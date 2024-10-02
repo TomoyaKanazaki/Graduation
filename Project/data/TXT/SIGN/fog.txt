@@ -1,0 +1,75 @@
+//=============================================================
+//
+// 印エディター
+// Author : Takeru Ogasawara
+//
+//=============================================================
+
+SCRIPT
+
+//=================================
+// 印情報
+//=================================
+
+SET_SIGN
+	POS = 640.00 150.00 0.00
+	ID = 0
+END_SIGN
+
+SET_SIGN
+	POS = 710.00 220.00 0.00
+	ID = 1
+END_SIGN
+
+SET_SIGN
+	POS = 780.00 290.00 0.00
+	ID = 2
+END_SIGN
+
+SET_SIGN
+	POS = 850.00 360.00 0.00
+	ID = 3
+END_SIGN
+
+SET_SIGN
+	POS = 780.00 430.00 0.00
+	ID = 4
+END_SIGN
+
+SET_SIGN
+	POS = 710.00 500.00 0.00
+	ID = 5
+END_SIGN
+
+SET_SIGN
+	POS = 640.00 570.00 0.00
+	ID = 6
+END_SIGN
+
+SET_SIGN
+	POS = 570.00 500.00 0.00
+	ID = 7
+END_SIGN
+
+SET_SIGN
+	POS = 500.00 430.00 0.00
+	ID = 8
+END_SIGN
+
+SET_SIGN
+	POS = 430.00 360.00 0.00
+	ID = 9
+END_SIGN
+
+SET_SIGN
+	POS = 500.00 290.00 0.00
+	ID = 10
+END_SIGN
+
+SET_SIGN
+	POS = 570.00 220.00 0.00
+	ID = 11
+END_SIGN
+
+
+END_SCRIPT
