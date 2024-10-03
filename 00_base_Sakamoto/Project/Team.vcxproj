@@ -80,7 +80,9 @@
     <ClCompile Include="source\Pause.cpp" />
     <ClCompile Include="source\player.cpp" />
     <ClCompile Include="source\Player2D.cpp" />
-    <ClCompile Include="source\precompile.cpp" />
+    <ClCompile Include="source\precompile.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="source\ranking.cpp" />
     <ClCompile Include="source\renderer.cpp" />
     <ClCompile Include="source\result.cpp" />
