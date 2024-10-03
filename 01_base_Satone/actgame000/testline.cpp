@@ -93,7 +93,7 @@ HRESULT CTestLine::Init(void)
 	//m_nIdxTexture = pTexture->Regist(m_apFilename[m_nType]);
 
 	//テクスチャの割り当て
-	CObject3D::BindTexture(m_nIdxTexture);
+	//CObject3D::BindTexture(m_nIdxTexture);
 
 	//オブジェクト3Dの初期化処理
 	CObject3D::Init();

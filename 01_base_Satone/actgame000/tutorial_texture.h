@@ -46,6 +46,7 @@ public:
 private:
 	void MoveKeyboard(void);	//プレイヤーキーボードの移動操作
 	void ScreenLimit(void);		// 画面外判定
+	void CircleColllllll(void);
 
 	static LPDIRECT3DTEXTURE9 m_pTexture;
 	static const char *m_apFilename[STEP_MAX];		//テクスチャの名前
@@ -64,6 +65,8 @@ private:
 	float m_fScale;			// 距離の倍率
 
 	CTest* m_pTest2;
+	CObject3D* m_pCircle;
+
 };
 
 #endif

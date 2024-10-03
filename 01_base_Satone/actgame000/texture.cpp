@@ -124,5 +124,11 @@ int CTexture::Regist(const char *pFilename)
 //==============================================================
 LPDIRECT3DTEXTURE9 CTexture::GetAddress(int nIdx)
 {
+	// ファイル範囲外もしくは使用していない
+	if (nIdx < 0 || nIdx > m_nNumAll)
+	{
+		return nullptr;
+	}
+
 	return m_apTexture[nIdx];		//指定のテクスチャを返す
 }

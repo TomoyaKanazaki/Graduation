@@ -167,7 +167,7 @@ void CObject3D::Draw(void)
 	pDevice->SetFVF(FVF_VERTEX_3D);
 
 	//テクスチャの設定
-	//pDevice->SetTexture(0, pTexture->GetAddress(m_nIdxTexture));
+	pDevice->SetTexture(0, pTexture->GetAddress(m_nIdxTexture));
 
 	//オブジェクト3Dの描画
 	pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP,			//プリミティブの種類

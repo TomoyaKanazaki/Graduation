@@ -45,6 +45,7 @@ CTutorialUI::CTutorialUI()
 	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		//位置
 	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		//移動量
 	m_distance = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		//移動量
+	m_pCircle = nullptr;
 
 	m_nType = 0;
 }
@@ -58,6 +59,7 @@ CTutorialUI::CTutorialUI(D3DXVECTOR3 pos, D3DXVECTOR3 rot, int nType)
 	m_pos = pos;		//位置
 	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		//移動量
 	m_distance = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		//移動量
+	m_pCircle = nullptr;
 
 	m_nType = nType;	//壁の種類
 
@@ -99,10 +101,10 @@ HRESULT CTutorialUI::Init(void)
 	CTexture *pTexture = CManager::GetInstance()->GetTexture();
 
 	//テクスチャの読み込み
-	m_nIdxTexture = pTexture->Regist(m_apFilename[m_nType]);
+	//m_nIdxTexture = pTexture->Regist(m_apFilename[m_nType]);
 
 	//テクスチャの割り当て
-	CObject3D::BindTexture(m_nIdxTexture);
+	//CObject3D::BindTexture(m_nIdxTexture);
 
 	//ビルボードの初期化処理
 	CObject3D::Init();
@@ -118,6 +120,20 @@ HRESULT CTutorialUI::Init(void)
 
 	// プレイヤー2の色設定
 	CObject3D::SetColor(D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
+
+	// 円の生成
+	m_pCircle = CObject3D::Create();
+
+	//テクスチャの読み込み
+	m_nIdxTexture = pTexture->Regist("data\\TEXTURE\\item00.png");
+	BindTexture(m_nIdxTexture);
+
+	//テクスチャの割り当て
+	m_pCircle->BindTexture(m_nIdxTexture);
+
+	m_pCircle->SetPosition(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pCircle->SetSize(400.0f, 400.0f);
+	m_pCircle->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0, 0.5f));
 
 	return S_OK;
 }
@@ -145,9 +161,7 @@ void CTutorialUI::Update(void)
 	m_fDistance = (m_pos.x - m_distance.x) * (m_pos.x - m_distance.x) + (m_pos.y - m_distance.y) * (m_pos.y - m_distance.y);
 	m_fDistance = sqrtf(m_fDistance);
 
-	float Base = 300.0f;
-
-	m_fScale = (m_fDistance / Base);
+	CircleColllllll();
 
 	MoveKeyboard();
 
@@ -161,6 +175,7 @@ void CTutorialUI::Update(void)
 	m_move.z += (0.0f - m_move.z) * 0.008f;
 
 	CObject3D::SetPosition(m_pos);
+	m_pCircle->SetPosition(m_pos);
 
 	pDebugProc->Print("\nプレイヤー2の位置    (%f, %f, %f)\n", m_pos.x, m_pos.y, m_pos.z);
 	pDebugProc->Print("\n距離2：%f\n", m_fDistance);
@@ -240,4 +255,21 @@ void CTutorialUI::ScreenLimit(void)
 		m_pos.y = LIMIT.y;
 		m_move.y *= -1.0f;
 	}
+}
+
+//==============================================================
+// 円の当たり判定
+//==============================================================
+void CTutorialUI::CircleColllllll(void)
+{
+	if (m_fDistance <= 400.0f + 400.0f)
+	{
+		float Base = 800.0f;
+
+		m_fScale = (m_fDistance / Base);
+
+		return;
+	}
+
+	m_fScale = 1.0f;
 }
