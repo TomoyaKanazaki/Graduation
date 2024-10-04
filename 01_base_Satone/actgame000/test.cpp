@@ -174,10 +174,6 @@ void CTest::Update(void)
 	D3DXVECTOR3 linepos = m_pos + (vecline * 0.5f);
 	float fRot = atan2f(vecline.y, vecline.x);
 
-	m_pTestLine->SetPosition(linepos);
-	m_pTestLine->SetRot(D3DXVECTOR3(0.0f, 0.0f, fRot));
-	m_pTestLine->SetSize(m_fDistance * 0.5f, 10.0f);
-
 	m_pos += m_move;			//ˆÚ“®—Ê‰ÁŽZ
 
 	ScreenLimit();

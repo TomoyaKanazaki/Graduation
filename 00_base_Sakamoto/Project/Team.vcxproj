@@ -22,7 +22,6 @@
     <ClCompile Include="source\2DEffect.cpp" />
     <ClCompile Include="source\2DUI.cpp" />
     <ClCompile Include="source\2DUI_edit.cpp" />
-    <ClCompile Include="source\action.cpp" />
     <ClCompile Include="source\block.cpp" />
     <ClCompile Include="source\blockmanager.cpp" />
     <ClCompile Include="source\BowmanArrow.cpp" />
@@ -110,7 +109,6 @@
     <ClInclude Include="source\2DEffect.h" />
     <ClInclude Include="source\2DUI.h" />
     <ClInclude Include="source\2DUI_edit.h" />
-    <ClInclude Include="source\action.h" />
     <ClInclude Include="source\block.h" />
     <ClInclude Include="source\blockmanager.h" />
     <ClInclude Include="source\BowmanArrow.h" />
