@@ -12,11 +12,17 @@
 #include "texture.h"
 #include "player.h"
 
-#define WAIGHT_SIZE (17)			//横の頂点数(９or１７or３３)
-#define HEIGHT_SIZE (2)				//縦の頂点数
-#define WAIGHT_CENTER (0.5f)		//横の原点(0.0f～1.0f)
-#define HEIGHT_CENTER (1.0f)		//縦の原点(0.0f～1.0f)
-#define CYLINDER_HEIGHT (5.0f)		//壁一枚の高さ
+//==========================================
+//  定数定義
+//==========================================
+namespace
+{
+	const int WAIGHT_SIZE = 17;			//横の頂点数(９or１７or３３)
+	const int HEIGHT_SIZE = 2;				//縦の頂点数
+	const float WAIGHT_CENTER = 0.5f;		//横の原点(0.0f～1.0f)
+	const float HEIGHT_CENTER = 1.0f;		//縦の原点(0.0f～1.0f)
+	const float CYLINDER_HEIGHT = 5.0f;		//壁一枚の高さ
+}
 
 //====================================================================
 //コンストラクタ

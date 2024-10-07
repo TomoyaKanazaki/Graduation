@@ -12,14 +12,19 @@
 #include "Fade.h"
 #include "sound.h"
 
-//マクロ定義
-#define PAUSE_POS (D3DXVECTOR3(640.0f, 100.0f, 0.0f))
-#define PAUSE_WIGHT (600.0f)
-#define PAUSE_HEIGHT (200.0f)
-#define UI_POS (D3DXVECTOR3(640.0f, 300.0f, 0.0f))
-#define UI_WIGHT (600.0f)
-#define UI_HEIGHT (150.0f)
-#define UI_HSIDE (175.0f)
+//==========================================
+//  定数定義
+//==========================================
+namespace
+{
+	const D3DXVECTOR3 PAUSE_POS = D3DXVECTOR3(640.0f, 100.0f, 0.0f);
+	const float PAUSE_WIGHT = 600.0f;
+	const float PAUSE_HEIGHT = 200.0f;
+	const D3DXVECTOR3 UI_POS = D3DXVECTOR3(640.0f, 300.0f, 0.0f);
+	const float UI_WIGHT = 600.0f;
+	const float UI_HEIGHT = 150.0f;
+	const float UI_HSIDE = 175.0f;
+}
 
 //静的メンバ変数宣言
 

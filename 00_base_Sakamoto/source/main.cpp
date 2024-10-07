@@ -9,9 +9,14 @@
 #include "game.h"
 #include "time.h"
 
-//マクロ定義
-#define CLASS_NAME "Pause."				//ウインドウクラスの名前
-#define WINDOW_NAME "　Pause.　"	//ウインドウの名前(キャプションに表示)
+//==========================================
+//  定数定義
+//==========================================
+namespace
+{
+	const char* CLASS_NAME = "Pause.";				//ウインドウクラスの名前
+	const char* WINDOW_NAME = "　Pause.　";			//ウインドウの名前(キャプションに表示)
+}
 
 //プロトタイプ宣言
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);

@@ -11,9 +11,14 @@
 #include "debugproc.h"
 #include "input.h"
 
-//マクロ定義
-#define POLYGON_WIGHT (300.0f)	//横幅
-#define POLYGON_HEIGHT (200.0f)	//縦幅
+//==========================================
+//  定数定義
+//==========================================
+namespace
+{
+	const float POLYGON_WIGHT = 300.0f;	//横幅
+	const float POLYGON_HEIGHT = 200.0f;	//縦幅
+}
 
 //静的メンバ変数宣言
 CObject *CObject::m_pTop[PRIORITY_MAX] = {};

@@ -11,12 +11,18 @@
 #include "game.h"
 #include "texture.h"
 
-#define WAIGHT_SIZE (17)			//横の頂点数(９or１７or３３)偶数だとバグる
-#define HEIGHT_SIZE (8)				//縦の頂点数
-#define WAIGHT_CENTER (0.5f)		//横の原点(0.0f～1.0f)
-#define HEIGHT_CENTER (1.0f)		//縦の原点(0.0f～1.0f)
-#define CYLINDER_HEIGHT (750.0f)	//壁一枚の高さ
-#define CYLINDER_RADIUS (6000.0f)	//円の半径
+//==========================================
+//  定数定義
+//==========================================
+namespace
+{
+	const int WAIGHT_SIZE = 17;			//横の頂点数(９or１７or３３)偶数だとバグる
+	const int HEIGHT_SIZE = 8;				//縦の頂点数
+	const float WAIGHT_CENTER = 0.5f;		//横の原点(0.0f～1.0f)
+	const float HEIGHT_CENTER = 1.0f;		//縦の原点(0.0f～1.0f)
+	const float CYLINDER_HEIGHT = 750.0f;	//壁一枚の高さ
+	const float CYLINDER_RADIUS = 6000.0f;	//円の半径
+}
 
 //====================================================================
 //コンストラクタ

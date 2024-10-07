@@ -12,14 +12,15 @@
 
 #pragma comment(lib,"xinput.lib")	//入力処理
 
-//マクロ定義
-#define NUM_KEY_MAX (256)	//キーの最大数
-#define MAX_PLAYER (4)	//プレイヤーの人数
-
 //入力のクラス宣言
 class CInput
 {
 public:
+
+	//マクロ定義
+#define NUM_KEY_MAX (256)	//キーの最大数
+#define MAX_PLAYER (4)	//プレイヤーの人数
+
 	CInput();
 	virtual ~CInput();
 
