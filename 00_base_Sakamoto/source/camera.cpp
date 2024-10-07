@@ -660,7 +660,7 @@ void CCamera::FPSCamera(void)
 	m_posV.x = pPlayer->GetPos().x;
 	m_posV.y = pPlayer->GetPos().y + 50.0f;
 	m_posV.z = pPlayer->GetPos().z;
-	m_rot.x = pPlayer->GetCameraHeightRot();
+	m_rot.x = 0.0f;
 	m_rot.y = pPlayer->GetRot().y + D3DX_PI;
 
 	//注視点の情報を出力する
@@ -696,7 +696,7 @@ void CCamera::FPSComplementCamera(void)
 	m_posVDest.x = pPlayer->GetPos().x;
 	m_posVDest.y = pPlayer->GetPos().y + 50.0f;
 	m_posVDest.z = pPlayer->GetPos().z;
-	m_rot.x = pPlayer->GetCameraHeightRot();
+	m_rot.x = 0.0f;
 	m_rot.y = pPlayer->GetRot().y + D3DX_PI;
 
 	//注視点の情報を出力する

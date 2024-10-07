@@ -24,7 +24,6 @@
 #include "time.h"
 #include "tutorial.h"
 #include "logo.h"
-#include "blockmanager.h"
 
 #ifdef _DEBUG
 #define SET_MODE (CScene::MODE_GAME)
@@ -215,24 +214,6 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 		return E_FAIL;
 	}
 
-	if (m_pBlockManager != nullptr)
-	{
-		delete m_pBlockManager;
-		m_pBlockManager = nullptr;
-
-	}
-
-	if (m_pBlockManager == nullptr)
-	{
-		//ブロックマネージャーの生成
-		m_pBlockManager = CBlockManager::GetInstance();
-
-		if (m_pBlockManager != nullptr)
-		{
-			m_pBlockManager->Init();
-		}
-	}
-
 	if (m_Fade == nullptr)
 	{
 		//フェードの生成
@@ -273,15 +254,6 @@ void CManager::Uninit(void)
 
 		delete m_pScene;
 		m_pScene = nullptr;
-	}
-
-	if (m_pBlockManager != nullptr)
-	{
-		//ブロックマネージャーの終了処理
-		m_pBlockManager->Uninit();
-
-		delete m_pBlockManager;
-		m_pBlockManager = nullptr;
 	}
 
 	//全てのオブジェクトの破棄
@@ -426,15 +398,7 @@ void CManager::Update(void)
 	}
 
 #endif
-	if (!m_bState && CScene::GetMode() == CScene::MODE_GAME && (CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_P) == true ||
-		CManager::GetInstance()->GetInputJoyPad()->GetTrigger(CInputJoypad::BUTTON_START, 0) == true))
-	{
-		m_bState = true;
-		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_BGM_GAME);
 
-		CGame::GetTime()->SetStartTime(timeGetTime());
-		CGame::GetTime()->SetTime(0);
-	}
 	if ((CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_P) == true ||
 		CManager::GetInstance()->GetInputJoyPad()->GetTrigger(CInputJoypad::BUTTON_START, 0) == true) &&
 		m_PauseOK == true &&
@@ -443,39 +407,16 @@ void CManager::Update(void)
 		//条件？ 処理１：処理２;
 		m_Pause = m_Pause ? false : true;
 		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_BOSS_DASH);
-		switch (CScene::GetMode())
-		{
-		case CScene::MODE_GAME:
-
-			if (m_Pause == true)
-			{
-				CGame::GetGamePause()->SetAppear(true);
-			}
-			else
-			{
-				CGame::GetGamePause()->SetAppear(false);
-			}
-
-			break;
-		}
 	}
-	if (!m_bState && CScene::GetMode() == CScene::MODE_GAME)
-	{
-		return;
-	}
-		//シーンの更新処理
-		m_pScene->Update();
 
-		//レンダラーの更新処理
-		m_pRenderer->Update();
+	//シーンの更新処理
+	m_pScene->Update();
 
-		//フェードの更新処理
-		m_Fade->Update();
+	//レンダラーの更新処理
+	m_pRenderer->Update();
 
-		//ブロックマネージャーの更新処理
-		m_pBlockManager->Update();
-	
-	
+	//フェードの更新処理
+	m_Fade->Update();
 }
 
 //====================================================================

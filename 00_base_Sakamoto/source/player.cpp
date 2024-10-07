@@ -28,7 +28,7 @@
 #include "sound.h"
 
 #define COLLISION_SIZE (D3DXVECTOR3(20.0f,40.0f,20.0f))		//横の当たり判定
-#define PLAYER_SPEED (0.0f)		//プレイヤーの移動速度
+#define PLAYER_SPEED (10.0f)		//プレイヤーの移動速度
 
 namespace
 {
@@ -88,13 +88,12 @@ CPlayer::CPlayer(int nPriority) :CObject(nPriority)
 	m_AutoMoveRot = D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f);
 	m_bJump = false;
 	m_nActionCount = 0;
-	m_Action = ACTION_WAIT;
-	m_AtkAction = ACTION_WAIT;
+	m_Action = ACTION_BWAIT;
+	m_AtkAction = ACTION_BWAIT;
 	m_State = STATE_NORMAL;
 	m_nStateCount = 0;
 	m_AtkPos = INITVECTOR3;
 	m_CollisionRot = 0.0f;
-	m_HeightCameraRot = 0.0f;
 	m_fLife = MAX_LIFE;
 	m_pMotion = nullptr;
 }
@@ -144,7 +143,7 @@ HRESULT CPlayer::Init(void)
 	SetType(CObject::TYPE_PLAYER3D);
 
 	//モデルの生成
-	LoadLevelData("data\\TXT\\motion_player.txt");
+	LoadLevelData("data\\TXT\\motion_foot_light_spear.txt");
 
 	//モーションの生成
 	if (m_pMotion == NULL)
@@ -155,9 +154,7 @@ HRESULT CPlayer::Init(void)
 
 	//初期化処理
 	m_pMotion->SetModel(&m_apModel[0], m_nNumModel);
-	m_pMotion->LoadData("data\\TXT\\motion_player.txt");
-
-	SetModelDisp(false);
+	m_pMotion->LoadData("data\\TXT\\motion_foot_light_spear.txt");
 
 	switch (CScene::GetMode())
 	{
@@ -356,7 +353,6 @@ void CPlayer::Move(void)
 	{
 		NormarizeMove.x += -1.0f * cosf(CameraRot.y) * PLAYER_SPEED;
 		NormarizeMove.z -= -1.0f * sinf(CameraRot.y) * PLAYER_SPEED;
-
 	}
 	if (pInputKeyboard->GetPress(DIK_D))
 	{
@@ -457,60 +453,10 @@ void CPlayer::Rot(void)
 	fRotMove = m_rot.y;
 	fRotDest = CManager::GetInstance()->GetCamera()->GetRot().y;
 
-#ifdef _DEBUG
-	if (pInputKeyboard->GetPress(DIK_I) == true)
+	if (pInputKeyboard->GetPress(DIK_W) == true || pInputKeyboard->GetPress(DIK_A) == true || pInputKeyboard->GetPress(DIK_S) == true || pInputKeyboard->GetPress(DIK_D) == true)
 	{
-		m_HeightCameraRot += ROT_SPEED;
-		if (m_HeightCameraRot > ROT_HEIGHT_UP_MAX)
-		{
-			m_HeightCameraRot = ROT_HEIGHT_UP_MAX;
-		}
+		m_rot.y = atan2f(m_move.z, -m_move.x);
 	}
-	if (pInputKeyboard->GetPress(DIK_L) == true)
-	{
-		m_rot.y += ROT_SPEED;
-	}
-	if (pInputKeyboard->GetPress(DIK_J) == true)
-	{
-		m_rot.y -= ROT_SPEED;
-	}
-	if (pInputKeyboard->GetPress(DIK_K) == true)
-	{
-		m_HeightCameraRot -= ROT_SPEED;
-		if (m_HeightCameraRot < ROT_HEIGHT_DOWN_MAX)
-		{
-			m_HeightCameraRot = ROT_HEIGHT_DOWN_MAX;
-		}
-	}
-#else
-	if (CManager::TYPE_MNK == CManager::GetInstance()->GetTypeInput())
-	{
-		if (pInputKeyboard->GetPress(DIK_I) == true)
-		{
-			m_HeightCameraRot += ROT_SPEED;
-			if (m_HeightCameraRot > ROT_HEIGHT_UP_MAX)
-			{
-				m_HeightCameraRot = ROT_HEIGHT_UP_MAX;
-			}
-		}
-		if (pInputKeyboard->GetPress(DIK_L) == true)
-		{
-			m_rot.y += ROT_SPEED;
-		}
-		if (pInputKeyboard->GetPress(DIK_J) == true)
-		{
-			m_rot.y -= ROT_SPEED;
-		}
-		if (pInputKeyboard->GetPress(DIK_K) == true)
-		{
-			m_HeightCameraRot -= ROT_SPEED;
-			if (m_HeightCameraRot < ROT_HEIGHT_DOWN_MAX)
-			{
-				m_HeightCameraRot = ROT_HEIGHT_DOWN_MAX;
-			}
-		}
-	}
-#endif // DEBUG
 
 	useful::NormalizeAngle(&m_rot);
 }
@@ -523,19 +469,19 @@ void CPlayer::ActionState(void)
 	//移動モーション
 	if (m_move.x > 0.1f || m_move.x < -0.1f || m_move.z > 0.1f || m_move.z < -0.1f)
 	{
-		if (m_Action != ACTION_MOVE)
+		if (m_Action != ACTION_BMOVE)
 		{
-			m_Action = ACTION_MOVE;
-			m_pMotion->Set(ACTION_MOVE, 5);
+			m_Action = ACTION_BMOVE;
+			m_pMotion->Set(ACTION_BMOVE, 5);
 		}
 	}
 	//ニュートラルモーション
 	else
 	{
-		if (m_Action != ACTION_WAIT)
+		if (m_Action != ACTION_BWAIT)
 		{
-			m_Action = ACTION_WAIT;
-			m_pMotion->Set(ACTION_WAIT, 5);
+			m_Action = ACTION_BWAIT;
+			m_pMotion->Set(ACTION_BWAIT, 5);
 		}
 	}
 }
@@ -646,7 +592,7 @@ void CPlayer::CollisionMapModel(useful::COLLISION XYZ)
 
 				CMapModel* pMapModel = (CMapModel*)pObj;	// ブロック情報の取得
 
-				if (pMapModel->GetCollision() == true)
+				if (pMapModel->GetCollision() == true && pMapModel->GetAppear() == true)
 				{
 					D3DXVECTOR3 pos = pMapModel->GetPos();
 					D3DXVECTOR3 posOld = pMapModel->GetPosOld();
@@ -762,7 +708,6 @@ void CPlayer::RotUpdate(void)
 
 	// 向きの更新処理
 	m_rot += (rotDiff * 0.5);
-	m_HeightCameraRot = 0.0f;
 }
 
 //====================================================================

@@ -261,12 +261,6 @@
     <ClCompile Include="source\MoveHelpUI.cpp">
       <Filter>ソース ファイル\07_UI_3D</Filter>
     </ClCompile>
-    <ClCompile Include="source\block.cpp">
-      <Filter>ソース ファイル\08_Map</Filter>
-    </ClCompile>
-    <ClCompile Include="source\blockmanager.cpp">
-      <Filter>ソース ファイル\08_Map</Filter>
-    </ClCompile>
     <ClCompile Include="source\CubeSpin.cpp">
       <Filter>ソース ファイル\08_Map</Filter>
     </ClCompile>
@@ -427,12 +421,6 @@
     </ClInclude>
     <ClInclude Include="source\2DUI_edit.h">
       <Filter>ヘッダー ファイル\01_System</Filter>
-    </ClInclude>
-    <ClInclude Include="source\block.h">
-      <Filter>ヘッダー ファイル\08_Map</Filter>
-    </ClInclude>
-    <ClInclude Include="source\blockmanager.h">
-      <Filter>ヘッダー ファイル\08_Map</Filter>
     </ClInclude>
     <ClInclude Include="source\BowmanArrow.h">
       <Filter>ヘッダー ファイル\10_enemy</Filter>

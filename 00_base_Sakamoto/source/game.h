@@ -46,12 +46,9 @@ public:
 	virtual void Update(void);
 	virtual void Draw(void);
 
-	static int GetFloor(void) { return m_nFloor; }
 	static CPlayer* GetPlayer(void) { return m_pPlayer; }
-	static CPlayer2D* GetPlayer2D(void) { return m_pPlayer2D; }
 	static CBoss* GetBoss(void) { return m_pBoss; }
 	static CPause* GetPause(void) { return m_pPause; }
-	static CGamePause* GetGamePause(void) { return m_pGamePause; }
 	static CScore* GetScore(void) { return m_pScore; }
 	static CEdit* GetEdit(void) { return m_pEdit; }
 	static CTime* GetTime(void) { return m_pTime; }
@@ -68,17 +65,12 @@ public:
 	static void SetGameEnd(bool Set) { m_bGameEnd = Set; }
 	void DeleteMap(void);
 
-	static CAim* GetAim(void) { return m_pAim; }
 	static bool GetSlow(void) { return m_Slow; }
 private:
 	static void EventUpdate(void);
 
-	bool EnemyCheck(void);					//敵がいるかどうかの判断
-
 	void Sample(void);						//サンプル系が入ってるヨ
 
-	static int m_nFloor;					//現在の階層
-	static int m_nEnemyNum;					//現在の敵の数
 	static bool m_bGameEnd;					//ゲーム終了状態かどうか
 
 	//イベント用変数
@@ -101,16 +93,8 @@ private:
 
 	static CEdit* m_pEdit;							//エディットモードのポインタ
 	static CPause* m_pPause;						//ポーズのポインタ
-	static CGamePause* m_pGamePause;				//ゲーム用ポーズのポインタ
 	static CScore* m_pScore;						//スコアのポインタ
 	static CTime* m_pTime;							//タイムのポインタ
-	static CObject2D* m_p2DSample;					//2Dポリゴンのサンプル
-	static CObject3D* m_p3DSample;					//3Dポリゴンのサンプル
-	static CObjectBillboard* m_pBillboardSample;	//Billboardポリゴンのサンプル
-	static CObjectX* m_pXModelSample;				//Xモデルのサンプル
-	static CObjmeshField* m_pMeshFieldSample;		//メッシュフィールドのサンプル
-	static CObjmeshWall* m_pMeshWallSample;			//メッシュウォールのサンプル
-	static CObjmeshCylinder* m_pMeshCylinderSample;	//メッシュシリンダーのサンプル
 	static CObjmeshDome* m_pMeshDomeUp;				//メッシュドーム
 	static CObjmeshField* m_pMeshField;				//メッシュフィールド
 	static CCubeBlock* m_pCubeBlock;				//キューブブロック
@@ -118,8 +102,13 @@ private:
 	static bool m_Slow;								//スロー演出のオンオフ
 
 	static CPlayer* m_pPlayer;						//プレイヤーのポインタ
-	static CPlayer2D* m_pPlayer2D;					//プレイヤーのポインタ
 
-	static CAim* m_pAim;							// 照準
+	static CObject2D* m_p2DSample;					//2Dポリゴンのサンプル
+	static CObject3D* m_p3DSample;					//3Dポリゴンのサンプル
+	static CObjectBillboard* m_pBillboardSample;	//Billboardポリゴンのサンプル
+	static CObjectX* m_pXModelSample;				//Xモデルのサンプル
+	static CObjmeshField* m_pMeshFieldSample;		//メッシュフィールドのサンプル
+	static CObjmeshWall* m_pMeshWallSample;			//メッシュウォールのサンプル
+	static CObjmeshCylinder* m_pMeshCylinderSample;	//メッシュシリンダーのサンプル
 };
 #endif

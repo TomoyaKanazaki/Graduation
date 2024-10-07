@@ -39,13 +39,15 @@ public:
 	//プレイヤーのモーション
 	enum ACTION_TYPE
 	{
-		ACTION_WAIT = 0,	//待機
-		ACTION_MOVE,		//移動
-		ACTION_READY,		//術準備
-		ACTION_ULTIMATE,	//術発動
-		ACTION_GOATTACK,	//突進
-		ACTION_DEATHEVENT,	//ボス死亡時イベント
-		ACTION_MAX,			//最大
+		ACTION_BWAIT = 0,		//戦闘待機
+		ACTION_SMOVE,			//探索移動
+		ACTION_BMOVE,			//戦闘移動
+		ACTION_SWAIT,			//探索待機
+		ACTION_ATTACK,			//攻撃
+		ACTION_BDEATH,			//戦闘中の死亡
+		ACTION_SDEATH,			//探索中の死亡
+		ACTION_DAMAGE,			//ダメージ
+		ACTION_MAX,				//最大
 	};
 
 	//プレイヤーの状態
@@ -80,7 +82,6 @@ public:
 	bool GetJump(void) { return m_bJump; }
 	void SetCameraPos(D3DXVECTOR3 pos) { m_CameraPos = pos; }
 	D3DXVECTOR3 GetCameraPos(void) { return m_CameraPos; }
-	float GetCameraHeightRot(void) { return m_HeightCameraRot; }
 	void SetAction(ACTION_TYPE Action, float BlendTime);
 	ACTION_TYPE GetAction(void) { return m_Action; }
 	void SetModelDisp(bool Sst);
@@ -115,7 +116,6 @@ private:
 	D3DXVECTOR3 m_rotDest;		//向きの目的地
 	D3DXVECTOR3 m_AutoMoveRot;	//自動移動の移動方向
 	D3DXVECTOR3 m_size;			//大きさ
-	float m_HeightCameraRot;	//カメラの高さの角度
 	D3DXVECTOR3 m_AtkPos;		//攻撃位置
 	D3DXVECTOR3 m_CameraPos;	//カメラ位置位置
 	D3DXMATRIX m_mtxWorld;		//ワールドマトリックス

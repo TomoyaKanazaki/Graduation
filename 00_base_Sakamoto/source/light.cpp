@@ -69,38 +69,18 @@ HRESULT CLight::Init(void)
 
 		case CScene::MODE_GAME:
 
-			// ボス戦
-			if (CGame::GetFloor() == 3)
-			{
-				// ゲームの方のコピペ
-				switch (nCntlight)
-				{
-				case 0:
-					vecDir[nCntlight] = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
-					break;
-				case 1:
-					vecDir[nCntlight] = D3DXVECTOR3(-1.0f, -1.0f, -1.0f);
-					break;
-				case 2:
-					vecDir[nCntlight] = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
-					break;
-				}
-			}
-			else
-			{
 				// ゲーム中
-				switch (nCntlight)
-				{
-				case 0:
-					vecDir[nCntlight] = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
-					break;
-				case 1:
-					vecDir[nCntlight] = D3DXVECTOR3(-1.0f, -1.0f, -1.0f);
-					break;
-				case 2:
-					vecDir[nCntlight] = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
-					break;
-				}
+			switch (nCntlight)
+			{
+			case 0:
+				vecDir[nCntlight] = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
+				break;
+			case 1:
+				vecDir[nCntlight] = D3DXVECTOR3(-1.0f, -1.0f, -1.0f);
+				break;
+			case 2:
+				vecDir[nCntlight] = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
+				break;
 			}
 
 			break;

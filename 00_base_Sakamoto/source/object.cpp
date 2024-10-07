@@ -112,8 +112,7 @@ void CObject::UpdateAll(void)
 			{
 				if (CManager::GetInstance()->GetPause() == true)
 				{
-					if (pObject->m_type != TYPE_BLOCK &&
-						pObject->m_type != TYPE_TIME)
+					if (pObject->m_type == TYPE_SAMPLE)
 					{
 						//XVˆ—
 						pObject->Update();

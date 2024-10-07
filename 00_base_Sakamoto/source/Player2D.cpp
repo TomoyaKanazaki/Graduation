@@ -7,7 +7,6 @@
 #include "Player2D.h"
 #include "renderer.h"
 #include "manager.h"
-#include "blockmanager.h"
 #include "input.h"
 #include "game.h"
 #include "objectAnim2d.h"
@@ -124,8 +123,6 @@ void CPlayer2D::Update(void)
 	}
 
 	SetPos(pos);
-
-	CManager::GetInstance()->GetBlockManager()->Collision(this);
 }
 
 //====================================================================

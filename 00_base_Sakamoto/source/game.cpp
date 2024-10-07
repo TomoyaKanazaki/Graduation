@@ -18,28 +18,18 @@
 #include "objmeshCylinder.h"
 #include "objmeshDome.h"
 #include "CubeBlock.h"
-#include "CubeDamage.h"
 #include "player.h"
 #include "Pause.h"
-#include "GamePause.h"
 #include "camera.h"
-#include "game.h"
 #include "sound.h"
 #include "time.h"
 #include "Score.h"
 #include "debugproc.h"
 #include "Xmodel.h"
 #include "texture.h"
-#include "numberBillboard.h"
-#include "numberFall.h"
-#include "enemy.h"
-#include "enemyAshigaru.h"
-#include "enemyBowman.h"
 #include "effect.h"
 #include "Edit.h"
-#include "log.h"
-#include "objGauge2D.h"
-#include "skinmesh.h"
+
 #include "renderer.h"
 #include "SampleObj2D.h"
 #include "SampleObj3D.h"
@@ -48,17 +38,7 @@
 #include "SampleLevelModel.h"
 #include "light.h"
 
-#include "MapModel.h"
-
 #include "slowManager.h"
-
-#include "scrollOpen.h"
-
-#include "objectBillboard.h"
-
-#include "Player2D.h"
-
-#include "blockmanager.h"
 
 namespace
 {
@@ -81,15 +61,12 @@ CObjmeshDome* CGame::m_pMeshDomeUp = nullptr;
 CObjmeshField* CGame::m_pMeshField = nullptr;
 CCubeBlock* CGame::m_pCubeBlock = nullptr;
 CPlayer* CGame::m_pPlayer = nullptr;
-CPlayer2D* CGame::m_pPlayer2D = nullptr;
 CBoss* CGame::m_pBoss = nullptr;
 bool CGame::m_bGameEnd = false;
 bool CGame::m_bEvent = false;
 bool CGame::m_bEventEnd = false;
 bool CGame::m_Wireframe = false;
 bool CGame::m_Slow = false;
-int CGame::m_nFloor = -1;
-int CGame::m_nEnemyNum = 0;
 int CGame::m_nTutorialWave = 0;
 int CGame::m_nEventCount = 0;
 int CGame::m_nEventWave = 0;
@@ -102,16 +79,11 @@ float CGame::m_BGColorA = 1.0f;
 D3DXVECTOR3 CGame::m_EventPos = D3DXVECTOR3(0.0f, 300.0f, 0.0f);
 D3DXVECTOR3 CGame::m_BGRot = INITVECTOR3;
 
-CGamePause* CGame::m_pGamePause = nullptr;
-
-CAim* CGame::m_pAim = nullptr;
-
 //====================================================================
 //コンストラクタ
 //====================================================================
 CGame::CGame()
 {
-	m_nEnemyNum = 0;
 	m_bGameEnd = false;
 	m_bEvent = false;
 	m_bEventEnd = false;
@@ -142,7 +114,6 @@ HRESULT CGame::Init(void)
 {
 	//CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_BGM_TUTORIAL);
 	CGame::GetTime()->SetStopTime(false);
-	CCubeDamage::StaticReset();
 
 	m_pMeshDomeUp = CObjmeshDome::Create();
 	m_pMeshDomeUp->SetTexture("data\\TEXTURE\\rain_clown.jpg");
@@ -150,18 +121,16 @@ HRESULT CGame::Init(void)
 	m_pMeshField = CObjmeshField::Create(21, 21);
 	m_pMeshField->SetPos(INITVECTOR3);
 
-	//ゲーム用ポーズの生成
-	if (m_pGamePause == nullptr)
-	{
-		m_pGamePause = CGamePause::Create();
-	}
-
 	m_bGameEnd = false;
 
 	// タイムの生成
 	m_pTime = CTime::Create();
 	m_pTime->SetStartTime(timeGetTime());
 	m_pTime->SetTime(0);
+
+	m_pPlayer = CPlayer::Create();
+	m_pPlayer->SetPos(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+
 #if _DEBUG
 	if (m_pEdit == nullptr)
 	{
@@ -183,12 +152,6 @@ void CGame::Uninit(void)
 	CObject::ReleaseAll();
 
 	m_pBoss = nullptr;
-
-	if (m_pGamePause != nullptr)
-	{
-		delete m_pGamePause;
-		m_pGamePause = nullptr;
-	}
 
 #if _DEBUG
 	if (m_pEdit != nullptr)
@@ -249,7 +212,7 @@ void CGame::Update(void)
 	{
 		float Speed = CManager::GetInstance()->GetGameSpeed();
 
-		Speed += 0.91f;
+		Speed += 0.90f;
 
 		CManager::GetInstance()->SetGameSpeed(Speed);
 	}
@@ -270,9 +233,6 @@ void CGame::Update(void)
 	}
 
 #endif
-
-	//ゲーム用ポーズの更新処理
-	m_pGamePause->Update();
 
 	if (m_bEvent == true)
 	{
@@ -334,54 +294,6 @@ void CGame::EventUpdate(void)
 	if (m_nEventCount > 0)
 	{
 		m_nEventCount--;
-	}
-}
-
-//====================================================================
-//ステージのブロック配置
-//====================================================================
-void CGame::SetStageBlock(void)
-{
-	m_pCubeBlock = CCubeBlock::Create();
-	m_pCubeBlock->SetPos(D3DXVECTOR3(0.0f, 100.0f, 0.0f));
-	m_pCubeBlock->SetSize(D3DXVECTOR3(500.0f, 10.0f, 500.0f));
-	m_pCubeBlock->SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-}
-
-//====================================================================
-//敵がいるかいないかの判断
-//====================================================================
-bool CGame::EnemyCheck(void)
-{
-	m_nEnemyNum = 0;
-
-	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
-	{
-		//オブジェクトを取得
-		CObject* pObj = CObject::GetTop(nCntPriority);
-
-		while (pObj != nullptr)
-		{
-			CObject* pObjNext = pObj->GetNext();
-
-			CObject::TYPE type = pObj->GetType();			//種類を取得
-
-			if (type == CObject::TYPE_ENEMY3D)
-			{//種類が敵の時
-				m_nEnemyNum++;
-			}
-
-			pObj = pObjNext;
-		}
-	}
-
-	if (m_nEnemyNum > 0)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
 	}
 }
 
