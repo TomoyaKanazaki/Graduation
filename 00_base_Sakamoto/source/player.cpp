@@ -27,11 +27,11 @@
 #include "effect.h"
 #include "sound.h"
 
-#define COLLISION_SIZE (D3DXVECTOR3(20.0f,40.0f,20.0f))		//横の当たり判定
-#define PLAYER_SPEED (10.0f)		//プレイヤーの移動速度
-
 namespace
 {
+	const D3DXVECTOR3 COLLISION_SIZE = D3DXVECTOR3(20.0f, 40.0f, 20.0f);		//横の当たり判定
+	const float PLAYER_SPEED = 10.0f;		//プレイヤーの移動速度
+
 	const float MAX_LIFE = 100.0f;			//体力最大値
 	const float EVASION_MOVE = 10.0f;		//回避移動量
 	const float EVASION_ROT = 0.4f;			//回避角度

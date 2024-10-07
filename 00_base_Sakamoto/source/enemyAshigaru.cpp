@@ -22,8 +22,14 @@
 #include "useful.h"
 #include "effect.h"
 
-#define MOVE_SPEED (1.0f)
-#define ASHIGARU_SEARCHDISTANCE (700.0f)	//	足軽の索敵距離
+//==========================================
+//  定数定義
+//==========================================
+namespace
+{
+	const float MOVE_SPEED = 1.0f;
+	const float ASHIGARU_SEARCHDISTANCE = 700.0f;	//	足軽の索敵距離
+}
 
 //====================================================================
 //コンストラクタ

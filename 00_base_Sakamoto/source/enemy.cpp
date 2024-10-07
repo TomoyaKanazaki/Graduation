@@ -27,11 +27,11 @@
 #include "modelEffect.h"
 #include "sound.h"
 
-#define COLLISION_SIZE (D3DXVECTOR3(5.0f,60.0f,5.0f))		//‰¡‚Ì“–‚½‚è”»’è
-#define LIFE (30.0f)	// ‘Ì—Í
-
 namespace
 {
+	const D3DXVECTOR3 COLLISION_SIZE = D3DXVECTOR3(5.0f, 60.0f, 5.0f);		//‰¡‚Ì“–‚½‚è”»’è
+	const float LIFE = 30.0f;	// ‘Ì—Í
+
 	const float DISTANCE_RECEDE = 200.0f;	//‹ß‚Ã‚­‹——£
 	const float DISTANCE_APPROACH = 100.0f;	//‰“‚´‚©‚é‹——£
 }

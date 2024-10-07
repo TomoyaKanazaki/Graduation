@@ -14,11 +14,17 @@
 #include "object3D.h"
 #include "CubeEffect.h"
 
-#define WAIGHT_SIZE (11)		//横の頂点数
-#define HEIGHT_SIZE (11)		//縦の頂点数
-#define WAIGHT_CENTER (0.5f)	//横の原点(0.0f～1.0f)
-#define HEIGHT_CENTER (0.5f)	//縦の原点(0.0f～1.0f)
-#define FIELD_SIZE (200.0f)		//床一枚の大きさ
+//==========================================
+//  定数定義
+//==========================================
+namespace
+{
+	const int WAIGHT_SIZE = 11;		//横の頂点数
+	const int HEIGHT_SIZE = 11;		//縦の頂点数
+	const float WAIGHT_CENTER = 0.5f;	//横の原点(0.0f～1.0f)
+	const float HEIGHT_CENTER = 0.5f;	//縦の原点(0.0f～1.0f)
+	const float FIELD_SIZE = 200.0f;		//床一枚の大きさ
+}
 
 //静的メンバ変数宣言
 int CCubeDamage::m_nExplosionCount = 0;

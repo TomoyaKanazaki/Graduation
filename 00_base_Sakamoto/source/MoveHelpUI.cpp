@@ -8,9 +8,14 @@
 #include "renderer.h"
 #include "manager.h"
 
-//マクロ定義
-#define NUMBER_WIGHT (100.0f)		//横幅
-#define NUMBER_HEIGHT (100.0f)		//縦幅
+//==========================================
+//  定数定義
+//==========================================
+namespace
+{
+	const float NUMBER_WIGHT = 100.0f;		//横幅
+	const float NUMBER_HEIGHT = 100.0f;		//縦幅
+}
 
 //====================================================================
 //コンストラクタ

@@ -8,12 +8,17 @@
 #include "ranking.h"
 #include "number.h"
 
-//マクロ定義
-#define SPACE_TIME (50.0f)		//ランキング同士の隙間
-#define TIME_POS (D3DXVECTOR3(1000.0f, 200.0f, 0.0f))		//ランキングの位置
-#define RANKING_SIZE (D3DXVECTOR3(70.0f, 70.0f, 0.0f))		//ランキングの大きさ
-#define NUMBER_DISTANCE (50.0f)		//文字同士の幅
-#define RANKING_DISTANCE (90.0f)	//ランキング同士の幅
+//==========================================
+//  定数定義
+//==========================================
+namespace
+{
+	const float SPACE_TIME = 50.0f;		//ランキング同士の隙間
+	const D3DXVECTOR3 TIME_POS = D3DXVECTOR3(1000.0f, 200.0f, 0.0f);		//ランキングの位置
+	const D3DXVECTOR3 RANKING_SIZE = D3DXVECTOR3(70.0f, 70.0f, 0.0f);		//ランキングの大きさ
+	const float NUMBER_DISTANCE = 50.0f;		//文字同士の幅
+	const float RANKING_DISTANCE = 90.0f;	//ランキング同士の幅
+}
 
 //静的メンバ変数宣言
 

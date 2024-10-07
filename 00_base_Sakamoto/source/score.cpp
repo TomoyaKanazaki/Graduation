@@ -7,10 +7,15 @@
 #include "score.h"
 #include "number.h"
 
-//マクロ定義
-#define SPACE_SCORE (60.0f)		//スコア同士の隙間
-#define SCORE_POS (D3DXVECTOR3(900.0f, 60.0f, 0.0f))		//スコアの位置
-#define INIT_SCORE 0		//スコアの位置
+//==========================================
+//  定数定義
+//==========================================
+namespace
+{
+	const float SPACE_SCORE = 60.0f;		//スコア同士の隙間
+	const D3DXVECTOR3 SCORE_POS = D3DXVECTOR3(900.0f, 60.0f, 0.0f);		//スコアの位置
+	const int INIT_SCORE = 0;		//スコアの位置
+}
 
 //静的メンバ変数宣言
 CNumber* CScore::m_apObject[NUM_SCORE] = {};
