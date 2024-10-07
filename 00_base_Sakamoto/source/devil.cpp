@@ -1,10 +1,11 @@
 //============================================
 //
-//	デビルの処理 [devil.cpp]
+//	デビルの処理(仮) [devil.cpp]
 //	Author:sakamoto kai
 //
 //============================================
 #include "devil.h"
+#include "player.h"
 #include "object.h"
 #include "manager.h"
 #include "renderer.h"
@@ -27,7 +28,7 @@
 #include "effect.h"
 #include "sound.h"
 
-#define COLLISION_SIZE (D3DXVECTOR3(20.0f,40.0f,20.0f))		//横の当たり判定
+#define COLLISION_SIZE (D3DXVECTOR3(750.0f,0.0f,550.0f))		//横の当たり判定
 #define PLAYER_SPEED (10.0f)		//プレイヤーの移動速度
 
 namespace
@@ -53,7 +54,7 @@ CDevil::CDevil(int nPriority) : CObject(nPriority)
 	m_nStateCount = 0;
 	m_CollisionRot = 0.0f;
 	m_pMotion = nullptr;
-	m_DevilPos = INITVECTOR3;
+	m_DevilPos = D3DXVECTOR3(-100.0f, 0.0f, 0.0f);
 }
 
 //====================================================================
@@ -221,6 +222,33 @@ void CDevil::GameUpdate(void)
 		m_pMotion->Update();
 	}
 
+	CEffect* pTestEffect = nullptr;
+
+	for (int nCnt = 0; nCnt < 4; nCnt++)
+	{
+		pTestEffect = CEffect::Create();
+
+		switch (nCnt)
+		{
+		case 0:
+			pTestEffect->SetPos(D3DXVECTOR3(m_DevilPos.x + COLLISION_SIZE.x, m_DevilPos.y, m_DevilPos.z + COLLISION_SIZE.z));
+			break;
+		case 1:
+			pTestEffect->SetPos(D3DXVECTOR3(m_DevilPos.x - COLLISION_SIZE.x, m_DevilPos.y, m_DevilPos.z + COLLISION_SIZE.z));
+			break;
+		case 2:
+			pTestEffect->SetPos(D3DXVECTOR3(m_DevilPos.x + COLLISION_SIZE.x, m_DevilPos.y, m_DevilPos.z - COLLISION_SIZE.z));
+			break;
+		case 3:
+			pTestEffect->SetPos(D3DXVECTOR3(m_DevilPos.x - COLLISION_SIZE.x, m_DevilPos.y, m_DevilPos.z - COLLISION_SIZE.z));
+			break;
+		}
+
+		pTestEffect->SetLife(20);
+		pTestEffect->SetRadius(20.0f);
+		pTestEffect->SetColor(D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
+	}
+
 	//モーションの管理
 	ActionState();
 
@@ -284,40 +312,34 @@ void CDevil::Move(void)
 
 	D3DXVECTOR3 NormarizeMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
-#ifdef _DEBUG
-
 	//キーボードの移動処理
 	if (pInputKeyboard->GetPress(DIK_UP))
 	{
-		NormarizeMove.z += 1.0f * cosf(CameraRot.y) * PLAYER_SPEED;
-		NormarizeMove.x += 1.0f * sinf(CameraRot.y) * PLAYER_SPEED;
+		ObjectScroll(D3DXVECTOR3(0.0f, 0.0f, 5.0f));
 
 	}
 	if (pInputKeyboard->GetPress(DIK_DOWN))
 	{
-		NormarizeMove.z += -1.0f * cosf(CameraRot.y) * PLAYER_SPEED;
-		NormarizeMove.x += -1.0f * sinf(CameraRot.y) * PLAYER_SPEED;
+		ObjectScroll(D3DXVECTOR3(0.0f, 0.0f, -5.0f));
 	}
 	if (pInputKeyboard->GetPress(DIK_LEFT))
 	{
-		NormarizeMove.x += -1.0f * cosf(CameraRot.y) * PLAYER_SPEED;
-		NormarizeMove.z -= -1.0f * sinf(CameraRot.y) * PLAYER_SPEED;
+		ObjectScroll(D3DXVECTOR3(-5.0f, 0.0f, 0.0f));
 	}
 	if (pInputKeyboard->GetPress(DIK_RIGHT))
 	{
-		NormarizeMove.x += 1.0f * cosf(CameraRot.y) * PLAYER_SPEED;
-		NormarizeMove.z -= 1.0f * sinf(CameraRot.y) * PLAYER_SPEED;
+		ObjectScroll(D3DXVECTOR3(5.0f, 0.0f, 0.0f));
 	}
 
 	if (pInputKeyboard->GetPress(DIK_UP) == false && pInputKeyboard->GetPress(DIK_LEFT) == false && pInputKeyboard->GetPress(DIK_DOWN) == false && pInputKeyboard->GetPress(DIK_RIGHT) == false)
 	{
 		//左スティックによる前後移動	
-		m_move.z += pInputJoypad->Get_Stick_Left(0).y * cosf(CameraRot.y) * PLAYER_SPEED;
-		m_move.x += pInputJoypad->Get_Stick_Left(0).y * sinf(CameraRot.y) * PLAYER_SPEED;
+		m_DevilPos.z += pInputJoypad->Get_Stick_Left(0).y * PLAYER_SPEED;
+		m_DevilPos.x += pInputJoypad->Get_Stick_Left(0).y * PLAYER_SPEED;
 
 		//左スティックによる左右移動
-		m_move.x += pInputJoypad->Get_Stick_Left(0).x * cosf(CameraRot.y) * PLAYER_SPEED;
-		m_move.z -= pInputJoypad->Get_Stick_Left(0).x * sinf(CameraRot.y) * PLAYER_SPEED;
+		m_DevilPos.x += pInputJoypad->Get_Stick_Left(0).x * PLAYER_SPEED;
+		m_DevilPos.z -= pInputJoypad->Get_Stick_Left(0).x * PLAYER_SPEED;
 	}
 
 	if (pInputKeyboard->GetPress(DIK_UP) == true || pInputKeyboard->GetPress(DIK_LEFT) == true || pInputKeyboard->GetPress(DIK_DOWN) == true || pInputKeyboard->GetPress(DIK_RIGHT) == true)
@@ -331,56 +353,6 @@ void CDevil::Move(void)
 		NormarizeMove.y = JunpPawer;
 		NormarizeMove.z *= PLAYER_SPEED;
 	}
-
-#else
-
-	//キーボードの移動処理
-	if (pInputKeyboard->GetPress(DIK_W))
-	{
-		NormarizeMove.z += 1.0f * cosf(CameraRot.y) * PLAYER_SPEED;
-		NormarizeMove.x += 1.0f * sinf(CameraRot.y) * PLAYER_SPEED;
-
-	}
-	if (pInputKeyboard->GetPress(DIK_S))
-	{
-		NormarizeMove.z += -1.0f * cosf(CameraRot.y) * PLAYER_SPEED;
-		NormarizeMove.x += -1.0f * sinf(CameraRot.y) * PLAYER_SPEED;
-	}
-	if (pInputKeyboard->GetPress(DIK_A))
-	{
-		NormarizeMove.x += -1.0f * cosf(CameraRot.y) * PLAYER_SPEED;
-		NormarizeMove.z -= -1.0f * sinf(CameraRot.y) * PLAYER_SPEED;
-
-	}
-	if (pInputKeyboard->GetPress(DIK_D))
-	{
-		NormarizeMove.x += 1.0f * cosf(CameraRot.y) * PLAYER_SPEED;
-		NormarizeMove.z -= 1.0f * sinf(CameraRot.y) * PLAYER_SPEED;
-	}
-	if (pInputKeyboard->GetPress(DIK_W) == false && pInputKeyboard->GetPress(DIK_A) == false && pInputKeyboard->GetPress(DIK_S) == false && pInputKeyboard->GetPress(DIK_D) == false)
-	{
-		//左スティックによる前後移動	
-		m_move.z += pInputJoypad->Get_Stick_Left(0).y * cosf(CameraRot.y) * PLAYER_SPEED;
-		m_move.x += pInputJoypad->Get_Stick_Left(0).y * sinf(CameraRot.y) * PLAYER_SPEED;
-
-		//左スティックによる左右移動
-		m_move.x += pInputJoypad->Get_Stick_Left(0).x * cosf(CameraRot.y) * PLAYER_SPEED;
-		m_move.z -= pInputJoypad->Get_Stick_Left(0).x * sinf(CameraRot.y) * PLAYER_SPEED;
-	}
-
-	if (pInputKeyboard->GetPress(DIK_W) == true || pInputKeyboard->GetPress(DIK_A) == true || pInputKeyboard->GetPress(DIK_S) == true || pInputKeyboard->GetPress(DIK_D) == true)
-	{
-		float JunpPawer = NormarizeMove.y;
-		NormarizeMove.y = 0.0f;
-
-		D3DXVec3Normalize(&NormarizeMove, &NormarizeMove);
-
-		NormarizeMove.x *= PLAYER_SPEED;
-		NormarizeMove.y = JunpPawer;
-		NormarizeMove.z *= PLAYER_SPEED;
-	}
-
-#endif // DEBUG
 
 	m_move += NormarizeMove;
 
@@ -506,6 +478,121 @@ void CDevil::SetModelDisp(bool Sst)
 		if (m_apModel[nCnt] != nullptr)
 		{
 			m_apModel[nCnt]->SetDisp(Sst);
+		}
+	}
+}
+
+//====================================================================
+// モデル表示の設定
+//====================================================================
+void CDevil::ObjectScroll(D3DXVECTOR3 Move)
+{
+	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
+	{
+		//オブジェクトを取得
+		CObject* pObj = CObject::GetTop(nCntPriority);
+
+		while (pObj != NULL)
+		{
+			CObject* pObjNext = pObj->GetNext();
+
+			CObject::TYPE type = pObj->GetType();			//種類を取得
+
+			if (type == TYPE_CUBEBLOCK)
+			{//種類がブロックの時
+
+				CCubeBlock* pBlock = (CCubeBlock*)pObj;	// ブロック情報の取得
+
+				D3DXVECTOR3 pos = pBlock->GetPos();
+				D3DXVECTOR3 Size = pBlock->GetSize();
+
+				pos += Move;
+
+				if (Move.x > 0.0f)
+				{
+					if (m_DevilPos.x + COLLISION_SIZE.x < pos.x - Size.x)
+					{
+						pos.x = -COLLISION_SIZE.x + m_DevilPos.x - Size.x + Move.x;
+					}
+				}
+				if (Move.x < 0.0f)
+				{
+					if (m_DevilPos.x - COLLISION_SIZE.x > pos.x + Size.x)
+					{
+						pos.x = COLLISION_SIZE.x + m_DevilPos.x + Size.x + Move.x;
+					}
+				}
+				if (Move.z > 0.0f)
+				{
+					if (m_DevilPos.z + COLLISION_SIZE.z < pos.z - Size.z)
+					{
+						pos.z = -COLLISION_SIZE.z + m_DevilPos.z - Size.z + Move.z;
+					}
+				}
+				if (Move.z < 0.0f)
+				{
+					if (m_DevilPos.z - COLLISION_SIZE.z > pos.z + Size.z)
+					{
+						pos.z = COLLISION_SIZE.z + m_DevilPos.z + Size.z + Move.z;
+					}
+				}
+
+				pBlock->SetPos(pos);
+			}
+			if (type == TYPE_PLAYER3D)
+			{//種類がブロックの時
+
+				CPlayer* pPlayer = (CPlayer*)pObj;	// ブロック情報の取得
+
+				D3DXVECTOR3 pos = pPlayer->GetPos();
+				D3DXVECTOR3 Size = pPlayer->GetSize();
+
+				pos += Move;
+
+				if (Move.x > 0.0f)
+				{
+					if (m_DevilPos.x + COLLISION_SIZE.x < pos.x - Size.x)
+					{
+						CEffect* pEffect = CEffect::Create();
+						pEffect->SetPos(pos);
+						pEffect->SetColor(D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
+						pEffect->SetRadius(100.0f);
+					}
+				}
+				if (Move.x < 0.0f)
+				{
+					if (m_DevilPos.x - COLLISION_SIZE.x > pos.x + Size.x)
+					{
+						CEffect* pEffect = CEffect::Create();
+						pEffect->SetPos(pos);
+						pEffect->SetColor(D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
+						pEffect->SetRadius(100.0f);
+					}
+				}
+				if (Move.z > 0.0f)
+				{
+					if (m_DevilPos.z + COLLISION_SIZE.z < pos.z - Size.z)
+					{
+						CEffect* pEffect = CEffect::Create();
+						pEffect->SetPos(pos);
+						pEffect->SetColor(D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
+						pEffect->SetRadius(100.0f);
+					}
+				}
+				if (Move.z < 0.0f)
+				{
+					if (m_DevilPos.z - COLLISION_SIZE.z > pos.z + Size.z)
+					{
+						CEffect* pEffect = CEffect::Create();
+						pEffect->SetPos(pos);
+						pEffect->SetColor(D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
+						pEffect->SetRadius(100.0f);
+					}
+				}
+
+				pPlayer->SetPos(pos);
+			}
+			pObj = pObjNext;
 		}
 	}
 }

@@ -1,6 +1,6 @@
 //============================================
 //
-//	デビルの処理 [devil.h]
+//	デビルの処理(仮) [devil.h]
 //	Author:sakamoto kai
 //
 //============================================
@@ -89,6 +89,7 @@ private:
 	void StateManager(void);	//状態管理
 	void Move(void);			//移動処理
 	void Rot(void);				//移動方向処理
+	void ObjectScroll(D3DXVECTOR3 Move);	//オブジェクトのスクロール
 
 	void DebugKey(void);		//デバッグキー
 
