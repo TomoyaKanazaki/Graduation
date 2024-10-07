@@ -21,31 +21,31 @@
 //マクロ定義
 namespace
 {
-	//const char* DATA_BLOCK_NAME("data\\TXT\\STAGE\\Block.txt");
-	//const char* DATA_XMODEL_NAME("data\\TXT\\STAGE\\XModel.txt");
-	//const char* DATA_STAIR_NAME("data\\TXT\\STAGE\\Stair.txt");
-	//const char* DATA_GIMMICK_NAME("data\\TXT\\STAGE\\Gimmick.txt");
+	const char* DATA_BLOCK_NAME("data\\TXT\\STAGE\\Block.txt");
+	const char* DATA_XMODEL_NAME("data\\TXT\\STAGE\\XModel.txt");
+	const char* DATA_STAIR_NAME("data\\TXT\\STAGE\\Stair.txt");
+	const char* DATA_GIMMICK_NAME("data\\TXT\\STAGE\\Gimmick.txt");
 
 	// チュートリアル用
-	const char* DATA_BLOCK_NAME("data\\TXT\\STAGE\\Block_Tutorial_000.txt");
-	const char* DATA_XMODEL_NAME("data\\TXT\\STAGE\\XModel_Tutorial_000.txt");
-	const char* DATA_STAIR_NAME("data\\TXT\\STAGE\\Stair_Tutorial_000.txt");
-	const char* DATA_GIMMICK_NAME("data\\TXT\\STAGE\\Gimmick_Tutorial_000.txt");
+	//const char* DATA_BLOCK_NAME("data\\TXT\\STAGE\\Block_Tutorial_000.txt");
+	//const char* DATA_XMODEL_NAME("data\\TXT\\STAGE\\XModel_Tutorial_000.txt");
+	//const char* DATA_STAIR_NAME("data\\TXT\\STAGE\\Stair_Tutorial_000.txt");
+	//const char* DATA_GIMMICK_NAME("data\\TXT\\STAGE\\Gimmick_Tutorial_000.txt");
 
 	// ブロックの初期位置（Y）
 	const float BLOCK_INIT_POS_Y[CEdit::BLOCK_INIT_TYPE_MAX] =
 	{
 		10.0f,
-		100.0f,
-		100.0f,
+		50.0f,
+		50.0f,
 	};
 
 	// ブロックの初期サイズ
 	const D3DXVECTOR3 BLOCK_INIT_SIZE[CEdit::BLOCK_INIT_TYPE_MAX] =
 	{
-		D3DXVECTOR3(100.0f, 10.0f,100.0f),
-		D3DXVECTOR3(10.0f,100.0f,100.0f),
-		D3DXVECTOR3(100.0f,100.0f, 10.0f),
+		D3DXVECTOR3(50.0f, 10.0f,50.0f),
+		D3DXVECTOR3(10.0f,50.0f,50.0f),
+		D3DXVECTOR3(50.0f,50.0f, 50.0f),
 	};
 
 	// ブロックのテクスチャの種類
@@ -138,8 +138,8 @@ CEdit::CEdit()
 	m_EditPos = INITVECTOR3;
 	m_EditRot = INITVECTOR3;
 	m_EditSize = D3DXVECTOR3(100.0f, 10.0f, 100.0f);
-	m_EditType = EDITTYPE_MODELHIT;
-	MoveWidth = 10.0f;
+	m_EditType = EDITTYPE_BLOCK;
+	MoveWidth = 100.0f;
 	m_fRotValue = D3DX_PI * 0.5f;
 	m_bModelCollision = true;
 	m_bAppearCollision = false;

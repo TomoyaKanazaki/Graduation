@@ -118,6 +118,14 @@ void CObject::UpdateAll(void)
 						pObject->Update();
 					}
 				}
+				else if(CManager::GetInstance()->GetEdit() == true)
+				{
+					if (pObject->m_type != TYPE_PLAYER3D)
+					{
+						//更新処理
+						pObject->Update();
+					}
+				}
 				else if (pObject->m_Appear == true)
 				{
 					//更新処理

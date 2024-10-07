@@ -131,6 +131,8 @@ HRESULT CGame::Init(void)
 	m_pPlayer = CPlayer::Create();
 	m_pPlayer->SetPos(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
+	LoadStageBlock("data\\TXT\\STAGE\\Block.txt");
+
 #if _DEBUG
 	if (m_pEdit == nullptr)
 	{
@@ -239,7 +241,7 @@ void CGame::Update(void)
 		EventUpdate();
 	}
 
-	if (pInputKeyboard->GetTrigger(DIK_RETURN) == true)
+	if (pInputKeyboard->GetTrigger(DIK_RETURN) == true && CManager::GetInstance()->GetEdit() == false)
 	{
 		CFade::SetFade(CScene::MODE_RESULT);
 		m_pTime->SetStopTime(true);
@@ -324,6 +326,166 @@ void CGame::DeleteMap(void)
 			pObj = pObjNext;
 		}
 	}
+}
+
+//====================================================================
+// ブロックの読み込み配置
+//====================================================================
+void CGame::LoadStageBlock(const char* pFilename)
+{
+	//ファイルを開く
+	FILE* pFile = fopen(pFilename, "r");
+
+	if (pFile != nullptr)
+	{//ファイルが開けた場合
+
+		char Getoff[32] = {};
+		char boolLife[32] = {};
+		char aString[128] = {};			//ゴミ箱
+		char aStartMessage[32] = {};	//スタートメッセージ
+		char aSetMessage[32] = {};		//セットメッセージ
+		char aEndMessage[32] = {};		//終了メッセージ
+
+		fscanf(pFile, "%s", &aStartMessage[0]);
+		if (strcmp(&aStartMessage[0], "STARTSETSTAGE") == 0)
+		{
+			while (1)
+			{
+				fscanf(pFile, "%s", &aSetMessage[0]);
+				if (strcmp(&aSetMessage[0], "STARTSETBLOCK") == 0)
+				{
+					D3DXVECTOR3 pos;
+					D3DXVECTOR3 Size;
+
+					fscanf(pFile, "%s", &aString[0]);
+					fscanf(pFile, "%f", &pos.x);
+					fscanf(pFile, "%f", &pos.y);
+					fscanf(pFile, "%f", &pos.z);
+
+					fscanf(pFile, "%s", &aString[0]);
+					fscanf(pFile, "%f", &Size.x);
+					fscanf(pFile, "%f", &Size.y);
+					fscanf(pFile, "%f", &Size.z);
+
+					CCubeBlock* pBlock = CCubeBlock::Create();
+					pBlock->SetPos(pos);
+					pBlock->SetSize(Size);
+
+					fscanf(pFile, "%s", &aEndMessage[0]);
+					if (strcmp(&aEndMessage[0], "ENDSETBLOCK") == 0)
+					{
+						break;
+					}
+				}
+				else if (strcmp(&aSetMessage[0], "ENDSETSTAGE") == 0)
+				{
+					break;
+				}
+			}
+		}
+		fclose(pFile);
+	}
+	else
+	{//ファイルが開けなかった場合
+		printf("***ファイルを開けませんでした***\n");
+	}
+}
+
+//====================================================================
+// モデルの読み込み配置
+//====================================================================
+void CGame::LoadStageMapModel(const char* pFilename)
+{
+	////ファイルを開く
+	//FILE* pFile = fopen(pFilename, "r");
+
+	//if (pFile != nullptr)
+	//{//ファイルが開けた場合
+
+	//	char Getoff[32] = {};
+	//	char boolLife[32] = {};
+	//	char aString[128] = {};			//ゴミ箱
+	//	char aStartMessage[32] = {};	//スタートメッセージ
+	//	char aSetMessage[32] = {};		//セットメッセージ
+	//	char aEndMessage[32] = {};		//終了メッセージ
+	//	char aBool[8] = {};				//bool型メッセージ
+	//	bool Loop = false;
+
+	//	fscanf(pFile, "%s", &aStartMessage[0]);
+	//	if (strcmp(&aStartMessage[0], "STARTSETSTAGE") == 0)
+	//	{
+	//		while (1)
+	//		{
+	//			fscanf(pFile, "%s", &aSetMessage[0]);
+	//			if (strcmp(&aSetMessage[0], "STARTSETXMODEL") == 0)
+	//			{
+	//				char aModelName[64] = {};		//モデルのパス名
+	//				D3DXVECTOR3 pos;
+	//				D3DXVECTOR3 rot;
+	//				int nEditIndex = 0;
+
+	//				fscanf(pFile, "%s", &aString[0]);
+	//				fscanf(pFile, "%s", &aModelName[0]);
+
+	//				fscanf(pFile, "%s", &aString[0]);
+	//				fscanf(pFile, "%d", &nEditIndex);
+
+	//				fscanf(pFile, "%s", &aString[0]);
+	//				fscanf(pFile, "%f", &pos.x);
+	//				fscanf(pFile, "%f", &pos.y);
+	//				fscanf(pFile, "%f", &pos.z);
+
+	//				fscanf(pFile, "%s", &aString[0]);
+	//				fscanf(pFile, "%f", &rot.x);
+	//				fscanf(pFile, "%f", &rot.y);
+	//				fscanf(pFile, "%f", &rot.z);
+
+	//				fscanf(pFile, "%s", &aString[0]);
+	//				fscanf(pFile, "%s", &aBool[0]);	//ループするかどうかを設定
+	//				Loop = (strcmp(&aBool[0], "1") == 0 ? true : false);			//bool型の書き方
+
+	//				CMapModel* pModel = CMapModel::Create(&aModelName[0]);
+	//				pModel->SetPos(pos);
+	//				pModel->SetRot(rot);
+	//				pModel->SetEditIdx(nEditIndex);
+
+	//				if (rot.y < 1.57f)
+	//				{
+
+	//				}
+	//				else if (rot.y < 3.14f)
+	//				{
+	//					pModel->SwapSize();
+	//				}
+	//				else if (rot.y < 4.71f)
+	//				{
+
+	//				}
+	//				else
+	//				{
+	//					pModel->SwapSize();
+	//				}
+
+	//				pModel->SetCollision(Loop);
+
+	//				fscanf(pFile, "%s", &aEndMessage[0]);
+	//				if (strcmp(&aEndMessage[0], "ENDSETXMODEL") != 0)
+	//				{
+	//					break;
+	//				}
+	//			}
+	//			else if (strcmp(&aSetMessage[0], "ENDSETSTAGE") == 0)
+	//			{
+	//				break;
+	//			}
+	//		}
+	//	}
+	//	fclose(pFile);
+	//}
+	//else
+	//{//ファイルが開けなかった場合
+	//	printf("***ファイルを開けませんでした***\n");
+	//}
 }
 
 //====================================================================

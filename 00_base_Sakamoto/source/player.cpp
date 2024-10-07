@@ -36,10 +36,10 @@ namespace
 	const float EVASION_MOVE = 10.0f;		//回避移動量
 	const float EVASION_ROT = 0.4f;			//回避角度
 	const int EVASION_FRAME = 7;			//回避フレーム
-	const int EVASION_FRAME_JUST = 3;			//ジャスト回避フレーム
-	const int INVINCIBLE_FRAME = 20;			//無敵フレーム
+	const int EVASION_FRAME_JUST = 3;		//ジャスト回避フレーム
+	const int INVINCIBLE_FRAME = 20;		//無敵フレーム
 
-	const int STAMINA_COUNT = 30;					//スタミナ消費から回復以降フレーム
+	const int STAMINA_COUNT = 30;			//スタミナ消費から回復以降フレーム
 	
 	const float DISTANCE_RECEDE = 200.0f;	//近づく距離
 	const float DISTANCE_APPROACH = 150.0f;	//遠ざかる距離

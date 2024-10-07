@@ -67,6 +67,9 @@ public:
 
 	static bool GetSlow(void) { return m_Slow; }
 private:
+	static void LoadStageBlock(const char* pFilename);
+	static void LoadStageMapModel(const char* pFilename);
+
 	static void EventUpdate(void);
 
 	void Sample(void);						//ƒTƒ“ƒvƒ‹Œn‚ª“ü‚Á‚Ä‚éƒˆ
