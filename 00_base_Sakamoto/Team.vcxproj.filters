@@ -324,6 +324,9 @@
     <ClCompile Include="source\slowManager.cpp">
       <Filter>ソース ファイル\01_System</Filter>
     </ClCompile>
+    <ClCompile Include="devil.cpp">
+      <Filter>ソース ファイル\10_enemy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\SampleLevelModel.h">
@@ -568,6 +571,9 @@
     </ClInclude>
     <ClInclude Include="source\scrollOpen.h">
       <Filter>ヘッダー ファイル\06_UI_2D</Filter>
+    </ClInclude>
+    <ClInclude Include="devil.h">
+      <Filter>ヘッダー ファイル\10_enemy</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
