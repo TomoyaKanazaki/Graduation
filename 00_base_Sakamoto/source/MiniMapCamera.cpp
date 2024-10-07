@@ -14,23 +14,28 @@
 #include "player.h"
 #include "sound.h"
 
-//マクロ定義
-#define CAMERA_DISTANCE (100.0f)							//視点と注視点の距離
-#define CAMERA_DISTANCE_EVENT (75.0f)						//イベント時の視点と注視点の距離
-#define MODEL_DISTANCE (10.0f)								//モデルと注視点の距離
-#define CAMERA_SPEED (9.0f)									//カメラの移動スピード
-#define CAMERA_VR_SPEED (0.015f)							//カメラの視点スピード
-#define CAMERA_PAD_VR_SPEED (0.015f)						//カメラのパッドの視点スピード
-#define CAMERA_HOMING (0.2f)								//カメラの追従スピード
-#define POS_HOMING (0.9f)									//位置への追従スピード
-#define DOWNVIEW_POSV (D3DXVECTOR3(0.0f, 1500.0f, -200.0f))	//見下ろしの視点
-#define DOWNVIEW_POSR (D3DXVECTOR3(0.0f, 0.0f, 0.0f))		//見下ろしの注視点
-#define SIDEVIEW_POSV (D3DXVECTOR3(0.0f, 350.0f, -1000.0f))	//2Dの視点
-#define SIDEVIEW_POSR (D3DXVECTOR3(0.0f, 300.0f, 0.0f))		//2Dの注視点
+//==========================================
+//  定数定義
+//==========================================
+namespace
+{
+	const float CAMERA_DISTANCE = 100.0f;							//視点と注視点の距離
+	const float CAMERA_DISTANCE_EVENT = 75.0f;						//イベント時の視点と注視点の距離
+	const float MODEL_DISTANCE = 10.0f;								//モデルと注視点の距離
+	const float CAMERA_SPEED = 9.0f;									//カメラの移動スピード
+	const float CAMERA_VR_SPEED = 0.015f;							//カメラの視点スピード
+	const float CAMERA_PAD_VR_SPEED = 0.015f;						//カメラのパッドの視点スピード
+	const float CAMERA_HOMING = 0.2f;								//カメラの追従スピード
+	const float POS_HOMING = 0.9f;									//位置への追従スピード
+	const D3DXVECTOR3 DOWNVIEW_POSV = D3DXVECTOR3(0.0f, 1500.0f, -200.0f);	//見下ろしの視点
+	const D3DXVECTOR3 DOWNVIEW_POSR = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		//見下ろしの注視点
+	const D3DXVECTOR3 SIDEVIEW_POSV = D3DXVECTOR3(0.0f, 350.0f, -1000.0f);	//2Dの視点
+	const D3DXVECTOR3 SIDEVIEW_POSR = D3DXVECTOR3(0.0f, 300.0f, 0.0f);		//2Dの注視点
 
-#define ULTIMATE_DISTANCE (300.0f)							//術発動時の視点と注視点距離
-#define ULTIMATE_DISTANCEu (300.0f)							//術発動時の高さ
-#define ULTIMATE_ROT (0.85f)								//術発動時の向き
+	const float ULTIMATE_DISTANCE = 300.0f;							//術発動時の視点と注視点距離
+	const float ULTIMATE_DISTANCEu = 300.0f;							//術発動時の高さ
+	const float ULTIMATE_ROT = 0.85f;								//術発動時の向き
+}
 
 //====================================================================
 //コンストラクタ

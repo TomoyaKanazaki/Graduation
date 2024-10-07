@@ -17,12 +17,18 @@
 #include "time.h"
 #include "camera.h"
 
-#define PLAYER_ROT_SPEED (0.2f)		//プレイヤーの回転スピード
-#define PLAYER_SPEED (10.0f)		//プレイヤーの速さ
-#define PLAYER_JAMPPOWER (15.0f)	//プレイヤーのジャンプ力
-#define PLAYER_JAMPWALL (4.0f)		//ジャンプまでの力の振り幅
-#define JAMP_ACTIONNOT (4)			//ジャンプから行動出来るまで
-#define COLLISION_SIZE (D3DXVECTOR3(40.0f,80.0f,40.0f))		//横の当たり判定
+//==========================================
+//  定数定義
+//==========================================
+namespace
+{
+	const float PLAYER_ROT_SPEED = 0.2f;		//プレイヤーの回転スピード
+	const float PLAYER_SPEED = 10.0f;		//プレイヤーの速さ
+	const float PLAYER_JAMPPOWER = 15.0f;	//プレイヤーのジャンプ力
+	const float PLAYER_JAMPWALL = 4.0f;		//ジャンプまでの力の振り幅
+	const int JAMP_ACTIONNOT = 4;			//ジャンプから行動出来るまで
+	const D3DXVECTOR3 COLLISION_SIZE = D3DXVECTOR3(40.0f, 80.0f, 40.0f);		//横の当たり判定
+}
 
 //====================================================================
 //コンストラクタ
