@@ -8,9 +8,14 @@
 #include "renderer.h"
 #include "manager.h"
 
-//マクロ定義
-#define SAMPLE_WIGHT (100.0f)		//横幅
-#define SAMPLE_HEIGHT (100.0f)		//縦幅
+//==========================================
+//  定数定義
+//==========================================
+namespace
+{
+	const float SAMPLE_WIGHT = 100.0f;		//横幅
+	const float SAMPLE_HEIGHT = 100.0f;		//縦幅
+}
 
 //====================================================================
 //コンストラクタ

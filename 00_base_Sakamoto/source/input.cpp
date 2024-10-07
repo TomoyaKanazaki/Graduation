@@ -6,11 +6,15 @@
 //========================================================================================
 #include "input.h"
 
-//マクロ定義
-#define GAMEPAD_TRIGGER_DEADZONE (100)	//トリガーのデッドゾーン
-#define TRIGGER_MAX (255)	//トリガーのマックス
-#define NUM_KEY_MAX (256)	//キーの最大数
-#define MOUSE_SENS (0.1f) //マウス感度の補正
+//==========================================
+//  定数定義
+//==========================================
+namespace
+{
+	const int GAMEPAD_TRIGGER_DEADZONE = 100;	//トリガーのデッドゾーン
+	const int TRIGGER_MAX = 255;	//トリガーのマックス
+	const float MOUSE_SENS = 0.1f; //マウス感度の補正
+}
 
 //静的メンバ変数宣言
 LPDIRECTINPUT8 CInput::m_pInput = NULL;

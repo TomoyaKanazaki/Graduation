@@ -11,12 +11,18 @@
 #include "game.h"
 #include "texture.h"
 
-#define WAIGHT_SIZE (9)			//‰¡‚Ì’¸“_”(‚Xor‚P‚Vor‚R‚R)
-#define HEIGHT_SIZE (2)				//c‚Ì’¸“_”
-#define WAIGHT_CENTER (0.5f)		//‰¡‚ÌŒ´“_(0.0f`1.0f)
-#define HEIGHT_CENTER (1.0f)		//c‚ÌŒ´“_(0.0f`1.0f)
-#define CYLINDER_HEIGHT (20.0f)	//•Çˆê–‡‚Ì‚‚³
-#define CYLINDER_RADIUS (50.0f)	//‰~‚Ì”¼Œa
+//==========================================
+//  ’è”’è‹`
+//==========================================
+namespace
+{
+	const int WAIGHT_SIZE = 9;			//‰¡‚Ì’¸“_”(‚Xor‚P‚Vor‚R‚R)
+	const int HEIGHT_SIZE = 2;				//c‚Ì’¸“_”
+	const float WAIGHT_CENTER = 0.5f;		//‰¡‚ÌŒ´“_(0.0f`1.0f)
+	const float HEIGHT_CENTER = 1.0f;		//c‚ÌŒ´“_(0.0f`1.0f)
+	const float CYLINDER_HEIGHT = 20.0f;	//•Çˆê–‡‚Ì‚‚³
+	const float CYLINDER_RADIUS = 50.0f;	//‰~‚Ì”¼Œa
+}
 
 //====================================================================
 //ƒRƒ“ƒXƒgƒ‰ƒNƒ^

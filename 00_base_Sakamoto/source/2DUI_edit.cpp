@@ -17,15 +17,20 @@
 #include "texture.h"
 #include "useful.h"
 
-//マクロ定義
-#define NUM_OBJECT (8)						//マップに出すオブジェクトの種類数
-#define START_OK ("STARTSETUI")				//スタートメッセージがあるかどうかの確認
-#define END_SET_OK ("ENDSETUI")				//エンドメッセージがあるかどうかの確認
-#define UI_SET ("STARTSET")					//ブロックのセットメッセージ
-#define DELETE_WIGHT (45.0f)				//削除処理の横の削除範囲
-#define DELETE_HEIGHT (45.0f)				//削除処理の縦の削除範囲
-#define SIDE_PRESSCOUNT (30)				//横に素早く移動するまでのカウント
-#define MOVE_POS (10.0f)					//移動距離
+//==========================================
+//  定数定義
+//==========================================
+namespace
+{
+	const int NUM_OBJECT = 8;					//マップに出すオブジェクトの種類数
+	const char* START_OK = "STARTSETUI";		//スタートメッセージがあるかどうかの確認
+	const char* END_SET_OK = "ENDSETUI";		//エンドメッセージがあるかどうかの確認
+	const char* UI_SET = "STARTSET";			//ブロックのセットメッセージ
+	const float DELETE_WIGHT = 45.0f;			//削除処理の横の削除範囲
+	const float DELETE_HEIGHT = 45.0f;			//削除処理の縦の削除範囲
+	const int SIDE_PRESSCOUNT = 30;				//横に素早く移動するまでのカウント
+	const float MOVE_POS = 10.0f;				//移動距離
+}
 
 // 静的メンバ変数宣言
 C2DUIEdit::UIINFO C2DUIEdit::m_aTextureInfo[UI_LABEL_MAX] =

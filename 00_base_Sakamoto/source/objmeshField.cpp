@@ -11,9 +11,15 @@
 #include "game.h"
 #include "texture.h"
 
-#define WAIGHT_CENTER (0.5f)	//横の原点(0.0f～1.0f)
-#define HEIGHT_CENTER (0.5f)	//縦の原点(0.0f～1.0f)
-#define FIELD_SIZE (500.0f)		//床一枚の大きさ
+//==========================================
+//  定数定義
+//==========================================
+namespace
+{
+	const float WAIGHT_CENTER = 0.5f;	//横の原点(0.0f～1.0f)
+	const float HEIGHT_CENTER = 0.5f;	//縦の原点(0.0f～1.0f)
+	const float FIELD_SIZE = 500.0f;		//床一枚の大きさ
+}
 
 //====================================================================
 //コンストラクタ
