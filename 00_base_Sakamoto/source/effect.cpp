@@ -9,8 +9,13 @@
 #include "manager.h"
 #include "texture.h"
 
-//マクロ定義
-#define SMALLER (2.0f)
+//==========================================
+//  定数定義
+//==========================================
+namespace
+{
+	const float SMALLER = 2.0f;
+}
 
 //静的メンバ変数宣言
 LPDIRECT3DTEXTURE9 CEffect::m_pTexture = NULL;
