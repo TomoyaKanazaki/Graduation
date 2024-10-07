@@ -324,7 +324,7 @@
     <ClCompile Include="source\slowManager.cpp">
       <Filter>ソース ファイル\01_System</Filter>
     </ClCompile>
-    <ClCompile Include="devil.cpp">
+    <ClCompile Include="source\devil.cpp">
       <Filter>ソース ファイル\10_enemy</Filter>
     </ClCompile>
   </ItemGroup>
@@ -572,7 +572,7 @@
     <ClInclude Include="source\scrollOpen.h">
       <Filter>ヘッダー ファイル\06_UI_2D</Filter>
     </ClInclude>
-    <ClInclude Include="devil.h">
+    <ClInclude Include="source\devil.h">
       <Filter>ヘッダー ファイル\10_enemy</Filter>
     </ClInclude>
   </ItemGroup>

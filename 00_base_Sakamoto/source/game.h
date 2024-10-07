@@ -31,6 +31,7 @@ class CTime;
 class CBoss;
 class CPlayer2D;
 class CGamePause;
+class CDevil;
 
 class CAim;
 
@@ -105,6 +106,7 @@ private:
 	static bool m_Slow;								//スロー演出のオンオフ
 
 	static CPlayer* m_pPlayer;						//プレイヤーのポインタ
+	static CDevil* m_pDevil;						//デビルのポインタ
 
 	static CObject2D* m_p2DSample;					//2Dポリゴンのサンプル
 	static CObject3D* m_p3DSample;					//3Dポリゴンのサンプル

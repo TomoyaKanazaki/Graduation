@@ -29,6 +29,7 @@
 #include "texture.h"
 #include "effect.h"
 #include "Edit.h"
+#include "devil.h"
 
 #include "renderer.h"
 #include "SampleObj2D.h"
@@ -61,6 +62,7 @@ CObjmeshDome* CGame::m_pMeshDomeUp = nullptr;
 CObjmeshField* CGame::m_pMeshField = nullptr;
 CCubeBlock* CGame::m_pCubeBlock = nullptr;
 CPlayer* CGame::m_pPlayer = nullptr;
+CDevil* CGame::m_pDevil = nullptr;
 CBoss* CGame::m_pBoss = nullptr;
 bool CGame::m_bGameEnd = false;
 bool CGame::m_bEvent = false;
@@ -130,6 +132,9 @@ HRESULT CGame::Init(void)
 
 	m_pPlayer = CPlayer::Create();
 	m_pPlayer->SetPos(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+
+	m_pDevil = CDevil::Create();
+	m_pDevil->SetPos(D3DXVECTOR3(0.0f, 200.0f, 0.0f));
 
 	LoadStageBlock("data\\TXT\\STAGE\\Block.txt");
 
