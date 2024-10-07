@@ -210,8 +210,7 @@ void CGame::Update(void)
 	CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
 	CInputJoypad* pInputJoypad = CManager::GetInstance()->GetInputJoyPad();
 
-	CDebugProc* pDebugProc = CManager::GetInstance()->GetDebugProc();
-	pDebugProc->Print("ゲームスピード : %f\n", CManager::GetInstance()->GetGameSpeed());
+	DebugProc::Print(DebugProc::POINT_LEFT, "ゲームスピード : %f\n", CManager::GetInstance()->GetGameSpeed());
 
 #if _DEBUG
 	if (pInputKeyboard->GetTrigger(DIK_0) == true)

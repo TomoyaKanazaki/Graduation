@@ -282,8 +282,7 @@ void CTutorial::Update(void)
 		m_Slow = false;
 	}
 
-	CDebugProc* pDebugProc = CManager::GetInstance()->GetDebugProc();
-	pDebugProc->Print("ゲームスピード : %f\n", CManager::GetInstance()->GetGameSpeed());
+	DebugProc::Print(DebugProc::POINT_LEFT, "ゲームスピード : %f\n", CManager::GetInstance()->GetGameSpeed());
 
 	// チュートリアルスキップ
 	if (CManager::GetInstance()->GetInputKeyboard()->GetPress(DIK_RETURN) == true ||

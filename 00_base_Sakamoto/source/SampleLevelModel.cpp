@@ -178,9 +178,6 @@ void CSampleLvModel::TitleUpdate(void)
 //====================================================================
 void CSampleLvModel::GameUpdate(void)
 {
-	//デバッグ表示の取得
-	CDebugProc* pDebugProc = CManager::GetInstance()->GetDebugProc();
-
 	//D3DXVECTOR3 ScreenCenter = D3DXVECTOR3(640.0f,360.0f,0.0f);
 	//D3DXVECTOR3 ScreenPos[4] = { INITVECTOR3 };
 	//D3DXVECTOR3 pos[4] = { INITVECTOR3 };
@@ -277,7 +274,7 @@ void CSampleLvModel::GameUpdate(void)
 	//	}
 	//}
 
-	//pDebugProc->Print("左 : 右 → %d : %d\n", Left, Right);
+	//DebugProc::Print(DebugProc::POINT_LEFT, "左 : 右 → %d : %d\n", Left, Right);
 
 
 

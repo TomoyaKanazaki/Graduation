@@ -13,7 +13,6 @@
 #include "game.h"
 #include "tutorial.h"
 #include "object3D.h"
-#include "debugproc.h"
 #include "2DEffect.h"
 #include "camera.h"
 #include "input.h"
@@ -205,9 +204,6 @@ void CEnemy::TitleUpdate(void)
 //====================================================================
 void CEnemy::GameUpdate(void)
 {
-	//デバッグ表示の取得
-	CDebugProc* pDebugProc = CManager::GetInstance()->GetDebugProc();
-
 	//スクリーン座標への変換処理
 	ScreenCollision();
 
@@ -504,13 +500,13 @@ void CEnemy::SearchPlayer(void)
 					{
 						SetBattle = true;
 
-						CManager::GetInstance()->GetDebugProc()->Print("索敵範囲内！\n");
+						DebugProc::Print(DebugProc::POINT_LEFT, "索敵範囲内！\n");
 
 						if (SortObject(pPlayer->GetPos()) == true)
 						{
 							SetBattle = false;
 
-							CManager::GetInstance()->GetDebugProc()->Print("間に壁がある！\n");
+							DebugProc::Print(DebugProc::POINT_LEFT, "間に壁がある！\n");
 						}
 					}
 				}
