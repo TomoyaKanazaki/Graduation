@@ -19,6 +19,8 @@
 
 #include <cstdlib>
 
+#include "debugproc.h"
+
 //メモリリーク出力用マクロ
 #define _CRTDBG_MAP_ALLOC
 #include <crtdbg.h>

@@ -129,8 +129,8 @@ void CMiniMapCamera::Update(void)
 	}
 	////デバッグ表示の取得
 	//CDebugProc* pDebugProc = CManager::GetInstance()->GetDebugProc();
-	//pDebugProc->Print("%f:%f:%f\n", m_posV.x, m_posV.y, m_posV.z);
-	//pDebugProc->Print("%f:%f:%f\n", m_posR.x, m_posR.y, m_posR.z);
+	//DebugProc::Print(DebugProc::POINT_LEFT, "%f:%f:%f\n", m_posV.x, m_posV.y, m_posV.z);
+	//DebugProc::Print(DebugProc::POINT_LEFT, "%f:%f:%f\n", m_posR.x, m_posR.y, m_posR.z);
 }
 
 //====================================================================

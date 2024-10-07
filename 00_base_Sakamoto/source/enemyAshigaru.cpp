@@ -464,7 +464,7 @@ void CEnemyAshigaru::WalkPoint(void)
 		}
 	}
 
-	CManager::GetInstance()->GetDebugProc()->Print("[“G] %f : %f : %f\n", pos.x, pos.y, pos.z);
+	DebugProc::Print(DebugProc::POINT_LEFT, "[“G] %f : %f : %f\n", pos.x, pos.y, pos.z);
 }
 
 //====================================================================

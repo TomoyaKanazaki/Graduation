@@ -132,7 +132,7 @@ void CCursorUI::move()
 	// 位置の設定
 	SetPos(pos);
 
-	CManager::GetInstance()->GetDebugProc()->Print("\nカーソルUI位置 %f %f\n", pos.x, pos.y);
+	DebugProc::Print(DebugProc::POINT_LEFT, "\nカーソルUI位置 %f %f\n", pos.x, pos.y);
 }
 
 //====================================================================

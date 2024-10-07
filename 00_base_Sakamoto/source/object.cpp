@@ -146,7 +146,7 @@ void CObject::UpdateAll(void)
 
 	DebugKey();
 
-	CManager::GetInstance()->GetDebugProc()->Print("オブジェクトの総数:[%d]\n", m_nNumAll);
+	DebugProc::Print(DebugProc::POINT_LEFT, "オブジェクトの総数:[%d]\n", m_nNumAll);
 }
 
 //====================================================================

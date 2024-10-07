@@ -12,7 +12,6 @@
 
 //前方宣言
 class CRenderer;
-class CDebugProc;
 class CInputKeyboard;
 class CInputJoypad;
 class CInputMouse;
@@ -84,7 +83,6 @@ public:
 	void Draw(void);
 
 	CRenderer *GetRenderer(void) { return m_pRenderer; }
-	CDebugProc *GetDebugProc(void) { return m_pDebugProc; }
 	CInputKeyboard *GetInputKeyboard(void) { return m_pInputKeyboard; }
 	CInputJoypad* GetInputJoyPad(void) { return m_pInputJoyPad; }
 	CInputMouse*GetInputMouse(void) { return m_pInputMouse; }
@@ -154,7 +152,6 @@ private:
 	bool m_bPad;						//ジョイパッドを使用しているかどうか
 	bool m_bState;
 	CRenderer *m_pRenderer;				//レンダラーのポインタ
-	CDebugProc *m_pDebugProc;			//デバッグプロックのポインタ
 	CInputKeyboard *m_pInputKeyboard;	//キーボードのポインタ
 	CInputJoypad* m_pInputJoyPad;		//ジョイパッドのポインタ
 	CInputMouse*m_pInputMouse;			//マウスのポインタ

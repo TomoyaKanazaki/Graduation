@@ -214,6 +214,9 @@ HRESULT CRenderer::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	//頂点バッファをアンロックする
 	m_pVtxBuffMT->Unlock();
 
+	//デバッグ表示の描画処理
+	DebugProc::Init();
+
 	return S_OK;
 }
 
@@ -228,6 +231,9 @@ void CRenderer::Uninit(void)
 		m_pD3DDevice->Release();
 		m_pD3DDevice = NULL;
 	}
+
+	// デバッグプロックの終了処理
+	DebugProc::Uninit();
 
 	//Direct3Dオブジェクトの破棄
 	if (m_pD3D != NULL)
@@ -273,6 +279,9 @@ void CRenderer::Uninit(void)
 //====================================================================
 void CRenderer::Update(void)
 {
+	//デバッグ表示の描画処理
+	DebugProc::Update();
+
 	//全てのオブジェクト2Dの更新処理
 	CObject::UpdateAll();
 }
@@ -282,9 +291,6 @@ void CRenderer::Update(void)
 //====================================================================
 void CRenderer::Draw(void)
 {
-	//デバッグ表示の取得
-	CDebugProc* pDebugProc = CManager::GetInstance()->GetDebugProc();
-
 	//カメラの取得
 	CCamera* pCamera = CManager::GetInstance()->GetCamera();
 	//CMiniMapCamera* pMiniMapCamera = CManager::GetInstance()->GetMiniMapCamera();
@@ -439,7 +445,7 @@ void CRenderer::Draw(void)
 			pFade->Draw();
 
 			//デバッグ表示の描画処理
-			pDebugProc->Draw();
+			DebugProc::Draw();
 
 			//描画終了
 			m_pD3DDevice->EndScene();

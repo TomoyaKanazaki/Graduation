@@ -284,31 +284,31 @@ void C2DUIEdit::DeleteObject(D3DXVECTOR3 pos)
 //====================================================================
 void C2DUIEdit::DebugObject(void)
 {
-	CManager::GetInstance()->GetDebugProc()->Print("\n%s\n", "ーーーーーエディットモードーーーーー");
+	DebugProc::Print(DebugProc::POINT_LEFT, "\n%s\n", "ーーーーーエディットモードーーーーー");
 
-	CManager::GetInstance()->GetDebugProc()->Print("\n%s\n", "操作説明ーー");
+	DebugProc::Print(DebugProc::POINT_LEFT, "\n%s\n", "操作説明ーー");
 	//操作説明
-	CManager::GetInstance()->GetDebugProc()->Print("%s\n", "移動：[W],[A],[S],[D]");
-	CManager::GetInstance()->GetDebugProc()->Print("%s\n", "テクスチャ変更：[０]");
-	CManager::GetInstance()->GetDebugProc()->Print("%s\n", "サイズ変更値の下降上昇：[３：４]");
-	CManager::GetInstance()->GetDebugProc()->Print("%s\n", "UIの横サイズの下降上昇：[５：６]");
-	CManager::GetInstance()->GetDebugProc()->Print("%s\n", "UIの縦サイズの下降上昇：[７：８]");
-	CManager::GetInstance()->GetDebugProc()->Print("%s\n", "オブジェクト回転：[９]");
-	CManager::GetInstance()->GetDebugProc()->Print("%s\n", "セーブ処理：[F9]");
+	DebugProc::Print(DebugProc::POINT_LEFT, "%s\n", "移動：[W],[A],[S],[D]");
+	DebugProc::Print(DebugProc::POINT_LEFT, "%s\n", "テクスチャ変更：[０]");
+	DebugProc::Print(DebugProc::POINT_LEFT, "%s\n", "サイズ変更値の下降上昇：[３：４]");
+	DebugProc::Print(DebugProc::POINT_LEFT, "%s\n", "UIの横サイズの下降上昇：[５：６]");
+	DebugProc::Print(DebugProc::POINT_LEFT, "%s\n", "UIの縦サイズの下降上昇：[７：８]");
+	DebugProc::Print(DebugProc::POINT_LEFT, "%s\n", "オブジェクト回転：[９]");
+	DebugProc::Print(DebugProc::POINT_LEFT, "%s\n", "セーブ処理：[F9]");
 
-	CManager::GetInstance()->GetDebugProc()->Print("\n%s\n", "ーーエディット情報ーー");
+	DebugProc::Print(DebugProc::POINT_LEFT, "\n%s\n", "ーーエディット情報ーー");
 
 	//オブジェクト
-	CManager::GetInstance()->GetDebugProc()->Print("テクスチャ：[%s]\n", m_aTextureInfo[ObjectType].pCommentname);
+	DebugProc::Print(DebugProc::POINT_LEFT, "テクスチャ：[%s]\n", m_aTextureInfo[ObjectType].pCommentname);
 
 	//位置・向き・大きさ
-	CManager::GetInstance()->GetDebugProc()->Print("位置：[%f:%f]\n", m_EditPos.x, m_EditPos.y);
-	CManager::GetInstance()->GetDebugProc()->Print("サイズ変更値：[%f]\n", m_nSideDistance);
-	CManager::GetInstance()->GetDebugProc()->Print("サイズ：[%f:%f]\n", m_EditSize.x, m_EditSize.y);
-	CManager::GetInstance()->GetDebugProc()->Print("向き：[%f]\n", m_EditRot.y);
+	DebugProc::Print(DebugProc::POINT_LEFT, "位置：[%f:%f]\n", m_EditPos.x, m_EditPos.y);
+	DebugProc::Print(DebugProc::POINT_LEFT, "サイズ変更値：[%f]\n", m_nSideDistance);
+	DebugProc::Print(DebugProc::POINT_LEFT, "サイズ：[%f:%f]\n", m_EditSize.x, m_EditSize.y);
+	DebugProc::Print(DebugProc::POINT_LEFT, "向き：[%f]\n", m_EditRot.y);
 
 	//とげの移動範囲
-	CManager::GetInstance()->GetDebugProc()->Print("\n%s\n", "ーーーーーエディットモードーーーーー");
+	DebugProc::Print(DebugProc::POINT_LEFT, "\n%s\n", "ーーーーーエディットモードーーーーー");
 }
 
 //====================================================================

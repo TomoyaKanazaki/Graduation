@@ -200,9 +200,8 @@ void CCamera::Update(void)
 		break;
 	}
 	//デバッグ表示の取得
-	CDebugProc* pDebugProc = CManager::GetInstance()->GetDebugProc();
-	pDebugProc->Print("[視点]%f:%f:%f\n", m_posV.x, m_posV.y, m_posV.z);
-	pDebugProc->Print("[注視点]%f:%f:%f\n", m_posR.x, m_posR.y, m_posR.z);
+	DebugProc::Print(DebugProc::POINT_LEFT, "[視点]%f:%f:%f\n", m_posV.x, m_posV.y, m_posV.z);
+	DebugProc::Print(DebugProc::POINT_LEFT, "[注視点]%f:%f:%f\n", m_posR.x, m_posR.y, m_posR.z);
 }
 
 //====================================================================

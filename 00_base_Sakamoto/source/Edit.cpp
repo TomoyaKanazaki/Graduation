@@ -221,18 +221,17 @@ void CEdit::Update(void)
 	}
 
 	//デバッグ表示の取得
-	CDebugProc* pDebugProc = CManager::GetInstance()->GetDebugProc();
-	pDebugProc->Print("========== {エディットモード起動中} ==========\n");
-	pDebugProc->Print("エディットの位置 [%f]:[%f]:[%f]\n", m_EditPos.x, m_EditPos.y, m_EditPos.z);
-	pDebugProc->Print("変動の幅 [%f]\n", MoveWidth);
-	pDebugProc->Print("向きの幅 [%f]\n", m_fRotValue);
-	pDebugProc->Print("-----[操作説明]-----\n");
-	pDebugProc->Print("エディット位置の移動 : [W][A][S][D][LShift][LControl]\n");
-	pDebugProc->Print("カメラ位置の移動     : [T][F][G][H][RShift][RControl]\n");
-	pDebugProc->Print("視点の移動           : [I][J][K][L]\n");
-	pDebugProc->Print("移動幅調整/リセット  : [←][→] / [N]\n");
-	pDebugProc->Print("向き幅調整/リセット  : [↑][↓] / [M]\n");
-	pDebugProc->Print("設置情報の保存       : [F9]\n");
+	DebugProc::Print(DebugProc::POINT_LEFT, "========== {エディットモード起動中} ==========\n");
+	DebugProc::Print(DebugProc::POINT_LEFT, "エディットの位置 [%f]:[%f]:[%f]\n", m_EditPos.x, m_EditPos.y, m_EditPos.z);
+	DebugProc::Print(DebugProc::POINT_LEFT, "変動の幅 [%f]\n", MoveWidth);
+	DebugProc::Print(DebugProc::POINT_LEFT, "向きの幅 [%f]\n", m_fRotValue);
+	DebugProc::Print(DebugProc::POINT_LEFT, "-----[操作説明]-----\n");
+	DebugProc::Print(DebugProc::POINT_LEFT, "エディット位置の移動 : [W][A][S][D][LShift][LControl]\n");
+	DebugProc::Print(DebugProc::POINT_LEFT, "カメラ位置の移動     : [T][F][G][H][RShift][RControl]\n");
+	DebugProc::Print(DebugProc::POINT_LEFT, "視点の移動           : [I][J][K][L]\n");
+	DebugProc::Print(DebugProc::POINT_LEFT, "移動幅調整/リセット  : [←][→] / [N]\n");
+	DebugProc::Print(DebugProc::POINT_LEFT, "向き幅調整/リセット  : [↑][↓] / [M]\n");
+	DebugProc::Print(DebugProc::POINT_LEFT, "設置情報の保存       : [F9]\n");
 
 	switch (m_EditType)
 	{
@@ -261,7 +260,7 @@ void CEdit::Update(void)
 		SaveData();
 	}
 
-	pDebugProc->Print("========== {エディットモード起動中} ==========\n");
+	DebugProc::Print(DebugProc::POINT_LEFT, "========== {エディットモード起動中} ==========\n");
 }
 
 //====================================================================
@@ -378,13 +377,12 @@ void CEdit::UpdateBlock(void)
 	}
 
 	//デバッグ表示の取得
-	CDebugProc* pDebugProc = CManager::GetInstance()->GetDebugProc();
-	pDebugProc->Print("ブロックのサイズ [%f]:[%f]:[%f]\n", m_pEditBlock->GetSize().x, m_pEditBlock->GetSize().y, m_pEditBlock->GetSize().z);
-	pDebugProc->Print("サイズ変更キー : X軸 [Q- : E+] \n");
-	pDebugProc->Print("サイズ変更キー : Y軸 [R- : Y+] \n");
-	pDebugProc->Print("サイズ変更キー : Z軸 [U- : O+] \n");
-	pDebugProc->Print("ブロックのテンプレート変更キー : [7 : 8] \n");
-	pDebugProc->Print("ブロックのテクスチャ変更キー : [5 : 6] \n");
+	DebugProc::Print(DebugProc::POINT_LEFT, "ブロックのサイズ [%f]:[%f]:[%f]\n", m_pEditBlock->GetSize().x, m_pEditBlock->GetSize().y, m_pEditBlock->GetSize().z);
+	DebugProc::Print(DebugProc::POINT_LEFT, "サイズ変更キー : X軸 [Q- : E+] \n");
+	DebugProc::Print(DebugProc::POINT_LEFT, "サイズ変更キー : Y軸 [R- : Y+] \n");
+	DebugProc::Print(DebugProc::POINT_LEFT, "サイズ変更キー : Z軸 [U- : O+] \n");
+	DebugProc::Print(DebugProc::POINT_LEFT, "ブロックのテンプレート変更キー : [7 : 8] \n");
+	DebugProc::Print(DebugProc::POINT_LEFT, "ブロックのテクスチャ変更キー : [5 : 6] \n");
 }
 
 //====================================================================
@@ -543,19 +541,18 @@ void CEdit::UpdateXModel(void)
 	m_pEditModel->UpdateBlock();
 
 	//デバッグ表示の取得
-	CDebugProc* pDebugProc = CManager::GetInstance()->GetDebugProc();
-	pDebugProc->Print("モデルの当たり判定切り替え : [5]\n");
-	pDebugProc->Print("向きの90度回転: [6]\n");
-	pDebugProc->Print("モデル変更: [7 : 8]\n");
+	DebugProc::Print(DebugProc::POINT_LEFT, "モデルの当たり判定切り替え : [5]\n");
+	DebugProc::Print(DebugProc::POINT_LEFT, "向きの90度回転: [6]\n");
+	DebugProc::Print(DebugProc::POINT_LEFT, "モデル変更: [7 : 8]\n");
 	if (m_bModelCollision == true)
 	{
-		pDebugProc->Print("モデルの当たり判定 : [ TRUE ]\n");
+		DebugProc::Print(DebugProc::POINT_LEFT, "モデルの当たり判定 : [ TRUE ]\n");
 	}
 	else
 	{
-		pDebugProc->Print("モデルの当たり判定 : [ FALSE ]\n");
+		DebugProc::Print(DebugProc::POINT_LEFT, "モデルの当たり判定 : [ FALSE ]\n");
 	}
-	pDebugProc->Print("モデルの説明: %s\n", m_aModelInfo[m_nModelNumber].pCommentname);
+	DebugProc::Print(DebugProc::POINT_LEFT, "モデルの説明: %s\n", m_aModelInfo[m_nModelNumber].pCommentname);
 }
 
 //====================================================================

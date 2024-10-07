@@ -54,7 +54,6 @@ CManager::CManager()
 	m_bState = true;
 	pManager = nullptr;
 	m_pRenderer = nullptr;
-	m_pDebugProc = nullptr;
 	m_pInputKeyboard = nullptr;
 	m_pInputJoyPad = nullptr;
 	m_pInputMouse = nullptr;
@@ -108,17 +107,6 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	if (FAILED(m_pRenderer->Init(hInstance, hWnd, TRUE)))
 	{//初期化処理が失敗した場合
 		return E_FAIL;
-	}
-
-	if (m_pDebugProc == nullptr)
-	{
-		//デバッグ表示の生成
-		m_pDebugProc = new CDebugProc;
-
-		if (m_pDebugProc != nullptr)
-		{
-			m_pDebugProc->Init();
-		}
 	}
 
 	if (m_pSound == nullptr)
@@ -322,15 +310,6 @@ void CManager::Uninit(void)
 		m_pInputKeyboard = nullptr;
 	}
 
-	if (m_pDebugProc != nullptr)
-	{
-		//デバッグ表示の終了処理
-		m_pDebugProc->Uninit();
-
-		delete m_pDebugProc;
-		m_pDebugProc = nullptr;
-	}
-
 	if (m_pRenderer != nullptr)
 	{
 		//レンダラーの終了処理
@@ -355,12 +334,9 @@ void CManager::Uninit(void)
 //====================================================================
 void CManager::Update(void)
 {
-	//デバッグ表示の更新処理
-	m_pDebugProc->Update();
-
 	//デバッグ表示
-	m_pDebugProc->Print("-----デバッグ表示-----\n");
-	m_pDebugProc->Print("FPS : %d\n", GetFps());
+	DebugProc::Print(DebugProc::POINT_LEFT, "-----デバッグ表示-----\n");
+	DebugProc::Print(DebugProc::POINT_LEFT, "FPS : %d\n", GetFps());
 
 	//カメラの更新処理
 	m_pCamera->Update();

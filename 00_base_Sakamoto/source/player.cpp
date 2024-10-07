@@ -245,9 +245,6 @@ void CPlayer::TitleUpdate(void)
 //====================================================================
 void CPlayer::GameUpdate(void)
 {
-	//デバッグ表示の取得
-	CDebugProc* pDebugProc = CManager::GetInstance()->GetDebugProc();
-
 	// 過去の位置に代入
 	m_posOld = m_pos;
 
@@ -279,8 +276,8 @@ void CPlayer::GameUpdate(void)
 	DebugKey();
 
 	//デバッグ表示
-	CManager::GetInstance()->GetDebugProc()->Print("[自分]位置 %f : %f : %f\n", m_pos.x, m_pos.y, m_pos.z);
-	CManager::GetInstance()->GetDebugProc()->Print("[自分]向き %f : %f : %f\n", m_rot.x, m_rot.y, m_rot.z);
+	DebugProc::Print(DebugProc::POINT_LEFT,"[自分]位置 %f : %f : %f\n", m_pos.x, m_pos.y, m_pos.z);
+	DebugProc::Print(DebugProc::POINT_LEFT,"[自分]向き %f : %f : %f\n", m_rot.x, m_rot.y, m_rot.z);
 }
 
 //====================================================================
