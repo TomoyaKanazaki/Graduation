@@ -52,6 +52,7 @@ public:
 		TYPE_OBJMESHFIELD,
 		TYPE_ARROW,
 		TYPE_DEBRIS,
+		TYPE_DEVIL,
 		TYPE_MAX,
 	};
 

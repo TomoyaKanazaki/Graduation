@@ -99,7 +99,7 @@ HRESULT CDevil::Init(void)
 	}
 
 	//í—Şİ’è
-	SetType(CObject::TYPE_PLAYER3D);
+	SetType(CObject::TYPE_DEVIL);
 
 	//ƒ‚ƒfƒ‹‚Ì¶¬
 	LoadLevelData("data\\TXT\\motion_foot_light_spear.txt");

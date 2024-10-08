@@ -53,10 +53,11 @@ public:
 	//プレイヤーの状態
 	enum STATE
 	{
-		STATE_NORMAL = 0,	//通常
-		STATE_DEATH,		//死亡
-		STATE_WAIT,			//待機
+		STATE_WAIT = 0,		//待機
+		STATE_WALK,			//歩き
 		STATE_DAMAGE,		//ダメージ
+		STATE_EGG,			//卵
+		STATE_ATTACK,		//攻撃
 		STATE_MAX,			//最大
 	};
 
@@ -95,7 +96,9 @@ private:
 	void StateManager(void);	//状態管理
 	void Move(void);			//移動処理
 	void Rot(void);				//移動方向処理
+	void Attack(void);			//攻撃処理
 	void CollisionWall(useful::COLLISION XYZ);	//壁との当たり判定
+	void SearchWall(void);						//壁のサーチ判定
 	void CollisionMapModel(useful::COLLISION XYZ);	//壁との当たり判定
 
 	void CameraPosUpdate(void);	//カメラ位置更新処理
@@ -126,7 +129,14 @@ private:
 
 	float m_CollisionRot;		//当たり判定用の向き
 
-	float m_fLife;					//ライフ
+	float m_fLife;				//ライフ
+	bool m_OKL;					//左への進行が許されるかどうか
+	bool m_OKR;					//右への進行が許されるかどうか
+	bool m_OKU;					//上への進行が許されるかどうか
+	bool m_OKD;					//下への進行が許されるかどうか
+	bool m_bInput;				//入力を行ったかどうか
+
+	bool m_UseItem;				//アイテムが使用可能かどうか
 
 	CSlowManager* m_pSlow;		// スロー
 

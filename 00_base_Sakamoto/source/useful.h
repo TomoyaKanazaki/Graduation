@@ -25,6 +25,7 @@ namespace useful
 	};
 
 	bool CollisionRectangle2D(D3DXVECTOR3 pos1, D3DXVECTOR3 pos2, D3DXVECTOR3 Size1, D3DXVECTOR3 Size2, useful::COLLISION Shaft);
+	bool PointSquareXZ(D3DXVECTOR3 Point, D3DXVECTOR3 pos, D3DXVECTOR3 Size);		//ì_Ç™éläpÇÃíÜÇ…ë∂ç›Ç∑ÇÈÇ©Ç«Ç§Ç©
 	bool CameraFront(D3DXVECTOR3 pos);
 	bool CollisionLine(D3DXVECTOR3 Mypos, D3DXVECTOR3 PairPos, float Angle);
 	bool SlashCollision(D3DXVECTOR3* EnemyPos, int Max, float SlashRot);

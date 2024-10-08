@@ -29,8 +29,8 @@
 
 namespace
 {
-	const D3DXVECTOR3 COLLISION_SIZE = D3DXVECTOR3(20.0f, 40.0f, 20.0f);		//横の当たり判定
-	const float PLAYER_SPEED = 10.0f;		//プレイヤーの移動速度
+	const D3DXVECTOR3 COLLISION_SIZE = D3DXVECTOR3(45.0f, 40.0f, 45.0f);		//横の当たり判定
+	const float PLAYER_SPEED = 5.0f;		//プレイヤーの移動速度
 
 	const float MAX_LIFE = 100.0f;			//体力最大値
 	const float EVASION_MOVE = 10.0f;		//回避移動量
@@ -90,12 +90,18 @@ CPlayer::CPlayer(int nPriority) :CObject(nPriority)
 	m_nActionCount = 0;
 	m_Action = ACTION_BWAIT;
 	m_AtkAction = ACTION_BWAIT;
-	m_State = STATE_NORMAL;
+	m_State = STATE_EGG;
 	m_nStateCount = 0;
 	m_AtkPos = INITVECTOR3;
 	m_CollisionRot = 0.0f;
 	m_fLife = MAX_LIFE;
 	m_pMotion = nullptr;
+	m_OKL = true;
+	m_OKR = true;
+	m_OKU = true;
+	m_OKD = true;
+	m_bInput = false;
+	m_UseItem = false;
 }
 
 //====================================================================
@@ -248,11 +254,19 @@ void CPlayer::GameUpdate(void)
 	// 過去の位置に代入
 	m_posOld = m_pos;
 
+	//壁があるか判断
+	SearchWall();
+
 	// 移動処理
 	Move();
 
 	// 向き移動処理
 	Rot();
+
+	if (m_UseItem)
+	{
+		Attack();
+	}
 
 	// カメラ更新処理
 	CameraPosUpdate();
@@ -332,43 +346,50 @@ void CPlayer::Move(void)
 
 	D3DXVECTOR3 NormarizeMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
-#ifdef _DEBUG
+	m_bInput = false;
 
 	//キーボードの移動処理
-	if (pInputKeyboard->GetPress(DIK_W))
+	if (pInputKeyboard->GetPress(DIK_W) && m_OKU)
 	{
-		NormarizeMove.z += 1.0f * cosf(CameraRot.y) * PLAYER_SPEED;
-		NormarizeMove.x += 1.0f * sinf(CameraRot.y) * PLAYER_SPEED;
+		NormarizeMove.z += 1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
+		NormarizeMove.x += 1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 
+		m_bInput = true;
 	}
-	if (pInputKeyboard->GetPress(DIK_S))
+	if (pInputKeyboard->GetPress(DIK_S) && m_OKD)
 	{
-		NormarizeMove.z += -1.0f * cosf(CameraRot.y) * PLAYER_SPEED;
-		NormarizeMove.x += -1.0f * sinf(CameraRot.y) * PLAYER_SPEED;
+		NormarizeMove.z += -1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
+		NormarizeMove.x += -1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
+
+		m_bInput = true;
 	}
-	if (pInputKeyboard->GetPress(DIK_A))
+	if (pInputKeyboard->GetPress(DIK_A) && m_OKL)
 	{
-		NormarizeMove.x += -1.0f * cosf(CameraRot.y) * PLAYER_SPEED;
-		NormarizeMove.z -= -1.0f * sinf(CameraRot.y) * PLAYER_SPEED;
+		NormarizeMove.x += -1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
+		NormarizeMove.z -= -1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
+
+		m_bInput = true;
 	}
-	if (pInputKeyboard->GetPress(DIK_D))
+	if (pInputKeyboard->GetPress(DIK_D) && m_OKR && !m_bInput)
 	{
-		NormarizeMove.x += 1.0f * cosf(CameraRot.y) * PLAYER_SPEED;
-		NormarizeMove.z -= 1.0f * sinf(CameraRot.y) * PLAYER_SPEED;
+		NormarizeMove.x += 1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
+		NormarizeMove.z -= 1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
+
+		m_bInput = true;
 	}
 
 	if (pInputKeyboard->GetPress(DIK_W) == false && pInputKeyboard->GetPress(DIK_A) == false && pInputKeyboard->GetPress(DIK_S) == false && pInputKeyboard->GetPress(DIK_D) == false)
 	{
 		//左スティックによる前後移動	
-		m_move.z += pInputJoypad->Get_Stick_Left(0).y * cosf(CameraRot.y) * PLAYER_SPEED;
-		m_move.x += pInputJoypad->Get_Stick_Left(0).y * sinf(CameraRot.y) * PLAYER_SPEED;
+		m_move.z += pInputJoypad->Get_Stick_Left(0).y * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
+		m_move.x += pInputJoypad->Get_Stick_Left(0).y * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 
 		//左スティックによる左右移動
-		m_move.x += pInputJoypad->Get_Stick_Left(0).x * cosf(CameraRot.y) * PLAYER_SPEED;
-		m_move.z -= pInputJoypad->Get_Stick_Left(0).x * sinf(CameraRot.y) * PLAYER_SPEED;
+		m_move.x += pInputJoypad->Get_Stick_Left(0).x * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
+		m_move.z -= pInputJoypad->Get_Stick_Left(0).x * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 	}
 
-	if (pInputKeyboard->GetPress(DIK_W) == true || pInputKeyboard->GetPress(DIK_A) == true || pInputKeyboard->GetPress(DIK_S) == true || pInputKeyboard->GetPress(DIK_D) == true)
+	if (m_bInput)
 	{
 		float JunpPawer = NormarizeMove.y;
 		NormarizeMove.y = 0.0f;
@@ -378,60 +399,13 @@ void CPlayer::Move(void)
 		NormarizeMove.x *= PLAYER_SPEED;
 		NormarizeMove.y = JunpPawer;
 		NormarizeMove.z *= PLAYER_SPEED;
+
+		//移動量を代入
+		m_move = NormarizeMove;
+
+		//移動状態にする
+		m_State = STATE_WALK;
 	}
-
-#else
-
-	//キーボードの移動処理
-	if (pInputKeyboard->GetPress(DIK_W))
-	{
-		NormarizeMove.z += 1.0f * cosf(CameraRot.y) * PLAYER_SPEED;
-		NormarizeMove.x += 1.0f * sinf(CameraRot.y) * PLAYER_SPEED;
-
-	}
-	if (pInputKeyboard->GetPress(DIK_S))
-	{
-		NormarizeMove.z += -1.0f * cosf(CameraRot.y) * PLAYER_SPEED;
-		NormarizeMove.x += -1.0f * sinf(CameraRot.y) * PLAYER_SPEED;
-	}
-	if (pInputKeyboard->GetPress(DIK_A))
-	{
-		NormarizeMove.x += -1.0f * cosf(CameraRot.y) * PLAYER_SPEED;
-		NormarizeMove.z -= -1.0f * sinf(CameraRot.y) * PLAYER_SPEED;
-
-	}
-	if (pInputKeyboard->GetPress(DIK_D))
-	{
-		NormarizeMove.x += 1.0f * cosf(CameraRot.y) * PLAYER_SPEED;
-		NormarizeMove.z -= 1.0f * sinf(CameraRot.y) * PLAYER_SPEED;
-	}
-	if (pInputKeyboard->GetPress(DIK_W) == false && pInputKeyboard->GetPress(DIK_A) == false && pInputKeyboard->GetPress(DIK_S) == false && pInputKeyboard->GetPress(DIK_D) == false)
-	{
-		//左スティックによる前後移動	
-		m_move.z += pInputJoypad->Get_Stick_Left(0).y * cosf(CameraRot.y) * PLAYER_SPEED;
-		m_move.x += pInputJoypad->Get_Stick_Left(0).y * sinf(CameraRot.y) * PLAYER_SPEED;
-
-		//左スティックによる左右移動
-		m_move.x += pInputJoypad->Get_Stick_Left(0).x * cosf(CameraRot.y) * PLAYER_SPEED;
-		m_move.z -= pInputJoypad->Get_Stick_Left(0).x * sinf(CameraRot.y) * PLAYER_SPEED;
-	}
-
-	if (pInputKeyboard->GetPress(DIK_W) == true || pInputKeyboard->GetPress(DIK_A) == true || pInputKeyboard->GetPress(DIK_S) == true || pInputKeyboard->GetPress(DIK_D) == true)
-	{
-		float JunpPawer = NormarizeMove.y;
-		NormarizeMove.y = 0.0f;
-
-		D3DXVec3Normalize(&NormarizeMove, &NormarizeMove);
-
-		NormarizeMove.x *= PLAYER_SPEED;
-		NormarizeMove.y = JunpPawer;
-		NormarizeMove.z *= PLAYER_SPEED;
-	}
-
-#endif // DEBUG
-
-	m_move += NormarizeMove;
-
 }
 
 //====================================================================
@@ -459,6 +433,14 @@ void CPlayer::Rot(void)
 }
 
 //====================================================================
+//攻撃処理
+//====================================================================
+void CPlayer::Attack(void)
+{
+
+}
+
+//====================================================================
 //モーションと状態の管理
 //====================================================================
 void CPlayer::ActionState(void)
@@ -470,6 +452,15 @@ void CPlayer::ActionState(void)
 		{
 			m_Action = ACTION_BMOVE;
 			m_pMotion->Set(ACTION_BMOVE, 5);
+		}
+	}
+	//卵モーション
+	else if (m_State == STATE_EGG)
+	{
+		if (m_Action != ACTION_SWAIT)
+		{
+			m_Action = ACTION_SWAIT;
+			m_pMotion->Set(ACTION_SWAIT, 5);
 		}
 	}
 	//ニュートラルモーション
@@ -490,22 +481,22 @@ void CPlayer::StateManager(void)
 {
 	switch (m_State)
 	{
-	case STATE_NORMAL:
+	case STATE_WAIT:
 		//	スローをdefaultへ
 		CSlowManager::SetValueDefault();
 		break;
 
-	case STATE_DEATH:
-		break;
-
-	case STATE_WAIT:
+	case STATE_WALK:
 		break;
 
 	case STATE_DAMAGE:
-		if (m_nStateCount == 0)
-		{
-			m_State = STATE_NORMAL;
-		}
+		break;
+
+	case STATE_EGG:
+		//if (m_nStateCount == 0)
+		//{
+		//	m_State = STATE_WAIT;
+		//}
 		break;
 	}
 
@@ -544,28 +535,100 @@ void CPlayer::CollisionWall(useful::COLLISION XYZ)
 				// 矩形の当たり判定
 				if (useful::CollisionBlock(pos, posOld, Move, Size, &m_pos, m_posOld, &m_move, &m_Objmove, m_size, &m_bJump, XYZ) == true)
 				{
-				}
-			}
-
-			if (type == TYPE_CUBECOLL)
-			{//種類がブロックの時
-
-				CCubeColl* pBlock = (CCubeColl*)pObj;	// ブロック情報の取得
-
-				D3DXVECTOR3 pos = pBlock->GetPos();
-				D3DXVECTOR3 posOld = pBlock->GetPosOld();
-				D3DXVECTOR3 Move = pBlock->GetMove();
-				D3DXVECTOR3 Size = pBlock->GetSize();
-
-				// 矩形の当たり判定
-				if (useful::CollisionBlock(pos, posOld, Move, Size, &m_pos, m_posOld, &m_move, &m_Objmove, m_size, &m_bJump, XYZ) == true)
-				{
+					//待機状態にする
+					m_State = STATE_WAIT;
 				}
 			}
 
 			pObj = pObjNext;
 		}
 	}
+}
+
+//====================================================================
+// 壁との当たり判定
+//====================================================================
+void CPlayer::SearchWall(void)
+{
+	bool OKR = true;	//右
+	bool OKL = true;	//左
+	bool OKU = true;	//上
+	bool OKD = true;	//下
+
+	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
+	{
+		//オブジェクトを取得
+		CObject* pObj = CObject::GetTop(nCntPriority);
+
+		while (pObj != NULL)
+		{
+			CObject* pObjNext = pObj->GetNext();
+
+			CObject::TYPE type = pObj->GetType();			//種類を取得
+
+			if (type == TYPE_CUBEBLOCK)
+			{//種類がブロックの時
+
+				CCubeBlock* pBlock = (CCubeBlock*)pObj;	// ブロック情報の取得
+
+				D3DXVECTOR3 pos = pBlock->GetPos();
+				D3DXVECTOR3 posOld = pBlock->GetPosOld();
+				D3DXVECTOR3 Move = pBlock->GetMove();
+				D3DXVECTOR3 Size = pBlock->GetSize();
+
+				D3DXVECTOR3 MyPos = INITVECTOR3;
+
+				for (int nCnt = 0; nCnt < 4; nCnt++)
+				{
+					switch (nCnt)
+					{
+					case 0:
+						MyPos = D3DXVECTOR3(m_pos.x + Size.x * 2.0f, m_pos.y, m_pos.z);	//右
+						break;
+					case 1:
+						MyPos = D3DXVECTOR3(m_pos.x - Size.x * 2.0f, m_pos.y, m_pos.z);	//左
+						break;
+					case 2:
+						MyPos = D3DXVECTOR3(m_pos.x, m_pos.y, m_pos.z + Size.z * 2.0f);	//上
+						break;
+					case 3:
+						MyPos = D3DXVECTOR3(m_pos.x, m_pos.y, m_pos.z - Size.z * 2.0f);	//下
+						break;
+					}
+
+					// 矩形の当たり判定
+					if (useful::CollisionRectangle2D(MyPos, pos, COLLISION_SIZE, Size, useful::COLLISION::COLLISION_ZX) == true)
+					{
+						switch (nCnt)
+						{
+						case 0:
+							OKR = false;
+							break;
+						case 1:
+							OKL = false;
+							break;
+						case 2:
+							OKU = false;
+							break;
+						case 3:
+							OKD = false;
+							break;
+						}
+
+						CEffect* pEffect = CEffect::Create();
+						pEffect->SetPos(MyPos);
+					}
+				}
+			}
+
+			pObj = pObjNext;
+		}
+	}
+
+	m_OKR = OKR;	//右
+	m_OKL = OKL;	//左
+	m_OKU = OKU;	//上
+	m_OKD = OKD;	//下
 }
 
 //====================================================================
@@ -632,8 +695,8 @@ void CPlayer::CameraPosUpdate(void)
 void CPlayer::PosUpdate(void)
 {
 	//減衰係数
-	m_move.x = m_move.x * 0.5f;
-	m_move.z = m_move.z * 0.5f;
+	//m_move.x = m_move.x * 0.5f;
+	//m_move.z = m_move.z * 0.5f;
 
 	if (m_move.x <= 0.0001f && m_move.x >= -0.0001f)
 	{
@@ -712,30 +775,30 @@ void CPlayer::RotUpdate(void)
 //====================================================================
 void CPlayer::HitDamage(float Damage)
 {
-	if (m_State == STATE_NORMAL)
-	{
-		m_fLife -= Damage;
+	//if (m_State == STATE_NORMAL)
+	//{
+	//	m_fLife -= Damage;
 
-		if (m_fLife <= 0.0f)
-		{
-			m_fLife = 0.0f;
-			m_State = STATE_DEATH;
-			CManager::GetInstance()->GetCamera()->SetCameraMode(CCamera::CAMERAMODE_FOLLOW);
-		}
-		else
-		{
-			m_State = STATE_DAMAGE;
-			m_nStateCount = 120;
+	//	if (m_fLife <= 0.0f)
+	//	{
+	//		m_fLife = 0.0f;
+	//		m_State = STATE_DEATH;
+	//		CManager::GetInstance()->GetCamera()->SetCameraMode(CCamera::CAMERAMODE_FOLLOW);
+	//	}
+	//	else
+	//	{
+	//		m_State = STATE_DAMAGE;
+	//		m_nStateCount = 120;
 
-			// 炎の音
-			CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_DAMAGE_PLAYER);
-		}
-	}
+	//		// 炎の音
+	//		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_DAMAGE_PLAYER);
+	//	}
+	//}
 
-	if (m_State == STATE_DEATH)
-	{
-		CGame::SetGameEnd(true);
-	}
+	//if (m_State == STATE_DEATH)
+	//{
+	//	CGame::SetGameEnd(true);
+	//}
 }
 
 //====================================================================

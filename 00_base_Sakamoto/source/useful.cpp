@@ -40,14 +40,32 @@ bool useful::CollisionRectangle2D(D3DXVECTOR3 pos1, D3DXVECTOR3 pos2, D3DXVECTOR
 		break;
 
 	case useful::COLLISION_ZX:
-		if (pos1.z + Size1.z < pos2.z - Size2.z &&
-			pos1.z - Size1.z > pos2.z + Size2.z &&
-			pos1.x + Size1.x < pos2.x - Size2.x &&
-			pos1.x - Size1.x > pos2.x + Size2.x)
+		if (pos1.z + Size1.z > pos2.z - Size2.z &&
+			pos1.z - Size1.z < pos2.z + Size2.z &&
+			pos1.x + Size1.x > pos2.x - Size2.x &&
+			pos1.x - Size1.x < pos2.x + Size2.x)
 		{
 			Hit = true;
 		}
 		break;
+	}
+
+	return Hit;
+}
+
+//====================================================================
+//“_‚ªŽlŠp‚Ì’†‚É‘¶Ý‚·‚é‚©‚Ç‚¤‚©
+//====================================================================
+bool useful::PointSquareXZ(D3DXVECTOR3 Point, D3DXVECTOR3 pos, D3DXVECTOR3 Size)
+{
+	bool Hit = false;
+
+	if (Point.z < pos.z + Size.z &&
+		Point.z > pos.z - Size.z &&
+		Point.x < pos.x + Size.x &&
+		Point.x > pos.x - Size.x)
+	{
+		Hit = true;
 	}
 
 	return Hit;
