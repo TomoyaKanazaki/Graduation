@@ -107,7 +107,7 @@ CPlayer::CPlayer(int nPriority) :CObject(nPriority)
 	m_bInput = false;
 	m_UseItem = false;
 	m_pLifeUi = nullptr;
-	m_nLife = 0;
+	m_nLife = 5;
 }
 
 //====================================================================
@@ -189,6 +189,7 @@ HRESULT CPlayer::Init(void)
 
 	// ëÃóÕ
 	m_pLifeUi->SetPos(LIFE_POS);
+	m_pLifeUi->GetNumber()->SetNumber(m_nLife);
 
 	// ÉXÉçÅ[ÇÃê∂ê¨
 	m_pSlow = CSlowManager::Create(CSlowManager::CAMP_PLAYER, CSlowManager::TAG_PLAYER);
