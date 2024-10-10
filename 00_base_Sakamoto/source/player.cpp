@@ -26,6 +26,7 @@
 #include "MapModel.h"
 #include "effect.h"
 #include "sound.h"
+#include "LifeUi.h"
 
 namespace
 {
@@ -73,6 +74,8 @@ namespace
 	const float AUTO_ROT_SPEED = 0.02f;		//自動移動の向き変更速度
 
 	const D3DXVECTOR3 PARAMETER_POS = D3DXVECTOR3(370.0f,650.0f,0.0f);		//パラメータの位置
+
+	const D3DXVECTOR3 LIFE_POS = D3DXVECTOR3(200.0f, 100.0f, 0.0f);
 }
 
 //====================================================================
@@ -102,6 +105,8 @@ CPlayer::CPlayer(int nPriority) :CObject(nPriority)
 	m_OKD = true;
 	m_bInput = false;
 	m_UseItem = false;
+	m_pLifeUi = nullptr;
+	m_nLife = 0;
 }
 
 //====================================================================
@@ -175,6 +180,14 @@ HRESULT CPlayer::Init(void)
 	case CScene::MODE_RESULT:
 		break;
 	}
+
+	m_pLifeUi = CLifeUi::Create();
+
+	// 数値
+	m_pLifeUi->GetNumber()->SetPos(D3DXVECTOR3(LIFE_POS.x + 200.0f, LIFE_POS.y, LIFE_POS.z));
+
+	// 体力
+	m_pLifeUi->SetPos(LIFE_POS);
 
 	// スローの生成
 	m_pSlow = CSlowManager::Create(CSlowManager::CAMP_PLAYER, CSlowManager::TAG_PLAYER);
@@ -813,6 +826,19 @@ void CPlayer::DebugKey(void)
 	if (pMouse->GetTrigger(pMouse->PUSH_WHEEL))
 	{
 		HitDamage(10.0f);
+	}
+	CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
+
+	//キーボードの移動処理
+	if (pInputKeyboard->GetTrigger(DIK_3))
+	{
+		m_nLife++;
+		m_pLifeUi->GetNumber()->SetNumber(m_nLife);;
+	}
+	if (pInputKeyboard->GetTrigger(DIK_4))
+	{
+		m_nLife--;
+		m_pLifeUi->GetNumber()->SetNumber(m_nLife);;
 	}
 
 #endif // !_DEBUG

@@ -25,6 +25,7 @@ class CParameterUI;
 
 class CEnemy;
 class CBoss;
+class CLifeUi;
 
 //オブジェクトプレイヤークラス
 class CPlayer : public CObject
@@ -131,6 +132,7 @@ private:
 	float m_CollisionRot;		//当たり判定用の向き
 
 	float m_fLife;				//ライフ
+	int m_nLife;				//ライフ
 	bool m_OKL;					//左への進行が許されるかどうか
 	bool m_OKR;					//右への進行が許されるかどうか
 	bool m_OKU;					//上への進行が許されるかどうか
@@ -146,6 +148,7 @@ private:
 	CMotion* m_pMotion;
 	char* m_aModelName[64];
 	int m_nNumModel;
+	CLifeUi* m_pLifeUi;
 };
 
 #endif
