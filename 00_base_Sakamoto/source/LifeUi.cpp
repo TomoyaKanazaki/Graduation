@@ -14,8 +14,8 @@
 //==========================================
 namespace
 {
-	const float SAMPLE_WIGHT = 100.0f;		//â°ïù
-	const float SAMPLE_HEIGHT = 100.0f;		//ècïù
+	const float SAMPLE_WIGHT = 70.0f;		//â°ïù
+	const float SAMPLE_HEIGHT = 70.0f;		//ècïù
 }
 
 //====================================================================

@@ -99,7 +99,7 @@ private:
 	void Rot(void);				//移動方向処理
 	void Attack(void);			//攻撃処理
 	void CollisionWall(useful::COLLISION XYZ);		//壁との当たり判定
-	void CollisionBowabowa(useful::COLLISION XYZ);	//ボワボワとの当たり判定
+	void CollisionBowabowa(void);	//ボワボワとの当たり判定
 	void SearchWall(void);							//壁のサーチ判定
 	void CollisionMapModel(useful::COLLISION XYZ);	//壁との当たり判定
 	void CollisionItem (void);	//アイテムとの当たり判定

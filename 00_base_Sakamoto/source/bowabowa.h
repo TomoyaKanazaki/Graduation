@@ -37,6 +37,7 @@ public:
 	void TitleUpdate(void);
 	void GameUpdate(void);
 	void Draw(void);
+	void Take(void);
 
 	int GetIdx(void) { return m_nIdxTexture; }
 	int GetIdxXModel(void) { return -1; }

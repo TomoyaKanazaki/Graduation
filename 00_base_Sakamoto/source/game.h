@@ -66,7 +66,7 @@ public:
 	static void SetGameEnd(bool Set) { m_bGameEnd = Set; }
 	static int GetBowabowa(void) { return m_nNumBowabowa; }
 	static void SetBowabowa(int Bowabowa) { m_nNumBowabowa = Bowabowa; }
-	static void AddBowabowa(void) { m_nNumBowabowa++; }
+	static void AddBowabowa(int nNum) { m_nNumBowabowa+= nNum; }
 	
 	void DeleteMap(void);
 
