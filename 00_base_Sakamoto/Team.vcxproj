@@ -95,6 +95,7 @@
     <ClCompile Include="source\SampleObjX.cpp" />
     <ClCompile Include="source\score.cpp" />
     <ClCompile Include="source\screenCover2D.cpp" />
+    <ClCompile Include="source\scrollarrow.cpp" />
     <ClCompile Include="source\scrollOpen.cpp" />
     <ClCompile Include="source\shrinkingBillboard.cpp" />
     <ClCompile Include="source\skinmesh.cpp" />
@@ -185,6 +186,7 @@
     <ClInclude Include="source\SampleObjX.h" />
     <ClInclude Include="source\score.h" />
     <ClInclude Include="source\screenCover2D.h" />
+    <ClInclude Include="source\scrollarrow.h" />
     <ClInclude Include="source\scrollOpen.h" />
     <ClInclude Include="source\shrinkingBillboard.h" />
     <ClInclude Include="source\skinmesh.h" />
