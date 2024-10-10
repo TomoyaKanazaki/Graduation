@@ -1,13 +1,13 @@
 //============================================
 //
-//	オブジェクト2Dのサンプル [SampleObj2D.cpp]
+//	スクロールアロー [scrollarrow.cpp]
 //	Author:sakamoto kai
 //
 //============================================
-#include "LifeUi.h"
+#include "scrollarrow.h"
 #include "renderer.h"
 #include "manager.h"
-#include "number.h"
+#include "input.h"
 
 //==========================================
 //  定数定義
@@ -21,18 +21,17 @@ namespace
 //====================================================================
 //コンストラクタ
 //====================================================================
-CLifeUi::CLifeUi(int nPriority) : CObject2D(nPriority)
+CScrollArrow::CScrollArrow(int nPriority) : CObject2D(nPriority)
 {
 	SetWidth(SAMPLE_WIGHT);
 	SetHeight(SAMPLE_HEIGHT);
 	m_nSample = 0;
-	m_pNumber = nullptr;
 }
 
 //====================================================================
 //デストラクタ
 //====================================================================
-CLifeUi::~CLifeUi()
+CScrollArrow::~CScrollArrow()
 {
 
 }
@@ -40,14 +39,14 @@ CLifeUi::~CLifeUi()
 //====================================================================
 //生成処理
 //====================================================================
-CLifeUi* CLifeUi::Create(int nPriority)
+CScrollArrow* CScrollArrow::Create(int nPriority)
 {
-	CLifeUi* pSample2D = NULL;
+	CScrollArrow* pSample2D = NULL;
 
 	if (pSample2D == NULL)
 	{
 		//オブジェクト2Dの生成
-		pSample2D = new CLifeUi(nPriority);
+		pSample2D = new CScrollArrow(nPriority);
 	}
 
 	//オブジェクトの初期化処理
@@ -62,17 +61,15 @@ CLifeUi* CLifeUi::Create(int nPriority)
 //====================================================================
 //初期化処理
 //====================================================================
-HRESULT CLifeUi::Init(void)
+HRESULT CScrollArrow::Init(void)
 {
 	CObject2D::Init();
 
 	//テクスチャ設定
-	SetTexture("data\\TEXTURE\\player\\life.png");
+	SetTexture("data\\TEXTURE\\UI\\signal.png");
 
 	//新しくcppを作成した時は新しいTYPEを列挙に追加して指定すること
-	SetType(CObject::TYPE_SAMPLE);
-
-	m_pNumber = CNumber::Create();
+	SetType(CObject::TYPE_SCROLLALLOW);
 
 	return S_OK;
 }
@@ -80,7 +77,7 @@ HRESULT CLifeUi::Init(void)
 //====================================================================
 //終了処理
 //====================================================================
-void CLifeUi::Uninit(void)
+void CScrollArrow::Uninit(void)
 {
 	CObject2D::Uninit();
 }
@@ -88,10 +85,57 @@ void CLifeUi::Uninit(void)
 //====================================================================
 //更新処理
 //====================================================================
-void CLifeUi::Update(void)
+void CScrollArrow::Update(void)
 {
 	//頂点情報の更新
 	CObject2D::Update();
+
+	CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
+
+#if _DEBUG
+	if (pInputKeyboard->GetTrigger(DIK_UP) == true)
+	{
+		m_State = STATE_UP;
+	}
+	if (pInputKeyboard->GetTrigger(DIK_DOWN) == true)
+	{
+		m_State = STATE_DOWN;
+
+	}
+	if (pInputKeyboard->GetTrigger(DIK_RIGHT) == true)
+	{
+		m_State = STATE_RIGHT;
+
+	}
+	if (pInputKeyboard->GetTrigger(DIK_LEFT) == true)
+	{
+		m_State = STATE_LEFT;
+
+	}
+
+	D3DXVECTOR3 rot = GetRot();
+
+	switch (m_State)
+	{
+	case STATE_UP:
+		rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		break;
+
+	case STATE_LEFT:
+		rot = D3DXVECTOR3(0.0f, 0.0f, D3DX_PI * 0.5f);
+		break;
+
+	case STATE_DOWN:
+		rot = D3DXVECTOR3(0.0f, 0.0f, D3DX_PI);
+		break;
+
+	case STATE_RIGHT:
+		rot = D3DXVECTOR3(0.0f, 0.0f, D3DX_PI * 1.5f);
+		break;
+	}
+
+	SetRot(rot);
+#endif
 
 	//----頂点情報を変更したい場合は以下のコードを使用すること-----
 	//VERTEX_2D* pVtx;	//頂点ポインタを所得
@@ -124,7 +168,7 @@ void CLifeUi::Update(void)
 //====================================================================
 //描画処理
 //====================================================================
-void CLifeUi::Draw(void)
+void CScrollArrow::Draw(void)
 {
 	CObject2D::Draw();
 }

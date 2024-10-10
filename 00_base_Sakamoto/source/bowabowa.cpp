@@ -10,6 +10,7 @@
 #include "texture.h"
 #include "XModel.h"
 #include "game.h"
+#include "score.h"
 
 //==========================================
 //  ’è”’è‹`
@@ -82,7 +83,7 @@ HRESULT CBowabowa::Init(char* pModelName)
 
 	case CScene::MODE_GAME:
 	case CScene::MODE_TUTORIAL:
-		CGame::AddBowabowa();
+		CGame::AddBowabowa(1);
 		break;
 
 	case CScene::MODE_RESULT:
@@ -192,4 +193,15 @@ void CBowabowa::StateManager(void)
 	{
 		m_nStateCount--;
 	}
+}
+
+//====================================================================
+//ó‘ÔŠÇ—
+//====================================================================
+void CBowabowa::Take(void)
+{
+	CGame::AddBowabowa(-1);
+	CScore *pScore = CGame::GetScore();
+	pScore->AddScore(100);
+	Uninit();
 }

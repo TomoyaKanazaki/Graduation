@@ -42,6 +42,7 @@
 
 #include "slowManager.h"
 #include "cross.h"
+#include "scrollarrow.h"
 
 namespace
 {
@@ -144,10 +145,20 @@ HRESULT CGame::Init(void)
 	m_pDevil = CDevil::Create();
 	m_pDevil->SetPos(D3DXVECTOR3(0.0f, 200.0f, 0.0f));
 
+	m_pScore = CScore::Create();
+
 	LoadStageBlock("data\\TXT\\STAGE\\Block.txt");
 
 	CCross* pCross = CCross::Create("data\\MODEL\\Testbowabowa.x");
 	pCross->SetPos(D3DXVECTOR3(0.0f,0.0f,200.0f));
+
+	CScrollArrow* pScrollAllow = nullptr;
+	pScrollAllow = CScrollArrow::Create();
+	pScrollAllow->SetPos((D3DXVECTOR3(80.0f, 120.0f, 0.0f)));
+
+	pScrollAllow = CScrollArrow::Create();
+	pScrollAllow->SetPos((D3DXVECTOR3(1200.0f, 120.0f, 0.0f)));
+
 
 #if _DEBUG
 	if (m_pEdit == nullptr)

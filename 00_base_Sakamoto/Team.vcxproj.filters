@@ -339,6 +339,9 @@
     <ClCompile Include="source\MapSystem.cpp">
       <Filter>ソース ファイル\08_Map</Filter>
     </ClCompile>
+    <ClCompile Include="source\scrollarrow.cpp">
+      <Filter>ソース ファイル\06_UI_2D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\SampleLevelModel.h">
@@ -598,6 +601,9 @@
     </ClInclude>
     <ClInclude Include="source\MapSystem.h">
       <Filter>ヘッダー ファイル\08_Map</Filter>
+    </ClInclude>
+    <ClInclude Include="source\scrollarrow.h">
+      <Filter>ヘッダー ファイル\06_UI_2D</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

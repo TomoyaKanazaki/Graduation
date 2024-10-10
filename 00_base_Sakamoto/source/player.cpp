@@ -28,14 +28,15 @@
 #include "sound.h"
 #include "LifeUi.h"
 #include "cross.h"
+#include "bowabowa.h"
 
 namespace
 {
 	const D3DXVECTOR3 COLLISION_SIZE = D3DXVECTOR3(45.0f, 40.0f, 45.0f);		//横の当たり判定
 	const float PLAYER_SPEED = 5.0f;		//プレイヤーの移動速度
-
 	const int LIFE_MAX = 2;	//初期ライフ数
-	const D3DXVECTOR3 LIFE_POS = D3DXVECTOR3(200.0f, 100.0f, 0.0f);	//ライフUIの位置
+
+	const D3DXVECTOR3 LIFE_POS = D3DXVECTOR3(50.0f, 650.0f, 0.0f);
 }
 
 //====================================================================
@@ -252,6 +253,9 @@ void CPlayer::GameUpdate(void)
 		// アイテムの当たり判定
 		CollisionItem();
 	}
+
+	//ぼわぼ羽の当たり判定
+	CollisionBowabowa();
 
 	//状態の管理
 	StateManager();
@@ -700,6 +704,44 @@ void CPlayer::CollisionItem(void)
 				if (useful::CollisionCircle(m_pos, pos,30.0f) == true)
 				{
 					pCross->Uninit();
+				}
+			}
+
+			pObj = pObjNext;
+		}
+	}
+}
+
+//====================================================================
+// ボアボアの当たり判定
+//====================================================================
+void CPlayer::CollisionBowabowa(void)
+{
+	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
+	{
+		//オブジェクトを取得
+		CObject* pObj = CObject::GetTop(nCntPriority);
+
+		while (pObj != NULL)
+		{
+			CObject* pObjNext = pObj->GetNext();
+
+			CObject::TYPE type = pObj->GetType();			//種類を取得
+
+			if (type == TYPE_BOWABOWA)
+			{//種類がアイテムの時
+
+				CBowabowa* pBowabowa = (CBowabowa*)pObj;	// アイテムの情報の取得
+
+
+				D3DXVECTOR3 pos = pBowabowa->GetPos();
+				D3DXVECTOR3 posOld = pBowabowa->GetPosOld();
+				D3DXVECTOR3 Size = pBowabowa->GetSize();
+
+				// 矩形の当たり判定
+				if (useful::CollisionCircle(m_pos, pos, 30.0f) == true)
+				{
+					pBowabowa->Take();
 				}
 			}
 
