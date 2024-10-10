@@ -56,7 +56,7 @@ public:
 	{
 		STATE_WAIT = 0,		//待機
 		STATE_WALK,			//歩き
-		STATE_DAMAGE,		//ダメージ
+		STATE_DEATH,		//死亡
 		STATE_EGG,			//卵
 		STATE_ATTACK,		//攻撃
 		STATE_MAX,			//最大
@@ -88,7 +88,7 @@ public:
 	ACTION_TYPE GetAction(void) { return m_Action; }
 	void SetModelDisp(bool Sst);
 
-	void HitDamage(float Damage);
+	void Death(void);
 	bool SortObject(D3DXVECTOR3 pos);					// オブジェクトとのソート処理
 
 private:
@@ -132,7 +132,6 @@ private:
 
 	float m_CollisionRot;		//当たり判定用の向き
 
-	float m_fLife;				//ライフ
 	int m_nLife;				//ライフ
 	bool m_OKL;					//左への進行が許されるかどうか
 	bool m_OKR;					//右への進行が許されるかどうか
