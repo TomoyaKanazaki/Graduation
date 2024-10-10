@@ -41,6 +41,7 @@
 #include "light.h"
 
 #include "slowManager.h"
+#include "cross.h"
 
 namespace
 {
@@ -144,6 +145,9 @@ HRESULT CGame::Init(void)
 	m_pDevil->SetPos(D3DXVECTOR3(0.0f, 200.0f, 0.0f));
 
 	LoadStageBlock("data\\TXT\\STAGE\\Block.txt");
+
+	CCross* pCross = CCross::Create("data\\MODEL\\Testbowabowa.x");
+	pCross->SetPos(D3DXVECTOR3(0.0f,0.0f,200.0f));
 
 #if _DEBUG
 	if (m_pEdit == nullptr)

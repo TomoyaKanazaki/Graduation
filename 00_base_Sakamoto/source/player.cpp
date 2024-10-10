@@ -27,6 +27,7 @@
 #include "effect.h"
 #include "sound.h"
 #include "LifeUi.h"
+#include "cross.h"
 
 namespace
 {
@@ -286,6 +287,9 @@ void CPlayer::GameUpdate(void)
 
 	// 位置更新処理
 	PosUpdate();
+
+	// アイテムの当たり判定
+	CollisionItem();
 
 	//状態の管理
 	StateManager();
@@ -679,6 +683,44 @@ void CPlayer::CollisionMapModel(useful::COLLISION XYZ)
 
 						pMapModel->Hit(D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0);
 					}
+				}
+			}
+
+			pObj = pObjNext;
+		}
+	}
+}
+
+//====================================================================
+// アイテムの当たり判定
+//====================================================================
+void CPlayer::CollisionItem(void)
+{
+	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
+	{
+		//オブジェクトを取得
+		CObject* pObj = CObject::GetTop(nCntPriority);
+
+		while (pObj != NULL)
+		{
+			CObject* pObjNext = pObj->GetNext();
+
+			CObject::TYPE type = pObj->GetType();			//種類を取得
+
+			if (type == TYPE_CROSS)
+			{//種類がアイテムの時
+
+				CCross* pCross = (CCross*)pObj;	// アイテムの情報の取得
+
+
+				D3DXVECTOR3 pos = pCross->GetPos();
+				D3DXVECTOR3 posOld = pCross->GetPosOld();
+				D3DXVECTOR3 Size = pCross->GetSize();
+
+				// 矩形の当たり判定
+				if (useful::CollisionCircle(m_pos, pos,30.0f) == true)
+				{
+					pCross->Uninit();
 				}
 			}
 

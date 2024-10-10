@@ -69,7 +69,7 @@ CCross* CCross::Create(char* pModelName)
 //====================================================================
 HRESULT CCross::Init(char* pModelName)
 {
-	SetType(CObject::TYPE_ENEMY3D);
+	SetType(CObject::TYPE_CROSS);
 
 	CObjectX::Init(pModelName);
 

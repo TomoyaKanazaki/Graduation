@@ -54,6 +54,7 @@ public:
 		TYPE_DEBRIS,
 		TYPE_DEVIL,
 		TYPE_BOWABOWA,
+		TYPE_CROSS,
 		TYPE_MAX,
 	};
 
