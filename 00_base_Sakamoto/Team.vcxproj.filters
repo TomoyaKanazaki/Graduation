@@ -327,6 +327,12 @@
     <ClCompile Include="source\devil.cpp">
       <Filter>ソース ファイル\10_enemy</Filter>
     </ClCompile>
+    <ClCompile Include="source\bowabowa.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\MapSystem.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\SampleLevelModel.h">
@@ -574,6 +580,12 @@
     </ClInclude>
     <ClInclude Include="source\devil.h">
       <Filter>ヘッダー ファイル\10_enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="source\bowabowa.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\MapSystem.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

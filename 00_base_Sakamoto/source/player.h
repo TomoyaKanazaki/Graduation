@@ -97,8 +97,9 @@ private:
 	void Move(void);			//移動処理
 	void Rot(void);				//移動方向処理
 	void Attack(void);			//攻撃処理
-	void CollisionWall(useful::COLLISION XYZ);	//壁との当たり判定
-	void SearchWall(void);						//壁のサーチ判定
+	void CollisionWall(useful::COLLISION XYZ);		//壁との当たり判定
+	void CollisionBowabowa(useful::COLLISION XYZ);	//ボワボワとの当たり判定
+	void SearchWall(void);							//壁のサーチ判定
 	void CollisionMapModel(useful::COLLISION XYZ);	//壁との当たり判定
 
 	void CameraPosUpdate(void);	//カメラ位置更新処理

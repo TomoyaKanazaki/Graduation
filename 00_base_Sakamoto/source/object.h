@@ -53,6 +53,7 @@ public:
 		TYPE_ARROW,
 		TYPE_DEBRIS,
 		TYPE_DEVIL,
+		TYPE_BOWABOWA,
 		TYPE_MAX,
 	};
 
