@@ -47,6 +47,7 @@
     <ClCompile Include="source\input.cpp" />
     <ClCompile Include="source\inputManager.cpp" />
     <ClCompile Include="source\LevelModelEffect.cpp" />
+    <ClCompile Include="source\LifeUi.cpp" />
     <ClCompile Include="source\light.cpp" />
     <ClCompile Include="source\log.cpp" />
     <ClCompile Include="source\logo.cpp" />
@@ -136,6 +137,7 @@
     <ClInclude Include="source\input.h" />
     <ClInclude Include="source\inputManager.h" />
     <ClInclude Include="source\LevelModelEffect.h" />
+    <ClInclude Include="source\LifeUi.h" />
     <ClInclude Include="source\light.h" />
     <ClInclude Include="source\log.h" />
     <ClInclude Include="source\logo.h" />
