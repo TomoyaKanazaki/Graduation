@@ -279,13 +279,7 @@
     <ClCompile Include="source\enemy.cpp">
       <Filter>ソース ファイル\10_enemy</Filter>
     </ClCompile>
-    <ClCompile Include="source\enemyAshigaru.cpp">
-      <Filter>ソース ファイル\10_enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="source\enemyBowman.cpp">
-      <Filter>ソース ファイル\10_enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="source\enemyTutorial.cpp">
+    <ClCompile Include="source\enemyMedaman.cpp">
       <Filter>ソース ファイル\10_enemy</Filter>
     </ClCompile>
     <ClCompile Include="source\LevelModelEffect.cpp">
@@ -473,13 +467,7 @@
     <ClInclude Include="source\enemy.h">
       <Filter>ヘッダー ファイル\10_enemy</Filter>
     </ClInclude>
-    <ClInclude Include="source\enemyAshigaru.h">
-      <Filter>ヘッダー ファイル\10_enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="source\enemyBowman.h">
-      <Filter>ヘッダー ファイル\10_enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="source\enemyTutorial.h">
+    <ClInclude Include="source\enemyMedaman.h">
       <Filter>ヘッダー ファイル\10_enemy</Filter>
     </ClInclude>
     <ClInclude Include="source\fade.h">

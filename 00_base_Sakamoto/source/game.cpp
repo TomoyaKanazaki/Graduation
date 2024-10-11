@@ -43,6 +43,7 @@
 #include "slowManager.h"
 #include "cross.h"
 #include "scrollarrow.h"
+#include "enemyMedaman.h"
 
 namespace
 {
@@ -149,7 +150,7 @@ HRESULT CGame::Init(void)
 
 	LoadStageBlock("data\\TXT\\STAGE\\Block.txt");
 
-	CCross* pCross = CCross::Create("data\\MODEL\\Testbowabowa.x");
+	CCross* pCross = CCross::Create("data\\MODEL\\TestCross.x");
 	pCross->SetPos(D3DXVECTOR3(0.0f,0.0f,200.0f));
 
 	CScrollArrow* pScrollAllow = nullptr;
@@ -159,6 +160,8 @@ HRESULT CGame::Init(void)
 	pScrollAllow = CScrollArrow::Create();
 	pScrollAllow->SetPos((D3DXVECTOR3(1200.0f, 120.0f, 0.0f)));
 
+	CEnemyMedaman* pMedaman = CEnemyMedaman::Create("data\\TXT\\motion_Samurai.txt");
+	pMedaman->SetPos(D3DXVECTOR3(-300.0f, 0.0f, 0.0f));
 
 #if _DEBUG
 	if (m_pEdit == nullptr)
