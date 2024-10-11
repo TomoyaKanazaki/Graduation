@@ -28,9 +28,6 @@
 
 #include "MapModel.h"
 #include "CubeBlock.h"
-#include "enemyAshigaru.h"
-#include "enemyBowman.h"
-#include "enemyTutorial.h"
 #include "objmeshDome.h"
 
 #include "object2D.h"

@@ -12,9 +12,10 @@
 //==========================================
 namespace
 {
-	const float SPACE_SCORE = 60.0f;		//スコア同士の隙間
-	const D3DXVECTOR3 SCORE_POS = D3DXVECTOR3(900.0f, 60.0f, 0.0f);		//スコアの位置
+	const float SPACE_SCORE = 40.0f;		//スコア同士の隙間
+	const D3DXVECTOR3 SCORE_POS = D3DXVECTOR3(50.0f, 40.0f, 0.0f);		//スコアの位置
 	const int INIT_SCORE = 0;		//スコアの位置
+	const D3DXVECTOR2 SCORE_SIZE = D3DXVECTOR2(50.0f,50.0f);
 }
 
 //静的メンバ変数宣言
@@ -81,8 +82,8 @@ HRESULT CScore::Init(void)
 			m_apObject[nCntObject]->SetNumber(0);
 
 			m_apObject[nCntObject]->SetPos(D3DXVECTOR3(m_pos.x + (nCntObject * SPACE_SCORE), m_pos.y, m_pos.z));
-			m_apObject[nCntObject]->SetWidth(65.0f);
-			m_apObject[nCntObject]->SetHeight(85.0f);
+			m_apObject[nCntObject]->SetWidth(SCORE_SIZE.x);
+			m_apObject[nCntObject]->SetHeight(SCORE_SIZE.y);
 
 			m_apObject[nCntObject]->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 		}

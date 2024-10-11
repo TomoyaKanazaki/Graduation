@@ -26,53 +26,17 @@
 #include "MapModel.h"
 #include "effect.h"
 #include "sound.h"
+#include "LifeUi.h"
+#include "cross.h"
+#include "bowabowa.h"
 
 namespace
 {
 	const D3DXVECTOR3 COLLISION_SIZE = D3DXVECTOR3(45.0f, 40.0f, 45.0f);		//横の当たり判定
 	const float PLAYER_SPEED = 5.0f;		//プレイヤーの移動速度
+	const int LIFE_MAX = 2;	//初期ライフ数
 
-	const float MAX_LIFE = 100.0f;			//体力最大値
-	const float EVASION_MOVE = 10.0f;		//回避移動量
-	const float EVASION_ROT = 0.4f;			//回避角度
-	const int EVASION_FRAME = 7;			//回避フレーム
-	const int EVASION_FRAME_JUST = 3;		//ジャスト回避フレーム
-	const int INVINCIBLE_FRAME = 20;		//無敵フレーム
-
-	const int STAMINA_COUNT = 30;			//スタミナ消費から回復以降フレーム
-	
-	const float DISTANCE_RECEDE = 200.0f;	//近づく距離
-	const float DISTANCE_APPROACH = 150.0f;	//遠ざかる距離
-	const float DISTANCE_APPROACH_BOSS = 150.0f;	//遠ざかる距離(ボス)
-
-	const float ULTIMATE_SLOW = 0.0f;		//術使用時のスロー値
-	const float TRACKING_LENGTH = 720.0f;	//戦闘に入る距離
-
-	const float ROT_SPEED = 0.015f;				// 向き速度
-	const float ROT_HEIGHT_UP_MAX = 0.50f;		// 縦軸向き(上)の最大値
-	const float ROT_HEIGHT_DOWN_MAX = -0.25f;	// 縦軸向き(下)の最大値
-
-	const float SYURIKENN_SPEED = 15.0f;	// 手裏剣速度
-
-	const float SYURIKENN_MOUSE_SPEED_SHOT = 7.0f;	// 手裏剣の発射判定のマウス速度
-	const float SYURIKENN_MOUSE_SPEED_STOP = 0.3f;	// 手裏剣の停止判定のマウス速度
-
-	const float SYURIKENN_PLAYER_SPEED = 0.2f;
-
-	const D3DXVECTOR3 SHURIKEN_UI_POS = D3DXVECTOR3(1150.0f, 550.0f, 0.0f);	// 手裏剣UIの位置
-	const int SHURIKEN_MAX = 5;												// 手裏剣の最大所持数
-	const float SHURIKEN_RELOAD_TIME = 150.0f;								// 手裏剣のリロード速度
-
-	const float SYURIKENN_NEED_MOVE = 0.15f;		// ジョイコン手裏剣のジャイロ速度
-	const float SYURIKENN_NEED_ROT = 15.0f;			// ジョイコン手裏剣の向き
-	const float SYURIKENN_JOYCON_SPEED_STOP = 2.0f;	// ジョイコン手裏剣の停止判定速度
-
-	const float EVASION_NEED_MOVE = 0.8f;	// ジョイコン回避のジャイロ速度
-	const float EVASION_NEED_ROT = 20.0f;	// ジョイコン回避の向き
-
-	const float AUTO_ROT_SPEED = 0.02f;		//自動移動の向き変更速度
-
-	const D3DXVECTOR3 PARAMETER_POS = D3DXVECTOR3(370.0f,650.0f,0.0f);		//パラメータの位置
+	const D3DXVECTOR3 LIFE_POS = D3DXVECTOR3(50.0f, 650.0f, 0.0f);
 }
 
 //====================================================================
@@ -94,7 +58,6 @@ CPlayer::CPlayer(int nPriority) :CObject(nPriority)
 	m_nStateCount = 0;
 	m_AtkPos = INITVECTOR3;
 	m_CollisionRot = 0.0f;
-	m_fLife = MAX_LIFE;
 	m_pMotion = nullptr;
 	m_OKL = true;
 	m_OKR = true;
@@ -102,6 +65,8 @@ CPlayer::CPlayer(int nPriority) :CObject(nPriority)
 	m_OKD = true;
 	m_bInput = false;
 	m_UseItem = false;
+	m_pLifeUi = nullptr;
+	m_nLife = LIFE_MAX;
 }
 
 //====================================================================
@@ -175,6 +140,15 @@ HRESULT CPlayer::Init(void)
 	case CScene::MODE_RESULT:
 		break;
 	}
+
+	m_pLifeUi = CLifeUi::Create();
+
+	// 数値
+	m_pLifeUi->GetNumber()->SetPos(D3DXVECTOR3(LIFE_POS.x + 200.0f, LIFE_POS.y, LIFE_POS.z));
+
+	// 体力
+	m_pLifeUi->SetPos(LIFE_POS);
+	m_pLifeUi->GetNumber()->SetNumber(m_nLife);
 
 	// スローの生成
 	m_pSlow = CSlowManager::Create(CSlowManager::CAMP_PLAYER, CSlowManager::TAG_PLAYER);
@@ -254,25 +228,34 @@ void CPlayer::GameUpdate(void)
 	// 過去の位置に代入
 	m_posOld = m_pos;
 
-	//壁があるか判断
-	SearchWall();
-
-	// 移動処理
-	Move();
-
-	// 向き移動処理
-	Rot();
-
-	if (m_UseItem)
+	if (m_State != STATE_DEATH)
 	{
-		Attack();
+		//壁があるか判断
+		SearchWall();
+
+		// 移動処理
+		Move();
+
+		// 向き移動処理
+		Rot();
+
+		if (m_UseItem)
+		{
+			Attack();
+		}
+
+		// カメラ更新処理
+		CameraPosUpdate();
+
+		// 位置更新処理
+		PosUpdate();
+
+		// アイテムの当たり判定
+		CollisionItem();
 	}
 
-	// カメラ更新処理
-	CameraPosUpdate();
-
-	// 位置更新処理
-	PosUpdate();
+	//ぼわぼ羽の当たり判定
+	CollisionBowabowa();
 
 	//状態の管理
 	StateManager();
@@ -446,6 +429,16 @@ void CPlayer::Attack(void)
 void CPlayer::ActionState(void)
 {
 	//移動モーション
+	if (m_State == STATE_DEATH)
+	{
+		if (m_Action != ACTION_SDEATH)
+		{
+			m_Action = ACTION_SDEATH;
+			m_pMotion->Set(ACTION_SDEATH, 5);
+		}
+	}
+
+	//移動モーション
 	if (m_move.x > 0.1f || m_move.x < -0.1f || m_move.z > 0.1f || m_move.z < -0.1f)
 	{
 		if (m_Action != ACTION_BMOVE)
@@ -489,7 +482,14 @@ void CPlayer::StateManager(void)
 	case STATE_WALK:
 		break;
 
-	case STATE_DAMAGE:
+	case STATE_DEATH:
+
+		if (m_nStateCount == 0)
+		{
+			m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+			m_State = STATE_EGG;
+		}
+
 		break;
 
 	case STATE_EGG:
@@ -675,6 +675,82 @@ void CPlayer::CollisionMapModel(useful::COLLISION XYZ)
 }
 
 //====================================================================
+// アイテムの当たり判定
+//====================================================================
+void CPlayer::CollisionItem(void)
+{
+	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
+	{
+		//オブジェクトを取得
+		CObject* pObj = CObject::GetTop(nCntPriority);
+
+		while (pObj != NULL)
+		{
+			CObject* pObjNext = pObj->GetNext();
+
+			CObject::TYPE type = pObj->GetType();			//種類を取得
+
+			if (type == TYPE_CROSS)
+			{//種類がアイテムの時
+
+				CCross* pCross = (CCross*)pObj;	// アイテムの情報の取得
+
+
+				D3DXVECTOR3 pos = pCross->GetPos();
+				D3DXVECTOR3 posOld = pCross->GetPosOld();
+				D3DXVECTOR3 Size = pCross->GetSize();
+
+				// 矩形の当たり判定
+				if (useful::CollisionCircle(m_pos, pos,30.0f) == true)
+				{
+					pCross->Uninit();
+				}
+			}
+
+			pObj = pObjNext;
+		}
+	}
+}
+
+//====================================================================
+// ボアボアの当たり判定
+//====================================================================
+void CPlayer::CollisionBowabowa(void)
+{
+	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
+	{
+		//オブジェクトを取得
+		CObject* pObj = CObject::GetTop(nCntPriority);
+
+		while (pObj != NULL)
+		{
+			CObject* pObjNext = pObj->GetNext();
+
+			CObject::TYPE type = pObj->GetType();			//種類を取得
+
+			if (type == TYPE_BOWABOWA)
+			{//種類がアイテムの時
+
+				CBowabowa* pBowabowa = (CBowabowa*)pObj;	// アイテムの情報の取得
+
+
+				D3DXVECTOR3 pos = pBowabowa->GetPos();
+				D3DXVECTOR3 posOld = pBowabowa->GetPosOld();
+				D3DXVECTOR3 Size = pBowabowa->GetSize();
+
+				// 矩形の当たり判定
+				if (useful::CollisionCircle(m_pos, pos, 30.0f) == true)
+				{
+					pBowabowa->Take();
+				}
+			}
+
+			pObj = pObjNext;
+		}
+	}
+}
+
+//====================================================================
 //カメラ位置更新処理
 //====================================================================
 void CPlayer::CameraPosUpdate(void)
@@ -773,32 +849,30 @@ void CPlayer::RotUpdate(void)
 //====================================================================
 //ダメージ処理
 //====================================================================
-void CPlayer::HitDamage(float Damage)
+void CPlayer::Death(void)
 {
-	//if (m_State == STATE_NORMAL)
-	//{
-	//	m_fLife -= Damage;
+	if (m_State != STATE_EGG && m_State != STATE_DEATH)
+	{
+		m_nLife--;
 
-	//	if (m_fLife <= 0.0f)
-	//	{
-	//		m_fLife = 0.0f;
-	//		m_State = STATE_DEATH;
-	//		CManager::GetInstance()->GetCamera()->SetCameraMode(CCamera::CAMERAMODE_FOLLOW);
-	//	}
-	//	else
-	//	{
-	//		m_State = STATE_DAMAGE;
-	//		m_nStateCount = 120;
+		if (m_nLife < 0)
+		{
+			CGame::SetGameEnd(true);
+		}
+		else
+		{
+			if (m_pLifeUi != nullptr)
+			{
+				m_pLifeUi->GetNumber()->SetNumber(m_nLife);
+			}
 
-	//		// 炎の音
-	//		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_DAMAGE_PLAYER);
-	//	}
-	//}
+			m_State = STATE_DEATH;
+			m_nStateCount = 150;
 
-	//if (m_State == STATE_DEATH)
-	//{
-	//	CGame::SetGameEnd(true);
-	//}
+			// ダメージ音
+			CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_DAMAGE_PLAYER);
+		}
+	}
 }
 
 //====================================================================
@@ -813,6 +887,19 @@ void CPlayer::DebugKey(void)
 	if (pMouse->GetTrigger(pMouse->PUSH_WHEEL))
 	{
 		HitDamage(10.0f);
+	}
+	CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
+
+	//キーボードの移動処理
+	if (pInputKeyboard->GetTrigger(DIK_3))
+	{
+		m_nLife++;
+		m_pLifeUi->GetNumber()->SetNumber(m_nLife);;
+	}
+	if (pInputKeyboard->GetTrigger(DIK_4))
+	{
+		m_nLife--;
+		m_pLifeUi->GetNumber()->SetNumber(m_nLife);;
 	}
 
 #endif // !_DEBUG

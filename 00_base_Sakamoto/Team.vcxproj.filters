@@ -279,13 +279,7 @@
     <ClCompile Include="source\enemy.cpp">
       <Filter>ソース ファイル\10_enemy</Filter>
     </ClCompile>
-    <ClCompile Include="source\enemyAshigaru.cpp">
-      <Filter>ソース ファイル\10_enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="source\enemyBowman.cpp">
-      <Filter>ソース ファイル\10_enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="source\enemyTutorial.cpp">
+    <ClCompile Include="source\enemyMedaman.cpp">
       <Filter>ソース ファイル\10_enemy</Filter>
     </ClCompile>
     <ClCompile Include="source\LevelModelEffect.cpp">
@@ -326,6 +320,21 @@
     </ClCompile>
     <ClCompile Include="source\devil.cpp">
       <Filter>ソース ファイル\10_enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="source\bowabowa.cpp">
+      <Filter>ソース ファイル\08_Map</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cross.cpp">
+      <Filter>ソース ファイル\08_Map</Filter>
+    </ClCompile>
+    <ClCompile Include="source\LifeUi.cpp">
+      <Filter>ソース ファイル\06_UI_2D</Filter>
+    </ClCompile>
+    <ClCompile Include="source\MapSystem.cpp">
+      <Filter>ソース ファイル\08_Map</Filter>
+    </ClCompile>
+    <ClCompile Include="source\scrollarrow.cpp">
+      <Filter>ソース ファイル\06_UI_2D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -458,13 +467,7 @@
     <ClInclude Include="source\enemy.h">
       <Filter>ヘッダー ファイル\10_enemy</Filter>
     </ClInclude>
-    <ClInclude Include="source\enemyAshigaru.h">
-      <Filter>ヘッダー ファイル\10_enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="source\enemyBowman.h">
-      <Filter>ヘッダー ファイル\10_enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="source\enemyTutorial.h">
+    <ClInclude Include="source\enemyMedaman.h">
       <Filter>ヘッダー ファイル\10_enemy</Filter>
     </ClInclude>
     <ClInclude Include="source\fade.h">
@@ -574,6 +577,21 @@
     </ClInclude>
     <ClInclude Include="source\devil.h">
       <Filter>ヘッダー ファイル\10_enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="source\bowabowa.h">
+      <Filter>ヘッダー ファイル\08_Map</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cross.h">
+      <Filter>ヘッダー ファイル\08_Map</Filter>
+    </ClInclude>
+    <ClInclude Include="source\LifeUi.h">
+      <Filter>ヘッダー ファイル\06_UI_2D</Filter>
+    </ClInclude>
+    <ClInclude Include="source\MapSystem.h">
+      <Filter>ヘッダー ファイル\08_Map</Filter>
+    </ClInclude>
+    <ClInclude Include="source\scrollarrow.h">
+      <Filter>ヘッダー ファイル\06_UI_2D</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

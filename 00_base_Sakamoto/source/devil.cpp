@@ -553,6 +553,16 @@ void CDevil::ObjectScroll(D3DXVECTOR3 Move)
 				{
 					if (m_DevilPos.x + COLLISION_SIZE.x < pos.x - Size.x)
 					{
+						if (pPlayer->GetState() == CPlayer::STATE_EGG)
+						{
+							pos.x = -COLLISION_SIZE.x + m_DevilPos.x - Size.x + Move.x;
+						}
+						else
+						{
+							pos.x = m_DevilPos.x + COLLISION_SIZE.x + Size.x;
+							CollisionPressPlayer(pPlayer, pos, Size);
+						}
+
 						CEffect* pEffect = CEffect::Create();
 						pEffect->SetPos(pos);
 						pEffect->SetColor(D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
@@ -563,6 +573,16 @@ void CDevil::ObjectScroll(D3DXVECTOR3 Move)
 				{
 					if (m_DevilPos.x - COLLISION_SIZE.x > pos.x + Size.x)
 					{
+						if (pPlayer->GetState() == CPlayer::STATE_EGG)
+						{
+							pos.x = COLLISION_SIZE.x + m_DevilPos.x + Size.x + Move.x;
+						}
+						else
+						{
+							pos.x = m_DevilPos.x - COLLISION_SIZE.x - Size.x;
+							CollisionPressPlayer(pPlayer, pos, Size);
+						}
+
 						CEffect* pEffect = CEffect::Create();
 						pEffect->SetPos(pos);
 						pEffect->SetColor(D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
@@ -573,6 +593,16 @@ void CDevil::ObjectScroll(D3DXVECTOR3 Move)
 				{
 					if (m_DevilPos.z + COLLISION_SIZE.z < pos.z - Size.z)
 					{
+						if (pPlayer->GetState() == CPlayer::STATE_EGG)
+						{
+							pos.z = -COLLISION_SIZE.z + m_DevilPos.z - Size.z + Move.z;
+						}
+						else
+						{
+							pos.z = m_DevilPos.z + COLLISION_SIZE.z + Size.z;
+							CollisionPressPlayer(pPlayer, pos, Size);
+						}
+
 						CEffect* pEffect = CEffect::Create();
 						pEffect->SetPos(pos);
 						pEffect->SetColor(D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
@@ -583,6 +613,16 @@ void CDevil::ObjectScroll(D3DXVECTOR3 Move)
 				{
 					if (m_DevilPos.z - COLLISION_SIZE.z > pos.z + Size.z)
 					{
+						if (pPlayer->GetState() == CPlayer::STATE_EGG)
+						{
+							pos.z = COLLISION_SIZE.z + m_DevilPos.z + Size.z + Move.z;
+						}
+						else
+						{
+							pos.z = m_DevilPos.z - COLLISION_SIZE.z - Size.z;
+							CollisionPressPlayer(pPlayer, pos, Size);
+						}
+
 						CEffect* pEffect = CEffect::Create();
 						pEffect->SetPos(pos);
 						pEffect->SetColor(D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
@@ -592,6 +632,43 @@ void CDevil::ObjectScroll(D3DXVECTOR3 Move)
 
 				pPlayer->SetPos(pos);
 			}
+			pObj = pObjNext;
+		}
+	}
+}
+
+//====================================================================
+// プレイヤーが潰される時の処理
+//====================================================================
+void CDevil::CollisionPressPlayer(CPlayer* pPlayer, D3DXVECTOR3 pos, D3DXVECTOR3 Size)
+{
+	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
+	{
+		//オブジェクトを取得
+		CObject* pObj = CObject::GetTop(nCntPriority);
+
+		while (pObj != NULL)
+		{
+			CObject* pObjNext = pObj->GetNext();
+
+			CObject::TYPE type = pObj->GetType();			//種類を取得
+
+			if (type == TYPE_CUBEBLOCK)
+			{//種類がブロックの時
+
+				CCubeBlock* pBlock = (CCubeBlock*)pObj;	// ブロック情報の取得
+
+				D3DXVECTOR3 Blockpos = pBlock->GetPos();
+				D3DXVECTOR3 BlockSize = pBlock->GetSize();
+
+				if (useful::CollisionRectangle2D(pos, Blockpos, Size, BlockSize, useful::COLLISION::COLLISION_ZX))
+				{
+					pPlayer->Death();
+					return;
+				}
+
+			}
+
 			pObj = pObjNext;
 		}
 	}
@@ -702,9 +779,9 @@ void CDevil::LoadLevelData(const char* pFilename)
 							if (strcmp(&aMessage[0], "ROT") == 0)
 							{
 								fscanf(pFile, "%s", &aString[0]);
-								fscanf(pFile, "%f", &ModelRot.x);				////向きの初期設定
-								fscanf(pFile, "%f", &ModelRot.y);				////向きの初期設定
-								fscanf(pFile, "%f", &ModelRot.z);				////向きの初期設定
+								fscanf(pFile, "%f", &ModelRot.x);				//向きの初期設定
+								fscanf(pFile, "%f", &ModelRot.y);				//向きの初期設定
+								fscanf(pFile, "%f", &ModelRot.z);				//向きの初期設定
 
 								m_apModel[nCntModel]->SetRot(ModelRot);
 								m_apModel[nCntModel]->SetStartRot(ModelRot);

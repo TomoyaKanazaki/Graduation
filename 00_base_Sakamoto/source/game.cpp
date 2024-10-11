@@ -30,6 +30,7 @@
 #include "effect.h"
 #include "Edit.h"
 #include "devil.h"
+#include "bowabowa.h"
 
 #include "renderer.h"
 #include "SampleObj2D.h"
@@ -40,6 +41,9 @@
 #include "light.h"
 
 #include "slowManager.h"
+#include "cross.h"
+#include "scrollarrow.h"
+#include "enemyMedaman.h"
 
 namespace
 {
@@ -73,6 +77,7 @@ int CGame::m_nTutorialWave = 0;
 int CGame::m_nEventCount = 0;
 int CGame::m_nEventWave = 0;
 int CGame::m_nEventNumber = 0;
+int CGame::m_nNumBowabowa = 0;
 float CGame::m_fEvectFinish = 0.0f;
 float CGame::m_fEventAngle = 0.0f;
 float CGame::m_EventHeight = 0.0f;
@@ -96,6 +101,7 @@ CGame::CGame()
 	m_fEventAngle = 0.0f;
 	m_nTutorialWave = 0;
 	m_nEventNumber = 0;
+	m_nNumBowabowa = 0;
 	CManager::GetInstance()->GetCamera()->SetBib(false);
 	CManager::GetInstance()->GetCamera()->SetCameraMode(CCamera::CAMERAMODE_CONTROL);
 
@@ -123,6 +129,10 @@ HRESULT CGame::Init(void)
 	m_pMeshField = CObjmeshField::Create(21, 21);
 	m_pMeshField->SetPos(INITVECTOR3);
 
+	CBowabowa* pBowabowa = nullptr;
+	pBowabowa = CBowabowa::Create("data\\MODEL\\Testbowabowa.x");
+	pBowabowa->SetPos(D3DXVECTOR3(100.0f, 0.0f, 0.0f));
+
 	m_bGameEnd = false;
 
 	// タイムの生成
@@ -136,7 +146,22 @@ HRESULT CGame::Init(void)
 	m_pDevil = CDevil::Create();
 	m_pDevil->SetPos(D3DXVECTOR3(0.0f, 200.0f, 0.0f));
 
+	m_pScore = CScore::Create();
+
 	LoadStageBlock("data\\TXT\\STAGE\\Block.txt");
+
+	CCross* pCross = CCross::Create("data\\MODEL\\TestCross.x");
+	pCross->SetPos(D3DXVECTOR3(0.0f,0.0f,200.0f));
+
+	CScrollArrow* pScrollAllow = nullptr;
+	pScrollAllow = CScrollArrow::Create();
+	pScrollAllow->SetPos((D3DXVECTOR3(80.0f, 120.0f, 0.0f)));
+
+	pScrollAllow = CScrollArrow::Create();
+	pScrollAllow->SetPos((D3DXVECTOR3(1200.0f, 120.0f, 0.0f)));
+
+	CEnemyMedaman* pMedaman = CEnemyMedaman::Create("data\\TXT\\motion_Samurai.txt");
+	pMedaman->SetPos(D3DXVECTOR3(-300.0f, 0.0f, 0.0f));
 
 #if _DEBUG
 	if (m_pEdit == nullptr)
@@ -244,6 +269,13 @@ void CGame::Update(void)
 	{
 		//イベントの更新
 		EventUpdate();
+	}
+
+	if (m_nNumBowabowa <= 0)
+	{
+		CFade::SetFade(CScene::MODE_RESULT);
+		m_pTime->SetStopTime(true);
+		CManager::GetInstance()->SetEndScore(m_pTime->GetTimeNumber());
 	}
 
 	if (pInputKeyboard->GetTrigger(DIK_RETURN) == true && CManager::GetInstance()->GetEdit() == false)

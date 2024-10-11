@@ -25,6 +25,7 @@ class CParameterUI;
 
 class CEnemy;
 class CBoss;
+class CLifeUi;
 
 //オブジェクトプレイヤークラス
 class CPlayer : public CObject
@@ -55,7 +56,7 @@ public:
 	{
 		STATE_WAIT = 0,		//待機
 		STATE_WALK,			//歩き
-		STATE_DAMAGE,		//ダメージ
+		STATE_DEATH,		//死亡
 		STATE_EGG,			//卵
 		STATE_ATTACK,		//攻撃
 		STATE_MAX,			//最大
@@ -87,7 +88,7 @@ public:
 	ACTION_TYPE GetAction(void) { return m_Action; }
 	void SetModelDisp(bool Sst);
 
-	void HitDamage(float Damage);
+	void Death(void);
 	bool SortObject(D3DXVECTOR3 pos);					// オブジェクトとのソート処理
 
 private:
@@ -97,9 +98,11 @@ private:
 	void Move(void);			//移動処理
 	void Rot(void);				//移動方向処理
 	void Attack(void);			//攻撃処理
-	void CollisionWall(useful::COLLISION XYZ);	//壁との当たり判定
-	void SearchWall(void);						//壁のサーチ判定
+	void CollisionWall(useful::COLLISION XYZ);		//壁との当たり判定
+	void CollisionBowabowa(void);	//ボワボワとの当たり判定
+	void SearchWall(void);							//壁のサーチ判定
 	void CollisionMapModel(useful::COLLISION XYZ);	//壁との当たり判定
+	void CollisionItem (void);	//アイテムとの当たり判定
 
 	void CameraPosUpdate(void);	//カメラ位置更新処理
 	void PosUpdate(void);		//位置更新処理
@@ -129,7 +132,7 @@ private:
 
 	float m_CollisionRot;		//当たり判定用の向き
 
-	float m_fLife;				//ライフ
+	int m_nLife;				//ライフ
 	bool m_OKL;					//左への進行が許されるかどうか
 	bool m_OKR;					//右への進行が許されるかどうか
 	bool m_OKU;					//上への進行が許されるかどうか
@@ -145,6 +148,7 @@ private:
 	CMotion* m_pMotion;
 	char* m_aModelName[64];
 	int m_nNumModel;
+	CLifeUi* m_pLifeUi;
 };
 
 #endif

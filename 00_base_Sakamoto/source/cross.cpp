@@ -1,24 +1,43 @@
 //============================================
 //
-//	チュートリアル敵の処理 [enemyTutorial.cpp]
-//	Author:酒井 南勝
+//	オブジェクトＸモデルのサンプル [SampleObjX.cpp]
+//	Author:sakamoto kai
 //
 //============================================
+#include "cross.h"
+#include "renderer.h"
+#include "manager.h"
+#include "texture.h"
+#include "XModel.h"
 
-#include "enemyTutorial.h"
+//==========================================
+//  定数定義
+//==========================================
+namespace
+{
+	const D3DXVECTOR3 SAMPLE_SIZE = D3DXVECTOR3(20.0f, 20.0f, 20.0f);		//当たり判定
+}
 
 //====================================================================
 //コンストラクタ
 //====================================================================
-CEnemyTutorial::CEnemyTutorial(int nPriority) : CEnemyAshigaru(nPriority)
+CCross::CCross(int nPriority) : CObjectX(nPriority)
 {
-	ZeroMemory(&m_info, sizeof(m_info));
+	SetSize(SAMPLE_SIZE);
+	SetPos(INITVECTOR3);
+	m_nIdxXModel = NULL;			//マテリアルの数
+	m_CollisionPos = INITVECTOR3;
+	m_bCollision = false;
+	m_State = STATE_NORMAL;
+	m_nStateCount = 0;
+	m_Scaling = 1.0f;
+	m_fColorA = 0.0f;
 }
 
 //====================================================================
 //デストラクタ
 //====================================================================
-CEnemyTutorial::~CEnemyTutorial()
+CCross::~CCross()
 {
 
 }
@@ -26,30 +45,49 @@ CEnemyTutorial::~CEnemyTutorial()
 //====================================================================
 //生成処理
 //====================================================================
-CEnemyTutorial* CEnemyTutorial::Create(const char* pFilename)
+CCross* CCross::Create(char* pModelName)
 {
-	// 生成
-	CEnemyTutorial* pInstance = new CEnemyTutorial();
+	CCross* pSample = NULL;
 
-	// 初期化処理
-	if (FAILED(pInstance->Init()))
+	if (pSample == NULL)
+	{
+		//オブジェクト2Dの生成
+		pSample = new CCross();
+	}
+
+	//オブジェクトの初期化処理
+	if (FAILED(pSample->Init(pModelName)))
 	{//初期化処理が失敗した場合
 		return NULL;
 	}
 
-	// モデル関連の初期化
-	pInstance->InitModel(pFilename);
-
-	return pInstance;
+	return pSample;
 }
 
 //====================================================================
 //初期化処理
 //====================================================================
-HRESULT CEnemyTutorial::Init(void)
+HRESULT CCross::Init(char* pModelName)
 {
-	// 継承クラスの初期化処理
-	CEnemyAshigaru::Init();
+	SetType(CObject::TYPE_CROSS);
+
+	CObjectX::Init(pModelName);
+
+	//モードごとに初期値を設定出来る
+	switch (CScene::GetMode())
+	{
+	case CScene::MODE_TITLE:
+		break;
+
+	case CScene::MODE_GAME:
+	case CScene::MODE_TUTORIAL:
+
+		break;
+
+	case CScene::MODE_RESULT:
+		break;
+	}
+
 
 	return S_OK;
 }
@@ -57,18 +95,15 @@ HRESULT CEnemyTutorial::Init(void)
 //====================================================================
 //終了処理
 //====================================================================
-void CEnemyTutorial::Uninit(void)
+void CCross::Uninit(void)
 {
-	// 継承クラスの終了処理
-	CEnemyAshigaru::Uninit();
-
-	SetDeathFlag(true);
+	CObjectX::Uninit();
 }
 
 //====================================================================
 //更新処理
 //====================================================================
-void CEnemyTutorial::Update(void)
+void CCross::Update(void)
 {
 	switch (CScene::GetMode())
 	{
@@ -90,39 +125,70 @@ void CEnemyTutorial::Update(void)
 //====================================================================
 //タイトルでの更新処理
 //====================================================================
-void CEnemyTutorial::TitleUpdate(void)
+void CCross::TitleUpdate(void)
 {
-	// 継承クラスのタイトル更新処理
-	CEnemyAshigaru::TitleUpdate();
+	D3DXVECTOR3 pos = GetPos();
+
+	//位置更新
+	pos += m_move;
+
+	SetPos(pos);
+
+	//頂点情報の更新
+	CObjectX::Update();
 }
 
 //====================================================================
 //ゲームでの更新処理
 //====================================================================
-void CEnemyTutorial::GameUpdate(void)
+void CCross::GameUpdate(void)
 {
-	// 継承クラスのゲーム更新処理
-	CEnemyAshigaru::GameUpdate();
+	//更新前の位置を過去の位置とする
+	m_posOld = m_pos;
+
+	//位置更新
+	CObjectX::SetPos(m_pos);
+	CObjectX::SetRot(m_rot);
+
+	//画面外判定
+	if (m_pos.y < 0.0f)
+	{
+
+	}
+
+	//大きさの設定
+	SetScaling(D3DXVECTOR3(m_Scaling, m_Scaling, m_Scaling));
+
+	//状態管理
+	StateManager();
+
+	//頂点情報の更新
+	CObjectX::Update();
 }
 
 //====================================================================
 //描画処理
 //====================================================================
-void CEnemyTutorial::Draw(void)
+void CCross::Draw(void)
 {
-	// 継承クラスの描画処理
-	CEnemyAshigaru::Draw();
+	CObjectX::Draw();
 }
 
 //====================================================================
-// 接触ダメージ処理
+//状態管理
 //====================================================================
-void CEnemyTutorial::HitDamage(float fDamage)
+void CCross::StateManager(void)
 {
-	CEnemyAshigaru::HitDamage(fDamage);
-
-	if (GetDeath() == true && m_info.bTaskOk == false)
+	switch (m_State)
 	{
-		m_info.bTaskOk = true;
+	case STATE_NORMAL:
+		break;
+	case STATE_ACTION:
+		break;
+	}
+
+	if (m_nStateCount > 0)
+	{
+		m_nStateCount--;
 	}
 }
