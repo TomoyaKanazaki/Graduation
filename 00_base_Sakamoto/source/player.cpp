@@ -114,7 +114,7 @@ HRESULT CPlayer::Init(void)
 	SetType(CObject::TYPE_PLAYER3D);
 
 	//ƒ‚ƒfƒ‹‚Ì¶¬
-	LoadLevelData("data\\TXT\\motion_foot_light_spear.txt");
+	LoadLevelData("data\\TXT\\tamagon.txt");
 
 	//ƒ‚[ƒVƒ‡ƒ“‚Ì¶¬
 	if (m_pMotion == NULL)
