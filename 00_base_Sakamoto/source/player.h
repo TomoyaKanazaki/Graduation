@@ -26,6 +26,7 @@ class CParameterUI;
 class CEnemy;
 class CBoss;
 class CLifeUi;
+class CFire;
 
 //オブジェクトプレイヤークラス
 class CPlayer : public CObject
