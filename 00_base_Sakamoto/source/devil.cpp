@@ -26,6 +26,8 @@
 #include "Number.h"
 #include "MapModel.h"
 #include "effect.h"
+#include "bowabowa.h"
+#include "Cross.h"
 #include "sound.h"
 
 #define COLLISION_SIZE (D3DXVECTOR3(750.0f,0.0f,550.0f))		//横の当たり判定
@@ -42,6 +44,7 @@ namespace
 CDevil::CDevil(int nPriority) : CObject(nPriority)
 {
 	SetSize(COLLISION_SIZE);
+	m_DevilSize = COLLISION_SIZE;
 	m_pos = INITVECTOR3;
 	m_move = INITVECTOR3;
 	m_Objmove = INITVECTOR3;
@@ -231,16 +234,16 @@ void CDevil::GameUpdate(void)
 		switch (nCnt)
 		{
 		case 0:
-			pTestEffect->SetPos(D3DXVECTOR3(m_DevilPos.x + COLLISION_SIZE.x, m_DevilPos.y, m_DevilPos.z + COLLISION_SIZE.z));
+			pTestEffect->SetPos(D3DXVECTOR3(m_DevilPos.x + m_DevilSize.x, m_DevilPos.y, m_DevilPos.z + m_DevilSize.z));
 			break;
 		case 1:
-			pTestEffect->SetPos(D3DXVECTOR3(m_DevilPos.x - COLLISION_SIZE.x, m_DevilPos.y, m_DevilPos.z + COLLISION_SIZE.z));
+			pTestEffect->SetPos(D3DXVECTOR3(m_DevilPos.x - m_DevilSize.x, m_DevilPos.y, m_DevilPos.z + m_DevilSize.z));
 			break;
 		case 2:
-			pTestEffect->SetPos(D3DXVECTOR3(m_DevilPos.x + COLLISION_SIZE.x, m_DevilPos.y, m_DevilPos.z - COLLISION_SIZE.z));
+			pTestEffect->SetPos(D3DXVECTOR3(m_DevilPos.x + m_DevilSize.x, m_DevilPos.y, m_DevilPos.z - m_DevilSize.z));
 			break;
 		case 3:
-			pTestEffect->SetPos(D3DXVECTOR3(m_DevilPos.x - COLLISION_SIZE.x, m_DevilPos.y, m_DevilPos.z - COLLISION_SIZE.z));
+			pTestEffect->SetPos(D3DXVECTOR3(m_DevilPos.x - m_DevilSize.x, m_DevilPos.y, m_DevilPos.z - m_DevilSize.z));
 			break;
 		}
 
@@ -510,35 +513,162 @@ void CDevil::ObjectScroll(D3DXVECTOR3 Move)
 
 				if (Move.x > 0.0f)
 				{
-					if (m_DevilPos.x + COLLISION_SIZE.x < pos.x - Size.x)
+					if (m_DevilPos.x + m_DevilSize.x < pos.x - 50.0f)
 					{
-						pos.x = -COLLISION_SIZE.x + m_DevilPos.x - Size.x + Move.x;
+						pos.x = -m_DevilSize.x + m_DevilPos.x - 50.0f + Move.x;
 					}
 				}
 				if (Move.x < 0.0f)
 				{
-					if (m_DevilPos.x - COLLISION_SIZE.x > pos.x + Size.x)
+					if (m_DevilPos.x - m_DevilSize.x > pos.x + 50.0f)
 					{
-						pos.x = COLLISION_SIZE.x + m_DevilPos.x + Size.x + Move.x;
+						pos.x = m_DevilSize.x + m_DevilPos.x + 50.0f + Move.x;
 					}
 				}
 				if (Move.z > 0.0f)
 				{
-					if (m_DevilPos.z + COLLISION_SIZE.z < pos.z - Size.z)
+					if (m_DevilPos.z + m_DevilSize.z < pos.z - 50.0f)
 					{
-						pos.z = -COLLISION_SIZE.z + m_DevilPos.z - Size.z + Move.z;
+						pos.z = -m_DevilSize.z + m_DevilPos.z - 50.0f + Move.z;
 					}
 				}
 				if (Move.z < 0.0f)
 				{
-					if (m_DevilPos.z - COLLISION_SIZE.z > pos.z + Size.z)
+					if (m_DevilPos.z - m_DevilSize.z > pos.z + 50.0f)
 					{
-						pos.z = COLLISION_SIZE.z + m_DevilPos.z + Size.z + Move.z;
+						pos.z = m_DevilSize.z + m_DevilPos.z + 50.0f + Move.z;
 					}
 				}
 
 				pBlock->SetPos(pos);
 			}
+
+			if (type == TYPE_CROSS)
+			{//種類が敵の時
+
+				CCross* pCross = (CCross*)pObj;	// ブロック情報の取得
+
+				D3DXVECTOR3 pos = pCross->GetPos();
+				D3DXVECTOR3 Size = pCross->GetSize();
+
+				pos += Move;
+
+				if (Move.x > 0.0f)
+				{
+					if (m_DevilPos.x + m_DevilSize.x < pos.x - 50.0f)
+					{
+						pos.x = -m_DevilSize.x + m_DevilPos.x - 50.0f + Move.x;
+					}
+				}
+				if (Move.x < 0.0f)
+				{
+					if (m_DevilPos.x - m_DevilSize.x > pos.x + 50.0f)
+					{
+						pos.x = m_DevilSize.x + m_DevilPos.x + 50.0f + Move.x;
+					}
+				}
+				if (Move.z > 0.0f)
+				{
+					if (m_DevilPos.z + m_DevilSize.z < pos.z - 50.0f)
+					{
+						pos.z = -m_DevilSize.z + m_DevilPos.z - 50.0f + Move.z;
+					}
+				}
+				if (Move.z < 0.0f)
+				{
+					if (m_DevilPos.z - m_DevilSize.z > pos.z + 50.0f)
+					{
+						pos.z = m_DevilSize.z + m_DevilPos.z + 50.0f + Move.z;
+					}
+				}
+
+				pCross->SetPos(pos);
+			}
+
+			if (type == TYPE_BOWABOWA)
+			{//種類が敵の時
+
+				CBowabowa* pBowabowa = (CBowabowa*)pObj;	// ブロック情報の取得
+
+				D3DXVECTOR3 pos = pBowabowa->GetPos();
+				D3DXVECTOR3 Size = pBowabowa->GetSize();
+
+				pos += Move;
+
+				if (Move.x > 0.0f)
+				{
+					if (m_DevilSize.x < pos.x)
+					{
+						pos.x = -m_DevilSize.x + Move.x - 100.0f;
+					}
+				}
+				if (Move.x < 0.0f)
+				{
+					if (-m_DevilSize.x > pos.x)
+					{
+						pos.x = m_DevilSize.x + Move.x + 100.0f;
+					}
+				}
+				if (Move.z > 0.0f)
+				{
+					if (m_DevilSize.z < pos.z)
+					{
+						pos.z = -m_DevilSize.z + Move.z - 100.0f;
+					}
+				}
+				if (Move.z < 0.0f)
+				{
+					if (-m_DevilSize.z > pos.z)
+					{
+						pos.z = m_DevilSize.z + Move.z + 100.0f;
+					}
+				}
+
+				pBowabowa->SetPos(pos);
+			}
+
+			if (type == TYPE_ENEMY3D)
+			{//種類が敵の時
+
+				CEnemy* pEnemy = (CEnemy*)pObj;	// ブロック情報の取得
+
+				D3DXVECTOR3 pos = pEnemy->GetPos();
+				D3DXVECTOR3 Size = pEnemy->GetSize();
+
+				pos += Move;
+
+				if (Move.x > 0.0f)
+				{
+					if (m_DevilPos.x + m_DevilSize.x < pos.x - 50.0f)
+					{
+						pos.x = -m_DevilSize.x + m_DevilPos.x - 50.0f + Move.x;
+					}
+				}
+				if (Move.x < 0.0f)
+				{
+					if (m_DevilPos.x - m_DevilSize.x > pos.x + 50.0f)
+					{
+						pos.x = m_DevilSize.x + m_DevilPos.x + 50.0f + Move.x;
+					}
+				}
+				if (Move.z > 0.0f)
+				{
+					if (m_DevilPos.z + m_DevilSize.z < pos.z - 50.0f)
+					{
+						pos.z = -m_DevilSize.z + m_DevilPos.z - 50.0f + Move.z;
+					}
+				}
+				if (Move.z < 0.0f)
+				{
+					if (m_DevilPos.z - m_DevilSize.z > pos.z + 50.0f)
+					{
+						pos.z = m_DevilSize.z + m_DevilPos.z + 50.0f + Move.z;
+					}
+				}
+
+				pEnemy->SetPos(pos);
+			}
+
 			if (type == TYPE_PLAYER3D)
 			{//種類がブロックの時
 
@@ -551,15 +681,15 @@ void CDevil::ObjectScroll(D3DXVECTOR3 Move)
 
 				if (Move.x > 0.0f)
 				{
-					if (m_DevilPos.x + COLLISION_SIZE.x < pos.x - Size.x)
+					if (m_DevilPos.x + m_DevilSize.x < pos.x - 50.0f)
 					{
 						if (pPlayer->GetState() == CPlayer::STATE_EGG)
 						{
-							pos.x = -COLLISION_SIZE.x + m_DevilPos.x - Size.x + Move.x;
+							pos.x = -m_DevilSize.x + m_DevilPos.x - 50.0f + Move.x;
 						}
 						else
 						{
-							pos.x = m_DevilPos.x + COLLISION_SIZE.x + Size.x;
+							pos.x = m_DevilPos.x + m_DevilSize.x + Size.x;
 							CollisionPressPlayer(pPlayer, pos, Size);
 						}
 
@@ -571,15 +701,15 @@ void CDevil::ObjectScroll(D3DXVECTOR3 Move)
 				}
 				if (Move.x < 0.0f)
 				{
-					if (m_DevilPos.x - COLLISION_SIZE.x > pos.x + Size.x)
+					if (m_DevilPos.x - m_DevilSize.x > pos.x + 50.0f)
 					{
 						if (pPlayer->GetState() == CPlayer::STATE_EGG)
 						{
-							pos.x = COLLISION_SIZE.x + m_DevilPos.x + Size.x + Move.x;
+							pos.x = m_DevilSize.x + m_DevilPos.x + 50.0f + Move.x;
 						}
 						else
 						{
-							pos.x = m_DevilPos.x - COLLISION_SIZE.x - Size.x;
+							pos.x = m_DevilPos.x - m_DevilSize.x - Size.x;
 							CollisionPressPlayer(pPlayer, pos, Size);
 						}
 
@@ -591,15 +721,15 @@ void CDevil::ObjectScroll(D3DXVECTOR3 Move)
 				}
 				if (Move.z > 0.0f)
 				{
-					if (m_DevilPos.z + COLLISION_SIZE.z < pos.z - Size.z)
+					if (m_DevilPos.z + m_DevilSize.z < pos.z - 50.0f)
 					{
 						if (pPlayer->GetState() == CPlayer::STATE_EGG)
 						{
-							pos.z = -COLLISION_SIZE.z + m_DevilPos.z - Size.z + Move.z;
+							pos.z = -m_DevilSize.z + m_DevilPos.z - 50.0f + Move.z;
 						}
 						else
 						{
-							pos.z = m_DevilPos.z + COLLISION_SIZE.z + Size.z;
+							pos.z = m_DevilPos.z + m_DevilSize.z + Size.z;
 							CollisionPressPlayer(pPlayer, pos, Size);
 						}
 
@@ -611,15 +741,15 @@ void CDevil::ObjectScroll(D3DXVECTOR3 Move)
 				}
 				if (Move.z < 0.0f)
 				{
-					if (m_DevilPos.z - COLLISION_SIZE.z > pos.z + Size.z)
+					if (m_DevilPos.z - m_DevilSize.z > pos.z + 50.0f)
 					{
 						if (pPlayer->GetState() == CPlayer::STATE_EGG)
 						{
-							pos.z = COLLISION_SIZE.z + m_DevilPos.z + Size.z + Move.z;
+							pos.z = m_DevilSize.z + m_DevilPos.z + 50.0f + Move.z;
 						}
 						else
 						{
-							pos.z = m_DevilPos.z - COLLISION_SIZE.z - Size.z;
+							pos.z = m_DevilPos.z - m_DevilSize.z - Size.z;
 							CollisionPressPlayer(pPlayer, pos, Size);
 						}
 

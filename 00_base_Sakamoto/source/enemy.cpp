@@ -26,6 +26,7 @@
 #include "score.h"
 #include "modelEffect.h"
 #include "Effect.h"
+#include "devil.h"
 #include "sound.h"
 
 namespace
@@ -349,6 +350,9 @@ void CEnemy::UpdatePos(void)
 
 	// 壁との当たり判定
 	CollisionWall(useful::COLLISION_Z);
+
+	//ステージ外との当たり判定
+	CollisionOut();
 }
 
 //====================================================================
@@ -390,6 +394,53 @@ void CEnemy::CollisionWall(useful::COLLISION XYZ)
 	}
 }
 
+//====================================================================
+// ステージ外との当たり判定
+//====================================================================
+void CEnemy::CollisionOut()
+{
+	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
+	{
+		//オブジェクトを取得
+		CObject* pObj = CObject::GetTop(nCntPriority);
+
+		while (pObj != NULL)
+		{
+			CObject* pObjNext = pObj->GetNext();
+
+			CObject::TYPE type = pObj->GetType();			//種類を取得
+
+			if (type == TYPE_DEVIL)
+			{//種類がブロックの時
+
+				CDevil* pDevil = (CDevil*)pObj;	// ブロック情報の取得
+
+				D3DXVECTOR3 Pos = pDevil->GetDevilPos();
+				D3DXVECTOR3 Size = pDevil->GetDevilSize();
+
+				// ステージ外の当たり判定
+				if (Pos.x + Size.x < m_pos.x - m_size.x)
+				{
+					m_pos.x = -Size.x + Pos.x - m_size.x;
+				}
+				if (Pos.x - Size.x > m_pos.x + m_size.x)
+				{
+					m_pos.x = Size.x + Pos.x + m_size.x;
+				}
+				if (Pos.z + Size.z < m_pos.z - m_size.z)
+				{
+					m_pos.z = -Size.z + Pos.z - m_size.z;
+				}
+				if (Pos.z - Size.z > m_pos.z + m_size.z)
+				{
+					m_pos.z = Size.z + Pos.z + m_size.z;
+				}
+			}
+
+			pObj = pObjNext;
+		}
+	}
+}
 
 //====================================================================
 // 死亡処理

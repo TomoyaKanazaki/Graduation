@@ -82,6 +82,10 @@ public:
 	STATE GetState(void) { return m_State; }
 	void SetAction(ACTION_TYPE Action, float BlendTime);
 	ACTION_TYPE GetAction(void) { return m_Action; }
+	void SetDevilPos(D3DXVECTOR3 size) { m_DevilPos = size; }
+	D3DXVECTOR3 GetDevilPos(void) { return m_DevilPos; }
+	void SetDevilSize(D3DXVECTOR3 size) { m_DevilSize = size; }
+	D3DXVECTOR3 GetDevilSize(void) { return m_DevilSize; }
 	void SetModelDisp(bool Sst);
 
 private:
@@ -108,6 +112,7 @@ private:
 	D3DXVECTOR3 m_AutoMoveRot;	//自動移動の移動方向
 	D3DXVECTOR3 m_size;			//大きさ
 	D3DXVECTOR3 m_DevilPos;		//デビルパワーがマップのブロックにデビルスクロールする位置、テスト用
+	D3DXVECTOR3 m_DevilSize;	//デビルパワーが及ぶ範囲、通称デビルサイズ、テスト用
 	D3DXMATRIX m_mtxWorld;		//ワールドマトリックス
 	int m_nActionCount;			//行動のカウント
 	STATE m_State;				//状態
