@@ -35,6 +35,7 @@
     <ClCompile Include="source\debris.cpp" />
     <ClCompile Include="source\debugproc.cpp" />
     <ClCompile Include="source\devil.cpp" />
+    <ClCompile Include="source\DevilHole.cpp" />
     <ClCompile Include="source\Edit.cpp" />
     <ClCompile Include="source\effect.cpp" />
     <ClCompile Include="source\enemy.cpp" />
@@ -125,6 +126,7 @@
     <ClInclude Include="source\debris.h" />
     <ClInclude Include="source\debugproc.h" />
     <ClInclude Include="source\devil.h" />
+    <ClInclude Include="source\DevilHole.h" />
     <ClInclude Include="source\Edit.h" />
     <ClInclude Include="source\effect.h" />
     <ClInclude Include="source\enemy.h" />
