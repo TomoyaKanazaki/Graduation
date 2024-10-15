@@ -64,6 +64,7 @@ public:
 	static void AddBGColorA(float Add) { m_BGColorA += Add; }
 	static void SetStageBlock(void);
 	static void SetGameEnd(bool Set) { m_bGameEnd = Set; }
+	static void SetGameClear(bool Set) { m_bGameClear = Set; }
 	static int GetBowabowa(void) { return m_nNumBowabowa; }
 	static void SetBowabowa(int Bowabowa) { m_nNumBowabowa = Bowabowa; }
 	static void AddBowabowa(int nNum) { m_nNumBowabowa+= nNum; }
@@ -72,6 +73,7 @@ public:
 
 	static bool GetSlow(void) { return m_Slow; }
 private:
+	static void StageClear(int Stage);
 	static void LoadStageBlock(const char* pFilename);
 	static void LoadStageMapModel(const char* pFilename);
 
@@ -80,6 +82,7 @@ private:
 	void Sample(void);								//サンプル系が入ってるヨ
 
 	static bool m_bGameEnd;							//ゲーム終了状態かどうか
+	static bool m_bGameClear;						//ゲームクリア状態かどうか
 
 	//イベント用変数
 	static bool m_bEvent;							//イベント状態かどうか

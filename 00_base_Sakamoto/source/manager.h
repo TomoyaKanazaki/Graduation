@@ -131,6 +131,9 @@ public:
 	void SetTypeInput(TYPE_INPUT type) { m_typeInput = type; }
 	TYPE_INPUT GetTypeInput(void) { return m_typeInput; }
 	bool Getstart() { return m_bState; }
+	int GetStage(void) { return m_nStage; }
+	void SetStage(int Stage) { m_nStage = Stage; }
+
 private:
 	static CManager *pManager;
 
@@ -138,6 +141,7 @@ private:
 	D3DXMATRIX m_GamemtxProjection;		//プロジェクションマトリックス
 	D3DVIEWPORT9 m_GameViewport;		//ゲーム画面のビューポート
 
+	int m_nStage;							//現在のステージ
 	float GameSpeed;					//ゲームスピード
 	int m_EndScore;						//最終的なスコア
 	int m_EndTime;						//最終的なタイム

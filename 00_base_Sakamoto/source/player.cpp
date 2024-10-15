@@ -115,7 +115,7 @@ HRESULT CPlayer::Init(void)
 	SetType(CObject::TYPE_PLAYER3D);
 
 	//モデルの生成
-	LoadLevelData("data\\TXT\\tamagon.txt");
+	LoadLevelData("data\\TXT\\motion_foot_light_spear.txt");
 
 	//モーションの生成
 	if (m_pMotion == NULL)
@@ -427,7 +427,7 @@ void CPlayer::Attack(void)
 	//キーボードの取得
 	CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
 
-	if (pInputKeyboard->GetPress(DIK_SPACE) == true)
+	if (pInputKeyboard->GetTrigger(DIK_SPACE) == true)
 	{
 		CFire::Create("data\\model\\BlockTest.x", m_pos, m_move);
 	}
@@ -904,6 +904,7 @@ void CPlayer::Death(void)
 		if (m_nLife < 0)
 		{
 			CGame::SetGameEnd(true);
+			CGame::SetGameClear(false);
 		}
 		else
 		{
