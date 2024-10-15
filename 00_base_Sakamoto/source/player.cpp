@@ -252,6 +252,9 @@ void CPlayer::GameUpdate(void)
 
 		// アイテムの当たり判定
 		CollisionItem();
+
+		// 敵の判定
+		CollisionEnemy();
 	}
 
 	//ぼわぼ羽の当たり判定
@@ -704,6 +707,43 @@ void CPlayer::CollisionItem(void)
 				if (useful::CollisionCircle(m_pos, pos,30.0f) == true)
 				{
 					pCross->Uninit();
+				}
+			}
+
+			pObj = pObjNext;
+		}
+	}
+}
+
+//====================================================================
+// 敵の当たり判定
+//====================================================================
+void CPlayer::CollisionEnemy(void)
+{
+	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
+	{
+		//オブジェクトを取得
+		CObject* pObj = CObject::GetTop(nCntPriority);
+
+		while (pObj != nullptr)
+		{
+			CObject* pObjNext = pObj->GetNext();
+
+			CObject::TYPE type = pObj->GetType();			//種類を取得
+
+			if (type == TYPE_ENEMY3D)
+			{//種類が敵の時
+
+				CEnemy* pEnemy = (CEnemy*)pObj;	// アイテムの情報の取得
+
+				D3DXVECTOR3 pos = pEnemy->GetPos();
+				D3DXVECTOR3 posOld = pEnemy->GetPosOld();
+				D3DXVECTOR3 Size = pEnemy->GetSize();
+
+				// 円の当たり判定
+				if (useful::CollisionCircle(m_pos, pos, 30.0f) == true)
+				{
+					Death();
 				}
 			}
 
