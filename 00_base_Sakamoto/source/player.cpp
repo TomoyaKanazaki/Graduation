@@ -427,7 +427,7 @@ void CPlayer::Attack(void)
 	//キーボードの取得
 	CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
 
-	if (pInputKeyboard->GetPress(DIK_SPACE) == true)
+	if (pInputKeyboard->GetTrigger(DIK_SPACE) == true)
 	{
 		CFire::Create("data\\model\\BlockTest.x", m_pos, m_move);
 	}
