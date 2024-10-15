@@ -1,7 +1,7 @@
 //============================================
 //
 //	敵の処理 [enemy.cpp]
-//	Author:sakamoto kai
+//	Author: sakamoto kai
 //
 //============================================
 #include "enemy.h"
@@ -25,11 +25,12 @@
 #include "2DEffect.h"
 #include "score.h"
 #include "modelEffect.h"
+#include "Effect.h"
 #include "sound.h"
 
 namespace
 {
-	const D3DXVECTOR3 COLLISION_SIZE = D3DXVECTOR3(5.0f, 60.0f, 5.0f);		//横の当たり判定
+	const D3DXVECTOR3 COLLISION_SIZE = D3DXVECTOR3(45.0f, 60.0f, 45.0f);		//横の当たり判定
 	const float LIFE = 30.0f;	// 体力
 
 	const float DISTANCE_RECEDE = 200.0f;	//近づく距離
@@ -47,37 +48,11 @@ CEnemy::CEnemy(int nPriority) :CObject(nPriority)
 	m_move = INITVECTOR3;
 	m_Objmove = INITVECTOR3;
 	m_rot = D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f);
-	m_AtkPos = INITVECTOR3;
-
-	m_nSeatchCount = 0;
-	m_bSeatchLoop = false;
-
 	m_nActionCount = 0;
-	m_nAttackHit = false;
-
 	SetSize(COLLISION_SIZE);
-
-	m_State = STATE_SEATCH;
 	m_nStateCount = 0;
-	m_bJump = false;
-	m_bDeath = false;
-	m_bAttack = false;
-
-	m_fLife = LIFE;
-
-	m_CollisionRot = 0.0f;
 
 	m_ColorA = 1.0f;
-
-	for (int nCnt = 0; nCnt < SCREEN_POS_NUM; nCnt++)
-	{
-		m_ScreenPos[nCnt] = D3DXVECTOR3(-100.0f, -100.0f, 0.0f);
-	}
-
-	for (int nCnt = 0; nCnt < SEARCH_POS_NUM; nCnt++)
-	{
-		m_SeatchPos[nCnt] = D3DXVECTOR3(0.0f, -10000.0f, 0.0f);
-	}
 
 	for (int nCnt = 0; nCnt < MODEL_NUM; nCnt++)
 	{
@@ -86,13 +61,17 @@ CEnemy::CEnemy(int nPriority) :CObject(nPriority)
 	}
 
 	m_size = COLLISION_SIZE;
-	m_SearchDistance = 0.0f;
-
 	m_pMotion = nullptr;
 	m_nNumModel = 0;
-	m_EnemyType = ENEMY_ASHIGARU;
-
+	m_EnemyType = ENEMY_MEDAMAN;
+	m_State = E_STATE_WAIT;
 	m_pSlow = nullptr;
+	m_SelectMove = SELECT_MOVE_MAX;
+
+	m_OKL = true;
+	m_OKR = true;
+	m_OKU = true;
+	m_OKD = true;
 }
 
 //====================================================================
@@ -204,31 +183,23 @@ void CEnemy::TitleUpdate(void)
 //====================================================================
 void CEnemy::GameUpdate(void)
 {
-	//スクリーン座標への変換処理
-	ScreenCollision();
-
 	// 過去の位置を記録
 	m_posOld = m_pos;
+
+	//壁の索敵判定
+	SearchWall();
+
+	// 状態の更新
+	StateManager();
 
 	// 位置更新処理
 	UpdatePos();
 
-	if (m_bDeath == false)
-	{
-		UpdateState();
-	}
-
+	//床の判定
 	if (m_pos.y <= 0.0f)
 	{
-		m_bJump = false;
 		m_pos.y = 0.0f;
 		m_move.y = 0.0f;
-	}
-
-	if (m_bDeath == true)
-	{
-		// 死亡処理
-		Death();
 	}
 
 	if (m_pMotion != nullptr)
@@ -264,22 +235,6 @@ void CEnemy::Draw(void)
 	//ワールドマトリックスの設定
 	m_pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
 
-	if (m_bDeath == true)
-	{
-		for (int nCntModel = 0; nCntModel < m_nNumModel; nCntModel++)
-		{
-			m_apModel[nCntModel]->SetColorType(CModel::COLORTYPE_TRUE_A);
-			m_apModel[nCntModel]->SetColorA(m_ColorA);
-		}
-	}
-	else
-	{
-		for (int nCntModel = 0; nCntModel < m_nNumModel; nCntModel++)
-		{
-			m_apModel[nCntModel]->SetColorType(CModel::COLORTYPE_FALSE);
-		}
-	}
-
 	//モデルの描画(全パーツ)
 	for (int nCntModel = 0; nCntModel < m_nNumModel; nCntModel++)
 	{
@@ -292,44 +247,44 @@ void CEnemy::Draw(void)
 //====================================================================
 void CEnemy::HitDamage(float fDamage)
 {
-	m_fLife -= fDamage;
+	//m_fLife -= fDamage;
 
-	if (m_State == STATE_SEATCH)
-	{
-		m_State = STATE_BATTLE;
-	}
+	//if (m_State == STATE_SEATCH)
+	//{
+	//	m_State = STATE_BATTLE;
+	//}
 
-	if (m_fLife <= 0.0f && m_bDeath == false)
-	{
-		m_fLife = 0.0f;
-		m_bAttack = false;
+	//if (m_fLife <= 0.0f && m_bDeath == false)
+	//{
+	//	m_fLife = 0.0f;
+	//	m_bAttack = false;
 
-		if (m_State == STATE_BATTLE)
-		{
-			m_bJump = true;
-			m_move.y = 8.0f;
-		}
+	//	if (m_State == STATE_BATTLE)
+	//	{
+	//		m_bJump = true;
+	//		m_move.y = 8.0f;
+	//	}
 
-		switch (m_EnemyType)
-		{
-		case CEnemy::ENEMY_ASHIGARU:
-			CGame::GetScore()->AddScore(500);
-			break;
+	//	switch (m_EnemyType)
+	//	{
+	//	case CEnemy::ENEMY_ASHIGARU:
+	//		CGame::GetScore()->AddScore(500);
+	//		break;
 
-		case CEnemy::ENEMY_BOWMAN:
-			CGame::GetScore()->AddScore(800);
-			break;
+	//	case CEnemy::ENEMY_BOWMAN:
+	//		CGame::GetScore()->AddScore(800);
+	//		break;
 
-		case CEnemy::ENEMY_SAMURAI:
-			CGame::GetScore()->AddScore(1200);
-			break;
+	//	case CEnemy::ENEMY_SAMURAI:
+	//		CGame::GetScore()->AddScore(1200);
+	//		break;
 
-		default:
-			break;
-		}
+	//	default:
+	//		break;
+	//	}
 
-		m_bDeath = true;
-	}
+	//	m_bDeath = true;
+	//}
 }
 
 //====================================================================
@@ -361,26 +316,6 @@ void CEnemy::UpdatePos(void)
 {
 	//重力
 	m_move.y -= 0.5f;
-
-	//死亡時の吹っ飛び
-	if(m_bDeath == true && m_bJump == true)
-	{
-		m_move.x = sinf(m_rot.y + D3DX_PI * 0.5f) * 10.0f;
-		m_move.z = cosf(m_rot.y + D3DX_PI * 0.5f) * 10.0f;
-	}
-
-	//減衰係数
-	m_move.x = m_move.x * 0.5f;
-	if (m_move.x <= 0.0001f && m_move.x >= -0.0001f)
-	{
-		m_move.x = 0.0f;
-	}
-
-	m_move.z = m_move.z * 0.5f;
-	if (m_move.z <= 0.0001f && m_move.z >= -0.0001f)
-	{
-		m_move.z = 0.0f;
-	}
 
 	// 変数宣言
 	float fSpeed = 1.0f;	// スロー用 default1.0fで初期化
@@ -441,28 +376,12 @@ void CEnemy::CollisionWall(useful::COLLISION XYZ)
 				D3DXVECTOR3 posOld = pBlock->GetPosOld();
 				D3DXVECTOR3 Move = pBlock->GetMove();
 				D3DXVECTOR3 Size = pBlock->GetSize();
+				bool bNullJump;
 
 				// 矩形の当たり判定
-				if (useful::CollisionBlock(pos, posOld, Move, Size, &m_pos, m_posOld, &m_move, &m_Objmove, m_size, &m_bJump, XYZ) == true)
+				if (useful::CollisionBlock(pos, posOld, Move, Size, &m_pos, m_posOld, &m_move, &m_Objmove, m_size, &bNullJump, XYZ) == true)
 				{
-
-				}
-			}
-
-			if (type == TYPE_CUBECOLL)
-			{//種類がブロックの時
-
-				CCubeColl* pBlock = (CCubeColl*)pObj;	// ブロック情報の取得
-
-				D3DXVECTOR3 pos = pBlock->GetPos();
-				D3DXVECTOR3 posOld = pBlock->GetPosOld();
-				D3DXVECTOR3 Move = pBlock->GetMove();
-				D3DXVECTOR3 Size = pBlock->GetSize();
-
-				// 矩形の当たり判定
-				if (useful::CollisionBlock(pos, posOld, Move, Size, &m_pos, m_posOld, &m_move, &m_Objmove, m_size, &m_bJump, XYZ) == true)
-				{
-
+					m_State = E_STATE_WAIT;
 				}
 			}
 
@@ -471,266 +390,6 @@ void CEnemy::CollisionWall(useful::COLLISION XYZ)
 	}
 }
 
-//====================================================================
-//プレイヤー索敵処理
-//====================================================================
-void CEnemy::SearchPlayer(void)
-{
-	bool SetBattle = false;
-
-	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
-	{
-		//オブジェクトを取得
-		CObject* pObj = CObject::GetTop(nCntPriority);
-
-		while (pObj != NULL)
-		{
-			CObject* pObjNext = pObj->GetNext();
-
-			CObject::TYPE type = pObj->GetType();			//種類を取得
-
-			if (type == TYPE_PLAYER3D)
-			{//種類が敵の時
-				CPlayer* pPlayer = (CPlayer*)pObj;
-
-				if (useful::CollisionCircle(m_pos, pPlayer->GetPos(), m_SearchDistance) == true)
-				{
-					if (useful::CollisionLine(m_pos, pPlayer->GetPos(), m_rot.y - D3DX_PI * 0.25f) == true &&
-						useful::CollisionLine(m_pos, pPlayer->GetPos(), m_rot.y + D3DX_PI * 0.25f) == false)
-					{
-						SetBattle = true;
-
-						DebugProc::Print(DebugProc::POINT_LEFT, "索敵範囲内！\n");
-
-						if (SortObject(pPlayer->GetPos()) == true)
-						{
-							SetBattle = false;
-
-							DebugProc::Print(DebugProc::POINT_LEFT, "間に壁がある！\n");
-						}
-					}
-				}
-			}
-
-			pObj = pObjNext;
-		}
-	}
-
-	if (SetBattle == true)
-	{
-		// 戦闘状態
-		m_State = STATE_BATTLE;
-
-		// 回避の音
-		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_BATTLE_ENTRY);
-
-	}
-}
-
-//====================================================================
-//マップオブジェクトと壁とのソート処理
-//====================================================================
-bool CEnemy::SortObject(D3DXVECTOR3 pos)
-{
-	float fDistance = sqrtf((m_pos.x - pos.x) * (m_pos.x - pos.x) + (m_pos.z - pos.z) * (m_pos.z - pos.z));
-
-	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
-	{
-		//オブジェクトを取得
-		CObject* pObj = CObject::GetTop(nCntPriority);
-
-		while (pObj != NULL)
-		{
-			CObject* pObjNext = pObj->GetNext();
-
-			CObject::TYPE type = pObj->GetType();			//種類を取得
-
-			if (type == TYPE_CUBEBLOCK)
-			{//種類がブロックの時
-				CCubeBlock* pBlock = (CCubeBlock*)pObj;
-
-				if (pBlock->GetPos().y <= 200.0f)
-				{
-					if (useful::CollisionCircle(m_pos, pBlock->GetPos(), m_SearchDistance) == true)
-					{
-						if (useful::CollisionLine(m_pos, pBlock->GetPos(), m_rot.y - D3DX_PI * 0.50f) == true &&
-							useful::CollisionLine(m_pos, pBlock->GetPos(), m_rot.y + D3DX_PI * 0.50f) == false)
-						{
-							D3DXVECTOR3 CrossPos = INITVECTOR3;
-							float ObjDistance = 10000.0f;
-
-							//交点の位置を求める
-							for (int nCnt = 0; nCnt < 4; nCnt++)
-							{
-								switch (nCnt)
-								{
-								case 0:
-									CrossPos = useful::CrossIntersection(m_pos, pos,
-										D3DXVECTOR3(pBlock->GetPos().x + pBlock->GetSize().x, pBlock->GetPos().y, pBlock->GetPos().z + pBlock->GetSize().z),
-										D3DXVECTOR3(pBlock->GetPos().x - pBlock->GetSize().x, pBlock->GetPos().y, pBlock->GetPos().z + pBlock->GetSize().z),
-										m_SearchDistance);
-									break;
-
-								case 1:
-									CrossPos = useful::CrossIntersection(m_pos, pos,
-										D3DXVECTOR3(pBlock->GetPos().x - pBlock->GetSize().x, pBlock->GetPos().y, pBlock->GetPos().z + pBlock->GetSize().z),
-										D3DXVECTOR3(pBlock->GetPos().x - pBlock->GetSize().x, pBlock->GetPos().y, pBlock->GetPos().z - pBlock->GetSize().z),
-										m_SearchDistance);
-									break;
-
-								case 2:
-									CrossPos = useful::CrossIntersection(m_pos, pos,
-										D3DXVECTOR3(pBlock->GetPos().x - pBlock->GetSize().x, pBlock->GetPos().y, pBlock->GetPos().z - pBlock->GetSize().z),
-										D3DXVECTOR3(pBlock->GetPos().x + pBlock->GetSize().x, pBlock->GetPos().y, pBlock->GetPos().z - pBlock->GetSize().z),
-										m_SearchDistance);
-									break;
-
-								case 3:
-									CrossPos = useful::CrossIntersection(m_pos, pos,
-										D3DXVECTOR3(pBlock->GetPos().x + pBlock->GetSize().x, pBlock->GetPos().y, pBlock->GetPos().z - pBlock->GetSize().z),
-										D3DXVECTOR3(pBlock->GetPos().x + pBlock->GetSize().x, pBlock->GetPos().y, pBlock->GetPos().z + pBlock->GetSize().z),
-										m_SearchDistance);
-									break;
-								}
-
-								ObjDistance = sqrtf((m_pos.x - CrossPos.x) * (m_pos.x - CrossPos.x) + (m_pos.z - CrossPos.z) * (m_pos.z - CrossPos.z));
-
-								//CManager::GetInstance()->GetDebugProc()->Print("[敵：%f %f] [プ：%f %f] [壁：%f %f] \n", m_pos.x, m_pos.z, pos.x, pos.z, CrossPos.x, CrossPos.z);
-								//CManager::GetInstance()->GetDebugProc()->Print("%f   :   %f\n", fDistance, ObjDistance);
-
-								if (ObjDistance < fDistance)
-								{
-									return true;
-								}
-							}
-						}
-					}
-				}				
-			}
-
-			pObj = pObjNext;
-		}
-	}
-	return false;
-}
-
-//====================================================================
-//プレイヤーと間合いを取る処理
-//====================================================================
-bool CEnemy::DistancePlayer(void)
-{
-	CPlayer* pPlayer = CGame::GetPlayer();
-
-	switch (CScene::GetMode())
-	{
-	case CScene::MODE_GAME:
-
-		pPlayer = CGame::GetPlayer();
-
-		break;
-	case CScene::MODE_TUTORIAL:
-
-		pPlayer = CTutorial::GetPlayer();
-
-		break;
-	}
-
-	bool bOK = false;
-
-	m_rot.y = useful::PosDirection(m_pos, pPlayer->GetPos(), 0.0f);
-
-	if (useful::CollisionCircle(m_pos, pPlayer->GetPos(), DISTANCE_RECEDE) == false)
-	{
-		m_move.x = sinf(D3DX_PI * -0.5f + m_rot.y) * 6.0f;
-		m_move.z = cosf(D3DX_PI * -0.5f + m_rot.y) * 6.0f;
-	}
-	else if (useful::CollisionCircle(m_pos, pPlayer->GetPos(), DISTANCE_APPROACH) == true)
-	{
-		m_move.x = -sinf(D3DX_PI * -0.5f + m_rot.y) * 6.0f;
-		m_move.z = -cosf(D3DX_PI * -0.5f + m_rot.y) * 6.0f;
-	}
-	else
-	{
-		bOK = true;
-	}
-	return bOK;
-}
-
-//====================================================================
-//自分以外の敵を押し出す処理
-//====================================================================
-void CEnemy::CollisionPush(void)
-{
-	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
-	{
-		//オブジェクトを取得
-		CObject* pObj = CObject::GetTop(nCntPriority);
-
-		while (pObj != NULL)
-		{
-			CObject* pObjNext = pObj->GetNext();
-
-			CObject::TYPE type = pObj->GetType();			//種類を取得
-			float fAngle = 0.0f;
-
-			if (type == TYPE_ENEMY3D && pObj != this)
-			{//種類がブロックの時
-				CEnemy* pEnemy = (CEnemy*)pObj;
-
-				if (useful::CollisionCircle(m_pos, pEnemy->GetPos(), 30.0f) == true)
-				{
-					fAngle = atan2f(pEnemy->GetPos().z - m_pos.z, m_pos.x - pEnemy->GetPos().x) + D3DX_PI * 0.5f;
-					m_move.x = sinf(fAngle) * 0.2f;
-					m_move.z = cosf(fAngle) * 0.2f;
-				}
-			}
-
-			pObj = pObjNext;
-		}
-	}
-}
-
-//====================================================================
-//スクリーン座標に変換する処理
-//====================================================================
-void CEnemy::ScreenCollision()
-{
-	//頂点設定
-	D3DXVECTOR3 pos[SCREEN_POS_NUM] = { INITVECTOR3 };
-
-	pos[0] = D3DXVECTOR3(GetPos().x - m_size.x, GetPos().y, GetPos().z + m_size.z);
-	pos[1] = D3DXVECTOR3(GetPos().x - m_size.x, GetPos().y + m_size.y, GetPos().z + m_size.z);
-	pos[2] = D3DXVECTOR3(GetPos().x + m_size.x, GetPos().y, GetPos().z + m_size.z);
-	pos[3] = D3DXVECTOR3(GetPos().x + m_size.x, GetPos().y + m_size.y, GetPos().z + m_size.z);
-	pos[4] = D3DXVECTOR3(GetPos().x - m_size.x, GetPos().y, GetPos().z - m_size.z);
-	pos[5] = D3DXVECTOR3(GetPos().x - m_size.x, GetPos().y + m_size.y, GetPos().z - m_size.z);
-	pos[6] = D3DXVECTOR3(GetPos().x + m_size.x, GetPos().y, GetPos().z - m_size.z);
-	pos[7] = D3DXVECTOR3(GetPos().x + m_size.x, GetPos().y + m_size.y, GetPos().z - m_size.z);
-
-	//ビューポートの設定
-	D3DVIEWPORT9 viewport;
-	viewport.X = 0;
-	viewport.Y = 0;
-	viewport.Width = SCREEN_WIDTH;
-	viewport.Height = SCREEN_HEIGHT;
-	viewport.MaxZ = 1.0f;
-	viewport.MinZ = 0.0f;
-
-	//マトリックスの取得
-	D3DXMATRIX ViewMatrix = CManager::GetInstance()->GetCamera()->GetViewMatrix();
-	D3DXMATRIX ProjectionMatrix = CManager::GetInstance()->GetCamera()->GetProjectionMatrix();
-
-	//D3DXVec3Project(&screenPosition, &pos, &viewport, &projectionMatrix, &viewMatrix, D3DXMatrixIdentity(&mtx));
-
-	//3Dの座標をスクリーン座標に変換
-	for (int nCnt = 0; nCnt < 8; nCnt++)
-	{
-		D3DXVec3Project(&m_ScreenPos[nCnt], &pos[nCnt], &viewport, &ProjectionMatrix, &ViewMatrix, D3DXMatrixIdentity(&m_mtxWorld));
-
-		//C2DEffect* pEffect = C2DEffect::Create();
-		//pEffect->SetPos(m_ScreenPos[nCnt]);
-	}
-}
 
 //====================================================================
 // 死亡処理
@@ -751,41 +410,206 @@ void CEnemy::Death(void)
 //====================================================================
 // 状態更新
 //====================================================================
-void CEnemy::UpdateState()
+void CEnemy::StateManager()
 {
+	int nRand = 0;
+
 	//状態の管理
 	switch (m_State)
 	{
-	case CEnemy::STATE_BATTLE:
+	case CEnemy::E_STATE_WAIT:
 
-		//戦闘状態の管理
-		BattleStateManager();
+		MoveSelect();
+		m_State = E_STATE_WALK;
 
 		break;
 
-	case CEnemy::STATE_SEATCH:
+	case CEnemy::E_STATE_TRUN:
 
-		//探索状態の管理
-		SearchStateManager();
+		m_move.x = m_move.x * -1.0f;
+		m_move.z = m_move.z * -1.0f;
 
-		//プレイヤーの索敵
-		SearchPlayer();
+		break;
+
+	case CEnemy::E_STATE_WALK:
+		break;
+
+	case CEnemy::E_STATE_EGG:
+		break;
+
+	case CEnemy::E_STATE_DEATH:
+
+		m_move.x = 0.0f;
+		m_move.z = 0.0f;
 
 		break;
 
 	default:
 		break;
 	}
+
+	if (m_nStateCount > 0)
+	{
+		m_nStateCount--;
+	}
 }
 
 //====================================================================
-// 武器の残像エフェクトを生成する
+// 移動方向の選択
 //====================================================================
-void CEnemy::CreateWeaponEffect(int ModelNumber)
+void CEnemy::MoveSelect()
 {
-	CModelEffect *pEffect = CModelEffect::Create(m_apModel[ModelNumber]->GetModelName());
-	pEffect->SetMtxWorld(m_apModel[ModelNumber]->GetMtxWorld());
-	pEffect->SetColor(D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
+	float OKRot[4];
+	int RotNumber = 0;
+
+	if (m_OKL && m_SelectMove != SELECT_MOVE_RIGHT)
+	{
+		OKRot[RotNumber] = D3DX_PI * -0.5f;
+		RotNumber++;
+	}
+	if (m_OKR && m_SelectMove != SELECT_MOVE_LEFT)
+	{
+		OKRot[RotNumber] = D3DX_PI * 0.5f;
+		RotNumber++;
+	}
+	if (m_OKU && m_SelectMove != SELECT_MOVE_DOWN)
+	{
+		OKRot[RotNumber] = D3DX_PI * 0.0f;
+		RotNumber++;
+	}
+	if (m_OKD && m_SelectMove != SELECT_MOVE_UP)
+	{
+		OKRot[RotNumber] = D3DX_PI * 1.0f;
+		RotNumber++;
+	}
+
+	if (RotNumber != 0)
+	{
+		int nRand = rand() % RotNumber;
+
+		m_move.x = sinf(OKRot[nRand]) * 3.0f;
+		m_move.z = cosf(OKRot[nRand]) * 3.0f;
+
+		if (m_move.x >= 3.0f)
+		{
+			m_SelectMove = SELECT_MOVE_RIGHT;
+		}
+		else if (m_move.x <= -3.0f)
+		{
+			m_SelectMove = SELECT_MOVE_LEFT;
+		}
+		else if (m_move.z >= 3.0f)
+		{
+			m_SelectMove = SELECT_MOVE_UP;
+		}
+		else if (m_move.z <= -3.0f)
+		{
+			m_SelectMove = SELECT_MOVE_DOWN;
+		}
+	}
+}
+
+//====================================================================
+// 壁との当たり判定
+//====================================================================
+void CEnemy::SearchWall(void)
+{
+	bool OKR = true;	//右
+	bool OKL = true;	//左
+	bool OKU = true;	//上
+	bool OKD = true;	//下
+
+	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
+	{
+		//オブジェクトを取得
+		CObject* pObj = CObject::GetTop(nCntPriority);
+
+		while (pObj != NULL)
+		{
+			CObject* pObjNext = pObj->GetNext();
+
+			CObject::TYPE type = pObj->GetType();			//種類を取得
+
+			if (type == TYPE_CUBEBLOCK)
+			{//種類がブロックの時
+
+				CCubeBlock* pBlock = (CCubeBlock*)pObj;	// ブロック情報の取得
+
+				D3DXVECTOR3 pos = pBlock->GetPos();
+				D3DXVECTOR3 posOld = pBlock->GetPosOld();
+				D3DXVECTOR3 Move = pBlock->GetMove();
+				D3DXVECTOR3 Size = pBlock->GetSize();
+
+				D3DXVECTOR3 MyPos = INITVECTOR3;
+
+				for (int nCnt = 0; nCnt < 4; nCnt++)
+				{
+					switch (nCnt)
+					{
+					case 0:
+						MyPos = D3DXVECTOR3(m_pos.x + Size.x * 2.0f, m_pos.y, m_pos.z);	//右
+						break;
+					case 1:
+						MyPos = D3DXVECTOR3(m_pos.x - Size.x * 2.0f, m_pos.y, m_pos.z);	//左
+						break;
+					case 2:
+						MyPos = D3DXVECTOR3(m_pos.x, m_pos.y, m_pos.z + Size.z * 2.0f);	//上
+						break;
+					case 3:
+						MyPos = D3DXVECTOR3(m_pos.x, m_pos.y, m_pos.z - Size.z * 2.0f);	//下
+						break;
+					}
+
+					// 矩形の当たり判定
+					if (useful::CollisionRectangle2D(MyPos, pos, COLLISION_SIZE, Size, useful::COLLISION::COLLISION_ZX) == true)
+					{
+						switch (nCnt)
+						{
+						case 0:
+							OKR = false;
+							break;
+						case 1:
+							OKL = false;
+							break;
+						case 2:
+							OKU = false;
+							break;
+						case 3:
+							OKD = false;
+							break;
+						}
+
+						CEffect* pEffect = CEffect::Create();
+						pEffect->SetPos(MyPos);
+					}
+				}
+			}
+
+			pObj = pObjNext;
+		}
+	}
+
+	if (!m_OKR && OKR)
+	{
+		m_State = E_STATE_WAIT;
+	}
+	if (!m_OKL && OKL)
+	{
+		m_State = E_STATE_WAIT;
+	}
+	if (!m_OKU && OKU)
+	{
+		m_State = E_STATE_WAIT;
+	}
+	if (!m_OKD && OKD)
+	{
+		m_State = E_STATE_WAIT;
+	}
+
+	m_OKR = OKR;	//右
+	m_OKL = OKL;	//左
+	m_OKU = OKU;	//上
+	m_OKD = OKD;	//下
 }
 
 //====================================================================
