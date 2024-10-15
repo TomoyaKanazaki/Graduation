@@ -336,6 +336,9 @@
     <ClCompile Include="source\scrollarrow.cpp">
       <Filter>ソース ファイル\06_UI_2D</Filter>
     </ClCompile>
+    <ClCompile Include="source\fire.cpp">
+      <Filter>ソース ファイル\09_player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\SampleLevelModel.h">
@@ -592,6 +595,9 @@
     </ClInclude>
     <ClInclude Include="source\scrollarrow.h">
       <Filter>ヘッダー ファイル\06_UI_2D</Filter>
+    </ClInclude>
+    <ClInclude Include="source\fire.h">
+      <Filter>ヘッダー ファイル\09_player</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

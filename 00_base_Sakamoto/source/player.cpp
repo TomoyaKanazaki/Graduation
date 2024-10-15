@@ -29,6 +29,7 @@
 #include "LifeUi.h"
 #include "cross.h"
 #include "bowabowa.h"
+#include "fire.h"
 
 namespace
 {
@@ -423,7 +424,13 @@ void CPlayer::Rot(void)
 //====================================================================
 void CPlayer::Attack(void)
 {
+	//キーボードの取得
+	CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
 
+	if (pInputKeyboard->GetPress(DIK_SPACE) == true)
+	{
+		CFire::Create("data\\model\\BlockTest.x", m_pos, m_move);
+	}
 }
 
 //====================================================================
@@ -698,7 +705,6 @@ void CPlayer::CollisionItem(void)
 
 				CCross* pCross = (CCross*)pObj;	// アイテムの情報の取得
 
-
 				D3DXVECTOR3 pos = pCross->GetPos();
 				D3DXVECTOR3 posOld = pCross->GetPosOld();
 				D3DXVECTOR3 Size = pCross->GetSize();
@@ -706,7 +712,7 @@ void CPlayer::CollisionItem(void)
 				// 矩形の当たり判定
 				if (useful::CollisionCircle(m_pos, pos,30.0f) == true)
 				{
-					pCross->Uninit();
+					m_UseItem = true;
 				}
 			}
 
