@@ -69,6 +69,7 @@ CPlayer* CGame::m_pPlayer = nullptr;
 CDevil* CGame::m_pDevil = nullptr;
 CBoss* CGame::m_pBoss = nullptr;
 bool CGame::m_bGameEnd = false;
+bool CGame::m_bGameClear = false;
 bool CGame::m_bEvent = false;
 bool CGame::m_bEventEnd = false;
 bool CGame::m_Wireframe = false;
@@ -104,7 +105,6 @@ CGame::CGame()
 	m_nNumBowabowa = 0;
 	CManager::GetInstance()->GetCamera()->SetBib(false);
 	CManager::GetInstance()->GetCamera()->SetCameraMode(CCamera::CAMERAMODE_CONTROL);
-
 }
 
 //====================================================================
@@ -120,9 +120,21 @@ CGame::~CGame()
 //====================================================================
 HRESULT CGame::Init(void)
 {
+	////BGMの再生
 	//CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_BGM_TUTORIAL);
+
+	//クリアフラグのデフォルトをオンにしておく
+	m_bGameClear = true;
+
+	//タイムの起動
 	CGame::GetTime()->SetStopTime(false);
 
+	// タイムの生成
+	m_pTime = CTime::Create();
+	m_pTime->SetStartTime(timeGetTime());
+	m_pTime->SetTime(0);
+
+	//ステージ背景や床の生成
 	m_pMeshDomeUp = CObjmeshDome::Create();
 	m_pMeshDomeUp->SetTexture("data\\TEXTURE\\rain_clown.jpg");
 
@@ -135,11 +147,6 @@ HRESULT CGame::Init(void)
 
 	m_bGameEnd = false;
 
-	// タイムの生成
-	m_pTime = CTime::Create();
-	m_pTime->SetStartTime(timeGetTime());
-	m_pTime->SetTime(0);
-
 	m_pPlayer = CPlayer::Create();
 	m_pPlayer->SetPos(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
@@ -147,8 +154,19 @@ HRESULT CGame::Init(void)
 	m_pDevil->SetPos(D3DXVECTOR3(0.0f, 200.0f, 0.0f));
 
 	m_pScore = CScore::Create();
+	m_pScore->SetScore(CManager::GetInstance()->GetEndScore());
 
-	LoadStageBlock("data\\TXT\\STAGE\\Block.txt");
+	//ステージの読み込み
+	switch (CManager::GetInstance()->GetStage())
+	{
+	case 0:
+		LoadStageBlock("data\\TXT\\STAGE\\Block00.txt");
+		break;
+
+	case 1:
+		LoadStageBlock("data\\TXT\\STAGE\\Block01.txt");
+		break;
+	}
 
 	CCross* pCross = CCross::Create("data\\MODEL\\TestCross.x");
 	pCross->SetPos(D3DXVECTOR3(0.0f,0.0f,200.0f));
@@ -271,25 +289,40 @@ void CGame::Update(void)
 		EventUpdate();
 	}
 
-	if (m_nNumBowabowa <= 0)
+	if (CManager::GetInstance()->GetFade()->GetFade() == CFade::FADE_NONE)
 	{
-		CFade::SetFade(CScene::MODE_RESULT);
-		m_pTime->SetStopTime(true);
-		CManager::GetInstance()->SetEndScore(m_pTime->GetTimeNumber());
-	}
+		//ステージクリア条件の設定
+		switch (CManager::GetInstance()->GetStage())
+		{
+		case 0:
+			if (m_nNumBowabowa <= 0)
+			{
+				m_bGameEnd = true;
+			}
+			break;
 
-	if (pInputKeyboard->GetTrigger(DIK_RETURN) == true && CManager::GetInstance()->GetEdit() == false)
-	{
-		CFade::SetFade(CScene::MODE_RESULT);
-		m_pTime->SetStopTime(true);
-		CManager::GetInstance()->SetEndScore(m_pTime->GetTimeNumber());
-	}
+		case 1:
+			if (m_nNumBowabowa <= 0)
+			{
+				m_bGameEnd = true;
+			}
+			break;
+		}
 
-	if (m_bGameEnd == true)
-	{
-		CFade::SetFade(CScene::MODE_RESULT);
-		m_pTime->SetStopTime(true);
-		CManager::GetInstance()->SetEndScore(m_pTime->GetTimeNumber());
+		//ステージクリア時の条件
+		if (m_bGameEnd == true)
+		{
+			if (m_bGameClear)
+			{
+				StageClear(CManager::GetInstance()->GetStage());
+			}
+			else
+			{
+				CFade::SetFade(CScene::MODE_RESULT);
+				m_pTime->SetStopTime(true);
+				CManager::GetInstance()->SetEndScore(m_pScore->GetScore());
+			}
+		}
 	}
 }
 
@@ -299,6 +332,29 @@ void CGame::Update(void)
 void CGame::Draw(void)
 {
 
+}
+
+//====================================================================
+//ステージクリア処理
+//====================================================================
+void CGame::StageClear(int Stage)
+{
+	if (Stage == 1)
+	{
+		CManager::GetInstance()->SetStage(0);
+
+		CFade::SetFade(CScene::MODE_RESULT);
+		m_pTime->SetStopTime(true);
+		CManager::GetInstance()->SetEndScore(m_pScore->GetScore());
+	}
+	else
+	{
+		CManager::GetInstance()->SetStage(Stage + 1);
+
+		CFade::SetFade(CScene::MODE_GAME);
+		m_pTime->SetStopTime(true);
+		CManager::GetInstance()->SetEndScore(m_pScore->GetScore());
+	}
 }
 
 //====================================================================

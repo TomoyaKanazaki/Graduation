@@ -115,7 +115,7 @@ HRESULT CPlayer::Init(void)
 	SetType(CObject::TYPE_PLAYER3D);
 
 	//ƒ‚ƒfƒ‹‚Ì¶¬
-	LoadLevelData("data\\TXT\\tamagon.txt");
+	LoadLevelData("data\\TXT\\motion_foot_light_spear.txt");
 
 	//ƒ‚[ƒVƒ‡ƒ“‚Ì¶¬
 	if (m_pMotion == NULL)
@@ -904,6 +904,7 @@ void CPlayer::Death(void)
 		if (m_nLife < 0)
 		{
 			CGame::SetGameEnd(true);
+			CGame::SetGameClear(false);
 		}
 		else
 		{
