@@ -9,6 +9,7 @@
 #include "manager.h"
 #include "texture.h"
 #include "XModel.h"
+#include "enemy.h"
 
 //==========================================
 // íËêîíËã`
@@ -144,6 +145,9 @@ void CFire::Update(void)
 		//îjä¸Ç∑ÇÈ
 		Uninit();
 	}
+
+	// ìGÇ∆ÇÃîªíË
+	CollisionEnemy();
 }
 
 //====================================================================
@@ -203,6 +207,40 @@ void CFire::Draw(void)
 //====================================================================
 void CFire::CollisionEnemy()
 {
+	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
+	{
+		//ÉIÉuÉWÉFÉNÉgÇéÊìæ
+		CObject* pObj = CObject::GetTop(nCntPriority);
+
+		while (pObj != nullptr)
+		{
+			CObject* pObjNext = pObj->GetNext();
+
+			// éÌóﬁÇéÊìæ
+			CObject::TYPE type = pObj->GetType();
+
+			if (type == TYPE_ENEMY3D)
+			{//éÌóﬁÇ™ìGÇÃéû
+				// ìGÇÃèÓïÒÇÃéÊìæ
+				CEnemy* pEnemy = (CEnemy*)pObj;	
+
+				D3DXVECTOR3 pos = pEnemy->GetPos();
+				D3DXVECTOR3 Size = pEnemy->GetSize();
+
+				// â~ÇÃìñÇΩÇËîªíË
+				if (useful::CollisionCircle(m_pos, pos, Size.x) == true)
+				{// íeÇ™ìñÇΩÇ¡ÇΩ
+					pEnemy->Hit(1);
+
+					Uninit();
+
+					return;
+				}
+			}
+
+			pObj = pObjNext;
+		}
+	}
 }
 
 //====================================================================

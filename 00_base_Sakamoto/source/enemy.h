@@ -66,7 +66,7 @@ public:
 	void GameUpdate(void);
 	void Draw(void);
 
-	virtual void HitDamage(float fDamage);
+	virtual bool Hit(int nLife);
 
 	void SetPos(D3DXVECTOR3 pos) { m_pos = pos; }
 	D3DXVECTOR3 GetPos(void) { return m_pos; }
@@ -106,6 +106,8 @@ private:
 	void SearchWall(void);								// 壁のサーチ判定
 
 	void LoadLevelData(const char* pFilename);
+
+	int m_nLife;				// 体力
 
 	D3DXVECTOR3 m_pos;			//位置
 	D3DXVECTOR3 m_posOld;		//過去の位置

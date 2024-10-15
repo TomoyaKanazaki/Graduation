@@ -32,7 +32,7 @@
 namespace
 {
 	const D3DXVECTOR3 COLLISION_SIZE = D3DXVECTOR3(45.0f, 60.0f, 45.0f);		//横の当たり判定
-	const float LIFE = 30.0f;	// 体力
+	const float LIFE = 1.0f;	// 体力
 
 	const float DISTANCE_RECEDE = 200.0f;	//近づく距離
 	const float DISTANCE_APPROACH = 100.0f;	//遠ざかる距離
@@ -244,48 +244,18 @@ void CEnemy::Draw(void)
 }
 
 //====================================================================
-// 接触ダメージ処理
+// ヒット処理
 //====================================================================
-void CEnemy::HitDamage(float fDamage)
+bool CEnemy::Hit(int nLife)
 {
-	//m_fLife -= fDamage;
+	m_nLife -= nLife;
 
-	//if (m_State == STATE_SEATCH)
-	//{
-	//	m_State = STATE_BATTLE;
-	//}
+	if (m_nLife < 0)
+	{// 体力0以下
+		Uninit();
+	}
 
-	//if (m_fLife <= 0.0f && m_bDeath == false)
-	//{
-	//	m_fLife = 0.0f;
-	//	m_bAttack = false;
-
-	//	if (m_State == STATE_BATTLE)
-	//	{
-	//		m_bJump = true;
-	//		m_move.y = 8.0f;
-	//	}
-
-	//	switch (m_EnemyType)
-	//	{
-	//	case CEnemy::ENEMY_ASHIGARU:
-	//		CGame::GetScore()->AddScore(500);
-	//		break;
-
-	//	case CEnemy::ENEMY_BOWMAN:
-	//		CGame::GetScore()->AddScore(800);
-	//		break;
-
-	//	case CEnemy::ENEMY_SAMURAI:
-	//		CGame::GetScore()->AddScore(1200);
-	//		break;
-
-	//	default:
-	//		break;
-	//	}
-
-	//	m_bDeath = true;
-	//}
+	return true;
 }
 
 //====================================================================
