@@ -35,6 +35,7 @@
     <ClCompile Include="source\debris.cpp" />
     <ClCompile Include="source\debugproc.cpp" />
     <ClCompile Include="source\devil.cpp" />
+    <ClCompile Include="source\DevilHole.cpp" />
     <ClCompile Include="source\Edit.cpp" />
     <ClCompile Include="source\effect.cpp" />
     <ClCompile Include="source\enemy.cpp" />
@@ -45,6 +46,7 @@
     <ClCompile Include="source\GamePause.cpp" />
     <ClCompile Include="source\input.cpp" />
     <ClCompile Include="source\inputManager.cpp" />
+    <ClCompile Include="source\item.cpp" />
     <ClCompile Include="source\LevelModelEffect.cpp" />
     <ClCompile Include="source\LifeUi.cpp" />
     <ClCompile Include="source\light.cpp" />
@@ -125,6 +127,7 @@
     <ClInclude Include="source\debris.h" />
     <ClInclude Include="source\debugproc.h" />
     <ClInclude Include="source\devil.h" />
+    <ClInclude Include="source\DevilHole.h" />
     <ClInclude Include="source\Edit.h" />
     <ClInclude Include="source\effect.h" />
     <ClInclude Include="source\enemy.h" />
@@ -135,6 +138,7 @@
     <ClInclude Include="source\GamePause.h" />
     <ClInclude Include="source\input.h" />
     <ClInclude Include="source\inputManager.h" />
+    <ClInclude Include="source\item.h" />
     <ClInclude Include="source\LevelModelEffect.h" />
     <ClInclude Include="source\LifeUi.h" />
     <ClInclude Include="source\light.h" />

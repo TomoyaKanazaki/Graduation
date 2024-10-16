@@ -79,6 +79,12 @@
     <Filter Include="ヘッダー ファイル\10_enemy">
       <UniqueIdentifier>{a6d26c64-77a3-4b7a-9bbd-793606c0baad}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\11_item">
+      <UniqueIdentifier>{9ae5a735-6267-4a1c-8856-975d1c53e960}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\11_item">
+      <UniqueIdentifier>{f013bb6e-aa95-4944-b258-fc2e3387c870}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\SampleLevelModel.cpp">
@@ -321,12 +327,6 @@
     <ClCompile Include="source\devil.cpp">
       <Filter>ソース ファイル\10_enemy</Filter>
     </ClCompile>
-    <ClCompile Include="source\bowabowa.cpp">
-      <Filter>ソース ファイル\08_Map</Filter>
-    </ClCompile>
-    <ClCompile Include="source\cross.cpp">
-      <Filter>ソース ファイル\08_Map</Filter>
-    </ClCompile>
     <ClCompile Include="source\LifeUi.cpp">
       <Filter>ソース ファイル\06_UI_2D</Filter>
     </ClCompile>
@@ -338,6 +338,18 @@
     </ClCompile>
     <ClCompile Include="source\fire.cpp">
       <Filter>ソース ファイル\09_player</Filter>
+    </ClCompile>
+    <ClCompile Include="source\DevilHole.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\item.cpp">
+      <Filter>ソース ファイル\11_item</Filter>
+    </ClCompile>
+    <ClCompile Include="source\bowabowa.cpp">
+      <Filter>ソース ファイル\11_item</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cross.cpp">
+      <Filter>ソース ファイル\11_item</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -581,12 +593,6 @@
     <ClInclude Include="source\devil.h">
       <Filter>ヘッダー ファイル\10_enemy</Filter>
     </ClInclude>
-    <ClInclude Include="source\bowabowa.h">
-      <Filter>ヘッダー ファイル\08_Map</Filter>
-    </ClInclude>
-    <ClInclude Include="source\cross.h">
-      <Filter>ヘッダー ファイル\08_Map</Filter>
-    </ClInclude>
     <ClInclude Include="source\LifeUi.h">
       <Filter>ヘッダー ファイル\06_UI_2D</Filter>
     </ClInclude>
@@ -598,6 +604,18 @@
     </ClInclude>
     <ClInclude Include="source\fire.h">
       <Filter>ヘッダー ファイル\09_player</Filter>
+    </ClInclude>
+    <ClInclude Include="source\DevilHole.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\item.h">
+      <Filter>ヘッダー ファイル\11_item</Filter>
+    </ClInclude>
+    <ClInclude Include="source\bowabowa.h">
+      <Filter>ヘッダー ファイル\11_item</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cross.h">
+      <Filter>ヘッダー ファイル\11_item</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

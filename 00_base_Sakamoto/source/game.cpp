@@ -31,6 +31,7 @@
 #include "Edit.h"
 #include "devil.h"
 #include "bowabowa.h"
+#include "DevilHole.h"
 
 #include "renderer.h"
 #include "SampleObj2D.h"
@@ -148,7 +149,7 @@ HRESULT CGame::Init(void)
 	m_bGameEnd = false;
 
 	m_pPlayer = CPlayer::Create();
-	m_pPlayer->SetPos(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pPlayer->SetPos(D3DXVECTOR3(0.0f, 0.0f, 100.0f));
 
 	m_pDevil = CDevil::Create();
 	m_pDevil->SetPos(D3DXVECTOR3(0.0f, 200.0f, 0.0f));
@@ -165,6 +166,7 @@ HRESULT CGame::Init(void)
 
 	case 1:
 		LoadStageBlock("data\\TXT\\STAGE\\Block01.txt");
+		CDevilHole* pDevilHole = CDevilHole::Create("data\\MODEL\\DevilHole.x");
 		break;
 	}
 
