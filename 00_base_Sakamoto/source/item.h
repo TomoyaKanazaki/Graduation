@@ -10,9 +10,6 @@
 #include "main.h"
 #include "objectX.h"
 
-//前方宣言
-class CObjGauge2D;
-
 //オブジェクトアイテムクラス
 class CItem : public CObjectX
 {
@@ -28,34 +25,53 @@ public:
 		STATE_ACTION,		//行動
 		STATE_MAX,
 	};
+	
+	enum TYPE
+	{// アイテムの種類
+		TYPE_NONE = 0,
+		TYPE_CROSS,		// 十字架
+		TYPE_BIBLE,		// 聖書
+		TYPE_BOWABOWA,	// ぼわぼわ
+		TYPE_MAX
+	};
 
-	static CItem* Create(char* pModelName);
+	static CItem* Create(TYPE eType, const D3DXVECTOR3& pos);
 
 	HRESULT Init(char* pModelName);
 	void Uninit(void);
 	void Update(void);
-	void GameUpdate(void);
 	void Draw(void);
 
+	virtual void CollisionPlayer();
+
+	// テクスチャ番号取得
 	int GetIdx(void) { return m_nIdxTexture; }
+
+	// Xモデル番号取得
 	int GetIdxXModel(void) { return -1; }
-	void SetPos(D3DXVECTOR3 pos) { m_pos = pos; }
+
+	//位置設定・取得
+	void SetPos(const D3DXVECTOR3& pos) { m_pos = pos; }
 	D3DXVECTOR3 GetPos(void) { return m_pos; }
 
 private:
-	void StateManager(void);	//状態管理
+	STATE m_eState;		// 状態
+	TYPE m_eType;		// 種類
 
-	int m_nIdxXModel;				//Xモデルの番号
-	D3DXVECTOR3 m_CollisionPos;		//当たり判定用の座標
-	bool m_bCollision;				//当たり判定用の座標
-	int m_nIdxTexture;				//テクスチャの番号
-	STATE m_State;					//状態
-	int m_nStateCount;				//状態管理用変数
-	float m_Scaling;				//大きさ
-	D3DXVECTOR3 m_pos;				//位置	
-	D3DXVECTOR3 m_posOld;			//過去の位置	
-	D3DXVECTOR3 m_move;				//移動量	
-	D3DXVECTOR3 m_rot;				//向き	
-	float m_fColorA;				//不透明度
+	int m_nIdxXModel;		//Xモデルの番号
+	int m_nIdxTexture;		//テクスチャの番号
+	int m_nStateCount;		//状態管理用変数
+
+	float m_fColorA;		//不透明度
+	float m_Scaling;		//大きさ
+
+	bool m_bCollision;		//当たり判定用の座標
+
+	D3DXVECTOR3 m_CollisionPos;	//当たり判定用の座標
+	D3DXVECTOR3 m_pos;			//位置	
+	D3DXVECTOR3 m_posOld;		//過去の位置	
+	D3DXVECTOR3 m_move;			//移動量	
+	D3DXVECTOR3 m_rot;			//向き	
 };
+
 #endif

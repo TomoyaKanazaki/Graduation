@@ -21,7 +21,7 @@ namespace
 //====================================================================
 //コンストラクタ
 //====================================================================
-CCross::CCross(int nPriority) : CObjectX(nPriority)
+CCross::CCross(int nPriority) : CItem(nPriority)
 {
 	SetSize(SAMPLE_SIZE);
 	SetPos(INITVECTOR3);
@@ -71,7 +71,7 @@ HRESULT CCross::Init(char* pModelName)
 {
 	SetType(CObject::TYPE_CROSS);
 
-	CObjectX::Init(pModelName);
+	CItem::Init(pModelName);
 
 	//モードごとに初期値を設定出来る
 	switch (CScene::GetMode())
@@ -97,7 +97,7 @@ HRESULT CCross::Init(char* pModelName)
 //====================================================================
 void CCross::Uninit(void)
 {
-	CObjectX::Uninit();
+	CItem::Uninit();
 }
 
 //====================================================================
@@ -135,7 +135,7 @@ void CCross::TitleUpdate(void)
 	SetPos(pos);
 
 	//頂点情報の更新
-	CObjectX::Update();
+	CItem::Update();
 }
 
 //====================================================================
@@ -163,7 +163,7 @@ void CCross::GameUpdate(void)
 	StateManager();
 
 	//頂点情報の更新
-	CObjectX::Update();
+	CItem::Update();
 }
 
 //====================================================================
@@ -171,7 +171,7 @@ void CCross::GameUpdate(void)
 //====================================================================
 void CCross::Draw(void)
 {
-	CObjectX::Draw();
+	CItem::Draw();
 }
 
 //====================================================================
