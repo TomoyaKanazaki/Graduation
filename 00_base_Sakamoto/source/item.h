@@ -1,7 +1,7 @@
 //============================================
 //
 //	ÉAÉCÉeÉÄÇÃèàóù [item.h]
-//	Author:sakamoto kai
+//	Author:morikawa shunya
 //
 //============================================
 #ifndef _ITEM_H_
@@ -34,7 +34,6 @@ public:
 	HRESULT Init(char* pModelName);
 	void Uninit(void);
 	void Update(void);
-	void TitleUpdate(void);
 	void GameUpdate(void);
 	void Draw(void);
 
