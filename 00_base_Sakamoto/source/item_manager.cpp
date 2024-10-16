@@ -114,7 +114,16 @@ void CItemManager::UnLoad()
 	* 必ず終了で破棄すること
 	*/
 
-	// TODO データの破棄
+	// 用意されている全てのデータを破棄する
+	for (int i = 0; i < ms_nNumMap; ++i)
+	{
+		for (int j = 0; j < ms_pItems[i].nNum; ++j)
+		{
+			delete ms_pItems[i].pType[j];
+			delete ms_pItems[i].pPos[j];
+		}
+		delete &ms_pItems[i];
+	}
 }
 
 //==========================================
