@@ -119,8 +119,8 @@ void CItemManager::UnLoad()
 	{
 		for (int j = 0; j < ms_pItems[i].nNum; ++j)
 		{
-			delete ms_pItems[i].pType[j];
-			delete ms_pItems[i].pPos[j];
+			delete &ms_pItems[i].pType[j];
+			delete &ms_pItems[i].pPos[j];
 		}
 		delete &ms_pItems[i];
 	}
