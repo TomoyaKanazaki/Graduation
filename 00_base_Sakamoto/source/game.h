@@ -68,6 +68,7 @@ public:
 	static int GetBowabowa(void) { return m_nNumBowabowa; }
 	static void SetBowabowa(int Bowabowa) { m_nNumBowabowa = Bowabowa; }
 	static void AddBowabowa(int nNum) { m_nNumBowabowa+= nNum; }
+	static void SetDevilHoleFinish(bool Set) { m_bDevilHoleFinish = Set; }
 	
 	void DeleteMap(void);
 
@@ -81,6 +82,12 @@ private:
 
 	void Sample(void);								//サンプル系が入ってるヨ
 
+	//インゲーム用変数
+	static CPlayer* m_pPlayer;						//プレイヤーのポインタ
+	static CDevil* m_pDevil;						//デビルのポインタ
+
+	static int m_nNumBowabowa;						//ボワボワの数
+	static bool m_bDevilHoleFinish;					//デビルホールがすべて埋まったかどうか
 	static bool m_bGameEnd;							//ゲーム終了状態かどうか
 	static bool m_bGameClear;						//ゲームクリア状態かどうか
 
@@ -111,10 +118,6 @@ private:
 	static CCubeBlock* m_pCubeBlock;				//キューブブロック
 	static bool m_Wireframe;						//ワイヤーフレームのオンオフ
 	static bool m_Slow;								//スロー演出のオンオフ
-
-	static CPlayer* m_pPlayer;						//プレイヤーのポインタ
-	static CDevil* m_pDevil;						//デビルのポインタ
-	static int m_nNumBowabowa;						//ボワボワの数
 
 	static CObject2D* m_p2DSample;					//2Dポリゴンのサンプル
 	static CObject3D* m_p3DSample;					//3Dポリゴンのサンプル

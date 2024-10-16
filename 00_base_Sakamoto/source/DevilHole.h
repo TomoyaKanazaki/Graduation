@@ -46,6 +46,7 @@ public:
 private:
 	void StateManager(void);	//状態管理
 	void CollisionOpen(void);	//解除判定
+	void ClearJudge(void);		//クリア判定処理
 
 	int m_nIdxXModel;				//Xモデルの番号
 	D3DXVECTOR3 m_CollisionPos;		//当たり判定用の座標

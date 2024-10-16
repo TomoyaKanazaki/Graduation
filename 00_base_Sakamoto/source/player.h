@@ -102,7 +102,7 @@ private:
 	void CollisionWall(useful::COLLISION XYZ);		//壁との当たり判定
 	void CollisionBowabowa(void);	//ボワボワとの当たり判定
 	void SearchWall(void);							//壁のサーチ判定
-	void CollisionMapModel(useful::COLLISION XYZ);	//壁との当たり判定
+	void CollisionDevilHole(useful::COLLISION XYZ);	//デビルホールとの当たり判定
 	void CollisionItem (void);	//アイテムとの当たり判定
 	void CollisionEnemy(void);	// 敵との当たり判定
 
