@@ -351,6 +351,12 @@
     <ClCompile Include="source\cross.cpp">
       <Filter>ソース ファイル\11_item</Filter>
     </ClCompile>
+    <ClCompile Include="source\item_manager.h">
+      <Filter>ヘッダー ファイル\11_item</Filter>
+    </ClCompile>
+    <ClCompile Include="source\item_manager.cpp">
+      <Filter>ソース ファイル\11_item</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\SampleLevelModel.h">

@@ -23,7 +23,7 @@ namespace
 //====================================================================
 //コンストラクタ
 //====================================================================
-CBowabowa::CBowabowa(int nPriority) : CObjectX(nPriority)
+CBowabowa::CBowabowa(int nPriority) : CItem(nPriority)
 {
 	SetSize(SAMPLE_SIZE);
 	SetPos(INITVECTOR3);
@@ -73,7 +73,7 @@ HRESULT CBowabowa::Init(char* pModelName)
 {
 	SetType(CObject::TYPE_BOWABOWA);
 
-	CObjectX::Init(pModelName);
+	CItem::Init(pModelName);
 
 	//モードごとに初期値を設定出来る
 	switch (CScene::GetMode())
@@ -99,7 +99,7 @@ HRESULT CBowabowa::Init(char* pModelName)
 //====================================================================
 void CBowabowa::Uninit(void)
 {
-	CObjectX::Uninit();
+	CItem::Uninit();
 }
 
 //====================================================================
@@ -137,7 +137,7 @@ void CBowabowa::TitleUpdate(void)
 	SetPos(pos);
 
 	//頂点情報の更新
-	CObjectX::Update();
+	CItem::Update();
 }
 
 //====================================================================
@@ -165,7 +165,7 @@ void CBowabowa::GameUpdate(void)
 	StateManager();
 
 	//頂点情報の更新
-	CObjectX::Update();
+	CItem::Update();
 }
 
 //====================================================================
@@ -173,7 +173,7 @@ void CBowabowa::GameUpdate(void)
 //====================================================================
 void CBowabowa::Draw(void)
 {
-	CObjectX::Draw();
+	CItem::Draw();
 }
 
 //====================================================================

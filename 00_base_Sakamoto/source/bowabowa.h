@@ -8,13 +8,13 @@
 #define _BOWABOWA_H_
 
 #include "main.h"
-#include "objectX.h"
+#include "item.h"
 
 //前方宣言
 class CObjGauge2D;
 
 //オブジェクトプレイヤークラス
-class CBowabowa : public CObjectX
+class CBowabowa : public CItem
 {
 public:
 
