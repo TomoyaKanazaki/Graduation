@@ -45,6 +45,7 @@ public:
 
 private:
 	void StateManager(void);	//ó‘ÔŠÇ—
+	void CollisionOpen(void);	//‰ğœ”»’è
 
 	int m_nIdxXModel;				//Xƒ‚ƒfƒ‹‚Ì”Ô†
 	D3DXVECTOR3 m_CollisionPos;		//“–‚½‚è”»’è—p‚ÌÀ•W

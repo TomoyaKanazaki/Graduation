@@ -198,3 +198,42 @@ void CDevilHole::StateManager(void)
 		m_nStateCount--;
 	}
 }
+
+//====================================================================
+// 壁との当たり判定
+//====================================================================
+void CDevilHole::CollisionOpen(void)
+{
+	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
+	{
+		//オブジェクトを取得
+		CObject* pObj = CObject::GetTop(nCntPriority);
+
+		while (pObj != NULL)
+		{
+			CObject* pObjNext = pObj->GetNext();
+
+			CObject::TYPE type = pObj->GetType();			//種類を取得
+
+			if (type == TYPE_PLAYER3D)
+			{//種類がプレイヤーの時
+
+				//* pBlock = (CCubeBlock*)pObj;	// ブロック情報の取得
+
+				//D3DXVECTOR3 pos = pBlock->GetPos();
+				//D3DXVECTOR3 posOld = pBlock->GetPosOld();
+				//D3DXVECTOR3 Move = pBlock->GetMove();
+				//D3DXVECTOR3 Size = pBlock->GetSize();
+
+				//// 矩形の当たり判定
+				//if (useful::CollisionBlock(pos, posOld, Move, Size, &m_pos, m_posOld, &m_move, &m_Objmove, m_size, &m_bJump, XYZ) == true)
+				//{
+				//	//待機状態にする
+				//	m_State = STATE_WAIT;
+				//}
+			}
+
+			pObj = pObjNext;
+		}
+	}
+}
