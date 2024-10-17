@@ -26,6 +26,7 @@ class CSound;
 class CTime;
 class CRanking;
 class CBlockManager;
+class CItemManager;
 
 //シーンクラス
 class CScene

@@ -10,7 +10,7 @@
 //  静的メンバ変数宣言
 //==========================================
 int CItemManager::ms_nNumMap = 0;
-CItemManager::SItems* CItemManager::ms_pItems = nullptr;
+CItemManager::SItems CItemManager::ms_pItems[MAX_ITEM][MAX_SET] = {};
 
 //==========================================
 //  コンストラクタ
@@ -26,6 +26,7 @@ CItemManager::CItemManager() :
 //==========================================
 CItemManager::~CItemManager()
 {
+
 }
 
 //==========================================
@@ -33,17 +34,17 @@ CItemManager::~CItemManager()
 //==========================================
 void CItemManager::Init(const int nMap, const EType type)
 {
-	// 使用する配置情報のnullチェック
-	if (&ms_pItems[nMap] == nullptr) { assert(false); return; }
+	//// 使用する配置情報のnullチェック
+	//if (&ms_pItems[nMap] == nullptr) { assert(false); return; }
 
-	// 使用する配置データを設定
-	m_pItems = &ms_pItems[nMap];
+	//// 使用する配置データを設定
+	//m_pItems = &ms_pItems[nMap];
 
-	// 配置タイプを設定
-	m_eType = type;
+	//// 配置タイプを設定
+	//m_eType = type;
 
-	// アイテムの設置
-	ItemSeting();
+	//// アイテムの設置
+	//ItemSeting();
 }
 
 //==========================================
@@ -93,13 +94,80 @@ CItemManager* CItemManager::Create(const int nMap, const EType type)
 //==========================================
 HRESULT CItemManager::Load()
 {
-	/*
-	* 読み込むデータ量が膨大になる可能性があるので
-	* 必ず初期化で取得すること
-	*/
+	///*
+	//* 読み込むデータ量が膨大になる可能性があるので
+	//* 必ず初期化で取得すること
+	//*/
 
-	// TODO アイテム配置データの作成
-	// TODO データの読み込み
+	//// TODO アイテム配置データの作成
+	//// TODO データの読み込み
+	//while (1)
+	//{
+	//	FILE* pFile = nullptr;
+
+	//	switch (ms_nNumMap)
+	//	{
+	//	case 0:
+	//		//ファイルを開く
+	//		pFile = fopen("data\\TXT\\STAGE\\Item00.txt", "r");
+	//		break;
+	//	case 1:
+	//		//ファイルを開く
+	//		pFile = fopen("data\\TXT\\STAGE\\Item01.txt", "r");
+	//		break;
+	//	default:
+	//		break;
+	//	}
+
+	//	if (pFile != nullptr)
+	//	{//ファイルが開けた場合
+
+	//		char aString[128] = {};			//メッセージ保存用
+
+	//		fscanf(pFile, "%s", &aString[0]);
+	//		if (strcmp(&aString[0], "STARTSETSTAGE") == 0)
+	//		{
+	//			int nNumberCount = 0;
+	//			while (1)
+	//			{
+	//				fscanf(pFile, "%s", &aString[0]);
+	//				if (strcmp(&aString[0], "STARTSETITEM") == 0)
+	//				{
+	//					D3DXVECTOR3 pos;
+	//					int Type;
+
+	//					fscanf(pFile, "%s", &aString[0]);
+	//					fscanf(pFile, "%f", &pos.x);
+	//					fscanf(pFile, "%f", &pos.y);
+	//					fscanf(pFile, "%f", &pos.z);
+
+	//					fscanf(pFile, "%s", &aString[0]);
+	//					fscanf(pFile, "%d", &Type);
+
+	//					ms_pItems[ms_nNumMap].pPos[nNumberCount] = pos;
+	//					ms_pItems[ms_nNumMap].pType[nNumberCount] = (CItem::TYPE)Type;
+	//					nNumberCount++;
+
+	//					fscanf(pFile, "%s", &aString[0]);
+	//					if (strcmp(&aString[0], "ENDSETITEM") == 0)
+	//					{
+	//						break;
+	//					}
+	//				}
+	//				else if (strcmp(&aString[0], "ENDSETSTAGE") == 0)
+	//				{
+	//					ms_pItems[ms_nNumMap].nNum = nNumberCount;
+	//					break;
+	//				}
+	//			}
+	//		}
+	//		fclose(pFile);
+	//	}
+	//	else
+	//	{//ファイルが開けなかった場合
+	//		break;
+	//	}
+	//}
 
 	return S_OK;
 }
@@ -114,16 +182,16 @@ void CItemManager::UnLoad()
 	* 必ず終了で破棄すること
 	*/
 
-	// 用意されている全てのデータを破棄する
-	for (int i = 0; i < ms_nNumMap; ++i)
-	{
-		for (int j = 0; j < ms_pItems[i].nNum; ++j)
-		{
-			delete &ms_pItems[i].pType[j];
-			delete &ms_pItems[i].pPos[j];
-		}
-		delete &ms_pItems[i];
-	}
+	//// 用意されている全てのデータを破棄する
+	//for (int i = 0; i < ms_nNumMap; ++i)
+	//{
+	//	for (int j = 0; j < ms_pItems[i].nNum; ++j)
+	//	{
+	//		delete &ms_pItems[i].pType[j];
+	//		delete &ms_pItems[i].pPos[j];
+	//	}
+	//	delete &ms_pItems[i];
+	//}
 }
 
 //==========================================

@@ -48,6 +48,7 @@ public:
 	virtual void Draw(void);
 
 	static CPlayer* GetPlayer(void) { return m_pPlayer; }
+	static CDevil* GetDevil(void) { return m_pDevil; }
 	static CBoss* GetBoss(void) { return m_pBoss; }
 	static CPause* GetPause(void) { return m_pPause; }
 	static CScore* GetScore(void) { return m_pScore; }

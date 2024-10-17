@@ -7,6 +7,9 @@
 //==========================================
 #include "item.h"
 
+#define MAX_ITEM (512)
+#define MAX_SET (32)
+
 //==========================================
 //  クラス定義
 //==========================================
@@ -58,5 +61,5 @@ private:
 
 	// 静的メンバ変数
 	static int ms_nNumMap; // 配置されるデータの数
-	static SItems* ms_pItems; // アイテム管理用変数
+	static SItems ms_pItems[MAX_ITEM][MAX_SET]; // アイテム管理用変数
 };
