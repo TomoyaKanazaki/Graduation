@@ -13,7 +13,7 @@
 //前方宣言
 class CObjGauge2D;
 
-//オブジェクトプレイヤークラス
+//オブジェクトボワボワクラス
 class CBowabowa : public CItem
 {
 public:

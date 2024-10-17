@@ -5,23 +5,27 @@
 //
 //============================================
 #include "bible.h"
+#include "renderer.h"
+#include "manager.h"
+#include "texture.h"
+#include "XModel.h"
+#include "player.h"
+
+//==========================================
+//  定数定義
+//==========================================
+namespace
+{
+	const D3DXVECTOR3 SAMPLE_SIZE = D3DXVECTOR3(20.0f, 20.0f, 20.0f);		//当たり判定
+}
 
 //====================================================================
 // コンストラクタ
 //====================================================================
-CBible::CBible(int nPriority) : CItem(nPriority),
-m_nIdxXModel	(0),			// Xモデル番号
-m_nIdxTexture	(-1),			// テクスチャ番号
-m_nStateCount	(0),			// 状態管理
-m_fColorA		(0.0f),			// 不透明度
-m_Scaling		(0.0f),			// 大きさ
-m_bCollision	(false),		// 当たり判定
-m_CollisionPos	(D3DXVECTOR3(0.0f, 0.0f, 0.0f)),	// 判定座標
-m_pos			(D3DXVECTOR3(0.0f, 0.0f, 0.0f)),	// 位置
-m_posOld		(D3DXVECTOR3(0.0f, 0.0f, 0.0f)),	// 過去の位置
-m_move			(D3DXVECTOR3(0.0f, 0.0f, 0.0f)),	// 移動量
-m_rot			(D3DXVECTOR3(0.0f, 0.0f, 0.0f))	// 向き
+CBible::CBible(int nPriority) : CItem(nPriority)
 {
+	SetSize(SAMPLE_SIZE);
+	SetPos(INITVECTOR3);
 }
 
 //====================================================================
@@ -62,6 +66,7 @@ HRESULT CBible::Init(char* pModelName)
 //====================================================================
 void CBible::Uninit(void)
 {
+	// 継承クラスの終了
 	CItem::Uninit();
 }
 
@@ -70,10 +75,75 @@ void CBible::Uninit(void)
 //====================================================================
 void CBible::Update(void)
 {
+	switch (CScene::GetMode())
+	{
+	case CScene::MODE_TITLE:
+		TitleUpdate();
+		break;
+
+	case CScene::MODE_GAME:
+	case CScene::MODE_TUTORIAL:
+
+		GameUpdate();
+		break;
+
+	case CScene::MODE_RESULT:
+		break;
+	}
+}
+
+//====================================================================
+// タイトルでの更新
+//====================================================================
+void CBible::TitleUpdate(void)
+{
+	D3DXVECTOR3 pos = GetPos();
+	D3DXVECTOR3 move = GetMove();
+
+	//位置更新
+	pos += move;
+
+	SetPos(pos);
+
+	//頂点情報の更新
+	CItem::Update();
+}
+
+//====================================================================
+// ゲームでの更新
+//====================================================================
+void CBible::GameUpdate(void)
+{
+	D3DXVECTOR3 pos = GetPos();
+	D3DXVECTOR3 posOld = GetPosold();
+	D3DXVECTOR3 rot = GetRot();
+
+	float Scaling = GetScaling();
+
+	//更新前の位置を過去の位置とする
+	posOld = pos;
+
+	//位置更新
+	CObjectX::SetPos(pos);
+	CObjectX::SetRot(rot);
+
+	//画面外判定
+	if (pos.y < 0.0f)
+	{
+
+	}
+
+	//大きさの設定
+	SetScaling(Scaling);
+
+	//状態管理
+	StateManager();
+
+	//頂点情報の更新
 	CItem::Update();
 
-	// 当たり判定
-	CItem::CollisionPlayer();
+	// プレイヤーとの判定
+	CollisionPlayer();
 }
 
 //====================================================================
@@ -81,5 +151,72 @@ void CBible::Update(void)
 //====================================================================
 void CBible::Draw(void)
 {
+	// 継承クラスの描画
 	CItem::Draw();
+}
+
+//====================================================================
+// プレイヤーとの判定
+//====================================================================
+bool CBible::CollisionPlayer()
+{
+	if (!CItem::CollisionPlayer())
+	{
+		return false;
+	}
+
+	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
+	{
+		//オブジェクトを取得
+		CObject* pObj = CObject::GetTop(nCntPriority);
+
+		while (pObj != nullptr)
+		{
+			CObject* pObjNext = pObj->GetNext();
+
+			CObject::TYPE type = pObj->GetType();	// 種類を取得
+
+			if (type != TYPE_PLAYER3D)
+			{
+				pObj = pObjNext;
+				continue;
+			}
+
+			CPlayer* pPlayer = (CPlayer*)pObj;		// アイテムの情報の取得
+
+			D3DXVECTOR3 pos = pObj->GetPos();
+			D3DXVECTOR3 rot = pPlayer->GetRot();
+			D3DXVECTOR3 Size = pObj->GetSize();
+
+			// アイテムの位置をプレイヤーと同じ位置に設定
+			SetPos(pos);
+
+			pObj = pObjNext;
+		}
+	}
+
+	return true;
+}
+
+//====================================================================
+//状態管理
+//====================================================================
+void CBible::StateManager(void)
+{
+	CItem::STATE State = GetState();
+
+	int nStateCounter = GetStateCounter();
+
+	switch (State)
+	{
+	case STATE_NORMAL:
+		break;
+	case STATE_ACTION:
+		break;
+	}
+
+	if (nStateCounter > 0)
+	{
+		nStateCounter--;
+	}
 }
