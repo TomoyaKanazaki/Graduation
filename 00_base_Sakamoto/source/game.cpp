@@ -45,6 +45,8 @@
 #include "cross.h"
 #include "scrollarrow.h"
 #include "enemyMedaman.h"
+#include "bible.h"
+
 
 namespace
 {
@@ -147,6 +149,11 @@ HRESULT CGame::Init(void)
 	CBowabowa* pBowabowa = nullptr;
 	pBowabowa = CBowabowa::Create("data\\MODEL\\Testbowabowa.x");
 	pBowabowa->SetPos(D3DXVECTOR3(100.0f, 0.0f, 0.0f));
+
+	// ¹‘¶¬
+	CBible* pBible = nullptr;
+	pBible = CBible::Create("data\\MODEL\\TestCross.x");
+	pBible->SetPos(D3DXVECTOR3(-100.0f, 0.0f, 0.0f));
 
 	m_bGameEnd = false;
 

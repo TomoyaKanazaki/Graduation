@@ -42,21 +42,21 @@ CBowabowa::~CBowabowa()
 //====================================================================
 CBowabowa* CBowabowa::Create(char* pModelName)
 {
-	CBowabowa* pSample = NULL;
+	CBowabowa* pBowabowa = nullptr;
 
-	if (pSample == NULL)
+	if (pBowabowa == nullptr)
 	{
 		//オブジェクト2Dの生成
-		pSample = new CBowabowa();
+		pBowabowa = new CBowabowa();
 	}
 
 	//オブジェクトの初期化処理
-	if (FAILED(pSample->Init(pModelName)))
+	if (FAILED(pBowabowa->Init(pModelName)))
 	{//初期化処理が失敗した場合
 		return NULL;
 	}
 
-	return pSample;
+	return pBowabowa;
 }
 
 //====================================================================
@@ -82,7 +82,6 @@ HRESULT CBowabowa::Init(char* pModelName)
 	case CScene::MODE_RESULT:
 		break;
 	}
-
 
 	return S_OK;
 }
@@ -221,7 +220,10 @@ void CBowabowa::Take(void)
 bool CBowabowa::CollisionPlayer()
 {
 	// falseの時
-	if (!CItem::CollisionPlayer()) { return false; }
+	if (!CItem::CollisionPlayer())
+	{
+		return false;
+	}
 
 	// 消滅
 	Uninit();

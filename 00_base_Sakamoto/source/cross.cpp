@@ -41,21 +41,21 @@ CCross::~CCross()
 //====================================================================
 CCross* CCross::Create(char* pModelName)
 {
-	CCross* pSample = NULL;
+	CCross* pCross = nullptr;
 
-	if (pSample == NULL)
+	if (pCross == nullptr)
 	{
 		//オブジェクト2Dの生成
-		pSample = new CCross();
+		pCross = new CCross();
 	}
 
 	//オブジェクトの初期化処理
-	if (FAILED(pSample->Init(pModelName)))
+	if (FAILED(pCross->Init(pModelName)))
 	{//初期化処理が失敗した場合
 		return NULL;
 	}
 
-	return pSample;
+	return pCross;
 }
 
 //====================================================================
@@ -137,11 +137,15 @@ void CCross::TitleUpdate(void)
 //====================================================================
 void CCross::GameUpdate(void)
 {
+	// 十字架が自動消去までの時間
+	int DeletCount = 660;
+
+	// 大きさ取得
+	float Scaling = GetScaling();
+
 	D3DXVECTOR3 pos = GetPos();
 	D3DXVECTOR3 posOld = GetPosold();
 	D3DXVECTOR3 rot = GetRot();
-
-	float Scaling = GetScaling();
 
 	//更新前の位置を過去の位置とする
 	posOld = pos;
@@ -209,13 +213,15 @@ bool CCross::CollisionPlayer()
 			D3DXVECTOR3 pos = pObj->GetPos();
 			D3DXVECTOR3 Size = pObj->GetSize();
 
+			// アイテム使用可能かどうか
 			pPlayer->SetUseItem(true);
+
+			// アイテムの位置をプレイヤーと同じ位置に設定
+			SetPos(pos);
 
 			pObj = pObjNext;
 		}
 	}
-
-	Uninit();
 
 	return true;
 }
