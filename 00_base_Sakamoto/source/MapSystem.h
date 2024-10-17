@@ -12,6 +12,7 @@
 
 class CObject2D;
 
+//É}ÉNÉçíËã`
 #define NUM_WIGHT (16)
 #define NUM_HEIGHT (12)
 
@@ -22,6 +23,8 @@ public:
 	CMapSystem();
 	~CMapSystem();
 
+	static CMapSystem* GetInstance();
+
 	void Init();
 	void Uninit();
 	void Update();
@@ -29,11 +32,19 @@ public:
 
 	void SetGritPos(int nWight, int nHeight) { m_nMapGrit[nWight][nHeight] = true; }
 
+	D3DXVECTOR3 GetMapPos(void) { return m_MapPos; }
+	int GetWightMax(void) { return m_WightMax; }
+	int GetHeightMax(void) { return m_HeightMax; }
+
 protected:
 
 public:
+	static CMapSystem* pMapSystem;
+
 	bool m_nMapGrit[NUM_WIGHT][NUM_HEIGHT];
-	D3DXVECTOR3 m_MovePos;
+	D3DXVECTOR3 m_MapPos;
+	int m_WightMax;
+	int m_HeightMax;
 };
 
 #endif

@@ -8,7 +8,7 @@
 #include "renderer.h"
 
 //静的メンバ変数宣言
-
+CMapSystem* CMapSystem::pMapSystem = nullptr;
 
 //====================================================================
 //コンストラクタ
@@ -22,7 +22,9 @@ CMapSystem::CMapSystem()
 			m_nMapGrit[nCntW][nCntH] = false;
 		}
 	}
-	m_MovePos = INITVECTOR3;
+	m_WightMax = NUM_WIGHT;
+	m_HeightMax = NUM_HEIGHT;
+	m_MapPos = D3DXVECTOR3((m_WightMax * 0.5f) * -100.0f, 0.0f, (m_HeightMax * 0.5f) * 100.0f);
 }
 
 //====================================================================
@@ -31,6 +33,18 @@ CMapSystem::CMapSystem()
 CMapSystem::~CMapSystem()
 {
 
+}
+
+//====================================================================
+//インスタンス取得
+//====================================================================
+CMapSystem* CMapSystem::GetInstance(void)
+{
+	if (pMapSystem == nullptr)
+	{
+		pMapSystem = new CMapSystem;
+	}
+	return pMapSystem;
 }
 
 //====================================================================
@@ -45,7 +59,7 @@ void CMapSystem::Init()
 			m_nMapGrit[nCntW][nCntH] = false;
 		}
 	}
-	m_MovePos = INITVECTOR3;
+	m_MapPos = INITVECTOR3;
 }
 
 //====================================================================

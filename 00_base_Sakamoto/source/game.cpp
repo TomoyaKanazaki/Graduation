@@ -47,6 +47,7 @@
 #include "enemyMedaman.h"
 #include "item_manager.h"
 #include "bible.h"
+#include "MapSystem.h"
 
 
 namespace
@@ -150,10 +151,6 @@ HRESULT CGame::Init(void)
 	CBowabowa* pBowabowa = nullptr;
 	pBowabowa = CBowabowa::Create("data\\MODEL\\Testbowabowa.x");
 	pBowabowa->SetPos(D3DXVECTOR3(100.0f, 0.0f, 0.0f));
-	//pBowabowa = CBowabowa::Create("data\\MODEL\\Testbowabowa.x");
-	//pBowabowa->SetPos(D3DXVECTOR3(300.0f, 0.0f, 500.0f));
-	//pBowabowa = CBowabowa::Create("data\\MODEL\\Testbowabowa.x");
-	//pBowabowa->SetPos(D3DXVECTOR3(-500.0f, 0.0f, -200.0f));
 
 	// 聖書生成
 	CBible* pBible = nullptr;
@@ -442,6 +439,61 @@ void CGame::DeleteMap(void)
 //====================================================================
 void CGame::LoadStageBlock(const char* pFilename)
 {
+	////ファイルを開く
+	//FILE* pFile = fopen(pFilename, "r");
+
+	//if (pFile != nullptr)
+	//{//ファイルが開けた場合
+
+	//	char Getoff[32] = {};
+	//	char boolLife[32] = {};
+	//	char aString[128] = {};			//ゴミ箱
+	//	char aStartMessage[32] = {};	//スタートメッセージ
+	//	char aSetMessage[32] = {};		//セットメッセージ
+	//	char aEndMessage[32] = {};		//終了メッセージ
+
+	//	fscanf(pFile, "%s", &aStartMessage[0]);
+	//	if (strcmp(&aStartMessage[0], "STARTSETSTAGE") == 0)
+	//	{
+	//		CMapSystem *pMapSystem = CMapSystem::GetInstance();
+	//		D3DXVECTOR3 MapSystemPos = pMapSystem->GetMapPos();
+	//		while (1)
+	//		{
+	//			fscanf(pFile, "%s", &aSetMessage[0]);
+	//			if (strcmp(&aSetMessage[0], "STARTSETBLOCK") == 0)
+	//			{
+	//				int WightNumber, HeightNumber;
+
+	//				fscanf(pFile, "%s", &aString[0]);
+	//				fscanf(pFile, "%d", &WightNumber);
+
+	//				fscanf(pFile, "%s", &aString[0]);
+	//				fscanf(pFile, "%d", &HeightNumber);
+
+	//				CCubeBlock* pBlock = CCubeBlock::Create();
+
+	//				pBlock->SetPos(D3DXVECTOR3(MapSystemPos.x + WightNumber * 100.0f, 50.0f, MapSystemPos.z - HeightNumber * 100.0f));
+	//				pBlock->SetSize(D3DXVECTOR3(50.0f, 50.0f, 50.0f));
+
+	//				fscanf(pFile, "%s", &aEndMessage[0]);
+	//				if (strcmp(&aEndMessage[0], "ENDSETBLOCK") == 0)
+	//				{
+	//					break;
+	//				}
+	//			}
+	//			else if (strcmp(&aSetMessage[0], "ENDSETSTAGE") == 0)
+	//			{
+	//				break;
+	//			}
+	//		}
+	//	}
+	//	fclose(pFile);
+	//}
+	//else
+	//{//ファイルが開けなかった場合
+	//	printf("***ファイルを開けませんでした***\n");
+	//}
+
 	//ファイルを開く
 	FILE* pFile = fopen(pFilename, "r");
 

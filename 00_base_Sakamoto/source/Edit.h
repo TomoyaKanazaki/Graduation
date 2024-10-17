@@ -127,6 +127,10 @@ private:
 	int m_nPressCount;			//ボタン入力カウント
 	int m_nBlockTextureIdx;		//ブロックのテクスチャ番号
 	D3DXVECTOR3 m_EditPos;		//設置位置
+
+	int m_MapGritWight;			//グリットの横位置
+	int m_MapGritHeight;		//グリットの縦位置
+
 	D3DXVECTOR3 m_EditRot;		//設置角度
 	D3DXVECTOR3 m_EditSize;		//設置サイズ
 	float MoveWidth;			//移動幅
