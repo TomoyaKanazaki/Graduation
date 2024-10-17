@@ -82,7 +82,6 @@ HRESULT CCross::Init(char* pModelName)
 		break;
 	}
 
-
 	return S_OK;
 }
 

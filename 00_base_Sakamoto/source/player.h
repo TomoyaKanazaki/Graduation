@@ -104,7 +104,7 @@ private:
 	void Attack(void);			//攻撃処理
 	void CollisionWall(useful::COLLISION XYZ);		//壁との当たり判定
 	void SearchWall(void);							//壁のサーチ判定
-	void CollisionMapModel(useful::COLLISION XYZ);	//壁との当たり判定
+	void CollisionDevilHole(useful::COLLISION XYZ);	//デビルホールとの当たり判定
 	void CollisionEnemy(void);	// 敵との当たり判定
 
 	void CameraPosUpdate(void);	//カメラ位置更新処理

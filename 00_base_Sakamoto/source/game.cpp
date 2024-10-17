@@ -75,6 +75,7 @@ bool CGame::m_bEvent = false;
 bool CGame::m_bEventEnd = false;
 bool CGame::m_Wireframe = false;
 bool CGame::m_Slow = false;
+bool CGame::m_bDevilHoleFinish = false;
 int CGame::m_nTutorialWave = 0;
 int CGame::m_nEventCount = 0;
 int CGame::m_nEventWave = 0;
@@ -96,6 +97,7 @@ CGame::CGame()
 	m_bGameEnd = false;
 	m_bEvent = false;
 	m_bEventEnd = false;
+	m_bDevilHoleFinish = false;
 	m_EventHeight = 0.0f;
 	m_BGColorA = 1.0f;
 	m_nEventCount = 0;
@@ -304,17 +306,17 @@ void CGame::Update(void)
 			break;
 
 		case 1:
-			if (m_nNumBowabowa <= 0)
+			if (m_bDevilHoleFinish == true)
 			{
 				m_bGameEnd = true;
 			}
 			break;
 		}
 
-		//ステージクリア時の条件
+		//ステージクリア時の処理
 		if (m_bGameEnd == true)
 		{
-			if (m_bGameClear)
+			if (m_bGameClear == true)
 			{
 				StageClear(CManager::GetInstance()->GetStage());
 			}

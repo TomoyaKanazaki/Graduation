@@ -97,6 +97,7 @@ private:
 
 	void StateManager();								//状態更新
 	void CollisionWall(useful::COLLISION XYZ);			//壁との当たり判定
+	void CollisionDevilHole(useful::COLLISION XYZ);	//デビルホールとの当たり判定
 	void CollisionOut();			//ステージ外との当たり判定
 
 	void UpdatePos(void);								// 位置更新処理
