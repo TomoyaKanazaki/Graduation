@@ -27,6 +27,7 @@
 #include "modelEffect.h"
 #include "Effect.h"
 #include "devil.h"
+#include "DevilHole.h"
 #include "sound.h"
 
 namespace
@@ -306,6 +307,7 @@ void CEnemy::UpdatePos(void)
 
 	// 壁との当たり判定
 	CollisionWall(useful::COLLISION_Y);
+	CollisionDevilHole(useful::COLLISION_Y);
 
 	//X軸の位置更新
 	m_pos.x += m_move.x * CManager::GetInstance()->GetGameSpeed() * fSpeed;
@@ -313,6 +315,7 @@ void CEnemy::UpdatePos(void)
 
 	// 壁との当たり判定
 	CollisionWall(useful::COLLISION_X);
+	CollisionDevilHole(useful::COLLISION_X);
 
 	//Z軸の位置更新
 	m_pos.z += m_move.z * CManager::GetInstance()->GetGameSpeed() * fSpeed;
@@ -320,6 +323,7 @@ void CEnemy::UpdatePos(void)
 
 	// 壁との当たり判定
 	CollisionWall(useful::COLLISION_Z);
+	CollisionDevilHole(useful::COLLISION_Z);
 
 	//ステージ外との当たり判定
 	CollisionOut();
@@ -355,6 +359,45 @@ void CEnemy::CollisionWall(useful::COLLISION XYZ)
 				// 矩形の当たり判定
 				if (useful::CollisionBlock(pos, posOld, Move, Size, &m_pos, m_posOld, &m_move, &m_Objmove, m_size, &bNullJump, XYZ) == true)
 				{
+					m_State = E_STATE_WAIT;
+				}
+			}
+
+			pObj = pObjNext;
+		}
+	}
+}
+
+//====================================================================
+// マップモデルの当たり判定
+//====================================================================
+void CEnemy::CollisionDevilHole(useful::COLLISION XYZ)
+{
+	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
+	{
+		//オブジェクトを取得
+		CObject* pObj = CObject::GetTop(nCntPriority);
+
+		while (pObj != NULL)
+		{
+			CObject* pObjNext = pObj->GetNext();
+
+			CObject::TYPE type = pObj->GetType();			//種類を取得
+
+			if (type == TYPE_DEVILHOLE)
+			{//種類がデビルホールの時
+
+				CDevilHole* pDevilHole = (CDevilHole*)pObj;	// ブロック情報の取得
+
+				D3DXVECTOR3 pos = pDevilHole->GetPos();
+				D3DXVECTOR3 posOld = pDevilHole->GetPosOld();
+				D3DXVECTOR3 Size = pDevilHole->GetSize();
+				bool bNullJump;
+
+				// 矩形の当たり判定
+				if (useful::CollisionBlock(pos, posOld, INITVECTOR3, Size, &m_pos, m_posOld, &m_move, &m_Objmove, m_size, &bNullJump, XYZ) == true)
+				{
+					//待機状態にする
 					m_State = E_STATE_WAIT;
 				}
 			}
@@ -560,6 +603,59 @@ void CEnemy::SearchWall(void)
 				D3DXVECTOR3 posOld = pBlock->GetPosOld();
 				D3DXVECTOR3 Move = pBlock->GetMove();
 				D3DXVECTOR3 Size = pBlock->GetSize();
+
+				D3DXVECTOR3 MyPos = INITVECTOR3;
+
+				for (int nCnt = 0; nCnt < 4; nCnt++)
+				{
+					switch (nCnt)
+					{
+					case 0:
+						MyPos = D3DXVECTOR3(m_pos.x + Size.x * 2.0f, m_pos.y, m_pos.z);	//右
+						break;
+					case 1:
+						MyPos = D3DXVECTOR3(m_pos.x - Size.x * 2.0f, m_pos.y, m_pos.z);	//左
+						break;
+					case 2:
+						MyPos = D3DXVECTOR3(m_pos.x, m_pos.y, m_pos.z + Size.z * 2.0f);	//上
+						break;
+					case 3:
+						MyPos = D3DXVECTOR3(m_pos.x, m_pos.y, m_pos.z - Size.z * 2.0f);	//下
+						break;
+					}
+
+					// 矩形の当たり判定
+					if (useful::CollisionRectangle2D(MyPos, pos, COLLISION_SIZE, Size, useful::COLLISION::COLLISION_ZX) == true)
+					{
+						switch (nCnt)
+						{
+						case 0:
+							OKR = false;
+							break;
+						case 1:
+							OKL = false;
+							break;
+						case 2:
+							OKU = false;
+							break;
+						case 3:
+							OKD = false;
+							break;
+						}
+
+						CEffect* pEffect = CEffect::Create();
+						pEffect->SetPos(MyPos);
+					}
+				}
+			}
+
+			if (type == TYPE_DEVILHOLE)
+			{//種類がデビルホールの時
+
+				CDevilHole* pDevilHole = (CDevilHole*)pObj;	// ブロック情報の取得
+
+				D3DXVECTOR3 pos = pDevilHole->GetPos();
+				D3DXVECTOR3 Size = pDevilHole->GetSize();
 
 				D3DXVECTOR3 MyPos = INITVECTOR3;
 

@@ -30,6 +30,7 @@
 #include "cross.h"
 #include "bowabowa.h"
 #include "fire.h"
+#include "DevilHole.h"
 
 namespace
 {
@@ -258,7 +259,7 @@ void CPlayer::GameUpdate(void)
 		CollisionEnemy();
 	}
 
-	//ぼわぼ羽の当たり判定
+	//ぼわぼわの当たり判定
 	CollisionBowabowa();
 
 	//状態の管理
@@ -582,9 +583,60 @@ void CPlayer::SearchWall(void)
 				CCubeBlock* pBlock = (CCubeBlock*)pObj;	// ブロック情報の取得
 
 				D3DXVECTOR3 pos = pBlock->GetPos();
-				D3DXVECTOR3 posOld = pBlock->GetPosOld();
-				D3DXVECTOR3 Move = pBlock->GetMove();
 				D3DXVECTOR3 Size = pBlock->GetSize();
+
+				D3DXVECTOR3 MyPos = INITVECTOR3;
+
+				for (int nCnt = 0; nCnt < 4; nCnt++)
+				{
+					switch (nCnt)
+					{
+					case 0:
+						MyPos = D3DXVECTOR3(m_pos.x + Size.x * 2.0f, m_pos.y, m_pos.z);	//右
+						break;
+					case 1:
+						MyPos = D3DXVECTOR3(m_pos.x - Size.x * 2.0f, m_pos.y, m_pos.z);	//左
+						break;
+					case 2:
+						MyPos = D3DXVECTOR3(m_pos.x, m_pos.y, m_pos.z + Size.z * 2.0f);	//上
+						break;
+					case 3:
+						MyPos = D3DXVECTOR3(m_pos.x, m_pos.y, m_pos.z - Size.z * 2.0f);	//下
+						break;
+					}
+
+					// 矩形の当たり判定
+					if (useful::CollisionRectangle2D(MyPos, pos, COLLISION_SIZE, Size, useful::COLLISION::COLLISION_ZX) == true)
+					{
+						switch (nCnt)
+						{
+						case 0:
+							OKR = false;
+							break;
+						case 1:
+							OKL = false;
+							break;
+						case 2:
+							OKU = false;
+							break;
+						case 3:
+							OKD = false;
+							break;
+						}
+
+						CEffect* pEffect = CEffect::Create();
+						pEffect->SetPos(MyPos);
+					}
+				}
+			}
+
+			if (type == TYPE_DEVILHOLE)
+			{//種類がデビルホールの時
+
+				CDevilHole* pDevilHole = (CDevilHole*)pObj;	// ブロック情報の取得
+
+				D3DXVECTOR3 pos = pDevilHole->GetPos();
+				D3DXVECTOR3 Size = pDevilHole->GetSize();
 
 				D3DXVECTOR3 MyPos = INITVECTOR3;
 
@@ -644,7 +696,7 @@ void CPlayer::SearchWall(void)
 //====================================================================
 // マップモデルの当たり判定
 //====================================================================
-void CPlayer::CollisionMapModel(useful::COLLISION XYZ)
+void CPlayer::CollisionDevilHole(useful::COLLISION XYZ)
 {
 	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
 	{
@@ -657,25 +709,20 @@ void CPlayer::CollisionMapModel(useful::COLLISION XYZ)
 
 			CObject::TYPE type = pObj->GetType();			//種類を取得
 
-			if (type == TYPE_MAPMODEL)
-			{//種類がブロックの時
+			if (type == TYPE_DEVILHOLE)
+			{//種類がデビルホールの時
 
-				CMapModel* pMapModel = (CMapModel*)pObj;	// ブロック情報の取得
+				CDevilHole* pDevilHole = (CDevilHole*)pObj;	// ブロック情報の取得
 
-				if (pMapModel->GetCollision() == true && pMapModel->GetAppear() == true)
+				D3DXVECTOR3 pos = pDevilHole->GetPos();
+				D3DXVECTOR3 posOld = pDevilHole->GetPosOld();
+				D3DXVECTOR3 Size = pDevilHole->GetSize();
+
+				// 矩形の当たり判定
+				if (useful::CollisionBlock(pos, posOld, INITVECTOR3, Size, &m_pos, m_posOld, &m_move, &m_Objmove, m_size, &m_bJump, XYZ) == true)
 				{
-					D3DXVECTOR3 pos = pMapModel->GetPos();
-					D3DXVECTOR3 posOld = pMapModel->GetPosOld();
-					D3DXVECTOR3 Move = pMapModel->GetMove();
-					D3DXVECTOR3 Size = pMapModel->GetSize();
-
-					// 矩形の当たり判定
-					if (useful::CollisionBlock(pos, posOld, Move, Size, &m_pos, m_posOld, &m_move, &m_Objmove, m_size, &m_bJump, XYZ) == true)
-					{
-						int a = pMapModel->GetEditIdx();
-
-						pMapModel->Hit(D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0);
-					}
+					//待機状態にする
+					m_State = STATE_WAIT;
 				}
 			}
 
@@ -858,7 +905,7 @@ void CPlayer::PosUpdate(void)
 
 	// 壁との当たり判定
 	CollisionWall(useful::COLLISION_Y);
-	CollisionMapModel(useful::COLLISION_Y);
+	CollisionDevilHole(useful::COLLISION_Y);
 
 	//X軸の位置更新
 	m_pos.x += m_move.x * CManager::GetInstance()->GetGameSpeed() * fSpeed;
@@ -866,7 +913,7 @@ void CPlayer::PosUpdate(void)
 
 	// 壁との当たり判定
 	CollisionWall(useful::COLLISION_X);
-	CollisionMapModel(useful::COLLISION_X);
+	CollisionDevilHole(useful::COLLISION_X);
 
 	//Z軸の位置更新
 	m_pos.z += m_move.z * CManager::GetInstance()->GetGameSpeed() * fSpeed;
@@ -874,7 +921,7 @@ void CPlayer::PosUpdate(void)
 
 	// 壁との当たり判定
 	CollisionWall(useful::COLLISION_Z);
-	CollisionMapModel(useful::COLLISION_Z);
+	CollisionDevilHole(useful::COLLISION_Z);
 }
 
 //====================================================================
