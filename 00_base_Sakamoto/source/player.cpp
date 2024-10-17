@@ -251,15 +251,9 @@ void CPlayer::GameUpdate(void)
 		// 位置更新処理
 		PosUpdate();
 
-		// アイテムの当たり判定
-		CollisionItem();
-
 		// 敵の判定
 		CollisionEnemy();
 	}
-
-	//ぼわぼ羽の当たり判定
-	CollisionBowabowa();
 
 	//状態の管理
 	StateManager();
@@ -685,43 +679,6 @@ void CPlayer::CollisionMapModel(useful::COLLISION XYZ)
 }
 
 //====================================================================
-// アイテムの当たり判定
-//====================================================================
-void CPlayer::CollisionItem(void)
-{
-	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
-	{
-		//オブジェクトを取得
-		CObject* pObj = CObject::GetTop(nCntPriority);
-
-		while (pObj != NULL)
-		{
-			CObject* pObjNext = pObj->GetNext();
-
-			CObject::TYPE type = pObj->GetType();			//種類を取得
-
-			if (type == TYPE_CROSS)
-			{//種類がアイテムの時
-
-				CCross* pCross = (CCross*)pObj;	// アイテムの情報の取得
-
-				D3DXVECTOR3 pos = pCross->GetPos();
-				D3DXVECTOR3 posOld = pCross->GetPosOld();
-				D3DXVECTOR3 Size = pCross->GetSize();
-
-				// 矩形の当たり判定
-				if (useful::CollisionCircle(m_pos, pos,30.0f) == true)
-				{
-					m_UseItem = true;
-				}
-			}
-
-			pObj = pObjNext;
-		}
-	}
-}
-
-//====================================================================
 // 敵の当たり判定
 //====================================================================
 void CPlayer::CollisionEnemy(void)
@@ -750,44 +707,6 @@ void CPlayer::CollisionEnemy(void)
 				if (useful::CollisionCircle(m_pos, pos, 30.0f) == true)
 				{
 					Death();
-				}
-			}
-
-			pObj = pObjNext;
-		}
-	}
-}
-
-//====================================================================
-// ボアボアの当たり判定
-//====================================================================
-void CPlayer::CollisionBowabowa(void)
-{
-	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
-	{
-		//オブジェクトを取得
-		CObject* pObj = CObject::GetTop(nCntPriority);
-
-		while (pObj != NULL)
-		{
-			CObject* pObjNext = pObj->GetNext();
-
-			CObject::TYPE type = pObj->GetType();			//種類を取得
-
-			if (type == TYPE_BOWABOWA)
-			{//種類がアイテムの時
-
-				CBowabowa* pBowabowa = (CBowabowa*)pObj;	// アイテムの情報の取得
-
-
-				D3DXVECTOR3 pos = pBowabowa->GetPos();
-				D3DXVECTOR3 posOld = pBowabowa->GetPosOld();
-				D3DXVECTOR3 Size = pBowabowa->GetSize();
-
-				// 矩形の当たり判定
-				if (useful::CollisionCircle(m_pos, pos, 30.0f) == true)
-				{
-					pBowabowa->Take();
 				}
 			}
 

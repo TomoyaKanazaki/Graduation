@@ -7,6 +7,8 @@
 #include "item.h"
 #include "cross.h"
 #include "bowabowa.h"
+#include "player.h"
+#include "useful.h"
 
 //====================================================================
 // コンストラクタ
@@ -113,7 +115,41 @@ void CItem::Draw()
 //====================================================================
 // プレイヤーとの当たり判定
 //====================================================================
-void CItem::CollisionPlayer()
+bool CItem::CollisionPlayer()
 {
+	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
+	{
+		//オブジェクトを取得
+		CObject* pObj = CObject::GetTop(nCntPriority);
 
+		while (pObj != NULL)
+		{
+			CObject* pObjNext = pObj->GetNext();
+
+			CObject::TYPE type = pObj->GetType();	// 種類を取得
+
+			if(type != TYPE_PLAYER3D)
+			{
+				pObj = pObjNext;
+				continue;
+			}
+
+			CPlayer* pPlayer = (CPlayer*)pObj;		// アイテムの情報の取得
+
+			D3DXVECTOR3 pos = pObj->GetPos();
+			D3DXVECTOR3 Size = pObj->GetSize();
+
+			// 矩形の当たり判定
+			if (useful::CollisionCircle(m_pos, pos, Size.x))
+			{
+				pPlayer->SetUseItem(true);
+
+				return true;
+			}
+
+			pObj = pObjNext;
+		}
+	}
+
+	return false;
 }

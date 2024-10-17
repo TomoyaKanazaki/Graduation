@@ -9,6 +9,7 @@
 #include "manager.h"
 #include "texture.h"
 #include "XModel.h"
+#include "player.h"
 
 //==========================================
 //  定数定義
@@ -25,13 +26,6 @@ CCross::CCross(int nPriority) : CItem(nPriority)
 {
 	SetSize(SAMPLE_SIZE);
 	SetPos(INITVECTOR3);
-	m_nIdxXModel = NULL;			//マテリアルの数
-	m_CollisionPos = INITVECTOR3;
-	m_bCollision = false;
-	m_State = STATE_NORMAL;
-	m_nStateCount = 0;
-	m_Scaling = 1.0f;
-	m_fColorA = 0.0f;
 }
 
 //====================================================================
@@ -128,9 +122,10 @@ void CCross::Update(void)
 void CCross::TitleUpdate(void)
 {
 	D3DXVECTOR3 pos = GetPos();
+	D3DXVECTOR3 move = GetMove();
 
 	//位置更新
-	pos += m_move;
+	pos += move;
 
 	SetPos(pos);
 
@@ -143,27 +138,36 @@ void CCross::TitleUpdate(void)
 //====================================================================
 void CCross::GameUpdate(void)
 {
+	D3DXVECTOR3 pos = GetPos();
+	D3DXVECTOR3 posOld = GetPosold();
+	D3DXVECTOR3 rot = GetRot();
+
+	float Scaling = GetScaling();
+
 	//更新前の位置を過去の位置とする
-	m_posOld = m_pos;
+	posOld = pos;
 
 	//位置更新
-	CObjectX::SetPos(m_pos);
-	CObjectX::SetRot(m_rot);
+	CObjectX::SetPos(pos);
+	CObjectX::SetRot(rot);
 
 	//画面外判定
-	if (m_pos.y < 0.0f)
+	if (pos.y < 0.0f)
 	{
 
 	}
 
 	//大きさの設定
-	SetScaling(D3DXVECTOR3(m_Scaling, m_Scaling, m_Scaling));
+	SetScaling(Scaling);
 
 	//状態管理
 	StateManager();
 
 	//頂点情報の更新
 	CItem::Update();
+
+	// 判定
+	CollisionPlayer();
 }
 
 //====================================================================
@@ -175,11 +179,58 @@ void CCross::Draw(void)
 }
 
 //====================================================================
+//プレイヤーとの判定
+//====================================================================
+bool CCross::CollisionPlayer()
+{
+	if (!CItem::CollisionPlayer())
+	{
+		return false;
+	}
+
+	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
+	{
+		//オブジェクトを取得
+		CObject* pObj = CObject::GetTop(nCntPriority);
+
+		while (pObj != NULL)
+		{
+			CObject* pObjNext = pObj->GetNext();
+
+			CObject::TYPE type = pObj->GetType();	// 種類を取得
+
+			if (type != TYPE_PLAYER3D)
+			{
+				pObj = pObjNext;
+				continue;
+			}
+
+			CPlayer* pPlayer = (CPlayer*)pObj;		// アイテムの情報の取得
+
+			D3DXVECTOR3 pos = pObj->GetPos();
+			D3DXVECTOR3 Size = pObj->GetSize();
+
+			pPlayer->SetUseItem(true);
+
+			pObj = pObjNext;
+		}
+	}
+
+	Uninit();
+
+	return true;
+}
+
+//====================================================================
 //状態管理
 //====================================================================
 void CCross::StateManager(void)
 {
-	switch (m_State)
+	CItem::STATE State = GetState();
+
+	int nStateCounter = GetStateCounter();
+
+	switch (State)
 	{
 	case STATE_NORMAL:
 		break;
@@ -187,8 +238,8 @@ void CCross::StateManager(void)
 		break;
 	}
 
-	if (m_nStateCount > 0)
+	if (nStateCounter > 0)
 	{
-		m_nStateCount--;
+		nStateCounter--;
 	}
 }
