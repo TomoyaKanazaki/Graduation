@@ -15,7 +15,14 @@
 //====================================================================
 CMapSystem::CMapSystem()
 {
-
+	for (int nCntW = 0; nCntW < NUM_WIGHT; nCntW++)
+	{
+		for (int nCntH = 0; nCntH < NUM_HEIGHT; nCntH++)
+		{
+			m_nMapGrit[nCntW][nCntH] = false;
+		}
+	}
+	m_MovePos = INITVECTOR3;
 }
 
 //====================================================================
@@ -31,7 +38,14 @@ CMapSystem::~CMapSystem()
 //====================================================================
 void CMapSystem::Init()
 {
-
+	for (int nCntW = 0; nCntW < NUM_WIGHT; nCntW++)
+	{
+		for (int nCntH = 0; nCntH < NUM_HEIGHT; nCntH++)
+		{
+			m_nMapGrit[nCntW][nCntH] = false;
+		}
+	}
+	m_MovePos = INITVECTOR3;
 }
 
 //====================================================================
