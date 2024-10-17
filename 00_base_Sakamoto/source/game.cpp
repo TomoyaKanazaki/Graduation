@@ -45,6 +45,7 @@
 #include "cross.h"
 #include "scrollarrow.h"
 #include "enemyMedaman.h"
+#include "item_manager.h"
 
 namespace
 {
@@ -107,7 +108,7 @@ CGame::CGame()
 	m_nEventNumber = 0;
 	m_nNumBowabowa = 0;
 	CManager::GetInstance()->GetCamera()->SetBib(false);
-	CManager::GetInstance()->GetCamera()->SetCameraMode(CCamera::CAMERAMODE_CONTROL);
+	CManager::GetInstance()->GetCamera()->SetCameraMode(CCamera::CAMERAMODE_DOWNVIEW);
 }
 
 //====================================================================
@@ -147,6 +148,10 @@ HRESULT CGame::Init(void)
 	CBowabowa* pBowabowa = nullptr;
 	pBowabowa = CBowabowa::Create("data\\MODEL\\Testbowabowa.x");
 	pBowabowa->SetPos(D3DXVECTOR3(100.0f, 0.0f, 0.0f));
+	pBowabowa = CBowabowa::Create("data\\MODEL\\Testbowabowa.x");
+	pBowabowa->SetPos(D3DXVECTOR3(300.0f, 0.0f, 500.0f));
+	pBowabowa = CBowabowa::Create("data\\MODEL\\Testbowabowa.x");
+	pBowabowa->SetPos(D3DXVECTOR3(-500.0f, 0.0f, -200.0f));
 
 	m_bGameEnd = false;
 

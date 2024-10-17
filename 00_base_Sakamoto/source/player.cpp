@@ -31,6 +31,7 @@
 #include "bowabowa.h"
 #include "fire.h"
 #include "DevilHole.h"
+#include "devil.h"
 
 namespace
 {
@@ -251,6 +252,9 @@ void CPlayer::GameUpdate(void)
 
 		// 位置更新処理
 		PosUpdate();
+
+		//画面外判定
+		CollisionStageOut();
 
 		// アイテムの当たり判定
 		CollisionItem();
@@ -802,6 +806,40 @@ void CPlayer::CollisionEnemy(void)
 
 			pObj = pObjNext;
 		}
+	}
+}
+
+//====================================================================
+// ステージ外の当たり判定
+//====================================================================
+void CPlayer::CollisionStageOut(void)
+{
+	D3DXVECTOR3 D_pos = CGame::GetDevil()->GetDevilPos();
+	D3DXVECTOR3 D_Size = CGame::GetDevil()->GetDevilSize();
+
+	if (m_pos.x - 50.0f > D_pos.x + D_Size.x)
+	{
+		m_pos.x = D_pos.x + D_Size.x + 50.0f;
+		m_State = STATE_WAIT;
+		m_move.x = 0.0f;
+	}
+	if (m_pos.x + 50.0f < D_pos.x - D_Size.x)
+	{
+		m_pos.x = D_pos.x - D_Size.x - 50.0f;
+		m_State = STATE_WAIT;
+		m_move.x = 0.0f;
+	}
+	if (m_pos.z - 50.0f > D_pos.z + D_Size.z)
+	{
+		m_pos.z = D_pos.z + D_Size.z + 50.0f;
+		m_State = STATE_WAIT;
+		m_move.z = 0.0f;
+	}
+	if (m_pos.z + 50.0f < D_pos.z - D_Size.z)
+	{
+		m_pos.z = D_pos.z - D_Size.z - 50.0f;
+		m_State = STATE_WAIT;
+		m_move.z = 0.0f;
 	}
 }
 
