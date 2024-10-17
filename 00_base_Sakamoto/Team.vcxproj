@@ -22,6 +22,7 @@
     <ClCompile Include="source\2DEffect.cpp" />
     <ClCompile Include="source\2DUI.cpp" />
     <ClCompile Include="source\2DUI_edit.cpp" />
+    <ClCompile Include="source\bible.cpp" />
     <ClCompile Include="source\bowabowa.cpp" />
     <ClCompile Include="source\BowmanArrow.cpp" />
     <ClCompile Include="source\camera.cpp" />
@@ -47,6 +48,8 @@
     <ClCompile Include="source\input.cpp" />
     <ClCompile Include="source\inputManager.cpp" />
     <ClCompile Include="source\item.cpp" />
+    <ClCompile Include="source\item_manager.cpp" />
+    <ClCompile Include="source\item_manager.h" />
     <ClCompile Include="source\LevelModelEffect.cpp" />
     <ClCompile Include="source\LifeUi.cpp" />
     <ClCompile Include="source\light.cpp" />
@@ -114,6 +117,7 @@
     <ClInclude Include="source\2DEffect.h" />
     <ClInclude Include="source\2DUI.h" />
     <ClInclude Include="source\2DUI_edit.h" />
+    <ClInclude Include="source\bible.h" />
     <ClInclude Include="source\bowabowa.h" />
     <ClInclude Include="source\BowmanArrow.h" />
     <ClInclude Include="source\camera.h" />

@@ -9,6 +9,9 @@
 #include "manager.h"
 #include "texture.h"
 #include "XModel.h"
+#include "player.h"
+#include "effect.h"
+#include "game.h"
 
 //==========================================
 //  定数定義
@@ -152,6 +155,12 @@ void CDevilHole::GameUpdate(void)
 	//更新前の位置を過去の位置とする
 	m_posOld = m_pos;
 
+	//ホール解除判定処理
+	CollisionOpen();
+
+	//クリア判定処理
+	ClearJudge();
+
 	//位置更新
 	CObjectX::SetPos(m_pos);
 	CObjectX::SetRot(m_rot);
@@ -197,4 +206,103 @@ void CDevilHole::StateManager(void)
 	{
 		m_nStateCount--;
 	}
+}
+
+//====================================================================
+// 壁との当たり判定
+//====================================================================
+void CDevilHole::CollisionOpen(void)
+{
+	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
+	{
+		//オブジェクトを取得
+		CObject* pObj = CObject::GetTop(nCntPriority);
+
+		while (pObj != NULL)
+		{
+			CObject* pObjNext = pObj->GetNext();
+
+			CObject::TYPE type = pObj->GetType();			//種類を取得
+
+			if (type == TYPE_PLAYER3D)
+			{//種類がプレイヤーの時
+
+				CPlayer *pPlayer = (CPlayer*)pObj;	// ブロック情報の取得
+
+				D3DXVECTOR3 pos = pPlayer->GetPos();
+				D3DXVECTOR3 MySize = GetSize();
+
+				for (int nCnt = 0; nCnt < 4; nCnt++)
+				{
+					D3DXVECTOR3 MyPos = m_pos;
+
+					switch (nCnt)
+					{
+					case 0:	//上
+						MyPos.z += 100.0f;
+						break;
+
+					case 1:	//下
+						MyPos.z -= 100.0f;
+						break;
+
+					case 2:	//右
+						MyPos.x += 100.0f;
+						break;
+
+					case 3:	//左
+						MyPos.x -= 100.0f;
+						break;
+					}
+
+					// 矩形の当たり判定
+					if (useful::PointSquareXZ(pos, MyPos, MySize) == true &&
+						m_bSet[nCnt] == false)
+					{
+						m_pHoleKey[nCnt] = CObjectX::Create("data\\MODEL\\DevilKey.x");
+
+						switch (nCnt)
+						{
+						case 0:	//上
+							m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(m_pos.x, m_pos.y, m_pos.z + 20.0f));
+							break;
+
+						case 1:	//下
+							m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(m_pos.x, m_pos.y, m_pos.z - 20.0f));
+							break;
+
+						case 2:	//右
+							m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(m_pos.x + 20.0f, m_pos.y, m_pos.z));
+							break;
+
+						case 3:	//左
+							m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(m_pos.x - 20.0f, m_pos.y, m_pos.z));
+							break;
+						}
+						
+						m_bSet[nCnt] = true;
+						return;
+					}
+				}
+			}
+
+			pObj = pObjNext;
+		}
+	}
+}
+
+//====================================================================
+// クリア判定処理
+//====================================================================
+void CDevilHole::ClearJudge(void)
+{
+	for (int nCnt = 0; nCnt < 4; nCnt++)
+	{
+		if (m_bSet[nCnt] == false)
+		{
+			return;
+		}
+	}
+
+	CGame::SetDevilHoleFinish(true);
 }

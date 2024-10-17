@@ -1,10 +1,10 @@
 //============================================
 //
-//	オブジェクトＸモデルのサンプル [SampleObjX.cpp]
-//	Author:sakamoto kai
+//	聖書の処理 [bible.cpp]
+//	Author:morikawa shunya
 //
 //============================================
-#include "cross.h"
+#include "bible.h"
 #include "renderer.h"
 #include "manager.h"
 #include "texture.h"
@@ -20,83 +20,60 @@ namespace
 }
 
 //====================================================================
-//コンストラクタ
+// コンストラクタ
 //====================================================================
-CCross::CCross(int nPriority) : CItem(nPriority)
+CBible::CBible(int nPriority) : CItem(nPriority)
 {
 	SetSize(SAMPLE_SIZE);
 	SetPos(INITVECTOR3);
 }
 
 //====================================================================
-//デストラクタ
+// デストラクタ
 //====================================================================
-CCross::~CCross()
+CBible::~CBible()
 {
 
 }
 
 //====================================================================
-//生成処理
+// 生成
 //====================================================================
-CCross* CCross::Create(char* pModelName)
+CBible* CBible::Create(char* pModelName)
 {
-	CCross* pCross = nullptr;
+	// インスタンス生成
+	CBible* pBible = new CBible;
 
-	if (pCross == nullptr)
-	{
-		//オブジェクト2Dの生成
-		pCross = new CCross();
-	}
+	// 初期化
+	pBible->Init(pModelName);
 
-	//オブジェクトの初期化処理
-	if (FAILED(pCross->Init(pModelName)))
-	{//初期化処理が失敗した場合
-		return NULL;
-	}
-
-	return pCross;
+	return pBible;
 }
 
 //====================================================================
-//初期化処理
+// 初期化
 //====================================================================
-HRESULT CCross::Init(char* pModelName)
+HRESULT CBible::Init(char* pModelName)
 {
-	SetType(CObject::TYPE_CROSS);
-
+	// 継承クラスの初期化
 	CItem::Init(pModelName);
-
-	//モードごとに初期値を設定出来る
-	switch (CScene::GetMode())
-	{
-	case CScene::MODE_TITLE:
-		break;
-
-	case CScene::MODE_GAME:
-	case CScene::MODE_TUTORIAL:
-
-		break;
-
-	case CScene::MODE_RESULT:
-		break;
-	}
 
 	return S_OK;
 }
 
 //====================================================================
-//終了処理
+// 終了
 //====================================================================
-void CCross::Uninit(void)
+void CBible::Uninit(void)
 {
+	// 継承クラスの終了
 	CItem::Uninit();
 }
 
 //====================================================================
-//更新処理
+// 更新
 //====================================================================
-void CCross::Update(void)
+void CBible::Update(void)
 {
 	switch (CScene::GetMode())
 	{
@@ -116,9 +93,9 @@ void CCross::Update(void)
 }
 
 //====================================================================
-//タイトルでの更新処理
+// タイトルでの更新
 //====================================================================
-void CCross::TitleUpdate(void)
+void CBible::TitleUpdate(void)
 {
 	D3DXVECTOR3 pos = GetPos();
 	D3DXVECTOR3 move = GetMove();
@@ -133,19 +110,15 @@ void CCross::TitleUpdate(void)
 }
 
 //====================================================================
-//ゲームでの更新処理
+// ゲームでの更新
 //====================================================================
-void CCross::GameUpdate(void)
+void CBible::GameUpdate(void)
 {
-	// 十字架が自動消去までの時間
-	int DeletCount = 660;
-
-	// 大きさ取得
-	float Scaling = GetScaling();
-
 	D3DXVECTOR3 pos = GetPos();
 	D3DXVECTOR3 posOld = GetPosold();
 	D3DXVECTOR3 rot = GetRot();
+
+	float Scaling = GetScaling();
 
 	//更新前の位置を過去の位置とする
 	posOld = pos;
@@ -169,22 +142,23 @@ void CCross::GameUpdate(void)
 	//頂点情報の更新
 	CItem::Update();
 
-	// 判定
+	// プレイヤーとの判定
 	CollisionPlayer();
 }
 
 //====================================================================
-//描画処理
+// 描画
 //====================================================================
-void CCross::Draw(void)
+void CBible::Draw(void)
 {
+	// 継承クラスの描画
 	CItem::Draw();
 }
 
 //====================================================================
-//プレイヤーとの判定
+// プレイヤーとの判定
 //====================================================================
-bool CCross::CollisionPlayer()
+bool CBible::CollisionPlayer()
 {
 	if (!CItem::CollisionPlayer())
 	{
@@ -196,7 +170,7 @@ bool CCross::CollisionPlayer()
 		//オブジェクトを取得
 		CObject* pObj = CObject::GetTop(nCntPriority);
 
-		while (pObj != NULL)
+		while (pObj != nullptr)
 		{
 			CObject* pObjNext = pObj->GetNext();
 
@@ -211,10 +185,8 @@ bool CCross::CollisionPlayer()
 			CPlayer* pPlayer = (CPlayer*)pObj;		// アイテムの情報の取得
 
 			D3DXVECTOR3 pos = pObj->GetPos();
+			D3DXVECTOR3 rot = pPlayer->GetRot();
 			D3DXVECTOR3 Size = pObj->GetSize();
-
-			// アイテム使用可能かどうか
-			pPlayer->SetUseItem(true);
 
 			// アイテムの位置をプレイヤーと同じ位置に設定
 			SetPos(pos);
@@ -229,7 +201,7 @@ bool CCross::CollisionPlayer()
 //====================================================================
 //状態管理
 //====================================================================
-void CCross::StateManager(void)
+void CBible::StateManager(void)
 {
 	CItem::STATE State = GetState();
 

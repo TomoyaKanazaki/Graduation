@@ -1,11 +1,11 @@
 //============================================
 //
-//	ボワボワの処理 [SampleObjX.h]
-//	Author:sakamoto kai
+//	聖書の処理 [bible.h]
+//	Author:morikawa shunya
 //
 //============================================
-#ifndef _BOWABOWA_H_
-#define _BOWABOWA_H_
+#ifndef _BIBLE_H_
+#define _BIBLE_H_
 
 #include "main.h"
 #include "item.h"
@@ -13,23 +13,15 @@
 //前方宣言
 class CObjGauge2D;
 
-//オブジェクトボワボワクラス
-class CBowabowa : public CItem
+//オブジェクト聖書クラス
+class CBible : public CItem
 {
 public:
 
-	CBowabowa(int nPriority = 3);
-	~CBowabowa();
+	CBible(int nPriority = 3);
+	~CBible();
 
-	//サンプルの状態
-	enum STATE
-	{
-		STATE_NORMAL = 0,	//通常
-		STATE_ACTION,		//行動
-		STATE_MAX,
-	};
-
-	static CBowabowa* Create(char* pModelName);
+	static CBible* Create(char* pModelName);
 
 	HRESULT Init(char* pModelName);
 	void Uninit(void);
@@ -37,7 +29,6 @@ public:
 	void TitleUpdate(void);
 	void GameUpdate(void);
 	void Draw(void);
-	void Take(void);
 
 	bool CollisionPlayer() override;
 
@@ -45,4 +36,5 @@ private:
 	void StateManager(void);		//状態管理
 
 };
+
 #endif

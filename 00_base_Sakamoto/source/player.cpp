@@ -30,6 +30,8 @@
 #include "cross.h"
 #include "bowabowa.h"
 #include "fire.h"
+#include "DevilHole.h"
+#include "devil.h"
 
 namespace
 {
@@ -251,15 +253,12 @@ void CPlayer::GameUpdate(void)
 		// 位置更新処理
 		PosUpdate();
 
-		// アイテムの当たり判定
-		CollisionItem();
+		//画面外判定
+		CollisionStageOut();
 
 		// 敵の判定
 		CollisionEnemy();
 	}
-
-	//ぼわぼ羽の当たり判定
-	CollisionBowabowa();
 
 	//状態の管理
 	StateManager();
@@ -582,9 +581,60 @@ void CPlayer::SearchWall(void)
 				CCubeBlock* pBlock = (CCubeBlock*)pObj;	// ブロック情報の取得
 
 				D3DXVECTOR3 pos = pBlock->GetPos();
-				D3DXVECTOR3 posOld = pBlock->GetPosOld();
-				D3DXVECTOR3 Move = pBlock->GetMove();
 				D3DXVECTOR3 Size = pBlock->GetSize();
+
+				D3DXVECTOR3 MyPos = INITVECTOR3;
+
+				for (int nCnt = 0; nCnt < 4; nCnt++)
+				{
+					switch (nCnt)
+					{
+					case 0:
+						MyPos = D3DXVECTOR3(m_pos.x + Size.x * 2.0f, m_pos.y, m_pos.z);	//右
+						break;
+					case 1:
+						MyPos = D3DXVECTOR3(m_pos.x - Size.x * 2.0f, m_pos.y, m_pos.z);	//左
+						break;
+					case 2:
+						MyPos = D3DXVECTOR3(m_pos.x, m_pos.y, m_pos.z + Size.z * 2.0f);	//上
+						break;
+					case 3:
+						MyPos = D3DXVECTOR3(m_pos.x, m_pos.y, m_pos.z - Size.z * 2.0f);	//下
+						break;
+					}
+
+					// 矩形の当たり判定
+					if (useful::CollisionRectangle2D(MyPos, pos, COLLISION_SIZE, Size, useful::COLLISION::COLLISION_ZX) == true)
+					{
+						switch (nCnt)
+						{
+						case 0:
+							OKR = false;
+							break;
+						case 1:
+							OKL = false;
+							break;
+						case 2:
+							OKU = false;
+							break;
+						case 3:
+							OKD = false;
+							break;
+						}
+
+						CEffect* pEffect = CEffect::Create();
+						pEffect->SetPos(MyPos);
+					}
+				}
+			}
+
+			if (type == TYPE_DEVILHOLE)
+			{//種類がデビルホールの時
+
+				CDevilHole* pDevilHole = (CDevilHole*)pObj;	// ブロック情報の取得
+
+				D3DXVECTOR3 pos = pDevilHole->GetPos();
+				D3DXVECTOR3 Size = pDevilHole->GetSize();
 
 				D3DXVECTOR3 MyPos = INITVECTOR3;
 
@@ -644,7 +694,7 @@ void CPlayer::SearchWall(void)
 //====================================================================
 // マップモデルの当たり判定
 //====================================================================
-void CPlayer::CollisionMapModel(useful::COLLISION XYZ)
+void CPlayer::CollisionDevilHole(useful::COLLISION XYZ)
 {
 	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
 	{
@@ -657,62 +707,20 @@ void CPlayer::CollisionMapModel(useful::COLLISION XYZ)
 
 			CObject::TYPE type = pObj->GetType();			//種類を取得
 
-			if (type == TYPE_MAPMODEL)
-			{//種類がブロックの時
+			if (type == TYPE_DEVILHOLE)
+			{//種類がデビルホールの時
 
-				CMapModel* pMapModel = (CMapModel*)pObj;	// ブロック情報の取得
+				CDevilHole* pDevilHole = (CDevilHole*)pObj;	// ブロック情報の取得
 
-				if (pMapModel->GetCollision() == true && pMapModel->GetAppear() == true)
-				{
-					D3DXVECTOR3 pos = pMapModel->GetPos();
-					D3DXVECTOR3 posOld = pMapModel->GetPosOld();
-					D3DXVECTOR3 Move = pMapModel->GetMove();
-					D3DXVECTOR3 Size = pMapModel->GetSize();
-
-					// 矩形の当たり判定
-					if (useful::CollisionBlock(pos, posOld, Move, Size, &m_pos, m_posOld, &m_move, &m_Objmove, m_size, &m_bJump, XYZ) == true)
-					{
-						int a = pMapModel->GetEditIdx();
-
-						pMapModel->Hit(D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0);
-					}
-				}
-			}
-
-			pObj = pObjNext;
-		}
-	}
-}
-
-//====================================================================
-// アイテムの当たり判定
-//====================================================================
-void CPlayer::CollisionItem(void)
-{
-	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
-	{
-		//オブジェクトを取得
-		CObject* pObj = CObject::GetTop(nCntPriority);
-
-		while (pObj != NULL)
-		{
-			CObject* pObjNext = pObj->GetNext();
-
-			CObject::TYPE type = pObj->GetType();			//種類を取得
-
-			if (type == TYPE_CROSS)
-			{//種類がアイテムの時
-
-				CCross* pCross = (CCross*)pObj;	// アイテムの情報の取得
-
-				D3DXVECTOR3 pos = pCross->GetPos();
-				D3DXVECTOR3 posOld = pCross->GetPosOld();
-				D3DXVECTOR3 Size = pCross->GetSize();
+				D3DXVECTOR3 pos = pDevilHole->GetPos();
+				D3DXVECTOR3 posOld = pDevilHole->GetPosOld();
+				D3DXVECTOR3 Size = pDevilHole->GetSize();
 
 				// 矩形の当たり判定
-				if (useful::CollisionCircle(m_pos, pos,30.0f) == true)
+				if (useful::CollisionBlock(pos, posOld, INITVECTOR3, Size, &m_pos, m_posOld, &m_move, &m_Objmove, m_size, &m_bJump, XYZ) == true)
 				{
-					m_UseItem = true;
+					//待機状態にする
+					m_State = STATE_WAIT;
 				}
 			}
 
@@ -757,42 +765,36 @@ void CPlayer::CollisionEnemy(void)
 		}
 	}
 }
-
+// ステージ外の当たり判定
 //====================================================================
-// ボアボアの当たり判定
-//====================================================================
-void CPlayer::CollisionBowabowa(void)
+void CPlayer::CollisionStageOut(void)
 {
-	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
+	D3DXVECTOR3 D_pos = CGame::GetDevil()->GetDevilPos();
+	D3DXVECTOR3 D_Size = CGame::GetDevil()->GetDevilSize();
+
+	if (m_pos.x - 50.0f > D_pos.x + D_Size.x)
 	{
-		//オブジェクトを取得
-		CObject* pObj = CObject::GetTop(nCntPriority);
-
-		while (pObj != NULL)
-		{
-			CObject* pObjNext = pObj->GetNext();
-
-			CObject::TYPE type = pObj->GetType();			//種類を取得
-
-			if (type == TYPE_BOWABOWA)
-			{//種類がアイテムの時
-
-				CBowabowa* pBowabowa = (CBowabowa*)pObj;	// アイテムの情報の取得
-
-
-				D3DXVECTOR3 pos = pBowabowa->GetPos();
-				D3DXVECTOR3 posOld = pBowabowa->GetPosOld();
-				D3DXVECTOR3 Size = pBowabowa->GetSize();
-
-				// 矩形の当たり判定
-				if (useful::CollisionCircle(m_pos, pos, 30.0f) == true)
-				{
-					pBowabowa->Take();
-				}
-			}
-
-			pObj = pObjNext;
-		}
+		m_pos.x = D_pos.x + D_Size.x + 50.0f;
+		m_State = STATE_WAIT;
+		m_move.x = 0.0f;
+	}
+	if (m_pos.x + 50.0f < D_pos.x - D_Size.x)
+	{
+		m_pos.x = D_pos.x - D_Size.x - 50.0f;
+		m_State = STATE_WAIT;
+		m_move.x = 0.0f;
+	}
+	if (m_pos.z - 50.0f > D_pos.z + D_Size.z)
+	{
+		m_pos.z = D_pos.z + D_Size.z + 50.0f;
+		m_State = STATE_WAIT;
+		m_move.z = 0.0f;
+	}
+	if (m_pos.z + 50.0f < D_pos.z - D_Size.z)
+	{
+		m_pos.z = D_pos.z - D_Size.z - 50.0f;
+		m_State = STATE_WAIT;
+		m_move.z = 0.0f;
 	}
 }
 
@@ -858,7 +860,7 @@ void CPlayer::PosUpdate(void)
 
 	// 壁との当たり判定
 	CollisionWall(useful::COLLISION_Y);
-	CollisionMapModel(useful::COLLISION_Y);
+	CollisionDevilHole(useful::COLLISION_Y);
 
 	//X軸の位置更新
 	m_pos.x += m_move.x * CManager::GetInstance()->GetGameSpeed() * fSpeed;
@@ -866,7 +868,7 @@ void CPlayer::PosUpdate(void)
 
 	// 壁との当たり判定
 	CollisionWall(useful::COLLISION_X);
-	CollisionMapModel(useful::COLLISION_X);
+	CollisionDevilHole(useful::COLLISION_X);
 
 	//Z軸の位置更新
 	m_pos.z += m_move.z * CManager::GetInstance()->GetGameSpeed() * fSpeed;
@@ -874,7 +876,7 @@ void CPlayer::PosUpdate(void)
 
 	// 壁との当たり判定
 	CollisionWall(useful::COLLISION_Z);
-	CollisionMapModel(useful::COLLISION_Z);
+	CollisionDevilHole(useful::COLLISION_Z);
 }
 
 //====================================================================

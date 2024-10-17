@@ -23,17 +23,10 @@ namespace
 //====================================================================
 //コンストラクタ
 //====================================================================
-CBowabowa::CBowabowa(int nPriority) : CObjectX(nPriority)
+CBowabowa::CBowabowa(int nPriority) : CItem(nPriority)
 {
 	SetSize(SAMPLE_SIZE);
 	SetPos(INITVECTOR3);
-	m_nIdxXModel = NULL;			//マテリアルの数
-	m_CollisionPos = INITVECTOR3;
-	m_bCollision = false;
-	m_State = STATE_NORMAL;
-	m_nStateCount = 0;
-	m_Scaling = 1.0f;
-	m_fColorA = 0.0f;
 }
 
 //====================================================================
@@ -49,21 +42,21 @@ CBowabowa::~CBowabowa()
 //====================================================================
 CBowabowa* CBowabowa::Create(char* pModelName)
 {
-	CBowabowa* pSample = NULL;
+	CBowabowa* pBowabowa = nullptr;
 
-	if (pSample == NULL)
+	if (pBowabowa == nullptr)
 	{
 		//オブジェクト2Dの生成
-		pSample = new CBowabowa();
+		pBowabowa = new CBowabowa();
 	}
 
 	//オブジェクトの初期化処理
-	if (FAILED(pSample->Init(pModelName)))
+	if (FAILED(pBowabowa->Init(pModelName)))
 	{//初期化処理が失敗した場合
 		return NULL;
 	}
 
-	return pSample;
+	return pBowabowa;
 }
 
 //====================================================================
@@ -73,7 +66,7 @@ HRESULT CBowabowa::Init(char* pModelName)
 {
 	SetType(CObject::TYPE_BOWABOWA);
 
-	CObjectX::Init(pModelName);
+	CItem::Init(pModelName);
 
 	//モードごとに初期値を設定出来る
 	switch (CScene::GetMode())
@@ -90,7 +83,6 @@ HRESULT CBowabowa::Init(char* pModelName)
 		break;
 	}
 
-
 	return S_OK;
 }
 
@@ -99,7 +91,7 @@ HRESULT CBowabowa::Init(char* pModelName)
 //====================================================================
 void CBowabowa::Uninit(void)
 {
-	CObjectX::Uninit();
+	CItem::Uninit();
 }
 
 //====================================================================
@@ -130,14 +122,15 @@ void CBowabowa::Update(void)
 void CBowabowa::TitleUpdate(void)
 {
 	D3DXVECTOR3 pos = GetPos();
+	D3DXVECTOR3 move = GetMove();
 
 	//位置更新
-	pos += m_move;
+	pos += move;
 
 	SetPos(pos);
 
 	//頂点情報の更新
-	CObjectX::Update();
+	CItem::Update();
 }
 
 //====================================================================
@@ -145,27 +138,38 @@ void CBowabowa::TitleUpdate(void)
 //====================================================================
 void CBowabowa::GameUpdate(void)
 {
+	D3DXVECTOR3 pos = GetPos();
+	D3DXVECTOR3 posOld = GetPosold();
+	D3DXVECTOR3 rot = GetRot();
+
+	float Scaling = GetScaling();
+
 	//更新前の位置を過去の位置とする
-	m_posOld = m_pos;
+	posOld = pos;
 
 	//位置更新
-	CObjectX::SetPos(m_pos);
-	CObjectX::SetRot(m_rot);
+	CObjectX::SetPos(pos);
+	CObjectX::SetRot(rot);
 
 	//画面外判定
-	if (m_pos.y < 0.0f)
+	if (pos.y < 0.0f)
 	{
 
 	}
 
 	//大きさの設定
-	SetScaling(D3DXVECTOR3(m_Scaling, m_Scaling, m_Scaling));
+	SetScaling(Scaling);
 
 	//状態管理
 	StateManager();
 
 	//頂点情報の更新
-	CObjectX::Update();
+	CItem::Update();
+
+	if (CollisionPlayer())
+	{// 当たったら消滅
+		return;
+	}
 }
 
 //====================================================================
@@ -173,7 +177,7 @@ void CBowabowa::GameUpdate(void)
 //====================================================================
 void CBowabowa::Draw(void)
 {
-	CObjectX::Draw();
+	CItem::Draw();
 }
 
 //====================================================================
@@ -181,7 +185,11 @@ void CBowabowa::Draw(void)
 //====================================================================
 void CBowabowa::StateManager(void)
 {
-	switch (m_State)
+	CItem::STATE State = GetState();
+
+	int nStateCounter = GetStateCounter();
+
+	switch (State)
 	{
 	case STATE_NORMAL:
 		break;
@@ -189,9 +197,9 @@ void CBowabowa::StateManager(void)
 		break;
 	}
 
-	if (m_nStateCount > 0)
+	if (nStateCounter > 0)
 	{
-		m_nStateCount--;
+		nStateCounter--;
 	}
 }
 
@@ -204,4 +212,20 @@ void CBowabowa::Take(void)
 	CScore *pScore = CGame::GetScore();
 	pScore->AddScore(100);
 	Uninit();
+}
+
+//====================================================================
+//プレイヤーとの判定
+//====================================================================
+bool CBowabowa::CollisionPlayer()
+{
+	// falseの時
+	if (!CItem::CollisionPlayer())
+	{
+		return false;
+	}
+
+	// 消滅
+	Uninit();
+	return true;
 }

@@ -24,6 +24,7 @@
 #include "time.h"
 #include "tutorial.h"
 #include "logo.h"
+#include "item_manager.h"
 
 #ifdef _DEBUG
 #define SET_MODE (CScene::MODE_GAME)
@@ -191,11 +192,15 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 		return E_FAIL;
 	}
 
+
 	if (m_pXModel == nullptr)
 	{
 		//Xモデルの生成
 		m_pXModel = new CXModel;
 	}
+
+	////アイテムマネージャの読み込み処理
+	//CItemManager::Load();
 
 	//全てのXモデルの読み込み
 	if (FAILED(m_pXModel->Load()))
@@ -244,6 +249,9 @@ void CManager::Uninit(void)
 		delete m_pScene;
 		m_pScene = nullptr;
 	}
+
+	//アイテムマネージャの読み込み処理
+	CItemManager::UnLoad();
 
 	//全てのオブジェクトの破棄
 	CObject::ReleaseAll();
