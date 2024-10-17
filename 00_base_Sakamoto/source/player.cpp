@@ -256,9 +256,6 @@ void CPlayer::GameUpdate(void)
 		//画面外判定
 		CollisionStageOut();
 
-		// アイテムの当たり判定
-		CollisionItem();
-
 		// 敵の判定
 		CollisionEnemy();
 	}
@@ -798,44 +795,6 @@ void CPlayer::CollisionStageOut(void)
 		m_pos.z = D_pos.z - D_Size.z - 50.0f;
 		m_State = STATE_WAIT;
 		m_move.z = 0.0f;
-	}
-}
-
-//====================================================================
-// ボアボアの当たり判定
-//====================================================================
-void CPlayer::CollisionBowabowa(void)
-{
-	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
-	{
-		//オブジェクトを取得
-		CObject* pObj = CObject::GetTop(nCntPriority);
-
-		while (pObj != NULL)
-		{
-			CObject* pObjNext = pObj->GetNext();
-
-			CObject::TYPE type = pObj->GetType();			//種類を取得
-
-			if (type == TYPE_BOWABOWA)
-			{//種類がアイテムの時
-
-				CBowabowa* pBowabowa = (CBowabowa*)pObj;	// アイテムの情報の取得
-
-
-				D3DXVECTOR3 pos = pBowabowa->GetPos();
-				D3DXVECTOR3 posOld = pBowabowa->GetPosOld();
-				D3DXVECTOR3 Size = pBowabowa->GetSize();
-
-				// 矩形の当たり判定
-				if (useful::CollisionCircle(m_pos, pos, 30.0f) == true)
-				{
-					pBowabowa->Take();
-				}
-			}
-
-			pObj = pObjNext;
-		}
 	}
 }
 
