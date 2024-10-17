@@ -42,7 +42,7 @@ public:
 	void Update(void);
 	void Draw(void);
 
-	virtual void CollisionPlayer();
+	virtual bool CollisionPlayer();
 
 	// テクスチャ番号取得
 	int GetIdx(void) { return m_nIdxTexture; }
@@ -53,6 +53,28 @@ public:
 	//位置設定・取得
 	void SetPos(const D3DXVECTOR3& pos) { m_pos = pos; }
 	D3DXVECTOR3 GetPos(void) { return m_pos; }
+
+	//位置設定・取得
+	void SetPosold(const D3DXVECTOR3& posold) { m_posOld = posold; }
+	D3DXVECTOR3 GetPosold(void) { return m_posOld; }
+
+	//移動量設定・取得
+	void SetMove(const D3DXVECTOR3& move) { m_move = move; }
+	D3DXVECTOR3 GetMove(void) { return m_move; }
+
+	//向き設定・取得
+	void SetRot(const D3DXVECTOR3& rot) { m_rot = rot; }
+	D3DXVECTOR3 GetRot(void) { return m_rot; }
+
+	//大きさ設定・取得
+	void SetScaling(const float& Scaling) { m_Scaling = Scaling; }
+	float GetScaling(void) { return m_Scaling; }
+
+	// 状態取得
+	STATE GetState() { return m_eState; }
+
+	// 状態管理の取得
+	int GetStateCounter() { return m_nStateCount; }
 
 private:
 	STATE m_eState;		// 状態
@@ -65,6 +87,7 @@ private:
 	float m_fColorA;		//不透明度
 	float m_Scaling;		//大きさ
 
+	bool m_UseItem;			//アイテムが使用可能かどうか
 	bool m_bCollision;		//当たり判定用の座標
 
 	D3DXVECTOR3 m_CollisionPos;	//当たり判定用の座標

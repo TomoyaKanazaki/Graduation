@@ -263,9 +263,6 @@ void CPlayer::GameUpdate(void)
 		CollisionEnemy();
 	}
 
-	//ぼわぼわの当たり判定
-	CollisionBowabowa();
-
 	//状態の管理
 	StateManager();
 
@@ -736,43 +733,6 @@ void CPlayer::CollisionDevilHole(useful::COLLISION XYZ)
 }
 
 //====================================================================
-// アイテムの当たり判定
-//====================================================================
-void CPlayer::CollisionItem(void)
-{
-	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
-	{
-		//オブジェクトを取得
-		CObject* pObj = CObject::GetTop(nCntPriority);
-
-		while (pObj != NULL)
-		{
-			CObject* pObjNext = pObj->GetNext();
-
-			CObject::TYPE type = pObj->GetType();			//種類を取得
-
-			if (type == TYPE_CROSS)
-			{//種類がアイテムの時
-
-				CCross* pCross = (CCross*)pObj;	// アイテムの情報の取得
-
-				D3DXVECTOR3 pos = pCross->GetPos();
-				D3DXVECTOR3 posOld = pCross->GetPosOld();
-				D3DXVECTOR3 Size = pCross->GetSize();
-
-				// 矩形の当たり判定
-				if (useful::CollisionCircle(m_pos, pos,30.0f) == true)
-				{
-					m_UseItem = true;
-				}
-			}
-
-			pObj = pObjNext;
-		}
-	}
-}
-
-//====================================================================
 // 敵の当たり判定
 //====================================================================
 void CPlayer::CollisionEnemy(void)
@@ -808,8 +768,6 @@ void CPlayer::CollisionEnemy(void)
 		}
 	}
 }
-
-//====================================================================
 // ステージ外の当たり判定
 //====================================================================
 void CPlayer::CollisionStageOut(void)

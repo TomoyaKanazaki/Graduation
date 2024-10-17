@@ -89,6 +89,9 @@ public:
 	ACTION_TYPE GetAction(void) { return m_Action; }
 	void SetModelDisp(bool Sst);
 
+	void SetUseItem(bool bUse) { m_UseItem = bUse; }
+	bool GetbUseItem() { return m_UseItem; }
+
 	void Death(void);
 	bool SortObject(D3DXVECTOR3 pos);					// オブジェクトとのソート処理
 
@@ -100,10 +103,8 @@ private:
 	void Rot(void);				//移動方向処理
 	void Attack(void);			//攻撃処理
 	void CollisionWall(useful::COLLISION XYZ);		//壁との当たり判定
-	void CollisionBowabowa(void);	//ボワボワとの当たり判定
 	void SearchWall(void);							//壁のサーチ判定
 	void CollisionDevilHole(useful::COLLISION XYZ);	//デビルホールとの当たり判定
-	void CollisionItem (void);	//アイテムとの当たり判定
 	void CollisionEnemy(void);	// 敵との当たり判定
 	void CollisionStageOut(void);	// ステージ外の当たり判定
 
