@@ -16,6 +16,7 @@
 #include "MapModel.h"
 #include "XModel.h"
 #include "CubeEffect.h"
+#include "MapSystem.h"
 #include "useful.h"
 
 //マクロ定義
@@ -35,7 +36,7 @@ namespace
 	// ブロックの初期位置（Y）
 	const float BLOCK_INIT_POS_Y[CEdit::BLOCK_INIT_TYPE_MAX] =
 	{
-		10.0f,
+		50.0f,
 		50.0f,
 		50.0f,
 	};
@@ -43,9 +44,9 @@ namespace
 	// ブロックの初期サイズ
 	const D3DXVECTOR3 BLOCK_INIT_SIZE[CEdit::BLOCK_INIT_TYPE_MAX] =
 	{
-		D3DXVECTOR3(50.0f, 10.0f,50.0f),
+		D3DXVECTOR3(50.0f, 50.0f,50.0f),
 		D3DXVECTOR3(10.0f,50.0f,50.0f),
-		D3DXVECTOR3(50.0f,50.0f, 50.0f),
+		D3DXVECTOR3(50.0f,10.0f, 50.0f),
 	};
 
 	// ブロックのテクスチャの種類
@@ -135,14 +136,17 @@ CEdit::CEdit()
 		AppearCollision();
 	}
 
-	m_EditPos = INITVECTOR3;
+	m_EditPos = D3DXVECTOR3(0.0f, 50.0f, 0.0f);
 	m_EditRot = INITVECTOR3;
-	m_EditSize = D3DXVECTOR3(100.0f, 10.0f, 100.0f);
+	m_EditSize = D3DXVECTOR3(50.0f, 50.0f, 50.0f);
 	m_EditType = EDITTYPE_BLOCK;
 	MoveWidth = 100.0f;
 	m_fRotValue = D3DX_PI * 0.5f;
 	m_bModelCollision = true;
 	m_bAppearCollision = false;
+
+	m_MapGritWight = 0;
+	m_MapGritHeight = 0;
 }
 
 //====================================================================
@@ -270,9 +274,10 @@ void CEdit::UpdateBlock(void)
 {
 	//キーボードの取得
 	CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
+	D3DXVECTOR3 MapPos = CMapSystem::GetInstance()->GetMapPos();
 
 	m_pEditBlock->SetAppear(true);
-	m_pEditBlock->SetPos(m_EditPos);
+	m_pEditBlock->SetPos(D3DXVECTOR3(MapPos.x + m_MapGritWight * 100.0f, 50.0f, MapPos.z - m_MapGritHeight * 100.0f));
 
 	m_pEditBlock->SetSize(m_EditSize);
 
@@ -367,6 +372,8 @@ void CEdit::UpdateBlock(void)
 		CCubeBlock* pBlock = CCubeBlock::Create();
 		pBlock->SetPos(m_pEditBlock->GetPos());
 		pBlock->SetSize(m_pEditBlock->GetSize());
+		pBlock->SetWightNumber(m_MapGritWight);
+		pBlock->SetHeightNumber(m_MapGritHeight);
 		pBlock->SetTexture(BLOCK_TEXTURE_TYPE[m_nBlockTextureIdx]);
 		AppearCollision();
 	}
@@ -562,6 +569,8 @@ void CEdit::Move(void)
 {
 	//キーボードの取得
 	CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
+	int MapWigthMax = CMapSystem::GetInstance()->GetWightMax();
+	int MapHeightMax = CMapSystem::GetInstance()->GetHeightMax();
 
 	if (pInputKeyboard->GetPress(DIK_W) == true ||
 		pInputKeyboard->GetPress(DIK_A) == true ||
@@ -582,21 +591,25 @@ void CEdit::Move(void)
 		if (pInputKeyboard->GetPress(DIK_W) == true)
 		{
 			m_EditPos.z += MoveWidth;
+			m_MapGritHeight--;
 		}
 
 		if (pInputKeyboard->GetPress(DIK_S) == true)
 		{
 			m_EditPos.z -= MoveWidth;
+			m_MapGritHeight++;
 		}
 
 		if (pInputKeyboard->GetPress(DIK_A) == true)
 		{
 			m_EditPos.x -= MoveWidth;
+			m_MapGritWight--;
 		}
 
 		if (pInputKeyboard->GetPress(DIK_D) == true)
 		{
 			m_EditPos.x += MoveWidth;
+			m_MapGritWight++;
 		}
 
 		if (pInputKeyboard->GetPress(DIK_LSHIFT) == true)
@@ -614,21 +627,25 @@ void CEdit::Move(void)
 		if (pInputKeyboard->GetTrigger(DIK_W) == true)
 		{
 			m_EditPos.z += MoveWidth;
+			m_MapGritHeight--;
 		}
 
 		if (pInputKeyboard->GetTrigger(DIK_S) == true)
 		{
 			m_EditPos.z -= MoveWidth;
+			m_MapGritHeight++;
 		}
 
 		if (pInputKeyboard->GetTrigger(DIK_A) == true)
 		{
 			m_EditPos.x -= MoveWidth;
+			m_MapGritWight--;
 		}
 
 		if (pInputKeyboard->GetTrigger(DIK_D) == true)
 		{
 			m_EditPos.x += MoveWidth;
+			m_MapGritWight++;
 		}
 
 		if (pInputKeyboard->GetTrigger(DIK_LSHIFT) == true)
@@ -640,6 +657,23 @@ void CEdit::Move(void)
 		{
 			m_EditPos.y -= MoveWidth;
 		}
+	}
+
+	if (m_MapGritWight >= MapWigthMax)
+	{
+		m_MapGritWight = 0;
+	}
+	if (m_MapGritWight < 0)
+	{
+		m_MapGritWight = MapWigthMax - 1;
+	}
+	if (m_MapGritHeight >= MapHeightMax)
+	{
+		m_MapGritHeight = 0;
+	}
+	if (m_MapGritHeight < 0)
+	{
+		m_MapGritHeight = MapHeightMax - 1;
 	}
 
 	//幅変更
@@ -853,8 +887,8 @@ void CEdit::SaveBlock(void)
 					fprintf(pFile, "%s\n", "STARTSETBLOCK");
 
 					//ステージをセーブした終了の合図
-					fprintf(pFile, "POS %f %f %f\n", pBlock->GetPos().x, pBlock->GetPos().y, pBlock->GetPos().z);
-					fprintf(pFile, "SIZE %f %f %f\n", pBlock->GetSize().x, pBlock->GetSize().y, pBlock->GetSize().z);
+					fprintf(pFile, "WIGHT %d\n", pBlock->GetWightNumber());
+					fprintf(pFile, "HEIGHT %d\n", pBlock->GetHeightNumber());
 					fprintf(pFile, "TEXTURE %s\n", pBlock->GetTextureName());
 
 					fprintf(pFile, "%s\n\n", "ENDSETBLOCK");

@@ -25,9 +25,17 @@ public:
 	void Draw(void);
 
 	bool CollisionBlock(D3DXVECTOR3* pPos, D3DXVECTOR3 pPosOld, D3DXVECTOR3* pMove, D3DXVECTOR3* pObjMove, D3DXVECTOR3 Size, bool* bJump, COLLISION XYZ);
+
+	void SetWightNumber(int Number) { m_nMapWightNumber = Number; }
+	int GetWightNumber(void) { return m_nMapWightNumber; }
+	void SetHeightNumber(int Number) { m_nMapHeightNumber = Number; }
+	int GetHeightNumber(void) { return m_nMapHeightNumber; }
 protected:
 
 private:
+
+	int m_nMapWightNumber;
+	int m_nMapHeightNumber;
 
 };
 #endif

@@ -18,7 +18,7 @@ namespace
 {
 	const float WAIGHT_SIZE = 11;		//‰¡‚Ì’¸“_”
 	const float HEIGHT_SIZE = 11;		//c‚Ì’¸“_”
-	const float WAIGHT_CENTER = 0.5f;	//‰¡‚ÌŒ´“_(0.0f`1.0f)
+	const float WIGHT_CENTER = 0.5f;	//‰¡‚ÌŒ´“_(0.0f`1.0f)
 	const float HEIGHT_CENTER = 0.5f;	//c‚ÌŒ´“_(0.0f`1.0f)
 	const float FIELD_SIZE = 200.0f;	//°ˆê–‡‚Ì‘å‚«‚³
 }
@@ -28,7 +28,8 @@ namespace
 //====================================================================
 CCubeBlock::CCubeBlock(int nPriority) :CObjmeshCube(nPriority)
 {
-
+	m_nMapWightNumber = 0;
+	m_nMapHeightNumber = 0;
 }
 
 //====================================================================
