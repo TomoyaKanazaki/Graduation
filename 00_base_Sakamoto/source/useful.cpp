@@ -11,6 +11,28 @@
 #include "debugproc.h"
 
 //====================================================================
+// ”š‚ğİ’è‚µ‚½”ÍˆÍ“à‚É”[‚ß‚éˆ—
+//====================================================================
+int useful::RangeNumber(int Max, int Min, int Number)
+{
+	int nNumber = Number;
+
+	if (nNumber >= Max)
+	{
+		nNumber = Min;
+		return nNumber;
+	}
+
+	if (nNumber < Min)
+	{
+		nNumber = Max - 1;
+		return nNumber;
+	}
+
+	return nNumber;
+}
+
+//====================================================================
 //
 //====================================================================
 bool useful::CollisionRectangle2D(D3DXVECTOR3 pos1, D3DXVECTOR3 pos2, D3DXVECTOR3 Size1, D3DXVECTOR3 Size2, useful::COLLISION Shaft)
