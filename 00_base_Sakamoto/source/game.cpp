@@ -111,7 +111,7 @@ CGame::CGame()
 	m_nEventNumber = 0;
 	m_nNumBowabowa = 0;
 	CManager::GetInstance()->GetCamera()->SetBib(false);
-	CManager::GetInstance()->GetCamera()->SetCameraMode(CCamera::CAMERAMODE_DOWNVIEW);
+	CManager::GetInstance()->GetCamera()->SetCameraMode(CCamera::CAMERAMODE_CONTROL);
 }
 
 //====================================================================
@@ -439,61 +439,6 @@ void CGame::DeleteMap(void)
 //====================================================================
 void CGame::LoadStageBlock(const char* pFilename)
 {
-	////ファイルを開く
-	//FILE* pFile = fopen(pFilename, "r");
-
-	//if (pFile != nullptr)
-	//{//ファイルが開けた場合
-
-	//	char Getoff[32] = {};
-	//	char boolLife[32] = {};
-	//	char aString[128] = {};			//ゴミ箱
-	//	char aStartMessage[32] = {};	//スタートメッセージ
-	//	char aSetMessage[32] = {};		//セットメッセージ
-	//	char aEndMessage[32] = {};		//終了メッセージ
-
-	//	fscanf(pFile, "%s", &aStartMessage[0]);
-	//	if (strcmp(&aStartMessage[0], "STARTSETSTAGE") == 0)
-	//	{
-	//		CMapSystem *pMapSystem = CMapSystem::GetInstance();
-	//		D3DXVECTOR3 MapSystemPos = pMapSystem->GetMapPos();
-	//		while (1)
-	//		{
-	//			fscanf(pFile, "%s", &aSetMessage[0]);
-	//			if (strcmp(&aSetMessage[0], "STARTSETBLOCK") == 0)
-	//			{
-	//				int WightNumber, HeightNumber;
-
-	//				fscanf(pFile, "%s", &aString[0]);
-	//				fscanf(pFile, "%d", &WightNumber);
-
-	//				fscanf(pFile, "%s", &aString[0]);
-	//				fscanf(pFile, "%d", &HeightNumber);
-
-	//				CCubeBlock* pBlock = CCubeBlock::Create();
-
-	//				pBlock->SetPos(D3DXVECTOR3(MapSystemPos.x + WightNumber * 100.0f, 50.0f, MapSystemPos.z - HeightNumber * 100.0f));
-	//				pBlock->SetSize(D3DXVECTOR3(50.0f, 50.0f, 50.0f));
-
-	//				fscanf(pFile, "%s", &aEndMessage[0]);
-	//				if (strcmp(&aEndMessage[0], "ENDSETBLOCK") == 0)
-	//				{
-	//					break;
-	//				}
-	//			}
-	//			else if (strcmp(&aSetMessage[0], "ENDSETSTAGE") == 0)
-	//			{
-	//				break;
-	//			}
-	//		}
-	//	}
-	//	fclose(pFile);
-	//}
-	//else
-	//{//ファイルが開けなかった場合
-	//	printf("***ファイルを開けませんでした***\n");
-	//}
-
 	//ファイルを開く
 	FILE* pFile = fopen(pFilename, "r");
 
@@ -510,27 +455,26 @@ void CGame::LoadStageBlock(const char* pFilename)
 		fscanf(pFile, "%s", &aStartMessage[0]);
 		if (strcmp(&aStartMessage[0], "STARTSETSTAGE") == 0)
 		{
+			CMapSystem *pMapSystem = CMapSystem::GetInstance();
+			D3DXVECTOR3 MapSystemPos = pMapSystem->GetMapPos();
+			float MapSystemGritSize = pMapSystem->GetGritSize() * 0.5f;
+
 			while (1)
 			{
 				fscanf(pFile, "%s", &aSetMessage[0]);
 				if (strcmp(&aSetMessage[0], "STARTSETBLOCK") == 0)
 				{
-					D3DXVECTOR3 pos;
-					D3DXVECTOR3 Size;
+					int WightNumber, HeightNumber;
 
 					fscanf(pFile, "%s", &aString[0]);
-					fscanf(pFile, "%f", &pos.x);
-					fscanf(pFile, "%f", &pos.y);
-					fscanf(pFile, "%f", &pos.z);
+					fscanf(pFile, "%d", &WightNumber);
 
 					fscanf(pFile, "%s", &aString[0]);
-					fscanf(pFile, "%f", &Size.x);
-					fscanf(pFile, "%f", &Size.y);
-					fscanf(pFile, "%f", &Size.z);
+					fscanf(pFile, "%d", &HeightNumber);
 
 					CCubeBlock* pBlock = CCubeBlock::Create();
-					pBlock->SetPos(pos);
-					pBlock->SetSize(Size);
+					pBlock->SetPos(D3DXVECTOR3(MapSystemPos.x + WightNumber * 100.0f, 50.0f, MapSystemPos.z - HeightNumber * 100.0f));
+					pBlock->SetSize(D3DXVECTOR3(MapSystemGritSize, MapSystemGritSize, MapSystemGritSize));
 
 					fscanf(pFile, "%s", &aEndMessage[0]);
 					if (strcmp(&aEndMessage[0], "ENDSETBLOCK") == 0)

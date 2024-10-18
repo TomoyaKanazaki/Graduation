@@ -32,6 +32,7 @@
 #include "fire.h"
 #include "DevilHole.h"
 #include "devil.h"
+#include "MapSystem.h"
 
 namespace
 {
@@ -70,6 +71,9 @@ CPlayer::CPlayer(int nPriority) :CObject(nPriority)
 	m_UseItem = false;
 	m_pLifeUi = nullptr;
 	m_nLife = LIFE_MAX;
+	m_eItemType = TYPE_NONE;
+	m_nMapWight = 0;
+	m_nMapHeight = 0;
 }
 
 //====================================================================
@@ -118,6 +122,10 @@ HRESULT CPlayer::Init(void)
 
 	//モデルの生成
 	LoadLevelData("data\\TXT\\motion_foot_light_spear.txt");
+
+	// プレイヤーの指定パーツ削除
+	SetPartsDisp(3, false);
+	SetPartsDisp(0, false);
 
 	//モーションの生成
 	if (m_pMotion == NULL)
@@ -260,6 +268,9 @@ void CPlayer::GameUpdate(void)
 		CollisionEnemy();
 	}
 
+	// プレイヤーがマップのどのマスに存在しているか設定する
+	MapSystemNumber();
+
 	//状態の管理
 	StateManager();
 
@@ -277,7 +288,8 @@ void CPlayer::GameUpdate(void)
 
 	//デバッグ表示
 	DebugProc::Print(DebugProc::POINT_LEFT,"[自分]位置 %f : %f : %f\n", m_pos.x, m_pos.y, m_pos.z);
-	DebugProc::Print(DebugProc::POINT_LEFT,"[自分]向き %f : %f : %f\n", m_rot.x, m_rot.y, m_rot.z);
+	DebugProc::Print(DebugProc::POINT_LEFT, "[自分]向き %f : %f : %f\n", m_rot.x, m_rot.y, m_rot.z);
+	DebugProc::Print(DebugProc::POINT_LEFT,"[自分]横 %d : 縦 %f\n", m_nMapWight, m_nMapHeight);
 }
 
 //====================================================================
@@ -765,6 +777,8 @@ void CPlayer::CollisionEnemy(void)
 		}
 	}
 }
+
+//====================================================================
 // ステージ外の当たり判定
 //====================================================================
 void CPlayer::CollisionStageOut(void)
@@ -796,6 +810,23 @@ void CPlayer::CollisionStageOut(void)
 		m_State = STATE_WAIT;
 		m_move.z = 0.0f;
 	}
+}
+
+//====================================================================
+// プレイヤーがマップのどのマスに存在しているか設定する
+//====================================================================
+void CPlayer::MapSystemNumber(void)
+{
+	D3DXVECTOR3 MapPos = CMapSystem::GetInstance()->GetMapPos();
+	int MapWightMax = CMapSystem::GetInstance()->GetWightMax();
+	int MapHeightMax = CMapSystem::GetInstance()->GetHeightMax();
+	D3DXVECTOR3 GritPos = INITVECTOR3;
+
+	(MapWightMax * 0.5f) * -100.0f;
+	(MapHeightMax * 0.5f) * 100.0f;
+
+	//m_nMapWight = ;
+	//m_nMapHeight = ;
 }
 
 //====================================================================
@@ -1198,5 +1229,16 @@ void CPlayer::LoadLevelData(const char* pFilename)
 	else
 	{//ファイルが開けなかった場合
 		printf("***ファイルを開けませんでした***\n");
+	}
+}
+
+//====================================================================
+// プレイヤーの指定モデル消去
+//====================================================================
+void CPlayer::SetPartsDisp(int nParts, bool Set)
+{
+	if (m_apModel[nParts] != nullptr)
+	{
+		m_apModel[nParts]->SetDisp(Set);
 	}
 }

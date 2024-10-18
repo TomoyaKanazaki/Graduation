@@ -232,6 +232,13 @@ void CDevilHole::CollisionOpen(void)
 				D3DXVECTOR3 pos = pPlayer->GetPos();
 				D3DXVECTOR3 MySize = GetSize();
 
+				if (pPlayer->GetItemType() != CPlayer::TYPE_BIBLE)
+				{// ¹‘ˆÈŠO‚Ì
+					pObj = pObjNext;
+
+					continue;
+				}
+
 				for (int nCnt = 0; nCnt < 4; nCnt++)
 				{
 					D3DXVECTOR3 MyPos = m_pos;
@@ -281,6 +288,7 @@ void CDevilHole::CollisionOpen(void)
 						}
 						
 						m_bSet[nCnt] = true;
+						pPlayer->SetItemType(CPlayer::TYPE_NONE);
 						return;
 					}
 				}

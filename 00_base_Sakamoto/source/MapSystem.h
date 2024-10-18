@@ -35,6 +35,7 @@ public:
 	D3DXVECTOR3 GetMapPos(void) { return m_MapPos; }
 	int GetWightMax(void) { return m_WightMax; }
 	int GetHeightMax(void) { return m_HeightMax; }
+	float GetGritSize(void) { return m_fGritSize; }
 
 protected:
 
@@ -45,6 +46,7 @@ public:
 	D3DXVECTOR3 m_MapPos;
 	int m_WightMax;
 	int m_HeightMax;
+	float m_fGritSize;
 };
 
 #endif

@@ -185,8 +185,13 @@ bool CBible::CollisionPlayer()
 			CPlayer* pPlayer = (CPlayer*)pObj;		// アイテムの情報の取得
 
 			D3DXVECTOR3 pos = pObj->GetPos();
-			D3DXVECTOR3 rot = pPlayer->GetRot();
 			D3DXVECTOR3 Size = pObj->GetSize();
+
+			// 聖書に設定
+			pPlayer->SetItemType(CPlayer::TYPE_BIBLE);
+
+			// 指定パーツ表示
+			pPlayer->SetPartsDisp(0, true);
 
 			// アイテムの位置をプレイヤーと同じ位置に設定
 			SetPos(pos);

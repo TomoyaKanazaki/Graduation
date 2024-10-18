@@ -63,6 +63,15 @@ public:
 		STATE_MAX,			//最大
 	};
 
+	// アイテムの種類
+	enum ITEM_TYPE
+	{
+		TYPE_NONE = 0,		// 何もない
+		TYPE_CROSS,			// 十字架
+		TYPE_BIBLE,			// 聖書
+		TYPE_MAX
+	};
+
 	D3DMATRIX GetMtxWorld(void) { return m_mtxWorld; }
 	static CPlayer* Create();
 	HRESULT Init(void);
@@ -88,6 +97,7 @@ public:
 	void SetAction(ACTION_TYPE Action, float BlendTime);
 	ACTION_TYPE GetAction(void) { return m_Action; }
 	void SetModelDisp(bool Sst);
+	void SetPartsDisp(int nParts, bool Set);
 
 	void SetUseItem(bool bUse) { m_UseItem = bUse; }
 	bool GetbUseItem() { return m_UseItem; }
@@ -95,18 +105,22 @@ public:
 	void Death(void);
 	bool SortObject(D3DXVECTOR3 pos);					// オブジェクトとのソート処理
 
+	void SetItemType(ITEM_TYPE eType) { m_eItemType = eType; }
+	ITEM_TYPE GetItemType() { return m_eItemType; }		// アイテムの種類取得
+
 private:
-	void MyObjCreate(void);		//自分が保持するオブジェクトの生成
-	void ActionState(void);		//モーションと状態の管理
-	void StateManager(void);	//状態管理
-	void Move(void);			//移動処理
-	void Rot(void);				//移動方向処理
-	void Attack(void);			//攻撃処理
+	void MyObjCreate(void);							//自分が保持するオブジェクトの生成
+	void ActionState(void);							//モーションと状態の管理
+	void StateManager(void);						//状態管理
+	void Move(void);								//移動処理
+	void Rot(void);									//移動方向処理
+	void Attack(void);								//攻撃処理
 	void CollisionWall(useful::COLLISION XYZ);		//壁との当たり判定
 	void SearchWall(void);							//壁のサーチ判定
 	void CollisionDevilHole(useful::COLLISION XYZ);	//デビルホールとの当たり判定
-	void CollisionEnemy(void);	// 敵との当たり判定
-	void CollisionStageOut(void);	// ステージ外の当たり判定
+	void CollisionEnemy(void);						// 敵との当たり判定
+	void CollisionStageOut(void);					// ステージ外の当たり判定
+	void MapSystemNumber(void);						// プレイヤーがマップのどのマスに存在しているか設定する
 
 	void CameraPosUpdate(void);	//カメラ位置更新処理
 	void PosUpdate(void);		//位置更新処理
@@ -136,6 +150,9 @@ private:
 
 	float m_CollisionRot;		//当たり判定用の向き
 
+	int m_nMapWight;			//マップの横番号
+	int m_nMapHeight;			//マップの縦番号
+
 	int m_nLife;				//ライフ
 	bool m_OKL;					//左への進行が許されるかどうか
 	bool m_OKR;					//右への進行が許されるかどうか
@@ -146,6 +163,8 @@ private:
 	bool m_UseItem;				//アイテムが使用可能かどうか
 
 	CSlowManager* m_pSlow;		// スロー
+
+	ITEM_TYPE m_eItemType;		// 持ってるアイテムの種類
 
 	//階層構造とモーションのポインタ
 	CModel* m_apModel[64];

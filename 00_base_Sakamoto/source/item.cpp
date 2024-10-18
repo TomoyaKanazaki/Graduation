@@ -142,7 +142,8 @@ bool CItem::CollisionPlayer()
 			// 矩形の当たり判定
 			if (useful::CollisionCircle(m_pos, pos, Size.x))
 			{
-				pPlayer->SetUseItem(true);
+				// アイテム使用可能かどうか
+				pPlayer->SetItemType(CPlayer::TYPE_CROSS);
 
 				return true;
 			}

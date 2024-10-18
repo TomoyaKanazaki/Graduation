@@ -225,6 +225,8 @@ bool CBowabowa::CollisionPlayer()
 		return false;
 	}
 
+	//ステージのボワボワ数を減らす
+	CGame::AddBowabowa(-1);
 	// 消滅
 	Uninit();
 	return true;
