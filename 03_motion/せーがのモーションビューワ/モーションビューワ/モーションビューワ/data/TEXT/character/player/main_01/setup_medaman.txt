@@ -19,9 +19,9 @@ NUM_MODEL = 3
 #------------------------------------------------------------------------------
 # モデルファイル名
 #------------------------------------------------------------------------------
-MODEL_FILENAME = data/MODEL/01_bonbon/00_body.x	# [0]腰
-MODEL_FILENAME = data/MODEL/01_bonbon/01_R_foot.x	# [1]体
-MODEL_FILENAME = data/MODEL/01_bonbon/02_L_foot.x	# [2]頭
+MODEL_FILENAME = data/MODEL/03_medaman/00_body.x	# [0]腰
+MODEL_FILENAME = data/MODEL/03_medaman/01_R_hand.x	# [1]体
+MODEL_FILENAME = data/MODEL/03_medaman/02_L_hand.x	# [2]頭
 
 
 #------------------------------------------------------------------------------
@@ -73,7 +73,7 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 0
 		PARENT = -1
-		POS = 0.00 20.70 0.00
+		POS = 0.00 14.70 0.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
@@ -81,7 +81,7 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 1
 		PARENT = 0
-		POS = -6.60 -11.75 0.00
+		POS = -6.60 -1.75 0.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
@@ -89,7 +89,7 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 2
 		PARENT = 0
-		POS = 6.60 -11.25 0.00
+		POS = 6.60 -1.25 0.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
