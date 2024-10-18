@@ -111,7 +111,7 @@ CGame::CGame()
 	m_nEventNumber = 0;
 	m_nNumBowabowa = 0;
 	CManager::GetInstance()->GetCamera()->SetBib(false);
-	CManager::GetInstance()->GetCamera()->SetCameraMode(CCamera::CAMERAMODE_DOWNVIEW);
+	CManager::GetInstance()->GetCamera()->SetCameraMode(CCamera::CAMERAMODE_CONTROL);
 }
 
 //====================================================================

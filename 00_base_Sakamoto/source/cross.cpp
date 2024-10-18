@@ -16,6 +16,8 @@
 //==========================================
 namespace
 {
+	const int CROSS_DELETTIME = 600;	// 十字架消滅時間
+	const D3DXVECTOR3 INIT_POS = D3DXVECTOR3(0.0f, 0.0f, 200.0f);		//当たり判定
 	const D3DXVECTOR3 SAMPLE_SIZE = D3DXVECTOR3(20.0f, 20.0f, 20.0f);		//当たり判定
 }
 
@@ -24,6 +26,7 @@ namespace
 //====================================================================
 CCross::CCross(int nPriority) : CItem(nPriority)
 {
+	m_nDeletCont = 0;
 	SetSize(SAMPLE_SIZE);
 	SetPos(INITVECTOR3);
 }
@@ -63,6 +66,8 @@ CCross* CCross::Create(char* pModelName)
 //====================================================================
 HRESULT CCross::Init(char* pModelName)
 {
+	m_nDeletCont = 0;
+
 	SetType(CObject::TYPE_CROSS);
 
 	CItem::Init(pModelName);
@@ -137,9 +142,6 @@ void CCross::TitleUpdate(void)
 //====================================================================
 void CCross::GameUpdate(void)
 {
-	// 十字架が自動消去までの時間
-	int DeletCount = 660;
-
 	// 大きさ取得
 	float Scaling = GetScaling();
 
@@ -213,11 +215,30 @@ bool CCross::CollisionPlayer()
 			D3DXVECTOR3 pos = pObj->GetPos();
 			D3DXVECTOR3 Size = pObj->GetSize();
 
-			// アイテム使用可能かどうか
+			// 十字架かどうか
+			pPlayer->SetItemType(CPlayer::TYPE_CROSS);
 			pPlayer->SetUseItem(true);
 
-			// アイテムの位置をプレイヤーと同じ位置に設定
+			// 指定パーツ表示
+			pPlayer->SetPartsDisp(3, true);
+
+			// アイテムの位置をプレイヤーの正面に設定
 			SetPos(pos);
+
+			// 加算
+			m_nDeletCont++;
+
+			if (m_nDeletCont > CROSS_DELETTIME)
+			{// CROSS_DELETTIME秒経過
+				// 指定パーツ非表示
+				pPlayer->SetPartsDisp(3, false);
+
+				// 初期位置に戻す
+				SetPos(INIT_POS);
+
+				// カウントリセット
+				m_nDeletCont = 0;
+			}
 
 			pObj = pObjNext;
 		}

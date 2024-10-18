@@ -44,5 +44,6 @@ public:
 private:
 	void StateManager(void);	//状態管理
 
+	int m_nDeletCont;		// 削除カウンター
 };
 #endif

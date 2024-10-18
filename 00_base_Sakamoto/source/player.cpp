@@ -71,7 +71,7 @@ CPlayer::CPlayer(int nPriority) :CObject(nPriority)
 	m_UseItem = false;
 	m_pLifeUi = nullptr;
 	m_nLife = LIFE_MAX;
-
+	m_eItemType = TYPE_NONE;
 	m_nMapWight = 0;
 	m_nMapHeight = 0;
 }
@@ -122,6 +122,10 @@ HRESULT CPlayer::Init(void)
 
 	//モデルの生成
 	LoadLevelData("data\\TXT\\motion_foot_light_spear.txt");
+
+	// プレイヤーの指定パーツ削除
+	SetPartsDisp(3, false);
+	SetPartsDisp(0, false);
 
 	//モーションの生成
 	if (m_pMotion == NULL)
@@ -1225,5 +1229,16 @@ void CPlayer::LoadLevelData(const char* pFilename)
 	else
 	{//ファイルが開けなかった場合
 		printf("***ファイルを開けませんでした***\n");
+	}
+}
+
+//====================================================================
+// プレイヤーの指定モデル消去
+//====================================================================
+void CPlayer::SetPartsDisp(int nParts, bool Set)
+{
+	if (m_apModel[nParts] != nullptr)
+	{
+		m_apModel[nParts]->SetDisp(Set);
 	}
 }

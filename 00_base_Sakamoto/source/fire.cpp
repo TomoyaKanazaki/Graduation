@@ -137,6 +137,9 @@ void CFire::Update(void)
 
 	SetPos(pos);
 
+	// “G‚Æ‚Ì”»’è
+	CollisionEnemy();
+
 	// Œ¸ŽZ
 	m_nLife--;
 
@@ -145,9 +148,6 @@ void CFire::Update(void)
 		//”jŠü‚·‚é
 		Uninit();
 	}
-
-	// “G‚Æ‚Ì”»’è
-	CollisionEnemy();
 }
 
 //====================================================================
