@@ -233,7 +233,9 @@ void CDevilHole::CollisionOpen(void)
 				D3DXVECTOR3 MySize = GetSize();
 
 				if (pPlayer->GetItemType() != CPlayer::TYPE_BIBLE)
-				{
+				{// ¹‘ˆÈŠO‚ÌŽž
+					pObj = pObjNext;
+
 					continue;
 				}
 
@@ -286,6 +288,7 @@ void CDevilHole::CollisionOpen(void)
 						}
 						
 						m_bSet[nCnt] = true;
+						pPlayer->SetItemType(CPlayer::TYPE_NONE);
 						return;
 					}
 				}

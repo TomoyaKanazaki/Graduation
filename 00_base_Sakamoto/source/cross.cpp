@@ -215,7 +215,7 @@ bool CCross::CollisionPlayer()
 			D3DXVECTOR3 pos = pObj->GetPos();
 			D3DXVECTOR3 Size = pObj->GetSize();
 
-			// 十字架かどうか
+			// 十字架に設定、弾発射可能にする
 			pPlayer->SetItemType(CPlayer::TYPE_CROSS);
 			pPlayer->SetUseItem(true);
 
@@ -230,6 +230,9 @@ bool CCross::CollisionPlayer()
 
 			if (m_nDeletCont > CROSS_DELETTIME)
 			{// CROSS_DELETTIME秒経過
+				// 使用不可
+				pPlayer->SetUseItem(false);
+
 				// 指定パーツ非表示
 				pPlayer->SetPartsDisp(3, false);
 
