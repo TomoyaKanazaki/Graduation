@@ -187,7 +187,7 @@ bool CBible::CollisionPlayer()
 			D3DXVECTOR3 pos = pObj->GetPos();
 			D3DXVECTOR3 Size = pObj->GetSize();
 
-			// 聖書かどうか
+			// 聖書に設定
 			pPlayer->SetItemType(CPlayer::TYPE_BIBLE);
 
 			// 指定パーツ表示

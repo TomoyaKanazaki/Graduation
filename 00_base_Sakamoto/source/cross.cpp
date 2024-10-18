@@ -215,7 +215,7 @@ bool CCross::CollisionPlayer()
 			D3DXVECTOR3 pos = pObj->GetPos();
 			D3DXVECTOR3 Size = pObj->GetSize();
 
-			// 十字架かどうか
+			// 十字架に設定、弾発射可能にする
 			pPlayer->SetItemType(CPlayer::TYPE_CROSS);
 			pPlayer->SetUseItem(true);
 
