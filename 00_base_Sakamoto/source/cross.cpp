@@ -230,6 +230,9 @@ bool CCross::CollisionPlayer()
 
 			if (m_nDeletCont > CROSS_DELETTIME)
 			{// CROSS_DELETTIME秒経過
+				// 使用不可
+				pPlayer->SetUseItem(false);
+
 				// 指定パーツ非表示
 				pPlayer->SetPartsDisp(3, false);
 
