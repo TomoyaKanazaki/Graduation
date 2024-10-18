@@ -7,6 +7,9 @@
 #include "MapSystem.h"
 #include "renderer.h"
 
+// マクロ定義
+#define GRIT_SIZE (100.0f)
+
 //静的メンバ変数宣言
 CMapSystem* CMapSystem::pMapSystem = nullptr;
 
@@ -25,6 +28,7 @@ CMapSystem::CMapSystem()
 	m_WightMax = NUM_WIGHT;
 	m_HeightMax = NUM_HEIGHT;
 	m_MapPos = D3DXVECTOR3((m_WightMax * 0.5f) * -100.0f, 0.0f, (m_HeightMax * 0.5f) * 100.0f);
+	m_fGritSize = GRIT_SIZE;
 }
 
 //====================================================================
