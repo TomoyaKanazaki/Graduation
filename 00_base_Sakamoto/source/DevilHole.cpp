@@ -234,6 +234,8 @@ void CDevilHole::CollisionOpen(void)
 
 				if (pPlayer->GetItemType() != CPlayer::TYPE_BIBLE)
 				{
+					pObj = pObjNext;
+
 					continue;
 				}
 
