@@ -28,6 +28,7 @@
 #include "effect.h"
 #include "bowabowa.h"
 #include "Cross.h"
+#include "MapSystem.h"
 #include "sound.h"
 
 #define COLLISION_SIZE (D3DXVECTOR3(750.0f,0.0f,550.0f))		//横の当たり判定
@@ -57,7 +58,7 @@ CDevil::CDevil(int nPriority) : CObject(nPriority)
 	m_nStateCount = 0;
 	m_CollisionRot = 0.0f;
 	m_pMotion = nullptr;
-	m_DevilPos = D3DXVECTOR3(-100.0f, 0.0f, 0.0f);
+	m_DevilPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 }
 
 //====================================================================
@@ -490,6 +491,8 @@ void CDevil::SetModelDisp(bool Sst)
 //====================================================================
 void CDevil::ObjectScroll(D3DXVECTOR3 Move)
 {
+	float m_GritSize = CMapSystem::GetInstance()->GetGritSize() * 0.5f;
+
 	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
 	{
 		//オブジェクトを取得
@@ -513,30 +516,30 @@ void CDevil::ObjectScroll(D3DXVECTOR3 Move)
 
 				if (Move.x > 0.0f)
 				{
-					if (m_DevilPos.x + m_DevilSize.x < pos.x - 50.0f)
+					if (m_DevilPos.x + m_DevilSize.x < pos.x - m_GritSize)
 					{
-						pos.x = -m_DevilSize.x + m_DevilPos.x - 50.0f + Move.x;
+						pos.x = -m_DevilSize.x + m_DevilPos.x - m_GritSize + Move.x;
 					}
 				}
 				if (Move.x < 0.0f)
 				{
-					if (m_DevilPos.x - m_DevilSize.x > pos.x + 50.0f)
+					if (m_DevilPos.x - m_DevilSize.x > pos.x + m_GritSize)
 					{
-						pos.x = m_DevilSize.x + m_DevilPos.x + 50.0f + Move.x;
+						pos.x = m_DevilSize.x + m_DevilPos.x + m_GritSize + Move.x;
 					}
 				}
 				if (Move.z > 0.0f)
 				{
-					if (m_DevilPos.z + m_DevilSize.z < pos.z - 50.0f)
+					if (m_DevilPos.z + m_DevilSize.z < pos.z - m_GritSize)
 					{
-						pos.z = -m_DevilSize.z + m_DevilPos.z - 50.0f + Move.z;
+						pos.z = -m_DevilSize.z + m_DevilPos.z - m_GritSize + Move.z;
 					}
 				}
 				if (Move.z < 0.0f)
 				{
-					if (m_DevilPos.z - m_DevilSize.z > pos.z + 50.0f)
+					if (m_DevilPos.z - m_DevilSize.z > pos.z + m_GritSize)
 					{
-						pos.z = m_DevilSize.z + m_DevilPos.z + 50.0f + Move.z;
+						pos.z = m_DevilSize.z + m_DevilPos.z + m_GritSize + Move.z;
 					}
 				}
 
@@ -555,30 +558,30 @@ void CDevil::ObjectScroll(D3DXVECTOR3 Move)
 
 				if (Move.x > 0.0f)
 				{
-					if (m_DevilPos.x + m_DevilSize.x < pos.x - 50.0f)
+					if (m_DevilPos.x + m_DevilSize.x < pos.x - m_GritSize)
 					{
-						pos.x = -m_DevilSize.x + m_DevilPos.x - 50.0f + Move.x;
+						pos.x = -m_DevilSize.x + m_DevilPos.x - m_GritSize + Move.x;
 					}
 				}
 				if (Move.x < 0.0f)
 				{
-					if (m_DevilPos.x - m_DevilSize.x > pos.x + 50.0f)
+					if (m_DevilPos.x - m_DevilSize.x > pos.x + m_GritSize)
 					{
-						pos.x = m_DevilSize.x + m_DevilPos.x + 50.0f + Move.x;
+						pos.x = m_DevilSize.x + m_DevilPos.x + m_GritSize + Move.x;
 					}
 				}
 				if (Move.z > 0.0f)
 				{
-					if (m_DevilPos.z + m_DevilSize.z < pos.z - 50.0f)
+					if (m_DevilPos.z + m_DevilSize.z < pos.z - m_GritSize)
 					{
-						pos.z = -m_DevilSize.z + m_DevilPos.z - 50.0f + Move.z;
+						pos.z = -m_DevilSize.z + m_DevilPos.z - m_GritSize + Move.z;
 					}
 				}
 				if (Move.z < 0.0f)
 				{
-					if (m_DevilPos.z - m_DevilSize.z > pos.z + 50.0f)
+					if (m_DevilPos.z - m_DevilSize.z > pos.z + m_GritSize)
 					{
-						pos.z = m_DevilSize.z + m_DevilPos.z + 50.0f + Move.z;
+						pos.z = m_DevilSize.z + m_DevilPos.z + m_GritSize + Move.z;
 					}
 				}
 
@@ -639,30 +642,30 @@ void CDevil::ObjectScroll(D3DXVECTOR3 Move)
 
 				if (Move.x > 0.0f)
 				{
-					if (m_DevilPos.x + m_DevilSize.x < pos.x - 50.0f)
+					if (m_DevilPos.x + m_DevilSize.x < pos.x + m_GritSize)
 					{
-						pos.x = -m_DevilSize.x + m_DevilPos.x - 50.0f + Move.x;
+						pos.x = -m_DevilSize.x + m_DevilPos.x + m_GritSize + Move.x;
 					}
 				}
 				if (Move.x < 0.0f)
 				{
-					if (m_DevilPos.x - m_DevilSize.x > pos.x + 50.0f)
+					if (m_DevilPos.x - m_DevilSize.x > pos.x - m_GritSize)
 					{
-						pos.x = m_DevilSize.x + m_DevilPos.x + 50.0f + Move.x;
+						pos.x = m_DevilSize.x + m_DevilPos.x - m_GritSize + Move.x;
 					}
 				}
 				if (Move.z > 0.0f)
 				{
-					if (m_DevilPos.z + m_DevilSize.z < pos.z - 50.0f)
+					if (m_DevilPos.z + m_DevilSize.z < pos.z + m_GritSize)
 					{
-						pos.z = -m_DevilSize.z + m_DevilPos.z - 50.0f + Move.z;
+						pos.z = -m_DevilSize.z + m_DevilPos.z + m_GritSize + Move.z;
 					}
 				}
 				if (Move.z < 0.0f)
 				{
-					if (m_DevilPos.z - m_DevilSize.z > pos.z + 50.0f)
+					if (m_DevilPos.z - m_DevilSize.z > pos.z - m_GritSize)
 					{
-						pos.z = m_DevilSize.z + m_DevilPos.z + 50.0f + Move.z;
+						pos.z = m_DevilSize.z + m_DevilPos.z - m_GritSize + Move.z;
 					}
 				}
 
@@ -681,15 +684,15 @@ void CDevil::ObjectScroll(D3DXVECTOR3 Move)
 
 				if (Move.x > 0.0f)
 				{
-					if (m_DevilPos.x + m_DevilSize.x < pos.x - 50.0f)
+					if (m_DevilPos.x + m_DevilSize.x < pos.x + m_GritSize)
 					{
 						if (pPlayer->GetState() == CPlayer::STATE_EGG)
 						{
-							pos.x = -m_DevilSize.x + m_DevilPos.x - 50.0f + Move.x;
+							pos.x = -m_DevilSize.x + m_DevilPos.x + m_GritSize + Move.x;
 						}
 						else
 						{
-							pos.x = m_DevilPos.x + m_DevilSize.x + Size.x;
+							pos.x = m_DevilPos.x + m_DevilSize.x - m_GritSize;
 							CollisionPressPlayer(pPlayer, pos, Size);
 						}
 
@@ -701,15 +704,15 @@ void CDevil::ObjectScroll(D3DXVECTOR3 Move)
 				}
 				if (Move.x < 0.0f)
 				{
-					if (m_DevilPos.x - m_DevilSize.x > pos.x + 50.0f)
+					if (m_DevilPos.x - m_DevilSize.x > pos.x - m_GritSize)
 					{
 						if (pPlayer->GetState() == CPlayer::STATE_EGG)
 						{
-							pos.x = m_DevilSize.x + m_DevilPos.x + 50.0f + Move.x;
+							pos.x = m_DevilSize.x + m_DevilPos.x - m_GritSize + Move.x;
 						}
 						else
 						{
-							pos.x = m_DevilPos.x - m_DevilSize.x - Size.x;
+							pos.x = m_DevilPos.x - m_DevilSize.x + m_GritSize;
 							CollisionPressPlayer(pPlayer, pos, Size);
 						}
 
@@ -721,15 +724,15 @@ void CDevil::ObjectScroll(D3DXVECTOR3 Move)
 				}
 				if (Move.z > 0.0f)
 				{
-					if (m_DevilPos.z + m_DevilSize.z < pos.z - 50.0f)
+					if (m_DevilPos.z + m_DevilSize.z < pos.z + m_GritSize)
 					{
 						if (pPlayer->GetState() == CPlayer::STATE_EGG)
 						{
-							pos.z = -m_DevilSize.z + m_DevilPos.z - 50.0f + Move.z;
+							pos.z = -m_DevilSize.z + m_DevilPos.z + m_GritSize + Move.z;
 						}
 						else
 						{
-							pos.z = m_DevilPos.z + m_DevilSize.z + Size.z;
+							pos.z = m_DevilPos.z + m_DevilSize.z - m_GritSize;
 							CollisionPressPlayer(pPlayer, pos, Size);
 						}
 
@@ -741,15 +744,15 @@ void CDevil::ObjectScroll(D3DXVECTOR3 Move)
 				}
 				if (Move.z < 0.0f)
 				{
-					if (m_DevilPos.z - m_DevilSize.z > pos.z + 50.0f)
+					if (m_DevilPos.z - m_DevilSize.z > pos.z - m_GritSize)
 					{
 						if (pPlayer->GetState() == CPlayer::STATE_EGG)
 						{
-							pos.z = m_DevilSize.z + m_DevilPos.z + 50.0f + Move.z;
+							pos.z = m_DevilSize.z + m_DevilPos.z - m_GritSize + Move.z;
 						}
 						else
 						{
-							pos.z = m_DevilPos.z - m_DevilSize.z - Size.z;
+							pos.z = m_DevilPos.z - m_DevilSize.z + m_GritSize;
 							CollisionPressPlayer(pPlayer, pos, Size);
 						}
 

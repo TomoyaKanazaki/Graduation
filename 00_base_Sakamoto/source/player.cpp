@@ -72,6 +72,7 @@ CPlayer::CPlayer(int nPriority) :CObject(nPriority)
 	m_pLifeUi = nullptr;
 	m_nLife = LIFE_MAX;
 	m_eItemType = TYPE_NONE;
+	m_MoveState = MOVE_STATE_WAIT;
 	m_nMapWight = 0;
 	m_nMapHeight = 0;
 }
@@ -347,33 +348,41 @@ void CPlayer::Move(void)
 	m_bInput = false;
 
 	//キーボードの移動処理
-	if (pInputKeyboard->GetPress(DIK_W) && m_OKU)
+	if ((pInputKeyboard->GetPress(DIK_W) && m_OKU) ||
+		(pInputKeyboard->GetPress(DIK_W) && m_MoveState == MOVE_STATE_DOWN))
 	{
 		NormarizeMove.z += 1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 		NormarizeMove.x += 1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 
 		m_bInput = true;
+		m_MoveState = MOVE_STATE_UP;
 	}
-	if (pInputKeyboard->GetPress(DIK_S) && m_OKD)
+	if ((pInputKeyboard->GetPress(DIK_S) && m_OKD) ||
+		(pInputKeyboard->GetPress(DIK_S) && m_MoveState == MOVE_STATE_UP))
 	{
 		NormarizeMove.z += -1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 		NormarizeMove.x += -1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 
 		m_bInput = true;
+		m_MoveState = MOVE_STATE_DOWN;
 	}
-	if (pInputKeyboard->GetPress(DIK_A) && m_OKL)
+	if ((pInputKeyboard->GetPress(DIK_A) && m_OKL) ||
+		(pInputKeyboard->GetPress(DIK_A) && m_MoveState == MOVE_STATE_RIGHT))
 	{
 		NormarizeMove.x += -1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 		NormarizeMove.z -= -1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 
 		m_bInput = true;
+		m_MoveState = MOVE_STATE_LEFT;
 	}
-	if (pInputKeyboard->GetPress(DIK_D) && m_OKR && !m_bInput)
+	if ((pInputKeyboard->GetPress(DIK_D) && m_OKR) ||
+		(pInputKeyboard->GetPress(DIK_D) && m_MoveState == MOVE_STATE_LEFT))
 	{
 		NormarizeMove.x += 1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 		NormarizeMove.z -= 1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 
 		m_bInput = true;
+		m_MoveState = MOVE_STATE_RIGHT;
 	}
 
 	if (pInputKeyboard->GetPress(DIK_W) == false && pInputKeyboard->GetPress(DIK_A) == false && pInputKeyboard->GetPress(DIK_S) == false && pInputKeyboard->GetPress(DIK_D) == false)
@@ -558,6 +567,7 @@ void CPlayer::CollisionWall(useful::COLLISION XYZ)
 				{
 					//待機状態にする
 					m_State = STATE_WAIT;
+					m_MoveState = MOVE_STATE_WAIT;
 				}
 			}
 
@@ -617,7 +627,7 @@ void CPlayer::SearchWall(void)
 		m_pos.x >= MyGritPos.x - ((MapGritSize * 0.5f) - m_size.x) &&
 		m_pos.z <= MyGritPos.z + ((MapGritSize * 0.5f) - m_size.z) &&
 		m_pos.z >= MyGritPos.z - ((MapGritSize * 0.5f) - m_size.z))
-	{
+	{// グリットの中心位置に立っているなら操作を受け付ける
 		m_OKR = OKR;	//右
 		m_OKL = OKL;	//左
 		m_OKU = OKU;	//上
@@ -840,28 +850,30 @@ void CPlayer::CollisionStageOut(void)
 {
 	D3DXVECTOR3 D_pos = CGame::GetDevil()->GetDevilPos();
 	D3DXVECTOR3 D_Size = CGame::GetDevil()->GetDevilSize();
+	float G_Size = CMapSystem::GetInstance()->GetGritSize() * 0.5f;
 
-	if (m_pos.x - 50.0f > D_pos.x + D_Size.x)
+	if (m_pos.x + G_Size > D_pos.x + D_Size.x)
 	{
-		m_pos.x = D_pos.x + D_Size.x + 50.0f;
+		m_pos.x = D_pos.x + D_Size.x - G_Size;
 		m_State = STATE_WAIT;
 		m_move.x = 0.0f;
 	}
-	if (m_pos.x + 50.0f < D_pos.x - D_Size.x)
+	if (m_pos.x - G_Size < D_pos.x - D_Size.x)
 	{
-		m_pos.x = D_pos.x - D_Size.x - 50.0f;
+		m_pos.x = D_pos.x - D_Size.x + G_Size;
 		m_State = STATE_WAIT;
 		m_move.x = 0.0f;
 	}
-	if (m_pos.z - 50.0f > D_pos.z + D_Size.z)
+	if (m_pos.z + G_Size > D_pos.z + D_Size.z)
 	{
-		m_pos.z = D_pos.z + D_Size.z + 50.0f;
+		m_pos.z = D_pos.z + D_Size.z - G_Size;
+		m_pos.z = D_pos.z + D_Size.z - G_Size;
 		m_State = STATE_WAIT;
 		m_move.z = 0.0f;
 	}
-	if (m_pos.z + 50.0f < D_pos.z - D_Size.z)
+	if (m_pos.z - G_Size < D_pos.z - D_Size.z)
 	{
-		m_pos.z = D_pos.z - D_Size.z - 50.0f;
+		m_pos.z = D_pos.z - D_Size.z + G_Size;
 		m_State = STATE_WAIT;
 		m_move.z = 0.0f;
 	}
