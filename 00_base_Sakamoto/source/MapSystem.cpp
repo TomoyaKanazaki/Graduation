@@ -12,6 +12,7 @@
 
 //静的メンバ変数宣言
 CMapSystem* CMapSystem::pMapSystem = nullptr;
+bool CMapSystem::m_nMapGrit[NUM_WIGHT][NUM_HEIGHT] = {false};
 
 //====================================================================
 //コンストラクタ
@@ -28,6 +29,7 @@ CMapSystem::CMapSystem()
 	m_WightMax = NUM_WIGHT;
 	m_HeightMax = NUM_HEIGHT;
 	m_MapPos = D3DXVECTOR3((m_WightMax * 0.5f) * -100.0f, 0.0f, (m_HeightMax * 0.5f) * 100.0f);
+	m_InitPos = m_MapPos;
 	m_fGritSize = GRIT_SIZE;
 }
 
@@ -60,10 +62,12 @@ void CMapSystem::Init()
 	{
 		for (int nCntH = 0; nCntH < NUM_HEIGHT; nCntH++)
 		{
-			m_nMapGrit[nCntW][nCntH] = false;
+			pMapSystem->m_nMapGrit[nCntW][nCntH] = false;
 		}
 	}
+
 	m_MapPos = D3DXVECTOR3((m_WightMax * 0.5f) * -100.0f, 0.0f, (m_HeightMax * 0.5f) * 100.0f);
+	m_InitPos = m_MapPos;
 }
 
 //====================================================================

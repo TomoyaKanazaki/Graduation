@@ -262,8 +262,11 @@ void CPlayer::GameUpdate(void)
 		// 位置更新処理
 		PosUpdate();
 
-		//画面外判定
-		CollisionStageOut();
+		if (m_State != STATE_EGG)
+		{
+			//画面外判定
+			CollisionStageOut();
+		}
 
 		// 敵の判定
 		CollisionEnemy();
@@ -606,19 +609,6 @@ void CPlayer::SearchWall(void)
 	OKU = !pMapSystem->GetGritBool(m_nMapWight, nUNumber);
 	OKD = !pMapSystem->GetGritBool(m_nMapWight, nDNumber);
 
-	for (int nCntW = 0; nCntW < nMapWightMax; nCntW++)
-	{
-		for (int nCntH = 0; nCntH < nMapHeightMax; nCntH++)
-		{
-			if (pMapSystem->GetGritBool(nCntW, nCntH))
-			{
-				CEffect* pEffect = CEffect::Create();
-				pEffect->SetPos(D3DXVECTOR3(MapSystemPos.x + nCntW * 100.0f, 50.0f, MapSystemPos.z - nCntH * 100.0f));
-				pEffect->SetLife(10);
-			}
-		}
-	}
-
 	//自分の立っているグリットの中心位置を求める
 	D3DXVECTOR3 MyGritPos = D3DXVECTOR3(MapSystemPos.x + m_nMapWight * 100.0f, 50.0f, MapSystemPos.z - m_nMapHeight * 100.0f);
 	float MapGritSize = pMapSystem->GetGritSize();
@@ -867,7 +857,6 @@ void CPlayer::CollisionStageOut(void)
 	if (m_pos.z + G_Size > D_pos.z + D_Size.z)
 	{
 		m_pos.z = D_pos.z + D_Size.z - G_Size;
-		m_pos.z = D_pos.z + D_Size.z - G_Size;
 		m_State = STATE_WAIT;
 		m_move.z = 0.0f;
 	}
@@ -884,7 +873,10 @@ void CPlayer::CollisionStageOut(void)
 //====================================================================
 void CPlayer::MapSystemNumber(void)
 {
-	D3DXVECTOR3 MapPos = CMapSystem::GetInstance()->GetMapPos();
+	CDevil* pDevil = CGame::GetDevil();
+	D3DXVECTOR3 DevilPos = pDevil->GetDevilPos();
+	D3DXVECTOR3 DevilSize = pDevil->GetDevilSize();
+	D3DXVECTOR3 MapSystemPos = CMapSystem::GetInstance()->GetMapPos();
 	int MapWightMax = CMapSystem::GetInstance()->GetWightMax();
 	int MapHeightMax = CMapSystem::GetInstance()->GetHeightMax();
 	float MapGritSize = CMapSystem::GetInstance()->GetGritSize();
@@ -892,7 +884,12 @@ void CPlayer::MapSystemNumber(void)
 
 	for (int nCntW = 0; nCntW < MapWightMax; nCntW++)
 	{
-		float fCountPosX = ((MapWightMax * 0.5f) * -MapGritSize) + (nCntW * MapGritSize);
+		float fCountPosX = MapSystemPos.x + (nCntW * MapGritSize);
+
+		if (fCountPosX > DevilPos.x + (DevilSize.x))
+		{
+			fCountPosX = fCountPosX - (DevilPos.x + (DevilSize.x * 2.0f)) - MapGritSize;
+		}
 
 		if (m_pos.x < fCountPosX + (MapGritSize * 0.5f) &&
 			m_pos.x >= fCountPosX - (MapGritSize * 0.5f))
@@ -904,7 +901,12 @@ void CPlayer::MapSystemNumber(void)
 
 	for (int nCntH = 0; nCntH < MapHeightMax; nCntH++)
 	{
-		float fCountPosZ = ((MapHeightMax * 0.5f) * MapGritSize) - (nCntH * MapGritSize);
+		float fCountPosZ = MapSystemPos.z - (nCntH * MapGritSize);
+
+		if (fCountPosZ < DevilPos.z - (DevilSize.z))
+		{
+			fCountPosZ = fCountPosZ + (DevilPos.z + (DevilSize.z * 2.0f)) + MapGritSize;
+		}
 
 		if (m_pos.z < fCountPosZ + (MapGritSize * 0.5f) &&
 			m_pos.z >= fCountPosZ - (MapGritSize * 0.5f))

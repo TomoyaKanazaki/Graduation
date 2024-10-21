@@ -95,6 +95,7 @@ private:
 	void Move(void);			//移動処理
 	void Rot(void);				//移動方向処理
 	void ObjectScroll(D3DXVECTOR3 Move);	//オブジェクトのスクロール
+	void GritScroll(D3DXVECTOR3 Move);		//グリットのスクロール
 	void CollisionPressPlayer(CPlayer* pPlayer, D3DXVECTOR3 pos, D3DXVECTOR3 Size);	//プレイヤーが潰される時の処理
 
 	void DebugKey(void);		//デバッグキー
