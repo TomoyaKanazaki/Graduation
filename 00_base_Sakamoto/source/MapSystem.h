@@ -30,7 +30,8 @@ public:
 	void Update();
 	void Draw();
 
-	void SetGritPos(int nWight, int nHeight) { m_nMapGrit[nWight][nHeight] = true; }
+	void SetGritBool(int nWight, int nHeight, bool Set) { m_nMapGrit[nWight][nHeight] = Set; }
+	bool GetGritBool(int nWight, int nHeight) { return m_nMapGrit[nWight][nHeight]; }
 
 	D3DXVECTOR3 GetMapPos(void) { return m_MapPos; }
 	int GetWightMax(void) { return m_WightMax; }

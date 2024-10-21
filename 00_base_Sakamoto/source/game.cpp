@@ -472,7 +472,10 @@ void CGame::LoadStageBlock(const char* pFilename)
 					fscanf(pFile, "%s", &aString[0]);
 					fscanf(pFile, "%d", &HeightNumber);
 
+					pMapSystem->SetGritBool(WightNumber, HeightNumber, true);
 					CCubeBlock* pBlock = CCubeBlock::Create();
+					pBlock->SetWightNumber(WightNumber);
+					pBlock->SetHeightNumber(HeightNumber);
 					pBlock->SetPos(D3DXVECTOR3(MapSystemPos.x + WightNumber * 100.0f, 50.0f, MapSystemPos.z - HeightNumber * 100.0f));
 					pBlock->SetSize(D3DXVECTOR3(MapSystemGritSize, MapSystemGritSize, MapSystemGritSize));
 

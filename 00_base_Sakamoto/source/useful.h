@@ -24,6 +24,7 @@ namespace useful
 		COLLISION_MAX,
 	};
 
+	int RangeNumber(int Max, int Min, int Number);	// ”š‚ğİ’è‚µ‚½”ÍˆÍ“à‚É”[‚ß‚éˆ—
 	bool CollisionRectangle2D(D3DXVECTOR3 pos1, D3DXVECTOR3 pos2, D3DXVECTOR3 Size1, D3DXVECTOR3 Size2, useful::COLLISION Shaft);
 	bool PointSquareXZ(D3DXVECTOR3 Point, D3DXVECTOR3 pos, D3DXVECTOR3 Size);		//“_‚ªlŠp‚Ì’†‚É‘¶İ‚·‚é‚©‚Ç‚¤‚©
 	bool CameraFront(D3DXVECTOR3 pos);
