@@ -63,6 +63,17 @@ public:
 		STATE_MAX,			//最大
 	};
 
+	// プレイヤーの移動方向
+	enum MOVE_STATE
+	{
+		MOVE_STATE_WAIT = 0,	// 待機
+		MOVE_STATE_LEFT,		// 左方向
+		MOVE_STATE_RIGHT,		// 右方向
+		MOVE_STATE_UP,			// 上方向
+		MOVE_STATE_DOWN,		// 下方向
+		MOVE_STATE_MAX,			// 最大
+	};
+
 	// アイテムの種類
 	enum ITEM_TYPE
 	{
@@ -146,6 +157,7 @@ private:
 	bool m_bJump;				//ジャンプをしたかどうか
 	int m_nActionCount;			//行動のカウント
 	STATE m_State;				//状態
+	MOVE_STATE m_MoveState;		//移動方向
 	int m_nStateCount;			//状態管理用カウント
 
 	float m_CollisionRot;		//当たり判定用の向き

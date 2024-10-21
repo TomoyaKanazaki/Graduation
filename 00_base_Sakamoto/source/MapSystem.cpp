@@ -63,7 +63,7 @@ void CMapSystem::Init()
 			m_nMapGrit[nCntW][nCntH] = false;
 		}
 	}
-	m_MapPos = INITVECTOR3;
+	m_MapPos = D3DXVECTOR3((m_WightMax * 0.5f) * -100.0f, 0.0f, (m_HeightMax * 0.5f) * 100.0f);
 }
 
 //====================================================================
@@ -71,7 +71,11 @@ void CMapSystem::Init()
 //====================================================================
 void CMapSystem::Uninit(void)
 {
-
+	if (pMapSystem != nullptr)
+	{
+		delete pMapSystem;
+		pMapSystem = nullptr;
+	}
 }
 
 //====================================================================

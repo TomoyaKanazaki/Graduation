@@ -133,6 +133,8 @@ HRESULT CGame::Init(void)
 	//クリアフラグのデフォルトをオンにしておく
 	m_bGameClear = true;
 
+	CMapSystem::GetInstance()->Init();
+
 	//タイムの起動
 	CGame::GetTime()->SetStopTime(false);
 
@@ -215,6 +217,8 @@ void CGame::Uninit(void)
 	CObject::ReleaseAll();
 
 	m_pBoss = nullptr;
+
+	CMapSystem::GetInstance()->Uninit();
 
 #if _DEBUG
 	if (m_pEdit != nullptr)
