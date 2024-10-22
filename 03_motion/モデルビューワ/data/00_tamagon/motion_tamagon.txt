@@ -9,7 +9,7 @@ SCRIPT			# この行は絶対消さないこと！
 #------------------------------------------------------------------------------
 # モデル数
 #------------------------------------------------------------------------------
-NUM_MODEL = 9
+NUM_MODEL = 11
 
 #------------------------------------------------------------------------------
 # モデルファイル名
@@ -23,6 +23,8 @@ MODEL_FILENAME = data/00_tamagon/05_R_foot.x	# [2]頭
 MODEL_FILENAME = data/00_tamagon/06_L_foot.x	# [2]頭
 MODEL_FILENAME = data/00_tamagon/07_R_feather.x	# [2]頭
 MODEL_FILENAME = data/00_tamagon/08_L_feather.x	# [2]頭
+MODEL_FILENAME = data/00_tamagon/09_cross.x	# [2]頭
+MODEL_FILENAME = data/00_tamagon/10_book.x	# [2]頭
 
 #------------------------------------------------------------------------------
 # キャラクター情報
@@ -31,7 +33,7 @@ CHARACTERSET
 	MOVE = 3.0					# 移動量
 	JUMP = 10.25					# ジャンプ量
 	RADIUS = 20.0					# 半径
-	NUM_PARTS = 9					# パーツ数
+	NUM_PARTS = 11					# パーツ数
 
 	PARTSSET
 		INDEX = 0
@@ -50,7 +52,7 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 2
 		PARENT = 0
-		POS = 0.10 -11.75 -24.50
+		POS = 0.10 -3.75 -18.00
 		ROT = 0.00 0.00 0.00
 	END_PARTSSET
 
@@ -93,6 +95,20 @@ CHARACTERSET
 		INDEX = 8
 		PARENT = 0
 		POS = 20.10 17.75 -14.50
+		ROT = 0.00 0.00 0.00
+	END_PARTSSET
+
+	PARTSSET
+		INDEX = 9
+		PARENT = 0
+		POS = -4.90 27.25 14.00
+		ROT = 0.00 0.00 0.00
+	END_PARTSSET
+
+	PARTSSET
+		INDEX = 10
+		PARENT = 0
+		POS = -8.90 35.75 7.00
 		ROT = 0.00 0.00 0.00
 	END_PARTSSET
 
