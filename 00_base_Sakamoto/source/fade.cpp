@@ -51,7 +51,7 @@ void CFade::Init(CScene::MODE modeNext)
 		FVF_VERTEX_2D,
 		D3DPOOL_MANAGED,
 		&m_pVtxBuffFade,
-		NULL);
+		nullptr);
 
 	VERTEX_2D*pVtx;	//頂点ポインタを所得
 
@@ -91,10 +91,10 @@ void CFade::Init(CScene::MODE modeNext)
 void CFade::Uninit(void)
 {
 	//頂点バッファの破棄
-	if (m_pVtxBuffFade != NULL)
+	if (m_pVtxBuffFade != nullptr)
 	{
 		m_pVtxBuffFade->Release();
-		m_pVtxBuffFade = NULL;
+		m_pVtxBuffFade = nullptr;
 	}
 }
 
@@ -162,7 +162,7 @@ void CFade::Draw(void)
 	m_pDevice->SetFVF(FVF_VERTEX_2D);
 
 	//テクスチャの設定
-	m_pDevice->SetTexture(0, NULL);
+	m_pDevice->SetTexture(0, nullptr);
 
 	//ポリゴンの描画
 	m_pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP,	//プリミティブの種類

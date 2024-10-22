@@ -40,9 +40,9 @@ CSampleObj2D::~CSampleObj2D()
 //====================================================================
 CSampleObj2D* CSampleObj2D::Create(int nPriority)
 {
-	CSampleObj2D* pSample2D = NULL;
+	CSampleObj2D* pSample2D = nullptr;
 
-	if (pSample2D == NULL)
+	if (pSample2D == nullptr)
 	{
 		//オブジェクト2Dの生成
 		pSample2D = new CSampleObj2D(nPriority);
@@ -51,7 +51,7 @@ CSampleObj2D* CSampleObj2D::Create(int nPriority)
 	//オブジェクトの初期化処理
 	if (FAILED(pSample2D->Init()))
 	{//初期化処理が失敗した場合
-		return NULL;
+		return nullptr;
 	}
 
 	return pSample2D;

@@ -162,9 +162,9 @@ CEdit::~CEdit()
 //====================================================================
 CEdit* CEdit::Create()
 {
-	CEdit* pMap = NULL;
+	CEdit* pMap = nullptr;
 
-	if (pMap == NULL)
+	if (pMap == nullptr)
 	{
 		//オブジェクト2Dの生成
 		pMap = new CEdit();
@@ -723,7 +723,7 @@ void CEdit::CollisionBlock(void)
 			//オブジェクトを取得
 			CObject* pObj = CObject::GetTop(nCntPriority);
 
-			while (pObj != NULL)
+			while (pObj != nullptr)
 			{
 				CObject* pObjNext = pObj->GetNext();
 
@@ -767,7 +767,7 @@ void CEdit::CollisionXModel(void)
 			//オブジェクトを取得
 			CObject* pObj = CObject::GetTop(nCntPriority);
 
-			while (pObj != NULL)
+			while (pObj != nullptr)
 			{
 				CObject* pObjNext = pObj->GetNext();
 
@@ -810,7 +810,7 @@ void CEdit::AppearCollision(void)
 			//オブジェクトを取得
 			CObject* pObj = CObject::GetTop(nCntPriority);
 
-			while (pObj != NULL)
+			while (pObj != nullptr)
 			{
 				CObject* pObjNext = pObj->GetNext();
 
@@ -863,7 +863,7 @@ void CEdit::SaveBlock(void)
 //ファイルを開く
 	pFile = fopen(DATA_BLOCK_NAME, "w");
 
-	if (pFile != NULL)
+	if (pFile != nullptr)
 	{//ファイルが開けた場合
 
 	 //ステージをセーブする開始の合図
@@ -874,7 +874,7 @@ void CEdit::SaveBlock(void)
 			//オブジェクトを取得
 			CObject* pObj = CObject::GetTop(nCntPriority);
 
-			while (pObj != NULL)
+			while (pObj != nullptr)
 			{
 				CObject* pObjNext = pObj->GetNext();
 
@@ -919,7 +919,7 @@ void CEdit::SaveXModel(void)
 //ファイルを開く
 	pFile = fopen(DATA_XMODEL_NAME, "w");
 
-	if (pFile != NULL)
+	if (pFile != nullptr)
 	{//ファイルが開けた場合
 
 	 //ステージをセーブする開始の合図
@@ -930,7 +930,7 @@ void CEdit::SaveXModel(void)
 			//オブジェクトを取得
 			CObject* pObj = CObject::GetTop(nCntPriority);
 
-			while (pObj != NULL)
+			while (pObj != nullptr)
 			{
 				CObject* pObjNext = pObj->GetNext();
 

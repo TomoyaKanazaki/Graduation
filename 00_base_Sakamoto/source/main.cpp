@@ -33,7 +33,7 @@ int	WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hinstancePrev, LPSTR lpCmdLine
 	//終了時にメモリリークを出力
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
-	CManager *pManager = NULL;	//マネージャのインスタンス
+	CManager *pManager = nullptr;	//マネージャのインスタンス
 
 	DWORD dwCurrentTime;	//現在時刻
 	DWORD dwExecLastTime;	//最後に処理した時刻
@@ -48,12 +48,12 @@ int	WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hinstancePrev, LPSTR lpCmdLine
 		0,									//0にする(通常は使用しない)
 		0,									//0にする(通常は使用しない)
 		hInstance,							//インスタンスハンドル
-		LoadIcon(NULL,IDI_APPLICATION),		//タスクバーのアイコン
-		LoadCursor(NULL,IDC_ARROW),			//マウスカーソル
+		LoadIcon(nullptr,IDI_APPLICATION),		//タスクバーのアイコン
+		LoadCursor(nullptr,IDC_ARROW),			//マウスカーソル
 		(HBRUSH)(COLOR_WINDOW + 1),			//クライアント領域の背景色
-		NULL,								//メニューバー
+		nullptr,								//メニューバー
 		CLASS_NAME,							//ウインドウクラスの名前
-		LoadIcon(NULL,IDI_APPLICATION),		//ファイルのアイコン
+		LoadIcon(nullptr,IDI_APPLICATION),		//ファイルのアイコン
 	};
 	HWND hWnd;
 	MSG msg;
@@ -73,10 +73,10 @@ int	WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hinstancePrev, LPSTR lpCmdLine
 		CW_USEDEFAULT,			//ウインドウの左上Y座標
 		SCREEN_WIDTH,			//ウインドウの幅
 		SCREEN_HEIGHT,			//ウインドウの高さ
-		NULL,					//親ウインドウのハンドル
-		NULL,					//メニューハンドルまたは子ウインドウID
+		nullptr,					//親ウインドウのハンドル
+		nullptr,					//メニューハンドルまたは子ウインドウID
 		hInstance,				//インスタンスハンドル
-		NULL);					//ウインドウ作成データ
+		nullptr);					//ウインドウ作成データ
 								//ウインドウの表示
 	ShowWindow(hWnd, nCmdShow);
 	UpdateWindow(hWnd);
@@ -93,13 +93,13 @@ int	WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hinstancePrev, LPSTR lpCmdLine
 	srand(dwExecLastTime);
 
 	//マネージャの生成
-	if (pManager == NULL)
+	if (pManager == nullptr)
 	{
 		pManager = CManager::GetInstance();
 	}
 
 	//初期化
-	if (pManager != NULL)
+	if (pManager != nullptr)
 	{
 		if (FAILED(pManager->Init(hInstance, hWnd, TRUE)))
 		{//初期化処理が失敗した場合
@@ -116,7 +116,7 @@ int	WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hinstancePrev, LPSTR lpCmdLine
 	//メッセージループ
 	while (1)
 	{//Windowsの処理
-		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE) != 0)
+		if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE) != 0)
 		{
 			if (msg.message == WM_QUIT)
 			{//WM_QUITメッセージを受け取ったらループを抜ける
@@ -146,7 +146,7 @@ int	WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hinstancePrev, LPSTR lpCmdLine
 			{//６０分の１秒経過
 				dwExecLastTime = dwCurrentTime;	//処理開始の時刻[現在時刻]を保存
 
-				if (pManager != NULL)
+				if (pManager != nullptr)
 				{
 					//更新処理
 					pManager->Update();
@@ -160,14 +160,14 @@ int	WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hinstancePrev, LPSTR lpCmdLine
 		}
 	}
 
-	if (pManager != NULL)
+	if (pManager != nullptr)
 	{
 		//終了処理
 		pManager->Uninit();
 
 		//メモリ解放
 		delete pManager;
-		pManager = NULL;
+		pManager = nullptr;
 	}
 
 	//分解能を戻す
@@ -201,7 +201,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		switch (wParam)
 		{
 		case VK_ESCAPE: //[ESC]キーが押された
-			nID = MessageBox(NULL, "終了しますか？", "終了メッセージ", MB_YESNO);
+			nID = MessageBox(nullptr, "終了しますか？", "終了メッセージ", MB_YESNO);
 
 			if (nID == IDYES)
 			{
@@ -218,7 +218,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;
 
 	case WM_CLOSE:	//閉じる押下のメッセージ
-		nID = MessageBox(NULL, "終了しますか？", "終了メッセージ", MB_YESNO);
+		nID = MessageBox(nullptr, "終了しますか？", "終了メッセージ", MB_YESNO);
 
 		if (nID == IDYES)
 		{

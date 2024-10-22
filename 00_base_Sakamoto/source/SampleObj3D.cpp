@@ -40,9 +40,9 @@ CSampleObj3D::~CSampleObj3D()
 //====================================================================
 CSampleObj3D* CSampleObj3D::Create(void)
 {
-	CSampleObj3D* pSample3D = NULL;
+	CSampleObj3D* pSample3D = nullptr;
 
-	if (pSample3D == NULL)
+	if (pSample3D == nullptr)
 	{
 		//オブジェクト2Dの生成
 		pSample3D = new CSampleObj3D();
@@ -51,7 +51,7 @@ CSampleObj3D* CSampleObj3D::Create(void)
 	//オブジェクトの初期化処理
 	if (FAILED(pSample3D->Init()))
 	{//初期化処理が失敗した場合
-		return NULL;
+		return nullptr;
 	}
 
 	return pSample3D;

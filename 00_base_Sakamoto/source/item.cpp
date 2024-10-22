@@ -122,7 +122,7 @@ bool CItem::CollisionPlayer()
 		//オブジェクトを取得
 		CObject* pObj = CObject::GetTop(nCntPriority);
 
-		while (pObj != NULL)
+		while (pObj != nullptr)
 		{
 			CObject* pObjNext = pObj->GetNext();
 

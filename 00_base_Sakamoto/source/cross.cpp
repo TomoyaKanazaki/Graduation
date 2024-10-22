@@ -55,7 +55,7 @@ CCross* CCross::Create(char* pModelName)
 	//オブジェクトの初期化処理
 	if (FAILED(pCross->Init(pModelName)))
 	{//初期化処理が失敗した場合
-		return NULL;
+		return nullptr;
 	}
 
 	return pCross;
@@ -198,7 +198,7 @@ bool CCross::CollisionPlayer()
 		//オブジェクトを取得
 		CObject* pObj = CObject::GetTop(nCntPriority);
 
-		while (pObj != NULL)
+		while (pObj != nullptr)
 		{
 			CObject* pObjNext = pObj->GetNext();
 

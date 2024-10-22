@@ -59,9 +59,9 @@ CCubeSpin::~CCubeSpin()
 //====================================================================
 CCubeSpin* CCubeSpin::Create(int NumCube)
 {
-	CCubeSpin* pObject3D = NULL;
+	CCubeSpin* pObject3D = nullptr;
 
-	if (pObject3D == NULL)
+	if (pObject3D == nullptr)
 	{
 		//オブジェクト3Dの生成
 		pObject3D = new CCubeSpin(NumCube);
@@ -70,7 +70,7 @@ CCubeSpin* CCubeSpin::Create(int NumCube)
 	//オブジェクトの初期化処理
 	if (FAILED(pObject3D->Init()))
 	{//初期化処理が失敗した場合
-		return NULL;
+		return nullptr;
 	}
 
 	return pObject3D;

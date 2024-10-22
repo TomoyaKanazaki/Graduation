@@ -28,8 +28,8 @@ namespace
 //====================================================================
 CObjmeshCube::CObjmeshCube(int nPriority) :CObject(nPriority)
 {
-	m_pVtxBuff = NULL;
-	g_pIdxBuff = NULL;
+	m_pVtxBuff = nullptr;
+	g_pIdxBuff = nullptr;
 	m_pos = INITVECTOR3;
 	m_rot = INITVECTOR3;
 	m_Color = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
@@ -55,9 +55,9 @@ CObjmeshCube::~CObjmeshCube()
 //====================================================================
 CObjmeshCube* CObjmeshCube::Create(void)
 {
-	CObjmeshCube* pObject3D = NULL;
+	CObjmeshCube* pObject3D = nullptr;
 
-	if (pObject3D == NULL)
+	if (pObject3D == nullptr)
 	{
 		//オブジェクト3Dの生成
 		pObject3D = new CObjmeshCube();
@@ -66,7 +66,7 @@ CObjmeshCube* CObjmeshCube::Create(void)
 	//オブジェクトの初期化処理
 	if (FAILED(pObject3D->Init()))
 	{//初期化処理が失敗した場合
-		return NULL;
+		return nullptr;
 	}
 
 	return pObject3D;
@@ -90,7 +90,7 @@ HRESULT CObjmeshCube::Init(void)
 		FVF_VERTEX_3D,
 		D3DPOOL_MANAGED,
 		&m_pVtxBuff,
-		NULL)))
+		nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -242,7 +242,7 @@ HRESULT CObjmeshCube::Init(void)
 		D3DFMT_INDEX16,
 		D3DPOOL_MANAGED,
 		&g_pIdxBuff,
-		NULL);
+		nullptr);
 
 	WORD* pIdx;	//インデックス情報へのポインタ
 
@@ -293,22 +293,22 @@ void CObjmeshCube::Uninit(void)
 }
 
 //====================================================================
-//所持するポインタをNULLにする処理
+//所持するポインタをnullptrにする処理
 //====================================================================
 void CObjmeshCube::SetNULL(void)
 {
 	//頂点バッファの破棄
-	if (m_pVtxBuff != NULL)
+	if (m_pVtxBuff != nullptr)
 	{
 		m_pVtxBuff->Release();
-		m_pVtxBuff = NULL;
+		m_pVtxBuff = nullptr;
 	}
 
 	//インデックスバッファの破棄
-	if (g_pIdxBuff != NULL)
+	if (g_pIdxBuff != nullptr)
 	{
 		g_pIdxBuff->Release();
-		g_pIdxBuff = NULL;
+		g_pIdxBuff = nullptr;
 	}
 }
 

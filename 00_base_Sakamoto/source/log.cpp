@@ -103,10 +103,10 @@ HRESULT CLog::Init(void)
 	m_Type = TEXT_00;
 	m_nLogIdx = -1;
 	m_fLogStopPosY = 0.0f;
-	m_pLogBG = NULL;
-	m_pLogPlayerBG = NULL;
-	m_pLogMessage = NULL;
-	m_pMain = NULL;			// 自分の事を使用しているオブジェクトのポインタ
+	m_pLogBG = nullptr;
+	m_pLogPlayerBG = nullptr;
+	m_pLogMessage = nullptr;
+	m_pMain = nullptr;			// 自分の事を使用しているオブジェクトのポインタ
 
 	//種類設定
 	SetType(CObject::TYPE_LOG);
@@ -121,22 +121,22 @@ HRESULT CLog::Init(void)
 void CLog::Uninit(void)
 {
 	// 終了処理
-	if (m_pLogBG != NULL)
+	if (m_pLogBG != nullptr)
 	{
 		m_pLogBG->Uninit();
-		m_pLogBG = NULL;
+		m_pLogBG = nullptr;
 	}
 
-	if (m_pLogPlayerBG != NULL)
+	if (m_pLogPlayerBG != nullptr)
 	{
 		m_pLogPlayerBG->Uninit();
-		m_pLogPlayerBG = NULL;
+		m_pLogPlayerBG = nullptr;
 	}
 
-	if (m_pLogMessage != NULL)
+	if (m_pLogMessage != nullptr)
 	{
 		m_pLogMessage->Uninit();
-		m_pLogMessage = NULL;
+		m_pLogMessage = nullptr;
 	}
 
 	SetDeathFlag(true);
@@ -148,30 +148,30 @@ void CLog::Uninit(void)
 void CLog::Update(void)
 {
 	// 描画処理
-	if (m_pLogBG != NULL)
+	if (m_pLogBG != nullptr)
 	{
 		m_pLogBG->Update();
 	}
-	if (m_pLogPlayerBG != NULL)
+	if (m_pLogPlayerBG != nullptr)
 	{
 		m_pLogPlayerBG->Update();
 	}
-	if (m_pLogMessage != NULL)
+	if (m_pLogMessage != nullptr)
 	{
 		m_pLogMessage->Update();
 	}
 
 	StateManager();
 
-	if (m_pLogBG != NULL)
+	if (m_pLogBG != nullptr)
 	{
 		m_pLogBG->SetPos(D3DXVECTOR3(LogPos.x, LogPos.y, 0.0f));
 	}
-	if (m_pLogPlayerBG != NULL)
+	if (m_pLogPlayerBG != nullptr)
 	{
 		m_pLogPlayerBG->SetPos(D3DXVECTOR3(LogPos.x + LOGDISTANCE_PLAYERID, LogPos.y, 0.0f));
 	}
-	if (m_pLogMessage != NULL)
+	if (m_pLogMessage != nullptr)
 	{
 		m_pLogMessage->SetPos(D3DXVECTOR3(LogPos.x + LOGDISTANCE_MESSAGE[m_Type].x, LogPos.y + LOGDISTANCE_MESSAGE[m_Type].y, 0.0f));
 	}
@@ -185,15 +185,15 @@ void CLog::Draw(void)
 	if (CScene::GetMode() == CScene::MODE_GAME)
 	{
 		// 描画処理
-		if (m_pLogBG != NULL)
+		if (m_pLogBG != nullptr)
 		{
 			m_pLogBG->Draw();
 		}
-		if (m_pLogPlayerBG != NULL)
+		if (m_pLogPlayerBG != nullptr)
 		{
 			m_pLogPlayerBG->Draw();
 		}
-		if (m_pLogMessage != NULL)
+		if (m_pLogMessage != nullptr)
 		{
 			m_pLogMessage->Draw();
 		}
@@ -265,7 +265,7 @@ void CLog::SetData(CLog::TEXT Type)
 	m_Type = Type;
 	m_nLife = LOGTIME;
 
-	if (m_pLogBG == NULL)
+	if (m_pLogBG == nullptr)
 	{
 		m_pLogBG = CObject2D::Create();
 		m_pLogBG->SetPos(D3DXVECTOR3(LogPos.x, LogPos.y, 0.0f));
@@ -274,7 +274,7 @@ void CLog::SetData(CLog::TEXT Type)
 		m_pLogBG->SetTexture("data\\TEXTURE\\Test.jpg");
 		m_pLogBG->SetColor(D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f));
 	}
-	if (m_pLogMessage == NULL)
+	if (m_pLogMessage == nullptr)
 	{
 		m_pLogMessage = CObject2D::Create();
 		m_pLogMessage->SetPos(D3DXVECTOR3(LogPos.x + LOGDISTANCE_MESSAGE[m_Type].x, LogPos.y + LOGDISTANCE_MESSAGE[m_Type].y, 0.0f));
@@ -324,7 +324,7 @@ void CLog::SetData(CLog::TEXT Type)
 			break;
 		}
 	}
-	if (m_pLogPlayerBG == NULL)
+	if (m_pLogPlayerBG == nullptr)
 	{
 		m_pLogPlayerBG = CObject2D::Create();
 		m_pLogPlayerBG->SetPos(D3DXVECTOR3(LogPos.x + LOGDISTANCE_PLAYERID, LogPos.y, 0.0f));
@@ -346,17 +346,17 @@ CLog* CLog::Create(CLog::TEXT Type)
 	CLog* pSample = nullptr;	// サンプルのインスタンスを生成
 
 	if (pSample == nullptr)
-	{ // オブジェクトが NULL の場合
+	{ // オブジェクトが nullptr の場合
 		pSample = new CLog;
 	}
 	else
-	{ // オブジェクトが NULL じゃない場合
+	{ // オブジェクトが nullptr じゃない場合
 		assert(false);
 		return nullptr;
 	}
 
 	if (pSample != nullptr)
-	{ // オブジェクトが NULL じゃない場合
+	{ // オブジェクトが nullptr じゃない場合
 
 	  // 初期化処理
 		if (FAILED(pSample->Init()))
@@ -369,7 +369,7 @@ CLog* CLog::Create(CLog::TEXT Type)
 		pSample->SetData(Type);
 	}
 	else
-	{ // オブジェクトが NULL の場合
+	{ // オブジェクトが nullptr の場合
 		assert(false);
 		return nullptr;
 	}
@@ -389,7 +389,7 @@ bool CLog::DelNumber(void)
 		//オブジェクトを取得
 		CObject* pObj = CObject::GetTop(nCntPriority);
 
-		while (pObj != NULL)
+		while (pObj != nullptr)
 		{
 			CObject* pObjNext = pObj->GetNext();
 

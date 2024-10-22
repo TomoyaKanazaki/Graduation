@@ -29,7 +29,7 @@ CBowmanArrow::CBowmanArrow(int nPriority) : CObjectX(nPriority)
 {
 	SetSize(COLLISION_SIZE);
 	SetPos(INITVECTOR3);
-	m_nIdxXModel = NULL;			//マテリアルの数
+	m_nIdxXModel = 0;			//マテリアルの数
 	m_CollisionPos = INITVECTOR3;
 	m_bCollision = false;
 	m_State = STATE_NORMAL;
@@ -52,9 +52,9 @@ CBowmanArrow::~CBowmanArrow()
 //====================================================================
 CBowmanArrow* CBowmanArrow::Create(char* pModelName)
 {
-	CBowmanArrow* pSample = NULL;
+	CBowmanArrow* pSample = nullptr;
 
-	if (pSample == NULL)
+	if (pSample == nullptr)
 	{
 		//オブジェクト2Dの生成
 		pSample = new CBowmanArrow();
@@ -63,7 +63,7 @@ CBowmanArrow* CBowmanArrow::Create(char* pModelName)
 	//オブジェクトの初期化処理
 	if (FAILED(pSample->Init(pModelName)))
 	{//初期化処理が失敗した場合
-		return NULL;
+		return nullptr;
 	}
 
 	return pSample;
@@ -233,7 +233,7 @@ void CBowmanArrow::CollisionPlayer(void)
 		//オブジェクトを取得
 		CObject* pObj = CObject::GetTop(nCntPriority);
 
-		while (pObj != NULL)
+		while (pObj != nullptr)
 		{
 			CObject* pObjNext = pObj->GetNext();
 
@@ -266,7 +266,7 @@ void CBowmanArrow::CollisionMapObject(D3DXVECTOR3 Mypos, D3DXVECTOR3 MyposOld, u
 		//オブジェクトを取得
 		CObject* pObj = CObject::GetTop(nCntPriority);
 
-		while (pObj != NULL)
+		while (pObj != nullptr)
 		{
 			CObject* pObjNext = pObj->GetNext();
 

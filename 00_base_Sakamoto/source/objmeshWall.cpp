@@ -28,9 +28,9 @@ namespace
 //====================================================================
 CObjmeshWall::CObjmeshWall(int nPriority) :CObject(nPriority)
 {
-	m_pTexture = NULL;
-	m_pVtxBuff = NULL;
-	g_pIdxBuff = NULL;
+	m_pTexture = nullptr;
+	m_pVtxBuff = nullptr;
+	g_pIdxBuff = nullptr;
 	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_Color = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
@@ -49,9 +49,9 @@ CObjmeshWall::~CObjmeshWall()
 //====================================================================
 CObjmeshWall* CObjmeshWall::Create(void)
 {
-	CObjmeshWall* pObject3D = NULL;
+	CObjmeshWall* pObject3D = nullptr;
 
-	if (pObject3D == NULL)
+	if (pObject3D == nullptr)
 	{
 		//オブジェクト3Dの生成
 		pObject3D = new CObjmeshWall();
@@ -60,7 +60,7 @@ CObjmeshWall* CObjmeshWall::Create(void)
 	//オブジェクトの初期化処理
 	if (FAILED(pObject3D->Init()))
 	{//初期化処理が失敗した場合
-		return NULL;
+		return nullptr;
 	}
 
 	return pObject3D;
@@ -82,7 +82,7 @@ HRESULT CObjmeshWall::Init(void)
 		FVF_VERTEX_3D,
 		D3DPOOL_MANAGED,
 		&m_pVtxBuff,
-		NULL)))
+		nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -140,7 +140,7 @@ HRESULT CObjmeshWall::Init(void)
 		D3DFMT_INDEX16,
 		D3DPOOL_MANAGED,
 		&g_pIdxBuff,
-		NULL);
+		nullptr);
 
 	WORD* pIdx;	//インデックス情報へのポインタ
 
@@ -178,22 +178,22 @@ void CObjmeshWall::Uninit(void)
 }
 
 //====================================================================
-//NULLにする処理
+//nullptrにする処理
 //====================================================================
 void CObjmeshWall::SetNULL(void)
 {
 	//頂点バッファの破棄
-	if (m_pVtxBuff != NULL)
+	if (m_pVtxBuff != nullptr)
 	{
 		m_pVtxBuff->Release();
-		m_pVtxBuff = NULL;
+		m_pVtxBuff = nullptr;
 	}
 
 	//インデックスバッファの破棄
-	if (g_pIdxBuff != NULL)
+	if (g_pIdxBuff != nullptr)
 	{
 		g_pIdxBuff->Release();
-		g_pIdxBuff = NULL;
+		g_pIdxBuff = nullptr;
 	}
 }
 

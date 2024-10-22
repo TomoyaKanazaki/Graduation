@@ -27,7 +27,7 @@ CFire::CFire(int nPriority) : CObjectX(nPriority)
 {
 	SetSize(SAMPLE_SIZE);
 	SetPos(INITVECTOR3);
-	m_nIdxXModel = NULL;			//マテリアルの数
+	m_nIdxXModel = 0;			//マテリアルの数
 	m_CollisionPos = INITVECTOR3;
 	m_bCollision = false;
 	m_State = STATE_NORMAL;

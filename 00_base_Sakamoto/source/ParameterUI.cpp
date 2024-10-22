@@ -65,9 +65,9 @@ CParameterUI::~CParameterUI()
 //====================================================================
 CParameterUI* CParameterUI::Create(int nPriority)
 {
-	CParameterUI* pSample2D = NULL;
+	CParameterUI* pSample2D = nullptr;
 
-	if (pSample2D == NULL)
+	if (pSample2D == nullptr)
 	{
 		//オブジェクト2Dの生成
 		pSample2D = new CParameterUI(nPriority);
@@ -76,7 +76,7 @@ CParameterUI* CParameterUI::Create(int nPriority)
 	//オブジェクトの初期化処理
 	if (FAILED(pSample2D->Init()))
 	{//初期化処理が失敗した場合
-		return NULL;
+		return nullptr;
 	}
 
 	return pSample2D;

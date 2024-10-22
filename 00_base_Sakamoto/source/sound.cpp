@@ -56,13 +56,13 @@ CSound::SOUNDINFO CSound::m_aSoundInfo[SOUND_LABEL_MAX] =
 //=============================================================================
 CSound::CSound()
 {
-	m_pXAudio2 = NULL;								// XAudio2オブジェクトへのインターフェイス
-	m_pMasteringVoice = NULL;						// マスターボイス
+	m_pXAudio2 = nullptr;								// XAudio2オブジェクトへのインターフェイス
+	m_pMasteringVoice = nullptr;						// マスターボイス
 	for (int nCntSound = 0; nCntSound < SOUND_LABEL_MAX; nCntSound++)
 	{
-		m_apSourceVoice[nCntSound] = NULL;			// ソースボイス
-		m_apDataAudio[nCntSound] = NULL;			// オーディオデータ
-		m_aSizeAudio[nCntSound] = NULL;				// オーディオデータサイズ
+		m_apSourceVoice[nCntSound] = nullptr;			// ソースボイス
+		m_apDataAudio[nCntSound] = nullptr;			// オーディオデータ
+		m_aSizeAudio[nCntSound] = 0;				// オーディオデータサイズ
 	}
 }
 
@@ -83,7 +83,7 @@ HRESULT CSound::InitSound(HWND hWnd)
 	HRESULT hr;
 
 	// COMライブラリの初期化
-	CoInitializeEx(NULL, COINIT_MULTITHREADED);
+	CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 
 	// XAudio2オブジェクトの作成
 	hr = XAudio2Create(&m_pXAudio2, 0);
@@ -103,11 +103,11 @@ HRESULT CSound::InitSound(HWND hWnd)
 	{
 		MessageBox(hWnd, "マスターボイスの生成に失敗！", "警告！", MB_ICONWARNING);
 
-		if (m_pXAudio2 != NULL)
+		if (m_pXAudio2 != nullptr)
 		{
 			// XAudio2オブジェクトの開放
 			m_pXAudio2->Release();
-			m_pXAudio2 = NULL;
+			m_pXAudio2 = nullptr;
 		}
 
 		// COMライブラリの終了処理
@@ -131,13 +131,13 @@ HRESULT CSound::InitSound(HWND hWnd)
 		memset(&buffer, 0, sizeof(XAUDIO2_BUFFER));
 
 		// サウンドデータファイルの生成
-		hFile = CreateFile(m_aSoundInfo[nCntSound].pFilename, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
+		hFile = CreateFile(m_aSoundInfo[nCntSound].pFilename, GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, 0, nullptr);
 		if (hFile == INVALID_HANDLE_VALUE)
 		{
 			MessageBox(hWnd, "サウンドデータファイルの生成に失敗！(1)", "警告！", MB_ICONWARNING);
 			return HRESULT_FROM_WIN32(GetLastError());
 		}
-		if (SetFilePointer(hFile, 0, NULL, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
+		if (SetFilePointer(hFile, 0, nullptr, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
 		{// ファイルポインタを先頭に移動
 			MessageBox(hWnd, "サウンドデータファイルの生成に失敗！(2)", "警告！", MB_ICONWARNING);
 			return HRESULT_FROM_WIN32(GetLastError());
@@ -224,30 +224,30 @@ void CSound::UninitSound(void)
 	// 一時停止
 	for (int nCntSound = 0; nCntSound < SOUND_LABEL_MAX; nCntSound++)
 	{
-		if (m_apSourceVoice[nCntSound] != NULL)
+		if (m_apSourceVoice[nCntSound] != nullptr)
 		{
 			// 一時停止
 			m_apSourceVoice[nCntSound]->Stop(0);
 
 			// ソースボイスの破棄
 			m_apSourceVoice[nCntSound]->DestroyVoice();
-			m_apSourceVoice[nCntSound] = NULL;
+			m_apSourceVoice[nCntSound] = nullptr;
 
 			// オーディオデータの開放
 			free(m_apDataAudio[nCntSound]);
-			m_apDataAudio[nCntSound] = NULL;
+			m_apDataAudio[nCntSound] = nullptr;
 		}
 	}
 
 	// マスターボイスの破棄
 	m_pMasteringVoice->DestroyVoice();
-	m_pMasteringVoice = NULL;
+	m_pMasteringVoice = nullptr;
 
-	if (m_pXAudio2 != NULL)
+	if (m_pXAudio2 != nullptr)
 	{
 		// XAudio2オブジェクトの開放
 		m_pXAudio2->Release();
-		m_pXAudio2 = NULL;
+		m_pXAudio2 = nullptr;
 	}
 
 	// COMライブラリの終了処理
@@ -316,7 +316,7 @@ void CSound::StopSound(void)
 	// 一時停止
 	for (int nCntSound = 0; nCntSound < SOUND_LABEL_MAX; nCntSound++)
 	{
-		if (m_apSourceVoice[nCntSound] != NULL)
+		if (m_apSourceVoice[nCntSound] != nullptr)
 		{
 			// 一時停止
 			m_apSourceVoice[nCntSound]->Stop(0);
@@ -338,19 +338,19 @@ HRESULT CSound::CheckChunk(HANDLE hFile, DWORD format, DWORD *pChunkSize, DWORD 
 	DWORD dwBytesRead = 0;
 	DWORD dwOffset = 0;
 
-	if (SetFilePointer(hFile, 0, NULL, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
+	if (SetFilePointer(hFile, 0, nullptr, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
 	{// ファイルポインタを先頭に移動
 		return HRESULT_FROM_WIN32(GetLastError());
 	}
 
 	while (hr == S_OK)
 	{
-		if (ReadFile(hFile, &dwChunkType, sizeof(DWORD), &dwRead, NULL) == 0)
+		if (ReadFile(hFile, &dwChunkType, sizeof(DWORD), &dwRead, nullptr) == 0)
 		{// チャンクの読み込み
 			hr = HRESULT_FROM_WIN32(GetLastError());
 		}
 
-		if (ReadFile(hFile, &dwChunkDataSize, sizeof(DWORD), &dwRead, NULL) == 0)
+		if (ReadFile(hFile, &dwChunkDataSize, sizeof(DWORD), &dwRead, nullptr) == 0)
 		{// チャンクデータの読み込み
 			hr = HRESULT_FROM_WIN32(GetLastError());
 		}
@@ -360,14 +360,14 @@ HRESULT CSound::CheckChunk(HANDLE hFile, DWORD format, DWORD *pChunkSize, DWORD 
 		case 'FFIR':
 			dwRIFFDataSize = dwChunkDataSize;
 			dwChunkDataSize = 4;
-			if (ReadFile(hFile, &dwFileType, sizeof(DWORD), &dwRead, NULL) == 0)
+			if (ReadFile(hFile, &dwFileType, sizeof(DWORD), &dwRead, nullptr) == 0)
 			{// ファイルタイプの読み込み
 				hr = HRESULT_FROM_WIN32(GetLastError());
 			}
 			break;
 
 		default:
-			if (SetFilePointer(hFile, dwChunkDataSize, NULL, FILE_CURRENT) == INVALID_SET_FILE_POINTER)
+			if (SetFilePointer(hFile, dwChunkDataSize, nullptr, FILE_CURRENT) == INVALID_SET_FILE_POINTER)
 			{// ファイルポインタをチャンクデータ分移動
 				return HRESULT_FROM_WIN32(GetLastError());
 			}
@@ -399,12 +399,12 @@ HRESULT CSound::ReadChunkData(HANDLE hFile, void *pBuffer, DWORD dwBuffersize, D
 {
 	DWORD dwRead;
 
-	if (SetFilePointer(hFile, dwBufferoffset, NULL, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
+	if (SetFilePointer(hFile, dwBufferoffset, nullptr, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
 	{// ファイルポインタを指定位置まで移動
 		return HRESULT_FROM_WIN32(GetLastError());
 	}
 
-	if (ReadFile(hFile, pBuffer, dwBuffersize, &dwRead, NULL) == 0)
+	if (ReadFile(hFile, pBuffer, dwBuffersize, &dwRead, nullptr) == 0)
 	{// データの読み込み
 		return HRESULT_FROM_WIN32(GetLastError());
 	}

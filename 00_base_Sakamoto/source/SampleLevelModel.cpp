@@ -60,9 +60,9 @@ CSampleLvModel::~CSampleLvModel()
 //====================================================================
 CSampleLvModel* CSampleLvModel::Create()
 {
-	CSampleLvModel* pPlayer = NULL;
+	CSampleLvModel* pPlayer = nullptr;
 
-	if (pPlayer == NULL)
+	if (pPlayer == nullptr)
 	{
 		//プレイヤーの生成
 		pPlayer = new CSampleLvModel();
@@ -71,7 +71,7 @@ CSampleLvModel* CSampleLvModel::Create()
 	//オブジェクトの初期化処理
 	if (FAILED(pPlayer->Init()))
 	{//初期化処理が失敗した場合
-		return NULL;
+		return nullptr;
 	}
 
 	return pPlayer;
@@ -86,7 +86,7 @@ HRESULT CSampleLvModel::Init(void)
 	LoadLevelData("data\\TXT\\motion_player.txt");
 
 	//モーションの生成
-	if (m_pMotion == NULL)
+	if (m_pMotion == nullptr)
 	{
 		//モーションの生成
 		m_pMotion = new CMotion;
@@ -134,15 +134,15 @@ void CSampleLvModel::Uninit(void)
 	{
 		m_apModel[nCntModel]->Uninit();
 		delete m_apModel[nCntModel];
-		m_apModel[nCntModel] = NULL;
+		m_apModel[nCntModel] = nullptr;
 	}
 
 	//モーションの終了処理
-	if (m_pMotion != NULL)
+	if (m_pMotion != nullptr)
 	{
 		//モーションの破棄
 		delete m_pMotion;
-		m_pMotion = NULL;
+		m_pMotion = nullptr;
 	}
 
 	SetDeathFlag(true);
@@ -396,7 +396,7 @@ void CSampleLvModel::LoadLevelData(const char* pFilename)
 	//ファイルを開く
 	pFile = fopen(pFilename, "r");
 
-	if (pFile != NULL)
+	if (pFile != nullptr)
 	{//ファイルが開けた場合
 
 		int ModelParent = 0;
@@ -471,7 +471,7 @@ void CSampleLvModel::LoadLevelData(const char* pFilename)
 
 								if (ModelParent == -1)
 								{
-									m_apModel[nCntModel]->SetParent(NULL);
+									m_apModel[nCntModel]->SetParent(nullptr);
 								}
 								else
 								{
