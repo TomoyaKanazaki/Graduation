@@ -42,9 +42,9 @@ CLifeUi::~CLifeUi()
 //====================================================================
 CLifeUi* CLifeUi::Create(int nPriority)
 {
-	CLifeUi* pSample2D = NULL;
+	CLifeUi* pSample2D = nullptr;
 
-	if (pSample2D == NULL)
+	if (pSample2D == nullptr)
 	{
 		//オブジェクト2Dの生成
 		pSample2D = new CLifeUi(nPriority);
@@ -53,7 +53,7 @@ CLifeUi* CLifeUi::Create(int nPriority)
 	//オブジェクトの初期化処理
 	if (FAILED(pSample2D->Init()))
 	{//初期化処理が失敗した場合
-		return NULL;
+		return nullptr;
 	}
 
 	return pSample2D;

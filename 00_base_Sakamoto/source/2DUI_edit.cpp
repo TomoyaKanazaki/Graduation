@@ -43,7 +43,7 @@ C2DUIEdit::UIINFO C2DUIEdit::m_aTextureInfo[UI_LABEL_MAX] =
 	{ "data\\TEXTURE\\RankBM.png","サンプル05" },
 	{ "data\\TEXTURE\\RankC.png","サンプル06" },
 };
-CObject2D* C2DUIEdit::m_pEditUI = NULL;			//ブロックへのポインタ
+CObject2D* C2DUIEdit::m_pEditUI = nullptr;			//ブロックへのポインタ
 
 //====================================================================
 //コンストラクタ
@@ -72,9 +72,9 @@ C2DUIEdit::~C2DUIEdit()
 //====================================================================
 C2DUIEdit* C2DUIEdit::Create()
 {
-	C2DUIEdit* pMap = NULL;
+	C2DUIEdit* pMap = nullptr;
 
-	if (pMap == NULL)
+	if (pMap == nullptr)
 	{
 		//オブジェクト2Dの生成
 		pMap = new C2DUIEdit();
@@ -102,7 +102,7 @@ void C2DUIEdit::Uninit(void)
 //====================================================================
 void C2DUIEdit::Update(void)
 {
-	C2DUI* pEditUI = NULL;
+	C2DUI* pEditUI = nullptr;
 
 	//キーボードの取得
 	CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
@@ -263,7 +263,7 @@ void C2DUIEdit::DeleteObject(D3DXVECTOR3 pos)
 		//オブジェクトを取得
 		CObject* pObj = CObject::GetTop(nCntPriority);
 
-		while (pObj != NULL)
+		while (pObj != nullptr)
 		{
 			CObject* pObjNext = pObj->GetNext();
 
@@ -326,7 +326,7 @@ void C2DUIEdit::SaveData(void)
 	//ファイルを開く
 	pFile = fopen(LOADUI_NAME, "w");
 
-	if (pFile != NULL)
+	if (pFile != nullptr)
 	{//ファイルが開けた場合
 
 	 //ステージをセーブする開始の合図
@@ -337,7 +337,7 @@ void C2DUIEdit::SaveData(void)
 			//オブジェクトを取得
 			CObject* pObj = CObject::GetTop(nCntPriority);
 
-			while (pObj != NULL)
+			while (pObj != nullptr)
 			{
 				CObject* pObjNext = pObj->GetNext();
 
@@ -393,7 +393,7 @@ void C2DUIEdit::LoadData(char* Name, D3DXVECTOR3 pos)
 	//ファイルを開く
 	pFile = fopen(Name, "r");
 
-	if (pFile != NULL)
+	if (pFile != nullptr)
 	{//ファイルが開けた場合
 		D3DXVECTOR3 SetPos = INITVECTOR3;
 		D3DXVECTOR3 SetRot = INITVECTOR3;

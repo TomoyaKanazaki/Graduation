@@ -41,9 +41,9 @@ CScrollArrow::~CScrollArrow()
 //====================================================================
 CScrollArrow* CScrollArrow::Create(int nPriority)
 {
-	CScrollArrow* pSample2D = NULL;
+	CScrollArrow* pSample2D = nullptr;
 
-	if (pSample2D == NULL)
+	if (pSample2D == nullptr)
 	{
 		//オブジェクト2Dの生成
 		pSample2D = new CScrollArrow(nPriority);
@@ -52,7 +52,7 @@ CScrollArrow* CScrollArrow::Create(int nPriority)
 	//オブジェクトの初期化処理
 	if (FAILED(pSample2D->Init()))
 	{//初期化処理が失敗した場合
-		return NULL;
+		return nullptr;
 	}
 
 	return pSample2D;

@@ -37,7 +37,7 @@ namespace
 CModelEffect::CModelEffect(int nPriority) : CObjectX(nPriority)
 {
 	SetSize(COLLISION_SIZE);
-	m_nIdxXModel = NULL;
+	m_nIdxXModel = 0;
 	m_nIdxTexture = -1;
 	m_pos = INITVECTOR3;
 	m_rot = INITVECTOR3;
@@ -57,9 +57,9 @@ CModelEffect::~CModelEffect()
 //====================================================================
 CModelEffect* CModelEffect::Create(char* pModelName)
 {
-	CModelEffect* pBlock = NULL;
+	CModelEffect* pBlock = nullptr;
 
-	if (pBlock == NULL)
+	if (pBlock == nullptr)
 	{
 		//オブジェクト2Dの生成
 		pBlock = new CModelEffect();
@@ -68,7 +68,7 @@ CModelEffect* CModelEffect::Create(char* pModelName)
 	//オブジェクトの初期化処理
 	if (FAILED(pBlock->Init(pModelName)))
 	{//初期化処理が失敗した場合
-		return NULL;
+		return nullptr;
 	}
 
 	return pBlock;

@@ -18,8 +18,8 @@
 //====================================================================
 CRenderer::CRenderer()
 {
-	m_pD3D = NULL;					//Direct3Dオブジェクトへのポインタ
-	m_pD3DDevice = NULL;			//Direct3Dデバイスへのポインタ
+	m_pD3D = nullptr;					//Direct3Dオブジェクトへのポインタ
+	m_pD3DDevice = nullptr;			//Direct3Dデバイスへのポインタ
 	m_bAfterimage = false;
 }
 
@@ -41,7 +41,7 @@ HRESULT CRenderer::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 
 	//Direct3Dオブジェクトの生成
 	m_pD3D = Direct3DCreate9(D3D_SDK_VERSION);
-	if (m_pD3D == NULL)
+	if (m_pD3D == nullptr)
 	{
 		return E_FAIL;
 	}
@@ -122,7 +122,7 @@ HRESULT CRenderer::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 			D3DFMT_A8R8G8B8,
 			D3DPOOL_DEFAULT,
 			&m_apTextureMT[nCnt],
-			NULL);
+			nullptr);
 
 		//テクスチャレンダリング用インターフェイスの生成
 		m_apTextureMT[nCnt]->GetSurfaceLevel(0, &m_apRenderMT[nCnt]);
@@ -136,7 +136,7 @@ HRESULT CRenderer::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 			0,
 			TRUE,
 			&m_pZBuffMT,
-			NULL
+			nullptr
 		);
 
 		//現在のレンダリングターゲットを取得(保存)
@@ -152,7 +152,7 @@ HRESULT CRenderer::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 		m_pD3DDevice->SetDepthStencilSurface(m_pZBuffMT);
 
 		//レンダリングターゲット用のテクスチャのクリア
-		m_pD3DDevice->Clear(0, NULL,
+		m_pD3DDevice->Clear(0, nullptr,
 			(D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER),
 			D3DCOLOR_RGBA(0, 0, 0, 0), 1.0f, 0);
 
@@ -177,7 +177,7 @@ HRESULT CRenderer::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 		FVF_VERTEX_2D,
 		D3DPOOL_MANAGED,
 		&m_pVtxBuffMT,
-		NULL)))
+		nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -226,51 +226,51 @@ HRESULT CRenderer::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 void CRenderer::Uninit(void)
 {
 	//デバック表示用フォントの破棄
-	if (m_pD3DDevice != NULL)
+	if (m_pD3DDevice != nullptr)
 	{
 		m_pD3DDevice->Release();
-		m_pD3DDevice = NULL;
+		m_pD3DDevice = nullptr;
 	}
 
 	// デバッグプロックの終了処理
 	DebugProc::Uninit();
 
 	//Direct3Dオブジェクトの破棄
-	if (m_pD3D != NULL)
+	if (m_pD3D != nullptr)
 	{
 		m_pD3D->Release();
-		m_pD3D = NULL;
+		m_pD3D = nullptr;
 	}
 
 	for (int nCnt = 0; nCnt < 2; nCnt++)
 	{
 		//レンダリングターゲット用テクスチャの破棄
-		if (m_apTextureMT[nCnt] != NULL)
+		if (m_apTextureMT[nCnt] != nullptr)
 		{
 			m_apTextureMT[nCnt]->Release();
-			m_apTextureMT[nCnt] = NULL;
+			m_apTextureMT[nCnt] = nullptr;
 		}
 
 		//テクスチャレンダリング用インターフェイスの破棄
-		if (m_apRenderMT[nCnt] != NULL)
+		if (m_apRenderMT[nCnt] != nullptr)
 		{
 			m_apRenderMT[nCnt]->Release();
-			m_apRenderMT[nCnt] = NULL;
+			m_apRenderMT[nCnt] = nullptr;
 		}
 	}
 
 	//テクスチャレンダリング用Zバッファの破棄
-	if (m_pZBuffMT != NULL)
+	if (m_pZBuffMT != nullptr)
 	{
 		m_pZBuffMT->Release();
-		m_pZBuffMT = NULL;
+		m_pZBuffMT = nullptr;
 	}
 
 	//フィードバック用ポリゴンの破棄
-	if (m_pVtxBuffMT != NULL)
+	if (m_pVtxBuffMT != nullptr)
 	{
 		m_pVtxBuffMT->Release();
-		m_pVtxBuffMT = NULL;
+		m_pVtxBuffMT = nullptr;
 	}
 }
 
@@ -304,7 +304,7 @@ void CRenderer::Draw(void)
 	//	LPDIRECT3DTEXTURE9 pTextureWk;
 
 	//	//画面クリア(バックバッファとZバッファのクリア)
-	//	m_pD3DDevice->Clear(0, NULL,
+	//	m_pD3DDevice->Clear(0, nullptr,
 	//		(D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER),
 	//		D3DCOLOR_RGBA(0, 0, 0, 0), 1.0f, 0);
 
@@ -326,7 +326,7 @@ void CRenderer::Draw(void)
 	//	CManager::GetInstance()->GetRenderer()->ChageTarget(pCamera->GetPosV(), pCamera->GetPosR(), pCamera->GetVecU());
 
 	//	//レンダリングターゲット用のテクスチャのクリア
-	//	m_pD3DDevice->Clear(0, NULL,
+	//	m_pD3DDevice->Clear(0, nullptr,
 	//		(D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER),
 	//		D3DCOLOR_RGBA(0, 0, 0, 0), 1.0f, 0);
 
@@ -368,7 +368,7 @@ void CRenderer::Draw(void)
 	//		m_pD3DDevice->EndScene();
 	//	}
 	//	////バックバッファとフロントバッファの入れ替え
-	//	//m_pD3DDevice->Present(NULL, NULL, NULL, NULL);
+	//	//m_pD3DDevice->Present(nullptr, nullptr, nullptr, nullptr);
 
 	//	//-----------------------------------------------------------------------------------
 
@@ -408,7 +408,7 @@ void CRenderer::Draw(void)
 	//		m_pD3DDevice->EndScene();
 	//	}
 	//	//バックバッファとフロントバッファの入れ替え
-	//	m_pD3DDevice->Present(NULL, NULL, NULL, NULL);
+	//	m_pD3DDevice->Present(nullptr, nullptr, nullptr, nullptr);
 
 	//	//テクスチャの[0]と[1]を入れ替える
 	//	pTextureWk = m_apTextureMT[0];
@@ -422,7 +422,7 @@ void CRenderer::Draw(void)
 	//else
 	//{
 		//画面クリア(バックバッファとZバッファのクリア)
-		m_pD3DDevice->Clear(0, NULL,
+		m_pD3DDevice->Clear(0, nullptr,
 			(D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER),
 			D3DCOLOR_RGBA(0, 0, 0, 0), 1.0f, 0);
 		//描画開始
@@ -451,7 +451,7 @@ void CRenderer::Draw(void)
 			m_pD3DDevice->EndScene();
 		}
 		//バックバッファとフロントバッファの入れ替え
-		m_pD3DDevice->Present(NULL, NULL, NULL, NULL);
+		m_pD3DDevice->Present(nullptr, nullptr, nullptr, nullptr);
 	//}
 }
 
@@ -526,8 +526,8 @@ LPDIRECT3DDEVICE9 CRenderer::GetDevice(void)
 ////====================================================================
 //CRenderer::CRenderer()
 //{
-//	m_pD3D = NULL;					//Direct3Dオブジェクトへのポインタ
-//	m_pD3DDevice = NULL;			//Direct3Dデバイスへのポインタ
+//	m_pD3D = nullptr;					//Direct3Dオブジェクトへのポインタ
+//	m_pD3DDevice = nullptr;			//Direct3Dデバイスへのポインタ
 //}
 //
 ////====================================================================
@@ -548,7 +548,7 @@ LPDIRECT3DDEVICE9 CRenderer::GetDevice(void)
 //
 //									//Direct3Dオブジェクトの生成
 //	m_pD3D = Direct3DCreate9(D3D_SDK_VERSION);
-//	if (m_pD3D == NULL)
+//	if (m_pD3D == nullptr)
 //	{
 //		return E_FAIL;
 //	}
@@ -625,17 +625,17 @@ LPDIRECT3DDEVICE9 CRenderer::GetDevice(void)
 //void CRenderer::Uninit(void)
 //{
 //	//デバック表示用フォントの破棄
-//	if (m_pD3DDevice != NULL)
+//	if (m_pD3DDevice != nullptr)
 //	{
 //		m_pD3DDevice->Release();
-//		m_pD3DDevice = NULL;
+//		m_pD3DDevice = nullptr;
 //	}
 //
 //	//Direct3Dオブジェクトの破棄
-//	if (m_pD3D != NULL)
+//	if (m_pD3D != nullptr)
 //	{
 //		m_pD3D->Release();
-//		m_pD3D = NULL;
+//		m_pD3D = nullptr;
 //	}
 //}
 //
@@ -663,7 +663,7 @@ LPDIRECT3DDEVICE9 CRenderer::GetDevice(void)
 //	CFade *pFade = CManager::GetInstance()->GetFade();
 //
 //	//画面クリア(バックバッファとZバッファのクリア)
-//	m_pD3DDevice->Clear(0, NULL,
+//	m_pD3DDevice->Clear(0, nullptr,
 //		(D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER),
 //		D3DCOLOR_RGBA(0, 0, 0, 0), 1.0f, 0);
 //	//描画開始
@@ -686,7 +686,7 @@ LPDIRECT3DDEVICE9 CRenderer::GetDevice(void)
 //		m_pD3DDevice->EndScene();
 //	}
 //	//バックバッファとフロントバッファの入れ替え
-//	m_pD3DDevice->Present(NULL, NULL, NULL, NULL);
+//	m_pD3DDevice->Present(nullptr, nullptr, nullptr, nullptr);
 //}
 //
 ////====================================================================

@@ -135,15 +135,15 @@ void CEnemy::Uninit(void)
 	{
 		m_apModel[nCntModel]->Uninit();
 		delete m_apModel[nCntModel];
-		m_apModel[nCntModel] = NULL;
+		m_apModel[nCntModel] = nullptr;
 	}
 
 	//モーションの終了処理
-	if (m_pMotion != NULL)
+	if (m_pMotion != nullptr)
 	{
 		//モーションの破棄
 		delete m_pMotion;
-		m_pMotion = NULL;
+		m_pMotion = nullptr;
 	}
 
 	SetDeathFlag(true);
@@ -270,7 +270,7 @@ void CEnemy::InitModel(const char* pFilename)
 	LoadLevelData(pFilename);
 
 	//モーションの生成
-	if (m_pMotion == NULL)
+	if (m_pMotion == nullptr)
 	{
 		//モーションの生成
 		m_pMotion = new CMotion;
@@ -339,7 +339,7 @@ void CEnemy::CollisionWall(useful::COLLISION XYZ)
 		//オブジェクトを取得
 		CObject* pObj = CObject::GetTop(nCntPriority);
 
-		while (pObj != NULL)
+		while (pObj != nullptr)
 		{
 			CObject* pObjNext = pObj->GetNext();
 
@@ -378,7 +378,7 @@ void CEnemy::CollisionDevilHole(useful::COLLISION XYZ)
 		//オブジェクトを取得
 		CObject* pObj = CObject::GetTop(nCntPriority);
 
-		while (pObj != NULL)
+		while (pObj != nullptr)
 		{
 			CObject* pObjNext = pObj->GetNext();
 
@@ -417,7 +417,7 @@ void CEnemy::CollisionOut()
 		//オブジェクトを取得
 		CObject* pObj = CObject::GetTop(nCntPriority);
 
-		while (pObj != NULL)
+		while (pObj != nullptr)
 		{
 			CObject* pObjNext = pObj->GetNext();
 
@@ -588,7 +588,7 @@ void CEnemy::SearchWall(void)
 		//オブジェクトを取得
 		CObject* pObj = CObject::GetTop(nCntPriority);
 
-		while (pObj != NULL)
+		while (pObj != nullptr)
 		{
 			CObject* pObjNext = pObj->GetNext();
 
@@ -739,7 +739,7 @@ void CEnemy::LoadLevelData(const char* pFilename)
 	//ファイルを開く
 	pFile = fopen(pFilename, "r");
 
-	if (pFile != NULL)
+	if (pFile != nullptr)
 	{//ファイルが開けた場合
 		int ModelParent = 0;
 		D3DXVECTOR3 ModelPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -814,7 +814,7 @@ void CEnemy::LoadLevelData(const char* pFilename)
 
 								if (ModelParent == -1)
 								{
-									m_apModel[nCntModel]->SetParent(NULL);
+									m_apModel[nCntModel]->SetParent(nullptr);
 								}
 								else
 								{

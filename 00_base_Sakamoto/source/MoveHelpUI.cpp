@@ -40,9 +40,9 @@ CMoveHelpUI::~CMoveHelpUI()
 //====================================================================
 CMoveHelpUI* CMoveHelpUI::Create(void)
 {
-	CMoveHelpUI* pSample3D = NULL;
+	CMoveHelpUI* pSample3D = nullptr;
 
-	if (pSample3D == NULL)
+	if (pSample3D == nullptr)
 	{
 		//オブジェクト2Dの生成
 		pSample3D = new CMoveHelpUI();
@@ -51,7 +51,7 @@ CMoveHelpUI* CMoveHelpUI::Create(void)
 	//オブジェクトの初期化処理
 	if (FAILED(pSample3D->Init()))
 	{//初期化処理が失敗した場合
-		return NULL;
+		return nullptr;
 	}
 
 	return pSample3D;

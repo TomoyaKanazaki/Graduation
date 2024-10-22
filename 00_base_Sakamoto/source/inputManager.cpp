@@ -34,9 +34,9 @@ CInputManager::~CInputManager()
 //====================================================================
 CInputManager* CInputManager::Create(void)
 {
-	CInputManager* pInstance = NULL;
+	CInputManager* pInstance = nullptr;
 
-	if (pInstance == NULL)
+	if (pInstance == nullptr)
 	{
 		//オブジェクト2Dの生成
 		pInstance = new CInputManager();
@@ -45,7 +45,7 @@ CInputManager* CInputManager::Create(void)
 	//オブジェクトの初期化処理
 	if (FAILED(pInstance->Init()))
 	{//初期化処理が失敗した場合
-		return NULL;
+		return nullptr;
 	}
 
 	return pInstance;

@@ -55,9 +55,9 @@ CLevelModelEffect::~CLevelModelEffect()
 //====================================================================
 CLevelModelEffect* CLevelModelEffect::Create()
 {
-	CLevelModelEffect* pPlayer = NULL;
+	CLevelModelEffect* pPlayer = nullptr;
 
-	if (pPlayer == NULL)
+	if (pPlayer == nullptr)
 	{
 		//プレイヤーの生成
 		pPlayer = new CLevelModelEffect();
@@ -66,7 +66,7 @@ CLevelModelEffect* CLevelModelEffect::Create()
 	//オブジェクトの初期化処理
 	if (FAILED(pPlayer->Init()))
 	{//初期化処理が失敗した場合
-		return NULL;
+		return nullptr;
 	}
 
 	return pPlayer;
@@ -81,7 +81,7 @@ HRESULT CLevelModelEffect::Init(void)
 	LoadLevelData("data\\TXT\\motion_foot_light_spear.txt");
 
 	//モーションの生成
-	if (m_pMotion == NULL)
+	if (m_pMotion == nullptr)
 	{
 		//モーションの生成
 		m_pMotion = new CMotion;
@@ -104,15 +104,15 @@ void CLevelModelEffect::Uninit(void)
 	{
 		m_apModel[nCntModel]->Uninit();
 		delete m_apModel[nCntModel];
-		m_apModel[nCntModel] = NULL;
+		m_apModel[nCntModel] = nullptr;
 	}
 
 	//モーションの終了処理
-	if (m_pMotion != NULL)
+	if (m_pMotion != nullptr)
 	{
 		//モーションの破棄
 		delete m_pMotion;
-		m_pMotion = NULL;
+		m_pMotion = nullptr;
 	}
 
 	SetDeathFlag(true);
@@ -207,7 +207,7 @@ void CLevelModelEffect::LoadLevelData(const char* pFilename)
 	//ファイルを開く
 	pFile = fopen(pFilename, "r");
 
-	if (pFile != NULL)
+	if (pFile != nullptr)
 	{//ファイルが開けた場合
 
 		int ModelParent = 0;
@@ -282,7 +282,7 @@ void CLevelModelEffect::LoadLevelData(const char* pFilename)
 
 								if (ModelParent == -1)
 								{
-									m_apModel[nCntModel]->SetParent(NULL);
+									m_apModel[nCntModel]->SetParent(nullptr);
 								}
 								else
 								{

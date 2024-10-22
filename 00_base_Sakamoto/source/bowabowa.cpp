@@ -53,7 +53,7 @@ CBowabowa* CBowabowa::Create(char* pModelName)
 	//オブジェクトの初期化処理
 	if (FAILED(pBowabowa->Init(pModelName)))
 	{//初期化処理が失敗した場合
-		return NULL;
+		return nullptr;
 	}
 
 	return pBowabowa;
