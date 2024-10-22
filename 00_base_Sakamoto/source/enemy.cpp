@@ -28,6 +28,7 @@
 #include "Effect.h"
 #include "devil.h"
 #include "DevilHole.h"
+#include "MapSystem.h"
 #include "sound.h"
 
 namespace
@@ -74,6 +75,9 @@ CEnemy::CEnemy(int nPriority) :CObject(nPriority)
 	m_OKR = true;
 	m_OKU = true;
 	m_OKD = true;
+
+	m_nMapWight = 0;
+	m_nMapHeight = 0;
 }
 
 //====================================================================
@@ -197,6 +201,9 @@ void CEnemy::GameUpdate(void)
 	// 位置更新処理
 	UpdatePos();
 
+	// 自分の番号を設定
+	MapSystemNumber();
+
 	//床の判定
 	if (m_pos.y <= 0.0f)
 	{
@@ -209,6 +216,8 @@ void CEnemy::GameUpdate(void)
 		//モーションの更新
 		m_pMotion->Update();
 	}
+
+	DebugProc::Print(DebugProc::POINT_LEFT, "[敵]横 %d : 縦 %d\n", m_nMapWight, m_nMapHeight);
 }
 
 //====================================================================
@@ -583,150 +592,287 @@ void CEnemy::SearchWall(void)
 	bool OKU = true;	//上
 	bool OKD = true;	//下
 
-	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
+	CMapSystem* pMapSystem = CMapSystem::GetInstance();
+	int nMapWightMax = pMapSystem->GetWightMax();
+	int nMapHeightMax = pMapSystem->GetHeightMax();
+	D3DXVECTOR3 MapSystemPos = pMapSystem->GetMapPos();
+
+	int nRNumber = m_nMapWight + 1;
+	int nLNumber = m_nMapWight - 1;
+	int nUNumber = m_nMapHeight - 1;
+	int nDNumber = m_nMapHeight + 1;
+
+	nRNumber = useful::RangeNumber(nMapWightMax, 0, nRNumber);
+	nLNumber = useful::RangeNumber(nMapWightMax, 0, nLNumber);
+	nUNumber = useful::RangeNumber(nMapWightMax, 0, nUNumber);
+	nDNumber = useful::RangeNumber(nMapWightMax, 0, nDNumber);
+
+	OKR = !pMapSystem->GetGritBool(nRNumber, m_nMapHeight);
+	OKL = !pMapSystem->GetGritBool(nLNumber, m_nMapHeight);
+	OKU = !pMapSystem->GetGritBool(m_nMapWight, nUNumber);
+	OKD = !pMapSystem->GetGritBool(m_nMapWight, nDNumber);
+
+	//自分の立っているグリットの中心位置を求める
+	D3DXVECTOR3 MyGritPos = INITVECTOR3;
+	float MapGritSize = pMapSystem->GetGritSize();
+
+	D3DXVECTOR3 DevilPos = CGame::GetDevil()->GetDevilPos();
+	D3DXVECTOR3 DevilSize = CGame::GetDevil()->GetDevilSize();
+
+	//ｘ座標のグリットに位置を設定する
+	MyGritPos.x = MapSystemPos.x + (m_nMapWight * MapGritSize);
+
+	// 自分の位置がマップ外だった場合に反対側からはみ出た分の位置を設定する
+	if (MyGritPos.x > DevilPos.x + (DevilSize.x))
 	{
-		//オブジェクトを取得
-		CObject* pObj = CObject::GetTop(nCntPriority);
+		MyGritPos.x = MyGritPos.x - (DevilPos.x + (DevilSize.x * 2.0f)) - MapGritSize;
+	}
 
-		while (pObj != nullptr)
+	//ｚ座標のグリットに位置を設定する
+	MyGritPos.z = MapSystemPos.z - (m_nMapHeight * MapGritSize);
+
+	// 自分の位置がマップ外だった場合に反対側からはみ出た分の位置を設定する
+	if (MyGritPos.z < DevilPos.z - (DevilSize.z))
+	{
+		MyGritPos.z = MyGritPos.z + (DevilPos.z + (DevilSize.z * 2.0f)) + MapGritSize;
+	}
+
+	DebugProc::Print(DebugProc::POINT_LEFT, "ああああ %f %f %f\n", MyGritPos.x, MyGritPos.y, MyGritPos.z);
+
+	if (m_pos.x <= MyGritPos.x + ((MapGritSize * 0.5f) - m_size.x) &&
+		m_pos.x >= MyGritPos.x - ((MapGritSize * 0.5f) - m_size.x) &&
+		m_pos.z <= MyGritPos.z + ((MapGritSize * 0.5f) - m_size.z) &&
+		m_pos.z >= MyGritPos.z - ((MapGritSize * 0.5f) - m_size.z))
+	{// グリットの中心位置に立っているなら操作を受け付ける
+
+		if (!m_OKR && OKR)
 		{
-			CObject* pObjNext = pObj->GetNext();
+			m_State = E_STATE_WAIT;
+		}
+		if (!m_OKL && OKL)
+		{
+			m_State = E_STATE_WAIT;
+		}
+		if (!m_OKU && OKU)
+		{
+			m_State = E_STATE_WAIT;
+		}
+		if (!m_OKD && OKD)
+		{
+			m_State = E_STATE_WAIT;
+		}
 
-			CObject::TYPE type = pObj->GetType();			//種類を取得
+		m_OKR = OKR;	//右
+		m_OKL = OKL;	//左
+		m_OKU = OKU;	//上
+		m_OKD = OKD;	//下
+	}
+	else
+	{
+		m_OKR = false;	//右
+		m_OKL = false;	//左
+		m_OKU = false;	//上
+		m_OKD = false;	//下
+	}
 
-			if (type == TYPE_CUBEBLOCK)
-			{//種類がブロックの時
+	//bool OKR = true;	//右
+	//bool OKL = true;	//左
+	//bool OKU = true;	//上
+	//bool OKD = true;	//下
 
-				CCubeBlock* pBlock = (CCubeBlock*)pObj;	// ブロック情報の取得
+	//for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
+	//{
+	//	//オブジェクトを取得
+	//	CObject* pObj = CObject::GetTop(nCntPriority);
 
-				D3DXVECTOR3 pos = pBlock->GetPos();
-				D3DXVECTOR3 posOld = pBlock->GetPosOld();
-				D3DXVECTOR3 Move = pBlock->GetMove();
-				D3DXVECTOR3 Size = pBlock->GetSize();
+	//	while (pObj != nullptr)
+	//	{
+	//		CObject* pObjNext = pObj->GetNext();
 
-				D3DXVECTOR3 MyPos = INITVECTOR3;
+	//		CObject::TYPE type = pObj->GetType();			//種類を取得
 
-				for (int nCnt = 0; nCnt < 4; nCnt++)
-				{
-					switch (nCnt)
-					{
-					case 0:
-						MyPos = D3DXVECTOR3(m_pos.x + Size.x * 2.0f, m_pos.y, m_pos.z);	//右
-						break;
-					case 1:
-						MyPos = D3DXVECTOR3(m_pos.x - Size.x * 2.0f, m_pos.y, m_pos.z);	//左
-						break;
-					case 2:
-						MyPos = D3DXVECTOR3(m_pos.x, m_pos.y, m_pos.z + Size.z * 2.0f);	//上
-						break;
-					case 3:
-						MyPos = D3DXVECTOR3(m_pos.x, m_pos.y, m_pos.z - Size.z * 2.0f);	//下
-						break;
-					}
+	//		if (type == TYPE_CUBEBLOCK)
+	//		{//種類がブロックの時
 
-					// 矩形の当たり判定
-					if (useful::CollisionRectangle2D(MyPos, pos, COLLISION_SIZE, Size, useful::COLLISION::COLLISION_ZX) == true)
-					{
-						switch (nCnt)
-						{
-						case 0:
-							OKR = false;
-							break;
-						case 1:
-							OKL = false;
-							break;
-						case 2:
-							OKU = false;
-							break;
-						case 3:
-							OKD = false;
-							break;
-						}
+	//			CCubeBlock* pBlock = (CCubeBlock*)pObj;	// ブロック情報の取得
 
-						CEffect* pEffect = CEffect::Create();
-						pEffect->SetPos(MyPos);
-					}
-				}
-			}
+	//			D3DXVECTOR3 pos = pBlock->GetPos();
+	//			D3DXVECTOR3 posOld = pBlock->GetPosOld();
+	//			D3DXVECTOR3 Move = pBlock->GetMove();
+	//			D3DXVECTOR3 Size = pBlock->GetSize();
 
-			if (type == TYPE_DEVILHOLE)
-			{//種類がデビルホールの時
+	//			D3DXVECTOR3 MyPos = INITVECTOR3;
 
-				CDevilHole* pDevilHole = (CDevilHole*)pObj;	// ブロック情報の取得
+	//			for (int nCnt = 0; nCnt < 4; nCnt++)
+	//			{
+	//				switch (nCnt)
+	//				{
+	//				case 0:
+	//					MyPos = D3DXVECTOR3(m_pos.x + Size.x * 2.0f, m_pos.y, m_pos.z);	//右
+	//					break;
+	//				case 1:
+	//					MyPos = D3DXVECTOR3(m_pos.x - Size.x * 2.0f, m_pos.y, m_pos.z);	//左
+	//					break;
+	//				case 2:
+	//					MyPos = D3DXVECTOR3(m_pos.x, m_pos.y, m_pos.z + Size.z * 2.0f);	//上
+	//					break;
+	//				case 3:
+	//					MyPos = D3DXVECTOR3(m_pos.x, m_pos.y, m_pos.z - Size.z * 2.0f);	//下
+	//					break;
+	//				}
 
-				D3DXVECTOR3 pos = pDevilHole->GetPos();
-				D3DXVECTOR3 Size = pDevilHole->GetSize();
+	//				// 矩形の当たり判定
+	//				if (useful::CollisionRectangle2D(MyPos, pos, COLLISION_SIZE, Size, useful::COLLISION::COLLISION_ZX) == true)
+	//				{
+	//					switch (nCnt)
+	//					{
+	//					case 0:
+	//						OKR = false;
+	//						break;
+	//					case 1:
+	//						OKL = false;
+	//						break;
+	//					case 2:
+	//						OKU = false;
+	//						break;
+	//					case 3:
+	//						OKD = false;
+	//						break;
+	//					}
 
-				D3DXVECTOR3 MyPos = INITVECTOR3;
+	//					CEffect* pEffect = CEffect::Create();
+	//					pEffect->SetPos(MyPos);
+	//				}
+	//			}
+	//		}
 
-				for (int nCnt = 0; nCnt < 4; nCnt++)
-				{
-					switch (nCnt)
-					{
-					case 0:
-						MyPos = D3DXVECTOR3(m_pos.x + Size.x * 2.0f, m_pos.y, m_pos.z);	//右
-						break;
-					case 1:
-						MyPos = D3DXVECTOR3(m_pos.x - Size.x * 2.0f, m_pos.y, m_pos.z);	//左
-						break;
-					case 2:
-						MyPos = D3DXVECTOR3(m_pos.x, m_pos.y, m_pos.z + Size.z * 2.0f);	//上
-						break;
-					case 3:
-						MyPos = D3DXVECTOR3(m_pos.x, m_pos.y, m_pos.z - Size.z * 2.0f);	//下
-						break;
-					}
+	//		if (type == TYPE_DEVILHOLE)
+	//		{//種類がデビルホールの時
 
-					// 矩形の当たり判定
-					if (useful::CollisionRectangle2D(MyPos, pos, COLLISION_SIZE, Size, useful::COLLISION::COLLISION_ZX) == true)
-					{
-						switch (nCnt)
-						{
-						case 0:
-							OKR = false;
-							break;
-						case 1:
-							OKL = false;
-							break;
-						case 2:
-							OKU = false;
-							break;
-						case 3:
-							OKD = false;
-							break;
-						}
+	//			CDevilHole* pDevilHole = (CDevilHole*)pObj;	// ブロック情報の取得
 
-						CEffect* pEffect = CEffect::Create();
-						pEffect->SetPos(MyPos);
-					}
-				}
-			}
+	//			D3DXVECTOR3 pos = pDevilHole->GetPos();
+	//			D3DXVECTOR3 Size = pDevilHole->GetSize();
 
-			pObj = pObjNext;
+	//			D3DXVECTOR3 MyPos = INITVECTOR3;
+
+	//			for (int nCnt = 0; nCnt < 4; nCnt++)
+	//			{
+	//				switch (nCnt)
+	//				{
+	//				case 0:
+	//					MyPos = D3DXVECTOR3(m_pos.x + Size.x * 2.0f, m_pos.y, m_pos.z);	//右
+	//					break;
+	//				case 1:
+	//					MyPos = D3DXVECTOR3(m_pos.x - Size.x * 2.0f, m_pos.y, m_pos.z);	//左
+	//					break;
+	//				case 2:
+	//					MyPos = D3DXVECTOR3(m_pos.x, m_pos.y, m_pos.z + Size.z * 2.0f);	//上
+	//					break;
+	//				case 3:
+	//					MyPos = D3DXVECTOR3(m_pos.x, m_pos.y, m_pos.z - Size.z * 2.0f);	//下
+	//					break;
+	//				}
+
+	//				// 矩形の当たり判定
+	//				if (useful::CollisionRectangle2D(MyPos, pos, COLLISION_SIZE, Size, useful::COLLISION::COLLISION_ZX) == true)
+	//				{
+	//					switch (nCnt)
+	//					{
+	//					case 0:
+	//						OKR = false;
+	//						break;
+	//					case 1:
+	//						OKL = false;
+	//						break;
+	//					case 2:
+	//						OKU = false;
+	//						break;
+	//					case 3:
+	//						OKD = false;
+	//						break;
+	//					}
+
+	//					CEffect* pEffect = CEffect::Create();
+	//					pEffect->SetPos(MyPos);
+	//				}
+	//			}
+	//		}
+
+	//		pObj = pObjNext;
+	//	}
+	//}
+
+	//if (!m_OKR && OKR)
+	//{
+	//	m_State = E_STATE_WAIT;
+	//}
+	//if (!m_OKL && OKL)
+	//{
+	//	m_State = E_STATE_WAIT;
+	//}
+	//if (!m_OKU && OKU)
+	//{
+	//	m_State = E_STATE_WAIT;
+	//}
+	//if (!m_OKD && OKD)
+	//{
+	//	m_State = E_STATE_WAIT;
+	//}
+
+	//m_OKR = OKR;	//右
+	//m_OKL = OKL;	//左
+	//m_OKU = OKU;	//上
+	//m_OKD = OKD;	//下
+}
+
+//====================================================================
+// マップのどのマスに存在しているか設定する
+//====================================================================
+void CEnemy::MapSystemNumber(void)
+{
+	CDevil* pDevil = CGame::GetDevil();
+	D3DXVECTOR3 DevilPos = pDevil->GetDevilPos();
+	D3DXVECTOR3 DevilSize = pDevil->GetDevilSize();
+	D3DXVECTOR3 MapSystemPos = CMapSystem::GetInstance()->GetMapPos();
+	int MapWightMax = CMapSystem::GetInstance()->GetWightMax();
+	int MapHeightMax = CMapSystem::GetInstance()->GetHeightMax();
+	float MapGritSize = CMapSystem::GetInstance()->GetGritSize();
+	D3DXVECTOR3 GritPos = INITVECTOR3;
+
+	for (int nCntW = 0; nCntW < MapWightMax; nCntW++)
+	{
+		float fCountPosX = MapSystemPos.x + (nCntW * MapGritSize);
+
+		if (fCountPosX > DevilPos.x + (DevilSize.x))
+		{
+			fCountPosX = fCountPosX - (DevilPos.x + (DevilSize.x * 2.0f)) - MapGritSize;
+		}
+
+		if (m_pos.x < fCountPosX + (MapGritSize * 0.5f) &&
+			m_pos.x >= fCountPosX - (MapGritSize * 0.5f))
+		{
+			m_nMapWight = nCntW;
+			break;
 		}
 	}
 
-	if (!m_OKR && OKR)
+	for (int nCntH = 0; nCntH < MapHeightMax; nCntH++)
 	{
-		m_State = E_STATE_WAIT;
-	}
-	if (!m_OKL && OKL)
-	{
-		m_State = E_STATE_WAIT;
-	}
-	if (!m_OKU && OKU)
-	{
-		m_State = E_STATE_WAIT;
-	}
-	if (!m_OKD && OKD)
-	{
-		m_State = E_STATE_WAIT;
-	}
+		float fCountPosZ = MapSystemPos.z - (nCntH * MapGritSize);
 
-	m_OKR = OKR;	//右
-	m_OKL = OKL;	//左
-	m_OKU = OKU;	//上
-	m_OKD = OKD;	//下
+		if (fCountPosZ < DevilPos.z - (DevilSize.z))
+		{
+			fCountPosZ = fCountPosZ + (DevilPos.z + (DevilSize.z * 2.0f)) + MapGritSize;
+		}
+
+		if (m_pos.z < fCountPosZ + (MapGritSize * 0.5f) &&
+			m_pos.z >= fCountPosZ - (MapGritSize * 0.5f))
+		{
+			m_nMapHeight = nCntH;
+			break;
+		}
+	}
 }
 
 //====================================================================
