@@ -48,9 +48,9 @@ CCubeEffect::~CCubeEffect()
 //====================================================================
 CCubeEffect* CCubeEffect::Create(void)
 {
-	CCubeEffect* pObject3D = NULL;
+	CCubeEffect* pObject3D = nullptr;
 
-	if (pObject3D == NULL)
+	if (pObject3D == nullptr)
 	{
 		//オブジェクト3Dの生成
 		pObject3D = new CCubeEffect();
@@ -59,7 +59,7 @@ CCubeEffect* CCubeEffect::Create(void)
 	//オブジェクトの初期化処理
 	if (FAILED(pObject3D->Init()))
 	{//初期化処理が失敗した場合
-		return NULL;
+		return nullptr;
 	}
 
 	return pObject3D;

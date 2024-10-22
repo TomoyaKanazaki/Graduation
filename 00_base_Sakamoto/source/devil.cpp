@@ -29,10 +29,11 @@
 #include "bowabowa.h"
 #include "Cross.h"
 #include "MapSystem.h"
+#include "debugproc.h"
 #include "sound.h"
 
 #define COLLISION_SIZE (D3DXVECTOR3(750.0f,0.0f,550.0f))		//横の当たり判定
-#define PLAYER_SPEED (10.0f)		//プレイヤーの移動速度
+#define SCROOL_SPEED (2.0f)		//スクロールの移動速度
 
 namespace
 {
@@ -59,6 +60,7 @@ CDevil::CDevil(int nPriority) : CObject(nPriority)
 	m_CollisionRot = 0.0f;
 	m_pMotion = nullptr;
 	m_DevilPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_MapDifference = INITVECTOR3;
 }
 
 //====================================================================
@@ -74,9 +76,9 @@ CDevil::~CDevil()
 //====================================================================
 CDevil* CDevil::Create()
 {
-	CDevil* pPlayer = NULL;
+	CDevil* pPlayer = nullptr;
 
-	if (pPlayer == NULL)
+	if (pPlayer == nullptr)
 	{
 		//プレイヤーの生成
 		pPlayer = new CDevil();
@@ -85,7 +87,7 @@ CDevil* CDevil::Create()
 	//オブジェクトの初期化処理
 	if (FAILED(pPlayer->Init()))
 	{//初期化処理が失敗した場合
-		return NULL;
+		return nullptr;
 	}
 
 	return pPlayer;
@@ -109,7 +111,7 @@ HRESULT CDevil::Init(void)
 	LoadLevelData("data\\TXT\\motion_foot_light_spear.txt");
 
 	//モーションの生成
-	if (m_pMotion == NULL)
+	if (m_pMotion == nullptr)
 	{
 		//モーションの生成
 		m_pMotion = new CMotion;
@@ -156,15 +158,15 @@ void CDevil::Uninit(void)
 	{
 		m_apModel[nCntModel]->Uninit();
 		delete m_apModel[nCntModel];
-		m_apModel[nCntModel] = NULL;
+		m_apModel[nCntModel] = nullptr;
 	}
 
 	//モーションの終了処理
-	if (m_pMotion != NULL)
+	if (m_pMotion != nullptr)
 	{
 		//モーションの破棄
 		delete m_pMotion;
-		m_pMotion = NULL;
+		m_pMotion = nullptr;
 	}
 
 	SetDeathFlag(true);
@@ -259,9 +261,13 @@ void CDevil::GameUpdate(void)
 	//デバッグキーの処理と設定
 	DebugKey();
 
+	D3DXVECTOR3 InitPos = CMapSystem::GetInstance()->GetInitPos();
+	D3DXVECTOR3 MapPos = CMapSystem::GetInstance()->GetMapPos();
+
 	//デバッグ表示
-	DebugProc::Print(DebugProc::POINT_LEFT, "[自分]位置 %f : %f : %f\n", m_pos.x, m_pos.y, m_pos.z);
-	DebugProc::Print(DebugProc::POINT_LEFT, "[自分]向き %f : %f : %f\n", m_rot.x, m_rot.y, m_rot.z);
+	DebugProc::Print(DebugProc::POINT_LEFT, "[マップ]　　　位置 %f : %f\n", MapPos.x, MapPos.z);
+	DebugProc::Print(DebugProc::POINT_LEFT, "[マップの差分]位置 %f : %f\n", InitPos.x - MapPos.x, InitPos.z - MapPos.z);
+	DebugProc::Print(DebugProc::POINT_LEFT, "[マップの差分]位置 %f : %f\n", m_MapDifference.x, m_MapDifference.z);
 }
 
 //====================================================================
@@ -319,31 +325,31 @@ void CDevil::Move(void)
 	//キーボードの移動処理
 	if (pInputKeyboard->GetPress(DIK_UP))
 	{
-		ObjectScroll(D3DXVECTOR3(0.0f, 0.0f, 5.0f));
+		ObjectScroll(D3DXVECTOR3(0.0f, 0.0f, SCROOL_SPEED));
 
 	}
 	if (pInputKeyboard->GetPress(DIK_DOWN))
 	{
-		ObjectScroll(D3DXVECTOR3(0.0f, 0.0f, -5.0f));
+		ObjectScroll(D3DXVECTOR3(0.0f, 0.0f, -SCROOL_SPEED));
 	}
 	if (pInputKeyboard->GetPress(DIK_LEFT))
 	{
-		ObjectScroll(D3DXVECTOR3(-5.0f, 0.0f, 0.0f));
+		ObjectScroll(D3DXVECTOR3(-SCROOL_SPEED, 0.0f, 0.0f));
 	}
 	if (pInputKeyboard->GetPress(DIK_RIGHT))
 	{
-		ObjectScroll(D3DXVECTOR3(5.0f, 0.0f, 0.0f));
+		ObjectScroll(D3DXVECTOR3(SCROOL_SPEED, 0.0f, 0.0f));
 	}
 
 	if (pInputKeyboard->GetPress(DIK_UP) == false && pInputKeyboard->GetPress(DIK_LEFT) == false && pInputKeyboard->GetPress(DIK_DOWN) == false && pInputKeyboard->GetPress(DIK_RIGHT) == false)
 	{
 		//左スティックによる前後移動	
-		m_DevilPos.z += pInputJoypad->Get_Stick_Left(0).y * PLAYER_SPEED;
-		m_DevilPos.x += pInputJoypad->Get_Stick_Left(0).y * PLAYER_SPEED;
+		m_DevilPos.z += pInputJoypad->Get_Stick_Left(0).y * SCROOL_SPEED;
+		m_DevilPos.x += pInputJoypad->Get_Stick_Left(0).y * SCROOL_SPEED;
 
 		//左スティックによる左右移動
-		m_DevilPos.x += pInputJoypad->Get_Stick_Left(0).x * PLAYER_SPEED;
-		m_DevilPos.z -= pInputJoypad->Get_Stick_Left(0).x * PLAYER_SPEED;
+		m_DevilPos.x += pInputJoypad->Get_Stick_Left(0).x * SCROOL_SPEED;
+		m_DevilPos.z -= pInputJoypad->Get_Stick_Left(0).x * SCROOL_SPEED;
 	}
 
 	if (pInputKeyboard->GetPress(DIK_UP) == true || pInputKeyboard->GetPress(DIK_LEFT) == true || pInputKeyboard->GetPress(DIK_DOWN) == true || pInputKeyboard->GetPress(DIK_RIGHT) == true)
@@ -353,9 +359,9 @@ void CDevil::Move(void)
 
 		D3DXVec3Normalize(&NormarizeMove, &NormarizeMove);
 
-		NormarizeMove.x *= PLAYER_SPEED;
+		NormarizeMove.x *= SCROOL_SPEED;
 		NormarizeMove.y = JunpPawer;
-		NormarizeMove.z *= PLAYER_SPEED;
+		NormarizeMove.z *= SCROOL_SPEED;
 	}
 
 	m_move += NormarizeMove;
@@ -487,64 +493,24 @@ void CDevil::SetModelDisp(bool Sst)
 }
 
 //====================================================================
-// モデル表示の設定
+// オブジェクトのスクロール
 //====================================================================
 void CDevil::ObjectScroll(D3DXVECTOR3 Move)
 {
-	float m_GritSize = CMapSystem::GetInstance()->GetGritSize() * 0.5f;
+	GritScroll(Move);
+
+	float m_GritSize = CMapSystem::GetInstance()->GetGritSize();
 
 	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
 	{
 		//オブジェクトを取得
 		CObject* pObj = CObject::GetTop(nCntPriority);
 
-		while (pObj != NULL)
+		while (pObj != nullptr)
 		{
 			CObject* pObjNext = pObj->GetNext();
 
 			CObject::TYPE type = pObj->GetType();			//種類を取得
-
-			if (type == TYPE_CUBEBLOCK)
-			{//種類がブロックの時
-
-				CCubeBlock* pBlock = (CCubeBlock*)pObj;	// ブロック情報の取得
-
-				D3DXVECTOR3 pos = pBlock->GetPos();
-				D3DXVECTOR3 Size = pBlock->GetSize();
-
-				pos += Move;
-
-				if (Move.x > 0.0f)
-				{
-					if (m_DevilPos.x + m_DevilSize.x < pos.x - m_GritSize)
-					{
-						pos.x = -m_DevilSize.x + m_DevilPos.x - m_GritSize + Move.x;
-					}
-				}
-				if (Move.x < 0.0f)
-				{
-					if (m_DevilPos.x - m_DevilSize.x > pos.x + m_GritSize)
-					{
-						pos.x = m_DevilSize.x + m_DevilPos.x + m_GritSize + Move.x;
-					}
-				}
-				if (Move.z > 0.0f)
-				{
-					if (m_DevilPos.z + m_DevilSize.z < pos.z - m_GritSize)
-					{
-						pos.z = -m_DevilSize.z + m_DevilPos.z - m_GritSize + Move.z;
-					}
-				}
-				if (Move.z < 0.0f)
-				{
-					if (m_DevilPos.z - m_DevilSize.z > pos.z + m_GritSize)
-					{
-						pos.z = m_DevilSize.z + m_DevilPos.z + m_GritSize + Move.z;
-					}
-				}
-
-				pBlock->SetPos(pos);
-			}
 
 			if (type == TYPE_CROSS)
 			{//種類が敵の時
@@ -684,15 +650,15 @@ void CDevil::ObjectScroll(D3DXVECTOR3 Move)
 
 				if (Move.x > 0.0f)
 				{
-					if (m_DevilPos.x + m_DevilSize.x < pos.x + m_GritSize)
+					if (pos.x + (m_GritSize * 0.5f) > m_DevilPos.x + m_DevilSize.x)
 					{
 						if (pPlayer->GetState() == CPlayer::STATE_EGG)
 						{
-							pos.x = -m_DevilSize.x + m_DevilPos.x + m_GritSize + Move.x;
+							pos.x = (m_DevilPos.x - m_DevilSize.x) - (m_GritSize * 2.0f) + Move.x;
 						}
 						else
 						{
-							pos.x = m_DevilPos.x + m_DevilSize.x - m_GritSize;
+							pos.x = m_DevilPos.x + m_DevilSize.x - (m_GritSize * 0.5f) + Move.x;
 							CollisionPressPlayer(pPlayer, pos, Size);
 						}
 
@@ -704,15 +670,15 @@ void CDevil::ObjectScroll(D3DXVECTOR3 Move)
 				}
 				if (Move.x < 0.0f)
 				{
-					if (m_DevilPos.x - m_DevilSize.x > pos.x - m_GritSize)
+					if (pos.x - (m_GritSize * 0.5f) < m_DevilPos.x - m_DevilSize.x)
 					{
 						if (pPlayer->GetState() == CPlayer::STATE_EGG)
 						{
-							pos.x = m_DevilSize.x + m_DevilPos.x - m_GritSize + Move.x;
+							pos.x = (m_DevilSize.x + m_DevilPos.x) + (m_GritSize * 2.0f) + Move.x;
 						}
 						else
 						{
-							pos.x = m_DevilPos.x - m_DevilSize.x + m_GritSize;
+							pos.x = m_DevilPos.x - m_DevilSize.x + (m_GritSize * 0.5f) + Move.x;
 							CollisionPressPlayer(pPlayer, pos, Size);
 						}
 
@@ -724,15 +690,15 @@ void CDevil::ObjectScroll(D3DXVECTOR3 Move)
 				}
 				if (Move.z > 0.0f)
 				{
-					if (m_DevilPos.z + m_DevilSize.z < pos.z + m_GritSize)
+					if (pos.z + (m_GritSize * 0.5f) > m_DevilPos.z + m_DevilSize.z)
 					{
 						if (pPlayer->GetState() == CPlayer::STATE_EGG)
 						{
-							pos.z = -m_DevilSize.z + m_DevilPos.z + m_GritSize + Move.z;
+							pos.z = (m_DevilPos.z - m_DevilSize.z) - (m_GritSize * 2.0f) + Move.z;
 						}
 						else
 						{
-							pos.z = m_DevilPos.z + m_DevilSize.z - m_GritSize;
+							pos.z = m_DevilPos.z + m_DevilSize.z - (m_GritSize * 0.5f) + Move.x;
 							CollisionPressPlayer(pPlayer, pos, Size);
 						}
 
@@ -744,15 +710,15 @@ void CDevil::ObjectScroll(D3DXVECTOR3 Move)
 				}
 				if (Move.z < 0.0f)
 				{
-					if (m_DevilPos.z - m_DevilSize.z > pos.z - m_GritSize)
+					if (pos.z - (m_GritSize * 0.5f) < m_DevilPos.z - m_DevilSize.z)
 					{
 						if (pPlayer->GetState() == CPlayer::STATE_EGG)
 						{
-							pos.z = m_DevilSize.z + m_DevilPos.z - m_GritSize + Move.z;
+							pos.z = (m_DevilPos.z + m_DevilSize.z) + (m_GritSize * 2.0f) + Move.z;
 						}
 						else
 						{
-							pos.z = m_DevilPos.z - m_DevilSize.z + m_GritSize;
+							pos.z = m_DevilPos.z - m_DevilSize.z + (m_GritSize * 0.5f) + Move.z;
 							CollisionPressPlayer(pPlayer, pos, Size);
 						}
 
@@ -771,6 +737,118 @@ void CDevil::ObjectScroll(D3DXVECTOR3 Move)
 }
 
 //====================================================================
+// グリットのスクロール
+//====================================================================
+void CDevil::GritScroll(D3DXVECTOR3 Move)
+{
+	D3DXVECTOR3 InitPos = CMapSystem::GetInstance()->GetInitPos();
+	D3DXVECTOR3 MapPos = CMapSystem::GetInstance()->GetMapPos();
+	int MapWightMax = CMapSystem::GetInstance()->GetWightMax();
+	int MapHeightMax = CMapSystem::GetInstance()->GetHeightMax();
+	float MapGrit = CMapSystem::GetInstance()->GetGritSize();
+	MapPos += Move;
+	m_MapDifference = -(InitPos - MapPos);
+
+	if ((InitPos.x - MapPos.x) > 0.0f)
+	{// 左範囲
+		MapPos.x = InitPos.x + (m_DevilSize.x * 2.0f) + MapGrit + Move.x;
+	}
+	if ((InitPos.x - MapPos.x + MapGrit) < (-m_DevilSize.x * 2.0f))
+	{// 右範囲
+		MapPos.x = InitPos.x + Move.x;
+	}
+
+	if ((InitPos.z - MapPos.z) < 0.0f)
+	{// 上範囲
+		MapPos.z = InitPos.z + (-m_DevilSize.z * 2.0f) - MapGrit + Move.z;
+	}
+	if ((InitPos.z - MapPos.z - MapGrit) > (m_DevilSize.z * 2.0f))
+	{// 下範囲
+		MapPos.z = InitPos.z + Move.z;
+	}
+
+	CMapSystem::GetInstance()->SetMapPos(MapPos);
+
+	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
+	{
+		//オブジェクトを取得
+		CObject* pObj = CObject::GetTop(nCntPriority);
+
+		while (pObj != nullptr)
+		{
+			CObject* pObjNext = pObj->GetNext();
+
+			CObject::TYPE type = pObj->GetType();			//種類を取得
+
+			if (type == TYPE_CUBEBLOCK)
+			{//種類がブロックの時
+
+				CCubeBlock* pBlock = (CCubeBlock*)pObj;	// ブロック情報の取得
+
+				// 縦横のナンバーと高さを設定する
+				D3DXVECTOR3 pos = D3DXVECTOR3(0.0f, 50.0f, 0.0f);
+				int BlockWight = pBlock->GetWightNumber();
+				int BlockHeight = pBlock->GetHeightNumber();
+
+				//ｘ座標のグリットに位置を設定する
+				pos.x = MapPos.x + (BlockWight * MapGrit);
+
+				// 自分の位置がマップ外だった場合に反対側からはみ出た分の位置を設定する
+				if (pos.x > m_DevilPos.x + (m_DevilSize.x))
+				{
+					pos.x = pos.x - (m_DevilPos.x + (m_DevilSize.x * 2.0f)) - MapGrit;
+				}
+
+				//ｚ座標のグリットに位置を設定する
+				pos.z = MapPos.z - (BlockHeight * MapGrit);
+
+				// 自分の位置がマップ外だった場合に反対側からはみ出た分の位置を設定する
+				if (pos.z < m_DevilPos.z - (m_DevilSize.z))
+				{
+					pos.z = pos.z + (m_DevilPos.z + (m_DevilSize.z * 2.0f)) + MapGrit;
+				}
+
+				pBlock->SetPos(pos);
+			}
+			pObj = pObjNext;
+		}
+	}
+
+#ifdef _DEBUG
+
+	//　グリットの位置にエフェクトを表示
+	for (int nCntW = 0; nCntW < MapWightMax; nCntW++)
+	{
+		for (int nCntH = 0; nCntH < MapHeightMax; nCntH++)
+		{
+			float fCountPosX = MapPos.x + (nCntW * MapGrit);
+
+			if (fCountPosX > m_DevilPos.x + (m_DevilSize.x))
+			{
+				fCountPosX = fCountPosX - (m_DevilPos.x + (m_DevilSize.x * 2.0f)) - MapGrit;
+			}
+
+			float fCountPosZ = MapPos.z - (nCntH * MapGrit);
+
+			if (fCountPosZ < m_DevilPos.z - (m_DevilSize.z))
+			{
+				fCountPosZ = fCountPosZ + (m_DevilPos.z + (m_DevilSize.z * 2.0f)) + MapGrit;
+			}
+
+			if (CMapSystem::GetInstance()->GetGritBool(nCntW, nCntH))
+			{// ブロックが存在するグリットのみエフェクトを表示
+
+				CEffect* pEffect = CEffect::Create();
+				pEffect->SetPos(D3DXVECTOR3(fCountPosX, 50.0f, fCountPosZ));
+				pEffect->SetLife(10);
+			}
+		}
+	}
+
+#endif // _DEBUG
+}
+
+//====================================================================
 // プレイヤーが潰される時の処理
 //====================================================================
 void CDevil::CollisionPressPlayer(CPlayer* pPlayer, D3DXVECTOR3 pos, D3DXVECTOR3 Size)
@@ -780,7 +858,7 @@ void CDevil::CollisionPressPlayer(CPlayer* pPlayer, D3DXVECTOR3 pos, D3DXVECTOR3
 		//オブジェクトを取得
 		CObject* pObj = CObject::GetTop(nCntPriority);
 
-		while (pObj != NULL)
+		while (pObj != nullptr)
 		{
 			CObject* pObjNext = pObj->GetNext();
 
@@ -817,7 +895,7 @@ void CDevil::LoadLevelData(const char* pFilename)
 	//ファイルを開く
 	pFile = fopen(pFilename, "r");
 
-	if (pFile != NULL)
+	if (pFile != nullptr)
 	{//ファイルが開けた場合
 
 		int ModelParent = 0;
@@ -892,7 +970,7 @@ void CDevil::LoadLevelData(const char* pFilename)
 
 								if (ModelParent == -1)
 								{
-									m_apModel[nCntModel]->SetParent(NULL);
+									m_apModel[nCntModel]->SetParent(nullptr);
 								}
 								else
 								{

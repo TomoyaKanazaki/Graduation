@@ -44,9 +44,9 @@ CShrinkingBillboard::~CShrinkingBillboard()
 //====================================================================
 CShrinkingBillboard* CShrinkingBillboard::Create(void)
 {
-	CShrinkingBillboard* pNumber = NULL;
+	CShrinkingBillboard* pNumber = nullptr;
 
-	if (pNumber == NULL)
+	if (pNumber == nullptr)
 	{
 		//オブジェクト2Dの生成
 		pNumber = new CShrinkingBillboard();
@@ -55,7 +55,7 @@ CShrinkingBillboard* CShrinkingBillboard::Create(void)
 	//オブジェクトの初期化処理
 	if (FAILED(pNumber->Init()))
 	{//初期化処理が失敗した場合
-		return NULL;
+		return nullptr;
 	}
 
 	return pNumber;

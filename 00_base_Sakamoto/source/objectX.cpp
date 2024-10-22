@@ -24,7 +24,7 @@ CObjectX::CObjectX(int nPriority) :CObject(nPriority)
 		m_IdxTextureNumber[nCnt] = -1;
 	}
 
-	m_pTexture = NULL;
+	m_pTexture = nullptr;
 	ZeroMemory(&m_pMesh, sizeof(m_pMesh));
 	ZeroMemory(&m_pBuffMat, sizeof(m_pBuffMat));
 	m_dwNumMat = 0;
@@ -52,9 +52,9 @@ CObjectX::~CObjectX()
 //====================================================================
 CObjectX *CObjectX::Create(char* pModelName)
 {
-	CObjectX *pObjectX = NULL;
+	CObjectX *pObjectX = nullptr;
 
-	if (pObjectX == NULL)
+	if (pObjectX == nullptr)
 	{
 		//オブジェクト3Dの生成
 		pObjectX = new CObjectX();
@@ -63,7 +63,7 @@ CObjectX *CObjectX::Create(char* pModelName)
 	//オブジェクトの初期化処理
 	if (FAILED(pObjectX->Init(pModelName)))
 	{//初期化処理が失敗した場合
-		return NULL;
+		return nullptr;
 	}
 
 	return pObjectX;
@@ -117,15 +117,15 @@ void CObjectX::Uninit(void)
 }
 
 //====================================================================
-//NULLにする処理
+//nullptrにする処理
 //====================================================================
 void CObjectX::SetNULL(void)
 {
-	if (m_pTexture != NULL)
+	if (m_pTexture != nullptr)
 	{
 		//メモリを開放する
 		delete[] m_pTexture;
-		m_pTexture = NULL;
+		m_pTexture = nullptr;
 	}
 }
 
@@ -211,7 +211,7 @@ void CObjectX::Draw(void)
 		}
 		else
 		{
-			m_pDevice->SetTexture(0, NULL);
+			m_pDevice->SetTexture(0, nullptr);
 		}
 
 		//モデル(パーツ)の描画
@@ -282,7 +282,7 @@ void CObjectX::Draw(float fAlpha)
 		}
 		else
 		{
-			m_pDevice->SetTexture(0, NULL);
+			m_pDevice->SetTexture(0, nullptr);
 		}
 
 		//モデル(パーツ)の描画
@@ -326,7 +326,7 @@ void CObjectX::BindFile(LPD3DXMESH pMesh, LPD3DXBUFFER pBuffMat, DWORD pdwNumMat
 	//CXModel::XModel *pXmodel =CManager::GetInstance()->GetXModel()->GetXModel(GetIdxXModel());
 
 	////テクスチャのメモリを確保
-	//if (m_pTexture == NULL)
+	//if (m_pTexture == nullptr)
 	//{
 	//	//メモリを確保する
 	//	m_pTexture = new LPDIRECT3DTEXTURE9[pXmodel->m_dwNumMat];
@@ -337,7 +337,7 @@ void CObjectX::BindFile(LPD3DXMESH pMesh, LPD3DXBUFFER pBuffMat, DWORD pdwNumMat
 
 	//for (int nCntMat = 0; nCntMat < (int)pXmodel->m_dwNumMat; nCntMat++)
 	//{
-	//	if (pMat[nCntMat].pTextureFilename != NULL)
+	//	if (pMat[nCntMat].pTextureFilename != nullptr)
 	//	{
 	//		//テクスチャの読み込み
 	//		D3DXCreateTextureFromFile(pDevice,
@@ -346,7 +346,7 @@ void CObjectX::BindFile(LPD3DXMESH pMesh, LPD3DXBUFFER pBuffMat, DWORD pdwNumMat
 	//	}
 	//	else
 	//	{
-	//		m_pTexture[nCntMat] = NULL;
+	//		m_pTexture[nCntMat] = nullptr;
 	//	}
 	//}
 }

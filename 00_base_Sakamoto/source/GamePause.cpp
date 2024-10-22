@@ -54,9 +54,9 @@ CGamePause::~CGamePause()
 //====================================================================
 CGamePause* CGamePause::Create()
 {
-	CGamePause* pPause = NULL;
+	CGamePause* pPause = nullptr;
 
-	if (pPause == NULL)
+	if (pPause == nullptr)
 	{
 		//敵の生成
 		pPause = new CGamePause();
@@ -65,7 +65,7 @@ CGamePause* CGamePause::Create()
 	//オブジェクトの初期化処理
 	if (FAILED(pPause->Init()))
 	{//初期化処理が失敗した場合
-		return NULL;
+		return nullptr;
 	}
 
 	return pPause;

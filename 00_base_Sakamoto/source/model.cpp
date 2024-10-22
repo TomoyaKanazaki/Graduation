@@ -13,8 +13,8 @@
 //====================================================================
 CModel::CModel()
 {
-	m_pMesh = NULL;								//メッシュ(頂点情報)へのポインタ
-	m_pBuffMat = NULL;							//マテリアルへのポインタ
+	m_pMesh = nullptr;								//メッシュ(頂点情報)へのポインタ
+	m_pBuffMat = nullptr;							//マテリアルへのポインタ
 	m_dwNumMat = 0;								//マテリアルの数
 	m_pTexture = nullptr;
 
@@ -23,7 +23,7 @@ CModel::CModel()
 	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		//位置
 	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		//向き
 	m_Scaling = D3DXVECTOR3(1.0f, 1.0f, 1.0f);	//拡大率
-	m_pParent = NULL;							//親モデルへのポインタ
+	m_pParent = nullptr;							//親モデルへのポインタ
 
 	m_Color = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 	m_ColorType = COLORTYPE_FALSE;
@@ -43,9 +43,9 @@ CModel::~CModel()
 //====================================================================
 CModel *CModel::Create(const char *pModelName)
 {
-	CModel *pModel = NULL;
+	CModel *pModel = nullptr;
 
-	if (pModel == NULL)
+	if (pModel == nullptr)
 	{
 		//モデルの生成
 		pModel = new CModel();
@@ -54,7 +54,7 @@ CModel *CModel::Create(const char *pModelName)
 	//オブジェクトの初期化処理
 	if (FAILED(pModel->Init(pModelName)))
 	{//初期化処理が失敗した場合
-		return NULL;
+		return nullptr;
 	}
 
 	return pModel;
@@ -72,9 +72,9 @@ HRESULT CModel::Init(const char *pModelName)
 	D3DXLoadMeshFromX(pModelName,
 		D3DXMESH_SYSTEMMEM,
 		m_pDevice,
-		NULL,
+		nullptr,
 		&m_pBuffMat,
-		NULL,
+		nullptr,
 		&m_dwNumMat,
 		&m_pMesh);
 
@@ -83,7 +83,7 @@ HRESULT CModel::Init(const char *pModelName)
 	D3DXMATERIAL *pMat;	//マテリアルへのポインタ
 
 	//テクスチャのメモリを確保
-	if (m_pTexture == NULL)
+	if (m_pTexture == nullptr)
 	{
 		//メモリを確保する
 		m_pTexture = new LPDIRECT3DTEXTURE9[m_dwNumMat];
@@ -94,7 +94,7 @@ HRESULT CModel::Init(const char *pModelName)
 
 	for (int nCntMat = 0; nCntMat < (int)m_dwNumMat; nCntMat++)
 	{
-		if (pMat[nCntMat].pTextureFilename != NULL)
+		if (pMat[nCntMat].pTextureFilename != nullptr)
 		{
 			//テクスチャの読み込み
 			D3DXCreateTextureFromFile(m_pDevice,
@@ -103,7 +103,7 @@ HRESULT CModel::Init(const char *pModelName)
 		}
 		else
 		{
-			m_pTexture[nCntMat] = NULL;
+			m_pTexture[nCntMat] = nullptr;
 		}
 	}
 
@@ -121,33 +121,33 @@ HRESULT CModel::Init(const char *pModelName)
 void CModel::Uninit(void)
 {
 	//バッファの破棄
-	if (m_pBuffMat != NULL)
+	if (m_pBuffMat != nullptr)
 	{
 		m_pBuffMat->Release();
-		m_pBuffMat = NULL;
+		m_pBuffMat = nullptr;
 	}
 
 	//メッシュの破棄
-	if (m_pMesh != NULL)
+	if (m_pMesh != nullptr)
 	{
 		m_pMesh->Release();
-		m_pMesh = NULL;
+		m_pMesh = nullptr;
 	}
 
 	for (int nCntMat = 0; nCntMat < (int)m_dwNumMat; nCntMat++)
 	{
-		if (m_pTexture[nCntMat] != NULL)
+		if (m_pTexture[nCntMat] != nullptr)
 		{
 			m_pTexture[nCntMat]->Release();
 		}
 	}
 
 	//テクスチャの破棄
-	if (m_pTexture != NULL)
+	if (m_pTexture != nullptr)
 	{
 		//メモリを確保する
 		delete[] m_pTexture;
-		m_pTexture = NULL;
+		m_pTexture = nullptr;
 	}
 }
 
@@ -187,7 +187,7 @@ void CModel::Draw(void)
 
 	D3DXMATRIX mtxParent;
 
-	if (m_pParent != NULL)
+	if (m_pParent != nullptr)
 	{//親が存在する
 		mtxParent = m_pParent->GetMtxWorld();
 	}

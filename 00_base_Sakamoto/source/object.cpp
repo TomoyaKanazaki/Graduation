@@ -31,7 +31,7 @@ bool CObject::m_bLevelStop = false;			//オブジェクト総数
 //====================================================================
 CObject::CObject(int nPriority)
 {
-	if (m_pTop[nPriority] == NULL)
+	if (m_pTop[nPriority] == nullptr)
 	{//他のオブジェクトがひとつもない時
 		m_pTop[nPriority] = this;
 		m_pPrev = nullptr;
@@ -69,7 +69,7 @@ void CObject::ReleaseAll(void)
 	{
 		CObject *pObject = m_pTop[nCntPriority];	//先頭オブジェクトを代入
 
-		while (pObject != NULL)
+		while (pObject != nullptr)
 		{
 			CObject *pObjectNext = pObject->m_pNext;	//次のオブジェクトを保存
 
@@ -87,7 +87,7 @@ void CObject::ReleaseAll(void)
 	{
 		CObject *pObject = m_pTop[nCntPriority];	//先頭オブジェクトを代入
 
-		while (pObject != NULL)
+		while (pObject != nullptr)
 		{
 			CObject *pObjectNext = pObject->m_pNext;	//次のオブジェクトを保存
 
@@ -108,7 +108,7 @@ void CObject::UpdateAll(void)
 	{
 		CObject *pObject = m_pTop[nCntPriority];	//先頭オブジェクトを代入
 
-		while (pObject != NULL)
+		while (pObject != nullptr)
 		{
 			CObject *pObjectNext = pObject->m_pNext;	//次のオブジェクトを保存
 
@@ -146,7 +146,7 @@ void CObject::UpdateAll(void)
 	{
 		CObject *pObject = m_pTop[nCntPriority];	//先頭オブジェクトを代入
 
-		while (pObject != NULL)
+		while (pObject != nullptr)
 		{
 			CObject *pObjectNext = pObject->m_pNext;	//次のオブジェクトを保存
 
@@ -180,7 +180,7 @@ void CObject::DrawAll(int nCnt)
 		{
 			CObject* pObject = m_pTop[nCntPriority];	//先頭オブジェクトを代入
 
-			while (pObject != NULL)
+			while (pObject != nullptr)
 			{
 				CObject* pObjectNext = pObject->m_pNext;	//次のオブジェクトを保存
 
@@ -201,7 +201,7 @@ void CObject::DrawAll(int nCnt)
 		{
 			CObject* pObject = m_pTop[nCntPriority];	//先頭オブジェクトを代入
 
-			while (pObject != NULL)
+			while (pObject != nullptr)
 			{
 				CObject* pObjectNext = pObject->m_pNext;	//次のオブジェクトを保存
 
@@ -255,7 +255,7 @@ void CObject::MultiTargetDraw(void)
 	CManager::GetInstance()->GetRenderer()->ChageTarget(pCamera->GetPosV(), pCamera->GetPosR(), pCamera->GetVecU());
 
 	//レンダリングターゲット用のテクスチャのクリア
-	m_pDevice->Clear(0, NULL,
+	m_pDevice->Clear(0, nullptr,
 		(D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER),
 		D3DCOLOR_RGBA(0, 0, 0, 0), 1.0f, 0);
 
@@ -265,7 +265,7 @@ void CObject::MultiTargetDraw(void)
 	{
 		CObject* pObject = m_pTop[nCntPriority];	//先頭オブジェクトを代入
 
-		while (pObject != NULL)
+		while (pObject != nullptr)
 		{
 			CObject* pObjectNext = pObject->m_pNext;	//次のオブジェクトを保存
 
@@ -308,17 +308,17 @@ void CObject::Release(void)
 	{
 		if (m_pTop[m_Priority] == m_pCur[m_Priority])
 		{//オブジェクトが１個しかない時
-			m_pTop[m_Priority] = NULL;
-			m_pCur[m_Priority] = NULL;
+			m_pTop[m_Priority] = nullptr;
+			m_pCur[m_Priority] = nullptr;
 		}
 		else if (this == m_pCur[m_Priority])
 		{//自分が最後尾の時
-			m_pPrev->m_pNext = NULL;
+			m_pPrev->m_pNext = nullptr;
 			m_pCur[m_Priority] = m_pPrev;
 		}
 		else if (this == m_pTop[m_Priority])
 		{//自分が先頭の時
-			m_pNext->m_pPrev = NULL;
+			m_pNext->m_pPrev = nullptr;
 			m_pTop[m_Priority] = m_pNext;
 		}
 		else
@@ -348,7 +348,7 @@ void CObject::DebugKey()
 		{
 			CObject* pObject = m_pTop[nCntPriority];	//先頭オブジェクトを代入
 
-			while (pObject != NULL)
+			while (pObject != nullptr)
 			{
 				CObject* pObjectNext = pObject->m_pNext;	//次のオブジェクトを保存
 
@@ -378,7 +378,7 @@ void CObject::ResetObjectMap(void)
 	{
 		CObject *pObject = m_pTop[nCntPriority];	//先頭オブジェクトを代入
 
-		while (pObject != NULL)
+		while (pObject != nullptr)
 		{
 			CObject *pObjectNext = pObject->m_pNext;	//次のオブジェクトを保存
 
@@ -401,7 +401,7 @@ void CObject::ResetObjectMap(void)
 	{
 		CObject *pObject = m_pTop[nCntPriority];	//先頭オブジェクトを代入
 
-		while (pObject != NULL)
+		while (pObject != nullptr)
 		{
 			CObject *pObjectNext = pObject->m_pNext;	//次のオブジェクトを保存
 
@@ -422,7 +422,7 @@ void CObject::ReleaseEnemy(void)
 	{
 		CObject *pObject = m_pTop[nCntPriority];	//先頭オブジェクトを代入
 
-		while (pObject != NULL)
+		while (pObject != nullptr)
 		{
 			CObject *pObjectNext = pObject->m_pNext;	//次のオブジェクトを保存
 
@@ -443,7 +443,7 @@ void CObject::ReleaseEnemy(void)
 	{
 		CObject *pObject = m_pTop[nCntPriority];	//先頭オブジェクトを代入
 
-		while (pObject != NULL)
+		while (pObject != nullptr)
 		{
 			CObject *pObjectNext = pObject->m_pNext;	//次のオブジェクトを保存
 
@@ -465,7 +465,7 @@ void CObject::DeleteBlock(void)
 	{
 		CObject *pObject = m_pTop[nCntPriority];	//先頭オブジェクトを代入
 
-		while (pObject != NULL)
+		while (pObject != nullptr)
 		{
 			CObject *pObjectNext = pObject->m_pNext;	//次のオブジェクトを保存
 
@@ -486,7 +486,7 @@ void CObject::DeleteBlock(void)
 	{
 		CObject *pObject = m_pTop[nCntPriority];	//先頭オブジェクトを代入
 
-		while (pObject != NULL)
+		while (pObject != nullptr)
 		{
 			CObject *pObjectNext = pObject->m_pNext;	//次のオブジェクトを保存
 

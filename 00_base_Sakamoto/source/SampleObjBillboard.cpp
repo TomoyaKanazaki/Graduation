@@ -40,9 +40,9 @@ CSampleObjBillboard::~CSampleObjBillboard()
 //====================================================================
 CSampleObjBillboard* CSampleObjBillboard::Create(void)
 {
-	CSampleObjBillboard* pSample3D = NULL;
+	CSampleObjBillboard* pSample3D = nullptr;
 
-	if (pSample3D == NULL)
+	if (pSample3D == nullptr)
 	{
 		//オブジェクト2Dの生成
 		pSample3D = new CSampleObjBillboard();
@@ -51,7 +51,7 @@ CSampleObjBillboard* CSampleObjBillboard::Create(void)
 	//オブジェクトの初期化処理
 	if (FAILED(pSample3D->Init()))
 	{//初期化処理が失敗した場合
-		return NULL;
+		return nullptr;
 	}
 
 	return pSample3D;

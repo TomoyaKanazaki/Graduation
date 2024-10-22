@@ -17,7 +17,7 @@ namespace
 }
 
 //静的メンバ変数宣言
-LPDIRECTINPUT8 CInput::m_pInput = NULL;
+LPDIRECTINPUT8 CInput::m_pInput = nullptr;
 
 //入力全体---------------------------------------------------------------------------------------
 //====================================================================
@@ -41,7 +41,7 @@ CInput::~CInput()
 //====================================================================
 HRESULT CInput::Init(HINSTANCE hInstance, HWND hWnd)
 {
-	if (m_pInput == NULL)
+	if (m_pInput == nullptr)
 	{
 		if (FAILED(DirectInput8Create
 		(
@@ -49,7 +49,7 @@ HRESULT CInput::Init(HINSTANCE hInstance, HWND hWnd)
 			DIRECTINPUT_VERSION,
 			IID_IDirectInput8,
 			(void**)&m_pInput,
-			NULL
+			nullptr
 		)))
 		{
 			return E_FAIL;
@@ -65,18 +65,18 @@ HRESULT CInput::Init(HINSTANCE hInstance, HWND hWnd)
 void CInput::Uninit(void)
 {
 	//入力デバイスの破棄
-	if (m_pDevice != NULL)
+	if (m_pDevice != nullptr)
 	{
 		m_pDevice->Unacquire();
 		m_pDevice->Release();
-		m_pDevice = NULL;
+		m_pDevice = nullptr;
 	}
 
 	//DirectInputオブジェクトの破棄
-	if (m_pInput != NULL)
+	if (m_pInput != nullptr)
 	{
 		m_pInput->Release();
-		m_pInput = NULL;
+		m_pInput = nullptr;
 	}
 }
 
@@ -110,7 +110,7 @@ HRESULT CInputKeyboard::Init(HINSTANCE hInstance, HWND hWnd)
 	CInput::Init(hInstance, hWnd);
 
 	//入力デバイスの設定
-	if (FAILED(m_pInput->CreateDevice(GUID_SysKeyboard, &m_pDevice, NULL)))
+	if (FAILED(m_pInput->CreateDevice(GUID_SysKeyboard, &m_pDevice, nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -659,7 +659,7 @@ HRESULT CInputMouse::Init(HINSTANCE hInstance, HWND hWnd)
 	CInput::Init(hInstance, hWnd);
 
 	//入力デバイスの設定
-	if (FAILED(m_pInput->CreateDevice(GUID_SysMouse, &m_pDevMouse, NULL)))
+	if (FAILED(m_pInput->CreateDevice(GUID_SysMouse, &m_pDevMouse, nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -714,11 +714,11 @@ HRESULT CInputMouse::Init(HINSTANCE hInstance, HWND hWnd)
 void CInputMouse::Uninit(void)
 {
 	//入力デバイス(マウス)の破棄
-	if (m_pDevMouse != NULL)
+	if (m_pDevMouse != nullptr)
 	{
 		m_pDevMouse->Unacquire();
 		m_pDevMouse->Release();
-		m_pDevMouse = NULL;
+		m_pDevMouse = nullptr;
 	}
 
 	CInput::Uninit();

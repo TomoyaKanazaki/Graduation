@@ -59,9 +59,9 @@ CMapModel::~CMapModel()
 //====================================================================
 CMapModel* CMapModel::Create(char* pModelName)
 {
-	CMapModel* pSample = NULL;
+	CMapModel* pSample = nullptr;
 
-	if (pSample == NULL)
+	if (pSample == nullptr)
 	{
 		//オブジェクト2Dの生成
 		pSample = new CMapModel();
@@ -70,7 +70,7 @@ CMapModel* CMapModel::Create(char* pModelName)
 	//オブジェクトの初期化処理
 	if (FAILED(pSample->Init(pModelName)))
 	{//初期化処理が失敗した場合
-		return NULL;
+		return nullptr;
 	}
 
 	return pSample;

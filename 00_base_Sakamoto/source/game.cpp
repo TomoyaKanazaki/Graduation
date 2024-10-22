@@ -111,7 +111,7 @@ CGame::CGame()
 	m_nEventNumber = 0;
 	m_nNumBowabowa = 0;
 	CManager::GetInstance()->GetCamera()->SetBib(false);
-	CManager::GetInstance()->GetCamera()->SetCameraMode(CCamera::CAMERAMODE_CONTROL);
+	CManager::GetInstance()->GetCamera()->SetCameraMode(CCamera::CAMERAMODE_DOWNVIEW);
 }
 
 //====================================================================
@@ -132,8 +132,6 @@ HRESULT CGame::Init(void)
 
 	//クリアフラグのデフォルトをオンにしておく
 	m_bGameClear = true;
-
-	CMapSystem::GetInstance()->Init();
 
 	//タイムの起動
 	CGame::GetTime()->SetStopTime(false);
@@ -217,8 +215,6 @@ void CGame::Uninit(void)
 	CObject::ReleaseAll();
 
 	m_pBoss = nullptr;
-
-	CMapSystem::GetInstance()->Uninit();
 
 #if _DEBUG
 	if (m_pEdit != nullptr)

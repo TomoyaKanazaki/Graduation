@@ -25,8 +25,8 @@ namespace
 //====================================================================
 CSkinmesh::CSkinmesh(int nPriority) :CObject(nPriority)
 {
-	m_pTexture = NULL;
-	m_pVtxBuff = NULL;
+	m_pTexture = nullptr;
+	m_pVtxBuff = nullptr;
 	m_Width = 50.0f;
 	m_Height = 150.0f;
 	m_pos = D3DXVECTOR3(0.0f, 100.0f, 0.0f);
@@ -48,9 +48,9 @@ CSkinmesh::~CSkinmesh()
 //====================================================================
 CSkinmesh* CSkinmesh::Create(void)
 {
-	CSkinmesh* pObject3D = NULL;
+	CSkinmesh* pObject3D = nullptr;
 
-	if (pObject3D == NULL)
+	if (pObject3D == nullptr)
 	{
 		//オブジェクト3Dの生成
 		pObject3D = new CSkinmesh();
@@ -59,7 +59,7 @@ CSkinmesh* CSkinmesh::Create(void)
 	//オブジェクトの初期化処理
 	if (FAILED(pObject3D->Init()))
 	{//初期化処理が失敗した場合
-		return NULL;
+		return nullptr;
 	}
 
 	return pObject3D;
@@ -82,7 +82,7 @@ HRESULT CSkinmesh::Init(void)
 		FVF_VERTEX_3D,
 		D3DPOOL_MANAGED,
 		&m_pVtxBuff,
-		NULL)))
+		nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -190,10 +190,10 @@ void CSkinmesh::Uninit(void)
 void CSkinmesh::SetNULL(void)
 {
 	//頂点バッファの破棄
-	if (m_pVtxBuff != NULL)
+	if (m_pVtxBuff != nullptr)
 	{
 		m_pVtxBuff->Release();
-		m_pVtxBuff = NULL;
+		m_pVtxBuff = nullptr;
 	}
 }
 
@@ -424,7 +424,7 @@ void CSkinmesh::LoadData(const char* pFilename)
 	//ファイルを開く
 	pFile = fopen(pFilename, "r");
 
-	if (pFile != NULL)
+	if (pFile != nullptr)
 	{//ファイルが開けた場合
 
 		int nCntBone = 0;
