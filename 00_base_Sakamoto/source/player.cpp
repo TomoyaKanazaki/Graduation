@@ -90,9 +90,9 @@ CPlayer::~CPlayer()
 //====================================================================
 CPlayer* CPlayer::Create()
 {
-	CPlayer* pPlayer = NULL;
+	CPlayer* pPlayer = nullptr;
 
-	if (pPlayer == NULL)
+	if (pPlayer == nullptr)
 	{
 		//プレイヤーの生成
 		pPlayer = new CPlayer();
@@ -101,7 +101,7 @@ CPlayer* CPlayer::Create()
 	//オブジェクトの初期化処理
 	if (FAILED(pPlayer->Init()))
 	{//初期化処理が失敗した場合
-		return NULL;
+		return nullptr;
 	}
 
 	return pPlayer;
@@ -129,7 +129,7 @@ HRESULT CPlayer::Init(void)
 	SetPartsDisp(0, false);
 
 	//モーションの生成
-	if (m_pMotion == NULL)
+	if (m_pMotion == nullptr)
 	{
 		//モーションの生成
 		m_pMotion = new CMotion;
@@ -185,15 +185,15 @@ void CPlayer::Uninit(void)
 	{
 		m_apModel[nCntModel]->Uninit();
 		delete m_apModel[nCntModel];
-		m_apModel[nCntModel] = NULL;
+		m_apModel[nCntModel] = nullptr;
 	}
 
 	//モーションの終了処理
-	if (m_pMotion != NULL)
+	if (m_pMotion != nullptr)
 	{
 		//モーションの破棄
 		delete m_pMotion;
-		m_pMotion = NULL;
+		m_pMotion = nullptr;
 	}
 
 	SetDeathFlag(true);
@@ -549,7 +549,7 @@ void CPlayer::CollisionWall(useful::COLLISION XYZ)
 		//オブジェクトを取得
 		CObject* pObj = CObject::GetTop(nCntPriority);
 
-		while (pObj != NULL)
+		while (pObj != nullptr)
 		{
 			CObject* pObjNext = pObj->GetNext();
 
@@ -610,8 +610,31 @@ void CPlayer::SearchWall(void)
 	OKD = !pMapSystem->GetGritBool(m_nMapWight, nDNumber);
 
 	//自分の立っているグリットの中心位置を求める
-	D3DXVECTOR3 MyGritPos = D3DXVECTOR3(MapSystemPos.x + m_nMapWight * 100.0f, 50.0f, MapSystemPos.z - m_nMapHeight * 100.0f);
+	D3DXVECTOR3 MyGritPos = INITVECTOR3;
 	float MapGritSize = pMapSystem->GetGritSize();
+
+	D3DXVECTOR3 DevilPos = CGame::GetDevil()->GetDevilPos();
+	D3DXVECTOR3 DevilSize = CGame::GetDevil()->GetDevilSize();
+
+	//ｘ座標のグリットに位置を設定する
+	MyGritPos.x = MapSystemPos.x + (m_nMapWight * MapGritSize);
+
+	// 自分の位置がマップ外だった場合に反対側からはみ出た分の位置を設定する
+	if (MyGritPos.x > DevilPos.x + (DevilSize.x))
+	{
+		MyGritPos.x = MyGritPos.x - (DevilPos.x + (DevilSize.x * 2.0f)) - MapGritSize;
+	}
+
+	//ｚ座標のグリットに位置を設定する
+	MyGritPos.z = MapSystemPos.z - (m_nMapHeight * MapGritSize);
+
+	// 自分の位置がマップ外だった場合に反対側からはみ出た分の位置を設定する
+	if (MyGritPos.z < DevilPos.z - (DevilSize.z))
+	{
+		MyGritPos.z = MyGritPos.z + (DevilPos.z + (DevilSize.z * 2.0f)) + MapGritSize;
+	}
+
+	DebugProc::Print(DebugProc::POINT_LEFT, "ああああ %f %f %f\n", MyGritPos.x, MyGritPos.y, MyGritPos.z);
 
 	if (m_pos.x <= MyGritPos.x + ((MapGritSize * 0.5f) - m_size.x) &&
 		m_pos.x >= MyGritPos.x - ((MapGritSize * 0.5f) - m_size.x) &&
@@ -636,7 +659,7 @@ void CPlayer::SearchWall(void)
 	//	//オブジェクトを取得
 	//	CObject* pObj = CObject::GetTop(nCntPriority);
 
-	//	while (pObj != NULL)
+	//	while (pObj != nullptr)
 	//	{
 	//		CObject* pObjNext = pObj->GetNext();
 
@@ -768,7 +791,7 @@ void CPlayer::CollisionDevilHole(useful::COLLISION XYZ)
 		//オブジェクトを取得
 		CObject* pObj = CObject::GetTop(nCntPriority);
 
-		while (pObj != NULL)
+		while (pObj != nullptr)
 		{
 			CObject* pObjNext = pObj->GetNext();
 
@@ -1111,7 +1134,7 @@ bool CPlayer::SortObject(D3DXVECTOR3 pos)
 		//オブジェクトを取得
 		CObject* pObj = CObject::GetTop(nCntPriority);
 
-		while (pObj != NULL)
+		while (pObj != nullptr)
 		{
 			CObject* pObjNext = pObj->GetNext();
 
@@ -1192,7 +1215,7 @@ void CPlayer::LoadLevelData(const char* pFilename)
 	//ファイルを開く
 	pFile = fopen(pFilename, "r");
 
-	if (pFile != NULL)
+	if (pFile != nullptr)
 	{//ファイルが開けた場合
 
 		int ModelParent = 0;
@@ -1267,7 +1290,7 @@ void CPlayer::LoadLevelData(const char* pFilename)
 
 								if (ModelParent == -1)
 								{
-									m_apModel[nCntModel]->SetParent(NULL);
+									m_apModel[nCntModel]->SetParent(nullptr);
 								}
 								else
 								{

@@ -86,6 +86,8 @@ public:
 	D3DXVECTOR3 GetDevilPos(void) { return m_DevilPos; }
 	void SetDevilSize(D3DXVECTOR3 size) { m_DevilSize = size; }
 	D3DXVECTOR3 GetDevilSize(void) { return m_DevilSize; }
+	void SetDifference(D3DXVECTOR3 size) { m_MapDifference = size; }
+	D3DXVECTOR3 GetDifference(void) { return m_MapDifference; }
 	void SetModelDisp(bool Sst);
 
 private:
@@ -103,25 +105,26 @@ private:
 	void LoadLevelData(const char* pFilename);
 
 	ACTION_TYPE m_Action;
-	ACTION_TYPE m_AtkAction;	//攻撃状態記録用変数
-	D3DXVECTOR3 m_pos;			//位置
-	D3DXVECTOR3 m_posOld;		//過去の位置
-	D3DXVECTOR3 m_move;			//移動量
-	D3DXVECTOR3 m_Objmove;		//オブジェクトから影響される移動量
-	D3DXVECTOR3 m_rot;			//向き
-	D3DXVECTOR3 m_rotDest;		//向きの目的地
-	D3DXVECTOR3 m_AutoMoveRot;	//自動移動の移動方向
-	D3DXVECTOR3 m_size;			//大きさ
-	D3DXVECTOR3 m_DevilPos;		//デビルパワーがマップのブロックにデビルスクロールする位置、テスト用
-	D3DXVECTOR3 m_DevilSize;	//デビルパワーが及ぶ範囲、通称デビルサイズ、テスト用
-	D3DXMATRIX m_mtxWorld;		//ワールドマトリックス
-	int m_nActionCount;			//行動のカウント
-	STATE m_State;				//状態
-	int m_nStateCount;			//状態管理用カウント
+	ACTION_TYPE m_AtkAction;		//攻撃状態記録用変数
+	D3DXVECTOR3 m_pos;				//位置
+	D3DXVECTOR3 m_posOld;			//過去の位置
+	D3DXVECTOR3 m_move;				//移動量
+	D3DXVECTOR3 m_Objmove;			//オブジェクトから影響される移動量
+	D3DXVECTOR3 m_rot;				//向き
+	D3DXVECTOR3 m_rotDest;			//向きの目的地
+	D3DXVECTOR3 m_AutoMoveRot;		//自動移動の移動方向
+	D3DXVECTOR3 m_size;				//大きさ
+	D3DXVECTOR3 m_DevilPos;			//デビルパワーがマップのブロックにデビルスクロールする位置、テスト用
+	D3DXVECTOR3 m_DevilSize;		//デビルパワーが及ぶ範囲、通称デビルサイズ、テスト用
+	D3DXVECTOR3 m_MapDifference;	//マップを動かした時の差分
+	D3DXMATRIX m_mtxWorld;			//ワールドマトリックス
+	int m_nActionCount;				//行動のカウント
+	STATE m_State;					//状態
+	int m_nStateCount;				//状態管理用カウント
 
-	float m_CollisionRot;		//当たり判定用の向き
+	float m_CollisionRot;			//当たり判定用の向き
 
-	CSlowManager* m_pSlow;		// スロー
+	CSlowManager* m_pSlow;			// スロー
 
 	//階層構造とモーションのポインタ
 	CModel* m_apModel[64];
