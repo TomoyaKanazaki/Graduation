@@ -1,25 +1,8 @@
-#------------------------------------------------------------------------------
-# キャラクター情報
-#------------------------------------------------------------------------------
-CHARACTERSET
-
-	CENTERSET
-		PARTS = 0		# 中心にするパーツ
-		OFFSET = 0.00 30.50 0.00		# オフセット位置
-	END_CENTERSET
-
-	VELOCITY = 0.50		# 移動量
-	JUMP = 0.00		# ジャンプ量
-	RADIUS = 60.00		# 半径
-	HEIGHT = 0.00		# 高さ
-	LIFE = 5		# 体力
-
 	PARTSSET
 		INDEX = 0
 		PARENT = -1
 		POS = 0.00 32.20 0.00
 		ROT = 0.00 0.00 0.00
-		START = 1
 	END_PARTSSET
 
 	PARTSSET
@@ -27,7 +10,6 @@ CHARACTERSET
 		PARENT = 0
 		POS = -0.10 -3.75 21.50
 		ROT = 0.00 0.00 0.00
-		START = 1
 	END_PARTSSET
 
 	PARTSSET
@@ -35,7 +17,6 @@ CHARACTERSET
 		PARENT = 0
 		POS = 0.10 -4.75 -18.00
 		ROT = 0.00 0.00 0.00
-		START = 1
 	END_PARTSSET
 
 	PARTSSET
@@ -43,7 +24,6 @@ CHARACTERSET
 		PARENT = 0
 		POS = -18.60 -12.75 -1.50
 		ROT = 0.00 0.00 0.00
-		START = 1
 	END_PARTSSET
 
 	PARTSSET
@@ -51,7 +31,6 @@ CHARACTERSET
 		PARENT = 0
 		POS = 19.60 -12.25 -1.50
 		ROT = 0.00 0.00 0.00
-		START = 1
 	END_PARTSSET
 
 	PARTSSET
@@ -59,7 +38,6 @@ CHARACTERSET
 		PARENT = 3
 		POS = 0.10 -6.25 -1.00
 		ROT = 0.00 0.00 0.00
-		START = 1
 	END_PARTSSET
 
 	PARTSSET
@@ -67,7 +45,6 @@ CHARACTERSET
 		PARENT = 4
 		POS = 0.10 -6.25 -1.00
 		ROT = 0.00 0.00 0.00
-		START = 1
 	END_PARTSSET
 
 	PARTSSET
@@ -75,7 +52,6 @@ CHARACTERSET
 		PARENT = 0
 		POS = -21.40 17.75 -8.50
 		ROT = 0.00 0.00 0.00
-		START = 1
 	END_PARTSSET
 
 	PARTSSET
@@ -83,6 +59,4 @@ CHARACTERSET
 		PARENT = 0
 		POS = 20.10 17.75 -8.50
 		ROT = 0.00 0.00 0.00
-		START = 1
 	END_PARTSSET
-END_CHARACTERSET
