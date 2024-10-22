@@ -145,7 +145,7 @@ HRESULT CGame::Init(void)
 	m_pMeshDomeUp = CObjmeshDome::Create();
 	m_pMeshDomeUp->SetTexture("data\\TEXTURE\\rain_clown.jpg");
 
-	m_pMeshField = CObjmeshField::Create(21, 21);
+	m_pMeshField = CObjmeshField::Create(16, 12);
 	m_pMeshField->SetPos(INITVECTOR3);
 
 	CBowabowa* pBowabowa = nullptr;
