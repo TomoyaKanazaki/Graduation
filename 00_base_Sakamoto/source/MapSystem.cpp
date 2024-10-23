@@ -6,6 +6,8 @@
 //========================================================================================
 #include "MapSystem.h"
 #include "renderer.h"
+#include "game.h"
+#include "Devil.h"
 
 // マクロ定義
 #define GRIT_SIZE (100.0f)
@@ -96,4 +98,38 @@ void CMapSystem::Update(void)
 void CMapSystem::Draw(void)
 {
 
+}
+
+//====================================================================
+// グリット位置の取得
+//====================================================================
+D3DXVECTOR3 CMapSystem::GetGritPos(int Wight, int Height)
+{
+	D3DXVECTOR3 Pos;
+
+	D3DXVECTOR3 DevilPos = CGame::GetDevil()->GetDevilPos();
+	D3DXVECTOR3 DevilSize = CGame::GetDevil()->GetDevilSize();
+
+	if (Wight < 0 || Wight >= m_WightMax ||
+		Height < 0 || Height >= m_HeightMax)
+	{
+		return Pos;
+	}
+
+	//　グリットの位置にエフェクトを表示
+	Pos.x = m_MapPos.x + (Wight * m_fGritSize);
+
+	if (Pos.x > DevilPos.x + (DevilSize.x))
+	{
+		Pos.x = Pos.x - (DevilPos.x + (DevilSize.x * 2.0f)) - m_fGritSize;
+	}
+
+	Pos.z = m_MapPos.z - (Height * m_fGritSize);
+
+	if (Pos.z < DevilPos.z - (DevilSize.z))
+	{
+		Pos.z = Pos.z + (DevilPos.z + (DevilSize.z * 2.0f)) + m_fGritSize;
+	}
+
+	return Pos;
 }

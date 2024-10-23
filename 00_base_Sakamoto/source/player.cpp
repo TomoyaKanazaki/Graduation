@@ -122,7 +122,7 @@ HRESULT CPlayer::Init(void)
 	SetType(CObject::TYPE_PLAYER3D);
 
 	//モデルの生成
-	LoadLevelData("data\\TXT\\motion_foot_light_spear.txt");
+	LoadLevelData("data\\TXT\\motion_tamagon.txt");
 
 	// プレイヤーの指定パーツ削除
 	SetPartsDisp(3, false);
@@ -137,7 +137,7 @@ HRESULT CPlayer::Init(void)
 
 	//初期化処理
 	m_pMotion->SetModel(&m_apModel[0], m_nNumModel);
-	m_pMotion->LoadData("data\\TXT\\motion_foot_light_spear.txt");
+	m_pMotion->LoadData("data\\TXT\\motion_tamagon.txt");
 
 	switch (CScene::GetMode())
 	{
