@@ -119,6 +119,9 @@ public:
 	void SetItemType(ITEM_TYPE eType) { m_eItemType = eType; }
 	ITEM_TYPE GetItemType() { return m_eItemType; }		// アイテムの種類取得
 
+	// 静的メンバ関数
+	static CListManager<CPlayer>* GetList(void); // リスト取得
+
 private:
 	void MyObjCreate(void);							//自分が保持するオブジェクトの生成
 	void ActionState(void);							//モーションと状態の管理
@@ -185,6 +188,12 @@ private:
 	char* m_aModelName[64];
 	int m_nNumModel;
 	CLifeUi* m_pLifeUi;
+
+	// 静的メンバ変数
+	static CListManager<CPlayer>* m_pList; // オブジェクトリスト
+
+	// メンバ変数
+	CListManager<CPlayer>::AIterator m_iterator; // イテレーター
 };
 
 #endif
