@@ -2,7 +2,7 @@
 //
 // デバッグ表示処理 [debugproc.cpp]
 // Author : Ibuki Okusada
-// Aded by Tomoya Kanazaki
+// Added by Tomoya Kanazaki
 //
 //==========================================================
 #include "debugproc.h"
