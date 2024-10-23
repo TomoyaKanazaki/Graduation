@@ -32,6 +32,8 @@ public:
 
 	// グリット位置の取得
 	D3DXVECTOR3 GetGritPos(int Wight, int Height);
+	int GetGritWightNumber(float PosX);
+	int GetGritHeightNumber(float PosZ);
 
 	void SetGritBool(int nWight, int nHeight, bool Set) { m_nMapGrit[nWight][nHeight] = Set; }
 	bool GetGritBool(int nWight, int nHeight) { return m_nMapGrit[nWight][nHeight]; }

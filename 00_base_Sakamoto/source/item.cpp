@@ -9,6 +9,7 @@
 #include "bowabowa.h"
 #include "player.h"
 #include "useful.h"
+#include "MapSystem.h"
 
 //====================================================================
 // コンストラクタ
@@ -101,6 +102,10 @@ void CItem::Uninit()
 //====================================================================
 void CItem::Update()
 {
+	m_pos = CMapSystem::GetInstance()->GetGritPos(m_nMapWight, m_nMapHeight);
+
+	CObjectX::SetPos(m_pos);
+
 	// 継承クラスの更新
 	CObjectX::Update();
 }

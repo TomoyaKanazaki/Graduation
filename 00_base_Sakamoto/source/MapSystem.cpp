@@ -101,7 +101,7 @@ void CMapSystem::Draw(void)
 }
 
 //====================================================================
-// グリット位置の取得
+// グリットの位置取得
 //====================================================================
 D3DXVECTOR3 CMapSystem::GetGritPos(int Wight, int Height)
 {
@@ -124,6 +124,8 @@ D3DXVECTOR3 CMapSystem::GetGritPos(int Wight, int Height)
 		Pos.x = Pos.x - (DevilPos.x + (DevilSize.x * 2.0f)) - m_fGritSize;
 	}
 
+	Pos.y = 0.0f;
+
 	Pos.z = m_MapPos.z - (Height * m_fGritSize);
 
 	if (Pos.z < DevilPos.z - (DevilSize.z))
@@ -132,4 +134,59 @@ D3DXVECTOR3 CMapSystem::GetGritPos(int Wight, int Height)
 	}
 
 	return Pos;
+}
+
+//====================================================================
+// グリットの横番号取得
+//====================================================================
+int CMapSystem::GetGritWightNumber(float PosX)
+{
+	CDevil* pDevil = CGame::GetDevil();
+	D3DXVECTOR3 DevilPos = pDevil->GetDevilPos();
+	D3DXVECTOR3 DevilSize = pDevil->GetDevilSize();
+
+	for (int nCntW = 0; nCntW < m_WightMax; nCntW++)
+	{
+		float fCountPosX = m_MapPos.x + (nCntW * m_fGritSize);
+
+		if (fCountPosX > DevilPos.x + (DevilSize.x))
+		{
+			fCountPosX = fCountPosX - (DevilPos.x + (DevilSize.x * 2.0f)) - m_fGritSize;
+		}
+
+		if (PosX < fCountPosX + (m_fGritSize * 0.5f) &&
+			PosX >= fCountPosX - (m_fGritSize * 0.5f))
+		{
+			return nCntW;
+		}
+	}
+
+	return -1;
+}
+
+//====================================================================
+// グリットの縦番号取得
+//====================================================================
+int CMapSystem::GetGritHeightNumber(float PosZ)
+{
+	CDevil* pDevil = CGame::GetDevil();
+	D3DXVECTOR3 DevilPos = pDevil->GetDevilPos();
+	D3DXVECTOR3 DevilSize = pDevil->GetDevilSize();
+
+	for (int nCntH = 0; nCntH < m_HeightMax; nCntH++)
+	{
+		float fCountPosZ = m_MapPos.z - (nCntH * m_fGritSize);
+
+		if (fCountPosZ < DevilPos.z - (DevilSize.z))
+		{
+			fCountPosZ = fCountPosZ + (DevilPos.z + (DevilSize.z * 2.0f)) + m_fGritSize;
+		}
+
+		if (PosZ < fCountPosZ + (m_fGritSize * 0.5f) &&
+			PosZ >= fCountPosZ - (m_fGritSize * 0.5f))
+		{
+			return nCntH;
+		}
+	}
+	return -1;
 }
