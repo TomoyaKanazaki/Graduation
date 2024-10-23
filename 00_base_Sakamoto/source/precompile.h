@@ -16,10 +16,13 @@
 #include <math.h>
 #include <stdio.h>
 #include <cmath>
+#include <list>
 
 #include <cstdlib>
 
+#include "useful.h"
 #include "debugproc.h"
+#include "listManager.h"
 
 //メモリリーク出力用マクロ
 #define _CRTDBG_MAP_ALLOC
