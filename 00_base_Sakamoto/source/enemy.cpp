@@ -441,21 +441,21 @@ void CEnemy::CollisionOut()
 				D3DXVECTOR3 Size = pDevil->GetDevilSize();
 
 				// ステージ外の当たり判定
-				if (Pos.x + Size.x < m_pos.x - m_size.x)
+				if (Pos.x + Size.x < m_pos.x)
 				{
-					m_pos.x = -Size.x + Pos.x - m_size.x;
+					m_pos.x = -Size.x + Pos.x;
 				}
-				if (Pos.x - Size.x > m_pos.x + m_size.x)
+				if (Pos.x - Size.x > m_pos.x)
 				{
-					m_pos.x = Size.x + Pos.x + m_size.x;
+					m_pos.x = Size.x + Pos.x;
 				}
-				if (Pos.z + Size.z < m_pos.z - m_size.z)
+				if (Pos.z + Size.z < m_pos.z)
 				{
-					m_pos.z = -Size.z + Pos.z - m_size.z;
+					m_pos.z = -Size.z + Pos.z;
 				}
-				if (Pos.z - Size.z > m_pos.z + m_size.z)
+				if (Pos.z - Size.z > m_pos.z)
 				{
-					m_pos.z = Size.z + Pos.z + m_size.z;
+					m_pos.z = Size.z + Pos.z;
 				}
 			}
 
@@ -604,8 +604,8 @@ void CEnemy::SearchWall(void)
 
 	nRNumber = useful::RangeNumber(nMapWightMax, 0, nRNumber);
 	nLNumber = useful::RangeNumber(nMapWightMax, 0, nLNumber);
-	nUNumber = useful::RangeNumber(nMapWightMax, 0, nUNumber);
-	nDNumber = useful::RangeNumber(nMapWightMax, 0, nDNumber);
+	nUNumber = useful::RangeNumber(nMapHeightMax, 0, nUNumber);
+	nDNumber = useful::RangeNumber(nMapHeightMax, 0, nDNumber);
 
 	OKR = !pMapSystem->GetGritBool(nRNumber, m_nMapHeight);
 	OKL = !pMapSystem->GetGritBool(nLNumber, m_nMapHeight);
@@ -613,29 +613,8 @@ void CEnemy::SearchWall(void)
 	OKD = !pMapSystem->GetGritBool(m_nMapWight, nDNumber);
 
 	//自分の立っているグリットの中心位置を求める
-	D3DXVECTOR3 MyGritPos = INITVECTOR3;
+	D3DXVECTOR3 MyGritPos = CMapSystem::GetInstance()->GetGritPos(m_nMapWight, m_nMapHeight);;
 	float MapGritSize = pMapSystem->GetGritSize();
-
-	D3DXVECTOR3 DevilPos = CGame::GetDevil()->GetDevilPos();
-	D3DXVECTOR3 DevilSize = CGame::GetDevil()->GetDevilSize();
-
-	//ｘ座標のグリットに位置を設定する
-	MyGritPos.x = MapSystemPos.x + (m_nMapWight * MapGritSize);
-
-	// 自分の位置がマップ外だった場合に反対側からはみ出た分の位置を設定する
-	if (MyGritPos.x > DevilPos.x + (DevilSize.x))
-	{
-		MyGritPos.x = MyGritPos.x - (DevilPos.x + (DevilSize.x * 2.0f)) - MapGritSize;
-	}
-
-	//ｚ座標のグリットに位置を設定する
-	MyGritPos.z = MapSystemPos.z - (m_nMapHeight * MapGritSize);
-
-	// 自分の位置がマップ外だった場合に反対側からはみ出た分の位置を設定する
-	if (MyGritPos.z < DevilPos.z - (DevilSize.z))
-	{
-		MyGritPos.z = MyGritPos.z + (DevilPos.z + (DevilSize.z * 2.0f)) + MapGritSize;
-	}
 
 	DebugProc::Print(DebugProc::POINT_LEFT, "ああああ %f %f %f\n", MyGritPos.x, MyGritPos.y, MyGritPos.z);
 
@@ -831,48 +810,8 @@ void CEnemy::SearchWall(void)
 //====================================================================
 void CEnemy::MapSystemNumber(void)
 {
-	CDevil* pDevil = CGame::GetDevil();
-	D3DXVECTOR3 DevilPos = pDevil->GetDevilPos();
-	D3DXVECTOR3 DevilSize = pDevil->GetDevilSize();
-	D3DXVECTOR3 MapSystemPos = CMapSystem::GetInstance()->GetMapPos();
-	int MapWightMax = CMapSystem::GetInstance()->GetWightMax();
-	int MapHeightMax = CMapSystem::GetInstance()->GetHeightMax();
-	float MapGritSize = CMapSystem::GetInstance()->GetGritSize();
-	D3DXVECTOR3 GritPos = INITVECTOR3;
-
-	for (int nCntW = 0; nCntW < MapWightMax; nCntW++)
-	{
-		float fCountPosX = MapSystemPos.x + (nCntW * MapGritSize);
-
-		if (fCountPosX > DevilPos.x + (DevilSize.x))
-		{
-			fCountPosX = fCountPosX - (DevilPos.x + (DevilSize.x * 2.0f)) - MapGritSize;
-		}
-
-		if (m_pos.x < fCountPosX + (MapGritSize * 0.5f) &&
-			m_pos.x >= fCountPosX - (MapGritSize * 0.5f))
-		{
-			m_nMapWight = nCntW;
-			break;
-		}
-	}
-
-	for (int nCntH = 0; nCntH < MapHeightMax; nCntH++)
-	{
-		float fCountPosZ = MapSystemPos.z - (nCntH * MapGritSize);
-
-		if (fCountPosZ < DevilPos.z - (DevilSize.z))
-		{
-			fCountPosZ = fCountPosZ + (DevilPos.z + (DevilSize.z * 2.0f)) + MapGritSize;
-		}
-
-		if (m_pos.z < fCountPosZ + (MapGritSize * 0.5f) &&
-			m_pos.z >= fCountPosZ - (MapGritSize * 0.5f))
-		{
-			m_nMapHeight = nCntH;
-			break;
-		}
-	}
+	m_nMapWight = CMapSystem::GetInstance()->GetGritWightNumber(m_pos.x);
+	m_nMapHeight = CMapSystem::GetInstance()->GetGritHeightNumber(m_pos.z);
 }
 
 //====================================================================

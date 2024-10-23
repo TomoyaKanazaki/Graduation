@@ -41,14 +41,10 @@ public:
 	//プレイヤーのモーション
 	enum ACTION_TYPE
 	{
-		ACTION_BWAIT = 0,		//戦闘待機
-		ACTION_SMOVE,			//探索移動
-		ACTION_BMOVE,			//戦闘移動
-		ACTION_SWAIT,			//探索待機
-		ACTION_ATTACK,			//攻撃
-		ACTION_BDEATH,			//戦闘中の死亡
-		ACTION_SDEATH,			//探索中の死亡
-		ACTION_DAMAGE,			//ダメージ
+		ACTION_WAIT = 0,		//待機
+		ACTION_MOVE,			//移動
+		ACTION_EGG,				//卵状態(未完成００
+		ACTION_DEATH,			//死亡状態(未完成０１
 		ACTION_MAX,				//最大
 	};
 
@@ -113,6 +109,10 @@ public:
 	void SetUseItem(bool bUse) { m_UseItem = bUse; }
 	bool GetbUseItem() { return m_UseItem; }
 
+	int GetWightNumber() { return m_nMapWight; }
+	int GetHeightNumber() { return m_nMapHeight; }
+	bool GetGritCenter() { return m_bGritCenter; }
+
 	void Death(void);
 	bool SortObject(D3DXVECTOR3 pos);					// オブジェクトとのソート処理
 
@@ -164,6 +164,7 @@ private:
 
 	int m_nMapWight;			//マップの横番号
 	int m_nMapHeight;			//マップの縦番号
+	bool m_bGritCenter;			//グリットの中心位置にいるかどうか
 
 	int m_nLife;				//ライフ
 	bool m_OKL;					//左への進行が許されるかどうか
