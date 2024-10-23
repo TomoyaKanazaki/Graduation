@@ -9,20 +9,22 @@ SCRIPT			# この行は絶対消さないこと！
 #------------------------------------------------------------------------------
 # モデル数
 #------------------------------------------------------------------------------
-NUM_MODEL = 9
+NUM_MODEL = 11
 
 #------------------------------------------------------------------------------
 # モデルファイル名
 #------------------------------------------------------------------------------
-MODEL_FILENAME = data/MODEL/00_tamagon/00_body.x	# [0]腰
-MODEL_FILENAME = data/MODEL/00_tamagon/01_tale.x	# [1]体
-MODEL_FILENAME = data/MODEL/00_tamagon/02_lower_jaw.x	# [2]頭
-MODEL_FILENAME = data/MODEL/00_tamagon/03_R_thighs.x	# [2]頭
-MODEL_FILENAME = data/MODEL/00_tamagon/04_L_thighs.x	# [2]頭
-MODEL_FILENAME = data/MODEL/00_tamagon/05_R_foot.x	# [2]頭
-MODEL_FILENAME = data/MODEL/00_tamagon/06_L_foot.x	# [2]頭
-MODEL_FILENAME = data/MODEL/00_tamagon/07_R_feather.x	# [2]頭
-MODEL_FILENAME = data/MODEL/00_tamagon/08_L_feather.x	# [2]頭
+MODEL_FILENAME = data/00_tamagon/00_body.x	# [0]腰
+MODEL_FILENAME = data/00_tamagon/01_tale.x	# [1]体
+MODEL_FILENAME = data/00_tamagon/02_lower_jaw.x	# [2]頭
+MODEL_FILENAME = data/00_tamagon/03_R_thighs.x	# [2]頭
+MODEL_FILENAME = data/00_tamagon/04_L_thighs.x	# [2]頭
+MODEL_FILENAME = data/00_tamagon/05_R_foot.x	# [2]頭
+MODEL_FILENAME = data/00_tamagon/06_L_foot.x	# [2]頭
+MODEL_FILENAME = data/00_tamagon/07_R_feather.x	# [2]頭
+MODEL_FILENAME = data/00_tamagon/08_L_feather.x	# [2]頭
+MODEL_FILENAME = data/00_tamagon/09_cross.x	# [2]頭
+MODEL_FILENAME = data/00_tamagon/10_book.x	# [2]頭
 
 #------------------------------------------------------------------------------
 # キャラクター情報
@@ -31,7 +33,7 @@ CHARACTERSET
 	MOVE = 3.0					# 移動量
 	JUMP = 10.25					# ジャンプ量
 	RADIUS = 20.0					# 半径
-	NUM_PARTS = 9					# パーツ数
+	NUM_PARTS = 11					# パーツ数
 
 	PARTSSET
 		INDEX = 0
@@ -43,28 +45,28 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 1
 		PARENT = 0
-		POS = -0.10 -3.75 21.50
+		POS = -0.10 -8.75 12.50
 		ROT = 0.00 0.00 0.00
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 2
 		PARENT = 0
-		POS = 0.10 -4.75 -18.00
+		POS = 0.10 -3.75 -18.00
 		ROT = 0.00 0.00 0.00
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 3
 		PARENT = 0
-		POS = -18.60 -12.75 -1.50
+		POS = -18.60 -12.75 -8.50
 		ROT = 0.00 0.00 0.00
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 4
 		PARENT = 0
-		POS = 19.60 -12.25 -1.50
+		POS = 19.60 -12.25 -8.50
 		ROT = 0.00 0.00 0.00
 	END_PARTSSET
 
@@ -85,14 +87,28 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 7
 		PARENT = 0
-		POS = -21.40 17.75 -8.50
+		POS = -21.40 17.75 -14.50
 		ROT = 0.00 0.00 0.00
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 8
 		PARENT = 0
-		POS = 20.10 17.75 -8.50
+		POS = 20.10 17.75 -14.50
+		ROT = 0.00 0.00 0.00
+	END_PARTSSET
+
+	PARTSSET
+		INDEX = 9
+		PARENT = 0
+		POS = -4.90 27.25 14.00
+		ROT = 0.00 0.00 0.00
+	END_PARTSSET
+
+	PARTSSET
+		INDEX = 10
+		PARENT = 0
+		POS = -8.90 35.75 7.00
 		ROT = 0.00 0.00 0.00
 	END_PARTSSET
 
@@ -111,33 +127,33 @@ MOTIONSET
 	KEYSET			# --- << KEY : 0 / 2 >> ---
 		FRAME = 50
 		KEY	# ----- [ 0 ] -----
-			POS = 0.00 -1.70 0.10
-			ROT = 0.00 0.00 0.00
+			POS = 0.00 0.00 0.00
+			ROT = 0.15 0.00 0.00
 		END_KEY
 
 		KEY	# ----- [ 1 ] -----
 			POS = 0.00 0.00 0.00
-			ROT = -0.19 0.00 0.00
+			ROT = 0.00 0.00 0.00
 		END_KEY
 
 		KEY	# ----- [ 2 ] -----
 			POS = 0.00 0.00 0.00
-			ROT = 0.16 0.00 0.00
+			ROT = 0.15 0.00 0.00
 		END_KEY
 
 		KEY	# ----- [ 3 ] -----
 			POS = 0.00 0.00 0.00
-			ROT = 0.00 0.00 0.00
+			ROT = -0.16 0.00 0.00
 		END_KEY
 
 		KEY	# ----- [ 4 ] -----
 			POS = 0.00 0.00 0.00
-			ROT = 0.00 0.00 0.75
+			ROT = -0.20 0.00 0.00
 		END_KEY
 
 		KEY	# ----- [ 5 ] -----
 			POS = 0.00 0.00 0.00
-			ROT = 0.00 -0.00 -1.16
+			ROT = 0.00 0.00 0.00
 		END_KEY
 
 		KEY	# ----- [ 6 ] -----
@@ -147,60 +163,80 @@ MOTIONSET
 
 		KEY	# ----- [ 7 ] -----
 			POS = 0.00 0.00 0.00
-			ROT = 0.00 0.00 0.09
+			ROT = 0.00 0.00 -0.62
 		END_KEY
 
 		KEY	# ----- [ 8 ] -----
 			POS = 0.00 0.00 0.00
-			ROT = 0.00 -1.45 0.00
+			ROT = 0.00 0.00 0.80
 		END_KEY
 
+		KEY	# ----- [ 9 ] -----
+			POS = 0.00 0.00 0.00
+			ROT = 0.00 0.00 0.00
+		END_KEY
+
+		KEY	# ----- [ 10 ] -----
+			POS = 0.00 0.00 0.00
+			ROT = 0.00 0.00 0.00
+		END_KEY
+	END_KEYSET
 
 	KEYSET			# --- << KEY : 1 / 2 >> ---
-		FRAME = 51
+		FRAME = 40
 		KEY	# ----- [ 0 ] -----
-			POS = 0.00 -1.70 0.10
-			ROT = 0.00 0.00 0.00
+			POS = 0.00 0.00 0.00
+			ROT = 0.03 0.00 0.00
 		END_KEY
 
 		KEY	# ----- [ 1 ] -----
 			POS = 0.00 0.00 0.00
-			ROT = -0.06 0.00 0.00
+			ROT = 0.00 0.00 0.00
 		END_KEY
 
 		KEY	# ----- [ 2 ] -----
 			POS = 0.00 0.00 0.00
-			ROT = 0.16 0.00 0.00
+			ROT = 0.18 0.00 0.00
 		END_KEY
 
 		KEY	# ----- [ 3 ] -----
 			POS = 0.00 0.00 0.00
-			ROT = -0.31 0.00 0.00
+			ROT = -0.05 0.00 0.00
 		END_KEY
 
 		KEY	# ----- [ 4 ] -----
 			POS = 0.00 0.00 0.00
-			ROT = 0.00 -0.03 1.04
+			ROT = -0.04 0.00 0.00
 		END_KEY
 
 		KEY	# ----- [ 5 ] -----
 			POS = 0.00 0.00 0.00
-			ROT = -0.09 -0.00 -1.01
+			ROT = 0.00 0.00 0.00
 		END_KEY
 
 		KEY	# ----- [ 6 ] -----
 			POS = 0.00 0.00 0.00
-			ROT = 0.00 -0.06 0.00
+			ROT = 0.00 0.00 0.00
 		END_KEY
 
 		KEY	# ----- [ 7 ] -----
 			POS = 0.00 0.00 0.00
-			ROT = 0.00 0.19 0.09
+			ROT = 0.00 0.00 -0.13
 		END_KEY
 
 		KEY	# ----- [ 8 ] -----
 			POS = 0.00 0.00 0.00
-			ROT = -0.44 -1.51 0.00
+			ROT = 0.00 0.00 0.14
+		END_KEY
+
+		KEY	# ----- [ 9 ] -----
+			POS = 0.00 0.00 0.00
+			ROT = 0.00 0.00 0.00
+		END_KEY
+
+		KEY	# ----- [ 10 ] -----
+			POS = 0.00 0.00 0.00
+			ROT = 0.00 0.00 0.00
 		END_KEY
 	END_KEYSET
 END_MOTIONSET

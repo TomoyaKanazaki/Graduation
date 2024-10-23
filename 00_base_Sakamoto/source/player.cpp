@@ -65,8 +65,8 @@ CPlayer::CPlayer(int nPriority) :CObject(nPriority)
 	m_AutoMoveRot = D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f);
 	m_bJump = false;
 	m_nActionCount = 0;
-	m_Action = ACTION_BWAIT;
-	m_AtkAction = ACTION_BWAIT;
+	m_Action = ACTION_WAIT;
+	m_AtkAction = ACTION_WAIT;
 	m_State = STATE_EGG;
 	m_nStateCount = 0;
 	m_AtkPos = INITVECTOR3;
@@ -84,6 +84,7 @@ CPlayer::CPlayer(int nPriority) :CObject(nPriority)
 	m_MoveState = MOVE_STATE_WAIT;
 	m_nMapWight = 0;
 	m_nMapHeight = 0;
+	m_bGritCenter = true;
 }
 
 //====================================================================
@@ -465,7 +466,7 @@ void CPlayer::Rot(void)
 
 	if (pInputKeyboard->GetPress(DIK_W) == true || pInputKeyboard->GetPress(DIK_A) == true || pInputKeyboard->GetPress(DIK_S) == true || pInputKeyboard->GetPress(DIK_D) == true)
 	{
-		m_rot.y = atan2f(m_move.z, -m_move.x);
+		m_rot.y = atan2f(-m_move.x, -m_move.z);
 	}
 
 	useful::NormalizeAngle(&m_rot);
@@ -493,38 +494,38 @@ void CPlayer::ActionState(void)
 	//移動モーション
 	if (m_State == STATE_DEATH)
 	{
-		if (m_Action != ACTION_SDEATH)
+		if (m_Action != ACTION_DEATH)
 		{
-			m_Action = ACTION_SDEATH;
-			m_pMotion->Set(ACTION_SDEATH, 5);
+			m_Action = ACTION_DEATH;
+			m_pMotion->Set(ACTION_DEATH, 5);
 		}
 	}
 
 	//移動モーション
 	if (m_move.x > 0.1f || m_move.x < -0.1f || m_move.z > 0.1f || m_move.z < -0.1f)
 	{
-		if (m_Action != ACTION_BMOVE)
+		if (m_Action != ACTION_MOVE)
 		{
-			m_Action = ACTION_BMOVE;
-			m_pMotion->Set(ACTION_BMOVE, 5);
+			m_Action = ACTION_MOVE;
+			m_pMotion->Set(ACTION_MOVE, 5);
 		}
 	}
 	//卵モーション
 	else if (m_State == STATE_EGG)
 	{
-		if (m_Action != ACTION_SWAIT)
+		if (m_Action != ACTION_EGG)
 		{
-			m_Action = ACTION_SWAIT;
-			m_pMotion->Set(ACTION_SWAIT, 5);
+			m_Action = ACTION_EGG;
+			m_pMotion->Set(ACTION_EGG, 5);
 		}
 	}
 	//ニュートラルモーション
 	else
 	{
-		if (m_Action != ACTION_BWAIT)
+		if (m_Action != ACTION_WAIT)
 		{
-			m_Action = ACTION_BWAIT;
-			m_pMotion->Set(ACTION_BWAIT, 5);
+			m_Action = ACTION_WAIT;
+			m_pMotion->Set(ACTION_WAIT, 5);
 		}
 	}
 }
@@ -609,7 +610,7 @@ void CPlayer::CollisionWall(useful::COLLISION XYZ)
 }
 
 //====================================================================
-// 壁との当たり判定
+// 上下左右に壁が存在するかの判定
 //====================================================================
 void CPlayer::SearchWall(void)
 {
@@ -630,8 +631,8 @@ void CPlayer::SearchWall(void)
 
 	nRNumber = useful::RangeNumber(nMapWightMax, 0, nRNumber);
 	nLNumber = useful::RangeNumber(nMapWightMax, 0, nLNumber);
-	nUNumber = useful::RangeNumber(nMapWightMax, 0, nUNumber);
-	nDNumber = useful::RangeNumber(nMapWightMax, 0, nDNumber);
+	nUNumber = useful::RangeNumber(nMapHeightMax, 0, nUNumber);
+	nDNumber = useful::RangeNumber(nMapHeightMax, 0, nDNumber);
 
 	OKR = !pMapSystem->GetGritBool(nRNumber, m_nMapHeight);
 	OKL = !pMapSystem->GetGritBool(nLNumber, m_nMapHeight);
@@ -639,31 +640,10 @@ void CPlayer::SearchWall(void)
 	OKD = !pMapSystem->GetGritBool(m_nMapWight, nDNumber);
 
 	//自分の立っているグリットの中心位置を求める
-	D3DXVECTOR3 MyGritPos = INITVECTOR3;
+	D3DXVECTOR3 MyGritPos = CMapSystem::GetInstance()->GetGritPos(m_nMapWight, m_nMapHeight);
 	float MapGritSize = pMapSystem->GetGritSize();
 
-	D3DXVECTOR3 DevilPos = CGame::GetDevil()->GetDevilPos();
-	D3DXVECTOR3 DevilSize = CGame::GetDevil()->GetDevilSize();
-
-	//ｘ座標のグリットに位置を設定する
-	MyGritPos.x = MapSystemPos.x + (m_nMapWight * MapGritSize);
-
-	// 自分の位置がマップ外だった場合に反対側からはみ出た分の位置を設定する
-	if (MyGritPos.x > DevilPos.x + (DevilSize.x))
-	{
-		MyGritPos.x = MyGritPos.x - (DevilPos.x + (DevilSize.x * 2.0f)) - MapGritSize;
-	}
-
-	//ｚ座標のグリットに位置を設定する
-	MyGritPos.z = MapSystemPos.z - (m_nMapHeight * MapGritSize);
-
-	// 自分の位置がマップ外だった場合に反対側からはみ出た分の位置を設定する
-	if (MyGritPos.z < DevilPos.z - (DevilSize.z))
-	{
-		MyGritPos.z = MyGritPos.z + (DevilPos.z + (DevilSize.z * 2.0f)) + MapGritSize;
-	}
-
-	DebugProc::Print(DebugProc::POINT_LEFT, "ああああ %f %f %f\n", MyGritPos.x, MyGritPos.y, MyGritPos.z);
+	DebugProc::Print(DebugProc::POINT_LEFT, "自分がいるグリットの中心位置 %f %f %f\n", MyGritPos.x, MyGritPos.y, MyGritPos.z);
 
 	if (m_pos.x <= MyGritPos.x + ((MapGritSize * 0.5f) - m_size.x) &&
 		m_pos.x >= MyGritPos.x - ((MapGritSize * 0.5f) - m_size.x) &&
@@ -674,6 +654,8 @@ void CPlayer::SearchWall(void)
 		m_OKL = OKL;	//左
 		m_OKU = OKU;	//上
 		m_OKD = OKD;	//下
+
+		m_bGritCenter = true;
 	}
 	else
 	{
@@ -681,6 +663,8 @@ void CPlayer::SearchWall(void)
 		m_OKL = false;	//左
 		m_OKU = false;	//上
 		m_OKD = false;	//下
+
+		m_bGritCenter = false;
 	}
 }
 
@@ -799,48 +783,8 @@ void CPlayer::CollisionStageOut(void)
 //====================================================================
 void CPlayer::MapSystemNumber(void)
 {
-	CDevil* pDevil = CGame::GetDevil();
-	D3DXVECTOR3 DevilPos = pDevil->GetDevilPos();
-	D3DXVECTOR3 DevilSize = pDevil->GetDevilSize();
-	D3DXVECTOR3 MapSystemPos = CMapSystem::GetInstance()->GetMapPos();
-	int MapWightMax = CMapSystem::GetInstance()->GetWightMax();
-	int MapHeightMax = CMapSystem::GetInstance()->GetHeightMax();
-	float MapGritSize = CMapSystem::GetInstance()->GetGritSize();
-	D3DXVECTOR3 GritPos = INITVECTOR3;
-
-	for (int nCntW = 0; nCntW < MapWightMax; nCntW++)
-	{
-		float fCountPosX = MapSystemPos.x + (nCntW * MapGritSize);
-
-		if (fCountPosX > DevilPos.x + (DevilSize.x))
-		{
-			fCountPosX = fCountPosX - (DevilPos.x + (DevilSize.x * 2.0f)) - MapGritSize;
-		}
-
-		if (m_pos.x < fCountPosX + (MapGritSize * 0.5f) &&
-			m_pos.x >= fCountPosX - (MapGritSize * 0.5f))
-		{
-			m_nMapWight = nCntW;
-			break;
-		}
-	}
-
-	for (int nCntH = 0; nCntH < MapHeightMax; nCntH++)
-	{
-		float fCountPosZ = MapSystemPos.z - (nCntH * MapGritSize);
-
-		if (fCountPosZ < DevilPos.z - (DevilSize.z))
-		{
-			fCountPosZ = fCountPosZ + (DevilPos.z + (DevilSize.z * 2.0f)) + MapGritSize;
-		}
-
-		if (m_pos.z < fCountPosZ + (MapGritSize * 0.5f) &&
-			m_pos.z >= fCountPosZ - (MapGritSize * 0.5f))
-		{
-			m_nMapHeight = nCntH;
-			break;
-		}
-	}
+	m_nMapWight = CMapSystem::GetInstance()->GetGritWightNumber(m_pos.x);
+	m_nMapHeight = CMapSystem::GetInstance()->GetGritHeightNumber(m_pos.z);
 }
 
 //====================================================================
@@ -910,7 +854,7 @@ void CPlayer::PosUpdate(void)
 	//X軸の位置更新
 	m_pos.x += m_move.x * CManager::GetInstance()->GetGameSpeed() * fSpeed;
 	m_pos.x += m_Objmove.x * CManager::GetInstance()->GetGameSpeed() * fSpeed;
-
+	
 	// 壁との当たり判定
 	CollisionWall(useful::COLLISION_X);
 	CollisionDevilHole(useful::COLLISION_X);
@@ -961,6 +905,7 @@ void CPlayer::Death(void)
 			}
 
 			m_State = STATE_DEATH;
+			m_move = INITVECTOR3;
 			m_nStateCount = 150;
 
 			// ダメージ音

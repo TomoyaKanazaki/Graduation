@@ -33,7 +33,7 @@
 #include "sound.h"
 
 #define COLLISION_SIZE (D3DXVECTOR3(750.0f,0.0f,550.0f))		//横の当たり判定
-#define SCROOL_SPEED (2.0f)		//スクロールの移動速度
+#define SCROOL_SPEED (5.0f)		//スクロールの移動速度
 
 namespace
 {
@@ -606,35 +606,6 @@ void CDevil::ObjectScroll(D3DXVECTOR3 Move)
 
 				pos += Move;
 
-				if (Move.x > 0.0f)
-				{
-					if (m_DevilPos.x + m_DevilSize.x < pos.x + m_GritSize)
-					{
-						pos.x = -m_DevilSize.x + m_DevilPos.x + m_GritSize + Move.x;
-					}
-				}
-				if (Move.x < 0.0f)
-				{
-					if (m_DevilPos.x - m_DevilSize.x > pos.x - m_GritSize)
-					{
-						pos.x = m_DevilSize.x + m_DevilPos.x - m_GritSize + Move.x;
-					}
-				}
-				if (Move.z > 0.0f)
-				{
-					if (m_DevilPos.z + m_DevilSize.z < pos.z + m_GritSize)
-					{
-						pos.z = -m_DevilSize.z + m_DevilPos.z + m_GritSize + Move.z;
-					}
-				}
-				if (Move.z < 0.0f)
-				{
-					if (m_DevilPos.z - m_DevilSize.z > pos.z - m_GritSize)
-					{
-						pos.z = m_DevilSize.z + m_DevilPos.z - m_GritSize + Move.z;
-					}
-				}
-
 				pEnemy->SetPos(pos);
 			}
 
@@ -643,93 +614,90 @@ void CDevil::ObjectScroll(D3DXVECTOR3 Move)
 
 				CPlayer* pPlayer = (CPlayer*)pObj;	// ブロック情報の取得
 
-				D3DXVECTOR3 pos = pPlayer->GetPos();
-				D3DXVECTOR3 Size = pPlayer->GetSize();
-
-				pos += Move;
-
-				if (Move.x > 0.0f)
+				if (pPlayer->GetState() != CPlayer::STATE_EGG)
 				{
-					if (pos.x + (m_GritSize * 0.5f) > m_DevilPos.x + m_DevilSize.x)
+					D3DXVECTOR3 pos = pPlayer->GetPos();
+					D3DXVECTOR3 Size = pPlayer->GetSize();
+
+					pos += Move;
+
+					if (Move.x > 0.0f)
 					{
-						if (pPlayer->GetState() == CPlayer::STATE_EGG)
-						{
-							pos.x = (m_DevilPos.x - m_DevilSize.x) - (m_GritSize * 2.0f) + Move.x;
-						}
-						else
+						if (pos.x + (m_GritSize * 0.5f) > m_DevilPos.x + m_DevilSize.x)
 						{
 							pos.x = m_DevilPos.x + m_DevilSize.x - (m_GritSize * 0.5f) + Move.x;
 							CollisionPressPlayer(pPlayer, pos, Size);
-						}
 
-						CEffect* pEffect = CEffect::Create();
-						pEffect->SetPos(pos);
-						pEffect->SetColor(D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
-						pEffect->SetRadius(100.0f);
-					}
-				}
-				if (Move.x < 0.0f)
-				{
-					if (pos.x - (m_GritSize * 0.5f) < m_DevilPos.x - m_DevilSize.x)
-					{
-						if (pPlayer->GetState() == CPlayer::STATE_EGG)
-						{
-							pos.x = (m_DevilSize.x + m_DevilPos.x) + (m_GritSize * 2.0f) + Move.x;
+							CEffect* pEffect = CEffect::Create();
+							pEffect->SetPos(pos);
+							pEffect->SetColor(D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
+							pEffect->SetRadius(100.0f);
 						}
-						else
+					}
+					if (Move.x < 0.0f)
+					{
+						if (pos.x - (m_GritSize * 0.5f) < m_DevilPos.x - m_DevilSize.x)
 						{
 							pos.x = m_DevilPos.x - m_DevilSize.x + (m_GritSize * 0.5f) + Move.x;
 							CollisionPressPlayer(pPlayer, pos, Size);
-						}
 
-						CEffect* pEffect = CEffect::Create();
-						pEffect->SetPos(pos);
-						pEffect->SetColor(D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
-						pEffect->SetRadius(100.0f);
-					}
-				}
-				if (Move.z > 0.0f)
-				{
-					if (pos.z + (m_GritSize * 0.5f) > m_DevilPos.z + m_DevilSize.z)
-					{
-						if (pPlayer->GetState() == CPlayer::STATE_EGG)
-						{
-							pos.z = (m_DevilPos.z - m_DevilSize.z) - (m_GritSize * 2.0f) + Move.z;
+							CEffect* pEffect = CEffect::Create();
+							pEffect->SetPos(pos);
+							pEffect->SetColor(D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
+							pEffect->SetRadius(100.0f);
 						}
-						else
+					}
+					if (Move.z > 0.0f)
+					{
+						if (pos.z + (m_GritSize * 0.5f) > m_DevilPos.z + m_DevilSize.z)
 						{
 							pos.z = m_DevilPos.z + m_DevilSize.z - (m_GritSize * 0.5f) + Move.x;
 							CollisionPressPlayer(pPlayer, pos, Size);
-						}
 
-						CEffect* pEffect = CEffect::Create();
-						pEffect->SetPos(pos);
-						pEffect->SetColor(D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
-						pEffect->SetRadius(100.0f);
-					}
-				}
-				if (Move.z < 0.0f)
-				{
-					if (pos.z - (m_GritSize * 0.5f) < m_DevilPos.z - m_DevilSize.z)
-					{
-						if (pPlayer->GetState() == CPlayer::STATE_EGG)
-						{
-							pos.z = (m_DevilPos.z + m_DevilSize.z) + (m_GritSize * 2.0f) + Move.z;
+							CEffect* pEffect = CEffect::Create();
+							pEffect->SetPos(pos);
+							pEffect->SetColor(D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
+							pEffect->SetRadius(100.0f);
 						}
-						else
+					}
+					if (Move.z < 0.0f)
+					{
+						if (pos.z - (m_GritSize * 0.5f) < m_DevilPos.z - m_DevilSize.z)
 						{
 							pos.z = m_DevilPos.z - m_DevilSize.z + (m_GritSize * 0.5f) + Move.z;
 							CollisionPressPlayer(pPlayer, pos, Size);
-						}
 
-						CEffect* pEffect = CEffect::Create();
-						pEffect->SetPos(pos);
-						pEffect->SetColor(D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
-						pEffect->SetRadius(100.0f);
+							CEffect* pEffect = CEffect::Create();
+							pEffect->SetPos(pos);
+							pEffect->SetColor(D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
+							pEffect->SetRadius(100.0f);
+						}
+					}
+
+					pPlayer->SetPos(pos);
+				}
+				else
+				{// 卵状態の時、ブロックが存在しない位置にホーミングする
+
+					int WightNumber = pPlayer->GetWightNumber();
+					int HeightNumber = pPlayer->GetHeightNumber();
+					if (!CMapSystem::GetInstance()->GetGritBool(WightNumber, HeightNumber))
+					{
+						D3DXVECTOR3 PlayerPos = pPlayer->GetPos();
+						D3DXVECTOR3 AnswerPos = INITVECTOR3;
+						AnswerPos = CMapSystem::GetInstance()->GetGritPos(WightNumber, HeightNumber);
+
+						if (pPlayer->GetGritCenter())
+						{
+							pPlayer->SetPos(AnswerPos);
+						}
+						else
+						{
+							PlayerPos += (AnswerPos - PlayerPos) * 0.5f;
+							pPlayer->SetPos(PlayerPos);
+						}
 					}
 				}
-
-				pPlayer->SetPos(pos);
 			}
 			pObj = pObjNext;
 		}
@@ -786,27 +754,13 @@ void CDevil::GritScroll(D3DXVECTOR3 Move)
 				CCubeBlock* pBlock = (CCubeBlock*)pObj;	// ブロック情報の取得
 
 				// 縦横のナンバーと高さを設定する
-				D3DXVECTOR3 pos = D3DXVECTOR3(0.0f, 50.0f, 0.0f);
+				D3DXVECTOR3 pos = INITVECTOR3;
 				int BlockWight = pBlock->GetWightNumber();
 				int BlockHeight = pBlock->GetHeightNumber();
 
-				//ｘ座標のグリットに位置を設定する
-				pos.x = MapPos.x + (BlockWight * MapGrit);
-
-				// 自分の位置がマップ外だった場合に反対側からはみ出た分の位置を設定する
-				if (pos.x > m_DevilPos.x + (m_DevilSize.x))
-				{
-					pos.x = pos.x - (m_DevilPos.x + (m_DevilSize.x * 2.0f)) - MapGrit;
-				}
-
-				//ｚ座標のグリットに位置を設定する
-				pos.z = MapPos.z - (BlockHeight * MapGrit);
-
-				// 自分の位置がマップ外だった場合に反対側からはみ出た分の位置を設定する
-				if (pos.z < m_DevilPos.z - (m_DevilSize.z))
-				{
-					pos.z = pos.z + (m_DevilPos.z + (m_DevilSize.z * 2.0f)) + MapGrit;
-				}
+				//グリット番号を位置に変換
+				pos = CMapSystem::GetInstance()->GetGritPos(BlockWight, BlockHeight);
+				pos.y = 50.0f;
 
 				pBlock->SetPos(pos);
 			}
@@ -821,25 +775,15 @@ void CDevil::GritScroll(D3DXVECTOR3 Move)
 	{
 		for (int nCntH = 0; nCntH < MapHeightMax; nCntH++)
 		{
-			float fCountPosX = MapPos.x + (nCntW * MapGrit);
-
-			if (fCountPosX > m_DevilPos.x + (m_DevilSize.x))
-			{
-				fCountPosX = fCountPosX - (m_DevilPos.x + (m_DevilSize.x * 2.0f)) - MapGrit;
-			}
-
-			float fCountPosZ = MapPos.z - (nCntH * MapGrit);
-
-			if (fCountPosZ < m_DevilPos.z - (m_DevilSize.z))
-			{
-				fCountPosZ = fCountPosZ + (m_DevilPos.z + (m_DevilSize.z * 2.0f)) + MapGrit;
-			}
+			//グリット番号を位置に変換
+			D3DXVECTOR3 CountPos = CMapSystem::GetInstance()->GetGritPos(nCntW, nCntH);
+			CountPos.y = 50.0f;
 
 			if (CMapSystem::GetInstance()->GetGritBool(nCntW, nCntH))
 			{// ブロックが存在するグリットのみエフェクトを表示
 
 				CEffect* pEffect = CEffect::Create();
-				pEffect->SetPos(D3DXVECTOR3(fCountPosX, 50.0f, fCountPosZ));
+				pEffect->SetPos(CountPos);
 				pEffect->SetLife(10);
 			}
 		}
