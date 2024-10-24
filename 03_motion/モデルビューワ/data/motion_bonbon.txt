@@ -25,7 +25,7 @@ CHARACTERSET
 	MOVE = 3.0					# 移動量
 	JUMP = 10.25					# ジャンプ量
 	RADIUS = 20.0					# 半径
-	NUM_PARTS = 17					# パーツ数
+	NUM_PARTS = 3					# パーツ数
 
 	PARTSSET
 		INDEX = 0					# 腰
