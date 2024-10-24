@@ -31,7 +31,7 @@ CObjmeshCylinder::CObjmeshCylinder(int nPriority) :CObject(nPriority)
 {
 	m_pTexture = nullptr;
 	m_pVtxBuff = nullptr;
-	g_pIdxBuff = nullptr;
+	m_pIdxBuff = nullptr;
 	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_Color = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
@@ -150,13 +150,13 @@ HRESULT CObjmeshCylinder::Init(void)
 		D3DUSAGE_WRITEONLY,
 		D3DFMT_INDEX16,
 		D3DPOOL_MANAGED,
-		&g_pIdxBuff,
+		&m_pIdxBuff,
 		nullptr);
 
 	WORD* pIdx;	//インデックス情報へのポインタ
 
 	//インデックスバッファをロックし、頂点番号データへのポインタを所得
-	g_pIdxBuff->Lock(0, 0, (void**)&pIdx, 0);
+	m_pIdxBuff->Lock(0, 0, (void**)&pIdx, 0);
 
 	for (int nCnt = 0, nOri = 0; nCnt < (WAIGHT_SIZE * HEIGHT_SIZE + WAIGHT_SIZE * (HEIGHT_SIZE - 2) + 2 * (HEIGHT_SIZE - 2)) / 2; nCnt++)
 	{
@@ -175,7 +175,7 @@ HRESULT CObjmeshCylinder::Init(void)
 	}
 
 	//インデックスバッファをアンロックする
-	g_pIdxBuff->Unlock();
+	m_pIdxBuff->Unlock();
 
 	return S_OK;
 }
@@ -201,10 +201,10 @@ void CObjmeshCylinder::SetNULL(void)
 	}
 
 	//インデックスバッファの破棄
-	if (g_pIdxBuff != nullptr)
+	if (m_pIdxBuff != nullptr)
 	{
-		g_pIdxBuff->Release();
-		g_pIdxBuff = nullptr;
+		m_pIdxBuff->Release();
+		m_pIdxBuff = nullptr;
 	}
 }
 
@@ -245,7 +245,7 @@ void CObjmeshCylinder::Draw(void)
 	m_pDevice->SetStreamSource(0, m_pVtxBuff, 0, sizeof(VERTEX_3D));
 
 	//インデックスバッファをデータストリームに設定
-	m_pDevice->SetIndices(g_pIdxBuff);
+	m_pDevice->SetIndices(m_pIdxBuff);
 
 	//頂点フォーマットの設定
 	m_pDevice->SetFVF(FVF_VERTEX_3D);
