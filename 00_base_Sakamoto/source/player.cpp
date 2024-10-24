@@ -37,7 +37,6 @@
 //===========================================
 // 定数定義
 //===========================================
-
 namespace
 {
 	const D3DXVECTOR3 COLLISION_SIZE = D3DXVECTOR3(45.0f, 40.0f, 45.0f);		//横の当たり判定
@@ -135,8 +134,8 @@ HRESULT CPlayer::Init(void)
 	LoadLevelData("data\\TXT\\motion_tamagon.txt");
 
 	// プレイヤーの指定パーツ削除
-	SetPartsDisp(3, false);
-	SetPartsDisp(0, false);
+	SetPartsDisp(9, false);		// 十字架のモデル非表示
+	SetPartsDisp(10, false);	// 聖書のモデル非表示
 
 	//モーションの生成
 	if (m_pMotion == nullptr)
@@ -1051,6 +1050,34 @@ bool CPlayer::SortObject(D3DXVECTOR3 pos)
 		}
 	}
 	return false;
+}
+
+//==========================================
+//  アイテムの設定
+//==========================================
+void CPlayer::SetItemType(ITEM_TYPE eType)
+{
+	// アイテムのタイプを設定
+	m_eItemType = eType;
+
+	// 所持しているアイテムによってモデルの表示を切り替える
+	switch (eType)
+	{
+	case TYPE_CROSS:
+		SetPartsDisp(9, true);		// 十字架のモデル表示
+		SetPartsDisp(10, false);	// 聖書のモデル非表示
+		break;
+
+	case TYPE_BIBLE:
+		SetPartsDisp(9, false);		// 十字架のモデル非表示
+		SetPartsDisp(10, true);		// 聖書のモデル表示
+		break;
+
+	default:
+		SetPartsDisp(9, false);		// 十字架のモデル非表示
+		SetPartsDisp(10, false);	// 聖書のモデル非表示
+		break;
+	}
 }
 
 //====================================================================
