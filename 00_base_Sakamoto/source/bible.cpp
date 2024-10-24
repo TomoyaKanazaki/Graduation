@@ -191,7 +191,7 @@ bool CBible::CollisionPlayer()
 			pPlayer->SetItemType(CPlayer::TYPE_BIBLE);
 
 			// 指定パーツ表示
-			pPlayer->SetPartsDisp(0, true);
+			pPlayer->SetPartsDisp(10, true);
 
 			// アイテムの位置をプレイヤーと同じ位置に設定
 			SetPos(pos);

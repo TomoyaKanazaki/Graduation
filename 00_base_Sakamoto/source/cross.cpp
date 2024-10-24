@@ -220,7 +220,7 @@ bool CCross::CollisionPlayer()
 			pPlayer->SetUseItem(true);
 
 			// 指定パーツ表示
-			pPlayer->SetPartsDisp(3, true);
+			pPlayer->SetPartsDisp(9, true);
 
 			// アイテムの位置をプレイヤーの正面に設定
 			SetPos(pos);

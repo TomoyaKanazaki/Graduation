@@ -135,8 +135,8 @@ HRESULT CPlayer::Init(void)
 	LoadLevelData("data\\TXT\\motion_tamagon.txt");
 
 	// プレイヤーの指定パーツ削除
-	SetPartsDisp(3, false);
-	SetPartsDisp(0, false);
+	SetPartsDisp(9, false);		// 十字架のモデル非表示
+	SetPartsDisp(10, false);	// 聖書のモデル非表示
 
 	//モーションの生成
 	if (m_pMotion == nullptr)
