@@ -116,7 +116,7 @@ public:
 	void Death(void);
 	bool SortObject(D3DXVECTOR3 pos);					// オブジェクトとのソート処理
 
-	void SetItemType(ITEM_TYPE eType) { m_eItemType = eType; }
+	void SetItemType(ITEM_TYPE eType);
 	ITEM_TYPE GetItemType() { return m_eItemType; }		// アイテムの種類取得
 
 	// 静的メンバ関数
