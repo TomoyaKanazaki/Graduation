@@ -280,7 +280,7 @@ void CPlayer::GameUpdate(void)
 		// Œü‚«ˆÚ“®ˆ—
 		Rot();
 
-		if (m_UseItem)
+		if (m_eItemType != TYPE_NONE)
 		{
 			Attack();
 		}
