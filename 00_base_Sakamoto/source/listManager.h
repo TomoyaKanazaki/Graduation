@@ -193,21 +193,19 @@ template<class T> CListManager<T> *CListManager<T>::Create(void)
 
 		return nullptr;
 	}
-	else
-	{ // 生成に成功した場合
 
-		// リストマネージャーの初期化
-		if (FAILED(pListManager->Init()))
-		{ // 初期化に失敗した場合
 
-			// リストマネージャーの破棄
-			SAFE_DELETE(pListManager);
-			return nullptr;
-		}
+	// リストマネージャーの初期化
+	if (FAILED(pListManager->Init()))
+	{ // 初期化に失敗した場合
 
-		// 確保したアドレスを返す
-		return pListManager;
+		// リストマネージャーの破棄
+		SAFE_DELETE(pListManager);
+		return nullptr;
 	}
+
+	// 確保したアドレスを返す
+	return pListManager;
 }
 
 //============================================================
