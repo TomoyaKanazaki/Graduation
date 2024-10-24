@@ -14,17 +14,17 @@ NUM_MODEL = 11
 #------------------------------------------------------------------------------
 # モデルファイル名
 #------------------------------------------------------------------------------
-MODEL_FILENAME = data/00_tamagon/00_body.x	# [0]腰
-MODEL_FILENAME = data/00_tamagon/01_tale.x	# [1]体
-MODEL_FILENAME = data/00_tamagon/02_lower_jaw.x	# [2]頭
-MODEL_FILENAME = data/00_tamagon/03_R_thighs.x	# [2]頭
-MODEL_FILENAME = data/00_tamagon/04_L_thighs.x	# [2]頭
-MODEL_FILENAME = data/00_tamagon/05_R_foot.x	# [2]頭
-MODEL_FILENAME = data/00_tamagon/06_L_foot.x	# [2]頭
-MODEL_FILENAME = data/00_tamagon/07_R_feather.x	# [2]頭
-MODEL_FILENAME = data/00_tamagon/08_L_feather.x	# [2]頭
-MODEL_FILENAME = data/00_tamagon/09_cross.x	# [2]頭
-MODEL_FILENAME = data/00_tamagon/10_book.x	# [2]頭
+MODEL_FILENAME = data/MODEL/00_tamagon/00_body.x	# [0]腰
+MODEL_FILENAME = data/MODEL/00_tamagon/01_tale.x	# [1]体
+MODEL_FILENAME = data/MODEL/00_tamagon/02_lower_jaw.x	# [2]頭
+MODEL_FILENAME = data/MODEL/00_tamagon/03_R_thighs.x	# [3]頭
+MODEL_FILENAME = data/MODEL/00_tamagon/04_L_thighs.x	# [4]頭
+MODEL_FILENAME = data/MODEL/00_tamagon/05_R_foot.x	# [5]頭
+MODEL_FILENAME = data/MODEL/00_tamagon/06_L_foot.x	# [6]頭
+MODEL_FILENAME = data/MODEL/00_tamagon/07_R_feather.x	# [7]頭
+MODEL_FILENAME = data/MODEL/00_tamagon/08_L_feather.x	# [8]頭
+MODEL_FILENAME = data/MODEL/00_tamagon/09_cross.x	# [9]頭
+MODEL_FILENAME = data/MODEL/00_tamagon/10_book.x	# [10]頭
 
 #------------------------------------------------------------------------------
 # キャラクター情報
@@ -294,6 +294,16 @@ MOTIONSET
 			POS = 0.00 0.00 0.00
 			ROT = 0.00 0.00 1.01
 		END_KEY
+		
+		KEY	# ----- [ 9 ] -----
+			POS = 0.00 0.00 0.00
+			ROT = 0.00 0.00 0.00
+		END_KEY
+
+		KEY	# ----- [ 10 ] -----
+			POS = 0.00 0.00 0.00
+			ROT = 0.00 0.00 0.00
+		END_KEY
 	END_KEYSET
 
 	KEYSET			# --- << KEY : 1 / 2 >> ---
@@ -341,6 +351,16 @@ MOTIONSET
 		KEY	# ----- [ 8 ] -----
 			POS = 0.00 0.00 0.00
 			ROT = 0.00 0.00 0.53
+		END_KEY
+		
+		KEY	# ----- [ 9 ] -----
+			POS = 0.00 0.00 0.00
+			ROT = 0.00 0.00 0.00
+		END_KEY
+
+		KEY	# ----- [ 10 ] -----
+			POS = 0.00 0.00 0.00
+			ROT = 0.00 0.00 0.00
 		END_KEY
 	END_KEYSET
 END_MOTIONSET
@@ -398,6 +418,16 @@ MOTIONSET
 			POS = 0.00 0.00 0.00
 			ROT = 0.00 -1.45 0.19
 		END_KEY
+		
+		KEY	# ----- [ 9 ] -----
+			POS = 0.00 0.00 0.00
+			ROT = 0.00 0.00 0.00
+		END_KEY
+
+		KEY	# ----- [ 10 ] -----
+			POS = 0.00 0.00 0.00
+			ROT = 0.00 0.00 0.00
+		END_KEY
 	END_KEYSET
 
 	KEYSET			# --- << KEY : 1 / 2 >> ---
@@ -445,6 +475,16 @@ MOTIONSET
 		KEY	# ----- [ 8 ] -----
 			POS = 0.00 0.00 0.00
 			ROT = 0.00 -1.45 0.22
+		END_KEY
+		
+		KEY	# ----- [ 9 ] -----
+			POS = 0.00 0.00 0.00
+			ROT = 0.00 0.00 0.00
+		END_KEY
+
+		KEY	# ----- [ 10 ] -----
+			POS = 0.00 0.00 0.00
+			ROT = 0.00 0.00 0.00
 		END_KEY
 	END_KEYSET
 END_MOTIONSET
@@ -502,6 +542,16 @@ MOTIONSET
 			POS = 0.00 0.00 0.00
 			ROT = 0.00 -1.45 0.19
 		END_KEY
+		
+		KEY	# ----- [ 9 ] -----
+			POS = 0.00 0.00 0.00
+			ROT = 0.00 0.00 0.00
+		END_KEY
+
+		KEY	# ----- [ 10 ] -----
+			POS = 0.00 0.00 0.00
+			ROT = 0.00 0.00 0.00
+		END_KEY
 	END_KEYSET
 
 	KEYSET			# --- << KEY : 1 / 2 >> ---
@@ -549,6 +599,16 @@ MOTIONSET
 		KEY	# ----- [ 8 ] -----
 			POS = 0.00 0.00 0.00
 			ROT = 0.00 -1.45 0.22
+		END_KEY
+		
+		KEY	# ----- [ 9 ] -----
+			POS = 0.00 0.00 0.00
+			ROT = 0.00 0.00 0.00
+		END_KEY
+
+		KEY	# ----- [ 10 ] -----
+			POS = 0.00 0.00 0.00
+			ROT = 0.00 0.00 0.00
 		END_KEY
 	END_KEYSET
 END_MOTIONSET
