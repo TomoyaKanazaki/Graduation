@@ -101,6 +101,30 @@ void CMapSystem::Draw(void)
 }
 
 //====================================================================
+// グリットの開始位置取得
+//====================================================================
+D3DXVECTOR3 CMapSystem::GetStartGritPos(float Wight, float Height)
+{
+	D3DXVECTOR3 Pos;
+
+	D3DXVECTOR3 DevilPos = CGame::GetDevil()->GetDevilPos();
+	D3DXVECTOR3 DevilSize = CGame::GetDevil()->GetDevilSize();
+
+	if (Wight < 0 || Wight >= (float)m_WightMax ||
+		Height < 0 || Height >= (float)m_HeightMax)
+	{
+		return Pos;
+	}
+
+	//　グリットの位置にエフェクトを表示
+	Pos.x = m_InitPos.x + (Wight * m_fGritSize);
+	Pos.y = 0.0f;
+	Pos.z = m_InitPos.z - (Height * m_fGritSize);
+
+	return Pos;
+}
+
+//====================================================================
 // グリットの位置取得
 //====================================================================
 D3DXVECTOR3 CMapSystem::GetGritPos(int Wight, int Height)

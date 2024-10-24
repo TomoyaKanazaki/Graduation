@@ -156,8 +156,20 @@ HRESULT CGame::Init(void)
 	//// ¹‘¶¬
 	CBible* pBible = nullptr;
 	pBible = CBible::Create("data\\MODEL\\TestCross.x");
-	pBible->SetWightNumber(8);
-	pBible->SetHeightNumber(4);
+	pBible->SetPosType(CBible::POS_TYPE_LEFTUP);
+	pBible->SetMapScroll(false);
+
+	pBible = CBible::Create("data\\MODEL\\TestCross.x");
+	pBible->SetPosType(CBible::POS_TYPE_RIGHTUP);
+	pBible->SetMapScroll(false);
+
+	pBible = CBible::Create("data\\MODEL\\TestCross.x");
+	pBible->SetPosType(CBible::POS_TYPE_LEFTDOWN);
+	pBible->SetMapScroll(false);
+
+	pBible = CBible::Create("data\\MODEL\\TestCross.x");
+	pBible->SetPosType(CBible::POS_TYPE_RIGHTDOWN);
+	pBible->SetMapScroll(false);
 
 	m_bGameEnd = false;
 
