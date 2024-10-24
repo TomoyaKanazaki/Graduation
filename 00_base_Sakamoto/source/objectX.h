@@ -55,6 +55,11 @@ public:
 	int GetTextureIdx(int nCnt) { return m_IdxTextureNumber[nCnt]; }
 	void SetMtxWorld(D3DMATRIX mtx) { m_SetMtx = mtx; m_bUseMtx = true; }
 
+	void SetMultiMatrix(bool Set) { m_bMultiMatrix = Set; }
+	bool GetMultiMatrix(void) { return m_bMultiMatrix; }
+	void SetUseMultiMatrix(D3DXMATRIX Set) { m_UseMultiMatrix = Set; }
+	D3DXMATRIX GetUseMultiMatrix(void) { return m_UseMultiMatrix; }
+
 protected:
 	D3DXMATRIX m_mtxWorld;					//ワールドマトリックス
 
@@ -75,5 +80,9 @@ private:
 	D3DXMATERIAL m_StateMat;				//状態管理時の色
 	D3DXCOLOR m_MatColor;					//マテリアルの色
 	bool m_bUseColor;						//色を変更しているかどうか
+
+	//マップとのマトリックス情報
+	bool m_bMultiMatrix;					//マトリックスの掛け合わせをするかどうか
+	D3DXMATRIX m_UseMultiMatrix;			//掛け合わせるマトリックス
 };
 #endif

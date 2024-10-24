@@ -31,6 +31,7 @@ public:
 	void Draw();
 
 	// グリット位置の取得
+	D3DXVECTOR3 GetStartGritPos(float Wight, float Height);
 	D3DXVECTOR3 GetGritPos(int Wight, int Height);
 	int GetGritWightNumber(float PosX);
 	int GetGritHeightNumber(float PosZ);

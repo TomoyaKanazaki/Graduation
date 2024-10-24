@@ -68,7 +68,7 @@ CObjmeshField* CGame::m_pMeshFieldSample = nullptr;
 CObjmeshWall* CGame::m_pMeshWallSample = nullptr;
 CObjmeshCylinder* CGame::m_pMeshCylinderSample = nullptr;
 CObjmeshDome* CGame::m_pMeshDomeUp = nullptr;
-CObjmeshField* CGame::m_pMeshField = nullptr;
+CObjmeshField* CGame::m_pMapField = nullptr;
 CCubeBlock* CGame::m_pCubeBlock = nullptr;
 CPlayer* CGame::m_pPlayer = nullptr;
 CDevil* CGame::m_pDevil = nullptr;
@@ -145,8 +145,8 @@ HRESULT CGame::Init(void)
 	m_pMeshDomeUp = CObjmeshDome::Create();
 	m_pMeshDomeUp->SetTexture("data\\TEXTURE\\rain_clown.jpg");
 
-	m_pMeshField = CObjmeshField::Create(16, 12);
-	m_pMeshField->SetPos(INITVECTOR3);
+	m_pMapField = CObjmeshField::Create(16, 12);
+	m_pMapField->SetPos(INITVECTOR3);
 
 	CBowabowa* pBowabowa = nullptr;
 	pBowabowa = CBowabowa::Create("data\\MODEL\\Testbowabowa.x");
@@ -156,8 +156,20 @@ HRESULT CGame::Init(void)
 	//// ¹‘¶¬
 	CBible* pBible = nullptr;
 	pBible = CBible::Create("data\\MODEL\\TestCross.x");
-	pBible->SetWightNumber(8);
-	pBible->SetHeightNumber(4);
+	pBible->SetPosType(CBible::POS_TYPE_LEFTUP);
+	pBible->SetMapScroll(false);
+
+	pBible = CBible::Create("data\\MODEL\\TestCross.x");
+	pBible->SetPosType(CBible::POS_TYPE_RIGHTUP);
+	pBible->SetMapScroll(false);
+
+	pBible = CBible::Create("data\\MODEL\\TestCross.x");
+	pBible->SetPosType(CBible::POS_TYPE_LEFTDOWN);
+	pBible->SetMapScroll(false);
+
+	pBible = CBible::Create("data\\MODEL\\TestCross.x");
+	pBible->SetPosType(CBible::POS_TYPE_RIGHTDOWN);
+	pBible->SetMapScroll(false);
 
 	m_bGameEnd = false;
 

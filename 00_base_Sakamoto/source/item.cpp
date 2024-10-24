@@ -31,6 +31,7 @@ CItem::CItem(int nPriority) : CObjectX(nPriority)
 	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);			// 向き
 	m_nMapWight = 0;			// マップの横番号
 	m_nMapHeight = 0;			// マップの縦番号
+	m_bMapScroll = true;
 }
 
 //====================================================================
@@ -85,6 +86,9 @@ HRESULT CItem::Init(char* pModelName)
 	// 継承クラスの初期化
 	CObjectX::Init(pModelName);
 
+	//マップとのマトリックスの掛け合わせをオンにする
+	SetMultiMatrix(true);
+
 	return S_OK;
 }
 
@@ -102,12 +106,19 @@ void CItem::Uninit()
 //====================================================================
 void CItem::Update()
 {
-	m_pos = CMapSystem::GetInstance()->GetGritPos(m_nMapWight, m_nMapHeight);
+	if (m_bMapScroll == true)
+	{
+		m_pos = CMapSystem::GetInstance()->GetGritPos(m_nMapWight, m_nMapHeight);
 
-	CObjectX::SetPos(m_pos);
+		CObjectX::SetPos(m_pos);
 
-	// 継承クラスの更新
-	CObjectX::Update();
+		// 継承クラスの更新
+		CObjectX::Update();
+	}
+	else
+	{
+		Move();
+	}
 }
 
 //====================================================================

@@ -43,6 +43,7 @@ public:
 	void Draw(void);
 
 	virtual bool CollisionPlayer();
+	virtual void Move() { ; }
 
 	// テクスチャ番号取得
 	int GetIdx(void) { return m_nIdxTexture; }
@@ -76,13 +77,17 @@ public:
 	// 状態管理の取得
 	int GetStateCounter() { return m_nStateCount; }
 
-	// マップの横番号の取得
+	// マップの横番号の設定・取得
 	void SetWightNumber(int Wight) { m_nMapWight = Wight; }
 	int GetWightNumber() { return m_nMapWight; }
 
-	// マップの縦番号の取得
+	// マップの縦番号の設定・取得
 	void SetHeightNumber(int Height) { m_nMapHeight = Height; }
 	int GetHeightNumber() { return m_nMapHeight; }
+
+	// スクロールするかどうかの設定・取得
+	void SetMapScroll(bool Height) { m_bMapScroll = Height; }
+	bool GetMapScroll() { return m_bMapScroll; }
 
 private:
 	STATE m_eState;		// 状態
@@ -97,6 +102,7 @@ private:
 
 	bool m_UseItem;			//アイテムが使用可能かどうか
 	bool m_bCollision;		//当たり判定用の座標
+	bool m_bMapScroll;		//マップのスクロール
 
 	D3DXVECTOR3 m_CollisionPos;	//当たり判定用の座標
 	D3DXVECTOR3 m_pos;			//位置	

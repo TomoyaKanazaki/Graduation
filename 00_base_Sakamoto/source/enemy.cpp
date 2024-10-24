@@ -29,6 +29,7 @@
 #include "devil.h"
 #include "DevilHole.h"
 #include "MapSystem.h"
+#include "objmeshField.h"
 #include "sound.h"
 
 namespace
@@ -115,6 +116,9 @@ HRESULT CEnemy::Init(void)
 {
 	//種類設定
 	SetType(CObject::TYPE_ENEMY3D);
+
+	//マップとのマトリックスの掛け合わせをオンにする
+	SetMultiMatrix(true);
 
 	// スローの生成(配属、タグの設定)
 	m_pSlow = CSlowManager::Create(m_pSlow->CAMP_ENEMY, m_pSlow->TAG_ENEMY);
@@ -242,6 +246,16 @@ void CEnemy::Draw(void)
 	D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);
 
 	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
+
+	if (m_bMultiMatrix)
+	{
+		SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
+
+		//算出したマトリクスをかけ合わせる
+		D3DXMatrixMultiply(&m_mtxWorld,
+			&m_mtxWorld,
+			&m_UseMultiMatrix);
+	}
 
 	//ワールドマトリックスの設定
 	m_pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
