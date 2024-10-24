@@ -15,7 +15,7 @@
 //静的メンバ変数宣言
 CObject2D *CPause::m_pPauseUI[MAX_PAUSE] = {};
 CObject2D *CPause::m_pPauseFG[MAX_FG] = {};
-CObject2D *CPause::m_pPauseMark = NULL;
+CObject2D *CPause::m_pPauseMark = nullptr;
 bool CPause::m_bColor = false;
 
 //====================================================================
@@ -40,9 +40,9 @@ CPause::~CPause()
 //====================================================================
 CPause *CPause::Create()
 {
-	CPause *pPause = NULL;
+	CPause *pPause = nullptr;
 
-	if (pPause == NULL)
+	if (pPause == nullptr)
 	{
 		//敵の生成
 		pPause = new CPause();
@@ -51,7 +51,7 @@ CPause *CPause::Create()
 	//オブジェクトの初期化処理
 	if (FAILED(pPause->Init()))
 	{//初期化処理が失敗した場合
-		return NULL;
+		return nullptr;
 	}
 
 	return pPause;

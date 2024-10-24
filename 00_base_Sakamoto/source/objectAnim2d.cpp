@@ -33,9 +33,9 @@ CObjectAnim2D::~CObjectAnim2D()
 //====================================================================
 CObjectAnim2D* CObjectAnim2D::Create(D3DXVECTOR3 pos, int nU, int nV, int nAnim, bool bLoop, float fRate, int nPriority)
 {
-	CObjectAnim2D* pObject2D = NULL;
+	CObjectAnim2D* pObject2D = nullptr;
 
-	if (pObject2D == NULL)
+	if (pObject2D == nullptr)
 	{
 		//オブジェクト2Dの生成
 		pObject2D = new CObjectAnim2D(nPriority);

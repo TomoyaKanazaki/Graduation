@@ -41,14 +41,10 @@ public:
 	//プレイヤーのモーション
 	enum ACTION_TYPE
 	{
-		ACTION_BWAIT = 0,		//戦闘待機
-		ACTION_SMOVE,			//探索移動
-		ACTION_BMOVE,			//戦闘移動
-		ACTION_SWAIT,			//探索待機
-		ACTION_ATTACK,			//攻撃
-		ACTION_BDEATH,			//戦闘中の死亡
-		ACTION_SDEATH,			//探索中の死亡
-		ACTION_DAMAGE,			//ダメージ
+		ACTION_WAIT = 0,		//待機
+		ACTION_MOVE,			//移動
+		ACTION_EGG,				//卵状態(未完成００
+		ACTION_DEATH,			//死亡状態(未完成０１
 		ACTION_MAX,				//最大
 	};
 
@@ -61,6 +57,17 @@ public:
 		STATE_EGG,			//卵
 		STATE_ATTACK,		//攻撃
 		STATE_MAX,			//最大
+	};
+
+	// プレイヤーの移動方向
+	enum MOVE_STATE
+	{
+		MOVE_STATE_WAIT = 0,	// 待機
+		MOVE_STATE_LEFT,		// 左方向
+		MOVE_STATE_RIGHT,		// 右方向
+		MOVE_STATE_UP,			// 上方向
+		MOVE_STATE_DOWN,		// 下方向
+		MOVE_STATE_MAX,			// 最大
 	};
 
 	// アイテムの種類
@@ -102,11 +109,18 @@ public:
 	void SetUseItem(bool bUse) { m_UseItem = bUse; }
 	bool GetbUseItem() { return m_UseItem; }
 
+	int GetWightNumber() { return m_nMapWight; }
+	int GetHeightNumber() { return m_nMapHeight; }
+	bool GetGritCenter() { return m_bGritCenter; }
+
 	void Death(void);
 	bool SortObject(D3DXVECTOR3 pos);					// オブジェクトとのソート処理
 
-	void SetItemType(ITEM_TYPE eType) { m_eItemType = eType; }
+	void SetItemType(ITEM_TYPE eType);
 	ITEM_TYPE GetItemType() { return m_eItemType; }		// アイテムの種類取得
+
+	// 静的メンバ関数
+	static CListManager<CPlayer>* GetList(void); // リスト取得
 
 private:
 	void MyObjCreate(void);							//自分が保持するオブジェクトの生成
@@ -146,12 +160,14 @@ private:
 	bool m_bJump;				//ジャンプをしたかどうか
 	int m_nActionCount;			//行動のカウント
 	STATE m_State;				//状態
+	MOVE_STATE m_MoveState;		//移動方向
 	int m_nStateCount;			//状態管理用カウント
 
 	float m_CollisionRot;		//当たり判定用の向き
 
 	int m_nMapWight;			//マップの横番号
 	int m_nMapHeight;			//マップの縦番号
+	bool m_bGritCenter;			//グリットの中心位置にいるかどうか
 
 	int m_nLife;				//ライフ
 	bool m_OKL;					//左への進行が許されるかどうか
@@ -172,6 +188,12 @@ private:
 	char* m_aModelName[64];
 	int m_nNumModel;
 	CLifeUi* m_pLifeUi;
+
+	// 静的メンバ変数
+	static CListManager<CPlayer>* m_pList; // オブジェクトリスト
+
+	// メンバ変数
+	CListManager<CPlayer>::AIterator m_iterator; // イテレーター
 };
 
 #endif

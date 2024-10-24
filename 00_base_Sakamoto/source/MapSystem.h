@@ -30,10 +30,17 @@ public:
 	void Update();
 	void Draw();
 
+	// グリット位置の取得
+	D3DXVECTOR3 GetGritPos(int Wight, int Height);
+	int GetGritWightNumber(float PosX);
+	int GetGritHeightNumber(float PosZ);
+
 	void SetGritBool(int nWight, int nHeight, bool Set) { m_nMapGrit[nWight][nHeight] = Set; }
 	bool GetGritBool(int nWight, int nHeight) { return m_nMapGrit[nWight][nHeight]; }
 
+	void SetMapPos(D3DXVECTOR3 pos) { m_MapPos = pos; }
 	D3DXVECTOR3 GetMapPos(void) { return m_MapPos; }
+	D3DXVECTOR3 GetInitPos(void) { return m_InitPos; }
 	int GetWightMax(void) { return m_WightMax; }
 	int GetHeightMax(void) { return m_HeightMax; }
 	float GetGritSize(void) { return m_fGritSize; }
@@ -43,7 +50,8 @@ protected:
 public:
 	static CMapSystem* pMapSystem;
 
-	bool m_nMapGrit[NUM_WIGHT][NUM_HEIGHT];
+	static bool m_nMapGrit[NUM_WIGHT][NUM_HEIGHT];
+	D3DXVECTOR3 m_InitPos;
 	D3DXVECTOR3 m_MapPos;
 	int m_WightMax;
 	int m_HeightMax;

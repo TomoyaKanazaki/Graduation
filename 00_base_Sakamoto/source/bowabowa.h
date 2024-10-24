@@ -29,7 +29,9 @@ public:
 		STATE_MAX,
 	};
 
+	// 静的メンバ関数
 	static CBowabowa* Create(char* pModelName);
+	static CListManager<CBowabowa>* GetList(void); // リスト取得
 
 	HRESULT Init(char* pModelName);
 	void Uninit(void);
@@ -43,6 +45,12 @@ public:
 
 private:
 	void StateManager(void);		//状態管理
+
+	// 静的メンバ変数
+	static CListManager<CBowabowa>* m_pList; // オブジェクトリスト
+
+	// メンバ変数
+	CListManager<CBowabowa>::AIterator m_iterator; // イテレーター
 
 };
 #endif

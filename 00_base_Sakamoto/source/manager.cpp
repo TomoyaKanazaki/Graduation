@@ -25,6 +25,7 @@
 #include "tutorial.h"
 #include "logo.h"
 #include "item_manager.h"
+#include "MapSystem.h"
 
 #ifdef _DEBUG
 #define SET_MODE (CScene::MODE_GAME)
@@ -180,6 +181,8 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 		return E_FAIL;
 	}
 
+	CMapSystem::GetInstance()->Init();
+
 	if (m_pTexture == nullptr)
 	{
 		//テクスチャの生成
@@ -255,6 +258,8 @@ void CManager::Uninit(void)
 
 	//全てのオブジェクトの破棄
 	CObject::ReleaseAll();
+
+	CMapSystem::GetInstance()->Uninit();
 
 	if (m_pTexture != nullptr)
 	{

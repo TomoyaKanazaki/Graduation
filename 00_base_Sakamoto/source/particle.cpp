@@ -69,9 +69,9 @@ CParticle::~CParticle()
 //====================================================================
 CParticle *CParticle::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXCOLOR col, float nLife, float nSize, int nType)
 {
-	CParticle *pParticle = NULL;
+	CParticle *pParticle = nullptr;
 
-	if (pParticle == NULL)
+	if (pParticle == nullptr)
 	{
 		//オブジェクト2Dの生成
 		pParticle = new CParticle(pos, rot, col, nLife, nSize, nType);
@@ -80,7 +80,7 @@ CParticle *CParticle::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXCOLOR col, fl
 	//オブジェクトの初期化処理
 	if (FAILED(pParticle->Init()))
 	{//初期化処理が失敗した場合
-		return NULL;
+		return nullptr;
 	}
 
  	return pParticle;
@@ -91,7 +91,7 @@ CParticle *CParticle::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXCOLOR col, fl
 //====================================================================
 HRESULT CParticle::Init(void)
 {
-	CEffect *pEffect = NULL;
+	CEffect *pEffect = nullptr;
 	SetType(CObject::TYPE_PARTICLE);
 
 	if (m_nType == 1)

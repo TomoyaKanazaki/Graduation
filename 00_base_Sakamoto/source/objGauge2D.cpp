@@ -14,8 +14,8 @@
 //====================================================================
 CObjGauge2D::CObjGauge2D(int nPriority) :CObject(nPriority)
 {
-	m_pTexture = NULL;
-	m_pVtxBuff = NULL;
+	m_pTexture = nullptr;
+	m_pVtxBuff = nullptr;
 	m_Width = 1.0f;
 	m_Height = 1.0f;
 	m_AddDarw = false;
@@ -39,9 +39,9 @@ CObjGauge2D::~CObjGauge2D()
 //====================================================================
 CObjGauge2D* CObjGauge2D::Create(int nPriority)
 {
-	CObjGauge2D* pObject2D = NULL;
+	CObjGauge2D* pObject2D = nullptr;
 
-	if (pObject2D == NULL)
+	if (pObject2D == nullptr)
 	{
 		//オブジェクト2Dの生成
 		pObject2D = new CObjGauge2D(nPriority);
@@ -50,7 +50,7 @@ CObjGauge2D* CObjGauge2D::Create(int nPriority)
 	//オブジェクトの初期化処理
 	if (FAILED(pObject2D->Init()))
 	{//初期化処理が失敗した場合
-		return NULL;
+		return nullptr;
 	}
 
 	return pObject2D;
@@ -75,7 +75,7 @@ HRESULT CObjGauge2D::Init(void)
 		FVF_VERTEX_2D,
 		D3DPOOL_MANAGED,
 		&m_pVtxBuff,
-		NULL)))
+		nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -139,10 +139,10 @@ void CObjGauge2D::Uninit(void)
 void CObjGauge2D::SetNULL(void)
 {
 	//頂点バッファの破棄
-	if (m_pVtxBuff != NULL)
+	if (m_pVtxBuff != nullptr)
 	{
 		m_pVtxBuff->Release();
-		m_pVtxBuff = NULL;
+		m_pVtxBuff = nullptr;
 	}
 }
 

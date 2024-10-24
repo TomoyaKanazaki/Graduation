@@ -18,8 +18,8 @@
 //====================================================================
 CObjectBillboard::CObjectBillboard(int nPriority) :CObject(nPriority)
 {
-	m_pTexture = NULL;
-	m_pVtxBuff = NULL;
+	m_pTexture = nullptr;
+	m_pVtxBuff = nullptr;
 	m_Width = POLYDON_SIZE;
 	m_Height = POLYDON_SIZE;
 	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -42,9 +42,9 @@ CObjectBillboard::~CObjectBillboard()
 //====================================================================
 CObjectBillboard *CObjectBillboard::Create(void)
 {
-	CObjectBillboard *pObject3D = NULL;
+	CObjectBillboard *pObject3D = nullptr;
 
-	if (pObject3D == NULL)
+	if (pObject3D == nullptr)
 	{
 		//オブジェクト3Dの生成
 		pObject3D = new CObjectBillboard();
@@ -53,7 +53,7 @@ CObjectBillboard *CObjectBillboard::Create(void)
 	//オブジェクトの初期化処理
 	if (FAILED(pObject3D->Init()))
 	{//初期化処理が失敗した場合
-		return NULL;
+		return nullptr;
 	}
 
 	return pObject3D;
@@ -75,7 +75,7 @@ HRESULT CObjectBillboard::Init(void)
 		FVF_VERTEX_3D,
 		D3DPOOL_MANAGED,
 		&m_pVtxBuff,
-		NULL)))
+		nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -129,10 +129,10 @@ void CObjectBillboard::Uninit(void)
 void CObjectBillboard::SetNULL(void)
 {
 	//頂点バッファの破棄
-	if (m_pVtxBuff != NULL)
+	if (m_pVtxBuff != nullptr)
 	{
 		m_pVtxBuff->Release();
-		m_pVtxBuff = NULL;
+		m_pVtxBuff = nullptr;
 	}
 }
 
@@ -181,7 +181,7 @@ void CObjectBillboard::Draw(void)
 	m_pDevice->GetTransform(D3DTS_VIEW, &mtxView);
 
 	//ポリゴンをカメラに対して正面を向ける
-	D3DXMatrixInverse(&m_mtxWorld, NULL, &mtxView);	//逆行列を求める
+	D3DXMatrixInverse(&m_mtxWorld, nullptr, &mtxView);	//逆行列を求める
 	m_mtxWorld._41 = 0.0f;
 	m_mtxWorld._42 = 0.0f;
 	m_mtxWorld._43 = 0.0f;

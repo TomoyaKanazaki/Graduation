@@ -17,8 +17,8 @@
 //====================================================================
 CObjectXtex::CObjectXtex(int nPriority) :CObject(nPriority)
 {
-	m_pBuffMat = NULL;
-	m_pMesh = NULL;
+	m_pBuffMat = nullptr;
+	m_pMesh = nullptr;
 	m_Width = POLYDON_SIZE;
 	m_Height = POLYDON_SIZE;
 	m_dwNumMat = 0;
@@ -42,9 +42,9 @@ CObjectXtex::~CObjectXtex()
 //====================================================================
 CObjectXtex *CObjectXtex::Create(void)
 {
-	CObjectXtex *pObjectXtex = NULL;
+	CObjectXtex *pObjectXtex = nullptr;
 
-	if (pObjectXtex == NULL)
+	if (pObjectXtex == nullptr)
 	{
 		//オブジェクト3Dの生成
 		pObjectXtex = new CObjectXtex();
@@ -53,7 +53,7 @@ CObjectXtex *CObjectXtex::Create(void)
 	//オブジェクトの初期化処理
 	if (FAILED(pObjectXtex->Init()))
 	{//初期化処理が失敗した場合
-		return NULL;
+		return nullptr;
 	}
 
 	return pObjectXtex;
@@ -76,7 +76,7 @@ void CObjectXtex::Uninit(void)
 }
 
 //====================================================================
-//NULLにする処理
+//nullptrにする処理
 //====================================================================
 void CObjectXtex::SetNULL(void)
 {
@@ -155,7 +155,7 @@ void CObjectXtex::Draw(void)
 			else
 			{
 				//テクスチャの設定
-				m_pDevice->SetTexture(0, NULL);
+				m_pDevice->SetTexture(0, nullptr);
 			}
 		}
 

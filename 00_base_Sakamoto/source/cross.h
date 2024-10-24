@@ -40,10 +40,19 @@ public:
 
 	bool CollisionPlayer() override;
 
+	// 静的メンバ関数
+	static CListManager<CCross>* GetList(void); // リスト取得
 
 private:
 	void StateManager(void);	//状態管理
 
 	int m_nDeletCont;		// 削除カウンター
+
+	// 静的メンバ変数
+	static CListManager<CCross>* m_pList; // オブジェクトリスト
+
+	// メンバ変数
+	CListManager<CCross>::AIterator m_iterator; // イテレーター
+
 };
 #endif

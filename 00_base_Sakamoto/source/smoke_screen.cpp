@@ -39,9 +39,9 @@ CSmokeScreen::~CSmokeScreen()
 //====================================================================
 CSmokeScreen* CSmokeScreen::Create()
 {
-	CSmokeScreen* pPlayer = NULL;
+	CSmokeScreen* pPlayer = nullptr;
 
-	if (pPlayer == NULL)
+	if (pPlayer == nullptr)
 	{
 		//オブジェクト2Dの生成
 		pPlayer = new CSmokeScreen();
@@ -50,7 +50,7 @@ CSmokeScreen* CSmokeScreen::Create()
 	//オブジェクトの初期化処理
 	if (FAILED(pPlayer->Init()))
 	{//初期化処理が失敗した場合
-		return NULL;
+		return nullptr;
 	}
 
 	return pPlayer;

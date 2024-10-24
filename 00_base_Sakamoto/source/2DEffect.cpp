@@ -18,7 +18,7 @@ namespace
 }
 
 //静的メンバ変数宣言
-LPDIRECT3DTEXTURE9 C2DEffect::m_pTexture = NULL;
+LPDIRECT3DTEXTURE9 C2DEffect::m_pTexture = nullptr;
 
 //====================================================================
 //コンストラクタ
@@ -48,9 +48,9 @@ C2DEffect::~C2DEffect()
 //====================================================================
 C2DEffect* C2DEffect::Create()
 {
-	C2DEffect* pPlayer = NULL;
+	C2DEffect* pPlayer = nullptr;
 
-	if (pPlayer == NULL)
+	if (pPlayer == nullptr)
 	{
 		//オブジェクト2Dの生成
 		pPlayer = new C2DEffect();
@@ -59,7 +59,7 @@ C2DEffect* C2DEffect::Create()
 	//オブジェクトの初期化処理
 	if (FAILED(pPlayer->Init()))
 	{//初期化処理が失敗した場合
-		return NULL;
+		return nullptr;
 	}
 
 	return pPlayer;

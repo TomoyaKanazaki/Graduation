@@ -25,9 +25,9 @@ CXModel::CXModel()
 {
 	for (int nCntModel = 0; nCntModel < MAX_MODEL; nCntModel++)
 	{
-		m_apXModel[nCntModel].m_pBuffMat = NULL;
+		m_apXModel[nCntModel].m_pBuffMat = nullptr;
 		m_apXModel[nCntModel].m_dwNumMat = NULL;
-		m_apXModel[nCntModel].m_pMesh = NULL;
+		m_apXModel[nCntModel].m_pMesh = nullptr;
 	}
 }
 
@@ -54,13 +54,13 @@ HRESULT CXModel::Load(void)
 	//	if (FAILED(D3DXLoadMeshFromX(c_apModelname[nCntModel],
 	//		D3DXMESH_SYSTEMMEM,
 	//		pDevice,
-	//		NULL,
+	//		nullptr,
 	//		&m_apXModel[nCntModel].m_pBuffMat,
-	//		NULL,
+	//		nullptr,
 	//		&m_apXModel[nCntModel].m_dwNumMat,
 	//		&m_apXModel[nCntModel].m_pMesh)))
 	//	{
-	//		if (c_apModelname[nCntModel] == NULL)
+	//		if (c_apModelname[nCntModel] == nullptr)
 	//		{
 	//			m_NumAll = nCntModel;
 	//			return S_OK;
@@ -83,17 +83,17 @@ void CXModel::Unload(void)
 	for (int nCntModel = 0; nCntModel < m_NumAll; nCntModel++)
 	{
 		//バッファの破棄
-		if (m_apXModel[nCntModel].m_pBuffMat != NULL)
+		if (m_apXModel[nCntModel].m_pBuffMat != nullptr)
 		{
 			m_apXModel[nCntModel].m_pBuffMat->Release();
-			m_apXModel[nCntModel].m_pBuffMat = NULL;
+			m_apXModel[nCntModel].m_pBuffMat = nullptr;
 		}
 
 		//メッシュの破棄
-		if (m_apXModel[nCntModel].m_pMesh != NULL)
+		if (m_apXModel[nCntModel].m_pMesh != nullptr)
 		{
 			m_apXModel[nCntModel].m_pMesh->Release();
-			m_apXModel[nCntModel].m_pMesh = NULL;
+			m_apXModel[nCntModel].m_pMesh = nullptr;
 		}
 	}
 }
@@ -118,9 +118,9 @@ int CXModel::Regist(const char *pFilename)
 	if (SUCCEEDED(D3DXLoadMeshFromX(pFilename,
 		D3DXMESH_SYSTEMMEM,
 		m_pDevice,
-		NULL,
+		nullptr,
 		&m_apXModel[m_NumAll].m_pBuffMat,
-		NULL,
+		nullptr,
 		&m_apXModel[m_NumAll].m_dwNumMat,
 		&m_apXModel[m_NumAll].m_pMesh)))
 	{

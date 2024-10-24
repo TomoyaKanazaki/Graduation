@@ -65,9 +65,9 @@ CCubeDamage::~CCubeDamage()
 //====================================================================
 CCubeDamage* CCubeDamage::Create(void)
 {
-	CCubeDamage* pObject3D = NULL;
+	CCubeDamage* pObject3D = nullptr;
 
-	if (pObject3D == NULL)
+	if (pObject3D == nullptr)
 	{
 		//オブジェクト3Dの生成
 		pObject3D = new CCubeDamage();
@@ -76,7 +76,7 @@ CCubeDamage* CCubeDamage::Create(void)
 	//オブジェクトの初期化処理
 	if (FAILED(pObject3D->Init()))
 	{//初期化処理が失敗した場合
-		return NULL;
+		return nullptr;
 	}
 
 	return pObject3D;
@@ -303,7 +303,7 @@ void CCubeDamage::UninitExplosion(void)
 		//オブジェクトを取得
 		CObject* pObj = CObject::GetTop(nCntPriority);
 
-		while (pObj != NULL)
+		while (pObj != nullptr)
 		{
 			CObject* pObjNext = pObj->GetNext();
 
@@ -366,7 +366,7 @@ bool CCubeDamage::CollisionShadow(void)
 		//オブジェクトを取得
 		CObject* pObj = CObject::GetTop(nCntPriority);
 
-		while (pObj != NULL)
+		while (pObj != nullptr)
 		{
 			CObject* pObjNext = pObj->GetNext();
 
@@ -429,7 +429,7 @@ bool CCubeDamage::CollisionBlock(void)
 		//オブジェクトを取得
 		CObject* pObj = CObject::GetTop(nCntPriority);
 
-		while (pObj != NULL)
+		while (pObj != nullptr)
 		{
 			CObject* pObjNext = pObj->GetNext();
 

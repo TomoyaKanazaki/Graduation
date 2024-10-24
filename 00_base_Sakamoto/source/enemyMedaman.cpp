@@ -58,7 +58,7 @@ CEnemyMedaman* CEnemyMedaman::Create(const char* pFilename)
 	// ‰Šú‰»ˆ—
 	if (FAILED(pInstance->Init()))
 	{//‰Šú‰»ˆ—‚ª¸”s‚µ‚½ê‡
-		return NULL;
+		return nullptr;
 	}
 
 	// ƒ‚ƒfƒ‹ŠÖ˜A‚Ì‰Šú‰»

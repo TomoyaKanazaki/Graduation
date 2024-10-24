@@ -36,7 +36,7 @@ CDebris::CDebris(int nPriority) : CObjectX(nPriority)
 {
 	SetSize(COLLISION_SIZE);
 	SetPos(INITVECTOR3);
-	m_nIdxXModel = NULL;			//マテリアルの数
+	m_nIdxXModel = 0;			//マテリアルの数
 	m_Scaling = 1.0f;
 }
 
@@ -53,9 +53,9 @@ CDebris::~CDebris()
 //====================================================================
 CDebris* CDebris::Create(D3DXVECTOR3 pos, D3DXVECTOR3 move, int ModelIdx)
 {
-	CDebris* pDebris = NULL;
+	CDebris* pDebris = nullptr;
 
-	if (pDebris == NULL)
+	if (pDebris == nullptr)
 	{
 		//オブジェクト2Dの生成
 		pDebris = new CDebris();
@@ -64,7 +64,7 @@ CDebris* CDebris::Create(D3DXVECTOR3 pos, D3DXVECTOR3 move, int ModelIdx)
 	//オブジェクトの初期化処理
 	if (FAILED(pDebris->Init(pos, move, ModelIdx)))
 	{//初期化処理が失敗した場合
-		return NULL;
+		return nullptr;
 	}
 
 	return pDebris;
@@ -264,7 +264,7 @@ void CDebris::CollisionMapObject(D3DXVECTOR3 Mypos, D3DXVECTOR3 MyposOld, useful
 		//オブジェクトを取得
 		CObject* pObj = CObject::GetTop(nCntPriority);
 
-		while (pObj != NULL)
+		while (pObj != nullptr)
 		{
 			CObject* pObjNext = pObj->GetNext();
 

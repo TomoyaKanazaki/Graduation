@@ -35,9 +35,9 @@ C2DUI::~C2DUI()
 //====================================================================
 C2DUI* C2DUI::Create(void)
 {
-	C2DUI* pSample2D = NULL;
+	C2DUI* pSample2D = nullptr;
 
-	if (pSample2D == NULL)
+	if (pSample2D == nullptr)
 	{
 		//オブジェクト2Dの生成
 		pSample2D = new C2DUI();
@@ -46,7 +46,7 @@ C2DUI* C2DUI::Create(void)
 	//オブジェクトの初期化処理
 	if (FAILED(pSample2D->Init()))
 	{//初期化処理が失敗した場合
-		return NULL;
+		return nullptr;
 	}
 
 	return pSample2D;

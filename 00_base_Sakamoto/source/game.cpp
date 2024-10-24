@@ -111,7 +111,7 @@ CGame::CGame()
 	m_nEventNumber = 0;
 	m_nNumBowabowa = 0;
 	CManager::GetInstance()->GetCamera()->SetBib(false);
-	CManager::GetInstance()->GetCamera()->SetCameraMode(CCamera::CAMERAMODE_CONTROL);
+	CManager::GetInstance()->GetCamera()->SetCameraMode(CCamera::CAMERAMODE_DOWNVIEW);
 }
 
 //====================================================================
@@ -145,17 +145,19 @@ HRESULT CGame::Init(void)
 	m_pMeshDomeUp = CObjmeshDome::Create();
 	m_pMeshDomeUp->SetTexture("data\\TEXTURE\\rain_clown.jpg");
 
-	m_pMeshField = CObjmeshField::Create(21, 21);
+	m_pMeshField = CObjmeshField::Create(16, 12);
 	m_pMeshField->SetPos(INITVECTOR3);
 
 	CBowabowa* pBowabowa = nullptr;
 	pBowabowa = CBowabowa::Create("data\\MODEL\\Testbowabowa.x");
-	pBowabowa->SetPos(D3DXVECTOR3(100.0f, 0.0f, 0.0f));
+	pBowabowa->SetWightNumber(9);
+	pBowabowa->SetHeightNumber(5);
 
-	// ¹‘¶¬
+	//// ¹‘¶¬
 	CBible* pBible = nullptr;
 	pBible = CBible::Create("data\\MODEL\\TestCross.x");
-	pBible->SetPos(D3DXVECTOR3(-100.0f, 0.0f, 0.0f));
+	pBible->SetWightNumber(8);
+	pBible->SetHeightNumber(4);
 
 	m_bGameEnd = false;
 

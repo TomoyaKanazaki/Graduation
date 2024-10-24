@@ -53,6 +53,7 @@
     <ClCompile Include="source\LevelModelEffect.cpp" />
     <ClCompile Include="source\LifeUi.cpp" />
     <ClCompile Include="source\light.cpp" />
+    <ClCompile Include="source\listManager.cpp" />
     <ClCompile Include="source\log.cpp" />
     <ClCompile Include="source\logo.cpp" />
     <ClCompile Include="source\main.cpp" />
@@ -146,6 +147,7 @@
     <ClInclude Include="source\LevelModelEffect.h" />
     <ClInclude Include="source\LifeUi.h" />
     <ClInclude Include="source\light.h" />
+    <ClInclude Include="source\listManager.h" />
     <ClInclude Include="source\log.h" />
     <ClInclude Include="source\logo.h" />
     <ClInclude Include="source\main.h" />
@@ -277,7 +279,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;HIDAPI_EXPORTS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
@@ -286,6 +288,7 @@
       <AdditionalIncludeDirectories>..\hidapi;source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <WholeProgramOptimization>true</WholeProgramOptimization>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -323,6 +326,7 @@
       <AdditionalIncludeDirectories>..\hidapi;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <SupportJustMyCode>true</SupportJustMyCode>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

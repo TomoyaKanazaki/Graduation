@@ -52,7 +52,7 @@ CTexture::CTexture()
 {
 	for (int nCntTex = 0; nCntTex < MAX_TEXTURE; nCntTex++)
 	{
-		m_apTexture[nCntTex] = NULL;
+		m_apTexture[nCntTex] = nullptr;
 	}
 }
 
@@ -79,7 +79,7 @@ HRESULT CTexture::Load(void)
 	//		c_apTexturename[nCntTex],
 	//		&m_apTexture[nCntTex])))
 	//	{
-	//		if (c_apTexturename[nCntTex] == NULL)
+	//		if (c_apTexturename[nCntTex] == nullptr)
 	//		{
 	//			m_NumAll = nCntTex;
 	//			return S_OK;
@@ -106,10 +106,10 @@ void CTexture::Unload(void)
 	for (int nCntTex = 0; nCntTex < m_NumAll; nCntTex++)
 	{
 		//テクスチャの破棄
-		if (m_apTexture[nCntTex] != NULL)
+		if (m_apTexture[nCntTex] != nullptr)
 		{
 			m_apTexture[nCntTex]->Release();
-			m_apTexture[nCntTex] = NULL;
+			m_apTexture[nCntTex] = nullptr;
 		}
 	}
 }
@@ -170,7 +170,7 @@ void CTexture::XModelRegist(int *nTexIdx, int nXModelIdx)
 	for (int nCntMat = 0; nCntMat < (int)pXmodel->m_dwNumMat; nCntMat++)
 	{
 		nCheck = -1;
-		if (pMat[nCntMat].pTextureFilename != NULL)
+		if (pMat[nCntMat].pTextureFilename != nullptr)
 		{
 			for (int nCntTex = 0; nCntTex < m_NumAll; nCntTex++)
 			{
@@ -196,7 +196,7 @@ void CTexture::XModelRegist(int *nTexIdx, int nXModelIdx)
 		}
 		else
 		{
-			m_apTexture[m_NumAll] = NULL;
+			m_apTexture[m_NumAll] = nullptr;
 			nTexIdx[nCntMat] = -1;
 		}
 	}

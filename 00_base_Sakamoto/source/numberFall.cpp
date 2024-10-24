@@ -45,9 +45,9 @@ CNumberFall::~CNumberFall()
 //====================================================================
 CNumberFall* CNumberFall::Create(void)
 {
-	CNumberFall* pNumber = NULL;
+	CNumberFall* pNumber = nullptr;
 
-	if (pNumber == NULL)
+	if (pNumber == nullptr)
 	{
 		//オブジェクト2Dの生成
 		pNumber = new CNumberFall();
@@ -56,7 +56,7 @@ CNumberFall* CNumberFall::Create(void)
 	//オブジェクトの初期化処理
 	if (FAILED(pNumber->Init()))
 	{//初期化処理が失敗した場合
-		return NULL;
+		return nullptr;
 	}
 
 	return pNumber;

@@ -14,7 +14,7 @@
 //====================================================================
 CMotion::CMotion()
 {
-	m_ppModel = NULL;
+	m_ppModel = nullptr;
 	m_nType = 0;					//モーションの種類の設定
 	m_bLoop = m_aInfo[m_nType].bLoop;	//ループするかどうかの設定
 	m_nKey = 0;							//現在のキーNoを0にする
@@ -215,7 +215,7 @@ void CMotion::LoadData(const char *pFilename)
 	//ファイルを開く
 	pFile = fopen(pFilename, "r");
 
-	if (pFile != NULL)
+	if (pFile != nullptr)
 	{//ファイルが開けた場合
 
 		int nCntModel = 0;

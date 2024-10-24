@@ -28,7 +28,7 @@ CDevilHole::CDevilHole(int nPriority) : CObjectX(nPriority)
 {
 	SetSize(SAMPLE_SIZE);
 	SetPos(INITVECTOR3);
-	m_nIdxXModel = NULL;			//マテリアルの数
+	m_nIdxXModel = 0;			//マテリアルの数
 	m_CollisionPos = INITVECTOR3;
 	m_bCollision = false;
 	m_State = STATE_NORMAL;
@@ -56,9 +56,9 @@ CDevilHole::~CDevilHole()
 //====================================================================
 CDevilHole* CDevilHole::Create(char* pModelName)
 {
-	CDevilHole* pSample = NULL;
+	CDevilHole* pSample = nullptr;
 
-	if (pSample == NULL)
+	if (pSample == nullptr)
 	{
 		//オブジェクト2Dの生成
 		pSample = new CDevilHole();
@@ -67,7 +67,7 @@ CDevilHole* CDevilHole::Create(char* pModelName)
 	//オブジェクトの初期化処理
 	if (FAILED(pSample->Init(pModelName)))
 	{//初期化処理が失敗した場合
-		return NULL;
+		return nullptr;
 	}
 
 	return pSample;
@@ -218,7 +218,7 @@ void CDevilHole::CollisionOpen(void)
 		//オブジェクトを取得
 		CObject* pObj = CObject::GetTop(nCntPriority);
 
-		while (pObj != NULL)
+		while (pObj != nullptr)
 		{
 			CObject* pObjNext = pObj->GetNext();
 

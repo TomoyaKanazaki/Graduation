@@ -360,6 +360,9 @@
     <ClCompile Include="source\bible.cpp">
       <Filter>ソース ファイル\11_item</Filter>
     </ClCompile>
+    <ClCompile Include="source\listManager.cpp">
+      <Filter>ソース ファイル\01_System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\SampleLevelModel.h">
@@ -628,6 +631,9 @@
     </ClInclude>
     <ClInclude Include="source\bible.h">
       <Filter>ヘッダー ファイル\11_item</Filter>
+    </ClInclude>
+    <ClInclude Include="source\listManager.h">
+      <Filter>ヘッダー ファイル\01_System</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

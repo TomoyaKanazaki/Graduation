@@ -34,6 +34,9 @@
 #include "devil.h"
 #include "MapSystem.h"
 
+//===========================================
+// 定数定義
+//===========================================
 namespace
 {
 	const D3DXVECTOR3 COLLISION_SIZE = D3DXVECTOR3(45.0f, 40.0f, 45.0f);		//横の当たり判定
@@ -42,6 +45,11 @@ namespace
 
 	const D3DXVECTOR3 LIFE_POS = D3DXVECTOR3(50.0f, 650.0f, 0.0f);
 }
+
+//===========================================
+// 静的メンバ変数宣言
+//===========================================
+CListManager<CPlayer>* CPlayer::m_pList = nullptr; // オブジェクトリスト
 
 //====================================================================
 //コンストラクタ
@@ -56,8 +64,8 @@ CPlayer::CPlayer(int nPriority) :CObject(nPriority)
 	m_AutoMoveRot = D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f);
 	m_bJump = false;
 	m_nActionCount = 0;
-	m_Action = ACTION_BWAIT;
-	m_AtkAction = ACTION_BWAIT;
+	m_Action = ACTION_WAIT;
+	m_AtkAction = ACTION_WAIT;
 	m_State = STATE_EGG;
 	m_nStateCount = 0;
 	m_AtkPos = INITVECTOR3;
@@ -72,8 +80,10 @@ CPlayer::CPlayer(int nPriority) :CObject(nPriority)
 	m_pLifeUi = nullptr;
 	m_nLife = LIFE_MAX;
 	m_eItemType = TYPE_NONE;
+	m_MoveState = MOVE_STATE_WAIT;
 	m_nMapWight = 0;
 	m_nMapHeight = 0;
+	m_bGritCenter = true;
 }
 
 //====================================================================
@@ -89,9 +99,9 @@ CPlayer::~CPlayer()
 //====================================================================
 CPlayer* CPlayer::Create()
 {
-	CPlayer* pPlayer = NULL;
+	CPlayer* pPlayer = nullptr;
 
-	if (pPlayer == NULL)
+	if (pPlayer == nullptr)
 	{
 		//プレイヤーの生成
 		pPlayer = new CPlayer();
@@ -100,7 +110,7 @@ CPlayer* CPlayer::Create()
 	//オブジェクトの初期化処理
 	if (FAILED(pPlayer->Init()))
 	{//初期化処理が失敗した場合
-		return NULL;
+		return nullptr;
 	}
 
 	return pPlayer;
@@ -121,14 +131,14 @@ HRESULT CPlayer::Init(void)
 	SetType(CObject::TYPE_PLAYER3D);
 
 	//モデルの生成
-	LoadLevelData("data\\TXT\\motion_foot_light_spear.txt");
+	LoadLevelData("data\\TXT\\motion_tamagon.txt");
 
 	// プレイヤーの指定パーツ削除
-	SetPartsDisp(3, false);
-	SetPartsDisp(0, false);
+	SetPartsDisp(9, false);		// 十字架のモデル非表示
+	SetPartsDisp(10, false);	// 聖書のモデル非表示
 
 	//モーションの生成
-	if (m_pMotion == NULL)
+	if (m_pMotion == nullptr)
 	{
 		//モーションの生成
 		m_pMotion = new CMotion;
@@ -136,7 +146,7 @@ HRESULT CPlayer::Init(void)
 
 	//初期化処理
 	m_pMotion->SetModel(&m_apModel[0], m_nNumModel);
-	m_pMotion->LoadData("data\\TXT\\motion_foot_light_spear.txt");
+	m_pMotion->LoadData("data\\TXT\\motion_tamagon.txt");
 
 	switch (CScene::GetMode())
 	{
@@ -164,6 +174,16 @@ HRESULT CPlayer::Init(void)
 	// スローの生成
 	m_pSlow = CSlowManager::Create(CSlowManager::CAMP_PLAYER, CSlowManager::TAG_PLAYER);
 
+	// リストマネージャーの生成
+	if (m_pList == nullptr)
+	{
+		m_pList = CListManager<CPlayer>::Create();
+		if (m_pList == nullptr) { assert(false); return E_FAIL; }
+	}
+
+	// リストに自身のオブジェクトを追加・イテレーターを取得
+	m_iterator = m_pList->AddList(this);
+
 	return S_OK;
 }
 
@@ -180,19 +200,29 @@ void CPlayer::MyObjCreate(void)
 //====================================================================
 void CPlayer::Uninit(void)
 {
+	// リストから自身のオブジェクトを削除
+	m_pList->DelList(m_iterator);
+
+	if (m_pList->GetNumAll() == 0)
+	{ // オブジェクトが一つもない場合
+
+		// リストマネージャーの破棄
+		m_pList->Release(m_pList);
+	}
+
 	for (int nCntModel = 0; nCntModel < m_nNumModel; nCntModel++)
 	{
 		m_apModel[nCntModel]->Uninit();
 		delete m_apModel[nCntModel];
-		m_apModel[nCntModel] = NULL;
+		m_apModel[nCntModel] = nullptr;
 	}
 
 	//モーションの終了処理
-	if (m_pMotion != NULL)
+	if (m_pMotion != nullptr)
 	{
 		//モーションの破棄
 		delete m_pMotion;
-		m_pMotion = NULL;
+		m_pMotion = nullptr;
 	}
 
 	SetDeathFlag(true);
@@ -261,8 +291,11 @@ void CPlayer::GameUpdate(void)
 		// 位置更新処理
 		PosUpdate();
 
-		//画面外判定
-		CollisionStageOut();
+		if (m_State != STATE_EGG)
+		{
+			//画面外判定
+			CollisionStageOut();
+		}
 
 		// 敵の判定
 		CollisionEnemy();
@@ -347,33 +380,41 @@ void CPlayer::Move(void)
 	m_bInput = false;
 
 	//キーボードの移動処理
-	if (pInputKeyboard->GetPress(DIK_W) && m_OKU)
+	if ((pInputKeyboard->GetPress(DIK_W) && m_OKU) ||
+		(pInputKeyboard->GetPress(DIK_W) && m_MoveState == MOVE_STATE_DOWN))
 	{
 		NormarizeMove.z += 1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 		NormarizeMove.x += 1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 
 		m_bInput = true;
+		m_MoveState = MOVE_STATE_UP;
 	}
-	if (pInputKeyboard->GetPress(DIK_S) && m_OKD)
+	if ((pInputKeyboard->GetPress(DIK_S) && m_OKD) ||
+		(pInputKeyboard->GetPress(DIK_S) && m_MoveState == MOVE_STATE_UP))
 	{
 		NormarizeMove.z += -1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 		NormarizeMove.x += -1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 
 		m_bInput = true;
+		m_MoveState = MOVE_STATE_DOWN;
 	}
-	if (pInputKeyboard->GetPress(DIK_A) && m_OKL)
+	if ((pInputKeyboard->GetPress(DIK_A) && m_OKL) ||
+		(pInputKeyboard->GetPress(DIK_A) && m_MoveState == MOVE_STATE_RIGHT))
 	{
 		NormarizeMove.x += -1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 		NormarizeMove.z -= -1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 
 		m_bInput = true;
+		m_MoveState = MOVE_STATE_LEFT;
 	}
-	if (pInputKeyboard->GetPress(DIK_D) && m_OKR && !m_bInput)
+	if ((pInputKeyboard->GetPress(DIK_D) && m_OKR) ||
+		(pInputKeyboard->GetPress(DIK_D) && m_MoveState == MOVE_STATE_LEFT))
 	{
 		NormarizeMove.x += 1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 		NormarizeMove.z -= 1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 
 		m_bInput = true;
+		m_MoveState = MOVE_STATE_RIGHT;
 	}
 
 	if (pInputKeyboard->GetPress(DIK_W) == false && pInputKeyboard->GetPress(DIK_A) == false && pInputKeyboard->GetPress(DIK_S) == false && pInputKeyboard->GetPress(DIK_D) == false)
@@ -424,7 +465,7 @@ void CPlayer::Rot(void)
 
 	if (pInputKeyboard->GetPress(DIK_W) == true || pInputKeyboard->GetPress(DIK_A) == true || pInputKeyboard->GetPress(DIK_S) == true || pInputKeyboard->GetPress(DIK_D) == true)
 	{
-		m_rot.y = atan2f(m_move.z, -m_move.x);
+		m_rot.y = atan2f(-m_move.x, -m_move.z);
 	}
 
 	useful::NormalizeAngle(&m_rot);
@@ -452,38 +493,38 @@ void CPlayer::ActionState(void)
 	//移動モーション
 	if (m_State == STATE_DEATH)
 	{
-		if (m_Action != ACTION_SDEATH)
+		if (m_Action != ACTION_DEATH)
 		{
-			m_Action = ACTION_SDEATH;
-			m_pMotion->Set(ACTION_SDEATH, 5);
+			m_Action = ACTION_DEATH;
+			m_pMotion->Set(ACTION_DEATH, 5);
 		}
 	}
 
 	//移動モーション
 	if (m_move.x > 0.1f || m_move.x < -0.1f || m_move.z > 0.1f || m_move.z < -0.1f)
 	{
-		if (m_Action != ACTION_BMOVE)
+		if (m_Action != ACTION_MOVE)
 		{
-			m_Action = ACTION_BMOVE;
-			m_pMotion->Set(ACTION_BMOVE, 5);
+			m_Action = ACTION_MOVE;
+			m_pMotion->Set(ACTION_MOVE, 5);
 		}
 	}
 	//卵モーション
 	else if (m_State == STATE_EGG)
 	{
-		if (m_Action != ACTION_SWAIT)
+		if (m_Action != ACTION_EGG)
 		{
-			m_Action = ACTION_SWAIT;
-			m_pMotion->Set(ACTION_SWAIT, 5);
+			m_Action = ACTION_EGG;
+			m_pMotion->Set(ACTION_EGG, 5);
 		}
 	}
 	//ニュートラルモーション
 	else
 	{
-		if (m_Action != ACTION_BWAIT)
+		if (m_Action != ACTION_WAIT)
 		{
-			m_Action = ACTION_BWAIT;
-			m_pMotion->Set(ACTION_BWAIT, 5);
+			m_Action = ACTION_WAIT;
+			m_pMotion->Set(ACTION_WAIT, 5);
 		}
 	}
 }
@@ -537,7 +578,7 @@ void CPlayer::CollisionWall(useful::COLLISION XYZ)
 		//オブジェクトを取得
 		CObject* pObj = CObject::GetTop(nCntPriority);
 
-		while (pObj != NULL)
+		while (pObj != nullptr)
 		{
 			CObject* pObjNext = pObj->GetNext();
 
@@ -558,6 +599,7 @@ void CPlayer::CollisionWall(useful::COLLISION XYZ)
 				{
 					//待機状態にする
 					m_State = STATE_WAIT;
+					m_MoveState = MOVE_STATE_WAIT;
 				}
 			}
 
@@ -567,7 +609,7 @@ void CPlayer::CollisionWall(useful::COLLISION XYZ)
 }
 
 //====================================================================
-// 壁との当たり判定
+// 上下左右に壁が存在するかの判定
 //====================================================================
 void CPlayer::SearchWall(void)
 {
@@ -588,40 +630,31 @@ void CPlayer::SearchWall(void)
 
 	nRNumber = useful::RangeNumber(nMapWightMax, 0, nRNumber);
 	nLNumber = useful::RangeNumber(nMapWightMax, 0, nLNumber);
-	nUNumber = useful::RangeNumber(nMapWightMax, 0, nUNumber);
-	nDNumber = useful::RangeNumber(nMapWightMax, 0, nDNumber);
+	nUNumber = useful::RangeNumber(nMapHeightMax, 0, nUNumber);
+	nDNumber = useful::RangeNumber(nMapHeightMax, 0, nDNumber);
 
 	OKR = !pMapSystem->GetGritBool(nRNumber, m_nMapHeight);
 	OKL = !pMapSystem->GetGritBool(nLNumber, m_nMapHeight);
 	OKU = !pMapSystem->GetGritBool(m_nMapWight, nUNumber);
 	OKD = !pMapSystem->GetGritBool(m_nMapWight, nDNumber);
 
-	for (int nCntW = 0; nCntW < nMapWightMax; nCntW++)
-	{
-		for (int nCntH = 0; nCntH < nMapHeightMax; nCntH++)
-		{
-			if (pMapSystem->GetGritBool(nCntW, nCntH))
-			{
-				CEffect* pEffect = CEffect::Create();
-				pEffect->SetPos(D3DXVECTOR3(MapSystemPos.x + nCntW * 100.0f, 50.0f, MapSystemPos.z - nCntH * 100.0f));
-				pEffect->SetLife(10);
-			}
-		}
-	}
-
 	//自分の立っているグリットの中心位置を求める
-	D3DXVECTOR3 MyGritPos = D3DXVECTOR3(MapSystemPos.x + m_nMapWight * 100.0f, 50.0f, MapSystemPos.z - m_nMapHeight * 100.0f);
+	D3DXVECTOR3 MyGritPos = CMapSystem::GetInstance()->GetGritPos(m_nMapWight, m_nMapHeight);
 	float MapGritSize = pMapSystem->GetGritSize();
+
+	DebugProc::Print(DebugProc::POINT_LEFT, "自分がいるグリットの中心位置 %f %f %f\n", MyGritPos.x, MyGritPos.y, MyGritPos.z);
 
 	if (m_pos.x <= MyGritPos.x + ((MapGritSize * 0.5f) - m_size.x) &&
 		m_pos.x >= MyGritPos.x - ((MapGritSize * 0.5f) - m_size.x) &&
 		m_pos.z <= MyGritPos.z + ((MapGritSize * 0.5f) - m_size.z) &&
 		m_pos.z >= MyGritPos.z - ((MapGritSize * 0.5f) - m_size.z))
-	{
+	{// グリットの中心位置に立っているなら操作を受け付ける
 		m_OKR = OKR;	//右
 		m_OKL = OKL;	//左
 		m_OKU = OKU;	//上
 		m_OKD = OKD;	//下
+
+		m_bGritCenter = true;
 	}
 	else
 	{
@@ -629,133 +662,9 @@ void CPlayer::SearchWall(void)
 		m_OKL = false;	//左
 		m_OKU = false;	//上
 		m_OKD = false;	//下
+
+		m_bGritCenter = false;
 	}
-
-	//for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
-	//{
-	//	//オブジェクトを取得
-	//	CObject* pObj = CObject::GetTop(nCntPriority);
-
-	//	while (pObj != NULL)
-	//	{
-	//		CObject* pObjNext = pObj->GetNext();
-
-	//		CObject::TYPE type = pObj->GetType();			//種類を取得
-
-	//		if (type == TYPE_CUBEBLOCK)
-	//		{//種類がブロックの時
-
-	//			CCubeBlock* pBlock = (CCubeBlock*)pObj;	// ブロック情報の取得
-
-	//			D3DXVECTOR3 pos = pBlock->GetPos();
-	//			D3DXVECTOR3 Size = pBlock->GetSize();
-
-	//			D3DXVECTOR3 MyPos = INITVECTOR3;
-
-	//			for (int nCnt = 0; nCnt < 4; nCnt++)
-	//			{
-	//				switch (nCnt)
-	//				{
-	//				case 0:
-	//					MyPos = D3DXVECTOR3(m_pos.x + Size.x * 2.0f, m_pos.y, m_pos.z);	//右
-	//					break;
-	//				case 1:
-	//					MyPos = D3DXVECTOR3(m_pos.x - Size.x * 2.0f, m_pos.y, m_pos.z);	//左
-	//					break;
-	//				case 2:
-	//					MyPos = D3DXVECTOR3(m_pos.x, m_pos.y, m_pos.z + Size.z * 2.0f);	//上
-	//					break;
-	//				case 3:
-	//					MyPos = D3DXVECTOR3(m_pos.x, m_pos.y, m_pos.z - Size.z * 2.0f);	//下
-	//					break;
-	//				}
-
-	//				// 矩形の当たり判定
-	//				if (useful::CollisionRectangle2D(MyPos, pos, COLLISION_SIZE, Size, useful::COLLISION::COLLISION_ZX) == true)
-	//				{
-	//					switch (nCnt)
-	//					{
-	//					case 0:
-	//						OKR = false;
-	//						break;
-	//					case 1:
-	//						OKL = false;
-	//						break;
-	//					case 2:
-	//						OKU = false;
-	//						break;
-	//					case 3:
-	//						OKD = false;
-	//						break;
-	//					}
-
-	//					CEffect* pEffect = CEffect::Create();
-	//					pEffect->SetPos(MyPos);
-	//				}
-	//			}
-	//		}
-
-	//		if (type == TYPE_DEVILHOLE)
-	//		{//種類がデビルホールの時
-
-	//			CDevilHole* pDevilHole = (CDevilHole*)pObj;	// ブロック情報の取得
-
-	//			D3DXVECTOR3 pos = pDevilHole->GetPos();
-	//			D3DXVECTOR3 Size = pDevilHole->GetSize();
-
-	//			D3DXVECTOR3 MyPos = INITVECTOR3;
-
-	//			for (int nCnt = 0; nCnt < 4; nCnt++)
-	//			{
-	//				switch (nCnt)
-	//				{
-	//				case 0:
-	//					MyPos = D3DXVECTOR3(m_pos.x + Size.x * 2.0f, m_pos.y, m_pos.z);	//右
-	//					break;
-	//				case 1:
-	//					MyPos = D3DXVECTOR3(m_pos.x - Size.x * 2.0f, m_pos.y, m_pos.z);	//左
-	//					break;
-	//				case 2:
-	//					MyPos = D3DXVECTOR3(m_pos.x, m_pos.y, m_pos.z + Size.z * 2.0f);	//上
-	//					break;
-	//				case 3:
-	//					MyPos = D3DXVECTOR3(m_pos.x, m_pos.y, m_pos.z - Size.z * 2.0f);	//下
-	//					break;
-	//				}
-
-	//				// 矩形の当たり判定
-	//				if (useful::CollisionRectangle2D(MyPos, pos, COLLISION_SIZE, Size, useful::COLLISION::COLLISION_ZX) == true)
-	//				{
-	//					switch (nCnt)
-	//					{
-	//					case 0:
-	//						OKR = false;
-	//						break;
-	//					case 1:
-	//						OKL = false;
-	//						break;
-	//					case 2:
-	//						OKU = false;
-	//						break;
-	//					case 3:
-	//						OKD = false;
-	//						break;
-	//					}
-
-	//					CEffect* pEffect = CEffect::Create();
-	//					pEffect->SetPos(MyPos);
-	//				}
-	//			}
-	//		}
-
-	//		pObj = pObjNext;
-	//	}
-	//}
-
-	//m_OKR = OKR;	//右
-	//m_OKL = OKL;	//左
-	//m_OKU = OKU;	//上
-	//m_OKD = OKD;	//下
 }
 
 //====================================================================
@@ -768,7 +677,7 @@ void CPlayer::CollisionDevilHole(useful::COLLISION XYZ)
 		//オブジェクトを取得
 		CObject* pObj = CObject::GetTop(nCntPriority);
 
-		while (pObj != NULL)
+		while (pObj != nullptr)
 		{
 			CObject* pObjNext = pObj->GetNext();
 
@@ -840,28 +749,29 @@ void CPlayer::CollisionStageOut(void)
 {
 	D3DXVECTOR3 D_pos = CGame::GetDevil()->GetDevilPos();
 	D3DXVECTOR3 D_Size = CGame::GetDevil()->GetDevilSize();
+	float G_Size = CMapSystem::GetInstance()->GetGritSize() * 0.5f;
 
-	if (m_pos.x - 50.0f > D_pos.x + D_Size.x)
+	if (m_pos.x + G_Size > D_pos.x + D_Size.x)
 	{
-		m_pos.x = D_pos.x + D_Size.x + 50.0f;
+		m_pos.x = D_pos.x + D_Size.x - G_Size;
 		m_State = STATE_WAIT;
 		m_move.x = 0.0f;
 	}
-	if (m_pos.x + 50.0f < D_pos.x - D_Size.x)
+	if (m_pos.x - G_Size < D_pos.x - D_Size.x)
 	{
-		m_pos.x = D_pos.x - D_Size.x - 50.0f;
+		m_pos.x = D_pos.x - D_Size.x + G_Size;
 		m_State = STATE_WAIT;
 		m_move.x = 0.0f;
 	}
-	if (m_pos.z - 50.0f > D_pos.z + D_Size.z)
+	if (m_pos.z + G_Size > D_pos.z + D_Size.z)
 	{
-		m_pos.z = D_pos.z + D_Size.z + 50.0f;
+		m_pos.z = D_pos.z + D_Size.z - G_Size;
 		m_State = STATE_WAIT;
 		m_move.z = 0.0f;
 	}
-	if (m_pos.z + 50.0f < D_pos.z - D_Size.z)
+	if (m_pos.z - G_Size < D_pos.z - D_Size.z)
 	{
-		m_pos.z = D_pos.z - D_Size.z - 50.0f;
+		m_pos.z = D_pos.z - D_Size.z + G_Size;
 		m_State = STATE_WAIT;
 		m_move.z = 0.0f;
 	}
@@ -872,35 +782,8 @@ void CPlayer::CollisionStageOut(void)
 //====================================================================
 void CPlayer::MapSystemNumber(void)
 {
-	D3DXVECTOR3 MapPos = CMapSystem::GetInstance()->GetMapPos();
-	int MapWightMax = CMapSystem::GetInstance()->GetWightMax();
-	int MapHeightMax = CMapSystem::GetInstance()->GetHeightMax();
-	float MapGritSize = CMapSystem::GetInstance()->GetGritSize();
-	D3DXVECTOR3 GritPos = INITVECTOR3;
-
-	for (int nCntW = 0; nCntW < MapWightMax; nCntW++)
-	{
-		float fCountPosX = ((MapWightMax * 0.5f) * -MapGritSize) + (nCntW * MapGritSize);
-
-		if (m_pos.x < fCountPosX + (MapGritSize * 0.5f) &&
-			m_pos.x >= fCountPosX - (MapGritSize * 0.5f))
-		{
-			m_nMapWight = nCntW;
-			break;
-		}
-	}
-
-	for (int nCntH = 0; nCntH < MapHeightMax; nCntH++)
-	{
-		float fCountPosZ = ((MapHeightMax * 0.5f) * MapGritSize) - (nCntH * MapGritSize);
-
-		if (m_pos.z < fCountPosZ + (MapGritSize * 0.5f) &&
-			m_pos.z >= fCountPosZ - (MapGritSize * 0.5f))
-		{
-			m_nMapHeight = nCntH;
-			break;
-		}
-	}
+	m_nMapWight = CMapSystem::GetInstance()->GetGritWightNumber(m_pos.x);
+	m_nMapHeight = CMapSystem::GetInstance()->GetGritHeightNumber(m_pos.z);
 }
 
 //====================================================================
@@ -970,7 +853,7 @@ void CPlayer::PosUpdate(void)
 	//X軸の位置更新
 	m_pos.x += m_move.x * CManager::GetInstance()->GetGameSpeed() * fSpeed;
 	m_pos.x += m_Objmove.x * CManager::GetInstance()->GetGameSpeed() * fSpeed;
-
+	
 	// 壁との当たり判定
 	CollisionWall(useful::COLLISION_X);
 	CollisionDevilHole(useful::COLLISION_X);
@@ -1021,6 +904,7 @@ void CPlayer::Death(void)
 			}
 
 			m_State = STATE_DEATH;
+			m_move = INITVECTOR3;
 			m_nStateCount = 150;
 
 			// ダメージ音
@@ -1097,7 +981,7 @@ bool CPlayer::SortObject(D3DXVECTOR3 pos)
 		//オブジェクトを取得
 		CObject* pObj = CObject::GetTop(nCntPriority);
 
-		while (pObj != NULL)
+		while (pObj != nullptr)
 		{
 			CObject* pObjNext = pObj->GetNext();
 
@@ -1168,6 +1052,34 @@ bool CPlayer::SortObject(D3DXVECTOR3 pos)
 	return false;
 }
 
+//==========================================
+//  アイテムの設定
+//==========================================
+void CPlayer::SetItemType(ITEM_TYPE eType)
+{
+	// アイテムのタイプを設定
+	m_eItemType = eType;
+
+	// 所持しているアイテムによってモデルの表示を切り替える
+	switch (eType)
+	{
+	case TYPE_CROSS:
+		SetPartsDisp(9, true);		// 十字架のモデル表示
+		SetPartsDisp(10, false);	// 聖書のモデル非表示
+		break;
+
+	case TYPE_BIBLE:
+		SetPartsDisp(9, false);		// 十字架のモデル非表示
+		SetPartsDisp(10, true);		// 聖書のモデル表示
+		break;
+
+	default:
+		SetPartsDisp(9, false);		// 十字架のモデル非表示
+		SetPartsDisp(10, false);	// 聖書のモデル非表示
+		break;
+	}
+}
+
 //====================================================================
 //ロード処理
 //====================================================================
@@ -1178,7 +1090,7 @@ void CPlayer::LoadLevelData(const char* pFilename)
 	//ファイルを開く
 	pFile = fopen(pFilename, "r");
 
-	if (pFile != NULL)
+	if (pFile != nullptr)
 	{//ファイルが開けた場合
 
 		int ModelParent = 0;
@@ -1253,7 +1165,7 @@ void CPlayer::LoadLevelData(const char* pFilename)
 
 								if (ModelParent == -1)
 								{
-									m_apModel[nCntModel]->SetParent(NULL);
+									m_apModel[nCntModel]->SetParent(nullptr);
 								}
 								else
 								{

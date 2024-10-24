@@ -76,6 +76,14 @@ public:
 	// 状態管理の取得
 	int GetStateCounter() { return m_nStateCount; }
 
+	// マップの横番号の取得
+	void SetWightNumber(int Wight) { m_nMapWight = Wight; }
+	int GetWightNumber() { return m_nMapWight; }
+
+	// マップの縦番号の取得
+	void SetHeightNumber(int Height) { m_nMapHeight = Height; }
+	int GetHeightNumber() { return m_nMapHeight; }
+
 private:
 	STATE m_eState;		// 状態
 	TYPE m_eType;		// 種類
@@ -95,6 +103,9 @@ private:
 	D3DXVECTOR3 m_posOld;		//過去の位置	
 	D3DXVECTOR3 m_move;			//移動量	
 	D3DXVECTOR3 m_rot;			//向き	
+
+	int m_nMapWight;			//マップの横番号
+	int m_nMapHeight;			//マップの縦番号
 };
 
 #endif

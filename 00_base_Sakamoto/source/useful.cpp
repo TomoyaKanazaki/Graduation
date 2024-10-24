@@ -530,7 +530,7 @@ void useful::Vec3Project(D3DXVECTOR3 *pOut, D3DXVECTOR3 v)
 	D3DXMatrixIdentity(&mtxWorld);
 
 	// ç¿ïWïœä∑
-	D3DXVec3Project(pOut, &v, &viewport, &mtxProjection, &mtxView, NULL);
+	D3DXVec3Project(pOut, &v, &viewport, &mtxProjection, &mtxView, nullptr);
 }
 
 //================
