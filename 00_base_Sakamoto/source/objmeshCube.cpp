@@ -375,6 +375,7 @@ void CObjmeshCube::Draw(void)
 {
 	//デバイスの所得
 	LPDIRECT3DDEVICE9 m_pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
+	D3DXMATRIX TestMatrix;	//テスト用マトリックス
 	D3DXMATRIX mtxRot, mtxTrans;	//計算用マトリックス
 
 	//ライティングをオフにする
@@ -392,6 +393,14 @@ void CObjmeshCube::Draw(void)
 	D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);
 
 	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
+
+	if (m_bMultiMatrix)
+	{
+		//算出したマトリクスをかけ合わせる
+		D3DXMatrixMultiply(&m_mtxWorld,
+			&m_mtxWorld,
+			&m_UseMultiMatrix);
+	}
 
 	//ワールドマトリックスの設定
 	m_pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);

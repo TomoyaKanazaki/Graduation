@@ -30,10 +30,12 @@
 #include "Cross.h"
 #include "MapSystem.h"
 #include "debugproc.h"
+#include "objmeshField.h"
 #include "sound.h"
 
 #define COLLISION_SIZE (D3DXVECTOR3(750.0f,0.0f,550.0f))		//横の当たり判定
 #define SCROOL_SPEED (5.0f)		//スクロールの移動速度
+#define STAGE_ROT_LIMIT (D3DX_PI * 0.25f)		//スクロールの移動速度
 
 namespace
 {
@@ -332,6 +334,7 @@ void CDevil::Move(void)
 	{
 		ObjectScroll(D3DXVECTOR3(0.0f, 0.0f, -SCROOL_SPEED));
 	}
+
 	if (pInputKeyboard->GetPress(DIK_LEFT))
 	{
 		ObjectScroll(D3DXVECTOR3(-SCROOL_SPEED, 0.0f, 0.0f));
@@ -378,18 +381,54 @@ void CDevil::Rot(void)
 	CInputMouse* pInputMouse = CManager::GetInstance()->GetInputMouse();
 	CInputJoypad* pInputJoypad = CManager::GetInstance()->GetInputJoyPad();
 	D3DXVECTOR3 CameraRot = CManager::GetInstance()->GetCamera()->GetRot();
+	
+	CObjmeshField *pMapField = CGame::GetMapField();
+	D3DXVECTOR3 MapRot = pMapField->GetRot();
 
-	//移動方向に向きを合わせる処理
-	float fRotMove, fRotDest;
-	fRotMove = m_rot.y;
-	fRotDest = CManager::GetInstance()->GetCamera()->GetRot().y;
-
-	if (pInputKeyboard->GetPress(DIK_W) == true || pInputKeyboard->GetPress(DIK_A) == true || pInputKeyboard->GetPress(DIK_S) == true || pInputKeyboard->GetPress(DIK_D) == true)
+	if (pInputKeyboard->GetPress(DIK_5))
 	{
-		m_rot.y = atan2f(m_move.z, -m_move.x);
+		MapRot = INITVECTOR3;
 	}
 
-	useful::NormalizeAngle(&m_rot);
+	if (pInputKeyboard->GetPress(DIK_6))
+	{
+		MapRot.x += D3DX_PI * 0.005f;
+
+		if (MapRot.x > STAGE_ROT_LIMIT)
+		{
+			MapRot.x = STAGE_ROT_LIMIT;
+		}
+	}
+	if (pInputKeyboard->GetPress(DIK_7))
+	{
+		MapRot.x -= D3DX_PI * 0.005f;
+
+		if (MapRot.x < -STAGE_ROT_LIMIT)
+		{
+			MapRot.x = -STAGE_ROT_LIMIT;
+		}
+	}
+
+	if (pInputKeyboard->GetPress(DIK_8))
+	{
+		MapRot.z += D3DX_PI * 0.005f;
+
+		if (MapRot.z > STAGE_ROT_LIMIT)
+		{
+			MapRot.z = STAGE_ROT_LIMIT;
+		}
+	}
+	if (pInputKeyboard->GetPress(DIK_9))
+	{
+		MapRot.z -= D3DX_PI * 0.005f;
+
+		if (MapRot.z < -STAGE_ROT_LIMIT)
+		{
+			MapRot.z = -STAGE_ROT_LIMIT;
+		}
+	}
+
+	pMapField->SetRot(MapRot);
 }
 
 //====================================================================

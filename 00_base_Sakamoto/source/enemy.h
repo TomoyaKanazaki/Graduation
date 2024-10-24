@@ -89,6 +89,11 @@ public:
 	void SetEnemyType(ENEMY_TYPE Type) { m_EnemyType = Type; }
 	ENEMY_TYPE GetEnemyType(void) { return m_EnemyType; }
 
+	void SetMultiMatrix(bool Set) { m_bMultiMatrix = Set; }
+	bool GetMultiMatrix(void) { return m_bMultiMatrix; }
+	void SetUseMultiMatrix(D3DXMATRIX Set) { m_UseMultiMatrix = Set; }
+	D3DXMATRIX GetUseMultiMatrix(void) { return m_UseMultiMatrix; }
+
 protected:
 
 	void InitModel(const char* pFilename);				// モデルの初期化
@@ -143,6 +148,10 @@ private:
 	CMotion* m_pMotion;
 	char* m_aModelName[MODEL_NUM];
 	int m_nNumModel;
+
+	//マップとのマトリックス情報
+	bool m_bMultiMatrix;					//マトリックスの掛け合わせをするかどうか
+	D3DXMATRIX m_UseMultiMatrix;			//掛け合わせるマトリックス
 };
 
 #endif

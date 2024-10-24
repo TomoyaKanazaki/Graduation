@@ -10,6 +10,7 @@
 #include "manager.h"
 #include "game.h"
 #include "texture.h"
+#include "objmeshField.h"
 
 //==========================================
 //  ’è”’è‹`
@@ -69,6 +70,8 @@ HRESULT CCubeBlock::Init(void)
 {	
 	CObjmeshCube::Init();
 
+	SetMultiMatrix(true);
+
 	SetTexture("data\\TEXTURE\\Wood003.png");
 
 	//SetColor(D3DXCOLOR(0.5f, 0.5f, 0.0f, 0.5f));
@@ -101,6 +104,7 @@ void CCubeBlock::Update(void)
 //====================================================================
 void CCubeBlock::Draw(void)
 {
+	SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
 	CObjmeshCube::Draw();
 }
 

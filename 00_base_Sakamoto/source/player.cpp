@@ -33,6 +33,7 @@
 #include "DevilHole.h"
 #include "devil.h"
 #include "MapSystem.h"
+#include "objmeshField.h"
 
 //===========================================
 // 定数定義
@@ -129,6 +130,9 @@ HRESULT CPlayer::Init(void)
 
 	//種類設定
 	SetType(CObject::TYPE_PLAYER3D);
+
+	//マップとのマトリックスの掛け合わせをオンにする
+	SetMultiMatrix(true);
 
 	//モデルの生成
 	LoadLevelData("data\\TXT\\motion_tamagon.txt");
@@ -354,6 +358,16 @@ void CPlayer::Draw(void)
 	D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);
 
 	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
+
+	if (m_bMultiMatrix)
+	{
+		SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
+
+		//算出したマトリクスをかけ合わせる
+		D3DXMatrixMultiply(&m_mtxWorld,
+			&m_mtxWorld,
+			&m_UseMultiMatrix);
+	}
 
 	//ワールドマトリックスの設定
 	m_pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
