@@ -14,28 +14,28 @@ SCRIPT			# Ç±ÇÃçsÇÕê‚ëŒè¡Ç≥Ç»Ç¢Ç±Ç∆ÅI
 #------------------------------------------------------------------------------
 # ÉÇÉfÉãêî
 #------------------------------------------------------------------------------
-NUM_MODEL =19
+NUM_MODEL = 19
 
 #------------------------------------------------------------------------------
 # ÉÇÉfÉãÉtÉ@ÉCÉãñº
 #------------------------------------------------------------------------------
-MODEL_FILENAME = data/MODEL/02_devil/00_head.x	# [0]ì™
-MODEL_FILENAME = data/MODEL/02_devil/01_jaw.x	# [1]ä{
+MODEL_FILENAME = data/MODEL/02_devil/04_waist.x	# [0]çò
+MODEL_FILENAME = data/MODEL/02_devil/03_body.x	# [1]ëÃ
 MODEL_FILENAME = data/MODEL/02_devil/02_neck.x	# [2]éÒ
-MODEL_FILENAME = data/MODEL/02_devil/03_body.x	# [3]ëÃ
-MODEL_FILENAME = data/MODEL/02_devil/04_waist.x	# [4]çò
+MODEL_FILENAME = data/MODEL/02_devil/01_jaw.x	# [3]ä{
+MODEL_FILENAME = data/MODEL/02_devil/00_head.x	# [4]ì™
 MODEL_FILENAME = data/MODEL/02_devil/05_R_upper_arm.x	# [5]âEè„òr
 MODEL_FILENAME = data/MODEL/02_devil/06_R_fore_arm.x	# [6]âEâ∫òr
 MODEL_FILENAME = data/MODEL/02_devil/07_R_hand.x	# [7]âEéË
 MODEL_FILENAME = data/MODEL/02_devil/08_L_upper_arm.x	# [8]ç∂è„òr
 MODEL_FILENAME = data/MODEL/02_devil/09_L_fore_arm.x	# [9]ç∂â∫òr
 MODEL_FILENAME = data/MODEL/02_devil/10_L_hand.x	# [10]ç∂éË
-MODEL_FILENAME = data/MODEL/02_devil/11_R_thighs.x	# [11]âEéw
-MODEL_FILENAME = data/MODEL/02_devil/12_R_kness.x	# [12]âEëæë⁄
-MODEL_FILENAME = data/MODEL/02_devil/13_R_feet.x	# [13]âEãr
-MODEL_FILENAME = data/MODEL/02_devil/14_L_thighs.x	# [14]ç∂éw
-MODEL_FILENAME = data/MODEL/02_devil/15_L_kness.x	# [15]ç∂ëæë⁄
-MODEL_FILENAME = data/MODEL/02_devil/16_R_feet.x	# [16]ç∂ãr
+MODEL_FILENAME = data/MODEL/02_devil/11_R_thighs.x	# [11]âEë⁄
+MODEL_FILENAME = data/MODEL/02_devil/12_R_kness.x	# [12]âEãr
+MODEL_FILENAME = data/MODEL/02_devil/13_R_feet.x	# [13]âEë´
+MODEL_FILENAME = data/MODEL/02_devil/14_L_thighs.x	# [14]ç∂ë⁄
+MODEL_FILENAME = data/MODEL/02_devil/15_L_kness.x	# [15]ç∂ãr
+MODEL_FILENAME = data/MODEL/02_devil/16_R_feet.x	# [16]ç∂ë´
 MODEL_FILENAME = data/MODEL/02_devil/17_L_feather.x	# [17]ç∂óÉ
 MODEL_FILENAME = data/MODEL/02_devil/18_R_feather.x	# [18]âEóÉ
 
@@ -56,188 +56,160 @@ CHARACTERSET
 	
 	CENTERSET
 		PARTS = 0		# íÜêSÇ…Ç∑ÇÈÉpÅ[Éc
-		OFFSET = 0.00 30.50 0.00		# ÉIÉtÉZÉbÉgà íu
+		OFFSET = 0.00 0.00 0.00		# ÉIÉtÉZÉbÉgà íu
 	END_CENTERSET
-
-CHARACTERSET
-
-	CENTERSET
-		PARTS = 0		# íÜêSÇ…Ç∑ÇÈÉpÅ[Éc
-		OFFSET = 0.00 30.50 0.00		# ÉIÉtÉZÉbÉgà íu
-	END_CENTERSET
-
-	VELOCITY = 0.50		# à⁄ìÆó 
-	JUMP = 0.00		# ÉWÉÉÉìÉvó 
-	RADIUS = 60.00		# îºåa
-	HEIGHT = 0.00		# çÇÇ≥
-	LIFE = 5		# ëÃóÕ
-
-CHARACTERSET
-
-	CENTERSET
-		PARTS = 0		# íÜêSÇ…Ç∑ÇÈÉpÅ[Éc
-		OFFSET = 0.00 30.50 0.00		# ÉIÉtÉZÉbÉgà íu
-	END_CENTERSET
-
-	VELOCITY = 0.50		# à⁄ìÆó 
-	JUMP = 0.00		# ÉWÉÉÉìÉvó 
-	RADIUS = 60.00		# îºåa
-	HEIGHT = 0.00		# çÇÇ≥
-	LIFE = 5		# ëÃóÕ
 
 	PARTSSET
 		INDEX = 0
 		PARENT = -1
-		POS = 0.00 20.70 0.00
+		POS = 0.00 24.75 0.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 1
-		PARENT = 0
-		POS = -6.60 -11.75 0.00
+		PARENT = 4
+		POS = 0.00 4.00 2.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 2
-		PARENT = 0
-		POS = 6.60 -11.25 0.00
+		PARENT = 1
+		POS = 0.00 17.00 -1.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
-	
+
 	PARTSSET
 		INDEX = 3
 		PARENT = 0
-		POS = 6.60 -11.25 0.00
-		ROT = 0.00 0.00 0.00
+		POS = 0.00 21.00 2.50
+		ROT = 0.20 0.00 0.00
 		START = 1
 	END_PARTSSET
-	
+
 	PARTSSET
 		INDEX = 4
-		PARENT = 0
-		POS = 6.60 -11.25 0.00
+		PARENT = 1
+		POS = 0.00 16.00 -2.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
-	
+
 	PARTSSET
 		INDEX = 5
-		PARENT = 0
-		POS = 6.60 -11.25 0.00
+		PARENT = 1
+		POS = 0.00 0.00 0.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
-	
+
 	PARTSSET
 		INDEX = 6
-		PARENT = 0
-		POS = 6.60 -11.25 0.00
+		PARENT = 5
+		POS = 0.00 0.00 0.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
-	
+
 	PARTSSET
 		INDEX = 7
-		PARENT = 0
-		POS = 6.60 -11.25 0.00
+		PARENT = 6
+		POS = 0.00 0.00 0.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
-	
+
 	PARTSSET
 		INDEX = 8
-		PARENT = 0
-		POS = 6.60 -11.25 0.00
+		PARENT = 1
+		POS = 0.00 0.00 0.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
-	
+
 	PARTSSET
 		INDEX = 9
-		PARENT = 0
-		POS = 6.60 -11.25 0.00
+		PARENT = 8
+		POS = 0.00 0.00 0.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
-	
+
 	PARTSSET
 		INDEX = 10
-		PARENT = 0
-		POS = 6.60 -11.25 0.00
+		PARENT = 9
+		POS = 0.00 0.00 0.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
-	
-		PARTSSET
+
+	PARTSSET
 		INDEX = 11
-		PARENT = 0
-		POS = 6.60 -11.25 0.00
+		PARENT = 7
+		POS = 0.00 0.00 0.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
-	
-		PARTSSET
+
+	PARTSSET
 		INDEX = 12
 		PARENT = 0
-		POS = 6.60 -11.25 0.00
+		POS = 5.00 0.00 0.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
-	
-		PARTSSET
+
+	PARTSSET
 		INDEX = 13
-		PARENT = 0
-		POS = 6.60 -11.25 0.00
+		PARENT = 12
+		POS = 0.00 -15.00 0.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
-	
-		PARTSSET
+
+	PARTSSET
 		INDEX = 14
-		PARENT = 0
-		POS = 6.60 -11.25 0.00
+		PARENT = 10
+		POS = 0.00 0.00 0.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
-	
-		PARTSSET
+
+	PARTSSET
 		INDEX = 15
 		PARENT = 0
-		POS = 6.60 -11.25 0.00
+		POS = -5.00 0.00 0.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
-	
-		PARTSSET
+
+	PARTSSET
 		INDEX = 16
-		PARENT = 0
-		POS = 6.60 -11.25 0.00
+		PARENT = 15
+		POS = 0.00 -15.00 0.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
-	
+
 	PARTSSET
 		INDEX = 17
-		PARENT = 0
-		POS = 6.60 -11.25 0.00
+		PARENT = 1
+		POS = 0.00 0.00 0.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
-	
+
 	PARTSSET
 		INDEX = 18
-		PARENT = 0
-		POS = 6.60 -11.25 0.00
+		PARENT = 1
+		POS = 0.00 0.00 0.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
-	
-
 END_CHARACTERSET
 
 
@@ -266,3 +238,4 @@ MOTION_FILENAME = data/TEXT/character/player/main_01/motion_def.txt			# [0]ÉfÉtÉ
 
 
 END_SCRIPT		# Ç±ÇÃçsÇÕê‚ëŒè¡Ç≥Ç»Ç¢Ç±Ç∆ÅI
+
