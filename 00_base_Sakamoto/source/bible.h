@@ -32,8 +32,17 @@ public:
 
 	bool CollisionPlayer() override;
 
+	// 静的メンバ関数
+	static CListManager<CBible>* GetList(void); // リスト取得
+
 private:
 	void StateManager(void);		//状態管理
+
+		// 静的メンバ変数
+	static CListManager<CBible>* m_pList; // オブジェクトリスト
+
+	// メンバ変数
+	CListManager<CBible>::AIterator m_iterator; // イテレーター
 
 };
 
