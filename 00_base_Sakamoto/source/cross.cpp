@@ -21,6 +21,11 @@ namespace
 	const D3DXVECTOR3 SAMPLE_SIZE = D3DXVECTOR3(20.0f, 20.0f, 20.0f);		//当たり判定
 }
 
+//===========================================
+// 静的メンバ変数宣言
+//===========================================
+CListManager<CCross>* CCross::m_pList = nullptr; // オブジェクトリスト
+
 //====================================================================
 //コンストラクタ
 //====================================================================
@@ -87,6 +92,16 @@ HRESULT CCross::Init(char* pModelName)
 		break;
 	}
 
+	// リストマネージャーの生成
+	if (m_pList == nullptr)
+	{
+		m_pList = CListManager<CCross>::Create();
+		if (m_pList == nullptr) { assert(false); return E_FAIL; }
+	}
+
+	// リストに自身のオブジェクトを追加・イテレーターを取得
+	m_iterator = m_pList->AddList(this);
+
 	return S_OK;
 }
 
@@ -95,6 +110,16 @@ HRESULT CCross::Init(char* pModelName)
 //====================================================================
 void CCross::Uninit(void)
 {
+	// リストから自身のオブジェクトを削除
+	m_pList->DelList(m_iterator);
+
+	if (m_pList->GetNumAll() == 0)
+	{ // オブジェクトが一つもない場合
+
+		// リストマネージャーの破棄
+		m_pList->Release(m_pList);
+	}
+
 	CItem::Uninit();
 }
 
