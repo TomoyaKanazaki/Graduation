@@ -8,6 +8,8 @@
 #include "renderer.h"
 #include "manager.h"
 #include "Xmodel.h"
+#include "game.h"
+#include "objmeshField.h"
 #include "texture.h"
 
 #define POLYDON_SIZE (200.0f)
@@ -173,6 +175,16 @@ void CObjectX::Draw(void)
 		D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);
 
 		D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
+	}
+
+	if (m_bMultiMatrix && CManager::GetInstance()->GetScene()->GetMode() == CScene::MODE_GAME)
+	{
+		SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
+
+		//算出したマトリクスをかけ合わせる
+		D3DXMatrixMultiply(&m_mtxWorld,
+			&m_mtxWorld,
+			&m_UseMultiMatrix);
 	}
 	
 	//ワールドマトリックスの設定

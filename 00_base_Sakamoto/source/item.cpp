@@ -85,6 +85,9 @@ HRESULT CItem::Init(char* pModelName)
 	// 継承クラスの初期化
 	CObjectX::Init(pModelName);
 
+	//マップとのマトリックスの掛け合わせをオンにする
+	SetMultiMatrix(true);
+
 	return S_OK;
 }
 

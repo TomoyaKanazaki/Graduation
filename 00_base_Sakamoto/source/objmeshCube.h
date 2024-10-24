@@ -52,6 +52,10 @@ public:
 	bool GetPlusMove(void) { return m_PlusMove; }
 	void SetBoolLife(bool Set) { m_bLife = Set; }
 	bool GetBoolLife(void) { return m_bLife; }
+	void SetMultiMatrix(bool Set) { m_bMultiMatrix = Set; }
+	bool GetMultiMatrix(void) { return m_bMultiMatrix; }
+	void SetUseMultiMatrix(D3DXMATRIX Set) { m_UseMultiMatrix = Set; }
+	D3DXMATRIX GetUseMultiMatrix(void) { return m_UseMultiMatrix; }
 	void SetLife(float Life) { m_nLife = Life; }
 	float GetLife(void) { return m_nLife; }
 	void SetDel(float Del) { m_fDel = Del; }
@@ -75,6 +79,8 @@ private:
 	D3DXVECTOR3 UninitPos;					//キューブの削除位置
 	float m_nLife;							//キューブの寿命
 	float m_fDel;							//キューブの色の減衰量
-	char m_acTextureName[64];			//モデルの名前
+	char m_acTextureName[64];				//モデルの名前
+	bool m_bMultiMatrix;					//マトリックスの掛け合わせをするかどうか
+	D3DXMATRIX m_UseMultiMatrix;			//掛け合わせるマトリックス
 };
 #endif

@@ -105,6 +105,10 @@ public:
 	ACTION_TYPE GetAction(void) { return m_Action; }
 	void SetModelDisp(bool Sst);
 	void SetPartsDisp(int nParts, bool Set);
+	void SetMultiMatrix(bool Set) { m_bMultiMatrix = Set; }
+	bool GetMultiMatrix(void) { return m_bMultiMatrix; }
+	void SetUseMultiMatrix(D3DXMATRIX Set) { m_UseMultiMatrix = Set; }
+	D3DXMATRIX GetUseMultiMatrix(void) { return m_UseMultiMatrix; }
 
 	void SetUseItem(bool bUse) { m_UseItem = bUse; }
 	bool GetbUseItem() { return m_UseItem; }
@@ -188,6 +192,10 @@ private:
 	char* m_aModelName[64];
 	int m_nNumModel;
 	CLifeUi* m_pLifeUi;
+
+	//マップとのマトリックス情報
+	bool m_bMultiMatrix;					//マトリックスの掛け合わせをするかどうか
+	D3DXMATRIX m_UseMultiMatrix;			//掛け合わせるマトリックス
 
 	// 静的メンバ変数
 	static CListManager<CPlayer>* m_pList; // オブジェクトリスト
