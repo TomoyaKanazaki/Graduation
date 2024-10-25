@@ -141,6 +141,8 @@ private:
 	void MapSystemNumber(void);						// プレイヤーがマップのどのマスに存在しているか設定する
 
 	void CameraPosUpdate(void);	//カメラ位置更新処理
+	float MoveSlopeX(void);		//傾き中の移動量変動
+	float MoveSlopeZ(void);		//傾き中の移動量変動
 	void PosUpdate(void);		//位置更新処理
 	void RotUpdate(void);		//向き更新処理
 
