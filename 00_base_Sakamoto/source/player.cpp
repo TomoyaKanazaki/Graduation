@@ -33,6 +33,7 @@
 #include "DevilHole.h"
 #include "devil.h"
 #include "MapSystem.h"
+#include "bible.h"
 #include "objmeshField.h"
 
 //===========================================
@@ -904,6 +905,18 @@ void CPlayer::Death(void)
 	if (m_State != STATE_EGG && m_State != STATE_DEATH)
 	{
 		m_nLife--;
+
+		if (m_eItemType == TYPE_BIBLE)
+		{
+			// ¹‘¶¬
+			CBible* pBible = nullptr;
+			pBible = CBible::Create("data\\MODEL\\TestCross.x");
+			pBible->SetWightNumber(m_nMapWight);
+			pBible->SetHeightNumber(m_nMapHeight);
+			pBible->SetMapScroll(true);
+
+			SetItemType(TYPE_NONE);
+		}
 
 		if (m_nLife < 0)
 		{

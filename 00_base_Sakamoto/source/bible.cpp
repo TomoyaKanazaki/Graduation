@@ -192,7 +192,8 @@ bool CBible::CollisionPlayer()
 
 			CPlayer* pPlayer = (CPlayer*)pObj;		// アイテムの情報の取得
 
-			if (pPlayer->GetItemType() == CPlayer::ITEM_TYPE::TYPE_BIBLE)
+			if (pPlayer->GetItemType() == CPlayer::ITEM_TYPE::TYPE_BIBLE ||
+				pPlayer->GetState() == CPlayer::STATE_DEATH)
 			{
 				pObj = pObjNext;
 				continue;
@@ -203,9 +204,6 @@ bool CBible::CollisionPlayer()
 
 			// 聖書に設定
 			pPlayer->SetItemType(CPlayer::TYPE_BIBLE);
-
-			// 指定パーツ表示
-			pPlayer->SetPartsDisp(10, true);
 
 			//// アイテムの位置をプレイヤーと同じ位置に設定
 			//SetPos(pos);
