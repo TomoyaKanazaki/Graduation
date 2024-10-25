@@ -237,6 +237,13 @@ bool CCross::CollisionPlayer()
 
 			CPlayer* pPlayer = (CPlayer*)pObj;		// ƒAƒCƒeƒ€‚Ìî•ñ‚ÌŽæ“¾
 
+			if (pPlayer->GetItemType() == CPlayer::ITEM_TYPE::TYPE_BIBLE ||
+				pPlayer->GetState() == CPlayer::STATE_DEATH)
+			{
+				pObj = pObjNext;
+				continue;
+			}
+
 			D3DXVECTOR3 pos = pObj->GetPos();
 			D3DXVECTOR3 Size = pObj->GetSize();
 

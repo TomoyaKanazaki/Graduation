@@ -9,6 +9,7 @@
 #include "bowabowa.h"
 #include "player.h"
 #include "useful.h"
+#include "effect.h"
 #include "MapSystem.h"
 
 //====================================================================
@@ -29,7 +30,7 @@ CItem::CItem(int nPriority) : CObjectX(nPriority)
 	m_posOld = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		// 過去の位置
 	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);			// 移動量
 	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);			// 向き
-	m_nMapWight = 0;			// マップの横番号
+	m_nMapWight = 1;			// マップの横番号
 	m_nMapHeight = 0;			// マップの縦番号
 	m_bMapScroll = true;
 }
@@ -109,6 +110,16 @@ void CItem::Update()
 	if (m_bMapScroll == true)
 	{
 		m_pos = CMapSystem::GetInstance()->GetGritPos(m_nMapWight, m_nMapHeight);
+		m_pos.y = 0.0f;
+
+#ifdef _DEBUG
+
+		CEffect* pEffect = CEffect::Create();
+		pEffect->SetPos(m_pos);
+		pEffect->SetColor(D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f));
+		pEffect->SetRadius(50.0f);
+
+#endif // _DEBUG
 
 		CObjectX::SetPos(m_pos);
 
@@ -160,9 +171,6 @@ bool CItem::CollisionPlayer()
 			// 矩形の当たり判定
 			if (useful::CollisionCircle(m_pos, pos, Size.x))
 			{
-				// アイテム使用可能かどうか
-				pPlayer->SetItemType(CPlayer::TYPE_CROSS);
-
 				return true;
 			}
 

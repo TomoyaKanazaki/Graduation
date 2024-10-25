@@ -153,21 +153,21 @@ HRESULT CGame::Init(void)
 	pBowabowa->SetWightNumber(9);
 	pBowabowa->SetHeightNumber(5);
 
-	//// ¹‘¶¬
+	// ¹‘¶¬
 	CBible* pBible = nullptr;
-	pBible = CBible::Create("data\\MODEL\\TestCross.x");
+	pBible = CBible::Create("data\\MODEL\\seisyo.x");
 	pBible->SetPosType(CBible::POS_TYPE_LEFTUP);
 	pBible->SetMapScroll(false);
 
-	pBible = CBible::Create("data\\MODEL\\TestCross.x");
+	pBible = CBible::Create("data\\MODEL\\seisyo.x");
 	pBible->SetPosType(CBible::POS_TYPE_RIGHTUP);
 	pBible->SetMapScroll(false);
 
-	pBible = CBible::Create("data\\MODEL\\TestCross.x");
+	pBible = CBible::Create("data\\MODEL\\seisyo.x");
 	pBible->SetPosType(CBible::POS_TYPE_LEFTDOWN);
 	pBible->SetMapScroll(false);
 
-	pBible = CBible::Create("data\\MODEL\\TestCross.x");
+	pBible = CBible::Create("data\\MODEL\\seisyo.x");
 	pBible->SetPosType(CBible::POS_TYPE_RIGHTDOWN);
 	pBible->SetMapScroll(false);
 
@@ -195,8 +195,9 @@ HRESULT CGame::Init(void)
 		break;
 	}
 
-	CCross* pCross = CCross::Create("data\\MODEL\\TestCross.x");
-	pCross->SetPos(D3DXVECTOR3(0.0f,0.0f,200.0f));
+	CCross* pCross = CCross::Create("data\\MODEL\\zyuzika.x");
+	pCross->SetWightNumber(2);
+	pCross->SetHeightNumber(4);
 
 	CScrollArrow* pScrollAllow = nullptr;
 	pScrollAllow = CScrollArrow::Create();
