@@ -16,7 +16,8 @@
 //==========================================
 namespace
 {
-	const int FIRE_LIFE = 60;		// 炎の体力
+	const int FIRE_LIFE = 60;			// 炎の体力
+	const float FIRE_SPEED = 10.0f;		// 炎の速度
 	const D3DXVECTOR3 SAMPLE_SIZE = D3DXVECTOR3(20.0f, 20.0f, 20.0f);		//当たり判定
 }
 
@@ -34,7 +35,7 @@ CFire::CFire(int nPriority) : CObjectX(nPriority)
 	m_nStateCount = 0;
 	m_Scaling = 1.0f;
 	m_fColorA = 0.0f;
-	m_nLife = FIRE_LIFE;
+	m_nLife = 0;
 }
 
 //====================================================================
@@ -48,26 +49,27 @@ CFire::~CFire()
 //====================================================================
 //生成処理
 //====================================================================
-CFire* CFire::Create(char* pModelName, const D3DXVECTOR3& pos, const D3DXVECTOR3& move)
+CFire* CFire::Create(char* pModelName, const D3DXVECTOR3& pos, const D3DXVECTOR3& rot)
 {
-	CFire* pSample = nullptr;
+	CFire* pFire = nullptr;
 
-	if (pSample == nullptr)
+	if (pFire == nullptr)
 	{
 		//オブジェクト2Dの生成
-		pSample = new CFire();
+		pFire = new CFire();
 
-		pSample->SetPos(pos);
-		pSample->SetMove(move);
+		pFire->SetPos(pos);
+		pFire->SetRot(rot);
+		pFire->m_rot = rot;
 	}
 
 	//オブジェクトの初期化処理
-	if (FAILED(pSample->Init(pModelName)))
+	if (FAILED(pFire->Init(pModelName)))
 	{//初期化処理が失敗した場合
 		return nullptr;
 	}
 
-	return pSample;
+	return pFire;
 }
 
 //====================================================================
@@ -75,27 +77,18 @@ CFire* CFire::Create(char* pModelName, const D3DXVECTOR3& pos, const D3DXVECTOR3
 //====================================================================
 HRESULT CFire::Init(char* pModelName)
 {
+	// オブジェクトの種類設定
 	SetType(CObject::TYPE_FIRE);
 
+	// 継承クラスの初期化
 	CObjectX::Init(pModelName);
-
-	//モードごとに初期値を設定出来る
-	switch (CScene::GetMode())
-	{
-	case CScene::MODE_TITLE:
-		break;
-
-	case CScene::MODE_GAME:
-	case CScene::MODE_TUTORIAL:
-
-		break;
-
-	case CScene::MODE_RESULT:
-		break;
-	}
 
 	// 炎の体力
 	m_nLife = FIRE_LIFE;
+
+	// 炎の速度
+	D3DXVECTOR3 move = -D3DXVECTOR3(FIRE_SPEED * sinf(m_rot.y), 0.0f, FIRE_SPEED * cosf(m_rot.y));
+	SetMove(move);
 
 	return S_OK;
 }
@@ -116,27 +109,14 @@ void CFire::Update(void)
 	D3DXVECTOR3 pos = GetPos();
 	D3DXVECTOR3 move = GetMove();
 
-	switch (CScene::GetMode())
-	{
-	case CScene::MODE_TITLE:
-		TitleUpdate();
-		break;
-
-	case CScene::MODE_GAME:
-	case CScene::MODE_TUTORIAL:
-
-		GameUpdate();
-		break;
-
-	case CScene::MODE_RESULT:
-		break;
-	}
+	GameUpdate();
 
 	//位置更新
 	pos += m_move;
 
+	// 位置・移動量設定
 	SetPos(pos);
-
+	
 	// 敵との判定
 	CollisionEnemy();
 
@@ -148,22 +128,6 @@ void CFire::Update(void)
 		//破棄する
 		Uninit();
 	}
-}
-
-//====================================================================
-//タイトルでの更新処理
-//====================================================================
-void CFire::TitleUpdate(void)
-{
-	D3DXVECTOR3 pos = GetPos();
-
-	//位置更新
-	pos += m_move;
-
-	SetPos(pos);
-
-	//頂点情報の更新
-	CObjectX::Update();
 }
 
 //====================================================================

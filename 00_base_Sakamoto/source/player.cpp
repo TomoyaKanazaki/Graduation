@@ -495,7 +495,7 @@ void CPlayer::Attack(void)
 
 	if (pInputKeyboard->GetTrigger(DIK_SPACE) == true)
 	{
-		CFire::Create("data\\model\\BlockTest.x", m_pos, m_move);
+		CFire::Create("data\\model\\BlockTest.x", m_pos, m_rot);
 	}
 }
 
