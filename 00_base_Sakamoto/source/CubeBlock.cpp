@@ -29,7 +29,7 @@ namespace
 //====================================================================
 CCubeBlock::CCubeBlock(int nPriority) :CObjmeshCube(nPriority)
 {
-	m_nMapWightNumber = 0;
+	m_nMapWidthNumber = 0;
 	m_nMapHeightNumber = 0;
 }
 

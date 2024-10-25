@@ -56,36 +56,36 @@ CListManager<CPlayer>* CPlayer::m_pList = nullptr; // オブジェクトリスト
 //====================================================================
 //コンストラクタ
 //====================================================================
-CPlayer::CPlayer(int nPriority) :CObject(nPriority)
+CPlayer::CPlayer(int nPriority) : CObject(nPriority),
+	m_size			(INITVECTOR3),
+	m_pos			(INITVECTOR3),
+	m_move			(INITVECTOR3),
+	m_Objmove		(INITVECTOR3),
+	m_rot			(INITVECTOR3),
+	m_AutoMoveRot	(INITVECTOR3),
+	m_bJump			(false),
+	m_nActionCount	(0),
+	m_Action		(ACTION_NONE),
+	m_AtkAction		(ACTION_NONE),
+	m_State			(STATE_NONE),
+	m_nStateCount	(0),
+	m_AtkPos		(INITVECTOR3),
+	m_CollisionRot	(0.0f),
+	m_pMotion		(nullptr),
+	m_OKL			(true),
+	m_OKR			(true),
+	m_OKU			(true),
+	m_OKD			(true),
+	m_bInput		(false),
+	m_pLifeUi		(nullptr),
+	m_nLife			(0),
+	m_eItemType		(TYPE_NONE),
+	m_MoveState		(MOVE_STATE_NONE),
+	m_nMapWidth		(0),
+	m_nMapHeight	(0),
+	m_bGritCenter	(true)
 {
-	SetSize(COLLISION_SIZE);
-	m_pos = INITVECTOR3;
-	m_move = INITVECTOR3;
-	m_Objmove = INITVECTOR3;
-	m_rot = D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f);
-	m_AutoMoveRot = D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f);
-	m_bJump = false;
-	m_nActionCount = 0;
-	m_Action = ACTION_WAIT;
-	m_AtkAction = ACTION_WAIT;
-	m_State = STATE_EGG;
-	m_nStateCount = 0;
-	m_AtkPos = INITVECTOR3;
-	m_CollisionRot = 0.0f;
-	m_pMotion = nullptr;
-	m_OKL = true;
-	m_OKR = true;
-	m_OKU = true;
-	m_OKD = true;
-	m_bInput = false;
-	m_UseItem = false;
-	m_pLifeUi = nullptr;
-	m_nLife = LIFE_MAX;
-	m_eItemType = TYPE_NONE;
-	m_MoveState = MOVE_STATE_WAIT;
-	m_nMapWight = 0;
-	m_nMapHeight = 0;
-	m_bGritCenter = true;
+
 }
 
 //====================================================================
@@ -101,17 +101,16 @@ CPlayer::~CPlayer()
 //====================================================================
 CPlayer* CPlayer::Create()
 {
-	CPlayer* pPlayer = nullptr;
+	CPlayer* pPlayer = new CPlayer();
 
-	if (pPlayer == nullptr)
-	{
-		//プレイヤーの生成
-		pPlayer = new CPlayer();
-	}
+	// メモリの確保に失敗した場合nullを返す
+	if (pPlayer == nullptr) { assert(false); return nullptr; }
 
-	//オブジェクトの初期化処理
+	// 初期化処理に失敗した場合nullを返す
 	if (FAILED(pPlayer->Init()))
-	{//初期化処理が失敗した場合
+	{
+		assert(false);
+		delete pPlayer;
 		return nullptr;
 	}
 
@@ -128,9 +127,26 @@ HRESULT CPlayer::Init(void)
 	{
 		MyObjCreate();
 	}
+	
+	// サイズの設定
+	m_size = COLLISION_SIZE;
+
+	// 向きの設定
+	m_rot = D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f);
+	m_AutoMoveRot = D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f);
+
+	// アクションの設定
+	m_Action = ACTION_WAIT;
+	m_AtkAction = ACTION_WAIT;
 
 	//種類設定
 	SetType(CObject::TYPE_PLAYER3D);
+
+	// 体力の設定
+	m_nLife = LIFE_MAX;
+
+	// 状態の設定
+	m_MoveState = MOVE_STATE_WAIT;
 
 	//マップとのマトリックスの掛け合わせをオンにする
 	SetMultiMatrix(true);
@@ -327,7 +343,7 @@ void CPlayer::GameUpdate(void)
 	//デバッグ表示
 	DebugProc::Print(DebugProc::POINT_LEFT,"[自分]位置 %f : %f : %f\n", m_pos.x, m_pos.y, m_pos.z);
 	DebugProc::Print(DebugProc::POINT_LEFT, "[自分]向き %f : %f : %f\n", m_rot.x, m_rot.y, m_rot.z);
-	DebugProc::Print(DebugProc::POINT_LEFT,"[自分]横 %d : 縦 %d\n", m_nMapWight, m_nMapHeight);
+	DebugProc::Print(DebugProc::POINT_LEFT,"[自分]横 %d : 縦 %d\n", m_nMapWidth, m_nMapHeight);
 }
 
 //====================================================================
@@ -638,8 +654,8 @@ void CPlayer::SearchWall(void)
 	int nMapHeightMax = pMapSystem->GetHeightMax();
 	D3DXVECTOR3 MapSystemPos = pMapSystem->GetMapPos();
 
-	int nRNumber = m_nMapWight + 1;
-	int nLNumber = m_nMapWight - 1;
+	int nRNumber = m_nMapWidth + 1;
+	int nLNumber = m_nMapWidth - 1;
 	int nUNumber = m_nMapHeight - 1;
 	int nDNumber = m_nMapHeight + 1;
 
@@ -650,11 +666,11 @@ void CPlayer::SearchWall(void)
 
 	OKR = !pMapSystem->GetGritBool(nRNumber, m_nMapHeight);
 	OKL = !pMapSystem->GetGritBool(nLNumber, m_nMapHeight);
-	OKU = !pMapSystem->GetGritBool(m_nMapWight, nUNumber);
-	OKD = !pMapSystem->GetGritBool(m_nMapWight, nDNumber);
+	OKU = !pMapSystem->GetGritBool(m_nMapWidth, nUNumber);
+	OKD = !pMapSystem->GetGritBool(m_nMapWidth, nDNumber);
 
 	//自分の立っているグリットの中心位置を求める
-	D3DXVECTOR3 MyGritPos = CMapSystem::GetInstance()->GetGritPos(m_nMapWight, m_nMapHeight);
+	D3DXVECTOR3 MyGritPos = CMapSystem::GetInstance()->GetGritPos(m_nMapWidth, m_nMapHeight);
 	float MapGritSize = pMapSystem->GetGritSize();
 
 	DebugProc::Print(DebugProc::POINT_LEFT, "自分がいるグリットの中心位置 %f %f %f\n", MyGritPos.x, MyGritPos.y, MyGritPos.z);
@@ -797,7 +813,7 @@ void CPlayer::CollisionStageOut(void)
 //====================================================================
 void CPlayer::MapSystemNumber(void)
 {
-	m_nMapWight = CMapSystem::GetInstance()->GetGritWightNumber(m_pos.x);
+	m_nMapWidth = CMapSystem::GetInstance()->GetGritWightNumber(m_pos.x);
 	m_nMapHeight = CMapSystem::GetInstance()->GetGritHeightNumber(m_pos.z);
 }
 
@@ -961,7 +977,7 @@ void CPlayer::Death(void)
 			// 聖書生成
 			CBible* pBible = nullptr;
 			pBible = CBible::Create("data\\MODEL\\TestCross.x");
-			pBible->SetWightNumber(m_nMapWight);
+			pBible->SetWightNumber(m_nMapWidth);
 			pBible->SetHeightNumber(m_nMapHeight);
 			pBible->SetMapScroll(true);
 

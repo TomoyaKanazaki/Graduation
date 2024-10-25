@@ -112,7 +112,7 @@ private:
 	void SearchWall(void);								// 壁のサーチ判定
 	void MapSystemNumber(void);							// どのマスに存在しているか設定する
 
-	int m_nMapWight;			//マップの横番号
+	int m_nMapWidth;			//マップの横番号
 	int m_nMapHeight;			//マップの縦番号
 
 	void LoadLevelData(const char* pFilename);

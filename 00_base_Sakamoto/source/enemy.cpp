@@ -77,7 +77,7 @@ CEnemy::CEnemy(int nPriority) :CObject(nPriority)
 	m_OKU = true;
 	m_OKD = true;
 
-	m_nMapWight = 0;
+	m_nMapWidth = 0;
 	m_nMapHeight = 0;
 }
 
@@ -221,7 +221,7 @@ void CEnemy::GameUpdate(void)
 		m_pMotion->Update();
 	}
 
-	DebugProc::Print(DebugProc::POINT_LEFT, "[“G]‰¡ %d : c %d\n", m_nMapWight, m_nMapHeight);
+	DebugProc::Print(DebugProc::POINT_LEFT, "[“G]‰¡ %d : c %d\n", m_nMapWidth, m_nMapHeight);
 }
 
 //====================================================================
@@ -611,8 +611,8 @@ void CEnemy::SearchWall(void)
 	int nMapHeightMax = pMapSystem->GetHeightMax();
 	D3DXVECTOR3 MapSystemPos = pMapSystem->GetMapPos();
 
-	int nRNumber = m_nMapWight + 1;
-	int nLNumber = m_nMapWight - 1;
+	int nRNumber = m_nMapWidth + 1;
+	int nLNumber = m_nMapWidth - 1;
 	int nUNumber = m_nMapHeight - 1;
 	int nDNumber = m_nMapHeight + 1;
 
@@ -623,11 +623,11 @@ void CEnemy::SearchWall(void)
 
 	OKR = !pMapSystem->GetGritBool(nRNumber, m_nMapHeight);
 	OKL = !pMapSystem->GetGritBool(nLNumber, m_nMapHeight);
-	OKU = !pMapSystem->GetGritBool(m_nMapWight, nUNumber);
-	OKD = !pMapSystem->GetGritBool(m_nMapWight, nDNumber);
+	OKU = !pMapSystem->GetGritBool(m_nMapWidth, nUNumber);
+	OKD = !pMapSystem->GetGritBool(m_nMapWidth, nDNumber);
 
 	//Ž©•ª‚Ì—§‚Á‚Ä‚¢‚éƒOƒŠƒbƒg‚Ì’†SˆÊ’u‚ð‹‚ß‚é
-	D3DXVECTOR3 MyGritPos = CMapSystem::GetInstance()->GetGritPos(m_nMapWight, m_nMapHeight);;
+	D3DXVECTOR3 MyGritPos = CMapSystem::GetInstance()->GetGritPos(m_nMapWidth, m_nMapHeight);;
 	float MapGritSize = pMapSystem->GetGritSize();
 
 	DebugProc::Print(DebugProc::POINT_LEFT, "‚ ‚ ‚ ‚  %f %f %f\n", MyGritPos.x, MyGritPos.y, MyGritPos.z);
@@ -824,7 +824,7 @@ void CEnemy::SearchWall(void)
 //====================================================================
 void CEnemy::MapSystemNumber(void)
 {
-	m_nMapWight = CMapSystem::GetInstance()->GetGritWightNumber(m_pos.x);
+	m_nMapWidth = CMapSystem::GetInstance()->GetGritWightNumber(m_pos.x);
 	m_nMapHeight = CMapSystem::GetInstance()->GetGritHeightNumber(m_pos.z);
 }
 
