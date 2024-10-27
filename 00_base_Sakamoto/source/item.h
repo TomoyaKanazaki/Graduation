@@ -78,8 +78,8 @@ public:
 	int GetStateCounter() { return m_nStateCount; }
 
 	// マップの横番号の設定・取得
-	void SetWightNumber(int Wight) { m_nMapWight = Wight; }
-	int GetWightNumber() { return m_nMapWight; }
+	void SetWightNumber(int Wight) { m_nMapWidth = Wight; }
+	int GetWightNumber() { return m_nMapWidth; }
 
 	// マップの縦番号の設定・取得
 	void SetHeightNumber(int Height) { m_nMapHeight = Height; }
@@ -110,7 +110,7 @@ private:
 	D3DXVECTOR3 m_move;			//移動量	
 	D3DXVECTOR3 m_rot;			//向き	
 
-	int m_nMapWight;			//マップの横番号
+	int m_nMapWidth;			//マップの横番号
 	int m_nMapHeight;			//マップの縦番号
 };
 

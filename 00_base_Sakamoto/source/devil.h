@@ -88,6 +88,8 @@ public:
 	D3DXVECTOR3 GetDevilSize(void) { return m_DevilSize; }
 	void SetDifference(D3DXVECTOR3 size) { m_MapDifference = size; }
 	D3DXVECTOR3 GetDifference(void) { return m_MapDifference; }
+	void SetDevilRot(D3DXVECTOR3 Rot) { m_DevilRot = Rot; }
+	D3DXVECTOR3 GetDevilRot(void) { return m_DevilRot; }
 	void SetModelDisp(bool Sst);
 
 private:
@@ -125,6 +127,7 @@ private:
 	float m_CollisionRot;			//当たり判定用の向き
 
 	CSlowManager* m_pSlow;			// スロー
+	D3DXVECTOR3 m_DevilRot;			// デビルパワーによって傾く値
 
 	//階層構造とモーションのポインタ
 	CModel* m_apModel[64];

@@ -30,7 +30,7 @@ CItem::CItem(int nPriority) : CObjectX(nPriority)
 	m_posOld = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		// 過去の位置
 	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);			// 移動量
 	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);			// 向き
-	m_nMapWight = 1;			// マップの横番号
+	m_nMapWidth = 1;			// マップの横番号
 	m_nMapHeight = 0;			// マップの縦番号
 	m_bMapScroll = true;
 }
@@ -109,7 +109,7 @@ void CItem::Update()
 {
 	if (m_bMapScroll == true)
 	{
-		m_pos = CMapSystem::GetInstance()->GetGritPos(m_nMapWight, m_nMapHeight);
+		m_pos = CMapSystem::GetInstance()->GetGritPos(m_nMapWidth, m_nMapHeight);
 		m_pos.y = 0.0f;
 
 #ifdef _DEBUG

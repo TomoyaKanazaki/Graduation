@@ -34,8 +34,8 @@
 #include "sound.h"
 
 #define COLLISION_SIZE (D3DXVECTOR3(750.0f,0.0f,550.0f))		//横の当たり判定
-#define SCROOL_SPEED (5.0f)		//スクロールの移動速度
-#define STAGE_ROT_LIMIT (D3DX_PI * 0.25f)		//スクロールの移動速度
+#define SCROOL_SPEED (5.0f)									//スクロールの移動速度
+#define STAGE_ROT_LIMIT (D3DX_PI * 0.25f)					//スクロールの移動速度
 
 namespace
 {
@@ -63,6 +63,7 @@ CDevil::CDevil(int nPriority) : CObject(nPriority)
 	m_pMotion = nullptr;
 	m_DevilPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_MapDifference = INITVECTOR3;
+	m_DevilRot = INITVECTOR3;
 }
 
 //====================================================================
@@ -220,6 +221,9 @@ void CDevil::GameUpdate(void)
 
 	// 向き移動処理
 	Rot();
+
+	// マップの傾き
+	m_DevilRot = CGame::GetMapField()->GetRot();
 
 	//状態の管理
 	StateManager();

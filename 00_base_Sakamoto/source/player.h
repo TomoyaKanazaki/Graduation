@@ -41,11 +41,12 @@ public:
 	//プレイヤーのモーション
 	enum ACTION_TYPE
 	{
-		ACTION_WAIT = 0,		//待機
-		ACTION_MOVE,			//移動
-		ACTION_EGG,				//卵状態(未完成００
-		ACTION_DEATH,			//死亡状態(未完成０１
-		ACTION_MAX,				//最大
+		ACTION_WAIT = 0,		// 待機
+		ACTION_MOVE,			// 移動
+		ACTION_EGG,				// 卵状態(未完成００
+		ACTION_DEATH,			// 死亡状態(未完成０１
+		ACTION_MAX,				// 最大
+		ACTION_NONE
 	};
 
 	//プレイヤーの状態
@@ -57,6 +58,7 @@ public:
 		STATE_EGG,			//卵
 		STATE_ATTACK,		//攻撃
 		STATE_MAX,			//最大
+		STATE_NONE
 	};
 
 	// プレイヤーの移動方向
@@ -68,6 +70,7 @@ public:
 		MOVE_STATE_UP,			// 上方向
 		MOVE_STATE_DOWN,		// 下方向
 		MOVE_STATE_MAX,			// 最大
+		MOVE_STATE_NONE
 	};
 
 	// アイテムの種類
@@ -113,7 +116,7 @@ public:
 	void SetUseItem(bool bUse) { m_UseItem = bUse; }
 	bool GetbUseItem() { return m_UseItem; }
 
-	int GetWightNumber() { return m_nMapWight; }
+	int GetWightNumber() { return m_nMapWidth; }
 	int GetHeightNumber() { return m_nMapHeight; }
 	bool GetGritCenter() { return m_bGritCenter; }
 
@@ -141,6 +144,8 @@ private:
 	void MapSystemNumber(void);						// プレイヤーがマップのどのマスに存在しているか設定する
 
 	void CameraPosUpdate(void);	//カメラ位置更新処理
+	float MoveSlopeX(void);		//傾き中の移動量変動
+	float MoveSlopeZ(void);		//傾き中の移動量変動
 	void PosUpdate(void);		//位置更新処理
 	void RotUpdate(void);		//向き更新処理
 
@@ -169,7 +174,7 @@ private:
 
 	float m_CollisionRot;		//当たり判定用の向き
 
-	int m_nMapWight;			//マップの横番号
+	int m_nMapWidth;			//マップの横番号
 	int m_nMapHeight;			//マップの縦番号
 	bool m_bGritCenter;			//グリットの中心位置にいるかどうか
 
