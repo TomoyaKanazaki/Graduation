@@ -34,7 +34,7 @@ CHARACTERSET
 	JUMP = 10.25					# ジャンプ量
 	RADIUS = 20.0					# 半径
 	NUM_PARTS = 11					# パーツ数
-
+	
 	PARTSSET
 		INDEX = 0
 		PARENT = -1
@@ -52,7 +52,7 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 2
 		PARENT = 0
-		POS = 0.10 -3.75 -18.00
+		POS = 0.10 -2.25 -18.00
 		ROT = 0.00 0.00 0.00
 	END_PARTSSET
 
@@ -101,17 +101,16 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 9
 		PARENT = 0
-		POS = -4.90 27.25 14.00
+		POS = -2.40 32.25 11.50
 		ROT = 0.00 0.00 0.00
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 10
 		PARENT = 0
-		POS = -8.90 35.75 7.00
+		POS = -6.90 36.25 5.00
 		ROT = 0.00 0.00 0.00
 	END_PARTSSET
-
 END_CHARACTERSET
 
 #------------------------------------------------------------------------------
@@ -294,6 +293,16 @@ MOTIONSET
 			POS = 0.00 0.00 0.00
 			ROT = 0.00 0.00 1.01
 		END_KEY
+		
+				KEY	# ----- [ 9 ] -----
+			POS = 0.00 0.00 0.00
+			ROT = 0.00 0.00 0.00
+		END_KEY
+
+		KEY	# ----- [ 10 ] -----
+			POS = 0.00 0.00 0.00
+			ROT = 0.00 0.00 0.00
+		END_KEY
 	END_KEYSET
 
 	KEYSET			# --- << KEY : 1 / 2 >> ---
@@ -341,6 +350,16 @@ MOTIONSET
 		KEY	# ----- [ 8 ] -----
 			POS = 0.00 0.00 0.00
 			ROT = 0.00 0.00 0.53
+		END_KEY
+		
+				KEY	# ----- [ 9 ] -----
+			POS = 0.00 0.00 0.00
+			ROT = 0.00 0.00 0.00
+		END_KEY
+
+		KEY	# ----- [ 10 ] -----
+			POS = 0.00 0.00 0.00
+			ROT = 0.00 0.00 0.00
 		END_KEY
 	END_KEYSET
 END_MOTIONSET
