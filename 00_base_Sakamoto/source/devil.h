@@ -76,6 +76,9 @@ public:
 	void TutorialUpdate(void);
 	void Draw(void);
 
+	float MoveSlopeX(void);		//ŒX‚«’†‚ÌˆÚ“®—Ê•Ï“®
+	float MoveSlopeZ(void);		//ŒX‚«’†‚ÌˆÚ“®—Ê•Ï“®
+
 	void SetPos(D3DXVECTOR3 pos) { m_pos = pos; }
 	D3DXVECTOR3 GetPos(void) { return m_pos; }
 	void SetMove(D3DXVECTOR3 move) { m_move = move; }

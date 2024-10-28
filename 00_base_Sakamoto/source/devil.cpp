@@ -876,6 +876,56 @@ void CDevil::CollisionPressPlayer(CPlayer* pPlayer, D3DXVECTOR3 pos, D3DXVECTOR3
 }
 
 //====================================================================
+//ŒX‚«’†‚ÌˆÚ“®—Ê•Ï“®
+//====================================================================
+float CDevil::MoveSlopeX(void)
+{
+	float fSlopeMove = 1.0f;
+
+	D3DXVECTOR3 DevilRot = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
+	if (CManager::GetInstance()->GetScene()->GetMode() == CScene::MODE_GAME)
+	{
+		DevilRot = m_DevilRot;
+	}
+
+	if (m_move.x > 0.0f)
+	{
+		fSlopeMove = (D3DX_PI / (D3DX_PI + DevilRot.z));
+	}
+	else if (m_move.x < 0.0f)
+	{
+		fSlopeMove = (D3DX_PI / (D3DX_PI - DevilRot.z));
+	}
+
+	return fSlopeMove;
+}
+
+//====================================================================
+//ŒX‚«’†‚ÌˆÚ“®—Ê•Ï“®
+//====================================================================
+float CDevil::MoveSlopeZ(void)
+{
+	float fSlopeMove = 1.0f;
+
+	D3DXVECTOR3 DevilRot = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
+	if (CManager::GetInstance()->GetScene()->GetMode() == CScene::MODE_GAME)
+	{
+		DevilRot = CGame::GetDevil()->GetDevilRot();
+	}
+
+	if (m_move.z > 0.0f)
+	{
+		fSlopeMove = (D3DX_PI / (D3DX_PI - DevilRot.x));
+	}
+	else if (m_move.z < 0.0f)
+	{
+		fSlopeMove = (D3DX_PI / (D3DX_PI + DevilRot.x));
+	}
+
+	return fSlopeMove;
+}
+
+//====================================================================
 //ƒ[ƒhˆ—
 //====================================================================
 void CDevil::LoadLevelData(const char* pFilename)
