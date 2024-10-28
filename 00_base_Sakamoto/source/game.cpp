@@ -45,6 +45,8 @@
 #include "cross.h"
 #include "scrollarrow.h"
 #include "enemyMedaman.h"
+#include "enemyBonbon.h"
+#include "enemyYoungDevil.h"
 #include "item_manager.h"
 #include "bible.h"
 #include "MapSystem.h"
@@ -177,7 +179,7 @@ HRESULT CGame::Init(void)
 	m_pPlayer->SetPos(D3DXVECTOR3(0.0f, 0.0f, 100.0f));
 
 	m_pDevil = CDevil::Create();
-	m_pDevil->SetPos(D3DXVECTOR3(0.0f, 200.0f, 0.0f));
+	m_pDevil->SetPos(D3DXVECTOR3(0.0f, 100.0f, 500.0f));
 
 	m_pScore = CScore::Create();
 	m_pScore->SetScore(CManager::GetInstance()->GetEndScore());
@@ -206,8 +208,14 @@ HRESULT CGame::Init(void)
 	pScrollAllow = CScrollArrow::Create();
 	pScrollAllow->SetPos((D3DXVECTOR3(1200.0f, 120.0f, 0.0f)));
 
-	CEnemyMedaman* pMedaman = CEnemyMedaman::Create("data\\TXT\\motion_Samurai.txt");
+	CEnemyMedaman* pMedaman = CEnemyMedaman::Create("data\\TXT\\motion_foot_light_spear.txt");
 	pMedaman->SetPos(D3DXVECTOR3(-300.0f, 0.0f, 0.0f));
+
+	CEnemyBonbon* pBonbon = CEnemyBonbon::Create("data\\TXT\\motion_bowman.txt");
+	pBonbon->SetPos(D3DXVECTOR3(-300.0f, 0.0f, 0.0f));
+
+	CEnemyYoungDevil* pYoungDevil = CEnemyYoungDevil::Create("data\\TXT\\motion_Samurai.txt");
+	pYoungDevil->SetPos(D3DXVECTOR3(-300.0f, 0.0f, 0.0f));
 
 #if _DEBUG
 	if (m_pEdit == nullptr)

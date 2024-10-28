@@ -55,8 +55,8 @@ CDevil::CDevil(int nPriority) : CObject(nPriority)
 	m_rot = D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f);
 	m_AutoMoveRot = D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f);
 	m_nActionCount = 0;
-	m_Action = ACTION_BWAIT;
-	m_AtkAction = ACTION_BWAIT;
+	m_Action = ACTION_WAIT;
+	m_AtkAction = ACTION_WAIT;
 	m_State = STATE_NORMAL;
 	m_nStateCount = 0;
 	m_CollisionRot = 0.0f;
@@ -111,7 +111,7 @@ HRESULT CDevil::Init(void)
 	SetType(CObject::TYPE_DEVIL);
 
 	//モデルの生成
-	LoadLevelData("data\\TXT\\motion_foot_light_spear.txt");
+	LoadLevelData("data\\TXT\\motion_Boss.txt");
 
 	//モーションの生成
 	if (m_pMotion == nullptr)
@@ -122,7 +122,7 @@ HRESULT CDevil::Init(void)
 
 	//初期化処理
 	m_pMotion->SetModel(&m_apModel[0], m_nNumModel);
-	m_pMotion->LoadData("data\\TXT\\motion_foot_light_spear.txt");
+	m_pMotion->LoadData("data\\TXT\\motion_Boss.txt");
 
 	switch (CScene::GetMode())
 	{
@@ -446,19 +446,19 @@ void CDevil::ActionState(void)
 	//移動モーション
 	if (m_move.x > 0.1f || m_move.x < -0.1f || m_move.z > 0.1f || m_move.z < -0.1f)
 	{
-		if (m_Action != ACTION_BMOVE)
+		if (m_Action != ACTION_WALK)
 		{
-			m_Action = ACTION_BMOVE;
-			m_pMotion->Set(ACTION_BMOVE, 5);
+			m_Action = ACTION_WALK;
+			m_pMotion->Set(ACTION_WALK, 5);
 		}
 	}
 	//ニュートラルモーション
 	else
 	{
-		if (m_Action != ACTION_BWAIT)
+		if (m_Action != ACTION_WAIT)
 		{
-			m_Action = ACTION_BWAIT;
-			m_pMotion->Set(ACTION_BWAIT, 5);
+			m_Action = ACTION_WAIT;
+			m_pMotion->Set(ACTION_WAIT, 5);
 		}
 	}
 }

@@ -1,10 +1,10 @@
 //============================================
 //
-//	メダマンの処理 [enemyMedaman.cpp]
+//	子デビルの処理 [enemyMedaman.cpp]
 //	Author: sakamoto kai
 //
 //============================================
-#include "enemyMedaman.h"
+#include "enemyYoungDevil.h"
 #include "LevelModelEffect.h"
 #include "object.h"
 #include "manager.h"
@@ -34,7 +34,7 @@ namespace
 //====================================================================
 //コンストラクタ
 //====================================================================
-CEnemyMedaman::CEnemyMedaman(int nPriority) : CEnemy(nPriority)
+CEnemyYoungDevil::CEnemyYoungDevil(int nPriority) : CEnemy(nPriority)
 {
 	m_AtkAction = ACTION_SWAIT;
 }
@@ -42,7 +42,7 @@ CEnemyMedaman::CEnemyMedaman(int nPriority) : CEnemy(nPriority)
 //====================================================================
 //デストラクタ
 //====================================================================
-CEnemyMedaman::~CEnemyMedaman()
+CEnemyYoungDevil::~CEnemyYoungDevil()
 {
 
 }
@@ -50,10 +50,10 @@ CEnemyMedaman::~CEnemyMedaman()
 //====================================================================
 //生成処理
 //====================================================================
-CEnemyMedaman* CEnemyMedaman::Create(const char* pFilename)
+CEnemyYoungDevil* CEnemyYoungDevil::Create(const char* pFilename)
 {
 	// 生成
-	CEnemyMedaman* pInstance = new CEnemyMedaman();
+	CEnemyYoungDevil* pInstance = new CEnemyYoungDevil();
 
 	// 初期化処理
 	if (FAILED(pInstance->Init()))
@@ -70,7 +70,7 @@ CEnemyMedaman* CEnemyMedaman::Create(const char* pFilename)
 //====================================================================
 //初期化処理
 //====================================================================
-HRESULT CEnemyMedaman::Init(void)
+HRESULT CEnemyYoungDevil::Init(void)
 {
 	// 継承クラスの初期化処理
 	CEnemy::Init();
@@ -83,7 +83,7 @@ HRESULT CEnemyMedaman::Init(void)
 //====================================================================
 //自分が保持するオブジェクトの生成
 //====================================================================
-void CEnemyMedaman::MyObjCreate(void)
+void CEnemyYoungDevil::MyObjCreate(void)
 {
 
 }
@@ -91,7 +91,7 @@ void CEnemyMedaman::MyObjCreate(void)
 //====================================================================
 //終了処理
 //====================================================================
-void CEnemyMedaman::Uninit(void)
+void CEnemyYoungDevil::Uninit(void)
 {
 	// 継承クラスの終了処理
 	CEnemy::Uninit();
@@ -102,7 +102,7 @@ void CEnemyMedaman::Uninit(void)
 //====================================================================
 //更新処理
 //====================================================================
-void CEnemyMedaman::Update(void)
+void CEnemyYoungDevil::Update(void)
 {
 	switch (CScene::GetMode())
 	{
@@ -124,7 +124,7 @@ void CEnemyMedaman::Update(void)
 //====================================================================
 //タイトルでの更新処理
 //====================================================================
-void CEnemyMedaman::TitleUpdate(void)
+void CEnemyYoungDevil::TitleUpdate(void)
 {
 	// 継承クラスのタイトル更新処理
 	CEnemy::TitleUpdate();
@@ -133,7 +133,7 @@ void CEnemyMedaman::TitleUpdate(void)
 //====================================================================
 //ゲームでの更新処理
 //====================================================================
-void CEnemyMedaman::GameUpdate(void)
+void CEnemyYoungDevil::GameUpdate(void)
 {
 	// 継承クラスのゲーム更新処理
 	CEnemy::GameUpdate();
@@ -145,7 +145,7 @@ void CEnemyMedaman::GameUpdate(void)
 //====================================================================
 //モーションと状態の管理
 //====================================================================
-void CEnemyMedaman::ActionState(void)
+void CEnemyYoungDevil::ActionState(void)
 {
 	// 情報取得
 	D3DXVECTOR3 move = GetMove();	// 移動量
@@ -173,7 +173,7 @@ void CEnemyMedaman::ActionState(void)
 //====================================================================
 //探索状態管理
 //====================================================================
-void CEnemyMedaman::StateManager(void)
+void CEnemyYoungDevil::StateManager(void)
 {
 
 }
@@ -181,7 +181,7 @@ void CEnemyMedaman::StateManager(void)
 //====================================================================
 //ダメージ判定処理
 //====================================================================
-void CEnemyMedaman::SetDamage(float Damage)
+void CEnemyYoungDevil::SetDamage(float Damage)
 {
 
 }
@@ -189,7 +189,7 @@ void CEnemyMedaman::SetDamage(float Damage)
 //====================================================================
 //描画処理
 //====================================================================
-void CEnemyMedaman::Draw(void)
+void CEnemyYoungDevil::Draw(void)
 {
 	// 継承クラスの描画処理
 	CEnemy::Draw();
@@ -198,7 +198,7 @@ void CEnemyMedaman::Draw(void)
 //====================================================================
 // 接触ダメージ処理
 //====================================================================
-void CEnemyMedaman::HitDamage(float fDamage)
+void CEnemyYoungDevil::HitDamage(float fDamage)
 {
 	CEnemy::HitDamage(fDamage);
 

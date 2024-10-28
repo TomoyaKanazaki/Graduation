@@ -202,6 +202,9 @@ void CEnemy::GameUpdate(void)
 	// 状態の更新
 	StateManager();
 
+	// 移動方向処理
+	Rot();
+
 	// 位置更新処理
 	UpdatePos();
 
@@ -350,6 +353,27 @@ void CEnemy::UpdatePos(void)
 
 	//ステージ外との当たり判定
 	CollisionOut();
+}
+
+//====================================================================
+//移動方向処理
+//====================================================================
+void CEnemy::Rot(void)
+{
+	//キーボードの取得
+	CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
+	CInputMouse* pInputMouse = CManager::GetInstance()->GetInputMouse();
+	CInputJoypad* pInputJoypad = CManager::GetInstance()->GetInputJoyPad();
+	D3DXVECTOR3 CameraRot = CManager::GetInstance()->GetCamera()->GetRot();
+
+	//移動方向に向きを合わせる処理
+	float fRotMove, fRotDest;
+	fRotMove = m_rot.y;
+	fRotDest = CManager::GetInstance()->GetCamera()->GetRot().y;
+
+	m_rot.y = atan2f(m_move.z, -m_move.x);
+
+	useful::NormalizeAngle(&m_rot);
 }
 
 //====================================================================

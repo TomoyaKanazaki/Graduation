@@ -363,6 +363,12 @@
     <ClCompile Include="source\listManager.cpp">
       <Filter>ソース ファイル\01_System</Filter>
     </ClCompile>
+    <ClCompile Include="source\enemyBonbon.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\enemyYoungDevil.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\SampleLevelModel.h">
@@ -634,6 +640,12 @@
     </ClInclude>
     <ClInclude Include="source\listManager.h">
       <Filter>ヘッダー ファイル\01_System</Filter>
+    </ClInclude>
+    <ClInclude Include="source\enemyBonbon.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\enemyYoungDevil.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
