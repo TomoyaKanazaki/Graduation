@@ -61,6 +61,7 @@ public:
 		TYPE_DEVILKEY,
 		TYPE_BIBLE,
 		TYPE_RAILBLOCK,
+		TYPE_RAIL,
 		TYPE_MAX,
 	};
 
