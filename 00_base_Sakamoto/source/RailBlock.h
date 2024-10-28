@@ -10,6 +10,8 @@
 #include "main.h"
 #include "CubeBlock.h"
 
+class CRail;
+
 //オブジェクトメッシュフィールドクラス
 class CRailBlock : public CCubeBlock
 {
@@ -17,9 +19,9 @@ public:
 	CRailBlock(int nPriority = 3);
 	~CRailBlock();
 
-	static CRailBlock* Create(void);
+	static CRailBlock* Create(int nMapWight, int nMapHeight);
 
-	HRESULT Init(void);
+	HRESULT Init(int nMapWight, int nMapHeight);
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);
@@ -27,6 +29,17 @@ public:
 protected:
 
 private:
+
+	void Move(D3DXVECTOR3 *Pos);
+	void RailCheck();
+	void RailSet();
+
+	int StartWightNumber;
+	int StartHeightNumber;
+
+	bool bMoveOK[4];
+	CRail* m_pTop;		// 先頭のレールへのポインタ
+	CRail* m_pCur;		// 最後尾のレールへのポインタ
 
 };
 #endif

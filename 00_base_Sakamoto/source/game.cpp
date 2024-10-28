@@ -186,9 +186,7 @@ HRESULT CGame::Init(void)
 	m_pScore->SetScore(CManager::GetInstance()->GetEndScore());
 
 	CMapSystem::GetInstance()->SetGritBool(8, 6, true);
-	CRailBlock* pBlock = CRailBlock::Create();
-	pBlock->SetWightNumber(8);
-	pBlock->SetHeightNumber(6);
+	CRailBlock* pBlock = CRailBlock::Create(8, 6);
 	pBlock->SetPos(D3DXVECTOR3(0.0f, 50.0f, 0.0f));
 	pBlock->SetSize(D3DXVECTOR3(50.0f, 50.0f, 50.0f));
 

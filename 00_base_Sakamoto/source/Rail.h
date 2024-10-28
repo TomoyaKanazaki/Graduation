@@ -14,49 +14,56 @@
 class CObjGauge2D;
 
 //オブジェクトプレイヤークラス
-class CRail : public CObjectX
+class CRail : public CObject
 {
 public:
 
 	CRail(int nPriority = 3);
 	~CRail();
 
-	//サンプルの状態
-	enum STATE
+	enum RAIL_POS
 	{
-		STATE_NORMAL = 0,	//通常
-		STATE_ACTION,		//行動
-		STATE_MAX,
+		RAIL_POS_UP = 0,
+		RAIL_POS_DOWN,
+		RAIL_POS_LEFT,
+		RAIL_POS_RIGHT,
+		RAIL_POS_MAX,
 	};
 
-	static CRail* Create(char* pModelName);
+	static CRail* Create();
 
-	HRESULT Init(char* pModelName);
+	HRESULT Init(void);
 	void Uninit(void);
 	void Update(void);
 	void TitleUpdate(void);
 	void GameUpdate(void);
 	void Draw(void);
 
-	int GetIdx(void) { return m_nIdxTexture; }
-	int GetIdxXModel(void) { return -1; }
-	void SetPos(D3DXVECTOR3 pos) { m_pos = pos; }
-	D3DXVECTOR3 GetPos(void) { return m_pos; }
+	void PrevSet(RAIL_POS Set);
+	void NextSet(RAIL_POS Set);
+
+	void SetWightNumber(int Number) { m_nMapWidth = Number; }
+	int GetWightNumber(void) { return m_nMapWidth; }
+	void SetHeightNumber(int Number) { m_nMapHeight = Number; }
+	int GetHeightNumber(void) { return m_nMapHeight; }
+
+	void SetPrevRail(CRail *Set) { m_pPrev = Set; }
+	CRail* GetPrevRail(void) { return m_pPrev; }
+	void SetNextRail(CRail* Set) { m_pNext = Set; }
+	CRail* GetNextRail(void) { return m_pNext; }
+
+	bool GetRailOK(int nCnt) { return m_bRail[nCnt]; }
 
 private:
-	void StateManager(void);	//状態管理
 
-	int m_nIdxXModel;				//Xモデルの番号
-	D3DXVECTOR3 m_CollisionPos;		//当たり判定用の座標
-	bool m_bCollision;				//当たり判定用の座標
-	int m_nIdxTexture;				//テクスチャの番号
-	STATE m_State;					//状態
-	int m_nStateCount;				//状態管理用変数
-	float m_Scaling;				//大きさ
-	D3DXVECTOR3 m_pos;				//位置	
-	D3DXVECTOR3 m_posOld;			//過去の位置	
-	D3DXVECTOR3 m_move;				//移動量	
-	D3DXVECTOR3 m_rot;				//向き	
-	float m_fColorA;				//不透明度
+	CObjectX* m_pRailModel[2];
+	bool m_bRail[RAIL_POS_MAX];
+
+	int m_nMapWidth;	// マップの横番号
+	int m_nMapHeight;	// マップの縦番号
+								   
+	CRail* m_pPrev;		// 前のレールへのポインタ
+	CRail* m_pNext;		// 次のレールへのポインタ
+
 };
 #endif

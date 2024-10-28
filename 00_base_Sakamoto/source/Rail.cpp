@@ -9,6 +9,8 @@
 #include "manager.h"
 #include "texture.h"
 #include "XModel.h"
+#include "objectX.h"
+#include "MapSystem.h"
 
 //==========================================
 //  定数定義
@@ -21,17 +23,18 @@ namespace
 //====================================================================
 //コンストラクタ
 //====================================================================
-CRail::CRail(int nPriority) : CObjectX(nPriority)
+CRail::CRail(int nPriority) : CObject(nPriority)
 {
-	SetSize(SAMPLE_SIZE);
-	SetPos(INITVECTOR3);
-	m_nIdxXModel = 0;			//マテリアルの数
-	m_CollisionPos = INITVECTOR3;
-	m_bCollision = false;
-	m_State = STATE_NORMAL;
-	m_nStateCount = 0;
-	m_Scaling = 1.0f;
-	m_fColorA = 0.0f;
+	m_pRailModel[0] = nullptr;
+	m_pRailModel[1] = nullptr;
+
+	for (int nCnt = 0; nCnt < RAIL_POS_MAX; nCnt++)
+	{
+		m_bRail[nCnt] = false;
+	}
+
+	m_pPrev = nullptr;		// 前のレールへのポインタ
+	m_pNext = nullptr;		// 次のレールへのポインタ
 }
 
 //====================================================================
@@ -45,7 +48,7 @@ CRail::~CRail()
 //====================================================================
 //生成処理
 //====================================================================
-CRail* CRail::Create(char* pModelName)
+CRail* CRail::Create()
 {
 	CRail* pSample = nullptr;
 
@@ -56,7 +59,7 @@ CRail* CRail::Create(char* pModelName)
 	}
 
 	//オブジェクトの初期化処理
-	if (FAILED(pSample->Init(pModelName)))
+	if (FAILED(pSample->Init()))
 	{//初期化処理が失敗した場合
 		return nullptr;
 	}
@@ -67,11 +70,9 @@ CRail* CRail::Create(char* pModelName)
 //====================================================================
 //初期化処理
 //====================================================================
-HRESULT CRail::Init(char* pModelName)
+HRESULT CRail::Init()
 {
-	SetType(CObject::TYPE_ENEMY3D);
-
-	CObjectX::Init(pModelName);
+	SetType(CObject::TYPE_RAIL);
 
 	//モードごとに初期値を設定出来る
 	switch (CScene::GetMode())
@@ -97,7 +98,7 @@ HRESULT CRail::Init(char* pModelName)
 //====================================================================
 void CRail::Uninit(void)
 {
-	CObjectX::Uninit();
+
 }
 
 //====================================================================
@@ -127,15 +128,7 @@ void CRail::Update(void)
 //====================================================================
 void CRail::TitleUpdate(void)
 {
-	D3DXVECTOR3 pos = GetPos();
 
-	//位置更新
-	pos += m_move;
-
-	SetPos(pos);
-
-	//頂点情報の更新
-	CObjectX::Update();
 }
 
 //====================================================================
@@ -143,27 +136,13 @@ void CRail::TitleUpdate(void)
 //====================================================================
 void CRail::GameUpdate(void)
 {
-	//更新前の位置を過去の位置とする
-	m_posOld = m_pos;
-
-	//位置更新
-	CObjectX::SetPos(m_pos);
-	CObjectX::SetRot(m_rot);
-
-	//画面外判定
-	if (m_pos.y < 0.0f)
+	for (int nCnt = 0; nCnt < 2; nCnt++)
 	{
-
+		if (m_pRailModel[nCnt] != nullptr)
+		{
+			m_pRailModel[nCnt]->SetPos(CMapSystem::GetInstance()->GetGritPos(m_nMapWidth, m_nMapHeight));
+		}
 	}
-
-	//大きさの設定
-	SetScaling(D3DXVECTOR3(m_Scaling, m_Scaling, m_Scaling));
-
-	//状態管理
-	StateManager();
-
-	//頂点情報の更新
-	CObjectX::Update();
 }
 
 //====================================================================
@@ -171,24 +150,90 @@ void CRail::GameUpdate(void)
 //====================================================================
 void CRail::Draw(void)
 {
-	CObjectX::Draw();
+
 }
 
 //====================================================================
-//状態管理
+//前のモデルの設定
 //====================================================================
-void CRail::StateManager(void)
+void CRail::PrevSet(RAIL_POS Set)
 {
-	switch (m_State)
-	{
-	case STATE_NORMAL:
-		break;
-	case STATE_ACTION:
-		break;
-	}
+	m_bRail[Set] = true;
 
-	if (m_nStateCount > 0)
+	if (m_pRailModel[0] == nullptr)
 	{
-		m_nStateCount--;
+		m_pRailModel[0] = CObjectX::Create("data\\MODEL\\TestRail.x");
+		m_pRailModel[0]->SetPos(CMapSystem::GetInstance()->GetGritPos(m_nMapWidth, m_nMapHeight));
+
+		switch (Set)
+		{
+		case CRail::RAIL_POS_UP:
+			m_pRailModel[0]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.0f, 0.0f));
+			break;
+		case CRail::RAIL_POS_DOWN:
+			m_pRailModel[0]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 1.0f, 0.0f));
+			break;
+		case CRail::RAIL_POS_LEFT:
+			m_pRailModel[0]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
+			break;
+		case CRail::RAIL_POS_RIGHT:
+			m_pRailModel[0]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
+			break;
+		default:
+			break;
+		}
+	}
+}
+
+//====================================================================
+//次のモデルの設定
+//====================================================================
+void CRail::NextSet(RAIL_POS Set)
+{
+	m_bRail[Set] = true;
+
+	if (m_pRailModel[1] == nullptr)
+	{
+		m_pRailModel[1] = CObjectX::Create("data\\MODEL\\TestRail.x");
+		m_pRailModel[1]->SetPos(CMapSystem::GetInstance()->GetGritPos(m_nMapWidth, m_nMapHeight));
+
+		int nMapWight = GetWightNumber();
+		int nMapHeight = GetHeightNumber();
+
+		switch (Set)
+		{
+		case CRail::RAIL_POS_UP:
+			m_pRailModel[1]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.0f, 0.0f));
+			Set = RAIL_POS_DOWN;
+			nMapHeight = GetHeightNumber() - 1;
+			break;
+
+		case CRail::RAIL_POS_DOWN:
+			m_pRailModel[1]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 1.0f, 0.0f));
+			Set = RAIL_POS_UP;
+			nMapHeight = GetHeightNumber() + 1;
+			break;
+
+		case CRail::RAIL_POS_LEFT:
+			m_pRailModel[1]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
+			Set = RAIL_POS_RIGHT;
+			nMapWight = GetWightNumber() - 1;
+			break;
+
+		case CRail::RAIL_POS_RIGHT:
+			m_pRailModel[1]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
+			Set = RAIL_POS_LEFT;
+			nMapWight = GetWightNumber() + 1;
+			break;
+
+		default:
+			break;
+		}
+
+		m_pNext = CRail::Create();
+		m_pNext->SetWightNumber(nMapWight);
+		m_pNext->SetHeightNumber(nMapHeight);
+		m_pNext->SetPrevRail(this);
+		m_pNext->PrevSet(Set);
 	}
 }
