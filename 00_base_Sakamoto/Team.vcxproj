@@ -40,7 +40,9 @@
     <ClCompile Include="source\Edit.cpp" />
     <ClCompile Include="source\effect.cpp" />
     <ClCompile Include="source\enemy.cpp" />
+    <ClCompile Include="source\enemyBonbon.cpp" />
     <ClCompile Include="source\enemyMedaman.cpp" />
+    <ClCompile Include="source\enemyYoungDevil.cpp" />
     <ClCompile Include="source\fade.cpp" />
     <ClCompile Include="source\fire.cpp" />
     <ClCompile Include="source\game.cpp" />
@@ -136,7 +138,9 @@
     <ClInclude Include="source\Edit.h" />
     <ClInclude Include="source\effect.h" />
     <ClInclude Include="source\enemy.h" />
+    <ClInclude Include="source\enemyBonbon.h" />
     <ClInclude Include="source\enemyMedaman.h" />
+    <ClInclude Include="source\enemyYoungDevil.h" />
     <ClInclude Include="source\fade.h" />
     <ClInclude Include="source\fire.h" />
     <ClInclude Include="source\game.h" />

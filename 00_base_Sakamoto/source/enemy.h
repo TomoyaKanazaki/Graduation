@@ -102,10 +102,11 @@ private:
 
 	void StateManager();								//状態更新
 	void CollisionWall(useful::COLLISION XYZ);			//壁との当たり判定
-	void CollisionDevilHole(useful::COLLISION XYZ);	//デビルホールとの当たり判定
-	void CollisionOut();			//ステージ外との当たり判定
+	void CollisionDevilHole(useful::COLLISION XYZ);		//デビルホールとの当たり判定
+	void CollisionOut();								//ステージ外との当たり判定
 
 	void UpdatePos(void);								// 位置更新処理
+	void Rot(void);										//移動方向処理
 	virtual void Death(void);							// 死亡処理
 	void MyObjCreate(void);								// 自分が保持するオブジェクトの生成
 	void MoveSelect(void);								// 移動方向の選択
@@ -141,7 +142,7 @@ private:
 	bool m_OKU;					//上への進行が許されるかどうか
 	bool m_OKD;					//下への進行が許されるかどうか
 
-	CSlowManager* m_pSlow;						// スロー情報
+	CSlowManager* m_pSlow;		// スロー情報
 
 	//階層構造とモーションのポインタ
 	CModel* m_apModel[MODEL_NUM];

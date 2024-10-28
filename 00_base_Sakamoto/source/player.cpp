@@ -873,6 +873,8 @@ void CPlayer::PosUpdate(void)
 		fSpeed = m_pSlow->GetValue();
 	}
 
+	CDevil* pDevil = CGame::GetDevil();
+
 	//Y軸の位置更新
 	m_pos.y += m_move.y * CManager::GetInstance()->GetGameSpeed() * fSpeed;
 	m_pos.y += m_Objmove.y * CManager::GetInstance()->GetGameSpeed() * fSpeed;
@@ -882,70 +884,20 @@ void CPlayer::PosUpdate(void)
 	CollisionDevilHole(useful::COLLISION_Y);
 
 	//X軸の位置更新
-	m_pos.x += m_move.x * CManager::GetInstance()->GetGameSpeed() * fSpeed * MoveSlopeX();
-	m_pos.x += m_Objmove.x * CManager::GetInstance()->GetGameSpeed() * fSpeed * MoveSlopeX();
+	m_pos.x += m_move.x * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeX();
+	m_pos.x += m_Objmove.x * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeX();
 	
 	// 壁との当たり判定
 	CollisionWall(useful::COLLISION_X);
 	CollisionDevilHole(useful::COLLISION_X);
 
 	//Z軸の位置更新
-	m_pos.z += m_move.z * CManager::GetInstance()->GetGameSpeed() * fSpeed * MoveSlopeZ();
-	m_pos.z += m_Objmove.z * CManager::GetInstance()->GetGameSpeed() * fSpeed * MoveSlopeZ();
+	m_pos.z += m_move.z * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeZ();
+	m_pos.z += m_Objmove.z * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeZ();
 
 	// 壁との当たり判定
 	CollisionWall(useful::COLLISION_Z);
 	CollisionDevilHole(useful::COLLISION_Z);
-}
-
-//====================================================================
-//傾き中の移動量変動
-//====================================================================
-float CPlayer::MoveSlopeX(void)
-{
-	float fSlopeMove = 1.0f;
-
-	D3DXVECTOR3 DevilRot = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
-	if (CManager::GetInstance()->GetScene()->GetMode() == CScene::MODE_GAME)
-	{
-		DevilRot = CGame::GetDevil()->GetDevilRot();
-	}
-
-	if (m_move.x > 0.0f)
-	{
-		fSlopeMove = (D3DX_PI / (D3DX_PI + DevilRot.z));
-	}
-	else if (m_move.x < 0.0f)
-	{
-		fSlopeMove = (D3DX_PI / (D3DX_PI - DevilRot.z));
-	}
-
-	return fSlopeMove;
-}
-
-//====================================================================
-//傾き中の移動量変動
-//====================================================================
-float CPlayer::MoveSlopeZ(void)
-{
-	float fSlopeMove = 1.0f;
-
-	D3DXVECTOR3 DevilRot = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
-	if (CManager::GetInstance()->GetScene()->GetMode() == CScene::MODE_GAME)
-	{
-		DevilRot = CGame::GetDevil()->GetDevilRot();
-	}
-
-	if (m_move.z > 0.0f)
-	{
-		fSlopeMove = (D3DX_PI / (D3DX_PI - DevilRot.x));
-	}
-	else if (m_move.z < 0.0f)
-	{
-		fSlopeMove = (D3DX_PI / (D3DX_PI + DevilRot.x));
-	}
-
-	return fSlopeMove;
 }
 
 //====================================================================

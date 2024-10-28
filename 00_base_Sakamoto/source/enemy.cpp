@@ -202,6 +202,9 @@ void CEnemy::GameUpdate(void)
 	// 状態の更新
 	StateManager();
 
+	// 移動方向処理
+	Rot();
+
 	// 位置更新処理
 	UpdatePos();
 
@@ -324,6 +327,8 @@ void CEnemy::UpdatePos(void)
 		}
 	}
 
+	CDevil* pDevil = CGame::GetDevil();
+
 	//Y軸の位置更新
 	m_pos.y += m_move.y * CManager::GetInstance()->GetGameSpeed() * fSpeed;
 	m_pos.y += m_Objmove.y * CManager::GetInstance()->GetGameSpeed() * fSpeed;
@@ -333,16 +338,16 @@ void CEnemy::UpdatePos(void)
 	CollisionDevilHole(useful::COLLISION_Y);
 
 	//X軸の位置更新
-	m_pos.x += m_move.x * CManager::GetInstance()->GetGameSpeed() * fSpeed;
-	m_pos.x += m_Objmove.x * CManager::GetInstance()->GetGameSpeed() * fSpeed;
+	m_pos.x += m_move.x * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeX();
+	m_pos.x += m_Objmove.x * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeX();
 
 	// 壁との当たり判定
 	CollisionWall(useful::COLLISION_X);
 	CollisionDevilHole(useful::COLLISION_X);
 
 	//Z軸の位置更新
-	m_pos.z += m_move.z * CManager::GetInstance()->GetGameSpeed() * fSpeed;
-	m_pos.z += m_Objmove.z * CManager::GetInstance()->GetGameSpeed() * fSpeed;
+	m_pos.z += m_move.z * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeZ();
+	m_pos.z += m_Objmove.z * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeZ();
 
 	// 壁との当たり判定
 	CollisionWall(useful::COLLISION_Z);
@@ -350,6 +355,27 @@ void CEnemy::UpdatePos(void)
 
 	//ステージ外との当たり判定
 	CollisionOut();
+}
+
+//====================================================================
+//移動方向処理
+//====================================================================
+void CEnemy::Rot(void)
+{
+	//キーボードの取得
+	CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
+	CInputMouse* pInputMouse = CManager::GetInstance()->GetInputMouse();
+	CInputJoypad* pInputJoypad = CManager::GetInstance()->GetInputJoyPad();
+	D3DXVECTOR3 CameraRot = CManager::GetInstance()->GetCamera()->GetRot();
+
+	//移動方向に向きを合わせる処理
+	float fRotMove, fRotDest;
+	fRotMove = m_rot.y;
+	fRotDest = CManager::GetInstance()->GetCamera()->GetRot().y;
+
+	m_rot.y = atan2f(m_move.z, -m_move.x);
+
+	useful::NormalizeAngle(&m_rot);
 }
 
 //====================================================================

@@ -40,15 +40,20 @@ public:
 	//プレイヤーのモーション
 	enum ACTION_TYPE
 	{
-		ACTION_BWAIT = 0,		//戦闘待機
-		ACTION_SMOVE,			//探索移動
-		ACTION_BMOVE,			//戦闘移動
-		ACTION_SWAIT,			//探索待機
-		ACTION_ATTACK,			//攻撃
-		ACTION_BDEATH,			//戦闘中の死亡
-		ACTION_SDEATH,			//探索中の死亡
-		ACTION_DAMAGE,			//ダメージ
-		ACTION_MAX,				//最大
+		ACTION_WAIT = 0,			//待機
+		ACTION_EVENT,				//イベント状態
+		ACTION_WALK,				//移動
+		ACTION_JUMP,				//バックジャンプ？
+		ACTION_DAMAGE,				//ダメージ
+		ACTION_DEATH,				//瀕死
+		ACTION_SWING_TRIPLE,		//3連振り下ろし
+		ACTION_SHURI_AND_KABUTO,	//手裏剣2発 + 兜割り
+		ACTION_DASH,				//ダッシュ
+		ACTION_MOW,					//薙ぎ払い
+		ACTION_SMOKE,				//煙幕
+		ACTION_DEATHEVENT,			//死亡時イベント
+		ACTION_DEATHEND,			//死亡
+		ACTION_MAX,					//最大
 	};
 
 	//プレイヤーの状態
@@ -70,6 +75,9 @@ public:
 	void GameUpdate(void);
 	void TutorialUpdate(void);
 	void Draw(void);
+
+	float MoveSlopeX(void);		//傾き中の移動量変動
+	float MoveSlopeZ(void);		//傾き中の移動量変動
 
 	void SetPos(D3DXVECTOR3 pos) { m_pos = pos; }
 	D3DXVECTOR3 GetPos(void) { return m_pos; }
