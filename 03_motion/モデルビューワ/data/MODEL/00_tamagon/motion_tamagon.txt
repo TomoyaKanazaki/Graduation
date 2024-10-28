@@ -14,17 +14,17 @@ NUM_MODEL = 11
 #------------------------------------------------------------------------------
 # モデルファイル名
 #------------------------------------------------------------------------------
-MODEL_FILENAME = data/00_tamagon/00_body.x	# [0]腰
-MODEL_FILENAME = data/00_tamagon/01_tale.x	# [1]体
-MODEL_FILENAME = data/00_tamagon/02_lower_jaw.x	# [2]頭
-MODEL_FILENAME = data/00_tamagon/03_R_thighs.x	# [2]頭
-MODEL_FILENAME = data/00_tamagon/04_L_thighs.x	# [2]頭
-MODEL_FILENAME = data/00_tamagon/05_R_foot.x	# [2]頭
-MODEL_FILENAME = data/00_tamagon/06_L_foot.x	# [2]頭
-MODEL_FILENAME = data/00_tamagon/07_R_feather.x	# [2]頭
-MODEL_FILENAME = data/00_tamagon/08_L_feather.x	# [2]頭
-MODEL_FILENAME = data/00_tamagon/09_cross.x	# [2]頭
-MODEL_FILENAME = data/00_tamagon/10_book.x	# [2]頭
+MODEL_FILENAME = data/MODEL/00_tamagon/00_body.x	# [0]腰
+MODEL_FILENAME = data/MODEL/00_tamagon/01_tale.x	# [1]体
+MODEL_FILENAME = data/MODEL/00_tamagon/02_lower_jaw.x	# [2]頭
+MODEL_FILENAME = data/MODEL/00_tamagon/03_R_thighs.x	# [2]頭
+MODEL_FILENAME = data/MODEL/00_tamagon/04_L_thighs.x	# [2]頭
+MODEL_FILENAME = data/MODEL/00_tamagon/05_R_foot.x	# [2]頭
+MODEL_FILENAME = data/MODEL/00_tamagon/06_L_foot.x	# [2]頭
+MODEL_FILENAME = data/MODEL/00_tamagon/07_R_feather.x	# [2]頭
+MODEL_FILENAME = data/MODEL/00_tamagon/08_L_feather.x	# [2]頭
+MODEL_FILENAME = data/MODEL/00_tamagon/09_cross.x	# [2]頭
+MODEL_FILENAME = data/MODEL/00_tamagon/10_book.x	# [2]頭
 
 #------------------------------------------------------------------------------
 # キャラクター情報
@@ -59,14 +59,14 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 3
 		PARENT = 0
-		POS = -18.60 -12.75 -8.50
+		POS = -18.60 -8.75 -2.50
 		ROT = 0.00 0.00 0.00
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 4
 		PARENT = 0
-		POS = 19.60 -12.25 -8.50
+		POS = 19.60 -8.25 -2.50
 		ROT = 0.00 0.00 0.00
 	END_PARTSSET
 
