@@ -49,21 +49,10 @@ CHARACTERSET
 	CENTERSET
 		PARTS = 0		# 中心にするパーツ
 		OFFSET = 0.00 30.50 0.00		# オフセット位置
-	END_CENTERSET
-
-CHARACTERSET
-
-	CENTERSET
-		PARTS = 0		# 中心にするパーツ
-		OFFSET = 0.00 30.50 0.00		# オフセット位置
-	END_CENTERSET
-
-	VELOCITY = 0.50		# 移動量
-	JUMP = 0.00		# ジャンプ量
-	RADIUS = 60.00		# 半径
-	HEIGHT = 0.00		# 高さ
-	LIFE = 5		# 体力
-
+END_CENTERSET
+#------------------------------------------------------------------------------
+# キャラクター情報
+#------------------------------------------------------------------------------
 CHARACTERSET
 
 	CENTERSET
@@ -96,7 +85,7 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 2
 		PARENT = 0
-		POS = 0.10 -11.75 -24.50
+		POS = 0.10 -2.25 -18.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
@@ -148,27 +137,23 @@ CHARACTERSET
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
-	
-		PARTSSET
+
+	PARTSSET
 		INDEX = 9
 		PARENT = 0
-		POS = 20.10 17.75 -14.50
+		POS = -2.40 32.25 11.50
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
-
 
 	PARTSSET
 		INDEX = 10
 		PARENT = 0
-		POS = 20.10 17.75 -14.50
+		POS = -6.90 36.25 5.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
-
-
 END_CHARACTERSET
-
 
 #==============================================================================
 #

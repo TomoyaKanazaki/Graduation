@@ -9,28 +9,16 @@ SCRIPT			# この行は絶対消さないこと！
 #------------------------------------------------------------------------------
 # モデル数
 #------------------------------------------------------------------------------
-NUM_MODEL = 17
+NUM_MODEL = 5
 
 #------------------------------------------------------------------------------
 # モデルファイル名
 #------------------------------------------------------------------------------
-MODEL_FILENAME = data/MODEL/ManBase/00_Waist.x		# [0]腰
-MODEL_FILENAME = data/MODEL/ManBase/01_Body.x		# [1]体
-MODEL_FILENAME = data/MODEL/ManBase/02_Head.x		# [2]頭
-MODEL_FILENAME = data/MODEL/ManBase/03_RShoulder.x	# [3]右肩
-MODEL_FILENAME = data/MODEL/ManBase/04_LShoulder.x	# [4]左肩
-MODEL_FILENAME = data/MODEL/ManBase/05_RUArm.x		# [5]右上腕
-MODEL_FILENAME = data/MODEL/ManBase/06_LUArm.x		# [6]左上腕
-MODEL_FILENAME = data/MODEL/ManBase/07_RDArm.x		# [7]右下腕
-MODEL_FILENAME = data/MODEL/ManBase/08_LDArm.x		# [8]左下腕
-MODEL_FILENAME = data/MODEL/ManBase/09_RHand.x		# [9]右手
-MODEL_FILENAME = data/MODEL/ManBase/10_LHand.x		# [10]左手
-MODEL_FILENAME = data/MODEL/ManBase/11_RLeg.x		# [11]右脚
-MODEL_FILENAME = data/MODEL/ManBase/12_LLeg.x		# [12]左脚
-MODEL_FILENAME = data/MODEL/ManBase/13_RFeet.x		# [13]右足
-MODEL_FILENAME = data/MODEL/ManBase/14_LFeet.x		# [14]左足
-MODEL_FILENAME = data/MODEL/ManBase/15_RShoe.x		# [15]右靴
-MODEL_FILENAME = data/MODEL/ManBase/16_LShoe.x		# [16]左靴
+MODEL_FILENAME = data/MODEL/04_smalldevil/00_body.x	# [0]腰
+MODEL_FILENAME = data/MODEL/04_smalldevil/01_R_foot.x	# [1]体
+MODEL_FILENAME = data/MODEL/04_smalldevil/02_L_foot.x	# [2]頭
+MODEL_FILENAME = data/MODEL/04_smalldevil/03_R_feather.x	# [2]頭
+MODEL_FILENAME = data/MODEL/04_smalldevil/04_L_feather.x	# [2]頭
 
 #------------------------------------------------------------------------------
 # キャラクター情報
@@ -39,125 +27,41 @@ CHARACTERSET
 	MOVE = 3.0					# 移動量
 	JUMP = 10.25					# ジャンプ量
 	RADIUS = 20.0					# 半径
-	NUM_PARTS = 17					# パーツ数
+	NUM_PARTS = 5					# パーツ数
 
 	PARTSSET
-		INDEX = 0					# 腰
-		PARENT = -1					# (親)NULL
-		POS = 0.0 29.0 0.0
-		ROT = 0.0 0.0 0.0
+		INDEX = 0
+		PARENT = -1
+		POS = 0.00 16.70 0.00
+		ROT = 0.00 0.00 0.00
 	END_PARTSSET
 
 	PARTSSET
-		INDEX = 1					# 体
-		PARENT = 0					# (親)体
-		POS = 0.0 0.0 0.0
-		ROT = 0.0 0.0 0.0
+		INDEX = 1
+		PARENT = 0
+		POS = -6.60 -8.25 0.00
+		ROT = 0.00 0.00 0.00
 	END_PARTSSET
 
 	PARTSSET
-		INDEX = 2					# 頭
-		PARENT = 1					# (親)体
-		POS = 0.0 12.0 0.0
-		ROT = 0.0 0.0 0.0
+		INDEX = 2
+		PARENT = 0
+		POS = 6.60 -7.75 0.00
+		ROT = 0.00 0.00 0.00
 	END_PARTSSET
 
 	PARTSSET
-		INDEX = 3					# 右肩
-		PARENT = 1					# (親)体
-		POS = 5.0 7.5 0.0
-		ROT = 0.0 0.0 0.0
+		INDEX = 3
+		PARENT = 0
+		POS = -6.60 -1.75 11.00
+		ROT = 0.00 0.00 0.00
 	END_PARTSSET
 
 	PARTSSET
-		INDEX = 4					# 左肩
-		PARENT = 1					# (親)体
-		POS = -5.0 7.5 0.0
-		ROT = 0.0 0.0 0.0
-	END_PARTSSET
-
-	PARTSSET
-		INDEX = 5					# 右上腕
-		PARENT = 3					# (親)右肩
-		POS = 1.5 0.0 0.0
-		ROT = 0.0 0.0 0.0
-	END_PARTSSET
-
-	PARTSSET
-		INDEX = 6					# 左上腕
-		PARENT = 4					# (親)左肩
-		POS = -1.5 0.0 0.0
-		ROT = 0.0 0.0 0.0
-	END_PARTSSET
-
-	PARTSSET
-		INDEX = 7					# 右下腕
-		PARENT = 5					# (親)右上腕
-		POS = 7.5 0.0 0.0
-		ROT = 0.0 0.0 0.0
-	END_PARTSSET
-
-	PARTSSET
-		INDEX = 8					# 左下腕
-		PARENT = 6					# (親)左上腕
-		POS = -7.5 0.0 0.0
-		ROT = 0.0 0.0 0.0
-	END_PARTSSET
-
-	PARTSSET
-		INDEX = 9					# 右手
-		PARENT = 7					# (親)右下腕
-		POS = 8.5 0.0 0.0
-		ROT = 0.0 0.0 0.0
-	END_PARTSSET
-
-	PARTSSET
-		INDEX = 10					# 左手
-		PARENT = 8					# (親)左下腕
-		POS = -8.5 0.0 0.0
-		ROT = 0.0 0.0 0.0
-	END_PARTSSET
-
-	PARTSSET
-		INDEX = 11					# 右脚
-		PARENT = 0					# (親)腰
-		POS = 2.0 -2.5 0.0
-		ROT = 0.0 0.0 0.0
-	END_PARTSSET
-
-	PARTSSET
-		INDEX = 12					# 左脚
-		PARENT = 0					# (親)腰
-		POS = -2.0 -2.5 0.0
-		ROT = 0.0 0.0 0.0
-	END_PARTSSET
-
-	PARTSSET
-		INDEX = 13					# 右足
-		PARENT = 11					# (親)右脚
-		POS = 0.0 -10.0 0.0
-		ROT = 0.0 0.0 0.0
-	END_PARTSSET
-
-	PARTSSET
-		INDEX = 14					# 左足
-		PARENT = 12					# (親)左脚
-		POS = 0.0 -10.0 0.0
-		ROT = 0.0 0.0 0.0
-	END_PARTSSET
-
-	PARTSSET
-		INDEX = 15					# 右靴
-		PARENT = 13					# (親)右足
-		POS = 0.0 -12.5 0.0
-		ROT = 0.0 0.0 0.0
-	END_PARTSSET
-
-	PARTSSET
-		INDEX = 16					# 左靴
-		PARENT = 14					# (親)左足
-		POS = 0.0 -12.5 0.0
-		ROT = 0.0 0.0 0.0
+		INDEX = 4
+		PARENT = 0
+		POS = 6.60 -1.25 11.00
+		ROT = 0.00 0.00 0.00
 	END_PARTSSET
 
 END_CHARACTERSET
