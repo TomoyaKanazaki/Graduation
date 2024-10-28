@@ -44,6 +44,7 @@ namespace
 	const D3DXVECTOR3 COLLISION_SIZE = D3DXVECTOR3(45.0f, 40.0f, 45.0f);		//横の当たり判定
 	const float PLAYER_SPEED = 5.0f;		//プレイヤーの移動速度
 	const int LIFE_MAX = 2;	//初期ライフ数
+	const int FIRE_STOPTIME = 30;	//攻撃時の移動停止時間
 
 	const D3DXVECTOR3 LIFE_POS = D3DXVECTOR3(50.0f, 650.0f, 0.0f);
 }
@@ -301,6 +302,7 @@ void CPlayer::GameUpdate(void)
 		// 向き移動処理
 		Rot();
 
+
 		if (m_eItemType != TYPE_NONE)
 		{
 			Attack();
@@ -309,8 +311,11 @@ void CPlayer::GameUpdate(void)
 		// カメラ更新処理
 		CameraPosUpdate();
 
-		// 位置更新処理
-		PosUpdate();
+		if (m_State == STATE_WALK)
+		{
+			// 位置更新処理
+			PosUpdate();
+		}
 
 		if (m_State != STATE_EGG)
 		{
@@ -459,7 +464,7 @@ void CPlayer::Move(void)
 		m_move.z -= pInputJoypad->Get_Stick_Left(0).x * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 	}
 
-	if (m_bInput)
+	if (m_bInput && m_State != STATE_ATTACK)
 	{
 		float JunpPawer = NormarizeMove.y;
 		NormarizeMove.y = 0.0f;
@@ -507,12 +512,17 @@ void CPlayer::Rot(void)
 //====================================================================
 void CPlayer::Attack(void)
 {
-	//キーボードの取得
-	CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
-
-	if (pInputKeyboard->GetTrigger(DIK_SPACE) == true)
+	if (m_State == STATE_WALK)
 	{
-		CFire::Create("data\\model\\BlockTest.x", m_pos, m_rot);
+		//キーボードの取得
+		CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
+
+		if (pInputKeyboard->GetTrigger(DIK_SPACE) == true)
+		{
+			CFire::Create("data\\model\\BlockTest.x", m_pos, m_rot);
+			m_State = STATE_ATTACK;
+			m_nStateCount = FIRE_STOPTIME;
+		}
 	}
 }
 
@@ -530,9 +540,17 @@ void CPlayer::ActionState(void)
 			m_pMotion->Set(ACTION_DEATH, 5);
 		}
 	}
-
 	//移動モーション
-	if (m_move.x > 0.1f || m_move.x < -0.1f || m_move.z > 0.1f || m_move.z < -0.1f)
+	else if (m_State == STATE_ATTACK)
+	{
+		if (m_Action != ACTION_WAIT)
+		{
+			m_Action = ACTION_WAIT;
+			m_pMotion->Set(ACTION_WAIT, 5);
+		}
+	}
+	//移動モーション
+	else if (m_move.x > 0.1f || m_move.x < -0.1f || m_move.z > 0.1f || m_move.z < -0.1f)
 	{
 		if (m_Action != ACTION_MOVE)
 		{
@@ -573,6 +591,15 @@ void CPlayer::StateManager(void)
 		break;
 
 	case STATE_WALK:
+		break;
+
+	case STATE_ATTACK:
+
+		if (m_nStateCount == 0)
+		{
+			m_State = STATE_WALK;
+		}
+
 		break;
 
 	case STATE_DEATH:
@@ -886,7 +913,7 @@ void CPlayer::PosUpdate(void)
 	//X軸の位置更新
 	m_pos.x += m_move.x * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeX();
 	m_pos.x += m_Objmove.x * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeX();
-	
+
 	// 壁との当たり判定
 	CollisionWall(useful::COLLISION_X);
 	CollisionDevilHole(useful::COLLISION_X);
@@ -924,6 +951,7 @@ void CPlayer::Death(void)
 	{
 		m_nLife--;
 
+		// 聖書を所持しているときにその場に聖書を落とす
 		if (m_eItemType == TYPE_BIBLE)
 		{
 			// 聖書生成
@@ -933,6 +961,7 @@ void CPlayer::Death(void)
 			pBible->SetHeightNumber(m_nMapHeight);
 			pBible->SetMapScroll(true);
 
+			// アイテムを所持していない状態にする
 			SetItemType(TYPE_NONE);
 		}
 

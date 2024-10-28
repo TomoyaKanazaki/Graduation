@@ -44,7 +44,8 @@ public:
 		ACTION_WAIT = 0,		// ‘Ò‹@
 		ACTION_MOVE,			// ˆÚ“®
 		ACTION_EGG,				// —‘ó‘Ô(–¢Š®¬‚O‚O
-		ACTION_DEATH,			// Ž€–Só‘Ô(–¢Š®¬‚O‚P
+		//ACTION_ATTACK,			// UŒ‚ó‘Ô(–¢Š®¬‚O‚P
+		ACTION_DEATH,			// Ž€–Só‘Ô(–¢Š®¬‚O‚Q
 		ACTION_MAX,				// Å‘å
 		ACTION_NONE
 	};
