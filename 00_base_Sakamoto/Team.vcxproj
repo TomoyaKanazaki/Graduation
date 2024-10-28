@@ -92,6 +92,8 @@
     <ClCompile Include="source\precompile.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="source\Rail.cpp" />
+    <ClCompile Include="source\RailBlock.cpp" />
     <ClCompile Include="source\ranking.cpp" />
     <ClCompile Include="source\renderer.cpp" />
     <ClCompile Include="source\result.cpp" />
@@ -188,6 +190,8 @@
     <ClInclude Include="source\precompile.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="source\Rail.h" />
+    <ClInclude Include="source\RailBlock.h" />
     <ClInclude Include="source\ranking.h" />
     <ClInclude Include="source\renderer.h" />
     <ClInclude Include="source\result.h" />

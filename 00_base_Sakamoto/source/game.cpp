@@ -50,7 +50,8 @@
 #include "item_manager.h"
 #include "bible.h"
 #include "MapSystem.h"
-
+#include "RailBlock.h"
+#include "Rail.h"
 
 namespace
 {
@@ -183,6 +184,16 @@ HRESULT CGame::Init(void)
 
 	m_pScore = CScore::Create();
 	m_pScore->SetScore(CManager::GetInstance()->GetEndScore());
+
+	CMapSystem::GetInstance()->SetGritBool(8, 6, true);
+	CRailBlock* pBlock = CRailBlock::Create();
+	pBlock->SetWightNumber(8);
+	pBlock->SetHeightNumber(6);
+	pBlock->SetPos(D3DXVECTOR3(0.0f, 50.0f, 0.0f));
+	pBlock->SetSize(D3DXVECTOR3(50.0f, 50.0f, 50.0f));
+
+	//CRail* pRail = CRail::Create("data\\MODEL\\TestRail.x");
+	//pRail->SetPos(D3DXVECTOR3(100.0f, 0.0f, 0.0f));
 
 	//ステージの読み込み
 	switch (CManager::GetInstance()->GetStage())
