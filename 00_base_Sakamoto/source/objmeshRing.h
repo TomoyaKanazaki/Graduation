@@ -46,6 +46,9 @@ public:
 	void SetLife(int Life) { m_nlife = Life; }
 	bool CollisionRing(D3DXVECTOR3 pos1, D3DXVECTOR3 pos2, float nRadiusOut, float nRadiusIn, float MinY, float MaxY);
 
+	// 静的メンバ関数
+	static CListManager<CObjmeshRing>* GetList(void); // リスト取得
+
 protected:
 	LPDIRECT3DTEXTURE9 m_pTexture;			//テクスチャへのポインタ
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;		//頂点バッファへのポインタ
@@ -61,5 +64,11 @@ private:
 	D3DXVECTOR3 m_posOld;					//過去の位置
 	D3DXVECTOR3 m_rot;						//向き
 	D3DXCOLOR m_Color;						//色
+
+	// 静的メンバ変数
+	static CListManager<CObjmeshRing>* m_pList; // オブジェクトリスト
+
+	// メンバ変数
+	CListManager<CObjmeshRing>::AIterator m_iterator; // イテレーター
 };
 #endif
