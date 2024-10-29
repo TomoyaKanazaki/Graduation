@@ -17,8 +17,11 @@ namespace
 	const float SMALLER = 2.0f;
 }
 
+//====================================================================
 //静的メンバ変数宣言
+//====================================================================
 LPDIRECT3DTEXTURE9 C2DEffect::m_pTexture = nullptr;
+CListManager<C2DEffect>* C2DEffect::m_pList = nullptr; // オブジェクトリスト
 
 //====================================================================
 //コンストラクタ
@@ -81,6 +84,15 @@ HRESULT C2DEffect::Init(void)
 	//頂点カラーの設定
 	SetColor(m_col);
 
+	if (m_pList == nullptr)
+	{// リストマネージャー生成
+		m_pList = CListManager<C2DEffect>::Create();
+		if (m_pList == nullptr) { assert(false); return E_FAIL; }
+	}
+
+	// リストに自身のオブジェクトを追加・イテレーターを取得
+	m_iterator = m_pList->AddList(this);
+
 	return S_OK;
 }
 
@@ -89,6 +101,16 @@ HRESULT C2DEffect::Init(void)
 //====================================================================
 void C2DEffect::Uninit(void)
 {
+	// リストから自身のオブジェクトを削除
+	m_pList->DelList(m_iterator);
+
+	if (m_pList->GetNumAll() == 0)
+	{ // オブジェクトが一つもない場合
+
+		// リストマネージャーの破棄
+		m_pList->Release(m_pList);
+	}
+
 	CObject2D::Uninit();
 }
 
@@ -142,4 +164,12 @@ void C2DEffect::Draw(void)
 	m_pDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
 	m_pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 	m_pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+}
+
+//====================================================================
+//リスト取得
+//====================================================================
+CListManager<C2DEffect>* C2DEffect::GetList(void)
+{
+	return m_pList;
 }
