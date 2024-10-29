@@ -183,7 +183,7 @@ HRESULT CObjmeshCylinder::Init(void)
 	m_pIdxBuff->Unlock();
 
 	if (m_pList == nullptr)
-	{
+	{// リストマネージャー生成
 		m_pList = CListManager<CObjmeshCylinder>::Create();
 		if (m_pList == nullptr) { assert(false); return E_FAIL; }
 	}

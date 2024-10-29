@@ -131,7 +131,7 @@ HRESULT CObject2D::Init(void)
 	m_pVtxBuff->Unlock();
 
 	if (m_pList == nullptr)
-	{
+	{// リストマネージャー生成
 		m_pList = CListManager<CObject2D>::Create();
 		if (m_pList == nullptr) { assert(false); return E_FAIL; }
 	}
