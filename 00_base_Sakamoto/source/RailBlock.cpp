@@ -109,13 +109,19 @@ void CRailBlock::Update(void)
 
 	if (GetWightNumber() != CMapSystem::GetInstance()->GetGritWightNumber(Pos.x))
 	{
+		CMapSystem::GetInstance()->SetGritBool(GetWightNumber(), GetHeightNumber(), false);
 		SetWightNumber(CMapSystem::GetInstance()->GetGritWightNumber(Pos.x));
+		CMapSystem::GetInstance()->SetGritBool(GetWightNumber(), GetHeightNumber(), true);
+
 		RailCheck();
 	}
 
 	if (GetHeightNumber() != CMapSystem::GetInstance()->GetGritHeightNumber(Pos.z))
 	{
+		CMapSystem::GetInstance()->SetGritBool(GetWightNumber(), GetHeightNumber(), false);
 		SetHeightNumber(CMapSystem::GetInstance()->GetGritHeightNumber(Pos.z));
+		CMapSystem::GetInstance()->SetGritBool(GetWightNumber(), GetHeightNumber(), true);
+
 		RailCheck();
 	}
 
