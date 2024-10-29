@@ -62,6 +62,5 @@ private:
 	// メンバ変数
 	CListManager<CObjmeshDome>::AIterator m_iterator; // イテレーター
 
-
 };
 #endif

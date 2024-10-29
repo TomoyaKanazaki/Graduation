@@ -392,3 +392,11 @@ void CObjmeshDome::SetTexture(const char* name)
 	CTexture* pTexture = CManager::GetInstance()->GetTexture();
 	m_nIdxTexture = pTexture->Regist(name);
 }
+
+//====================================================================
+// ƒŠƒXƒgæ“¾
+//====================================================================
+CListManager<CObjmeshDome>* CObjmeshDome::GetList(void)
+{
+	return m_pList;
+}
