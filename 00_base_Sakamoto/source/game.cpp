@@ -53,6 +53,8 @@
 #include "RailBlock.h"
 #include "Rail.h"
 
+#include "bowabowa.h"
+
 namespace
 {
 	const int SAMPLE_NAMESPACE = 0;
@@ -340,7 +342,8 @@ void CGame::Update(void)
 		switch (CManager::GetInstance()->GetStage())
 		{
 		case 0:
-			if (m_nNumBowabowa <= 0)
+			// ボワボワのリスト構造が無ければ抜ける
+			if (CBowabowa::GetList() == nullptr)
 			{
 				m_bGameEnd = true;
 			}

@@ -195,9 +195,6 @@ void CCross::GameUpdate(void)
 
 	//頂点情報の更新
 	CItem::Update();
-
-	// 判定
-	CollisionPlayer();
 }
 
 //====================================================================
@@ -209,77 +206,18 @@ void CCross::Draw(void)
 }
 
 //====================================================================
-//プレイヤーとの判定
+//　ヒット処理
 //====================================================================
-bool CCross::CollisionPlayer()
+void CCross::Hit(CPlayer* pPlayer)
 {
-	if (!CItem::CollisionPlayer())
+	if (pPlayer->GetItemType() != CPlayer::TYPE_NONE
+		&& pPlayer->GetItemType() != CPlayer::TYPE_CROSS)
 	{
-		return false;
+		return;
 	}
 
-	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
-	{
-		//オブジェクトを取得
-		CObject* pObj = CObject::GetTop(nCntPriority);
-
-		while (pObj != nullptr)
-		{
-			CObject* pObjNext = pObj->GetNext();
-
-			CObject::TYPE type = pObj->GetType();	// 種類を取得
-
-			if (type != TYPE_PLAYER3D)
-			{
-				pObj = pObjNext;
-				continue;
-			}
-
-			CPlayer* pPlayer = (CPlayer*)pObj;		// アイテムの情報の取得
-
-			if (pPlayer->GetItemType() == CPlayer::ITEM_TYPE::TYPE_BIBLE ||
-				pPlayer->GetState() == CPlayer::STATE_DEATH)
-			{
-				pObj = pObjNext;
-				continue;
-			}
-
-			D3DXVECTOR3 pos = pObj->GetPos();
-			D3DXVECTOR3 Size = pObj->GetSize();
-
-			// 十字架に設定、弾発射可能にする
-			pPlayer->SetItemType(CPlayer::TYPE_CROSS);
-			pPlayer->SetUseItem(true);
-
-			// 指定パーツ表示
-			pPlayer->SetPartsDisp(9, true);
-
-			// アイテムの位置をプレイヤーの正面に設定
-			SetPos(pos);
-
-			// 加算
-			m_nDeletCont++;
-
-			if (m_nDeletCont > CROSS_DELETTIME)
-			{// CROSS_DELETTIME秒経過
-				// 使用不可
-				pPlayer->SetUseItem(false);
-
-				// 指定パーツ非表示
-				pPlayer->SetPartsDisp(3, false);
-
-				// 初期位置に戻す
-				SetPos(INIT_POS);
-
-				// カウントリセット
-				m_nDeletCont = 0;
-			}
-
-			pObj = pObjNext;
-		}
-	}
-
-	return true;
+	// 設定
+	pPlayer->SetItemType(CPlayer::TYPE_CROSS);
 }
 
 //====================================================================
@@ -303,4 +241,12 @@ void CCross::StateManager(void)
 	{
 		nStateCounter--;
 	}
+}
+
+//==========================================
+//  リストの取得
+//==========================================
+CListManager<CCross>* CCross::GetList(void)
+{
+	return m_pList;
 }

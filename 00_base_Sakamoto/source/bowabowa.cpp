@@ -11,6 +11,7 @@
 #include "XModel.h"
 #include "game.h"
 #include "score.h"
+#include "player.h"
 
 //==========================================
 //  定数定義
@@ -190,11 +191,6 @@ void CBowabowa::GameUpdate(void)
 
 	//頂点情報の更新
 	CItem::Update();
-
-	if (CollisionPlayer())
-	{// 当たったら消滅
-		return;
-	}
 }
 
 //====================================================================
@@ -239,20 +235,25 @@ void CBowabowa::Take(void)
 	Uninit();
 }
 
-//====================================================================
-//プレイヤーとの判定
-//====================================================================
-bool CBowabowa::CollisionPlayer()
+//==========================================
+// ヒット処理
+//==========================================
+void CBowabowa::Hit(CPlayer* pPlayer)
 {
-	// falseの時
-	if (!CItem::CollisionPlayer())
+
+	if (pPlayer->GetItemType() != CPlayer::TYPE_CROSS)
 	{
-		return false;
+		return;
 	}
 
-	//ステージのボワボワ数を減らす
-	CGame::AddBowabowa(-1);
-	// 消滅
+	// 削除
 	Uninit();
-	return true;
+}
+
+//==========================================
+//  リストの取得
+//==========================================
+CListManager<CBowabowa>* CBowabowa::GetList(void)
+{
+	return m_pList;
 }
