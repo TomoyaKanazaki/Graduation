@@ -41,6 +41,9 @@ public:
 	LPDIRECT3DVERTEXBUFFER9 GetVtxBuff(void) { return m_pVtxBuff; }
 	virtual int GetIdx(void) { return m_nIdxTexture; }
 
+	// 静的メンバ関数
+	static CListManager<CObjmeshWall>* GetList(void); // リスト取得
+
 protected:
 	LPDIRECT3DTEXTURE9 m_pTexture;			//テクスチャへのポインタ
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;		//頂点バッファへのポインタ
@@ -53,5 +56,12 @@ private:
 	D3DXVECTOR3 m_posOld;					//過去の位置
 	D3DXVECTOR3 m_rot;						//向き
 	D3DXCOLOR m_Color;						//色
+
+	// 静的メンバ変数
+	static CListManager<CObjmeshWall>* m_pList; // オブジェクトリスト
+
+	// メンバ変数
+	CListManager<CObjmeshWall>::AIterator m_iterator; // イテレーター
+
 };
 #endif
