@@ -9,6 +9,11 @@
 #include "manager.h"
 #include "texture.h"
 
+//===========================================
+// 静的メンバ変数宣言
+//===========================================
+CListManager<CObject2D>* CObject2D::m_pList = nullptr; // オブジェクトリスト
+
 //====================================================================
 //コンストラクタ
 //====================================================================
@@ -404,4 +409,12 @@ const char *CObject2D::GetTexture(void)
 	const char* Name = pTexture->GetTextureName(m_nIdxTexture);
 
 	return Name;
+}
+
+//==========================================
+// リストの取得
+//==========================================
+CListManager<CObject2D>* CObject2D::GetList(void)
+{
+	return m_pList;
 }

@@ -39,12 +39,12 @@ public:
 	void GameUpdate(void);
 	void Draw(void);
 
-	bool CollisionPlayer() override;
 	void Move() override;
+
+	void Hit(CPlayer* pPlayer) override;
 
 	// 静的メンバ関数
 	static CListManager<CBible>* GetList(void); // リスト取得
-
 
 	//位置設定・取得
 	void SetPosType(const POS_TYPE& TYPE) { m_PosType = TYPE; }
@@ -53,7 +53,7 @@ public:
 private:
 	void StateManager(void);		//状態管理
 
-		// 静的メンバ変数
+	// 静的メンバ変数
 	static CListManager<CBible>* m_pList; // オブジェクトリスト
 
 	// メンバ変数

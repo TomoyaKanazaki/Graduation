@@ -9,6 +9,11 @@
 #include "manager.h"
 #include "texture.h"
 
+//===========================================
+// 静的メンバ変数宣言
+//===========================================
+CListManager<CObjGauge2D>* CObjGauge2D::m_pList = nullptr; // オブジェクトリスト
+
 //====================================================================
 //コンストラクタ
 //====================================================================
@@ -378,4 +383,12 @@ void CObjGauge2D::SetTexture(const char* name)
 void CObjGauge2D::SetGaugeWidth(float nCMax, float nCMeter)
 {
 	m_Ratio = (float)nCMeter / nCMax;
+}
+
+//==========================================
+// リストの取得
+//==========================================
+CListManager<CObjGauge2D>* CObjGauge2D::GetList(void)
+{
+	return m_pList;
 }

@@ -10,6 +10,9 @@
 #include "main.h"
 #include "objectX.h"
 
+// 前方宣言
+class CPlayer;
+
 //オブジェクトアイテムクラス
 class CItem : public CObjectX
 {
@@ -42,7 +45,6 @@ public:
 	void Update(void);
 	void Draw(void);
 
-	virtual bool CollisionPlayer();
 	virtual void Move() { ; }
 
 	// テクスチャ番号取得
@@ -89,7 +91,11 @@ public:
 	void SetMapScroll(bool Height) { m_bMapScroll = Height; }
 	bool GetMapScroll() { return m_bMapScroll; }
 
+	bool CollisionPlayer();
+	virtual void Hit(CPlayer* pPlayer) = 0;
+
 private:
+
 	STATE m_eState;		// 状態
 	TYPE m_eType;		// 種類
 

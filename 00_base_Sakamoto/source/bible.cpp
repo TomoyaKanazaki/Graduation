@@ -149,9 +149,6 @@ void CBible::GameUpdate(void)
 
 	//親クラスの更新
 	CItem::Update();
-
-	// プレイヤーとの判定
-	CollisionPlayer();
 }
 
 //====================================================================
@@ -161,61 +158,6 @@ void CBible::Draw(void)
 {
 	// 継承クラスの描画
 	CItem::Draw();
-}
-
-//====================================================================
-// プレイヤーとの判定
-//====================================================================
-bool CBible::CollisionPlayer()
-{
-	if (!CItem::CollisionPlayer())
-	{
-		return false;
-	}
-
-	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
-	{
-		//オブジェクトを取得
-		CObject* pObj = CObject::GetTop(nCntPriority);
-
-		while (pObj != nullptr)
-		{
-			CObject* pObjNext = pObj->GetNext();
-
-			CObject::TYPE type = pObj->GetType();	// 種類を取得
-
-			if (type != TYPE_PLAYER3D)
-			{
-				pObj = pObjNext;
-				continue;
-			}
-
-			CPlayer* pPlayer = (CPlayer*)pObj;		// アイテムの情報の取得
-
-			if (pPlayer->GetItemType() == CPlayer::ITEM_TYPE::TYPE_BIBLE ||
-				pPlayer->GetState() == CPlayer::STATE_DEATH)
-			{
-				pObj = pObjNext;
-				continue;
-			}
-
-			D3DXVECTOR3 pos = pObj->GetPos();
-			D3DXVECTOR3 Size = pObj->GetSize();
-
-			// 聖書に設定
-			pPlayer->SetItemType(CPlayer::TYPE_BIBLE);
-
-			//// アイテムの位置をプレイヤーと同じ位置に設定
-			//SetPos(pos);
-
-			Uninit();
-			return true;
-
-			pObj = pObjNext;
-		}
-	}
-
-	return true;
 }
 
 //====================================================================
@@ -304,6 +246,22 @@ void CBible::Move()
 }
 
 //====================================================================
+// 状態管理
+//====================================================================
+void CBible::Hit(CPlayer* pPlayer)
+{
+	if (pPlayer->GetItemType() == CPlayer::TYPE_NONE
+		|| pPlayer->GetItemType() != CPlayer::TYPE_BIBLE)
+	{
+		return;
+	}
+
+	// 設定
+	pPlayer->SetItemType(CPlayer::TYPE_BIBLE);
+
+}
+
+//====================================================================
 //状態管理
 //====================================================================
 void CBible::StateManager(void)
@@ -324,4 +282,12 @@ void CBible::StateManager(void)
 	{
 		nStateCounter--;
 	}
+}
+
+//==========================================
+//  リストの取得
+//==========================================
+CListManager<CBible>* CBible::GetList(void)
+{
+	return m_pList;
 }

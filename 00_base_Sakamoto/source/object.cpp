@@ -20,11 +20,14 @@ namespace
 	const float POLYGON_HEIGHT = 200.0f;	//縦幅
 }
 
-//静的メンバ変数宣言
+//===========================================
+// 静的メンバ変数宣言
+//===========================================
 CObject *CObject::m_pTop[PRIORITY_MAX] = {};
 CObject *CObject::m_pCur[PRIORITY_MAX] = {};
 int CObject::m_nNumAll = 0;					//オブジェクト総数
 bool CObject::m_bLevelStop = false;			//オブジェクト総数
+CListManager<CObject>* CObject::m_pList = nullptr; // オブジェクトリスト
 
 //====================================================================
 //コンストラクタ
