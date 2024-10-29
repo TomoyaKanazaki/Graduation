@@ -286,6 +286,15 @@ HRESULT CObjmeshCube::Init(void)
 	//インデックスバッファをアンロックする
 	m_pIdxBuff->Unlock();
 
+	if (m_pList == nullptr)
+	{// リストマネージャー生成
+		m_pList = CListManager<CObjmeshCube>::Create();
+		if (m_pList == nullptr) { assert(false); return E_FAIL; }
+	}
+
+	// リストに自身のオブジェクトを追加・イテレーターを取得
+	m_iterator = m_pList->AddList(this);
+
 	return S_OK;
 }
 
@@ -294,6 +303,16 @@ HRESULT CObjmeshCube::Init(void)
 //====================================================================
 void CObjmeshCube::Uninit(void)
 {
+	// リストから自身のオブジェクトを削除
+	m_pList->DelList(m_iterator);
+
+	if (m_pList->GetNumAll() == 0)
+	{ // オブジェクトが一つもない場合
+
+		// リストマネージャーの破棄
+		m_pList->Release(m_pList);
+	}
+
 	SetDeathFlag(true);
 }
 
