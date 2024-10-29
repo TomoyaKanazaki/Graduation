@@ -38,7 +38,7 @@ public:
 	void GameUpdate(void);
 	void Draw(void);
 
-	bool CollisionPlayer() override;
+	void Hit(CPlayer* pPlayer) override;
 
 	// 静的メンバ関数
 	static CListManager<CCross>* GetList(void); // リスト取得

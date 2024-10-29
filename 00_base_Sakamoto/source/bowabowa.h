@@ -41,7 +41,7 @@ public:
 	void Draw(void);
 	void Take(void);
 
-	bool CollisionPlayer() override;
+	void Hit(CPlayer* pPlayer) override;
 
 private:
 	void StateManager(void);		//ó‘ÔŠÇ—

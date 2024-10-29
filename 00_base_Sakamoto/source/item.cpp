@@ -11,6 +11,7 @@
 #include "useful.h"
 #include "effect.h"
 #include "MapSystem.h"
+#include "bible.h"
 
 //====================================================================
 // コンストラクタ
@@ -60,7 +61,7 @@ CItem* CItem::Create(TYPE eType, const D3DXVECTOR3& pos)
 			break;
 
 		case CItem::TYPE_BIBLE:		// 聖書
-			// pItem = new CBible;
+			 pItem = new CBible;
 			break;
 
 		case CItem::TYPE_BOWABOWA:	// ぼわぼわ
@@ -130,6 +131,9 @@ void CItem::Update()
 	{
 		Move();
 	}
+
+	// プレイヤーとアイテムの判定
+	CollisionPlayer();
 }
 
 //====================================================================
@@ -146,35 +150,21 @@ void CItem::Draw()
 //====================================================================
 bool CItem::CollisionPlayer()
 {
-	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
+	// プレイヤーのリスト構造が無ければ抜ける
+	if (CPlayer::GetList() == nullptr) { return false; }
+	std::list<CPlayer*> list = CPlayer::GetList()->GetList();    // リストを取得
+
+	// プレイヤーリストの中身を確認する
+	for (CPlayer* player : list)
 	{
-		//オブジェクトを取得
-		CObject* pObj = CObject::GetTop(nCntPriority);
+		D3DXVECTOR3 pos = player->GetPos();
+		D3DXVECTOR3 size = player->GetSize();
 
-		while (pObj != nullptr)
+		// 矩形の当たり判定
+		if (useful::CollisionCircle(m_pos, pos, size.x))
 		{
-			CObject* pObjNext = pObj->GetNext();
-
-			CObject::TYPE type = pObj->GetType();	// 種類を取得
-
-			if(type != TYPE_PLAYER3D)
-			{
-				pObj = pObjNext;
-				continue;
-			}
-
-			CPlayer* pPlayer = (CPlayer*)pObj;		// アイテムの情報の取得
-
-			D3DXVECTOR3 pos = pObj->GetPos();
-			D3DXVECTOR3 Size = pObj->GetSize();
-
-			// 矩形の当たり判定
-			if (useful::CollisionCircle(m_pos, pos, Size.x))
-			{
-				return true;
-			}
-
-			pObj = pObjNext;
+			Hit(player);
+			return true;
 		}
 	}
 
