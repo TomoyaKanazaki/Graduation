@@ -53,7 +53,7 @@ public:
 private:
 	void StateManager(void);		//状態管理
 
-		// 静的メンバ変数
+	// 静的メンバ変数
 	static CListManager<CBible>* m_pList; // オブジェクトリスト
 
 	// メンバ変数

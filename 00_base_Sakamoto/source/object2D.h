@@ -51,6 +51,9 @@ public:
 	void SetMultiTarget(bool Set) { MultiTarget = Set; }
 	void SetNULL(void);
 
+	// 静的メンバ関数
+	static CListManager<CObject2D>* GetList(void); // リスト取得
+
 protected:
 	void SetVtxBuff(LPDIRECT3DVERTEXBUFFER9 Height) { m_pVtxBuff = Height; }
 	LPDIRECT3DVERTEXBUFFER9 GetVtxBuff(void) { return m_pVtxBuff; }
@@ -67,5 +70,12 @@ private:
 	LPDIRECT3DTEXTURE9 m_pTexture;			//テクスチャへのポインタ
 	LPDIRECT3DTEXTURE9 m_pTargetTexture;	//テクスチャへのポインタ
 	bool MultiTarget;						//マルチターゲットレンダリングをオンにするかどうか
+
+	// 静的メンバ変数
+	static CListManager<CObject2D>* m_pList; // オブジェクトリスト
+
+	// メンバ変数
+	CListManager<CObject2D>::AIterator m_iterator; // イテレーター
+
 };
 #endif

@@ -54,6 +54,9 @@ public:
 	LPDIRECT3DVERTEXBUFFER9 GetVtxBuff(void) { return m_pVtxBuff; }
 	virtual int GetIdx(void) { return m_nIdxTexture; }
 
+	// 静的メンバ関数
+	static CListManager<CObject3D>* GetList(void); // リスト取得
+
 protected:
 	LPDIRECT3DTEXTURE9 m_pTexture;			//テクスチャへのポインタ
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;		//頂点バッファへのポインタ
@@ -71,6 +74,12 @@ private:
 	D3DXVECTOR2 m_Scroll;					//スクロールアニメーション
 	D3DXVECTOR2 m_ScrollSpeed;				//スクロールの速度
 	D3DXCOLOR m_Color;						//色
+
+	// 静的メンバ変数
+	static CListManager<CObject3D>* m_pList; // オブジェクトリスト
+
+	// メンバ変数
+	CListManager<CObject3D>::AIterator m_iterator; // イテレーター
 
 };
 #endif

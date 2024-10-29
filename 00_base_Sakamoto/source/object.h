@@ -118,6 +118,9 @@ public:
 	virtual D3DXVECTOR3* GetScreenPos(void) { return nullptr; }
 	static void DebugKey();
 
+	// 静的メンバ関数
+	static CListManager<CObject>* GetList(void); // リスト取得
+
 protected:
 	void Release(void);
 
@@ -134,6 +137,13 @@ private:
 	bool m_bLevelUI;						//レベルアップ時のUI
 	bool m_Appear;							//表示状態かどうか
 	TYPE m_type;							//オブジェクトの種類
+
+	// 静的メンバ変数
+	static CListManager<CObject>* m_pList; // オブジェクトリスト
+
+	// メンバ変数
+	CListManager<CObject>::AIterator m_iterator; // イテレーター
+
 };
 
 #endif

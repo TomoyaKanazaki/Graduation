@@ -31,6 +31,7 @@
 #include "MapSystem.h"
 #include "debugproc.h"
 #include "objmeshField.h"
+#include "railblock.h"
 #include "sound.h"
 
 #define COLLISION_SIZE (D3DXVECTOR3(750.0f,0.0f,550.0f))		//‰¡‚Ì“–‚½‚è”»’è
@@ -653,6 +654,16 @@ void CDevil::ObjectScroll(D3DXVECTOR3 Move)
 				pos += Move;
 
 				pEnemy->SetPos(pos);
+			}
+
+			if (type == TYPE_RAILBLOCK)
+			{//Ží—Þ‚ª“G‚ÌŽž
+
+				CRailBlock* pRBlock = (CRailBlock*)pObj;	// ƒuƒƒbƒNî•ñ‚ÌŽæ“¾
+
+				D3DXVECTOR3 pos = pRBlock->GetPos();
+				pos += Move;
+				pRBlock->SetPos(pos);
 			}
 
 			if (type == TYPE_PLAYER3D)

@@ -47,6 +47,9 @@ public:
 	void SetCull(int nCull) { m_nCull = nCull; }
 	int GetCull(void) { return m_nCull; }
 
+	// 静的メンバ関数
+	static CListManager<CObjmeshCylinder>* GetList(void); // リスト取得
+
 protected:
 	LPDIRECT3DTEXTURE9 m_pTexture;			//テクスチャへのポインタ
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;		//頂点バッファへのポインタ
@@ -61,5 +64,11 @@ private:
 	D3DXCOLOR m_Color;						//色
 	float m_fRadius;						//半径
 	int m_nCull;							//カリング内容
+
+	// 静的メンバ変数
+	static CListManager<CObjmeshCylinder>* m_pList; // オブジェクトリスト
+
+	// メンバ変数
+	CListManager<CObjmeshCylinder>::AIterator m_iterator; // イテレーター
 };
 #endif
