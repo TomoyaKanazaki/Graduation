@@ -12,13 +12,14 @@
 #include "game.h"
 #include "Devil.h"
 #include "MapSystem.h"
+#include "debugproc.h"
 
 //==========================================
 //  定数定義
 //==========================================
 namespace
 {
-
+	const float RAIL_WIGHT = 5.0f;	//レール幅
 }
 
 //====================================================================
@@ -136,15 +137,41 @@ void CRailBlock::Draw(void)
 //====================================================================
 void CRailBlock::Move(D3DXVECTOR3* Pos)
 {
+	D3DXVECTOR3 TestPos = INITVECTOR3;
+
 	D3DXVECTOR3 SlopeMove = INITVECTOR3;
 	D3DXVECTOR3 SlopeRot = CGame::GetDevil()->GetDevilRot();
 	D3DXVECTOR3 GritPos = CMapSystem::GetInstance()->GetGritPos(GetWightNumber(), GetHeightNumber());
+	D3DXVECTOR3 GritDistance = *Pos - GritPos;	//グリットの中心とした時の相対位置、差分
 
-	SlopeMove.x = SlopeRot.x * 10.0f;
-	SlopeMove.z = SlopeRot.z * 10.0f;
+	SlopeMove.x = -SlopeRot.z * 10.0f;
+	SlopeMove.z = SlopeRot.x * 10.0f;
 
-	Pos->x -= SlopeMove.z;
-	Pos->z += SlopeMove.x;
+	if (useful::CollisionCircle(GritPos, D3DXVECTOR3(Pos->x, GritPos.y, Pos->z), RAIL_WIGHT) == true)
+	{
+		Pos->x += SlopeMove.x;
+		Pos->z += SlopeMove.z;
+	}
+	else
+	{
+		if (GritPos.x - Pos->x >= -5.0f && GritPos.x - Pos->x <= RAIL_WIGHT)
+		{
+			Pos->z += SlopeMove.z;
+		}
+		else
+		{
+			Pos->z = GritPos.z;
+		}
+
+		if (GritPos.z - Pos->z >= -5.0f && GritPos.z - Pos->z <= RAIL_WIGHT)
+		{
+			Pos->x += SlopeMove.x;
+		}
+		else
+		{
+			Pos->x = GritPos.x;
+		}
+	}
 
 	// 上
 	if (!bMoveOK[0])
@@ -181,6 +208,74 @@ void CRailBlock::Move(D3DXVECTOR3* Pos)
 			Pos->x = GritPos.x;
 		}
 	}
+
+	if (CMapSystem::GetInstance()->GetGritWightNumber(Pos->x) == -1)
+	{
+		if (Pos->x > 0.0f)	//右のグリット外に出たとき
+		{
+			if (SlopeMove.x > 0.0f && bMoveOK[3])	//X軸の動きが[+]で右にレールが存在する時
+			{
+				//１つ右のグリットに移動
+				GritPos = CMapSystem::GetInstance()->GetGritPos(GetWightNumber() + 1, GetHeightNumber());
+			}
+			else
+			{
+				// 現在のグリットに移動
+				GritPos = CMapSystem::GetInstance()->GetGritPos(GetWightNumber(), GetHeightNumber());
+			}
+		}
+		else if (Pos->x < 0.0f)	//左のグリット外に出たとき
+		{
+			if (SlopeMove.x < 0.0f && bMoveOK[2])	//X軸の動きが[-]で左にレールが存在する時
+			{
+				//１つ右のグリットに移動
+				GritPos = CMapSystem::GetInstance()->GetGritPos(GetWightNumber() - 1, GetHeightNumber());
+			}
+			else
+			{
+				// 現在のグリットに移動
+				GritPos = CMapSystem::GetInstance()->GetGritPos(GetWightNumber(), GetHeightNumber());
+			}
+		}
+			Pos->x = GritPos.x;
+	}
+
+	if (CMapSystem::GetInstance()->GetGritHeightNumber(Pos->z) == -1)
+	{
+		if (Pos->z > 0.0f)	//右のグリット外に出たとき
+		{
+			if (SlopeMove.z > 0.0f && bMoveOK[0])	//Z軸の動きが[+]で右にレールが存在する時
+			{
+				//１つ右のグリットに移動
+				GritPos = CMapSystem::GetInstance()->GetGritPos(GetWightNumber(), GetHeightNumber() - 1);
+			}
+			else
+			{
+				// 現在のグリットに移動
+				GritPos = CMapSystem::GetInstance()->GetGritPos(GetWightNumber(), GetHeightNumber());
+			}
+		}
+		else if (Pos->z < 0.0f)	//左のグリット外に出たとき
+		{
+			if (SlopeMove.z < 0.0f && bMoveOK[1])	//Z軸の動きが[-]で左にレールが存在する時
+			{
+				//１つ右のグリットに移動
+				GritPos = CMapSystem::GetInstance()->GetGritPos(GetWightNumber(), GetHeightNumber() + 1);
+			}
+			else
+			{
+				// 現在のグリットに移動
+				GritPos = CMapSystem::GetInstance()->GetGritPos(GetWightNumber(), GetHeightNumber());
+			}
+		}
+		Pos->z = GritPos.z;
+	}
+
+	DebugProc::Print(DebugProc::POINT_LEFT, "[レールブロック]位置 %f : %f : %f\n", Pos->x, Pos->y, Pos->z);
+	DebugProc::Print(DebugProc::POINT_LEFT, "[レールブロック]横番号 %d \n", GetWightNumber());
+	DebugProc::Print(DebugProc::POINT_LEFT, "[レールブロック]縦番号 %d \n", GetHeightNumber());
+	DebugProc::Print(DebugProc::POINT_LEFT, "[レールブロック]差分 %f : %f \n", GritDistance.x, GritDistance.z);
+	DebugProc::Print(DebugProc::POINT_LEFT, "[テストブロック]差分 %f : %f \n", TestPos.x, TestPos.z);
 }
 
 //====================================================================
@@ -223,13 +318,14 @@ void CRailBlock::RailSet(void)
 	m_pTop->SetHeightNumber(GetHeightNumber());
 	m_pTop->NextSet(CRail::RAIL_POS_RIGHT);
 
-	int nMax = 4;
-	int nData[4];
+	int nMax = 5;
+	int nData[5];
 
-	nData[0] = 0;
+	nData[0] = 3;
 	nData[1] = 3;
 	nData[2] = 1;
-	nData[3] = 3;
+	nData[3] = 1;
+	nData[4] = 1;
 
 	CRail* pRail = m_pTop->GetNextRail();
 
