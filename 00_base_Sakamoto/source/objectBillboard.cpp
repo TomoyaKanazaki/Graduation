@@ -13,6 +13,11 @@
 
 #define POLYDON_SIZE (10.0f)
 
+//===========================================
+// 静的メンバ変数宣言
+//===========================================
+CListManager<CObjectBillboard>* CObjectBillboard::m_pList = nullptr; // オブジェクトリスト
+
 //====================================================================
 //コンストラクタ
 //====================================================================
@@ -350,4 +355,12 @@ void CObjectBillboard::SetTexture(const char *name)
 {
 	CTexture *pTexture = CManager::GetInstance()->GetTexture();
 	m_nIdxTexture = pTexture->Regist(name);
+}
+
+//==========================================
+// リストの取得
+//==========================================
+CListManager<CObjectBillboard>* CObjectBillboard::GetList(void)
+{
+	return m_pList;
 }

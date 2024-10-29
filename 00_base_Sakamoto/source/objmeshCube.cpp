@@ -23,6 +23,11 @@ namespace
 	const float FIELD_SIZE = 200.0f;		//床一枚の大きさ
 }
 
+//===========================================
+// 静的メンバ変数宣言
+//===========================================
+CListManager<CObjmeshCube>* CObjmeshCube::m_pList = nullptr; // オブジェクトリスト
+
 //====================================================================
 //コンストラクタ
 //====================================================================
@@ -640,4 +645,12 @@ void CObjmeshCube::SetTexture(const char* name)
 	CTexture* pTexture = CManager::GetInstance()->GetTexture();
 	m_nIdxTexture = pTexture->Regist(name);
 	strcpy(&m_acTextureName[0], name);
+}
+
+//==========================================
+// リストの取得
+//==========================================
+CListManager<CObjmeshCube>* CObjmeshCube::GetList(void)
+{
+	return m_pList;
 }

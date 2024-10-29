@@ -13,6 +13,11 @@
 
 #define POLYDON_SIZE (10.0f)
 
+//===========================================
+// 静的メンバ変数宣言
+//===========================================
+CListManager<CObject3D>* CObject3D::m_pList = nullptr; // オブジェクトリスト
+
 //====================================================================
 //コンストラクタ
 //====================================================================
@@ -339,4 +344,12 @@ void CObject3D::SetTexture(const char *name)
 {
 	CTexture *pTexture = CManager::GetInstance()->GetTexture();
 	m_nIdxTexture = pTexture->Regist(name);
+}
+
+//==========================================
+// リストの取得
+//==========================================
+CListManager<CObject3D>* CObject3D::GetList(void)
+{
+	return m_pList;
 }

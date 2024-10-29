@@ -12,6 +12,11 @@
 
 #define POLYDON_SIZE (10.0f)
 
+//===========================================
+// 静的メンバ変数宣言
+//===========================================
+CListManager<CObjectXtex>* CObjectXtex::m_pList = nullptr; // オブジェクトリスト
+
 //====================================================================
 //コンストラクタ
 //====================================================================
@@ -265,4 +270,12 @@ D3DXVECTOR3 CObjectXtex::GetSize(void)
 	m_pMesh->UnlockVertexBuffer();
 
 	return RetrunPos;
+}
+
+//==========================================
+// リストの取得
+//==========================================
+CListManager<CObjectXtex>* CObjectXtex::GetList(void)
+{
+	return m_pList;
 }
