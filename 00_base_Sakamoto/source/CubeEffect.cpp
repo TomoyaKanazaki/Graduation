@@ -157,3 +157,11 @@ void CCubeEffect::Draw(void)
 {
 	CObjmeshCube::Draw();
 }
+
+//====================================================================
+//ƒŠƒXƒgŽæ“¾
+//====================================================================
+CListManager<CCubeEffect>* CCubeEffect::GetList(void)
+{
+	return m_pList;
+}
