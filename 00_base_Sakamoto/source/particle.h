@@ -41,6 +41,9 @@ public:
 	void SetParticleType(int Type) { m_nType = Type; }
 	int GetParticleType(void) { return m_nType; }
 
+	// 静的メンバ関数
+	static CListManager<CParticle>* GetList(void); // リスト取得
+
 protected:
 
 private:
@@ -51,6 +54,12 @@ private:
 	float m_nLife;		//寿命(発生時間)
 	float m_nSize;		//大きさ
 	int m_nType;		//種類	
+
+	// 静的メンバ変数
+	static CListManager<CParticle>* m_pList; // オブジェクトリスト
+
+	// メンバ変数
+	CListManager<CParticle>::AIterator m_iterator; // イテレーター
 
 };
 

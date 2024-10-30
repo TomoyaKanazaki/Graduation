@@ -86,11 +86,14 @@ HRESULT CModelEffect::Init(char* pModelName)
 
 	CObjectX::Init(pModelName);
 
-	// 静的メンバ変数
-	static CListManager<CModelEffect>* m_pList; // オブジェクトリスト
+	if (m_pList == nullptr)
+	{// リストマネージャー生成
+		m_pList = CListManager<CModelEffect>::Create();
+		if (m_pList == nullptr) { assert(false); return E_FAIL; }
+	}
 
-	// メンバ変数
-	CListManager<CModelEffect>::AIterator m_iterator; // イテレーター
+	// リストに自身のオブジェクトを追加・イテレーターを取得
+	m_iterator = m_pList->AddList(this);
 
 	return S_OK;
 }
