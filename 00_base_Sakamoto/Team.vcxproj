@@ -28,10 +28,8 @@
     <ClCompile Include="source\cross.cpp" />
     <ClCompile Include="source\CubeBlock.cpp" />
     <ClCompile Include="source\CubeColl.cpp" />
-    <ClCompile Include="source\CubeDamage.cpp" />
     <ClCompile Include="source\CubeEffect.cpp" />
     <ClCompile Include="source\cursorUI.cpp" />
-    <ClCompile Include="source\debris.cpp" />
     <ClCompile Include="source\debugproc.cpp" />
     <ClCompile Include="source\devil.cpp" />
     <ClCompile Include="source\DevilHole.cpp" />
@@ -80,11 +78,9 @@
     <ClCompile Include="source\objmeshField.cpp" />
     <ClCompile Include="source\objmeshRing.cpp" />
     <ClCompile Include="source\objmeshWall.cpp" />
-    <ClCompile Include="source\ParameterUI.cpp" />
     <ClCompile Include="source\particle.cpp" />
     <ClCompile Include="source\Pause.cpp" />
     <ClCompile Include="source\player.cpp" />
-    <ClCompile Include="source\Player2D.cpp" />
     <ClCompile Include="source\precompile.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
@@ -99,7 +95,6 @@
     <ClCompile Include="source\SampleObjBillboard.cpp" />
     <ClCompile Include="source\SampleObjX.cpp" />
     <ClCompile Include="source\score.cpp" />
-    <ClCompile Include="source\screenCover2D.cpp" />
     <ClCompile Include="source\scrollarrow.cpp" />
     <ClCompile Include="source\shrinkingBillboard.cpp" />
     <ClCompile Include="source\slowManager.cpp" />
@@ -121,10 +116,8 @@
     <ClInclude Include="source\cross.h" />
     <ClInclude Include="source\CubeBlock.h" />
     <ClInclude Include="source\CubeColl.h" />
-    <ClInclude Include="source\CubeDamage.h" />
     <ClInclude Include="source\CubeEffect.h" />
     <ClInclude Include="source\cursorUI.h" />
-    <ClInclude Include="source\debris.h" />
     <ClInclude Include="source\debugproc.h" />
     <ClInclude Include="source\devil.h" />
     <ClInclude Include="source\DevilHole.h" />
@@ -171,11 +164,9 @@
     <ClInclude Include="source\objmeshField.h" />
     <ClInclude Include="source\objmeshRing.h" />
     <ClInclude Include="source\objmeshWall.h" />
-    <ClInclude Include="source\ParameterUI.h" />
     <ClInclude Include="source\particle.h" />
     <ClInclude Include="source\Pause.h" />
     <ClInclude Include="source\player.h" />
-    <ClInclude Include="source\Player2D.h" />
     <ClInclude Include="source\precompile.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClInclude>
@@ -190,7 +181,6 @@
     <ClInclude Include="source\SampleObjBillboard.h" />
     <ClInclude Include="source\SampleObjX.h" />
     <ClInclude Include="source\score.h" />
-    <ClInclude Include="source\screenCover2D.h" />
     <ClInclude Include="source\scrollarrow.h" />
     <ClInclude Include="source\shrinkingBillboard.h" />
     <ClInclude Include="source\slowManager.h" />
