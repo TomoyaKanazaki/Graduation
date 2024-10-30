@@ -101,8 +101,8 @@ bool useful::PushSquareXZ(D3DXVECTOR3 PosMy, D3DXVECTOR3 SizeMy, D3DXVECTOR3 Mov
 	switch (XYZ)
 	{
 	case useful::COLLISION_X:
-		//Å{Ç©ÇÁÅ|ÇÃñ 
-		if (PosMy.x - SizeMy.x - MoveMy.x < PosPair.x + SizePair.x &&
+		// âüÇµèoÇµîªíË
+		if (PosMy.x - SizeMy.x + MoveMy.x < PosPair.x + SizePair.x &&
 			PosMy.x + SizeMy.x + MoveMy.x > PosPair.x - SizePair.x &&
 			PosMy.z + SizeMy.z > PosPair.z - SizePair.z &&
 			PosMy.z - SizeMy.z < PosPair.z + SizePair.z
@@ -111,18 +111,19 @@ bool useful::PushSquareXZ(D3DXVECTOR3 PosMy, D3DXVECTOR3 SizeMy, D3DXVECTOR3 Mov
 			return true;
 		}
 
-		////Å|Ç©ÇÁÅ{ÇÃñ 
-		//if (PosMy.x + SizeMy.x + MoveMy.x > PosPair.x - SizePair.x &&
-		//	PosMy.z + SizeMy.z > PosPair.z - SizePair.z &&
-		//	PosMy.z - SizeMy.z < PosPair.z + SizePair.z
-		//	)
-		//{
-		//	return true;
-		//}
-
 		break;
 
 	case useful::COLLISION_Z:
+
+		// âüÇµèoÇµîªíË
+		if (PosMy.z - SizeMy.z + MoveMy.z < PosPair.z + SizePair.z &&
+			PosMy.z + SizeMy.z + MoveMy.z > PosPair.z - SizePair.z &&
+			PosMy.x + SizeMy.x > PosPair.x - SizePair.x &&
+			PosMy.x - SizeMy.x < PosPair.x + SizePair.x
+			)
+		{
+			return true;
+		}
 
 		break;
 	}
