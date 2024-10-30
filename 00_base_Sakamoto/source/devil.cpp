@@ -112,7 +112,7 @@ HRESULT CDevil::Init(void)
 	SetType(CObject::TYPE_DEVIL);
 
 	//ƒ‚ƒfƒ‹‚Ì¶¬
-	LoadLevelData("data\\TXT\\motion_Boss.txt");
+	LoadLevelData("data\\TXT\\MOTION\\01_enemy\\motion_devil.txt");
 
 	//ƒ‚[ƒVƒ‡ƒ“‚Ì¶¬
 	if (m_pMotion == nullptr)
@@ -123,7 +123,7 @@ HRESULT CDevil::Init(void)
 
 	//‰Šú‰»ˆ—
 	m_pMotion->SetModel(&m_apModel[0], m_nNumModel);
-	m_pMotion->LoadData("data\\TXT\\motion_Boss.txt");
+	m_pMotion->LoadData("data\\TXT\\MOTION\\01_enemy\\motion_devil.txt");
 
 	switch (CScene::GetMode())
 	{
