@@ -36,6 +36,9 @@ public:
 	void SetColor(D3DXCOLOR color) { m_color = color; }
 	D3DXCOLOR GetColor(void) { return m_color; }
 
+	// 静的メンバ関数
+	static CListManager<CModelEffect>* GetList(void); // リスト取得
+
 private:
 
 	int m_nIdxXModel;				//Xモデルの番号
@@ -43,5 +46,12 @@ private:
 	D3DXVECTOR3 m_pos;				//位置	
 	D3DXVECTOR3 m_rot;				//向き	
 	D3DXCOLOR m_color;				//色
+
+	// 静的メンバ変数
+	static CListManager<CModelEffect>* m_pList; // オブジェクトリスト
+
+	// メンバ変数
+	CListManager<CModelEffect>::AIterator m_iterator; // イテレーター
+
 };
 #endif
