@@ -20,6 +20,9 @@
 
 #include <cstdlib>
 
+#include <string>			// •¶Žš—ñ
+
+
 #include "useful.h"
 #include "debugproc.h"
 #include "listManager.h"
