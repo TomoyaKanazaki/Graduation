@@ -31,12 +31,21 @@ public:
 	void SetFall(int Life) { m_bFall = Life; }
 	int GetFall(void) { return m_bFall; }
 
+	// 静的メンバ関数
+	static CListManager<CCubeEffect>* GetList(void); // リスト取得
+
 private:
 
 	D3DXVECTOR3 m_pos;
 	D3DXVECTOR3 m_move;
 	float m_nLife;
 	bool m_bFall;
+
+	// 静的メンバ変数
+	static CListManager<CCubeEffect>* m_pList; // オブジェクトリスト
+
+	// メンバ変数
+	CListManager<CCubeEffect>::AIterator m_iterator; // イテレーター
 
 };
 #endif

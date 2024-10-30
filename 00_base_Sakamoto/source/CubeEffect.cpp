@@ -24,6 +24,11 @@ namespace
 }
 
 //====================================================================
+//静的メンバ変数宣言
+//====================================================================
+CListManager<CCubeEffect>* CCubeEffect::m_pList = nullptr; // オブジェクトリスト
+
+//====================================================================
 //コンストラクタ
 //====================================================================
 CCubeEffect::CCubeEffect(int nPriority) :CObjmeshCube(nPriority)
@@ -33,7 +38,6 @@ CCubeEffect::CCubeEffect(int nPriority) :CObjmeshCube(nPriority)
 	m_nLife = -1;
 	m_bFall = false;
 }
-
 
 //====================================================================
 //デストラクタ
@@ -77,6 +81,15 @@ HRESULT CCubeEffect::Init(void)
 
 	SetType(TYPE_CUBEEFFECT);
 
+	if (m_pList == nullptr)
+	{// リストマネージャー生成
+		m_pList = CListManager<CCubeEffect>::Create();
+		if (m_pList == nullptr) { assert(false); return E_FAIL; }
+	}
+
+	// リストに自身のオブジェクトを追加・イテレーターを取得
+	m_iterator = m_pList->AddList(this);
+
 	return S_OK;
 }
 
@@ -85,6 +98,16 @@ HRESULT CCubeEffect::Init(void)
 //====================================================================
 void CCubeEffect::Uninit(void)
 {
+	// リストから自身のオブジェクトを削除
+	m_pList->DelList(m_iterator);
+
+	if (m_pList->GetNumAll() == 0)
+	{ // オブジェクトが一つもない場合
+
+		// リストマネージャーの破棄
+		m_pList->Release(m_pList);
+	}
+
 	CObjmeshCube::Uninit();
 
 	SetDeathFlag(true);
@@ -133,4 +156,12 @@ void CCubeEffect::Update(void)
 void CCubeEffect::Draw(void)
 {
 	CObjmeshCube::Draw();
+}
+
+//====================================================================
+//リスト取得
+//====================================================================
+CListManager<CCubeEffect>* CCubeEffect::GetList(void)
+{
+	return m_pList;
 }

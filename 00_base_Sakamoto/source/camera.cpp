@@ -44,6 +44,11 @@ namespace
 	const float TTTLE_LENGTH = 0.01f;								//プレイヤー視点までのたどり着いた距離
 }
 
+//===========================================
+// 静的メンバ変数宣言
+//===========================================
+CListManager<CCamera>* CCamera::m_pList = nullptr; // オブジェクトリスト
+
 //====================================================================
 //コンストラクタ
 //====================================================================
@@ -92,6 +97,15 @@ CCamera::~CCamera()
 //====================================================================
 HRESULT CCamera::Init(void)
 {
+	if (m_pList == nullptr)
+	{// リストマネージャー生成
+		m_pList = CListManager<CCamera>::Create();
+		if (m_pList == nullptr) { assert(false); return E_FAIL; }
+	}
+
+	// リストに自身のオブジェクトを追加・イテレーターを取得
+	m_iterator = m_pList->AddList(this);
+
 	return S_OK;
 }
 
@@ -100,7 +114,15 @@ HRESULT CCamera::Init(void)
 //====================================================================
 void CCamera::Uninit(void)
 {
+	// リストから自身のオブジェクトを削除
+	m_pList->DelList(m_iterator);
 
+	if (m_pList->GetNumAll() == 0)
+	{ // オブジェクトが一つもない場合
+
+		// リストマネージャーの破棄
+		m_pList->Release(m_pList);
+	}
 }
 
 //====================================================================
@@ -935,4 +957,12 @@ void CCamera::ResetCamera(void)
 	{
 		m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	}
+}
+
+//====================================================================
+//リスト取得
+//====================================================================
+CListManager<CCamera>* CCamera::GetList(void)
+{
+	return m_pList;
 }
