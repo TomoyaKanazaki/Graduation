@@ -14,9 +14,9 @@ NUM_MODEL = 3
 #------------------------------------------------------------------------------
 # モデルファイル名
 #------------------------------------------------------------------------------
-MODEL_FILENAME = data/MODEL/01_bonbon/00_body.x		# [0]腰
-MODEL_FILENAME = data/MODEL/01_bonbon/01_R_foot.x		# [0]腰
-MODEL_FILENAME = data/MODEL/01_bonbon/02_L_foot.x		# [0]腰
+MODEL_FILENAME = data/MODEL/01_enemy/01_bonbon/00_body.x		# [0]腰
+MODEL_FILENAME = data/MODEL/01_enemy/01_bonbon/01_R_foot.x		# [0]腰
+MODEL_FILENAME = data/MODEL/01_enemy/01_bonbon/02_L_foot.x		# [0]腰
 
 #------------------------------------------------------------------------------
 # キャラクター情報
