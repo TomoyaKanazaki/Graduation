@@ -1,6 +1,6 @@
 //============================================
 //
-//	プレイヤーの処理 [playerEffect.cpp]
+//	プレイヤーの処理 [LevelModelEffect.cpp]
 //	Author:sakamoto kai
 //
 //============================================
@@ -29,6 +29,11 @@ namespace
 	const int JAMP_ACTIONNOT = 4;			//ジャンプから行動出来るまで
 	const D3DXVECTOR3 COLLISION_SIZE = D3DXVECTOR3(40.0f, 80.0f, 40.0f);		//横の当たり判定
 }
+
+//==========================================
+// 静的メンバ変数宣言
+//==========================================
+CListManager<CLevelModelEffect>* CLevelModelEffect::m_pList = nullptr; // オブジェクトリスト
 
 //====================================================================
 //コンストラクタ
@@ -92,6 +97,15 @@ HRESULT CLevelModelEffect::Init(void)
 
 	SetType(CObject::TYPE_PLAYEREFFECT);
 
+	if (m_pList == nullptr)
+	{// リストマネージャー生成
+		m_pList = CListManager<CLevelModelEffect>::Create();
+		if (m_pList == nullptr) { assert(false); return E_FAIL; }
+	}
+
+	// リストに自身のオブジェクトを追加・イテレーターを取得
+	m_iterator = m_pList->AddList(this);
+
 	return S_OK;
 }
 
@@ -100,6 +114,16 @@ HRESULT CLevelModelEffect::Init(void)
 //====================================================================
 void CLevelModelEffect::Uninit(void)
 {
+	// リストから自身のオブジェクトを削除
+	m_pList->DelList(m_iterator);
+
+	if (m_pList->GetNumAll() == 0)
+	{ // オブジェクトが一つもない場合
+
+		// リストマネージャーの破棄
+		m_pList->Release(m_pList);
+	}
+
 	for (int nCntModel = 0; nCntModel < m_nNumModel; nCntModel++)
 	{
 		m_apModel[nCntModel]->Uninit();
@@ -333,4 +357,12 @@ void CLevelModelEffect::LoadLevelData(const char* pFilename)
 	{//ファイルが開けなかった場合
 		printf("***ファイルを開けませんでした***\n");
 	}
+}
+
+//====================================================================
+//リスト取得
+//====================================================================
+CListManager<CLevelModelEffect>* CLevelModelEffect::GetList(void)
+{
+	return m_pList;
 }
