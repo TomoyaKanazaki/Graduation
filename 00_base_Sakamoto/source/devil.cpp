@@ -53,7 +53,7 @@ CDevil::CDevil(int nPriority) : CObject(nPriority)
 	m_pos = INITVECTOR3;
 	m_move = INITVECTOR3;
 	m_Objmove = INITVECTOR3;
-	m_rot = D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f);
+	m_rot = D3DXVECTOR3(0.0f,0.0f, 0.0f);
 	m_AutoMoveRot = D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f);
 	m_nActionCount = 0;
 	m_Action = ACTION_WAIT;
