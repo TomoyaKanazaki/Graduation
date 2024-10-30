@@ -33,6 +33,7 @@ private:
 	void Move(D3DXVECTOR3 *Pos);
 	void RailCheck();
 	void RailSet();
+	void CollisionPlayer(useful::COLLISION XYZ);	//レールブロックとの当たり判定
 
 	int StartWightNumber;
 	int StartHeightNumber;

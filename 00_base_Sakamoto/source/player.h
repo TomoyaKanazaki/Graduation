@@ -97,6 +97,8 @@ public:
 	D3DXVECTOR3 GetPos(void) { return m_pos; }
 	void SetMove(D3DXVECTOR3 move) { m_move = move; }
 	D3DXVECTOR3 GetMove(void) { return m_move; }
+	void SetObjMove(D3DXVECTOR3 move) { m_Objmove = move; }
+	D3DXVECTOR3 GetObjMove(void) { return m_Objmove; }
 	void SetRot(D3DXVECTOR3 rot) { m_rot = rot; }
 	D3DXVECTOR3 GetRot(void) { return m_rot; }
 	void SetSize(D3DXVECTOR3 size) { m_size = size; }
@@ -138,6 +140,7 @@ private:
 	void Rot(void);									//移動方向処理
 	void Attack(void);								//攻撃処理
 	void CollisionWall(useful::COLLISION XYZ);		//壁との当たり判定
+	void CollisionRailBlock(useful::COLLISION XYZ);	//レールブロックとの当たり判定
 	void SearchWall(void);							//壁のサーチ判定
 	void CollisionDevilHole(useful::COLLISION XYZ);	//デビルホールとの当たり判定
 	void CollisionEnemy(void);						// 敵との当たり判定

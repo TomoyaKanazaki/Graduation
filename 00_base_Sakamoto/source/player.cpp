@@ -34,6 +34,7 @@
 #include "devil.h"
 #include "MapSystem.h"
 #include "bible.h"
+#include "RailBlock.h"
 #include "objmeshField.h"
 
 //===========================================
@@ -41,7 +42,8 @@
 //===========================================
 namespace
 {
-	const D3DXVECTOR3 COLLISION_SIZE = D3DXVECTOR3(45.0f, 40.0f, 45.0f);		//横の当たり判定
+	const D3DXVECTOR3 COLLISION_SIZE = D3DXVECTOR3(35.0f, 40.0f, 35.0f);		//横の当たり判定
+	const float GRIT_OK = 45.0f;				//移動可能なグリットの範囲内
 	const float PLAYER_SPEED = 5.0f;		//プレイヤーの移動速度
 	const int LIFE_MAX = 2;	//初期ライフ数
 	const int FIRE_STOPTIME = 30;	//攻撃時の移動停止時間
@@ -425,7 +427,7 @@ void CPlayer::Move(void)
 		m_bInput = true;
 		m_MoveState = MOVE_STATE_UP;
 	}
-	if ((pInputKeyboard->GetPress(DIK_S) && m_OKD) ||
+	else if ((pInputKeyboard->GetPress(DIK_S) && m_OKD) ||
 		(pInputKeyboard->GetPress(DIK_S) && m_MoveState == MOVE_STATE_UP))
 	{
 		NormarizeMove.z += -1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
@@ -434,7 +436,7 @@ void CPlayer::Move(void)
 		m_bInput = true;
 		m_MoveState = MOVE_STATE_DOWN;
 	}
-	if ((pInputKeyboard->GetPress(DIK_A) && m_OKL) ||
+	else if ((pInputKeyboard->GetPress(DIK_A) && m_OKL) ||
 		(pInputKeyboard->GetPress(DIK_A) && m_MoveState == MOVE_STATE_RIGHT))
 	{
 		NormarizeMove.x += -1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
@@ -443,7 +445,7 @@ void CPlayer::Move(void)
 		m_bInput = true;
 		m_MoveState = MOVE_STATE_LEFT;
 	}
-	if ((pInputKeyboard->GetPress(DIK_D) && m_OKR) ||
+	else if ((pInputKeyboard->GetPress(DIK_D) && m_OKR) ||
 		(pInputKeyboard->GetPress(DIK_D) && m_MoveState == MOVE_STATE_LEFT))
 	{
 		NormarizeMove.x += 1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
@@ -653,11 +655,53 @@ void CPlayer::CollisionWall(useful::COLLISION XYZ)
 				D3DXVECTOR3 Size = pBlock->GetSize();
 
 				// 矩形の当たり判定
-				if (useful::CollisionBlock(pos, posOld, Move, Size, &m_pos, m_posOld, &m_move, &m_Objmove, m_size, &m_bJump, XYZ) == true)
+				if (useful::CollisionBlock(pos, pos, Move, Size, &m_pos, m_posOld, &m_move, &m_Objmove, m_size, &m_bJump, XYZ) == true)
 				{
 					//待機状態にする
 					m_State = STATE_WAIT;
 					m_MoveState = MOVE_STATE_WAIT;
+					m_pos = CMapSystem::GetInstance()->GetGritPos(m_nMapWidth, m_nMapHeight);
+				}
+			}
+
+			pObj = pObjNext;
+		}
+	}
+}
+
+//====================================================================
+// レールブロックとの当たり判定
+//====================================================================
+void CPlayer::CollisionRailBlock(useful::COLLISION XYZ)
+{
+	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
+	{
+		//オブジェクトを取得
+		CObject* pObj = CObject::GetTop(nCntPriority);
+
+		while (pObj != nullptr)
+		{
+			CObject* pObjNext = pObj->GetNext();
+
+			CObject::TYPE type = pObj->GetType();			//種類を取得
+
+			if (type == TYPE_RAILBLOCK)
+			{//種類がブロックの時
+
+				CRailBlock* pBlock = (CRailBlock*)pObj;	// ブロック情報の取得
+
+				D3DXVECTOR3 pos = pBlock->GetPos();
+				D3DXVECTOR3 posOld = pBlock->GetPosOld();
+				D3DXVECTOR3 Move = pBlock->GetMove();
+				D3DXVECTOR3 Size = pBlock->GetSize();
+
+				// 矩形の当たり判定
+				if (useful::CollisionBlock(pos, pos, Move, Size, &m_pos, m_posOld, &m_move, &m_Objmove, m_size, &m_bJump, XYZ) == true)
+				{
+					//待機状態にする
+					m_State = STATE_WAIT;
+					m_MoveState = MOVE_STATE_WAIT;
+					m_pos = CMapSystem::GetInstance()->GetGritPos(m_nMapWidth, m_nMapHeight);
 				}
 			}
 
@@ -702,10 +746,10 @@ void CPlayer::SearchWall(void)
 
 	DebugProc::Print(DebugProc::POINT_LEFT, "自分がいるグリットの中心位置 %f %f %f\n", MyGritPos.x, MyGritPos.y, MyGritPos.z);
 
-	if (m_pos.x <= MyGritPos.x + ((MapGritSize * 0.5f) - m_size.x) &&
-		m_pos.x >= MyGritPos.x - ((MapGritSize * 0.5f) - m_size.x) &&
-		m_pos.z <= MyGritPos.z + ((MapGritSize * 0.5f) - m_size.z) &&
-		m_pos.z >= MyGritPos.z - ((MapGritSize * 0.5f) - m_size.z))
+	if (m_pos.x <= MyGritPos.x + ((MapGritSize * 0.5f) - GRIT_OK) &&
+		m_pos.x >= MyGritPos.x - ((MapGritSize * 0.5f) - GRIT_OK) &&
+		m_pos.z <= MyGritPos.z + ((MapGritSize * 0.5f) - GRIT_OK) &&
+		m_pos.z >= MyGritPos.z - ((MapGritSize * 0.5f) - GRIT_OK))
 	{// グリットの中心位置に立っているなら操作を受け付ける
 		m_OKR = OKR;	//右
 		m_OKL = OKL;	//左
@@ -755,6 +799,8 @@ void CPlayer::CollisionDevilHole(useful::COLLISION XYZ)
 				{
 					//待機状態にする
 					m_State = STATE_WAIT;
+
+					m_pos = CMapSystem::GetInstance()->GetGritPos(m_nMapWidth, m_nMapHeight);
 				}
 			}
 
@@ -917,6 +963,7 @@ void CPlayer::PosUpdate(void)
 	// 壁との当たり判定
 	CollisionWall(useful::COLLISION_X);
 	CollisionDevilHole(useful::COLLISION_X);
+	CollisionRailBlock(useful::COLLISION_X);
 
 	//Z軸の位置更新
 	m_pos.z += m_move.z * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeZ();
@@ -925,6 +972,7 @@ void CPlayer::PosUpdate(void)
 	// 壁との当たり判定
 	CollisionWall(useful::COLLISION_Z);
 	CollisionDevilHole(useful::COLLISION_Z);
+	CollisionRailBlock(useful::COLLISION_Z);
 }
 
 //====================================================================
