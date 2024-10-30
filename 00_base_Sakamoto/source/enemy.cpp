@@ -373,7 +373,7 @@ void CEnemy::Rot(void)
 	fRotMove = m_rot.y;
 	fRotDest = CManager::GetInstance()->GetCamera()->GetRot().y;
 
-	m_rot.y = atan2f(m_move.z, -m_move.x);
+	m_rot.y = atan2f(-m_move.x, -m_move.z);
 
 	useful::NormalizeAngle(&m_rot);
 }

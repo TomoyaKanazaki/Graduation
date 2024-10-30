@@ -14,50 +14,22 @@ SCRIPT			# この行は絶対消さないこと！
 #------------------------------------------------------------------------------
 # モデル数
 #------------------------------------------------------------------------------
-NUM_MODEL = 5
+NUM_MODEL = 3
 
 #------------------------------------------------------------------------------
 # モデルファイル名
 #------------------------------------------------------------------------------
-MODEL_FILENAME = data/MODEL/04_smalldevil/00_body.x	# [0]腰
-MODEL_FILENAME = data/MODEL/04_smalldevil/01_R_foot.x	# [1]体
-MODEL_FILENAME = data/MODEL/04_smalldevil/02_L_foot.x	# [2]頭
-MODEL_FILENAME = data/MODEL/04_smalldevil/03_R_feather.x	# [2]頭
-MODEL_FILENAME = data/MODEL/04_smalldevil/04_L_feather.x	# [2]頭
+MODEL_FILENAME = data/MODEL/01_bonbon/00_body.x	# [0]腰
+MODEL_FILENAME = data/MODEL/01_bonbon/01_R_foot.x	# [1]体
+MODEL_FILENAME = data/MODEL/01_bonbon/02_L_foot.x	# [2]頭
+
 
 #------------------------------------------------------------------------------
 # キャラクター情報
 #------------------------------------------------------------------------------
-CHARACTERSET
-	VELOCITY_NORMAL = 1.00	# 通常移動量
-	VELOCITY_RUN = 1.00		# ダッシュ移動量
-	VELOCITY_BLINK = 1.00	# ブリンク移動量
-	
-	VELOCITY = 0.50	# 移動量
-	
-	JUMP = 0.00		# ジャンプ量
-	RADIUS = 60.00	# 半径
-	HEIGHT = 100.00	# 高さ
-	LIFE = 50		# 体力
-	
-	CENTERSET
-		PARTS = 0		# 中心にするパーツ
-		OFFSET = 0.00 30.50 0.00		# オフセット位置
-	END_CENTERSET
-
-CHARACTERSET
-
-	CENTERSET
-		PARTS = 0		# 中心にするパーツ
-		OFFSET = 0.00 30.50 0.00		# オフセット位置
-	END_CENTERSET
-
-	VELOCITY = 0.50		# 移動量
-	JUMP = 0.00		# ジャンプ量
-	RADIUS = 60.00		# 半径
-	HEIGHT = 0.00		# 高さ
-	LIFE = 5		# 体力
-
+#------------------------------------------------------------------------------
+# キャラクター情報
+#------------------------------------------------------------------------------
 CHARACTERSET
 
 	CENTERSET
@@ -74,7 +46,7 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 0
 		PARENT = -1
-		POS = 0.00 14.70 0.00
+		POS = 0.00 50.70 0.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
@@ -82,7 +54,7 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 1
 		PARENT = 0
-		POS = -6.60 -1.75 0.00
+		POS = -11.10 -29.25 0.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
@@ -90,29 +62,11 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 2
 		PARENT = 0
-		POS = 6.60 -1.25 0.00
+		POS = 11.10 -28.75 0.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
-	
-	PARTSSET
-		INDEX = 3
-		PARENT = 0
-		POS = -6.60 -1.75 0.00
-		ROT = 0.00 0.00 0.00
-		START = 1
-	END_PARTSSET
-
-	PARTSSET
-		INDEX = 4
-		PARENT = 0
-		POS = 6.60 -1.25 0.00
-		ROT = 0.00 0.00 0.00
-		START = 1
-	END_PARTSSET
-
 END_CHARACTERSET
-
 
 #==============================================================================
 #

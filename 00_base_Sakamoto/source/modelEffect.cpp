@@ -29,6 +29,11 @@ namespace
 	const float MOVE_SPEED = 3.0f;		//移動速度
 }
 
+//==========================================
+// 静的メンバ変数宣言
+//==========================================
+CListManager<CModelEffect>* CModelEffect::m_pList = nullptr; // オブジェクトリスト
+
 //====================================================================
 //コンストラクタ
 //====================================================================
@@ -81,6 +86,15 @@ HRESULT CModelEffect::Init(char* pModelName)
 
 	CObjectX::Init(pModelName);
 
+	if (m_pList == nullptr)
+	{// リストマネージャー生成
+		m_pList = CListManager<CModelEffect>::Create();
+		if (m_pList == nullptr) { assert(false); return E_FAIL; }
+	}
+
+	// リストに自身のオブジェクトを追加・イテレーターを取得
+	m_iterator = m_pList->AddList(this);
+
 	return S_OK;
 }
 
@@ -89,6 +103,16 @@ HRESULT CModelEffect::Init(char* pModelName)
 //====================================================================
 void CModelEffect::Uninit(void)
 {
+	// リストから自身のオブジェクトを削除
+	m_pList->DelList(m_iterator);
+
+	if (m_pList->GetNumAll() == 0)
+	{ // オブジェクトが一つもない場合
+
+		// リストマネージャーの破棄
+		m_pList->Release(m_pList);
+	}
+
 	CObjectX::Uninit();
 }
 
