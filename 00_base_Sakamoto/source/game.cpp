@@ -219,7 +219,7 @@ HRESULT CGame::Init(void)
 	pScrollAllow = CScrollArrow::Create();
 	pScrollAllow->SetPos((D3DXVECTOR3(1200.0f, 120.0f, 0.0f)));
 
-	CEnemyMedaman* pMedaman = CEnemyMedaman::Create("data\\TXT\\motion_foot_light_spear.txt");
+	CEnemyMedaman* pMedaman = CEnemyMedaman::Create("data\\TXT\\MOTION\\ENEMY\\motion_medaman.txt");
 	pMedaman->SetPos(D3DXVECTOR3(-300.0f, 0.0f, 0.0f));
 
 	CEnemyBonbon* pBonbon = CEnemyBonbon::Create("data\\TXT\\motion_bowman.txt");
