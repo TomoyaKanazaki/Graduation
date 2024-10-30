@@ -14,25 +14,25 @@ NUM_MODEL = 19
 #------------------------------------------------------------------------------
 # モデルファイル名
 #------------------------------------------------------------------------------
-MODEL_FILENAME = data/MODEL/02_devil/04_waist.x	# [0]腰
-MODEL_FILENAME = data/MODEL/02_devil/03_body.x	# [1]体
-MODEL_FILENAME = data/MODEL/02_devil/02_neck.x	# [2]首
-MODEL_FILENAME = data/MODEL/02_devil/01_jaw.x	# [3]顎
-MODEL_FILENAME = data/MODEL/02_devil/00_head.x	# [4]頭
-MODEL_FILENAME = data/MODEL/02_devil/05_R_upper_arm.x	# [5]右上腕
-MODEL_FILENAME = data/MODEL/02_devil/06_R_fore_arm.x	# [6]右下腕
-MODEL_FILENAME = data/MODEL/02_devil/07_R_hand_clenched.x	# [7]右手
-MODEL_FILENAME = data/MODEL/02_devil/08_L_upper_arm.x	# [8]左上腕
-MODEL_FILENAME = data/MODEL/02_devil/09_L_fore_arm.x	# [9]左下腕
-MODEL_FILENAME = data/MODEL/02_devil/10_L_hand_clenched.x	# [10]左手
-MODEL_FILENAME = data/MODEL/02_devil/11_R_thighs.x	# [11]右腿
-MODEL_FILENAME = data/MODEL/02_devil/12_R_kness.x	# [12]右脚
-MODEL_FILENAME = data/MODEL/02_devil/13_R_feet.x	# [13]右足
-MODEL_FILENAME = data/MODEL/02_devil/14_L_thighs.x	# [14]左腿
-MODEL_FILENAME = data/MODEL/02_devil/15_L_kness.x	# [15]左脚
-MODEL_FILENAME = data/MODEL/02_devil/16_R_feet.x	# [16]左足
-MODEL_FILENAME = data/MODEL/02_devil/17_L_feather.x	# [17]左翼
-MODEL_FILENAME = data/MODEL/02_devil/18_R_feather.x	# [18]右翼
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/04_waist.x		# [0]腰
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/03_body.x			# [1]体
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/02_neck.x			# [2]首
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/01_jaw.x			# [3]顎
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/00_head.x			# [4]頭
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/05_R_upper_arm.x	# [5]右上腕
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/06_R_fore_arm.x	# [6]右下腕
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/07_R_hand.x		# [7]右手
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/08_L_upper_arm.x	# [8]左上腕
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/09_L_fore_arm.x	# [9]左下腕
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/10_L_hand.x		# [10]左手
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/11_R_thighs.x		# [11]右腿
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/12_R_kness.x		# [12]右脚
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/13_R_feet.x		# [13]右足
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/14_L_thighs.x		# [14]左腿
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/15_L_kness.x		# [15]左脚
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/16_R_feet.x		# [16]左足
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/17_L_feather.x	# [17]左翼
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/18_R_feather.x	# [18]右翼
 
 #------------------------------------------------------------------------------
 # キャラクター情報
@@ -116,8 +116,8 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 10
 		PARENT = 9
-		POS = 7.50 0.00 0.00
-		ROT = 0.00 -3.11 0.00
+		POS = 7.95 0.00 0.00
+		ROT = 0.00 0.00 0.00
 	END_PARTSSET
 
 	PARTSSET
