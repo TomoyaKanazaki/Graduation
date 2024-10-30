@@ -342,18 +342,18 @@ void CRailBlock::CollisionPlayer(useful::COLLISION XYZ)
 				CPlayer* pPlayer = (CPlayer*)pObj;	// ブロック情報の取得
 
 				D3DXVECTOR3 pos = pPlayer->GetPos();
-				D3DXVECTOR3 posOld = pPlayer->GetPos();
 				D3DXVECTOR3 Size = pPlayer->GetSize();
 
 				D3DXVECTOR3 Mypos = GetPos();
 				D3DXVECTOR3 MyposOld = GetPosOld();
 				D3DXVECTOR3 MyMove = (Mypos - MyposOld);
+				float MySize = CMapSystem::GetInstance()->GetGritSize() * 0.5f;
 
 				switch (XYZ)
 				{
 				case useful::COLLISION_X:
 					// 矩形の当たり判定
-					if (useful::PushSquareXZ(Mypos, MyposOld, MyMove, pos, Size, XYZ) == true)
+					if (useful::PushSquareXZ(Mypos, D3DXVECTOR3(MySize, 0.0f, MySize), MyMove, pos, Size, XYZ) == true)
 					{
 						pPlayer->SetObjMoveX(MyMove.x);
 						return;
@@ -365,16 +365,16 @@ void CRailBlock::CollisionPlayer(useful::COLLISION XYZ)
 					break;
 
 				case useful::COLLISION_Z:
-					//// 矩形の当たり判定
-					//if (useful::PushSquareXZ(Mypos, MyposOld, MyMove, pos, Size, XYZ) == true)
-					//{
-					//	pPlayer->SetObjMoveZ(MyMove.z);
-					//	return;
-					//}
-					//else
-					//{
-					//	pPlayer->SetObjMoveZ(0.0f);
-					//}
+					// 矩形の当たり判定
+					if (useful::PushSquareXZ(Mypos, D3DXVECTOR3(MySize, 0.0f, MySize), MyMove, pos, Size, XYZ) == true)
+					{
+						pPlayer->SetObjMoveZ(MyMove.z);
+						return;
+					}
+					else
+					{
+						pPlayer->SetObjMoveZ(0.0f);
+					}
 					break;
 				}
 			}

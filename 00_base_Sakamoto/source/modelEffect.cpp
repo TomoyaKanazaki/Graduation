@@ -142,3 +142,11 @@ void CModelEffect::Draw(void)
 {
 	CObjectX::Draw();
 }
+
+//====================================================================
+//ƒŠƒXƒgŽæ“¾
+//====================================================================
+CListManager<CModelEffect>* CModelEffect::GetList(void)
+{
+	return m_pList;
+}
