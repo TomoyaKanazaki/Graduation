@@ -341,55 +341,7 @@ void CObjmeshCube::SetNULL(void)
 //====================================================================
 void CObjmeshCube::Update(void)
 {
-	m_posOld = m_pos;
 
-	m_pos += m_move;
-
-	if (m_Color.a > 0.0f)
-	{
-		if (m_fDel > 0.001f)
-		{
-			m_Color.a -= m_fDel;
-			SetColor(m_Color);
-		}
-	}
-	else
-	{
-		Uninit();
-		return;
-	}
-
-	if (m_nLife != -1 && m_nLife > 0)
-	{
-		m_nLife--;
-	}
-	else if(m_nLife == 0)
-	{
-		Uninit();
-		return;
-	}
-
-	if (m_bLife == true)
-	{
-		if (m_PlusMove == true)
-		{
-			if (m_pos.x > UninitPos.x ||
-				m_pos.y > UninitPos.y || 
-				m_pos.z > UninitPos.z)
-			{
-				Uninit();
-			}
-		}
-		else
-		{
-			if (m_pos.x < UninitPos.x ||
-				m_pos.y < UninitPos.y ||
-				m_pos.z < UninitPos.z)
-			{
-				Uninit();
-			}
-		}
-	}
 }
 
 //====================================================================
