@@ -325,40 +325,63 @@ void CRailBlock::RailCheck(void)
 //====================================================================
 void CRailBlock::CollisionPlayer(useful::COLLISION XYZ)
 {
-	//for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
-	//{
-	//	//オブジェクトを取得
-	//	CObject* pObj = CObject::GetTop(nCntPriority);
+	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
+	{
+		//オブジェクトを取得
+		CObject* pObj = CObject::GetTop(nCntPriority);
 
-	//	while (pObj != nullptr)
-	//	{
-	//		CObject* pObjNext = pObj->GetNext();
+		while (pObj != nullptr)
+		{
+			CObject* pObjNext = pObj->GetNext();
 
-	//		CObject::TYPE type = pObj->GetType();			//種類を取得
+			CObject::TYPE type = pObj->GetType();			//種類を取得
 
-	//		if (type == TYPE_PLAYER3D)
-	//		{//種類がブロックの時
+			if (type == TYPE_PLAYER3D)
+			{//種類がブロックの時
 
-	//			CPlayer* pPlayer = (CPlayer*)pObj;	// ブロック情報の取得
+				CPlayer* pPlayer = (CPlayer*)pObj;	// ブロック情報の取得
 
-	//			D3DXVECTOR3 pos = pPlayer->GetPos();
-	//			D3DXVECTOR3 posOld = pPlayer->GetPos();
-	//			D3DXVECTOR3 Size = pPlayer->GetSize();
+				D3DXVECTOR3 pos = pPlayer->GetPos();
+				D3DXVECTOR3 posOld = pPlayer->GetPos();
+				D3DXVECTOR3 Size = pPlayer->GetSize();
 
-	//			D3DXVECTOR3 Mypos = GetPos();
-	//			D3DXVECTOR3 MyposOld = GetPosOld();
-	//			D3DXVECTOR3 MyMove = (Mypos - MyposOld);
+				D3DXVECTOR3 Mypos = GetPos();
+				D3DXVECTOR3 MyposOld = GetPosOld();
+				D3DXVECTOR3 MyMove = (Mypos - MyposOld);
 
-	//			// 矩形の当たり判定
-	//			if (true)
-	//			{
-	//				pPlayer->SetObjMove(MyMove);
-	//			}
-	//		}
+				switch (XYZ)
+				{
+				case useful::COLLISION_X:
+					// 矩形の当たり判定
+					if (useful::PushSquareXZ(Mypos, MyposOld, MyMove, pos, Size, XYZ) == true)
+					{
+						pPlayer->SetObjMoveX(MyMove.x);
+						return;
+					}
+					else
+					{
+						pPlayer->SetObjMoveX(0.0f);
+					}
+					break;
 
-	//		pObj = pObjNext;
-	//	}
-	//}
+				case useful::COLLISION_Z:
+					//// 矩形の当たり判定
+					//if (useful::PushSquareXZ(Mypos, MyposOld, MyMove, pos, Size, XYZ) == true)
+					//{
+					//	pPlayer->SetObjMoveZ(MyMove.z);
+					//	return;
+					//}
+					//else
+					//{
+					//	pPlayer->SetObjMoveZ(0.0f);
+					//}
+					break;
+				}
+			}
+
+			pObj = pObjNext;
+		}
+	}
 }
 
 //====================================================================

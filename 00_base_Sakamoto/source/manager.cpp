@@ -18,7 +18,6 @@
 #include "game.h"
 #include "result.h"
 #include "fade.h"
-#include "GamePause.h"
 #include "sound.h"
 #include "Edit.h"
 #include "time.h"

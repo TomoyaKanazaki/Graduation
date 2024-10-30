@@ -97,7 +97,8 @@ public:
 	D3DXVECTOR3 GetPos(void) { return m_pos; }
 	void SetMove(D3DXVECTOR3 move) { m_move = move; }
 	D3DXVECTOR3 GetMove(void) { return m_move; }
-	void SetObjMove(D3DXVECTOR3 move) { m_Objmove = move; }
+	void SetObjMoveX(float move) { m_Objmove.x = move; }
+	void SetObjMoveZ(float move) { m_Objmove.z = move; }
 	D3DXVECTOR3 GetObjMove(void) { return m_Objmove; }
 	void SetRot(D3DXVECTOR3 rot) { m_rot = rot; }
 	D3DXVECTOR3 GetRot(void) { return m_rot; }
@@ -149,6 +150,7 @@ private:
 
 	void CameraPosUpdate(void);	//カメラ位置更新処理
 	void PosUpdate(void);		//位置更新処理
+	void ObjPosUpdate(void);	//オブジェクトによる位置更新処理
 	void RotUpdate(void);		//向き更新処理
 
 	void DebugKey(void);		//デバッグキー

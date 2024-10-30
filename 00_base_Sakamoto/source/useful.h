@@ -36,6 +36,7 @@ namespace useful
 	int RangeNumber(int Max, int Min, int Number);	// 数字を設定した範囲内に納める処理
 	bool CollisionRectangle2D(D3DXVECTOR3 pos1, D3DXVECTOR3 pos2, D3DXVECTOR3 Size1, D3DXVECTOR3 Size2, useful::COLLISION Shaft);
 	bool PointSquareXZ(D3DXVECTOR3 Point, D3DXVECTOR3 pos, D3DXVECTOR3 Size);		//点が四角の中に存在するかどうか
+	bool PushSquareXZ(D3DXVECTOR3 PosMy, D3DXVECTOR3 SizeMy, D3DXVECTOR3 MoveMy, D3DXVECTOR3 PosPair, D3DXVECTOR3 SizePair, useful::COLLISION XYZ);		//矩形の押し出し判定
 	bool CameraFront(D3DXVECTOR3 pos);
 	bool CollisionLine(D3DXVECTOR3 Mypos, D3DXVECTOR3 PairPos, float Angle);
 	bool SlashCollision(D3DXVECTOR3* EnemyPos, int Max, float SlashRot);

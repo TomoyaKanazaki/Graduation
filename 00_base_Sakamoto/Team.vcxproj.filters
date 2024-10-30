@@ -198,9 +198,6 @@
     <ClCompile Include="source\MiniMapCamera.cpp">
       <Filter>ソース ファイル\04_Direction</Filter>
     </ClCompile>
-    <ClCompile Include="source\skinmesh.cpp">
-      <Filter>ソース ファイル\04_Direction</Filter>
-    </ClCompile>
     <ClCompile Include="source\sound.cpp">
       <Filter>ソース ファイル\04_Direction</Filter>
     </ClCompile>
@@ -220,9 +217,6 @@
       <Filter>ソース ファイル\05_Effect</Filter>
     </ClCompile>
     <ClCompile Include="source\particle.cpp">
-      <Filter>ソース ファイル\05_Effect</Filter>
-    </ClCompile>
-    <ClCompile Include="source\smoke_screen.cpp">
       <Filter>ソース ファイル\05_Effect</Filter>
     </ClCompile>
     <ClCompile Include="source\renderer.cpp">
@@ -264,12 +258,6 @@
     <ClCompile Include="source\numberFall.cpp">
       <Filter>ソース ファイル\07_UI_3D</Filter>
     </ClCompile>
-    <ClCompile Include="source\MoveHelpUI.cpp">
-      <Filter>ソース ファイル\07_UI_3D</Filter>
-    </ClCompile>
-    <ClCompile Include="source\CubeSpin.cpp">
-      <Filter>ソース ファイル\08_Map</Filter>
-    </ClCompile>
     <ClCompile Include="source\CubeBlock.cpp">
       <Filter>ソース ファイル\08_Map</Filter>
     </ClCompile>
@@ -278,9 +266,6 @@
     </ClCompile>
     <ClCompile Include="source\CubeDamage.cpp">
       <Filter>ソース ファイル\08_Map</Filter>
-    </ClCompile>
-    <ClCompile Include="source\BowmanArrow.cpp">
-      <Filter>ソース ファイル\10_enemy</Filter>
     </ClCompile>
     <ClCompile Include="source\enemy.cpp">
       <Filter>ソース ファイル\10_enemy</Filter>
@@ -309,15 +294,6 @@
     <ClCompile Include="source\Player2D.cpp">
       <Filter>ソース ファイル\09_player</Filter>
     </ClCompile>
-    <ClCompile Include="source\GamePause.cpp">
-      <Filter>ソース ファイル\02_Mode</Filter>
-    </ClCompile>
-    <ClCompile Include="source\screenCover2D.cpp">
-      <Filter>ソース ファイル\05_Effect</Filter>
-    </ClCompile>
-    <ClCompile Include="source\scrollOpen.cpp">
-      <Filter>ソース ファイル\06_UI_2D</Filter>
-    </ClCompile>
     <ClCompile Include="source\shrinkingBillboard.cpp">
       <Filter>ソース ファイル\07_UI_3D</Filter>
     </ClCompile>
@@ -332,9 +308,6 @@
     </ClCompile>
     <ClCompile Include="source\MapSystem.cpp">
       <Filter>ソース ファイル\08_Map</Filter>
-    </ClCompile>
-    <ClCompile Include="source\scrollarrow.cpp">
-      <Filter>ソース ファイル\06_UI_2D</Filter>
     </ClCompile>
     <ClCompile Include="source\fire.cpp">
       <Filter>ソース ファイル\09_player</Filter>
@@ -373,6 +346,12 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="source\Rail.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\screenCover2D.cpp">
+      <Filter>ソース ファイル\06_UI_2D</Filter>
+    </ClCompile>
+    <ClCompile Include="source\scrollarrow.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -473,9 +452,6 @@
     <ClInclude Include="source\2DUI_edit.h">
       <Filter>ヘッダー ファイル\01_System</Filter>
     </ClInclude>
-    <ClInclude Include="source\BowmanArrow.h">
-      <Filter>ヘッダー ファイル\10_enemy</Filter>
-    </ClInclude>
     <ClInclude Include="source\camera.h">
       <Filter>ヘッダー ファイル\04_Direction</Filter>
     </ClInclude>
@@ -486,9 +462,6 @@
       <Filter>ヘッダー ファイル\08_Map</Filter>
     </ClInclude>
     <ClInclude Include="source\CubeDamage.h">
-      <Filter>ヘッダー ファイル\08_Map</Filter>
-    </ClInclude>
-    <ClInclude Include="source\CubeSpin.h">
       <Filter>ヘッダー ファイル\08_Map</Filter>
     </ClInclude>
     <ClInclude Include="source\CubeEffect.h">
@@ -513,9 +486,6 @@
       <Filter>ヘッダー ファイル\04_Direction</Filter>
     </ClInclude>
     <ClInclude Include="source\game.h">
-      <Filter>ヘッダー ファイル\02_Mode</Filter>
-    </ClInclude>
-    <ClInclude Include="source\GamePause.h">
       <Filter>ヘッダー ファイル\02_Mode</Filter>
     </ClInclude>
     <ClInclude Include="source\LevelModelEffect.h">
@@ -547,9 +517,6 @@
     </ClInclude>
     <ClInclude Include="source\modelEffect.h">
       <Filter>ヘッダー ファイル\05_Effect</Filter>
-    </ClInclude>
-    <ClInclude Include="source\MoveHelpUI.h">
-      <Filter>ヘッダー ファイル\07_UI_3D</Filter>
     </ClInclude>
     <ClInclude Include="source\numberBillboard.h">
       <Filter>ヘッダー ファイル\07_UI_3D</Filter>
@@ -605,15 +572,6 @@
     <ClInclude Include="source\shrinkingBillboard.h">
       <Filter>ヘッダー ファイル\07_UI_3D</Filter>
     </ClInclude>
-    <ClInclude Include="source\smoke_screen.h">
-      <Filter>ヘッダー ファイル\06_UI_2D</Filter>
-    </ClInclude>
-    <ClInclude Include="source\skinmesh.h">
-      <Filter>ヘッダー ファイル\04_Direction</Filter>
-    </ClInclude>
-    <ClInclude Include="source\scrollOpen.h">
-      <Filter>ヘッダー ファイル\06_UI_2D</Filter>
-    </ClInclude>
     <ClInclude Include="source\devil.h">
       <Filter>ヘッダー ファイル\10_enemy</Filter>
     </ClInclude>
@@ -622,9 +580,6 @@
     </ClInclude>
     <ClInclude Include="source\MapSystem.h">
       <Filter>ヘッダー ファイル\08_Map</Filter>
-    </ClInclude>
-    <ClInclude Include="source\scrollarrow.h">
-      <Filter>ヘッダー ファイル\06_UI_2D</Filter>
     </ClInclude>
     <ClInclude Include="source\fire.h">
       <Filter>ヘッダー ファイル\09_player</Filter>
@@ -657,6 +612,9 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="source\Rail.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\scrollarrow.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
