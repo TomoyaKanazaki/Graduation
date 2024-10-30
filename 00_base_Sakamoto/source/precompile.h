@@ -25,6 +25,8 @@
 #include <sstream>			// 文字列入出力ストリーム
 #include <string>			// 文字列
 
+#include <map>				// 連想配列
+
 #include "useful.h"
 #include "debugproc.h"
 #include "listManager.h"
