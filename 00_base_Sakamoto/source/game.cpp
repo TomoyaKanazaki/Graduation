@@ -160,19 +160,19 @@ HRESULT CGame::Init(void)
 
 	// ¹‘¶¬
 	CBible* pBible = nullptr;
-	pBible = CBible::Create("data\\MODEL\\seisyo.x");
+	pBible = CBible::Create("data\\MODEL\\02_item\\holybible.x");
 	pBible->SetPosType(CBible::POS_TYPE_LEFTUP);
 	pBible->SetMapScroll(false);
 
-	pBible = CBible::Create("data\\MODEL\\seisyo.x");
+	pBible = CBible::Create("data\\MODEL\\02_item\\holybible.x");
 	pBible->SetPosType(CBible::POS_TYPE_RIGHTUP);
 	pBible->SetMapScroll(false);
 
-	pBible = CBible::Create("data\\MODEL\\seisyo.x");
+	pBible = CBible::Create("data\\MODEL\\02_item\\holybible.x");
 	pBible->SetPosType(CBible::POS_TYPE_LEFTDOWN);
 	pBible->SetMapScroll(false);
 
-	pBible = CBible::Create("data\\MODEL\\seisyo.x");
+	pBible = CBible::Create("data\\MODEL\\02_item\\holybible.x");
 	pBible->SetPosType(CBible::POS_TYPE_RIGHTDOWN);
 	pBible->SetMapScroll(false);
 
