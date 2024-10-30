@@ -16,7 +16,6 @@
 #include "number.h"
 #include "input.h"
 #include "CubeBlock.h"
-#include "CubeDamage.h"
 #include "sound.h"
 #include "camera.h"
 #include "fade.h"

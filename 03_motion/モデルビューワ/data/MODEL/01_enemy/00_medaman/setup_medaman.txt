@@ -19,11 +19,11 @@ NUM_MODEL = 5
 #------------------------------------------------------------------------------
 # モデルファイル名
 #------------------------------------------------------------------------------
-MODEL_FILENAME = data/MODEL/04_smalldevil/00_body.x	# [0]腰
-MODEL_FILENAME = data/MODEL/04_smalldevil/01_R_foot.x	# [1]体
-MODEL_FILENAME = data/MODEL/04_smalldevil/02_L_foot.x	# [2]頭
-MODEL_FILENAME = data/MODEL/04_smalldevil/03_R_feather.x	# [2]頭
-MODEL_FILENAME = data/MODEL/04_smalldevil/04_L_feather.x	# [2]頭
+MODEL_FILENAME = data/MODEL/03_medaman/00_body.x	# [0]腰
+MODEL_FILENAME = data/MODEL/03_medaman/01_R_hand.x	# [1]体
+MODEL_FILENAME = data/MODEL/03_medaman/02_L_hand.x	# [2]頭
+MODEL_FILENAME = data/MODEL/03_medaman/03_R_foot.x	# [2]頭
+MODEL_FILENAME = data/MODEL/03_medaman/04_L_foot.x	# [2]頭
 
 #------------------------------------------------------------------------------
 # キャラクター情報
@@ -44,7 +44,7 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 0
 		PARENT = -1
-		POS = 0.00 34.20 0.00
+		POS = 0.00 49.20 0.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
@@ -52,7 +52,7 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 1
 		PARENT = 0
-		POS = -9.60 -18.25 0.00
+		POS = -21.60 -1.75 0.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
@@ -60,7 +60,7 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 2
 		PARENT = 0
-		POS = 9.60 -17.75 0.00
+		POS = 21.60 -1.25 0.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
@@ -68,7 +68,7 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 3
 		PARENT = 0
-		POS = -6.60 -1.75 19.00
+		POS = -16.40 -43.75 -18.50
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
@@ -76,7 +76,7 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 4
 		PARENT = 0
-		POS = 6.60 -1.25 19.00
+		POS = 17.60 -43.75 -18.50
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET

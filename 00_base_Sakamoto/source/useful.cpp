@@ -103,7 +103,7 @@ bool useful::PushSquareXZ(D3DXVECTOR3 PosMy, D3DXVECTOR3 SizeMy, D3DXVECTOR3 Mov
 	case useful::COLLISION_X:
 		//Å{Ç©ÇÁÅ|ÇÃñ 
 		if (PosMy.x - SizeMy.x - MoveMy.x < PosPair.x + SizePair.x &&
-			PosMy.x + SizeMy.x - MoveMy.x > PosPair.x - SizePair.x &&
+			PosMy.x + SizeMy.x + MoveMy.x > PosPair.x - SizePair.x &&
 			PosMy.z + SizeMy.z > PosPair.z - SizePair.z &&
 			PosMy.z - SizeMy.z < PosPair.z + SizePair.z
 			)
