@@ -60,6 +60,10 @@ public:
 
 	void SetCameraCount(int nCount) { m_nCameraCount = nCount; }
 	int GetCameraCount(void) { return m_nCameraCount; }
+
+	// 静的メンバ関数
+	static CListManager<CCamera>* GetList(void); // リスト取得
+
 private:
 	void ControlCamera(void);
 	void FollowCamera(void);
@@ -100,6 +104,13 @@ private:
 	int m_FollowDistance;		//追従時のカメラ距離
 	bool m_bAttention;			//注目状態
 	int m_nCameraCount;			//どのくらいこのカメラを維持するかというカウント
+
+	// 静的メンバ変数
+	static CListManager<CCamera>* m_pList; // オブジェクトリスト
+
+	// メンバ変数
+	CListManager<CCamera>::AIterator m_iterator; // イテレーター
+
 };
 
 #endif

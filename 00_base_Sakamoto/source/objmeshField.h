@@ -44,6 +44,9 @@ public:
 
 	virtual int GetIdx(void) { return m_nIdxTexture; }
 
+	// 静的メンバ関数
+	static CListManager<CObjmeshField>* GetList(void); // リスト取得
+
 protected:
 	LPDIRECT3DTEXTURE9 m_pTexture;			//テクスチャへのポインタ
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;		//頂点バッファへのポインタ
@@ -58,5 +61,12 @@ private:
 	D3DXCOLOR m_Color;						//色
 	int m_vtxWidth;							// 横の頂点数
 	int m_vtxHeight;						// 縦の頂点数
+
+	// 静的メンバ変数
+	static CListManager<CObjmeshField>* m_pList; // オブジェクトリスト
+
+	// メンバ変数
+	CListManager<CObjmeshField>::AIterator m_iterator; // イテレーター
+
 };
 #endif

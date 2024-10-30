@@ -37,6 +37,9 @@ public:
 	int GetIdx(void) { return m_nIdxTexture; }
 	void SetTexName(char* Name) { m_cTexName = Name; }
 
+	// 静的メンバ関数
+	static CListManager<C2DEffect>* GetList(void); // リスト取得
+
 private:
 	int m_nIdxTexture;						//テクスチャの番号
 	static LPDIRECT3DTEXTURE9 m_pTexture;	//共有テクスチャへのポインタ
@@ -47,5 +50,12 @@ private:
 	float m_nLifeMax;						//寿命の最大値
 	float m_nLife;							//寿命
 	char* m_cTexName;
+
+	// 静的メンバ変数
+	static CListManager<C2DEffect>* m_pList; // オブジェクトリスト
+
+	// メンバ変数
+	CListManager<C2DEffect>::AIterator m_iterator; // イテレーター
+
 };
 #endif
