@@ -24,16 +24,12 @@
     <ClCompile Include="source\2DUI_edit.cpp" />
     <ClCompile Include="source\bible.cpp" />
     <ClCompile Include="source\bowabowa.cpp" />
-    <ClCompile Include="source\BowmanArrow.cpp" />
     <ClCompile Include="source\camera.cpp" />
     <ClCompile Include="source\cross.cpp" />
     <ClCompile Include="source\CubeBlock.cpp" />
     <ClCompile Include="source\CubeColl.cpp" />
-    <ClCompile Include="source\CubeDamage.cpp" />
     <ClCompile Include="source\CubeEffect.cpp" />
-    <ClCompile Include="source\CubeSpin.cpp" />
     <ClCompile Include="source\cursorUI.cpp" />
-    <ClCompile Include="source\debris.cpp" />
     <ClCompile Include="source\debugproc.cpp" />
     <ClCompile Include="source\devil.cpp" />
     <ClCompile Include="source\DevilHole.cpp" />
@@ -46,7 +42,6 @@
     <ClCompile Include="source\fade.cpp" />
     <ClCompile Include="source\fire.cpp" />
     <ClCompile Include="source\game.cpp" />
-    <ClCompile Include="source\GamePause.cpp" />
     <ClCompile Include="source\input.cpp" />
     <ClCompile Include="source\inputManager.cpp" />
     <ClCompile Include="source\item.cpp" />
@@ -66,7 +61,6 @@
     <ClCompile Include="source\model.cpp" />
     <ClCompile Include="source\modelEffect.cpp" />
     <ClCompile Include="source\motion.cpp" />
-    <ClCompile Include="source\MoveHelpUI.cpp" />
     <ClCompile Include="source\number.cpp" />
     <ClCompile Include="source\numberBillboard.cpp" />
     <ClCompile Include="source\numberFall.cpp" />
@@ -84,11 +78,9 @@
     <ClCompile Include="source\objmeshField.cpp" />
     <ClCompile Include="source\objmeshRing.cpp" />
     <ClCompile Include="source\objmeshWall.cpp" />
-    <ClCompile Include="source\ParameterUI.cpp" />
     <ClCompile Include="source\particle.cpp" />
     <ClCompile Include="source\Pause.cpp" />
     <ClCompile Include="source\player.cpp" />
-    <ClCompile Include="source\Player2D.cpp" />
     <ClCompile Include="source\precompile.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
@@ -103,13 +95,9 @@
     <ClCompile Include="source\SampleObjBillboard.cpp" />
     <ClCompile Include="source\SampleObjX.cpp" />
     <ClCompile Include="source\score.cpp" />
-    <ClCompile Include="source\screenCover2D.cpp" />
     <ClCompile Include="source\scrollarrow.cpp" />
-    <ClCompile Include="source\scrollOpen.cpp" />
     <ClCompile Include="source\shrinkingBillboard.cpp" />
-    <ClCompile Include="source\skinmesh.cpp" />
     <ClCompile Include="source\slowManager.cpp" />
-    <ClCompile Include="source\smoke_screen.cpp" />
     <ClCompile Include="source\sound.cpp" />
     <ClCompile Include="source\texture.cpp" />
     <ClCompile Include="source\time.cpp" />
@@ -124,16 +112,12 @@
     <ClInclude Include="source\2DUI_edit.h" />
     <ClInclude Include="source\bible.h" />
     <ClInclude Include="source\bowabowa.h" />
-    <ClInclude Include="source\BowmanArrow.h" />
     <ClInclude Include="source\camera.h" />
     <ClInclude Include="source\cross.h" />
     <ClInclude Include="source\CubeBlock.h" />
     <ClInclude Include="source\CubeColl.h" />
-    <ClInclude Include="source\CubeDamage.h" />
     <ClInclude Include="source\CubeEffect.h" />
-    <ClInclude Include="source\CubeSpin.h" />
     <ClInclude Include="source\cursorUI.h" />
-    <ClInclude Include="source\debris.h" />
     <ClInclude Include="source\debugproc.h" />
     <ClInclude Include="source\devil.h" />
     <ClInclude Include="source\DevilHole.h" />
@@ -146,7 +130,6 @@
     <ClInclude Include="source\fade.h" />
     <ClInclude Include="source\fire.h" />
     <ClInclude Include="source\game.h" />
-    <ClInclude Include="source\GamePause.h" />
     <ClInclude Include="source\input.h" />
     <ClInclude Include="source\inputManager.h" />
     <ClInclude Include="source\item.h" />
@@ -164,7 +147,6 @@
     <ClInclude Include="source\model.h" />
     <ClInclude Include="source\modelEffect.h" />
     <ClInclude Include="source\motion.h" />
-    <ClInclude Include="source\MoveHelpUI.h" />
     <ClInclude Include="source\number.h" />
     <ClInclude Include="source\numberBillboard.h" />
     <ClInclude Include="source\numberFall.h" />
@@ -182,11 +164,9 @@
     <ClInclude Include="source\objmeshField.h" />
     <ClInclude Include="source\objmeshRing.h" />
     <ClInclude Include="source\objmeshWall.h" />
-    <ClInclude Include="source\ParameterUI.h" />
     <ClInclude Include="source\particle.h" />
     <ClInclude Include="source\Pause.h" />
     <ClInclude Include="source\player.h" />
-    <ClInclude Include="source\Player2D.h" />
     <ClInclude Include="source\precompile.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClInclude>
@@ -201,13 +181,9 @@
     <ClInclude Include="source\SampleObjBillboard.h" />
     <ClInclude Include="source\SampleObjX.h" />
     <ClInclude Include="source\score.h" />
-    <ClInclude Include="source\screenCover2D.h" />
     <ClInclude Include="source\scrollarrow.h" />
-    <ClInclude Include="source\scrollOpen.h" />
     <ClInclude Include="source\shrinkingBillboard.h" />
-    <ClInclude Include="source\skinmesh.h" />
     <ClInclude Include="source\slowManager.h" />
-    <ClInclude Include="source\smoke_screen.h" />
     <ClInclude Include="source\sound.h" />
     <ClInclude Include="source\texture.h" />
     <ClInclude Include="source\time.h" />

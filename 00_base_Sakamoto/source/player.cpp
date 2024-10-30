@@ -319,6 +319,8 @@ void CPlayer::GameUpdate(void)
 			PosUpdate();
 		}
 
+		ObjPosUpdate();
+
 		if (m_State != STATE_EGG)
 		{
 			//画面外判定
@@ -701,7 +703,6 @@ void CPlayer::CollisionRailBlock(useful::COLLISION XYZ)
 					//待機状態にする
 					m_State = STATE_WAIT;
 					m_MoveState = MOVE_STATE_WAIT;
-					m_pos = CMapSystem::GetInstance()->GetGritPos(m_nMapWidth, m_nMapHeight);
 				}
 			}
 
@@ -746,10 +747,11 @@ void CPlayer::SearchWall(void)
 
 	DebugProc::Print(DebugProc::POINT_LEFT, "自分がいるグリットの中心位置 %f %f %f\n", MyGritPos.x, MyGritPos.y, MyGritPos.z);
 
-	if (m_pos.x <= MyGritPos.x + ((MapGritSize * 0.5f) - GRIT_OK) &&
+	if ((m_pos.x <= MyGritPos.x + ((MapGritSize * 0.5f) - GRIT_OK) &&
 		m_pos.x >= MyGritPos.x - ((MapGritSize * 0.5f) - GRIT_OK) &&
 		m_pos.z <= MyGritPos.z + ((MapGritSize * 0.5f) - GRIT_OK) &&
-		m_pos.z >= MyGritPos.z - ((MapGritSize * 0.5f) - GRIT_OK))
+		m_pos.z >= MyGritPos.z - ((MapGritSize * 0.5f) - GRIT_OK)) ||
+		m_State == STATE_WAIT)
 	{// グリットの中心位置に立っているなら操作を受け付ける
 		m_OKR = OKR;	//右
 		m_OKL = OKL;	//左
@@ -973,6 +975,55 @@ void CPlayer::PosUpdate(void)
 	CollisionWall(useful::COLLISION_Z);
 	CollisionDevilHole(useful::COLLISION_Z);
 	CollisionRailBlock(useful::COLLISION_Z);
+}
+
+//====================================================================
+//オブジェクトによる位置更新処理
+//====================================================================
+void CPlayer::ObjPosUpdate(void)
+{
+	if (m_bJump == true)
+	{
+		m_Objmove.x = m_Objmove.x * 0.25f;
+		if (m_Objmove.x <= 0.0001f && m_Objmove.x >= -0.0001f)
+		{
+			m_Objmove.x = 0.0f;
+		}
+
+		m_Objmove.z = m_Objmove.z * 0.25f;
+		if (m_Objmove.z <= 0.0001f && m_Objmove.z >= -0.0001f)
+		{
+			m_Objmove.z = 0.0f;
+		}
+	}
+
+	// 変数宣言
+	float fSpeed = 1.0f;	// スロー用 default1.0fで初期化
+	if (m_pSlow)
+	{
+		fSpeed = m_pSlow->GetValue();
+	}
+
+	CDevil* pDevil = CGame::GetDevil();
+
+	//Y軸の位置更新
+	m_pos.y += m_Objmove.y * CManager::GetInstance()->GetGameSpeed() * fSpeed;
+
+	//X軸の位置更新
+	m_pos.x += m_Objmove.x * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeX();
+
+	//// 壁との当たり判定
+	//CollisionWall(useful::COLLISION_X);
+	//CollisionDevilHole(useful::COLLISION_X);
+	//CollisionRailBlock(useful::COLLISION_X);
+
+	//Z軸の位置更新
+	m_pos.z += m_Objmove.z * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeZ();
+
+	//// 壁との当たり判定
+	//CollisionWall(useful::COLLISION_Z);
+	//CollisionDevilHole(useful::COLLISION_Z);
+	//CollisionRailBlock(useful::COLLISION_Z);
 }
 
 //====================================================================

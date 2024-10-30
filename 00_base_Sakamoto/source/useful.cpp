@@ -94,6 +94,43 @@ bool useful::PointSquareXZ(D3DXVECTOR3 Point, D3DXVECTOR3 pos, D3DXVECTOR3 Size)
 }
 
 //====================================================================
+//ãÈå`ÇÃâüÇµèoÇµîªíË
+//====================================================================
+bool useful::PushSquareXZ(D3DXVECTOR3 PosMy, D3DXVECTOR3 SizeMy, D3DXVECTOR3 MoveMy, D3DXVECTOR3 PosPair, D3DXVECTOR3 SizePair, useful::COLLISION XYZ)
+{
+	switch (XYZ)
+	{
+	case useful::COLLISION_X:
+		//Å{Ç©ÇÁÅ|ÇÃñ 
+		if (PosMy.x - SizeMy.x - MoveMy.x < PosPair.x + SizePair.x &&
+			PosMy.x + SizeMy.x + MoveMy.x > PosPair.x - SizePair.x &&
+			PosMy.z + SizeMy.z > PosPair.z - SizePair.z &&
+			PosMy.z - SizeMy.z < PosPair.z + SizePair.z
+			)
+		{
+			return true;
+		}
+
+		////Å|Ç©ÇÁÅ{ÇÃñ 
+		//if (PosMy.x + SizeMy.x + MoveMy.x > PosPair.x - SizePair.x &&
+		//	PosMy.z + SizeMy.z > PosPair.z - SizePair.z &&
+		//	PosMy.z - SizeMy.z < PosPair.z + SizePair.z
+		//	)
+		//{
+		//	return true;
+		//}
+
+		break;
+
+	case useful::COLLISION_Z:
+
+		break;
+	}
+
+	return false;
+}
+
+//====================================================================
 //ÉJÉÅÉâÇÃëOë§Ç…ë∂ç›ÇµÇƒÇ¢ÇÈÇ©Ç«Ç§Ç©
 //====================================================================
 bool useful::CameraFront(D3DXVECTOR3 pos)

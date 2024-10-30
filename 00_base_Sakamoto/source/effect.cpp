@@ -164,3 +164,11 @@ void CEffect::Draw(void)
 	m_pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 	m_pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 }
+
+//====================================================================
+//ƒŠƒXƒgŽæ“¾
+//====================================================================
+CListManager<CEffect>* CEffect::GetList(void)
+{
+	return m_pList;
+}
