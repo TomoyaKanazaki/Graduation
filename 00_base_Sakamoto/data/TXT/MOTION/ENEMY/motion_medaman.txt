@@ -14,11 +14,11 @@ NUM_MODEL = 5
 #------------------------------------------------------------------------------
 # モデルファイル名
 #------------------------------------------------------------------------------
-MODEL_FILENAME = data/MODEL/03_medaman/00_body.x		# [0]腰
-MODEL_FILENAME = data/MODEL/03_medaman/01_R_hand.x	# [1]体
-MODEL_FILENAME = data/MODEL/03_medaman/02_L_hand.x	# [2]頭
-MODEL_FILENAME = data/MODEL/03_medaman/03_R_foot.x	# [2]頭
-MODEL_FILENAME = data/MODEL/03_medaman/04_L_foot.x	# [2]頭
+MODEL_FILENAME = data/MODEL/enemy/03_medaman/00_body.x	# [0]腰
+MODEL_FILENAME = data/MODEL/enemy/03_medaman/01_R_hand.x	# [1]体
+MODEL_FILENAME = data/MODEL/enemy/03_medaman/02_L_hand.x	# [2]頭
+MODEL_FILENAME = data/MODEL/enemy/03_medaman/03_R_foot.x	# [2]頭
+MODEL_FILENAME = data/MODEL/enemy/03_medaman/04_L_foot.x	# [2]頭
 
 #------------------------------------------------------------------------------
 # キャラクター情報
