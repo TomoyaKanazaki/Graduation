@@ -53,7 +53,7 @@ CDevil::CDevil(int nPriority) : CObject(nPriority)
 	m_pos = INITVECTOR3;
 	m_move = INITVECTOR3;
 	m_Objmove = INITVECTOR3;
-	m_rot = D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f);
+	m_rot = D3DXVECTOR3(0.0f,0.0f, 0.0f);
 	m_AutoMoveRot = D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f);
 	m_nActionCount = 0;
 	m_Action = ACTION_WAIT;
@@ -112,7 +112,7 @@ HRESULT CDevil::Init(void)
 	SetType(CObject::TYPE_DEVIL);
 
 	//ƒ‚ƒfƒ‹‚Ì¶¬
-	LoadLevelData("data\\TXT\\motion_Boss.txt");
+	LoadLevelData("data\\TXT\\MOTION\\01_enemy\\motion_devil.txt");
 
 	//ƒ‚[ƒVƒ‡ƒ“‚Ì¶¬
 	if (m_pMotion == nullptr)
@@ -123,7 +123,7 @@ HRESULT CDevil::Init(void)
 
 	//‰Šú‰»ˆ—
 	m_pMotion->SetModel(&m_apModel[0], m_nNumModel);
-	m_pMotion->LoadData("data\\TXT\\motion_Boss.txt");
+	m_pMotion->LoadData("data\\TXT\\MOTION\\01_enemy\\motion_devil.txt");
 
 	switch (CScene::GetMode())
 	{

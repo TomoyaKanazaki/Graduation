@@ -1,11 +1,10 @@
 //============================================
 //
-//	プレイヤーの処理 [playerEffect.h]
+//	プレイヤーの処理 [LevelModelEffect.h]
 //	Author:sakamoto kai
 //
 //============================================
-#ifndef _PLAYEREFFECT_H_
-#define _PLAYEREFFECT_H_
+#pragma once
 
 #include "object.h"
 
@@ -47,6 +46,9 @@ public:
 	void SetAllPose(int nType, int nKey, float nCounter);
 	void SetPose(int nType, int nKey, float nCounter, int nModelNumber);
 
+	// 静的メンバ関数
+	static CListManager<CLevelModelEffect>* GetList(void); // リスト取得
+
 private:
 	ACTION_TYPE m_Action;		//モーション
 	D3DXVECTOR3 m_pos;			//位置
@@ -59,6 +61,10 @@ private:
 	CMotion* m_pMotion;
 	char* m_aModelName[64];
 	int m_nNumModel;
-};
 
-#endif
+	// 静的メンバ変数
+	static CListManager<CLevelModelEffect>* m_pList; // オブジェクトリスト
+
+	// メンバ変数
+	CListManager<CLevelModelEffect>::AIterator m_iterator; // イテレーター
+};
