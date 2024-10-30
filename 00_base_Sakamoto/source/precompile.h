@@ -20,6 +20,11 @@
 
 #include <cstdlib>
 
+#include <iostream>			// 入出力ストリーム
+#include <fstream>			// ファイル入出力ストリーム
+#include <sstream>			// 文字列入出力ストリーム
+#include <string>			// 文字列
+
 #include "useful.h"
 #include "debugproc.h"
 #include "listManager.h"
