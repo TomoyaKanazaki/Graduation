@@ -37,23 +37,15 @@ public:
 	CDevil(int nPriority = 2);
 	~CDevil();
 
-	//プレイヤーのモーション
+	// モーション
 	enum ACTION_TYPE
 	{
-		ACTION_WAIT = 0,			//待機
-		ACTION_EVENT,				//イベント状態
-		ACTION_WALK,				//移動
-		ACTION_JUMP,				//バックジャンプ？
-		ACTION_DAMAGE,				//ダメージ
-		ACTION_DEATH,				//瀕死
-		ACTION_SWING_TRIPLE,		//3連振り下ろし
-		ACTION_SHURI_AND_KABUTO,	//手裏剣2発 + 兜割り
-		ACTION_DASH,				//ダッシュ
-		ACTION_MOW,					//薙ぎ払い
-		ACTION_SMOKE,				//煙幕
-		ACTION_DEATHEVENT,			//死亡時イベント
-		ACTION_DEATHEND,			//死亡
-		ACTION_MAX,					//最大
+		ACTION_NEUTRAL = 0,			// 待機
+		ACTION_SIGNAL_UP,			// 傾き信号「上」
+		ACTION_SIGNAL_DOWN,			// 傾き信号「下」
+		ACTION_SIGNAL_LEFT,			// 傾き信号「左」
+		ACTION_SIGNAL_RIGHT,		// 傾き信号「右」
+		ACTION_MAX,					// 最大
 	};
 
 	//プレイヤーの状態

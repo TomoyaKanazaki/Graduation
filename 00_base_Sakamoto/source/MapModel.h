@@ -73,6 +73,9 @@ public:
 	virtual void Break(D3DXVECTOR3 *pos);	//攻撃によって壊されたとき
 	void ScreenCollision();
 
+	// 静的メンバ関数
+	static CListManager<CMapModel>* GetList(void); // リスト取得
+
 private:
 	void StateManager(void);	//状態管理
 
@@ -94,5 +97,12 @@ private:
 	int m_bBreakBound;		//破壊エフェクト状態でバウンドした回数
 
 	CCubeEffect* m_pDebugBlock;		//デバッグ用ブロック
+
+	// 静的メンバ変数
+	static CListManager<CMapModel>* m_pList; // オブジェクトリスト
+
+	// メンバ変数
+	CListManager<CMapModel>::AIterator m_iterator; // イテレーター
+
 };
 #endif

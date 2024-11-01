@@ -14,11 +14,18 @@
 #include "camera.h"
 #include "2DEffect.h"
 
-//マクロ定義
+//====================================================================
+// 定数定義
+//====================================================================
 namespace
 {
 	const D3DXVECTOR3 COLLISION_SIZE = D3DXVECTOR3(100.0f, 100.0f, 100.0f);
 }
+
+//====================================================================
+//静的メンバ変数宣言
+//====================================================================
+CListManager<CMapModel>* CMapModel::m_pList = nullptr; // オブジェクトリスト
 
 //====================================================================
 //コンストラクタ
@@ -102,6 +109,14 @@ HRESULT CMapModel::Init(char* pModelName)
 		break;
 	}
 
+	if (m_pList == nullptr)
+	{// リストマネージャー生成
+		m_pList = CListManager<CMapModel>::Create();
+		if (m_pList == nullptr) { assert(false); return E_FAIL; }
+	}
+
+	// リストに自身のオブジェクトを追加・イテレーターを取得
+	m_iterator = m_pList->AddList(this);
 
 	return S_OK;
 }
@@ -115,6 +130,16 @@ void CMapModel::Uninit(void)
 	{
 		m_pDebugBlock->Uninit();
 		m_pDebugBlock = nullptr;
+	}
+
+	// リストから自身のオブジェクトを削除
+	m_pList->DelList(m_iterator);
+
+	if (m_pList->GetNumAll() == 0)
+	{ // オブジェクトが一つもない場合
+
+		// リストマネージャーの破棄
+		m_pList->Release(m_pList);
 	}
 
 	CObjectX::Uninit();
@@ -352,4 +377,12 @@ void CMapModel::ScreenCollision()
 		//C2DEffect* pEffect = C2DEffect::Create();
 		//pEffect->SetPos(m_ScreenPos[nCnt]);
 	}
+}
+
+//====================================================================
+//リスト取得
+//====================================================================
+CListManager<CMapModel>* CMapModel::GetList(void)
+{
+	return m_pList;
 }

@@ -19,7 +19,13 @@
 namespace
 {
 	const D3DXVECTOR3 SAMPLE_SIZE = D3DXVECTOR3(50.0f, 0.0f, 50.0f);		//当たり判定
+	const int DIRECTION = 4;	// デビルホールの最大方向
 }
+
+//====================================================================
+//静的メンバ変数宣言
+//====================================================================
+CListManager<CDevilHole>* CDevilHole::m_pList = nullptr; // オブジェクトリスト
 
 //====================================================================
 //コンストラクタ
@@ -36,7 +42,7 @@ CDevilHole::CDevilHole(int nPriority) : CObjectX(nPriority)
 	m_Scaling = 1.0f;
 	m_fColorA = 0.0f;
 	
-	for (int nCnt = 0; nCnt < 4; nCnt++)
+	for (int nCnt = 0; nCnt < DIRECTION; nCnt++)
 	{
 		m_bSet[nCnt] = false;			//上下左右の穴が埋まっているかどうか
 		m_pHoleKey[nCnt] = nullptr;		//上下左右の穴を埋めるポリゴン
@@ -97,6 +103,14 @@ HRESULT CDevilHole::Init(char* pModelName)
 		break;
 	}
 
+	if (m_pList == nullptr)
+	{// リストマネージャー生成
+		m_pList = CListManager<CDevilHole>::Create();
+		if (m_pList == nullptr) { assert(false); return E_FAIL; }
+	}
+
+	// リストに自身のオブジェクトを追加・イテレーターを取得
+	m_iterator = m_pList->AddList(this);
 
 	return S_OK;
 }
@@ -106,6 +120,16 @@ HRESULT CDevilHole::Init(char* pModelName)
 //====================================================================
 void CDevilHole::Uninit(void)
 {
+	// リストから自身のオブジェクトを削除
+	m_pList->DelList(m_iterator);
+
+	if (m_pList->GetNumAll() == 0)
+	{ // オブジェクトが一つもない場合
+
+		// リストマネージャーの破棄
+		m_pList->Release(m_pList);
+	}
+
 	CObjectX::Uninit();
 }
 
@@ -239,7 +263,7 @@ void CDevilHole::CollisionOpen(void)
 					continue;
 				}
 
-				for (int nCnt = 0; nCnt < 4; nCnt++)
+				for (int nCnt = 0; nCnt < DIRECTION; nCnt++)
 				{
 					D3DXVECTOR3 MyPos = m_pos;
 
@@ -313,4 +337,12 @@ void CDevilHole::ClearJudge(void)
 	}
 
 	CGame::SetDevilHoleFinish(true);
+}
+
+//====================================================================
+//リスト取得
+//====================================================================
+CListManager<CDevilHole>* CDevilHole::GetList(void)
+{
+	return m_pList;
 }
