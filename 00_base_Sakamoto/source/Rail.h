@@ -54,6 +54,9 @@ public:
 
 	bool GetRailOK(int nCnt) { return m_bRail[nCnt]; }
 
+	// 静的メンバ関数
+	static CListManager<CRail>* GetList(void); // リスト取得
+
 private:
 
 	CObjectX* m_pRailModel[2];
@@ -64,6 +67,12 @@ private:
 								   
 	CRail* m_pPrev;		// 前のレールへのポインタ
 	CRail* m_pNext;		// 次のレールへのポインタ
+
+	// 静的メンバ変数
+	static CListManager<CRail>* m_pList; // オブジェクトリスト
+
+	// メンバ変数
+	CListManager<CRail>::AIterator m_iterator; // イテレーター
 
 };
 #endif
