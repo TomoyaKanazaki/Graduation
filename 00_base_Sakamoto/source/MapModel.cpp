@@ -126,12 +126,6 @@ HRESULT CMapModel::Init(char* pModelName)
 //====================================================================
 void CMapModel::Uninit(void)
 {
-	if (m_pDebugBlock != nullptr)
-	{
-		m_pDebugBlock->Uninit();
-		m_pDebugBlock = nullptr;
-	}
-
 	// リストから自身のオブジェクトを削除
 	m_pList->DelList(m_iterator);
 
@@ -140,6 +134,12 @@ void CMapModel::Uninit(void)
 
 		// リストマネージャーの破棄
 		m_pList->Release(m_pList);
+	}
+
+	if (m_pDebugBlock != nullptr)
+	{
+		m_pDebugBlock->Uninit();
+		m_pDebugBlock = nullptr;
 	}
 
 	CObjectX::Uninit();
