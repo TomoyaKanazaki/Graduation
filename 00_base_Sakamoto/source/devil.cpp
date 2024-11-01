@@ -33,14 +33,20 @@
 #include "railblock.h"
 #include "sound.h"
 
-#define COLLISION_SIZE (D3DXVECTOR3(750.0f,0.0f,550.0f))		//横の当たり判定
-#define SCROOL_SPEED (5.0f)									//スクロールの移動速度
-#define STAGE_ROT_LIMIT (D3DX_PI * 0.25f)					//スクロールの移動速度
-
+//===========================================
+// 定数定義
+//===========================================
 namespace
 {
-
+	float SCROOL_SPEED = 5.0f;					// スクロールの移動速度
+	float STAGE_ROT_LIMIT = D3DX_PI * 0.25f;	// スクロールの移動速度
+	D3DXVECTOR3 COLLISION_SIZE = D3DXVECTOR3(750.0f, 0.0f, 550.0f);		// 横の当たり判定
 }
+
+//===========================================
+// 静的メンバ変数宣言
+//===========================================
+CListManager<CDevil>* CDevil::m_pList = nullptr; // オブジェクトリスト
 
 //====================================================================
 //コンストラクタ
@@ -101,12 +107,6 @@ CDevil* CDevil::Create()
 //====================================================================
 HRESULT CDevil::Init(void)
 {
-	if (CScene::GetMode() == CScene::MODE_GAME ||
-		CScene::GetMode() == CScene::MODE_TUTORIAL)
-	{
-		MyObjCreate();
-	}
-
 	//種類設定
 	SetType(CObject::TYPE_DEVIL);
 
@@ -141,15 +141,17 @@ HRESULT CDevil::Init(void)
 	// スローの生成
 	m_pSlow = CSlowManager::Create(CSlowManager::CAMP_PLAYER, CSlowManager::TAG_PLAYER);
 
-	return S_OK;
-}
+	// リストマネージャーの生成
+	if (m_pList == nullptr)
+	{
+		m_pList = CListManager<CDevil>::Create();
+		if (m_pList == nullptr) { assert(false); return E_FAIL; }
+	}
 
-//====================================================================
-//自分が保持するオブジェクトの生成
-//====================================================================
-void CDevil::MyObjCreate(void)
-{
-	//オブジェクト生成
+	// リストに自身のオブジェクトを追加・イテレーターを取得
+	m_iterator = m_pList->AddList(this);
+
+	return S_OK;
 }
 
 //====================================================================
@@ -157,6 +159,16 @@ void CDevil::MyObjCreate(void)
 //====================================================================
 void CDevil::Uninit(void)
 {
+	// リストから自身のオブジェクトを削除
+	m_pList->DelList(m_iterator);
+
+	if (m_pList->GetNumAll() == 0)
+	{ // オブジェクトが一つもない場合
+
+		// リストマネージャーの破棄
+		m_pList->Release(m_pList);
+	}
+
 	for (int nCntModel = 0; nCntModel < m_nNumModel; nCntModel++)
 	{
 		m_apModel[nCntModel]->Uninit();
@@ -1071,4 +1083,12 @@ void CDevil::LoadLevelData(const char* pFilename)
 	{//ファイルが開けなかった場合
 		printf("***ファイルを開けませんでした***\n");
 	}
+}
+
+//====================================================================
+//リスト取得
+//====================================================================
+CListManager<CDevil>* CDevil::GetList(void)
+{
+	return m_pList;
 }

@@ -92,8 +92,10 @@ public:
 	D3DXVECTOR3 GetDevilRot(void) { return m_DevilRot; }
 	void SetModelDisp(bool Sst);
 
+	// 静的メンバ関数
+	static CListManager<CDevil>* GetList(void); // リスト取得
+
 private:
-	void MyObjCreate(void);		//自分が保持するオブジェクトの生成
 	void ActionState(void);		//モーションと状態の管理
 	void StateManager(void);	//状態管理
 	void Move(void);			//移動処理
@@ -134,6 +136,13 @@ private:
 	CMotion* m_pMotion;
 	char* m_aModelName[64];
 	int m_nNumModel;
+
+	// 静的メンバ変数
+	static CListManager<CDevil>* m_pList; // オブジェクトリスト
+
+	// メンバ変数
+	CListManager<CDevil>::AIterator m_iterator; // イテレーター
+
 };
 
 #endif
