@@ -84,7 +84,7 @@ HRESULT CEnemyMedaman::Init(void)
 
 	SetEnemyType(CEnemy::ENEMY_MEDAMAN);	//敵の種類設定
 
-		// リストマネージャーの生成
+	// リストマネージャーの生成
 	if (m_pList == nullptr)
 	{
 		m_pList = CListManager<CEnemyMedaman>::Create();
