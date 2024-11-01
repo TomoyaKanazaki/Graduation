@@ -31,6 +31,9 @@
 #include "objmeshField.h"
 #include "sound.h"
 
+//===========================================
+// 定数定義
+//===========================================
 namespace
 {
 	const D3DXVECTOR3 COLLISION_SIZE = D3DXVECTOR3(45.0f, 60.0f, 45.0f);		//横の当たり判定
@@ -39,6 +42,11 @@ namespace
 	const float DISTANCE_RECEDE = 200.0f;	//近づく距離
 	const float DISTANCE_APPROACH = 100.0f;	//遠ざかる距離
 }
+
+//===========================================
+// 静的メンバ変数宣言
+//===========================================
+CListManager<CEnemy>* CEnemy::m_pList = nullptr; // オブジェクトリスト
 
 //====================================================================
 //コンストラクタ
@@ -122,15 +130,17 @@ HRESULT CEnemy::Init(void)
 	// スローの生成(配属、タグの設定)
 	m_pSlow = CSlowManager::Create(m_pSlow->CAMP_ENEMY, m_pSlow->TAG_ENEMY);
 
+	// リストマネージャーの生成
+	if (m_pList == nullptr)
+	{
+		m_pList = CListManager<CEnemy>::Create();
+		if (m_pList == nullptr) { assert(false); return E_FAIL; }
+	}
+
+	// リストに自身のオブジェクトを追加・イテレーターを取得
+	m_iterator = m_pList->AddList(this);
+
 	return S_OK;
-}
-
-//====================================================================
-//自分が保持するオブジェクトの生成
-//====================================================================
-void CEnemy::MyObjCreate(void)
-{
-
 }
 
 //====================================================================
@@ -138,6 +148,16 @@ void CEnemy::MyObjCreate(void)
 //====================================================================
 void CEnemy::Uninit(void)
 {
+	// リストから自身のオブジェクトを削除
+	m_pList->DelList(m_iterator);
+
+	if (m_pList->GetNumAll() == 0)
+	{ // オブジェクトが一つもない場合
+
+		// リストマネージャーの破棄
+		m_pList->Release(m_pList);
+	}
+
 	for (int nCntModel = 0; nCntModel < m_nNumModel; nCntModel++)
 	{
 		m_apModel[nCntModel]->Uninit();
@@ -991,3 +1011,10 @@ void CEnemy::LoadLevelData(const char* pFilename)
 	}
 }
 
+//====================================================================
+//リスト取得
+//====================================================================
+CListManager<CEnemy>* CEnemy::GetList(void)
+{
+	return m_pList;
+}
