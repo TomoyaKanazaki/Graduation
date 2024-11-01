@@ -17,11 +17,6 @@ namespace
 	float NUMBER_HEIGHT = 100.0f;	// 縦幅
 }
 
-//==========================================
-// 静的メンバ変数宣言
-//==========================================
-CListManager<C2DUI>* C2DUI::m_pList = nullptr; // オブジェクトリスト
-
 //====================================================================
 //コンストラクタ
 //====================================================================
@@ -72,15 +67,6 @@ HRESULT C2DUI::Init(void)
 	//新しくcppを作成した時は新しいTYPEを列挙に追加して指定すること
 	SetType(CObject::TYPE_2DUI);
 
-	if (m_pList == nullptr)
-	{// リストマネージャー生成
-		m_pList = CListManager<C2DUI>::Create();
-		if (m_pList == nullptr) { assert(false); return E_FAIL; }
-	}
-
-	// リストに自身のオブジェクトを追加・イテレーターを取得
-	m_iterator = m_pList->AddList(this);
-
 	return S_OK;
 }
 
@@ -89,16 +75,6 @@ HRESULT C2DUI::Init(void)
 //====================================================================
 void C2DUI::Uninit(void)
 {
-	// リストから自身のオブジェクトを削除
-	m_pList->DelList(m_iterator);
-
-	if (m_pList->GetNumAll() == 0)
-	{ // オブジェクトが一つもない場合
-
-		// リストマネージャーの破棄
-		m_pList->Release(m_pList);
-	}
-
 	CObject2D::Uninit();
 }
 
@@ -145,12 +121,4 @@ void C2DUI::Update(void)
 void C2DUI::Draw(void)
 {
 	CObject2D::Draw();
-}
-
-//====================================================================
-//リスト取得
-//====================================================================
-CListManager<C2DUI>* C2DUI::GetList(void)
-{
-	return m_pList;
 }
