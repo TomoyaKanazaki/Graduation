@@ -194,7 +194,6 @@ template<class T> CListManager<T> *CListManager<T>::Create(void)
 		return nullptr;
 	}
 
-
 	// リストマネージャーの初期化
 	if (FAILED(pListManager->Init()))
 	{ // 初期化に失敗した場合
