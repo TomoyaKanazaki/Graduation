@@ -14,31 +14,31 @@ NUM_MODEL = 25
 #------------------------------------------------------------------------------
 # モデルファイル名
 #------------------------------------------------------------------------------
-MODEL_FILENAME = data/MODEL/02_devil/04_waist.x	# [0]腰
-MODEL_FILENAME = data/MODEL/02_devil/03_body.x	# [1]体
-MODEL_FILENAME = data/MODEL/02_devil/02_neck.x	# [2]首
-MODEL_FILENAME = data/MODEL/02_devil/01_jaw.x	# [3]顎
-MODEL_FILENAME = data/MODEL/02_devil/00_head.x	# [4]頭
-MODEL_FILENAME = data/MODEL/02_devil/05_R_upper_arm.x	# [5]右上腕
-MODEL_FILENAME = data/MODEL/02_devil/06_R_fore_arm.x	# [6]右下腕
-MODEL_FILENAME = data/MODEL/02_devil/07_R_hand.x	# [7]右手
-MODEL_FILENAME = data/MODEL/02_devil/08_R_1st_joint.x	# [8]第一関節
-MODEL_FILENAME = data/MODEL/02_devil/09_R_2nd_joint.x	# [9]第二関節
-MODEL_FILENAME = data/MODEL/02_devil/10_R_3rd_joint.x	# [10]第三関節
-MODEL_FILENAME = data/MODEL/02_devil/11_L_upper_arm.x	# [11]左上腕
-MODEL_FILENAME = data/MODEL/02_devil/12_L_fore_arm.x	# [12]左下腕
-MODEL_FILENAME = data/MODEL/02_devil/13_L_hand.x	# [13]左手
-MODEL_FILENAME = data/MODEL/02_devil/14_L_1st_joint.x	# [14]第一関節
-MODEL_FILENAME = data/MODEL/02_devil/15_L_2nd_joint.x	# [15]第二関節
-MODEL_FILENAME = data/MODEL/02_devil/16_L_3rd_joint.x	# [16]第三関節
-MODEL_FILENAME = data/MODEL/02_devil/17_R_thighs.x	# [17]右腿
-MODEL_FILENAME = data/MODEL/02_devil/18_R_kness.x	# [18]右脚
-MODEL_FILENAME = data/MODEL/02_devil/19_R_feet.x	# [19]右足
-MODEL_FILENAME = data/MODEL/02_devil/20_L_thighs.x	# [20]左腿
-MODEL_FILENAME = data/MODEL/02_devil/21_L_kness.x	# [21]左脚
-MODEL_FILENAME = data/MODEL/02_devil/22_L_feet.x	# [22]左足
-MODEL_FILENAME = data/MODEL/02_devil/23_R_feather.x	# [23]左翼
-MODEL_FILENAME = data/MODEL/02_devil/24_L_feather.x	# [24]右翼
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/04_waist.x	# [0]腰
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/03_body.x	# [1]体
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/02_neck.x	# [2]首
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/01_jaw.x	# [3]顎
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/00_head.x	# [4]頭
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/05_R_upper_arm.x	# [5]右上腕
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/06_R_fore_arm.x	# [6]右下腕
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/07_R_hand.x	# [7]右手
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/08_R_1st_joint.x	# [8]第一関節
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/09_R_2nd_joint.x	# [9]第二関節
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/10_R_3rd_joint.x	# [10]第三関節
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/11_L_upper_arm.x	# [11]左上腕
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/12_L_fore_arm.x	# [12]左下腕
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/13_L_hand.x	# [13]左手
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/14_L_1st_joint.x	# [14]第一関節
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/15_L_2nd_joint.x	# [15]第二関節
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/16_L_3rd_joint.x	# [16]第三関節
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/17_R_thighs.x	# [17]右腿
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/18_R_kness.x	# [18]右脚
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/19_R_feet.x	# [19]右足
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/20_L_thighs.x	# [20]左腿
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/21_L_kness.x	# [21]左脚
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/22_L_feet.x	# [22]左足
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/23_R_feather.x	# [23]左翼
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/24_L_feather.x	# [24]右翼
 
 #------------------------------------------------------------------------------
 # キャラクター情報
