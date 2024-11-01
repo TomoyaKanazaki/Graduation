@@ -58,6 +58,11 @@
 namespace
 {
 	const int SAMPLE_NAMESPACE = 0;
+
+	const int BOTTOM_FIELD_VTX_WIDTH = 32;		// 下床の横数
+	const int BOTTOM_FIELD_VTX_HEIGHT = 32;		// 下床の縦数
+	const char* BOTTOM_FIELD_TEX = "data\\TEXTURE\\Field\\Tile000.png";		// 下床のテクスチャ
+	const D3DXVECTOR3 BOTTOM_FIELD_POS = D3DXVECTOR3(0.0f, -500.0f, 0.0f);	// 下床の位置
 }
 
 //静的メンバ変数宣言
@@ -152,6 +157,11 @@ HRESULT CGame::Init(void)
 
 	m_pMapField = CObjmeshField::Create(16, 12);
 	m_pMapField->SetPos(INITVECTOR3);
+
+	// 下床の生成
+	CObjmeshField* pBottonField = CObjmeshField::Create(BOTTOM_FIELD_VTX_WIDTH, BOTTOM_FIELD_VTX_HEIGHT);
+	pBottonField->SetTexture(BOTTOM_FIELD_TEX);
+	pBottonField->SetPos(BOTTOM_FIELD_POS);
 
 	CBowabowa* pBowabowa = nullptr;
 	pBowabowa = CBowabowa::Create("data\\MODEL\\Testbowabowa.x");
