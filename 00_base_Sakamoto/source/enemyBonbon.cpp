@@ -27,8 +27,10 @@
 //==========================================
 namespace
 {
-	const float MOVE_SPEED = 1.0f;
-	const float ASHIGARU_SEARCHDISTANCE = 700.0f;	//	足軽の索敵距離
+	const float MOTION_MOVE = 0.1f;		// 移動状態モーション変更への移動量
+
+	const int MOTION_BLEND_NEUTRAL = 5;	// 待機状態のモーションブレンド時間
+	const int MOTION_BLEND_MOVE = 5;	// 移動状態のモーションブレンド時間
 }
 
 //====================================================================
@@ -36,7 +38,7 @@ namespace
 //====================================================================
 CEnemyBonbon::CEnemyBonbon(int nPriority) : CEnemy(nPriority)
 {
-	m_AtkAction = ACTION_SWAIT;
+	m_AtkAction = ACTION_NEUTRAL;
 }
 
 //====================================================================
@@ -150,22 +152,22 @@ void CEnemyBonbon::ActionState(void)
 	// 情報取得
 	D3DXVECTOR3 move = GetMove();	// 移動量
 
-		//移動モーション
-	if (move.x > 0.1f || move.x < -0.1f || move.z > 0.1f || move.z < -0.1f)
+	// 移動モーション
+	if (move.x > MOTION_MOVE || move.x < -MOTION_MOVE || move.z > MOTION_MOVE || move.z < -MOTION_MOVE)
 	{
-		if (m_Action != ACTION_BMOVE)
+		if (m_Action != ACTION_MOVE)
 		{
-			m_Action = ACTION_BMOVE;
-			GetMotion()->Set(ACTION_BMOVE, 5);
+			m_Action = ACTION_MOVE;
+			GetMotion()->Set(ACTION_MOVE, MOTION_BLEND_NEUTRAL);
 		}
 	}
-	//ニュートラルモーション
+	// ニュートラルモーション
 	else
 	{
-		if (m_Action != ACTION_SWAIT)
+		if (m_Action != ACTION_NEUTRAL)
 		{
-			m_Action = ACTION_SWAIT;
-			GetMotion()->Set(ACTION_SWAIT, 5);
+			m_Action = ACTION_NEUTRAL;
+			GetMotion()->Set(ACTION_NEUTRAL, MOTION_BLEND_MOVE);
 		}
 	}
 }
@@ -202,7 +204,7 @@ void CEnemyBonbon::HitDamage(float fDamage)
 {
 	CEnemy::HitDamage(fDamage);
 
-	if (GetLife() > 0 && m_Action != ACTION_ATTACK)
+	if (GetLife() > 0 && m_Action != ACTION_TEST)
 	{
 		m_nStateCount = 1000;
 	}
