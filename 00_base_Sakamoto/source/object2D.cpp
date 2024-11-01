@@ -9,11 +9,6 @@
 #include "manager.h"
 #include "texture.h"
 
-//===========================================
-// 静的メンバ変数宣言
-//===========================================
-CListManager<CObject2D>* CObject2D::m_pList = nullptr; // オブジェクトリスト
-
 //====================================================================
 //コンストラクタ
 //====================================================================
@@ -130,15 +125,6 @@ HRESULT CObject2D::Init(void)
 	//頂点バッファをアンロックする
 	m_pVtxBuff->Unlock();
 
-	if (m_pList == nullptr)
-	{// リストマネージャー生成
-		m_pList = CListManager<CObject2D>::Create();
-		if (m_pList == nullptr) { assert(false); return E_FAIL; }
-	}
-
-	// リストに自身のオブジェクトを追加・イテレーターを取得
-	m_iterator = m_pList->AddList(this);
-
 	return S_OK;
 }
 
@@ -147,16 +133,6 @@ HRESULT CObject2D::Init(void)
 //====================================================================
 void CObject2D::Uninit(void)
 {
-	// リストから自身のオブジェクトを削除
-	m_pList->DelList(m_iterator);
-
-	if (m_pList->GetNumAll() == 0)
-	{ // オブジェクトが一つもない場合
-
-		// リストマネージャーの破棄
-		m_pList->Release(m_pList);
-	}
-
 	SetDeathFlag(true);
 }
 
@@ -428,12 +404,4 @@ const char *CObject2D::GetTexture(void)
 	const char* Name = pTexture->GetTextureName(m_nIdxTexture);
 
 	return Name;
-}
-
-//==========================================
-// リストの取得
-//==========================================
-CListManager<CObject2D>* CObject2D::GetList(void)
-{
-	return m_pList;
 }
