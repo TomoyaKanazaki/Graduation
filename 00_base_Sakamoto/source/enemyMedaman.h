@@ -21,18 +21,10 @@ public:
 	// モーション
 	enum ACTION_TYPE
 	{
-		ACTION_BWAIT_RIGFT = 0,	//戦闘待機右
-		ACTION_SMOVE,			//探索移動
-		ACTION_BMOVE,			//戦闘移動
-		ACTION_SWAIT,			//探索待機
-		ACTION_ATTACK,			//攻撃
-		ACTION_BDEATH,			//戦闘中の死亡
-		ACTION_SDEATH,			//探索中の死亡
-		ACTION_DAMAGE,			//ダメージ
-		ACTION_BWAIT_UPDOWN,	//戦闘待機上下
-		ACTION_BWAIT_LEFT,		//戦闘待機左
-		ACTION_DASHATTACK,		//ダッシュ攻撃
-		ACTION_MAX,				//最大
+		ACTION_NEUTRAL = 0,	// 待機状態
+		ACTION_MOVE,		// 移動状態
+		ACTION_TEST,		// テスト用状態
+		ACTION_MAX,			// 最大
 	};
 
 	static CEnemyMedaman* Create(const char* pFilename);
