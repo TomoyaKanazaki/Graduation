@@ -34,7 +34,6 @@ public:
 	HRESULT Init(char* pModelName);
 	void Uninit(void);
 	void Update(void);
-	void TitleUpdate(void);
 	void GameUpdate(void);
 	void Draw(void);
 	void CollisionEnemy();
@@ -46,6 +45,9 @@ public:
 
 	void SetMove(D3DXVECTOR3 move) { m_move = move; }
 	D3DXVECTOR3 GetMove(void) { return m_move; }
+
+	// 静的メンバ関数
+	static CListManager<CFire>* GetList(void); // リスト取得
 
 private:
 	void StateManager(void);		// 状態管理
@@ -67,5 +69,12 @@ private:
 	D3DXVECTOR3 m_posOld;			// 過去の位置	
 	D3DXVECTOR3 m_move;				// 移動量	
 	D3DXVECTOR3 m_rot;				// 向き	
+
+	// 静的メンバ変数
+	static CListManager<CFire>* m_pList; // オブジェクトリスト
+
+	// メンバ変数
+	CListManager<CFire>::AIterator m_iterator; // イテレーター
+
 };
 #endif

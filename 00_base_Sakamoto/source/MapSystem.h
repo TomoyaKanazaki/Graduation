@@ -46,8 +46,6 @@ public:
 	int GetHeightMax(void) { return m_HeightMax; }
 	float GetGritSize(void) { return m_fGritSize; }
 
-protected:
-
 public:
 	static CMapSystem* pMapSystem;
 

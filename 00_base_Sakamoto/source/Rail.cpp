@@ -21,6 +21,11 @@ namespace
 }
 
 //====================================================================
+//静的メンバ変数宣言
+//====================================================================
+CListManager<CRail>* CRail::m_pList = nullptr; // オブジェクトリスト
+
+//====================================================================
 //コンストラクタ
 //====================================================================
 CRail::CRail(int nPriority) : CObject(nPriority)
@@ -89,6 +94,14 @@ HRESULT CRail::Init()
 		break;
 	}
 
+	if (m_pList == nullptr)
+	{// リストマネージャー生成
+		m_pList = CListManager<CRail>::Create();
+		if (m_pList == nullptr) { assert(false); return E_FAIL; }
+	}
+
+	// リストに自身のオブジェクトを追加・イテレーターを取得
+	m_iterator = m_pList->AddList(this);
 
 	return S_OK;
 }
@@ -98,7 +111,15 @@ HRESULT CRail::Init()
 //====================================================================
 void CRail::Uninit(void)
 {
+	// リストから自身のオブジェクトを削除
+	m_pList->DelList(m_iterator);
 
+	if (m_pList->GetNumAll() == 0)
+	{ // オブジェクトが一つもない場合
+
+		// リストマネージャーの破棄
+		m_pList->Release(m_pList);
+	}
 }
 
 //====================================================================
@@ -238,4 +259,12 @@ void CRail::NextSet(RAIL_POS Set)
 		m_pNext->SetPrevRail(this);
 		m_pNext->PrevSet(Set);
 	}
+}
+
+//====================================================================
+//リスト取得
+//====================================================================
+CListManager<CRail>* CRail::GetList(void)
+{
+	return m_pList;
 }
