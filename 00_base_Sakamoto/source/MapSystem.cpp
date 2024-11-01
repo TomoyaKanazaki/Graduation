@@ -9,8 +9,11 @@
 #include "game.h"
 #include "Devil.h"
 
-// マクロ定義
-#define GRIT_SIZE (100.0f)
+// 定数定義
+namespace
+{
+	float GRID_SIZE = 100.0f;	// グリッドのサイズ
+}
 
 //静的メンバ変数宣言
 CMapSystem* CMapSystem::pMapSystem = nullptr;
@@ -32,7 +35,7 @@ CMapSystem::CMapSystem()
 	m_HeightMax = NUM_HEIGHT;
 	m_MapPos = D3DXVECTOR3((m_WightMax * 0.5f) * -100.0f, 0.0f, (m_HeightMax * 0.5f) * 100.0f);
 	m_InitPos = m_MapPos;
-	m_fGritSize = GRIT_SIZE;
+	m_fGritSize = GRID_SIZE;
 }
 
 //====================================================================
