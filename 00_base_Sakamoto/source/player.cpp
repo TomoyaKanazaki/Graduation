@@ -20,7 +20,6 @@
 #include "enemy.h"
 #include "objGauge2D.h"
 #include "CubeBlock.h"
-#include "CubeColl.h"
 #include "slowManager.h"
 #include "Number.h"
 #include "MapModel.h"

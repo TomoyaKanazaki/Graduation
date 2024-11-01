@@ -208,9 +208,6 @@
     <ClCompile Include="source\CubeBlock.cpp">
       <Filter>ソース ファイル\07_Map</Filter>
     </ClCompile>
-    <ClCompile Include="source\CubeColl.cpp">
-      <Filter>ソース ファイル\07_Map</Filter>
-    </ClCompile>
     <ClCompile Include="source\enemy.cpp">
       <Filter>ソース ファイル\09_enemy</Filter>
     </ClCompile>
@@ -481,9 +478,6 @@
       <Filter>ソース ファイル\06_UI_3D</Filter>
     </ClInclude>
     <ClInclude Include="source\CubeBlock.h">
-      <Filter>ソース ファイル\07_Map</Filter>
-    </ClInclude>
-    <ClInclude Include="source\CubeColl.h">
       <Filter>ソース ファイル\07_Map</Filter>
     </ClInclude>
     <ClInclude Include="source\MapModel.h">

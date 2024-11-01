@@ -67,7 +67,7 @@ private:
 	bool m_bSet[4];					//上下左右の穴が埋まっているかどうか
 	CObjectX *m_pHoleKey[4];			//上下左右の穴を埋めるポリゴン
 
-		// 静的メンバ変数
+	// 静的メンバ変数
 	static CListManager<CDevilHole>* m_pList; // オブジェクトリスト
 
 	// メンバ変数
