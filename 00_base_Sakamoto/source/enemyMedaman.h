@@ -36,6 +36,10 @@ public:
 	void Draw(void);
 
 	void HitDamage(float fDamage);
+
+	// 静的メンバ関数
+	static CListManager<CEnemyMedaman>* GetList(void); // リスト取得
+
 private:
 
 	void MyObjCreate(void);								//自分が保持するオブジェクトの生成
@@ -47,6 +51,13 @@ private:
 	ACTION_TYPE m_AtkAction;		// 攻撃状態記録用変数
 
 	int m_nStateCount;			// 状態カウント
+
+	// 静的メンバ変数
+	static CListManager<CEnemyMedaman>* m_pList; // オブジェクトリスト
+
+	// メンバ変数
+	CListManager<CEnemyMedaman>::AIterator m_iterator; // イテレーター
+
 };
 
 #endif
