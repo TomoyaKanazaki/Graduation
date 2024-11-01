@@ -10,7 +10,7 @@
 #include "main.h"
 #include "objmeshCube.h"
 
-//オブジェクトメッシュフィールドクラス
+//オブジェクトキューブブロッククラス
 class CCubeBlock : public CObjmeshCube
 {
 public:
@@ -30,12 +30,22 @@ public:
 	int GetWightNumber(void) { return m_nMapWidthNumber; }
 	void SetHeightNumber(int Number) { m_nMapHeightNumber = Number; }
 	int GetHeightNumber(void) { return m_nMapHeightNumber; }
+
+	// 静的メンバ関数
+	static CListManager<CCubeBlock>* GetList(void); // リスト取得
+
 protected:
 
 private:
 
 	int m_nMapWidthNumber;
 	int m_nMapHeightNumber;
+
+	// 静的メンバ変数
+	static CListManager<CCubeBlock>* m_pList; // オブジェクトリスト
+
+	// メンバ変数
+	CListManager<CCubeBlock>::AIterator m_iterator; // イテレーター
 
 };
 #endif
