@@ -26,7 +26,8 @@ public:
 	void Update(void);
 	void Draw(void);
 
-protected:
+	// 静的メンバ関数
+	static CListManager<CRailBlock>* GetList(void); // リスト取得
 
 private:
 
@@ -41,6 +42,12 @@ private:
 	bool bMoveOK[4];
 	CRail* m_pTop;		// 先頭のレールへのポインタ
 	CRail* m_pCur;		// 最後尾のレールへのポインタ
+
+	// 静的メンバ変数
+	static CListManager<CRailBlock>* m_pList; // オブジェクトリスト
+
+	// メンバ変数
+	CListManager<CRailBlock>::AIterator m_iterator; // イテレーター
 
 };
 #endif

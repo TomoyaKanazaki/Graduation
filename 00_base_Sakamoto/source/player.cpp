@@ -1226,14 +1226,6 @@ bool CPlayer::SortObject(D3DXVECTOR3 pos)
 }
 
 //==========================================
-//  リストの取得
-//==========================================
-CListManager<CPlayer>* CPlayer::GetList(void)
-{
-	return m_pList;
-}
-
-//==========================================
 //  アイテムの設定
 //==========================================
 void CPlayer::SetItemType(ITEM_TYPE eType)
@@ -1408,4 +1400,12 @@ void CPlayer::SetPartsDisp(int nParts, bool Set)
 	{
 		m_apModel[nParts]->SetDisp(Set);
 	}
+}
+
+//==========================================
+//  リストの取得
+//==========================================
+CListManager<CPlayer>* CPlayer::GetList(void)
+{
+	return m_pList;
 }

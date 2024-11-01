@@ -94,6 +94,9 @@ public:
 	void SetUseMultiMatrix(D3DXMATRIX Set) { m_UseMultiMatrix = Set; }
 	D3DXMATRIX GetUseMultiMatrix(void) { return m_UseMultiMatrix; }
 
+	// 静的メンバ関数
+	static CListManager<CEnemy>* GetList(void); // リスト取得
+
 protected:
 
 	void InitModel(const char* pFilename);				// モデルの初期化
@@ -153,6 +156,13 @@ private:
 	//マップとのマトリックス情報
 	bool m_bMultiMatrix;					//マトリックスの掛け合わせをするかどうか
 	D3DXMATRIX m_UseMultiMatrix;			//掛け合わせるマトリックス
+
+	// 静的メンバ変数
+	static CListManager<CEnemy>* m_pList; // オブジェクトリスト
+
+	// メンバ変数
+	CListManager<CEnemy>::AIterator m_iterator; // イテレーター
+
 };
 
 #endif
