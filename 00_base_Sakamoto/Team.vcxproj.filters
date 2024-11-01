@@ -256,9 +256,6 @@
     <ClCompile Include="source\fire.cpp">
       <Filter>ソース ファイル\09_player</Filter>
     </ClCompile>
-    <ClCompile Include="source\DevilHole.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="source\item.cpp">
       <Filter>ソース ファイル\11_item</Filter>
     </ClCompile>
@@ -277,23 +274,26 @@
     <ClCompile Include="source\listManager.cpp">
       <Filter>ソース ファイル\01_System</Filter>
     </ClCompile>
-    <ClCompile Include="source\enemyBonbon.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="source\enemyYoungDevil.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="source\RailBlock.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Rail.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="source\scrollarrow.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="source\item_manager.h">
       <Filter>ソース ファイル\11_item</Filter>
+    </ClCompile>
+    <ClCompile Include="source\DevilHole.cpp">
+      <Filter>ソース ファイル\08_Map</Filter>
+    </ClCompile>
+    <ClCompile Include="source\enemyBonbon.cpp">
+      <Filter>ソース ファイル\10_enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="source\enemyYoungDevil.cpp">
+      <Filter>ソース ファイル\10_enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Rail.cpp">
+      <Filter>ソース ファイル\08_Map</Filter>
+    </ClCompile>
+    <ClCompile Include="source\RailBlock.cpp">
+      <Filter>ソース ファイル\08_Map</Filter>
+    </ClCompile>
+    <ClCompile Include="source\scrollarrow.cpp">
+      <Filter>ソース ファイル\06_UI_2D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -526,22 +526,22 @@
       <Filter>ソース ファイル\11_item</Filter>
     </ClInclude>
     <ClInclude Include="source\DevilHole.h">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\08_Map</Filter>
     </ClInclude>
     <ClInclude Include="source\enemyBonbon.h">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\10_enemy</Filter>
     </ClInclude>
     <ClInclude Include="source\enemyYoungDevil.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="source\Rail.h">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\10_enemy</Filter>
     </ClInclude>
     <ClInclude Include="source\RailBlock.h">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\08_Map</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Rail.h">
+      <Filter>ソース ファイル\08_Map</Filter>
     </ClInclude>
     <ClInclude Include="source\scrollarrow.h">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\06_UI_2D</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -31,6 +31,11 @@ namespace
 	const int MOVE_SPEED5(8 + 1);		//ランダム移動量
 }
 
+//==========================================
+// 静的メンバ変数宣言
+//==========================================
+CListManager<CParticle>* CParticle::m_pList = nullptr; // オブジェクトリスト
+
 //====================================================================
 //コンストラクタ
 //====================================================================
@@ -275,6 +280,15 @@ HRESULT CParticle::Init(void)
 
 	Uninit();
 
+	if (m_pList == nullptr)
+	{// リストマネージャー生成
+		m_pList = CListManager<CParticle>::Create();
+		if (m_pList == nullptr) { assert(false); return E_FAIL; }
+	}
+
+	// リストに自身のオブジェクトを追加・イテレーターを取得
+	m_iterator = m_pList->AddList(this);
+
 	return S_OK;
 }
 
@@ -283,6 +297,16 @@ HRESULT CParticle::Init(void)
 //====================================================================
 void CParticle::Uninit(void)
 {
+	// リストから自身のオブジェクトを削除
+	m_pList->DelList(m_iterator);
+
+	if (m_pList->GetNumAll() == 0)
+	{ // オブジェクトが一つもない場合
+
+		// リストマネージャーの破棄
+		m_pList->Release(m_pList);
+	}
+
 	SetDeathFlag(true);
 }
 
@@ -300,4 +324,12 @@ void CParticle::Update(void)
 void CParticle::Draw(void)
 {
 
+}
+
+//====================================================================
+//リスト取得
+//====================================================================
+CListManager<CParticle>* CParticle::GetList(void)
+{
+	return m_pList;
 }
