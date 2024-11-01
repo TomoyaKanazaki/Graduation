@@ -85,7 +85,7 @@ HRESULT CObjmeshField::Init(void)
 	//デバイスの取得
 	LPDIRECT3DDEVICE9 m_pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
 
-	SetTexture("data\\TEXTURE\\Tatami000.png");
+	SetTexture("data\\TEXTURE\\MapChip.jpg");
 
 	SetType(CObject::TYPE_OBJMESHFIELD);
 
