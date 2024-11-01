@@ -251,7 +251,7 @@ void CBible::Move()
 void CBible::Hit(CPlayer* pPlayer)
 {
 	if (pPlayer->GetItemType() != CPlayer::TYPE_NONE
-		&& pPlayer->GetItemType() != CPlayer::TYPE_CROSS)
+		&& pPlayer->GetItemType() != CPlayer::TYPE_BIBLE)
 	{
 		return;
 	}
