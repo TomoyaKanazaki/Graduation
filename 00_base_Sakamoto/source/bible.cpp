@@ -250,15 +250,17 @@ void CBible::Move()
 //====================================================================
 void CBible::Hit(CPlayer* pPlayer)
 {
-	if (pPlayer->GetItemType() == CPlayer::TYPE_NONE
-		|| pPlayer->GetItemType() != CPlayer::TYPE_BIBLE)
+	if (pPlayer->GetItemType() != CPlayer::TYPE_NONE
+		&& pPlayer->GetItemType() != CPlayer::TYPE_BIBLE)
 	{
 		return;
 	}
 
-	// 設定
+	// プレイヤーのアイテムを設定
 	pPlayer->SetItemType(CPlayer::TYPE_BIBLE);
 
+	// 自身の削除
+	Uninit();
 }
 
 //====================================================================

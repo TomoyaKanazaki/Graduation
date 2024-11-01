@@ -21,7 +21,6 @@
 #include "enemy.h"
 #include "objGauge2D.h"
 #include "CubeBlock.h"
-#include "CubeColl.h"
 #include "slowManager.h"
 #include "Number.h"
 #include "MapModel.h"
@@ -56,8 +55,8 @@ CDevil::CDevil(int nPriority) : CObject(nPriority)
 	m_rot = D3DXVECTOR3(0.0f,0.0f, 0.0f);
 	m_AutoMoveRot = D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f);
 	m_nActionCount = 0;
-	m_Action = ACTION_WAIT;
-	m_AtkAction = ACTION_WAIT;
+	m_Action = ACTION_NEUTRAL;
+	m_AtkAction = ACTION_NEUTRAL;
 	m_State = STATE_NORMAL;
 	m_nStateCount = 0;
 	m_CollisionRot = 0.0f;
@@ -444,22 +443,22 @@ void CDevil::Rot(void)
 //====================================================================
 void CDevil::ActionState(void)
 {
-	//移動モーション
+	// 移動モーション
 	if (m_move.x > 0.1f || m_move.x < -0.1f || m_move.z > 0.1f || m_move.z < -0.1f)
 	{
-		if (m_Action != ACTION_WALK)
+		if (m_Action != ACTION_SIGNAL_UP)
 		{
-			m_Action = ACTION_WALK;
-			m_pMotion->Set(ACTION_WALK, 5);
+			m_Action = ACTION_SIGNAL_UP;
+			m_pMotion->Set(ACTION_SIGNAL_UP, 5);
 		}
 	}
-	//ニュートラルモーション
+	// ニュートラルモーション
 	else
 	{
-		if (m_Action != ACTION_WAIT)
+		if (m_Action != ACTION_NEUTRAL)
 		{
-			m_Action = ACTION_WAIT;
-			m_pMotion->Set(ACTION_WAIT, 5);
+			m_Action = ACTION_NEUTRAL;
+			m_pMotion->Set(ACTION_NEUTRAL, 5);
 		}
 	}
 }

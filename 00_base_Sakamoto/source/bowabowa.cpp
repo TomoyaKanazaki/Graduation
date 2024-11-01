@@ -240,7 +240,7 @@ void CBowabowa::Take(void)
 //==========================================
 void CBowabowa::Hit(CPlayer* pPlayer)
 {
-
+	// \Žš‰Ë‚ðŽ‚Á‚Ä‚È‚¢ê‡ŠÖ”‚ð”²‚¯‚é
 	if (pPlayer->GetItemType() != CPlayer::TYPE_CROSS)
 	{
 		return;

@@ -216,7 +216,7 @@ void CCross::Hit(CPlayer* pPlayer)
 		return;
 	}
 
-	// 設定
+	// プレイヤーのアイテムを設定
 	pPlayer->SetItemType(CPlayer::TYPE_CROSS);
 }
 

@@ -27,9 +27,7 @@
     <ClCompile Include="source\camera.cpp" />
     <ClCompile Include="source\cross.cpp" />
     <ClCompile Include="source\CubeBlock.cpp" />
-    <ClCompile Include="source\CubeColl.cpp" />
     <ClCompile Include="source\CubeEffect.cpp" />
-    <ClCompile Include="source\cursorUI.cpp" />
     <ClCompile Include="source\debugproc.cpp" />
     <ClCompile Include="source\devil.cpp" />
     <ClCompile Include="source\DevilHole.cpp" />
@@ -116,9 +114,7 @@
     <ClInclude Include="source\camera.h" />
     <ClInclude Include="source\cross.h" />
     <ClInclude Include="source\CubeBlock.h" />
-    <ClInclude Include="source\CubeColl.h" />
     <ClInclude Include="source\CubeEffect.h" />
-    <ClInclude Include="source\cursorUI.h" />
     <ClInclude Include="source\debugproc.h" />
     <ClInclude Include="source\devil.h" />
     <ClInclude Include="source\DevilHole.h" />

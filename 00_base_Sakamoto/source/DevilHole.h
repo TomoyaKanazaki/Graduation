@@ -43,6 +43,9 @@ public:
 	void SetPos(D3DXVECTOR3 pos) { m_pos = pos; }
 	D3DXVECTOR3 GetPos(void) { return m_pos; }
 
+	// 静的メンバ関数
+	static CListManager<CDevilHole>* GetList(void); // リスト取得
+
 private:
 	void StateManager(void);	//状態管理
 	void CollisionOpen(void);	//解除判定
@@ -63,5 +66,12 @@ private:
 
 	bool m_bSet[4];					//上下左右の穴が埋まっているかどうか
 	CObjectX *m_pHoleKey[4];			//上下左右の穴を埋めるポリゴン
+
+	// 静的メンバ変数
+	static CListManager<CDevilHole>* m_pList; // オブジェクトリスト
+
+	// メンバ変数
+	CListManager<CDevilHole>::AIterator m_iterator; // イテレーター
+
 };
 #endif
