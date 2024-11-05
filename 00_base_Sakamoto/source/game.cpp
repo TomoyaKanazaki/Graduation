@@ -158,6 +158,21 @@ HRESULT CGame::Init(void)
 	m_pMapField = CObjmeshField::Create(16, 12);
 	m_pMapField->SetPos(INITVECTOR3);
 
+	// ŒX‚«‘•’uiŒ©‚½–Ú‚¾‚¯‚Ì‰¼j
+	CObjectX* pObjX = CObjectX::Create("data\\MODEL\\mawasiguruma.x");
+	pObjX->SetPos(D3DXVECTOR3(900.0f, 0.0f, -600.0f));
+
+	CObjectX* pObjX2 = CObjectX::Create("data\\MODEL\\mawasiguruma.x");
+	pObjX2->SetPos(D3DXVECTOR3(900.0f, 0.0f, 600.0f));
+	pObjX2->SetRot(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
+
+	CObjectX* pObjX3 = CObjectX::Create("data\\MODEL\\mawasiguruma.x");
+	pObjX3->SetPos(D3DXVECTOR3(-900.0f, 0.0f, -600.0f));
+
+	CObjectX* pObjX4 = CObjectX::Create("data\\MODEL\\mawasiguruma.x");
+	pObjX4->SetPos(D3DXVECTOR3(-900.0f, 0.0f, 600.0f));
+	pObjX4->SetRot(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
+
 	// ‰º°‚Ì¶¬
 	CObjmeshField* pBottonField = CObjmeshField::Create(BOTTOM_FIELD_VTX_WIDTH, BOTTOM_FIELD_VTX_HEIGHT);
 	pBottonField->SetTexture(BOTTOM_FIELD_TEX);
