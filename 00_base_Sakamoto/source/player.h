@@ -96,6 +96,8 @@ public:
 	void SetPos(D3DXVECTOR3 pos) { m_pos = pos; }
 	D3DXVECTOR3 GetPos(void) { return m_pos; }
 	void SetMove(D3DXVECTOR3 move) { m_move = move; }
+	void SetMoveX(float moveX) { m_move.x = moveX; }
+	void SetMoveZ(float moveZ) { m_move.z = moveZ; }
 	D3DXVECTOR3 GetMove(void) { return m_move; }
 	void SetObjMoveX(float move) { m_Objmove.x = move; }
 	void SetObjMoveZ(float move) { m_Objmove.z = move; }
@@ -104,6 +106,7 @@ public:
 	D3DXVECTOR3 GetRot(void) { return m_rot; }
 	void SetSize(D3DXVECTOR3 size) { m_size = size; }
 	D3DXVECTOR3 GetSize(void) { return m_size; }
+	void SetState(STATE State) { m_State = State; }
 	STATE GetState(void) { return m_State; }
 	bool GetJump(void) { return m_bJump; }
 	void SetCameraPos(D3DXVECTOR3 pos) { m_CameraPos = pos; }
@@ -116,6 +119,8 @@ public:
 	bool GetMultiMatrix(void) { return m_bMultiMatrix; }
 	void SetUseMultiMatrix(D3DXMATRIX Set) { m_UseMultiMatrix = Set; }
 	D3DXMATRIX GetUseMultiMatrix(void) { return m_UseMultiMatrix; }
+	void SetPressObj(bool Set) { m_bPressObj = Set; }
+	bool GetPressObj(void) { return m_bPressObj; }
 
 	void SetUseItem(bool bUse) { m_UseItem = bUse; }
 	bool GetbUseItem() { return m_UseItem; }
@@ -131,7 +136,7 @@ public:
 	ITEM_TYPE GetItemType() { return m_eItemType; }		// アイテムの種類取得
 
 	// 静的メンバ関数
-	static CListManager<CPlayer>* GetList(void); // リスト取得
+	static CListManager<CPlayer>* GetList(void);	// リスト取得
 
 private:
 	void MyObjCreate(void);							//自分が保持するオブジェクトの生成
@@ -141,11 +146,14 @@ private:
 	void Rot(void);									//移動方向処理
 	void Attack(void);								//攻撃処理
 	void CollisionWall(useful::COLLISION XYZ);		//壁との当たり判定
-	void CollisionRailBlock(useful::COLLISION XYZ);	//レールブロックとの当たり判定
+	void CollisionPressWall(useful::COLLISION XYZ);	//壁との圧死判定
+	void CollisionWaitRailBlock(useful::COLLISION XYZ);	//止まっているレールブロックとの当たり判定
+	void CollisionMoveRailBlock(useful::COLLISION XYZ);	//動いているレールブロックとの当たり判定
 	void SearchWall(void);							//壁のサーチ判定
 	void CollisionDevilHole(useful::COLLISION XYZ);	//デビルホールとの当たり判定
 	void CollisionEnemy(void);						// 敵との当たり判定
 	void CollisionStageOut(void);					// ステージ外の当たり判定
+	void CollisionPressStageOut(void);				// ステージ外の圧死判定
 	void MapSystemNumber(void);						// プレイヤーがマップのどのマスに存在しているか設定する
 
 	void CameraPosUpdate(void);	//カメラ位置更新処理
@@ -188,6 +196,7 @@ private:
 	bool m_OKU;					//上への進行が許されるかどうか
 	bool m_OKD;					//下への進行が許されるかどうか
 	bool m_bInput;				//入力を行ったかどうか
+	bool m_bPressObj;			//オブジェクトに押されているかどうか
 
 	bool m_UseItem;				//アイテムが使用可能かどうか
 

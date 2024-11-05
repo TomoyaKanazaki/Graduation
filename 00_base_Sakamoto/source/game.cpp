@@ -178,6 +178,11 @@ HRESULT CGame::Init(void)
 	pBlock->SetPos(D3DXVECTOR3(0.0f, 50.0f, 0.0f));
 	pBlock->SetSize(D3DXVECTOR3(50.0f, 50.0f, 50.0f));
 
+	//CMapSystem::GetInstance()->SetGritBool(8, 7, true);
+	//pBlock = CRailBlock::Create(8, 7);
+	//pBlock->SetPos(D3DXVECTOR3(0.0f, 50.0f, 0.0f));
+	//pBlock->SetSize(D3DXVECTOR3(50.0f, 50.0f, 50.0f));
+
 	//CRail* pRail = CRail::Create("data\\MODEL\\TestRail.x");
 	//pRail->SetPos(D3DXVECTOR3(100.0f, 0.0f, 0.0f));
 
