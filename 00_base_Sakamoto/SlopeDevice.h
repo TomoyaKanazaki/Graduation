@@ -7,10 +7,15 @@
 #ifndef _SLOPE_DEVICE_H_
 #define _SLOPE_DEVICE_H_
 
-#include "objectX.h"
+#include "object.h"
+
+#define MODEL_NUM		(64)	// モデルの数
+
+class CModel;
+class CMotion;
 
 //オブジェクトプレイヤークラス
-class CSlopeDevice : public CObjectX
+class CSlopeDevice : public CObject
 {
 public:
 
@@ -25,19 +30,28 @@ public:
 		STATE_MAX,
 	};
 
+	// モーション
+	enum ACTION_TYPE
+	{
+		ACTION_NEUTRAL = 0,	// 待機状態
+		ACTION_MAX,			// 最大
+	};
+
 	static CSlopeDevice* Create(char* pModelName);
 
-	HRESULT Init(char* pModelName);
+	HRESULT Init(void);
 	void Uninit(void);
 	void Update(void);
 	void TitleUpdate(void);
 	void GameUpdate(void);
 	void Draw(void);
 
-	int GetIdx(void) { return m_nIdxTexture; }
-	int GetIdxXModel(void) { return -1; }
 	void SetPos(D3DXVECTOR3 pos) { m_pos = pos; }
 	D3DXVECTOR3 GetPos(void) { return m_pos; }
+
+	void SetMultiMatrix(bool Set) { m_bMultiMatrix = Set; }
+	bool GetMultiMatrix(void) { return m_bMultiMatrix; }
+	void SetUseMultiMatrix(D3DXMATRIX Set) { m_UseMultiMatrix = Set; }
 
 	// 静的メンバ関数
 	static CListManager<CSlopeDevice>* GetList(void); // リスト取得
@@ -45,18 +59,25 @@ public:
 private:
 	void StateManager(void);		// 状態管理
 
-	int m_nIdxXModel;				// Xモデルの番号
-	D3DXVECTOR3 m_CollisionPos;		// 当たり判定用の座標
-	bool m_bCollision;				// 当たり判定用の座標
-	int m_nIdxTexture;				// テクスチャの番号
-	STATE m_State;					// 状態
-	int m_nStateCount;				// 状態管理用変数
-	float m_Scaling;				// 大きさ
-	D3DXVECTOR3 m_pos;				// 位置	
-	D3DXVECTOR3 m_posOld;			// 過去の位置	
-	D3DXVECTOR3 m_move;				// 移動量	
-	D3DXVECTOR3 m_rot;				// 向き	
-	float m_fColorA;				// 不透明度
+	D3DXVECTOR3 m_pos;			//位置
+	D3DXVECTOR3 m_posOld;		//過去の位置
+	D3DXVECTOR3 m_rot;			//向き
+	D3DXVECTOR3 m_size;			//大きさ
+
+	D3DXMATRIX m_mtxWorld;		//ワールドマトリックス
+
+	STATE m_State;					//状態
+	int m_nStateCount;				//状態管理用変数
+
+	//階層構造とモーションのポインタ
+	CModel* m_apModel[MODEL_NUM];
+	CMotion* m_pMotion;
+	char* m_aModelName[MODEL_NUM];
+	int m_nNumModel;
+
+	//マップとのマトリックス情報
+	bool m_bMultiMatrix;					// マトリックスの掛け合わせをするかどうか
+	D3DXMATRIX m_UseMultiMatrix;			// 掛け合わせるマトリックス
 
 	// 静的メンバ変数
 	static CListManager<CSlopeDevice>* m_pList; // オブジェクトリスト
