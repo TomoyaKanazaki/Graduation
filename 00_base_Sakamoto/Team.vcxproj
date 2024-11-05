@@ -19,7 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="SlopeDevice.cpp" />
     <ClCompile Include="source\2DEffect.cpp" />
     <ClCompile Include="source\2DUI.cpp" />
     <ClCompile Include="source\2DUI_edit.cpp" />
@@ -97,6 +96,7 @@
     <ClCompile Include="source\score.cpp" />
     <ClCompile Include="source\scrollarrow.cpp" />
     <ClCompile Include="source\shrinkingBillboard.cpp" />
+    <ClCompile Include="source\SlopeDevice.cpp" />
     <ClCompile Include="source\slowManager.cpp" />
     <ClCompile Include="source\sound.cpp" />
     <ClCompile Include="source\texture.cpp" />
@@ -107,7 +107,6 @@
     <ClCompile Include="source\Xmodel.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="SlopeDevice.h" />
     <ClInclude Include="source\2DEffect.h" />
     <ClInclude Include="source\2DUI.h" />
     <ClInclude Include="source\2DUI_edit.h" />
@@ -182,6 +181,7 @@
     <ClInclude Include="source\score.h" />
     <ClInclude Include="source\scrollarrow.h" />
     <ClInclude Include="source\shrinkingBillboard.h" />
+    <ClInclude Include="source\SlopeDevice.h" />
     <ClInclude Include="source\slowManager.h" />
     <ClInclude Include="source\sound.h" />
     <ClInclude Include="source\texture.h" />

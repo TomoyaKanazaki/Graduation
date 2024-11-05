@@ -289,7 +289,7 @@
     <ClCompile Include="source\scrollarrow.cpp">
       <Filter>ソース ファイル\05_UI_2D</Filter>
     </ClCompile>
-    <ClCompile Include="SlopeDevice.cpp">
+    <ClCompile Include="source\SlopeDevice.cpp">
       <Filter>ソース ファイル\07_Map</Filter>
     </ClCompile>
   </ItemGroup>
@@ -534,7 +534,7 @@
     <ClInclude Include="source\scrollarrow.h">
       <Filter>ソース ファイル\05_UI_2D</Filter>
     </ClInclude>
-    <ClInclude Include="SlopeDevice.h">
+    <ClInclude Include="source\SlopeDevice.h">
       <Filter>ソース ファイル\07_Map</Filter>
     </ClInclude>
   </ItemGroup>
