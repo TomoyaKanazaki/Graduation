@@ -196,38 +196,25 @@ void CFire::Draw(void)
 //====================================================================
 void CFire::CollisionEnemy()
 {
-	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
+	// キューブブロックのリスト構造が無ければ抜ける
+	if (CEnemy::GetList() == nullptr) { return; }
+	std::list<CEnemy*> list = CEnemy::GetList()->GetList();    // リストを取得
+
+	// キューブブロックリストの中身を確認する
+	for (CEnemy* pEnemy : list)
 	{
-		//オブジェクトを取得
-		CObject* pObj = CObject::GetTop(nCntPriority);
+		D3DXVECTOR3 pos = pEnemy->GetPos();
+		D3DXVECTOR3 Size = pEnemy->GetSize();
 
-		while (pObj != nullptr)
-		{
-			CObject* pObjNext = pObj->GetNext();
+		// 円の当たり判定
+		if (useful::CollisionCircle(m_pos, pos, Size.x) == true)
+		{// 弾が当たった
+			pEnemy->Hit(1);
 
-			// 種類を取得
-			CObject::TYPE type = pObj->GetType();
+			// 削除
+			Uninit();
 
-			if (type == TYPE_ENEMY3D)
-			{//種類が敵の時
-				// 敵の情報の取得
-				CEnemy* pEnemy = (CEnemy*)pObj;	
-
-				D3DXVECTOR3 pos = pEnemy->GetPos();
-				D3DXVECTOR3 Size = pEnemy->GetSize();
-
-				// 円の当たり判定
-				if (useful::CollisionCircle(m_pos, pos, Size.x) == true)
-				{// 弾が当たった
-					pEnemy->Hit(1);
-
-					Uninit();
-
-					return;
-				}
-			}
-
-			pObj = pObjNext;
+			return;
 		}
 	}
 }

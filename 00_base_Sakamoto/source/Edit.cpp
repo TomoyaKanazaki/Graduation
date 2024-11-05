@@ -718,38 +718,27 @@ void CEdit::CollisionBlock(void)
 {
 	if (m_pEditBlock != nullptr)
 	{
-		for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
+		// マップモデルのリスト構造が無ければ抜ける
+		if (CCubeBlock::GetList() == nullptr) { return; }
+		std::list<CCubeBlock*> list = CCubeBlock::GetList()->GetList();    // リストを取得
+
+		// マップモデルリストの中身を確認する
+		for (CCubeBlock* pCubeModel : list)
 		{
-			//オブジェクトを取得
-			CObject* pObj = CObject::GetTop(nCntPriority);
+			D3DXVECTOR3 MyPos = m_pEditBlock->GetPos();
+			D3DXVECTOR3 MySize = m_pEditBlock->GetSize() * 2.0f;
+			D3DXVECTOR3 BlockPos = pCubeModel->GetPos();
+			D3DXVECTOR3 BlockSize = pCubeModel->GetSize();
+			D3DXVECTOR3 BlockMove = pCubeModel->GetMove();
 
-			while (pObj != nullptr)
+			if (BlockPos.x + BlockSize.x > MyPos.x &&
+				BlockPos.x - BlockSize.x < MyPos.x &&
+				BlockPos.z + BlockSize.z > MyPos.z &&
+				BlockPos.z - BlockSize.z < MyPos.z &&
+				BlockPos.y + BlockSize.y > MyPos.y &&
+				BlockPos.y - BlockSize.y < MyPos.y)
 			{
-				CObject* pObjNext = pObj->GetNext();
-
-				CObject::TYPE type = pObj->GetType();			//種類を取得
-
-				if (type == CObject::TYPE_CUBEBLOCK)
-				{//種類がブロックの時
-					CCubeBlock* pBlock = (CCubeBlock*)pObj;
-
-					D3DXVECTOR3 MyPos = m_pEditBlock->GetPos();
-					D3DXVECTOR3 MySize = m_pEditBlock->GetSize() * 2.0f;
-					D3DXVECTOR3 BlockPos = pBlock->GetPos();
-					D3DXVECTOR3 BlockSize = pBlock->GetSize();
-					D3DXVECTOR3 BlockMove = pBlock->GetMove();
-
-					if (BlockPos.x + BlockSize.x > MyPos.x &&
-						BlockPos.x - BlockSize.x < MyPos.x &&
-						BlockPos.z + BlockSize.z > MyPos.z &&
-						BlockPos.z - BlockSize.z < MyPos.z &&
-						BlockPos.y + BlockSize.y > MyPos.y &&
-						BlockPos.y - BlockSize.y < MyPos.y)
-					{
-						pBlock->Uninit();
-					}
-				}
-				pObj = pObjNext;
+				pCubeModel->Uninit();
 			}
 		}
 	}
