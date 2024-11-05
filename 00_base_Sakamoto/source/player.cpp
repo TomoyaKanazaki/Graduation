@@ -639,38 +639,25 @@ void CPlayer::StateManager(void)
 //====================================================================
 void CPlayer::CollisionWall(useful::COLLISION XYZ)
 {
-	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
+	// キューブブロックのリスト構造が無ければ抜ける
+	if (CCubeBlock::GetList() == nullptr) { return; }
+	std::list<CCubeBlock*> list = CCubeBlock::GetList()->GetList();    // リストを取得
+
+	// キューブブロックリストの中身を確認する
+	for (CCubeBlock* pCubeBlock : list)
 	{
-		//オブジェクトを取得
-		CObject* pObj = CObject::GetTop(nCntPriority);
+		D3DXVECTOR3 pos = pCubeBlock->GetPos();
+		D3DXVECTOR3 posOld = pCubeBlock->GetPosOld();
+		D3DXVECTOR3 Move = pCubeBlock->GetMove();
+		D3DXVECTOR3 Size = pCubeBlock->GetSize();
 
-		while (pObj != nullptr)
+		// 矩形の当たり判定
+		if (useful::CollisionBlock(pos, pos, Move, Size, &m_pos, m_posOld, &m_move, &m_Objmove, m_size, &m_bJump, XYZ) == true)
 		{
-			CObject* pObjNext = pObj->GetNext();
-
-			CObject::TYPE type = pObj->GetType();			//種類を取得
-
-			if (type == TYPE_CUBEBLOCK)
-			{//種類がブロックの時
-
-				CCubeBlock* pBlock = (CCubeBlock*)pObj;	// ブロック情報の取得
-
-				D3DXVECTOR3 pos = pBlock->GetPos();
-				D3DXVECTOR3 posOld = pBlock->GetPosOld();
-				D3DXVECTOR3 Move = pBlock->GetMove();
-				D3DXVECTOR3 Size = pBlock->GetSize();
-
-				// 矩形の当たり判定
-				if (useful::CollisionBlock(pos, pos, Move, Size, &m_pos, m_posOld, &m_move, &m_Objmove, m_size, &m_bJump, XYZ) == true)
-				{
-					//待機状態にする
-					m_State = STATE_WAIT;
-					m_MoveState = MOVE_STATE_WAIT;
-					m_pos = CMapSystem::GetInstance()->GetGritPos(m_nMapWidth, m_nMapHeight);
-				}
-			}
-
-			pObj = pObjNext;
+			//待機状態にする
+			m_State = STATE_WAIT;
+			m_MoveState = MOVE_STATE_WAIT;
+			m_pos = CMapSystem::GetInstance()->GetGritPos(m_nMapWidth, m_nMapHeight);
 		}
 	}
 }
