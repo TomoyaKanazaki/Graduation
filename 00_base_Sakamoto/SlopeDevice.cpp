@@ -13,13 +13,16 @@
 #include "effect.h"
 #include "game.h"
 
+#include "model.h"
+#include "motion.h"
+
+#include "objmeshField.h"
+
 //==========================================
 //  定数定義
 //==========================================
 namespace
 {
-	const D3DXVECTOR3 SAMPLE_SIZE = D3DXVECTOR3(50.0f, 0.0f, 50.0f);		//当たり判定
-	const int DIRECTION = 4;	// デビルホールの最大方向
 }
 
 //====================================================================
@@ -30,17 +33,24 @@ CListManager<CSlopeDevice>* CSlopeDevice::m_pList = nullptr; // オブジェクトリス
 //====================================================================
 //コンストラクタ
 //====================================================================
-CSlopeDevice::CSlopeDevice(int nPriority) : CObjectX(nPriority)
+CSlopeDevice::CSlopeDevice(int nPriority) : CObject(nPriority)
 {
-	SetSize(SAMPLE_SIZE);
-	SetPos(INITVECTOR3);
-	m_nIdxXModel = 0;			//マテリアルの数
-	m_CollisionPos = INITVECTOR3;
-	m_bCollision = false;
-	m_State = STATE_NORMAL;
+	m_pos = INITVECTOR3;
+	m_posOld = INITVECTOR3;
+	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_size = INITVECTOR3;
+
+	m_State = STATE(0);
 	m_nStateCount = 0;
-	m_Scaling = 1.0f;
-	m_fColorA = 0.0f;
+
+	for (int nCnt = 0; nCnt < MODEL_NUM; nCnt++)
+	{
+		m_apModel[nCnt] = nullptr;
+		m_aModelName[nCnt] = "";
+	}
+
+	m_pMotion = nullptr;
+	m_nNumModel = 0;
 }
 
 //====================================================================
@@ -60,7 +70,7 @@ CSlopeDevice* CSlopeDevice::Create(char* pModelName)
 	CSlopeDevice* pInstance = new CSlopeDevice();
 
 	// オブジェクトの初期化処理
-	if (FAILED(pInstance->Init(pModelName)))
+	if (FAILED(pInstance->Init()))
 	{// 初期化処理が失敗した場合
 		return nullptr;
 	}
@@ -71,11 +81,9 @@ CSlopeDevice* CSlopeDevice::Create(char* pModelName)
 //====================================================================
 //初期化処理
 //====================================================================
-HRESULT CSlopeDevice::Init(char* pModelName)
+HRESULT CSlopeDevice::Init(void)
 {
 	SetType(CObject::TYPE_DEVILHOLE);
-
-	CObjectX::Init(pModelName);
 
 	//モードごとに初期値を設定出来る
 	switch (CScene::GetMode())
@@ -119,7 +127,22 @@ void CSlopeDevice::Uninit(void)
 		m_pList->Release(m_pList);
 	}
 
-	CObjectX::Uninit();
+	for (int nCntModel = 0; nCntModel < m_nNumModel; nCntModel++)
+	{
+		m_apModel[nCntModel]->Uninit();
+		delete m_apModel[nCntModel];
+		m_apModel[nCntModel] = nullptr;
+	}
+
+	//モーションの終了処理
+	if (m_pMotion != nullptr)
+	{
+		//モーションの破棄
+		delete m_pMotion;
+		m_pMotion = nullptr;
+	}
+
+	SetDeathFlag(true);
 }
 
 //====================================================================
@@ -149,15 +172,11 @@ void CSlopeDevice::Update(void)
 //====================================================================
 void CSlopeDevice::TitleUpdate(void)
 {
-	D3DXVECTOR3 pos = GetPos();
-
-	//位置更新
-	pos += m_move;
-
-	SetPos(pos);
-
-	//頂点情報の更新
-	CObjectX::Update();
+	if (m_pMotion != nullptr)
+	{
+		//モーションの更新
+		m_pMotion->Update();
+	}
 }
 
 //====================================================================
@@ -165,21 +184,14 @@ void CSlopeDevice::TitleUpdate(void)
 //====================================================================
 void CSlopeDevice::GameUpdate(void)
 {
-	//更新前の位置を過去の位置とする
-	m_posOld = m_pos;
-
-	//位置更新
-	CObjectX::SetPos(m_pos);
-	CObjectX::SetRot(m_rot);
-
-	//大きさの設定
-	SetScaling(D3DXVECTOR3(m_Scaling, m_Scaling, m_Scaling));
-
 	//状態管理
 	StateManager();
 
-	//頂点情報の更新
-	CObjectX::Update();
+	if (m_pMotion != nullptr)
+	{
+		//モーションの更新
+		m_pMotion->Update();
+	}
 }
 
 //====================================================================
@@ -187,7 +199,42 @@ void CSlopeDevice::GameUpdate(void)
 //====================================================================
 void CSlopeDevice::Draw(void)
 {
-	CObjectX::Draw();
+	//デバイスの取得
+	LPDIRECT3DDEVICE9 m_pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
+
+	D3DXMATRIX mtxRot, mtxTrans;	//計算用マトリックス
+
+	//ワールドマトリックスの初期化
+	D3DXMatrixIdentity(&m_mtxWorld);
+
+	//向きを反映
+	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
+
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
+
+	//位置を反映
+	D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);
+
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
+
+	if (m_bMultiMatrix)
+	{
+		SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
+
+		//算出したマトリクスをかけ合わせる
+		D3DXMatrixMultiply(&m_mtxWorld,
+			&m_mtxWorld,
+			&m_UseMultiMatrix);
+	}
+
+	//ワールドマトリックスの設定
+	m_pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
+
+	//モデルの描画(全パーツ)
+	for (int nCntModel = 0; nCntModel < m_nNumModel; nCntModel++)
+	{
+		m_apModel[nCntModel]->Draw();
+	}
 }
 
 //====================================================================

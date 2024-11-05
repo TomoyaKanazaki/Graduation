@@ -157,9 +157,6 @@ void CRailBlock::Update(void)
 	SetPos(Pos);
 	SetPosOld(PosOld);
 
-	CollisionPlayer(useful::COLLISION_X);
-	CollisionPlayer(useful::COLLISION_Z);
-
 	CCubeBlock::Update();
 }
 
@@ -353,79 +350,6 @@ void CRailBlock::RailCheck(void)
 
 		pRail = pRail->GetNextRail();
 	}
-}
-
-//====================================================================
-// レールブロックとの当たり判定
-//====================================================================
-void CRailBlock::CollisionPlayer(useful::COLLISION XYZ)
-{
-	//for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
-	//{
-	//	//オブジェクトを取得
-	//	CObject* pObj = CObject::GetTop(nCntPriority);
-
-	//	while (pObj != nullptr)
-	//	{
-	//		CObject* pObjNext = pObj->GetNext();
-
-	//		CObject::TYPE type = pObj->GetType();			//種類を取得
-
-	//		if (type == TYPE_PLAYER3D)
-	//		{//種類がブロックの時
-
-	//			CPlayer* pPlayer = (CPlayer*)pObj;	// ブロック情報の取得
-
-	//			if (pPlayer->GetState() != CPlayer::ACTION_DEATH && pPlayer->GetState() != CPlayer::ACTION_EGG)
-	//			{
-	//				D3DXVECTOR3 pos = pPlayer->GetPos();
-	//				D3DXVECTOR3 Size = pPlayer->GetSize();
-
-	//				D3DXVECTOR3 Mypos = GetPos();
-	//				D3DXVECTOR3 MyposOld = GetPosOld();
-	//				D3DXVECTOR3 MyMove = (Mypos - MyposOld);
-	//				float MySize = CMapSystem::GetInstance()->GetGritSize() * 0.5f;
-
-	//				switch (XYZ)
-	//				{
-	//				case useful::COLLISION_X:
-	//					// 矩形の当たり判定
-	//					if (useful::PushSquareXZ(Mypos, D3DXVECTOR3(MySize, 0.0f, MySize), MyMove, pos, Size, XYZ) == true)
-	//					{
-	//						pPlayer->SetObjMoveX(MyMove.x);
-	//						pPlayer->SetMoveX(0.0f);
-	//						pPlayer->SetPressObj(true);
-	//						return;
-	//					}
-	//					else
-	//					{
-	//						pPlayer->SetObjMoveX(0.0f);
-	//						pPlayer->SetPressObj(false);
-	//					}
-	//					break;
-
-	//				case useful::COLLISION_Z:
-	//					// 矩形の当たり判定
-	//					if (useful::PushSquareXZ(Mypos, D3DXVECTOR3(MySize, 0.0f, MySize), MyMove, pos, Size, XYZ) == true)
-	//					{
-	//						pPlayer->SetObjMoveZ(MyMove.z);
-	//						pPlayer->SetMoveZ(0.0f);
-	//						pPlayer->SetPressObj(true);
-	//						return;
-	//					}
-	//					else
-	//					{
-	//						pPlayer->SetObjMoveZ(0.0f);
-	//						pPlayer->SetPressObj(false);
-	//					}
-	//					break;
-	//				}
-	//			}
-	//		}
-
-	//		pObj = pObjNext;
-	//	}
-	//}
 }
 
 //====================================================================

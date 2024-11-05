@@ -100,7 +100,14 @@ private:
 	void StateManager(void);	//状態管理
 	void Move(void);			//移動処理
 	void Rot(void);				//移動方向処理
+
 	void ObjectScroll(D3DXVECTOR3 Move);	//オブジェクトのスクロール
+	void CrossScroll(D3DXVECTOR3 Move, float GritSize);		// 十字架のスクロール
+	void BowabowaScroll(D3DXVECTOR3 Move, float GritSize);	// ボワボワのスクロール
+	void EnemyScroll(D3DXVECTOR3 Move, float GritSize);		// 敵のスクロール
+	void RailBlockScroll(D3DXVECTOR3 Move, float GritSize);	// レールブロックのスクロール
+	void PlayerScroll(D3DXVECTOR3 Move, float GritSize);	// プレイヤーのスクロール
+
 	void GritScroll(D3DXVECTOR3 Move);		//グリットのスクロール
 	void CollisionPressPlayer(CPlayer* pPlayer, D3DXVECTOR3 pos, D3DXVECTOR3 Size);	//プレイヤーが潰される時の処理
 

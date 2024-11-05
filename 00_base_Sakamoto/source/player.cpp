@@ -41,12 +41,14 @@
 //===========================================
 namespace
 {
-	const D3DXVECTOR3 COLLISION_SIZE = D3DXVECTOR3(35.0f, 40.0f, 35.0f);		//横の当たり判定
-	const float GRIT_OK = 45.0f;				//移動可能なグリットの範囲内
-	const float PLAYER_SPEED = 5.0f;		//プレイヤーの移動速度
 	const int LIFE_MAX = 2;	//初期ライフ数
 	const int FIRE_STOPTIME = 30;	//攻撃時の移動停止時間
 
+	const float GRIT_OK = 45.0f;			//移動可能なグリットの範囲内
+	const float PLAYER_SPEED = 5.0f;		//プレイヤーの移動速度
+	const float OBJDISTANCE = 10000.0f;		// オブジェクトの距離
+
+	const D3DXVECTOR3 COLLISION_SIZE = D3DXVECTOR3(35.0f, 40.0f, 35.0f);		//横の当たり判定
 	const D3DXVECTOR3 LIFE_POS = D3DXVECTOR3(50.0f, 650.0f, 0.0f);
 }
 
@@ -639,38 +641,25 @@ void CPlayer::StateManager(void)
 //====================================================================
 void CPlayer::CollisionWall(useful::COLLISION XYZ)
 {
-	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
+	// キューブブロックのリスト構造が無ければ抜ける
+	if (CCubeBlock::GetList() == nullptr) { return; }
+	std::list<CCubeBlock*> list = CCubeBlock::GetList()->GetList();    // リストを取得
+
+	// キューブブロックリストの中身を確認する
+	for (CCubeBlock* pCubeBlock : list)
 	{
-		//オブジェクトを取得
-		CObject* pObj = CObject::GetTop(nCntPriority);
+		D3DXVECTOR3 pos = pCubeBlock->GetPos();
+		D3DXVECTOR3 posOld = pCubeBlock->GetPosOld();
+		D3DXVECTOR3 Move = pCubeBlock->GetMove();
+		D3DXVECTOR3 Size = pCubeBlock->GetSize();
 
-		while (pObj != nullptr)
+		// 矩形の当たり判定
+		if (useful::CollisionBlock(pos, pos, Move, Size, &m_pos, m_posOld, &m_move, &m_Objmove, m_size, &m_bJump, XYZ) == true)
 		{
-			CObject* pObjNext = pObj->GetNext();
-
-			CObject::TYPE type = pObj->GetType();			//種類を取得
-
-			if (type == TYPE_CUBEBLOCK)
-			{//種類がブロックの時
-
-				CCubeBlock* pBlock = (CCubeBlock*)pObj;	// ブロック情報の取得
-
-				D3DXVECTOR3 pos = pBlock->GetPos();
-				D3DXVECTOR3 posOld = pBlock->GetPosOld();
-				D3DXVECTOR3 Move = pBlock->GetMove();
-				D3DXVECTOR3 Size = pBlock->GetSize();
-
-				// 矩形の当たり判定
-				if (useful::CollisionBlock(pos, pos, Move, Size, &m_pos, m_posOld, &m_move, &m_Objmove, m_size, &m_bJump, XYZ) == true)
-				{
-					//待機状態にする
-					m_State = STATE_WAIT;
-					m_MoveState = MOVE_STATE_WAIT;
-					m_pos = CMapSystem::GetInstance()->GetGritPos(m_nMapWidth, m_nMapHeight);
-				}
-			}
-
-			pObj = pObjNext;
+			//待機状態にする
+			m_State = STATE_WAIT;
+			m_MoveState = MOVE_STATE_WAIT;
+			m_pos = CMapSystem::GetInstance()->GetGritPos(m_nMapWidth, m_nMapHeight);
 		}
 	}
 }
@@ -680,35 +669,22 @@ void CPlayer::CollisionWall(useful::COLLISION XYZ)
 //====================================================================
 void CPlayer::CollisionPressWall(useful::COLLISION XYZ)
 {
-	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
+	// キューブブロックのリスト構造が無ければ抜ける
+	if (CCubeBlock::GetList() == nullptr) { return; }
+	std::list<CCubeBlock*> list = CCubeBlock::GetList()->GetList();    // リストを取得
+
+	// キューブブロックリストの中身を確認する
+	for (CCubeBlock* pCubeBlock : list)
 	{
-		//オブジェクトを取得
-		CObject* pObj = CObject::GetTop(nCntPriority);
+		D3DXVECTOR3 pos = pCubeBlock->GetPos();
+		D3DXVECTOR3 posOld = pCubeBlock->GetPosOld();
+		D3DXVECTOR3 Move = pCubeBlock->GetMove();
+		D3DXVECTOR3 Size = pCubeBlock->GetSize();
 
-		while (pObj != nullptr)
+		// 矩形の当たり判定
+		if (useful::CollisionRectangle2D(m_pos, pos, m_size, Size, XYZ) == true)
 		{
-			CObject* pObjNext = pObj->GetNext();
-
-			CObject::TYPE type = pObj->GetType();			//種類を取得
-
-			if (type == TYPE_CUBEBLOCK)
-			{//種類がブロックの時
-
-				CCubeBlock* pBlock = (CCubeBlock*)pObj;	// ブロック情報の取得
-
-				D3DXVECTOR3 pos = pBlock->GetPos();
-				D3DXVECTOR3 posOld = pBlock->GetPosOld();
-				D3DXVECTOR3 Move = pBlock->GetMove();
-				D3DXVECTOR3 Size = pBlock->GetSize();
-
-				// 矩形の当たり判定
-				if (useful::CollisionRectangle2D(m_pos, pos, m_size, Size, XYZ) == true)
-				{
-					Death();
-				}
-			}
-
-			pObj = pObjNext;
+			Death();
 		}
 	}
 }
@@ -718,112 +694,83 @@ void CPlayer::CollisionPressWall(useful::COLLISION XYZ)
 //====================================================================
 void CPlayer::CollisionWaitRailBlock(useful::COLLISION XYZ)
 {
-	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
+	// レールブロックのリスト構造が無ければ抜ける
+	if (CRailBlock::GetList() == nullptr) { return; }
+	std::list<CRailBlock*> list = CRailBlock::GetList()->GetList();    // リストを取得
+
+	// レールブロックリストの中身を確認する
+	for (CRailBlock* pRailBlock : list)
 	{
-		//オブジェクトを取得
-		CObject* pObj = CObject::GetTop(nCntPriority);
+		D3DXVECTOR3 pos = pRailBlock->GetPos();
+		D3DXVECTOR3 posOld = pRailBlock->GetPosOld();
+		D3DXVECTOR3 Move = pRailBlock->GetMove();
+		D3DXVECTOR3 Size = pRailBlock->GetSize();
 
-		while (pObj != nullptr)
+		// 矩形の当たり判定
+		if (useful::CollisionBlock(pos, pos, Move, Size, &m_pos, m_posOld, &m_move, &m_Objmove, m_size, &m_bJump, XYZ) == true)
 		{
-			CObject* pObjNext = pObj->GetNext();
-
-			CObject::TYPE type = pObj->GetType();			//種類を取得
-
-			if (type == TYPE_RAILBLOCK)
-			{//種類がブロックの時
-
-				CRailBlock* pBlock = (CRailBlock*)pObj;	// ブロック情報の取得
-
-				D3DXVECTOR3 pos = pBlock->GetPos();
-				D3DXVECTOR3 posOld = pBlock->GetPosOld();
-				D3DXVECTOR3 Move = pBlock->GetMove();
-				D3DXVECTOR3 Size = pBlock->GetSize();
-
-				// 矩形の当たり判定
-				if (useful::CollisionBlock(pos, pos, Move, Size, &m_pos, m_posOld, &m_move, &m_Objmove, m_size, &m_bJump, XYZ) == true)
-				{
-					//待機状態にする
-					m_State = STATE_WAIT;
-					m_MoveState = MOVE_STATE_WAIT;
-				}
-			}
-
-			pObj = pObjNext;
+			//待機状態にする
+			m_State = STATE_WAIT;
+			m_MoveState = MOVE_STATE_WAIT;
 		}
 	}
 }
-
 
 //====================================================================
 // 動いているレールブロックとの当たり判定
 //====================================================================
 void CPlayer::CollisionMoveRailBlock(useful::COLLISION XYZ)
 {
-	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
+	// レールブロックのリスト構造が無ければ抜ける
+	if (CRailBlock::GetList() == nullptr) { return; }
+	std::list<CRailBlock*> list = CRailBlock::GetList()->GetList();    // リストを取得
+
+	// レールブロックリストの中身を確認する
+	for (CRailBlock* pRailBlock : list)
 	{
-		//オブジェクトを取得
-		CObject* pObj = CObject::GetTop(nCntPriority);
+		D3DXVECTOR3 pos = m_pos;
+		D3DXVECTOR3 Size = m_size;
 
-		while (pObj != nullptr)
+		D3DXVECTOR3 Mypos = pRailBlock->GetPos();
+		D3DXVECTOR3 MyposOld = pRailBlock->GetPosOld();
+		D3DXVECTOR3 MyMove = (Mypos - MyposOld);
+		float MySize = CMapSystem::GetInstance()->GetGritSize() * 0.5f;
+
+		switch (XYZ)
 		{
-			CObject* pObjNext = pObj->GetNext();
-
-			CObject::TYPE type = pObj->GetType();			//種類を取得
-
-			if (type == TYPE_RAILBLOCK)
-			{//種類がブロックの時
-
-				CRailBlock* pBlock = (CRailBlock*)pObj;	// ブロック情報の取得
-
-				if (m_State != CPlayer::ACTION_DEATH && m_State != CPlayer::ACTION_EGG)
-				{
-					D3DXVECTOR3 pos = m_pos;
-					D3DXVECTOR3 Size = m_size;
-
-					D3DXVECTOR3 Mypos = pBlock->GetPos();
-					D3DXVECTOR3 MyposOld = pBlock->GetPosOld();
-					D3DXVECTOR3 MyMove = (Mypos - MyposOld);
-					float MySize = CMapSystem::GetInstance()->GetGritSize() * 0.5f;
-
-					switch (XYZ)
-					{
-					case useful::COLLISION_X:
-						// 矩形の当たり判定
-						if (useful::PushSquareXZ(Mypos, D3DXVECTOR3(MySize, 0.0f, MySize), MyMove, pos, Size, XYZ) == true)
-						{
-							m_Objmove.x = MyMove.x;
-							m_move.x = 0.0f;
-							m_bPressObj = true;
-							return;
-						}
-						else
-						{
-							m_Objmove.x = 0.0f;
-							m_bPressObj = false;
-						}
-						break;
-
-					case useful::COLLISION_Z:
-						// 矩形の当たり判定
-						if (useful::PushSquareXZ(Mypos, D3DXVECTOR3(MySize, 0.0f, MySize), MyMove, pos, Size, XYZ) == true)
-						{
-							m_Objmove.z = MyMove.z;
-							m_move.z = 0.0f;
-							m_bPressObj = true;
-							return;
-						}
-						else
-						{
-							m_Objmove.z = 0.0f;
-							m_bPressObj = false;
-						}
-						break;
-					}
-				}
+		case useful::COLLISION_X:
+			// 矩形の当たり判定
+			if (useful::PushSquareXZ(Mypos, D3DXVECTOR3(MySize, 0.0f, MySize), MyMove, pos, Size, XYZ) == true)
+			{
+				m_Objmove.x = MyMove.x;
+				m_move.x = 0.0f;
+				m_bPressObj = true;
+				return;
 			}
+			else
+			{
+				m_Objmove.x = 0.0f;
+				m_bPressObj = false;
+			}
+			break;
 
-			pObj = pObjNext;
+		case useful::COLLISION_Z:
+			// 矩形の当たり判定
+			if (useful::PushSquareXZ(Mypos, D3DXVECTOR3(MySize, 0.0f, MySize), MyMove, pos, Size, XYZ) == true)
+			{
+				m_Objmove.z = MyMove.z;
+				m_move.z = 0.0f;
+				m_bPressObj = true;
+				return;
+			}
+			else
+			{
+				m_Objmove.z = 0.0f;
+				m_bPressObj = false;
+			}
+			break;
 		}
+
 	}
 }
 
@@ -892,37 +839,24 @@ void CPlayer::SearchWall(void)
 //====================================================================
 void CPlayer::CollisionDevilHole(useful::COLLISION XYZ)
 {
-	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
+	// デビルホールのリスト構造が無ければ抜ける
+	if (CDevilHole::GetList() == nullptr) { return; }
+	std::list<CDevilHole*> list = CDevilHole::GetList()->GetList();    // リストを取得
+
+	// デビルホールリストの中身を確認する
+	for (CDevilHole* pDevilHole : list)
 	{
-		//オブジェクトを取得
-		CObject* pObj = CObject::GetTop(nCntPriority);
+		D3DXVECTOR3 pos = pDevilHole->GetPos();
+		D3DXVECTOR3 posOld = pDevilHole->GetPosOld();
+		D3DXVECTOR3 Size = pDevilHole->GetSize();
 
-		while (pObj != nullptr)
+		// 矩形の当たり判定
+		if (useful::CollisionBlock(pos, posOld, INITVECTOR3, Size, &m_pos, m_posOld, &m_move, &m_Objmove, m_size, &m_bJump, XYZ) == true)
 		{
-			CObject* pObjNext = pObj->GetNext();
+			//待機状態にする
+			m_State = STATE_WAIT;
 
-			CObject::TYPE type = pObj->GetType();			//種類を取得
-
-			if (type == TYPE_DEVILHOLE)
-			{//種類がデビルホールの時
-
-				CDevilHole* pDevilHole = (CDevilHole*)pObj;	// ブロック情報の取得
-
-				D3DXVECTOR3 pos = pDevilHole->GetPos();
-				D3DXVECTOR3 posOld = pDevilHole->GetPosOld();
-				D3DXVECTOR3 Size = pDevilHole->GetSize();
-
-				// 矩形の当たり判定
-				if (useful::CollisionBlock(pos, posOld, INITVECTOR3, Size, &m_pos, m_posOld, &m_move, &m_Objmove, m_size, &m_bJump, XYZ) == true)
-				{
-					//待機状態にする
-					m_State = STATE_WAIT;
-
-					m_pos = CMapSystem::GetInstance()->GetGritPos(m_nMapWidth, m_nMapHeight);
-				}
-			}
-
-			pObj = pObjNext;
+			m_pos = CMapSystem::GetInstance()->GetGritPos(m_nMapWidth, m_nMapHeight);
 		}
 	}
 }
@@ -932,34 +866,21 @@ void CPlayer::CollisionDevilHole(useful::COLLISION XYZ)
 //====================================================================
 void CPlayer::CollisionEnemy(void)
 {
-	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
+	// 敵のリスト構造が無ければ抜ける
+	if (CEnemy::GetList() == nullptr) { return; }
+	std::list<CEnemy*> list = CEnemy::GetList()->GetList();    // リストを取得
+
+	// 敵のリストの中身を確認する
+	for (CEnemy* pEnemy : list)
 	{
-		//オブジェクトを取得
-		CObject* pObj = CObject::GetTop(nCntPriority);
+		D3DXVECTOR3 pos = pEnemy->GetPos();
+		D3DXVECTOR3 posOld = pEnemy->GetPosOld();
+		D3DXVECTOR3 Size = pEnemy->GetSize();
 
-		while (pObj != nullptr)
+		// 円の当たり判定
+		if (useful::CollisionCircle(m_pos, pos, 30.0f) == true)
 		{
-			CObject* pObjNext = pObj->GetNext();
-
-			CObject::TYPE type = pObj->GetType();			//種類を取得
-
-			if (type == TYPE_ENEMY3D)
-			{//種類が敵の時
-
-				CEnemy* pEnemy = (CEnemy*)pObj;	// アイテムの情報の取得
-
-				D3DXVECTOR3 pos = pEnemy->GetPos();
-				D3DXVECTOR3 posOld = pEnemy->GetPosOld();
-				D3DXVECTOR3 Size = pEnemy->GetSize();
-
-				// 円の当たり判定
-				if (useful::CollisionCircle(m_pos, pos, 30.0f) == true)
-				{
-					Death();
-				}
-			}
-
-			pObj = pObjNext;
+			Death();
 		}
 	}
 }
@@ -1290,80 +1211,64 @@ bool CPlayer::SortObject(D3DXVECTOR3 pos)
 {
 	float fDistance = sqrtf((m_pos.x - pos.x) * (m_pos.x - pos.x) + (m_pos.z - pos.z) * (m_pos.z - pos.z));
 
-	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
+	// 敵のリスト構造が無ければ抜ける
+	if (CCubeBlock::GetList() == nullptr) { return false; }
+	std::list<CCubeBlock*> list = CCubeBlock::GetList()->GetList();    // リストを取得
+
+	// 敵のリストの中身を確認する
+	for (CCubeBlock* pCubeBlock : list)
 	{
-		//オブジェクトを取得
-		CObject* pObj = CObject::GetTop(nCntPriority);
-
-		while (pObj != nullptr)
+		if (pCubeBlock->GetPos().y <= 200.0f)
 		{
-			CObject* pObjNext = pObj->GetNext();
+			if (useful::CollisionCircle(m_pos, pCubeBlock->GetPos(), 250.0f) == true)
+			{
+				D3DXVECTOR3 CrossPos = INITVECTOR3;
+				float ObjDistance = OBJDISTANCE;
 
-			CObject::TYPE type = pObj->GetType();			//種類を取得
-
-			if (type == TYPE_CUBEBLOCK)
-			{//種類がブロックの時
-				CCubeBlock* pBlock = (CCubeBlock*)pObj;
-
-				if (pBlock->GetPos().y <= 200.0f)
+				//交点の位置を求める
+				for (int nCnt = 0; nCnt < 4; nCnt++)
 				{
-					if (useful::CollisionCircle(m_pos, pBlock->GetPos(), 250.0f) == true)
+					switch (nCnt)
 					{
-						D3DXVECTOR3 CrossPos = INITVECTOR3;
-						float ObjDistance = 10000.0f;
+					case 0:
+						CrossPos = useful::CrossIntersection(m_pos, pos,
+							D3DXVECTOR3(pCubeBlock->GetPos().x + pCubeBlock->GetSize().x, pCubeBlock->GetPos().y, pCubeBlock->GetPos().z + pCubeBlock->GetSize().z),
+							D3DXVECTOR3(pCubeBlock->GetPos().x - pCubeBlock->GetSize().x, pCubeBlock->GetPos().y, pCubeBlock->GetPos().z + pCubeBlock->GetSize().z),
+							250.0f);
+						break;
 
-						//交点の位置を求める
-						for (int nCnt = 0; nCnt < 4; nCnt++)
-						{
-							switch (nCnt)
-							{
-							case 0:
-								CrossPos = useful::CrossIntersection(m_pos, pos,
-									D3DXVECTOR3(pBlock->GetPos().x + pBlock->GetSize().x, pBlock->GetPos().y, pBlock->GetPos().z + pBlock->GetSize().z),
-									D3DXVECTOR3(pBlock->GetPos().x - pBlock->GetSize().x, pBlock->GetPos().y, pBlock->GetPos().z + pBlock->GetSize().z),
-									250.0f);
-								break;
+					case 1:
+						CrossPos = useful::CrossIntersection(m_pos, pos,
+							D3DXVECTOR3(pCubeBlock->GetPos().x - pCubeBlock->GetSize().x, pCubeBlock->GetPos().y, pCubeBlock->GetPos().z + pCubeBlock->GetSize().z),
+							D3DXVECTOR3(pCubeBlock->GetPos().x - pCubeBlock->GetSize().x, pCubeBlock->GetPos().y, pCubeBlock->GetPos().z - pCubeBlock->GetSize().z),
+							250.0f);
+						break;
 
-							case 1:
-								CrossPos = useful::CrossIntersection(m_pos, pos,
-									D3DXVECTOR3(pBlock->GetPos().x - pBlock->GetSize().x, pBlock->GetPos().y, pBlock->GetPos().z + pBlock->GetSize().z),
-									D3DXVECTOR3(pBlock->GetPos().x - pBlock->GetSize().x, pBlock->GetPos().y, pBlock->GetPos().z - pBlock->GetSize().z),
-									250.0f);
-								break;
+					case 2:
+						CrossPos = useful::CrossIntersection(m_pos, pos,
+							D3DXVECTOR3(pCubeBlock->GetPos().x - pCubeBlock->GetSize().x, pCubeBlock->GetPos().y, pCubeBlock->GetPos().z - pCubeBlock->GetSize().z),
+							D3DXVECTOR3(pCubeBlock->GetPos().x + pCubeBlock->GetSize().x, pCubeBlock->GetPos().y, pCubeBlock->GetPos().z - pCubeBlock->GetSize().z),
+							250.0f);
+						break;
 
-							case 2:
-								CrossPos = useful::CrossIntersection(m_pos, pos,
-									D3DXVECTOR3(pBlock->GetPos().x - pBlock->GetSize().x, pBlock->GetPos().y, pBlock->GetPos().z - pBlock->GetSize().z),
-									D3DXVECTOR3(pBlock->GetPos().x + pBlock->GetSize().x, pBlock->GetPos().y, pBlock->GetPos().z - pBlock->GetSize().z),
-									250.0f);
-								break;
+					case 3:
+						CrossPos = useful::CrossIntersection(m_pos, pos,
+							D3DXVECTOR3(pCubeBlock->GetPos().x + pCubeBlock->GetSize().x, pCubeBlock->GetPos().y, pCubeBlock->GetPos().z - pCubeBlock->GetSize().z),
+							D3DXVECTOR3(pCubeBlock->GetPos().x + pCubeBlock->GetSize().x, pCubeBlock->GetPos().y, pCubeBlock->GetPos().z + pCubeBlock->GetSize().z),
+							250.0f);
+						break;
+					}
 
-							case 3:
-								CrossPos = useful::CrossIntersection(m_pos, pos,
-									D3DXVECTOR3(pBlock->GetPos().x + pBlock->GetSize().x, pBlock->GetPos().y, pBlock->GetPos().z - pBlock->GetSize().z),
-									D3DXVECTOR3(pBlock->GetPos().x + pBlock->GetSize().x, pBlock->GetPos().y, pBlock->GetPos().z + pBlock->GetSize().z),
-									250.0f);
-								break;
-							}
+					ObjDistance = sqrtf((m_pos.x - CrossPos.x) * (m_pos.x - CrossPos.x) + (m_pos.z - CrossPos.z) * (m_pos.z - CrossPos.z));
 
-							ObjDistance = sqrtf((m_pos.x - CrossPos.x) * (m_pos.x - CrossPos.x) + (m_pos.z - CrossPos.z) * (m_pos.z - CrossPos.z));
-
-							//CManager::GetInstance()->GetDebugProc()->Print("[敵：%f %f] [プ：%f %f] [壁：%f %f] \n", m_pos.x, m_pos.z, pos.x, pos.z, CrossPos.x, CrossPos.z);
-							//CManager::GetInstance()->GetDebugProc()->Print("%f   :   %f\n", fDistance, ObjDistance);
-
-							if (ObjDistance < fDistance)
-							{
-								return true;
-							}
-						}
+					if (ObjDistance < fDistance)
+					{
+						return true;
 					}
 				}
 			}
-
-			pObj = pObjNext;
 		}
 	}
-	return false;
 }
 
 //==========================================
