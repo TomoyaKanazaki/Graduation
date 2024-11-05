@@ -190,6 +190,7 @@ HRESULT CGame::Init(void)
 	{
 	case 0:
 		LoadStageBlock("data\\TXT\\STAGE\\Block00.txt");
+<<<<<<< .mine
 
 		// ƒ{ƒƒ{ƒ‚Ì¶¬
 		pBowabowa = CBowabowa::Create("data\\MODEL\\Testbowabowa.x");
@@ -199,12 +200,26 @@ HRESULT CGame::Init(void)
 		pCross = CCross::Create("data\\MODEL\\zyuzika.x");
 		pCross->SetWightNumber(2);
 		pCross->SetHeightNumber(4);
+
+
+=======
+		CBowabowa* pBowabowa = nullptr;
+		pBowabowa = CBowabowa::Create("data\\MODEL\\Testbowabowa.x");
+		pBowabowa->SetWightNumber(9);
+		pBowabowa->SetHeightNumber(5);
+		pBowabowa = nullptr;
+		delete pBowabowa;
+		CCross* pCross = CCross::Create("data\\MODEL\\zyuzika.x");
+		pCross->SetWightNumber(2);
+		pCross->SetHeightNumber(4);
+		pCross = nullptr;
+		delete pCross;
+>>>>>>> .theirs
 		break;
 
 	case 1:
 		LoadStageBlock("data\\TXT\\STAGE\\Block01.txt");
 		CDevilHole* pDevilHole = CDevilHole::Create("data\\MODEL\\DevilHole.x");
-
 		// ¹‘¶¬
 		CBible* pBible = nullptr;
 		pBible = CBible::Create("data\\MODEL\\02_item\\holybible.x");
@@ -222,9 +237,12 @@ HRESULT CGame::Init(void)
 		pBible = CBible::Create("data\\MODEL\\02_item\\holybible.x");
 		pBible->SetPosType(CBible::POS_TYPE_RIGHTDOWN);
 		pBible->SetMapScroll(false);
+
+		pBible = nullptr;
+		delete pBible;
+
 		break;
 	}
-
 	CScrollArrow* pScrollAllow = nullptr;
 	pScrollAllow = CScrollArrow::Create();
 	pScrollAllow->SetPos((D3DXVECTOR3(80.0f, 120.0f, 0.0f)));
