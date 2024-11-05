@@ -163,29 +163,6 @@ HRESULT CGame::Init(void)
 	pBottonField->SetTexture(BOTTOM_FIELD_TEX);
 	pBottonField->SetPos(BOTTOM_FIELD_POS);
 
-	CBowabowa* pBowabowa = nullptr;
-	pBowabowa = CBowabowa::Create("data\\MODEL\\Testbowabowa.x");
-	pBowabowa->SetWightNumber(9);
-	pBowabowa->SetHeightNumber(5);
-
-	// 聖書生成
-	CBible* pBible = nullptr;
-	pBible = CBible::Create("data\\MODEL\\02_item\\holybible.x");
-	pBible->SetPosType(CBible::POS_TYPE_LEFTUP);
-	pBible->SetMapScroll(false);
-
-	pBible = CBible::Create("data\\MODEL\\02_item\\holybible.x");
-	pBible->SetPosType(CBible::POS_TYPE_RIGHTUP);
-	pBible->SetMapScroll(false);
-
-	pBible = CBible::Create("data\\MODEL\\02_item\\holybible.x");
-	pBible->SetPosType(CBible::POS_TYPE_LEFTDOWN);
-	pBible->SetMapScroll(false);
-
-	pBible = CBible::Create("data\\MODEL\\02_item\\holybible.x");
-	pBible->SetPosType(CBible::POS_TYPE_RIGHTDOWN);
-	pBible->SetMapScroll(false);
-
 	m_bGameEnd = false;
 
 	m_pPlayer = CPlayer::Create();
@@ -205,22 +182,48 @@ HRESULT CGame::Init(void)
 	//CRail* pRail = CRail::Create("data\\MODEL\\TestRail.x");
 	//pRail->SetPos(D3DXVECTOR3(100.0f, 0.0f, 0.0f));
 
+	CBowabowa* pBowabowa = nullptr;
+	CCross* pCross = nullptr;
+
 	//ステージの読み込み
 	switch (CManager::GetInstance()->GetStage())
 	{
 	case 0:
 		LoadStageBlock("data\\TXT\\STAGE\\Block00.txt");
+
+		// ボワボワの生成
+		pBowabowa = CBowabowa::Create("data\\MODEL\\Testbowabowa.x");
+		pBowabowa->SetWightNumber(9);
+		pBowabowa->SetHeightNumber(5);
+
+		pCross = CCross::Create("data\\MODEL\\zyuzika.x");
+		pCross->SetWightNumber(2);
+		pCross->SetHeightNumber(4);
 		break;
 
 	case 1:
 		LoadStageBlock("data\\TXT\\STAGE\\Block01.txt");
 		CDevilHole* pDevilHole = CDevilHole::Create("data\\MODEL\\DevilHole.x");
+
+		// 聖書生成
+		CBible* pBible = nullptr;
+		pBible = CBible::Create("data\\MODEL\\02_item\\holybible.x");
+		pBible->SetPosType(CBible::POS_TYPE_LEFTUP);
+		pBible->SetMapScroll(false);
+
+		pBible = CBible::Create("data\\MODEL\\02_item\\holybible.x");
+		pBible->SetPosType(CBible::POS_TYPE_RIGHTUP);
+		pBible->SetMapScroll(false);
+
+		pBible = CBible::Create("data\\MODEL\\02_item\\holybible.x");
+		pBible->SetPosType(CBible::POS_TYPE_LEFTDOWN);
+		pBible->SetMapScroll(false);
+
+		pBible = CBible::Create("data\\MODEL\\02_item\\holybible.x");
+		pBible->SetPosType(CBible::POS_TYPE_RIGHTDOWN);
+		pBible->SetMapScroll(false);
 		break;
 	}
-
-	CCross* pCross = CCross::Create("data\\MODEL\\zyuzika.x");
-	pCross->SetWightNumber(2);
-	pCross->SetHeightNumber(4);
 
 	CScrollArrow* pScrollAllow = nullptr;
 	pScrollAllow = CScrollArrow::Create();
