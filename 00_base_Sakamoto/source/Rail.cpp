@@ -191,16 +191,16 @@ void CRail::PrevSet(RAIL_POS Set)
 
 		switch (Set)
 		{
-		case CRail::RAIL_POS_UP:
+		case CRail::RAIL_POS_UP:	// 上
 			m_pRailModel[0]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.0f, 0.0f));
 			break;
-		case CRail::RAIL_POS_DOWN:
+		case CRail::RAIL_POS_DOWN:	// 下
 			m_pRailModel[0]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 1.0f, 0.0f));
 			break;
-		case CRail::RAIL_POS_LEFT:
+		case CRail::RAIL_POS_LEFT:	// 左
 			m_pRailModel[0]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
 			break;
-		case CRail::RAIL_POS_RIGHT:
+		case CRail::RAIL_POS_RIGHT:	// 右
 			m_pRailModel[0]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
 			break;
 		default:
@@ -231,25 +231,25 @@ void CRail::NextSet(RAIL_POS Set)
 		//引数で設定した方向にレールの向き、番号を設定
 		switch (Set)
 		{
-		case CRail::RAIL_POS_UP:
+		case CRail::RAIL_POS_UP:	// 上
 			m_pRailModel[1]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.0f, 0.0f));
 			Set = RAIL_POS_DOWN;
 			nMapHeight = GetHeightNumber() - 1;
 			break;
 
-		case CRail::RAIL_POS_DOWN:
+		case CRail::RAIL_POS_DOWN:	// 下
 			m_pRailModel[1]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 1.0f, 0.0f));
 			Set = RAIL_POS_UP;
 			nMapHeight = GetHeightNumber() + 1;
 			break;
 
-		case CRail::RAIL_POS_LEFT:
+		case CRail::RAIL_POS_LEFT:	// 左
 			m_pRailModel[1]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
 			Set = RAIL_POS_RIGHT;
 			nMapWight = GetWightNumber() - 1;
 			break;
 
-		case CRail::RAIL_POS_RIGHT:
+		case CRail::RAIL_POS_RIGHT:	// 右
 			m_pRailModel[1]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
 			Set = RAIL_POS_LEFT;
 			nMapWight = GetWightNumber() + 1;

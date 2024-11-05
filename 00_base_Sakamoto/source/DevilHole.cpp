@@ -237,88 +237,74 @@ void CDevilHole::StateManager(void)
 //====================================================================
 void CDevilHole::CollisionOpen(void)
 {
-	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
+	// プレイヤーのリスト構造が無ければ抜ける
+	if (CPlayer::GetList() == nullptr) { return; }
+	std::list<CPlayer*> list = CPlayer::GetList()->GetList();    // リストを取得
+
+	// プレイヤーリストの中身を確認する
+	for (CPlayer* pPlayer : list)
 	{
-		//オブジェクトを取得
-		CObject* pObj = CObject::GetTop(nCntPriority);
+		// プレイヤーの位置・オブジェクトXサイズ取得
+		D3DXVECTOR3 playerPos = pPlayer->GetPos();
+		D3DXVECTOR3 ObjXSize = GetSize();
 
-		while (pObj != nullptr)
+		if (pPlayer->GetItemType() != CPlayer::TYPE_BIBLE)
+		{// 聖書以外の時
+			continue;
+		}
+
+		for (int nCnt = 0; nCnt < DIRECTION; nCnt++)
 		{
-			CObject* pObjNext = pObj->GetNext();
+			D3DXVECTOR3 pos = m_pos;
 
-			CObject::TYPE type = pObj->GetType();			//種類を取得
+			switch (nCnt)
+			{
+			case 0:	//上
+				pos.z += 100.0f;
+				break;
 
-			if (type == TYPE_PLAYER3D)
-			{//種類がプレイヤーの時
+			case 1:	//下
+				pos.z -= 100.0f;
+				break;
 
-				CPlayer *pPlayer = (CPlayer*)pObj;	// ブロック情報の取得
+			case 2:	//右
+				pos.x += 100.0f;
+				break;
 
-				D3DXVECTOR3 pos = pPlayer->GetPos();
-				D3DXVECTOR3 MySize = GetSize();
-
-				if (pPlayer->GetItemType() != CPlayer::TYPE_BIBLE)
-				{// 聖書以外の時
-					pObj = pObjNext;
-
-					continue;
-				}
-
-				for (int nCnt = 0; nCnt < DIRECTION; nCnt++)
-				{
-					D3DXVECTOR3 MyPos = m_pos;
-
-					switch (nCnt)
-					{
-					case 0:	//上
-						MyPos.z += 100.0f;
-						break;
-
-					case 1:	//下
-						MyPos.z -= 100.0f;
-						break;
-
-					case 2:	//右
-						MyPos.x += 100.0f;
-						break;
-
-					case 3:	//左
-						MyPos.x -= 100.0f;
-						break;
-					}
-
-					// 矩形の当たり判定
-					if (useful::PointSquareXZ(pos, MyPos, MySize) == true &&
-						m_bSet[nCnt] == false)
-					{
-						m_pHoleKey[nCnt] = CObjectX::Create("data\\MODEL\\DevilKey.x");
-
-						switch (nCnt)
-						{
-						case 0:	//上
-							m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(m_pos.x, m_pos.y, m_pos.z + 20.0f));
-							break;
-
-						case 1:	//下
-							m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(m_pos.x, m_pos.y, m_pos.z - 20.0f));
-							break;
-
-						case 2:	//右
-							m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(m_pos.x + 20.0f, m_pos.y, m_pos.z));
-							break;
-
-						case 3:	//左
-							m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(m_pos.x - 20.0f, m_pos.y, m_pos.z));
-							break;
-						}
-						
-						m_bSet[nCnt] = true;
-						pPlayer->SetItemType(CPlayer::TYPE_NONE);
-						return;
-					}
-				}
+			case 3:	//左
+				pos.x -= 100.0f;
+				break;
 			}
 
-			pObj = pObjNext;
+			// 矩形の当たり判定
+			if (useful::PointSquareXZ(playerPos, pos, ObjXSize) == true &&
+				m_bSet[nCnt] == false)
+			{
+				m_pHoleKey[nCnt] = CObjectX::Create("data\\MODEL\\DevilKey.x");
+
+				switch (nCnt)
+				{
+				case 0:	//上
+					m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(m_pos.x, m_pos.y, m_pos.z + 20.0f));
+					break;
+
+				case 1:	//下
+					m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(m_pos.x, m_pos.y, m_pos.z - 20.0f));
+					break;
+
+				case 2:	//右
+					m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(m_pos.x + 20.0f, m_pos.y, m_pos.z));
+					break;
+
+				case 3:	//左
+					m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(m_pos.x - 20.0f, m_pos.y, m_pos.z));
+					break;
+				}
+
+				m_bSet[nCnt] = true;
+				pPlayer->SetItemType(CPlayer::TYPE_NONE);
+				return;
+			}
 		}
 	}
 }
