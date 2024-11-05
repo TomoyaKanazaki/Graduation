@@ -555,8 +555,10 @@ void CDevil::SetModelDisp(bool Sst)
 //====================================================================
 void CDevil::ObjectScroll(D3DXVECTOR3 Move)
 {
+	// グリッドのスクロール
 	GritScroll(Move);
 
+	// グリッドのサイズ
 	float m_GritSize = CMapSystem::GetInstance()->GetGritSize();
 
 	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)

@@ -1,10 +1,10 @@
 //============================================
 //
-//	デビルホールの処理 [DevilHole.cpp]
-//	Author:sakamoto kai
+//	傾き装置の処理 [SlopeDevice.cpp]
+//	Author:sakai minato
 //
 //============================================
-#include "DevilHole.h"
+#include "SlopeDevice.h"
 #include "renderer.h"
 #include "manager.h"
 #include "texture.h"
@@ -25,12 +25,12 @@ namespace
 //====================================================================
 //静的メンバ変数宣言
 //====================================================================
-CListManager<CDevilHole>* CDevilHole::m_pList = nullptr; // オブジェクトリスト
+CListManager<CSlopeDevice>* CSlopeDevice::m_pList = nullptr; // オブジェクトリスト
 
 //====================================================================
 //コンストラクタ
 //====================================================================
-CDevilHole::CDevilHole(int nPriority) : CObjectX(nPriority)
+CSlopeDevice::CSlopeDevice(int nPriority) : CObjectX(nPriority)
 {
 	SetSize(SAMPLE_SIZE);
 	SetPos(INITVECTOR3);
@@ -41,18 +41,12 @@ CDevilHole::CDevilHole(int nPriority) : CObjectX(nPriority)
 	m_nStateCount = 0;
 	m_Scaling = 1.0f;
 	m_fColorA = 0.0f;
-	
-	for (int nCnt = 0; nCnt < DIRECTION; nCnt++)
-	{
-		m_bSet[nCnt] = false;			//上下左右の穴が埋まっているかどうか
-		m_pHoleKey[nCnt] = nullptr;		//上下左右の穴を埋めるポリゴン
-	}
 }
 
 //====================================================================
 //デストラクタ
 //====================================================================
-CDevilHole::~CDevilHole()
+CSlopeDevice::~CSlopeDevice()
 {
 
 }
@@ -60,29 +54,24 @@ CDevilHole::~CDevilHole()
 //====================================================================
 //生成処理
 //====================================================================
-CDevilHole* CDevilHole::Create(char* pModelName)
+CSlopeDevice* CSlopeDevice::Create(char* pModelName)
 {
-	CDevilHole* pSample = nullptr;
+	// オブジェクトの生成処理
+	CSlopeDevice* pInstance = new CSlopeDevice();
 
-	if (pSample == nullptr)
-	{
-		//オブジェクト2Dの生成
-		pSample = new CDevilHole();
-	}
-
-	//オブジェクトの初期化処理
-	if (FAILED(pSample->Init(pModelName)))
-	{//初期化処理が失敗した場合
+	// オブジェクトの初期化処理
+	if (FAILED(pInstance->Init(pModelName)))
+	{// 初期化処理が失敗した場合
 		return nullptr;
 	}
 
-	return pSample;
+	return pInstance;
 }
 
 //====================================================================
 //初期化処理
 //====================================================================
-HRESULT CDevilHole::Init(char* pModelName)
+HRESULT CSlopeDevice::Init(char* pModelName)
 {
 	SetType(CObject::TYPE_DEVILHOLE);
 
@@ -105,7 +94,7 @@ HRESULT CDevilHole::Init(char* pModelName)
 
 	if (m_pList == nullptr)
 	{// リストマネージャー生成
-		m_pList = CListManager<CDevilHole>::Create();
+		m_pList = CListManager<CSlopeDevice>::Create();
 		if (m_pList == nullptr) { assert(false); return E_FAIL; }
 	}
 
@@ -118,7 +107,7 @@ HRESULT CDevilHole::Init(char* pModelName)
 //====================================================================
 //終了処理
 //====================================================================
-void CDevilHole::Uninit(void)
+void CSlopeDevice::Uninit(void)
 {
 	// リストから自身のオブジェクトを削除
 	m_pList->DelList(m_iterator);
@@ -136,7 +125,7 @@ void CDevilHole::Uninit(void)
 //====================================================================
 //更新処理
 //====================================================================
-void CDevilHole::Update(void)
+void CSlopeDevice::Update(void)
 {
 	switch (CScene::GetMode())
 	{
@@ -158,7 +147,7 @@ void CDevilHole::Update(void)
 //====================================================================
 //タイトルでの更新処理
 //====================================================================
-void CDevilHole::TitleUpdate(void)
+void CSlopeDevice::TitleUpdate(void)
 {
 	D3DXVECTOR3 pos = GetPos();
 
@@ -174,26 +163,14 @@ void CDevilHole::TitleUpdate(void)
 //====================================================================
 //ゲームでの更新処理
 //====================================================================
-void CDevilHole::GameUpdate(void)
+void CSlopeDevice::GameUpdate(void)
 {
 	//更新前の位置を過去の位置とする
 	m_posOld = m_pos;
 
-	//ホール解除判定処理
-	CollisionOpen();
-
-	//クリア判定処理
-	ClearJudge();
-
 	//位置更新
 	CObjectX::SetPos(m_pos);
 	CObjectX::SetRot(m_rot);
-
-	//画面外判定
-	if (m_pos.y < 0.0f)
-	{
-
-	}
 
 	//大きさの設定
 	SetScaling(D3DXVECTOR3(m_Scaling, m_Scaling, m_Scaling));
@@ -208,7 +185,7 @@ void CDevilHole::GameUpdate(void)
 //====================================================================
 //描画処理
 //====================================================================
-void CDevilHole::Draw(void)
+void CSlopeDevice::Draw(void)
 {
 	CObjectX::Draw();
 }
@@ -216,7 +193,7 @@ void CDevilHole::Draw(void)
 //====================================================================
 //状態管理
 //====================================================================
-void CDevilHole::StateManager(void)
+void CSlopeDevice::StateManager(void)
 {
 	switch (m_State)
 	{
@@ -233,102 +210,9 @@ void CDevilHole::StateManager(void)
 }
 
 //====================================================================
-// 壁との当たり判定
-//====================================================================
-void CDevilHole::CollisionOpen(void)
-{
-	// プレイヤーのリスト構造が無ければ抜ける
-	if (CPlayer::GetList() == nullptr) { return; }
-	std::list<CPlayer*> list = CPlayer::GetList()->GetList();    // リストを取得
-
-	// プレイヤーリストの中身を確認する
-	for (CPlayer* pPlayer : list)
-	{
-		// プレイヤーの位置・オブジェクトXサイズ取得
-		D3DXVECTOR3 playerPos = pPlayer->GetPos();
-		D3DXVECTOR3 ObjXSize = GetSize();
-
-		if (pPlayer->GetItemType() != CPlayer::TYPE_BIBLE)
-		{// 聖書以外の時
-			continue;
-		}
-
-		for (int nCnt = 0; nCnt < DIRECTION; nCnt++)
-		{
-			D3DXVECTOR3 pos = m_pos;
-
-			switch (nCnt)
-			{
-			case 0:	//上
-				pos.z += 100.0f;
-				break;
-
-			case 1:	//下
-				pos.z -= 100.0f;
-				break;
-
-			case 2:	//右
-				pos.x += 100.0f;
-				break;
-
-			case 3:	//左
-				pos.x -= 100.0f;
-				break;
-			}
-
-			// 矩形の当たり判定
-			if (useful::PointSquareXZ(playerPos, pos, ObjXSize) == true &&
-				m_bSet[nCnt] == false)
-			{
-				m_pHoleKey[nCnt] = CObjectX::Create("data\\MODEL\\DevilKey.x");
-
-				switch (nCnt)
-				{
-				case 0:	//上
-					m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(m_pos.x, m_pos.y, m_pos.z + 20.0f));
-					break;
-
-				case 1:	//下
-					m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(m_pos.x, m_pos.y, m_pos.z - 20.0f));
-					break;
-
-				case 2:	//右
-					m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(m_pos.x + 20.0f, m_pos.y, m_pos.z));
-					break;
-
-				case 3:	//左
-					m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(m_pos.x - 20.0f, m_pos.y, m_pos.z));
-					break;
-				}
-
-				m_bSet[nCnt] = true;
-				pPlayer->SetItemType(CPlayer::TYPE_NONE);
-				return;
-			}
-		}
-	}
-}
-
-//====================================================================
-// クリア判定処理
-//====================================================================
-void CDevilHole::ClearJudge(void)
-{
-	for (int nCnt = 0; nCnt < 4; nCnt++)
-	{
-		if (m_bSet[nCnt] == false)
-		{
-			return;
-		}
-	}
-
-	CGame::SetDevilHoleFinish(true);
-}
-
-//====================================================================
 //リスト取得
 //====================================================================
-CListManager<CDevilHole>* CDevilHole::GetList(void)
+CListManager<CSlopeDevice>* CSlopeDevice::GetList(void)
 {
 	return m_pList;
 }
