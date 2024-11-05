@@ -561,215 +561,257 @@ void CDevil::ObjectScroll(D3DXVECTOR3 Move)
 	// グリッドのサイズ
 	float m_GritSize = CMapSystem::GetInstance()->GetGritSize();
 
-	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
+	// 十字架のスクロール
+	CrossScroll(Move, m_GritSize);
+
+	// ボワボワのスクロール
+	BowabowaScroll(Move, m_GritSize);
+
+	// 敵のスクロール
+	EnemyScroll(Move, m_GritSize);
+
+	// レールブロックのスクロール
+	RailBlockScroll(Move, m_GritSize);
+
+	// プレイヤーのスクロール
+	PlayerScroll(Move, m_GritSize);
+}
+
+//====================================================================
+// 十字架のスクロール
+//====================================================================
+void CDevil::CrossScroll(D3DXVECTOR3 Move, float GritSize)
+{
+	// 十字架のリスト構造が無ければ抜ける
+	if (CCross::GetList() == nullptr) { return; }
+	std::list<CCross*> list = CCross::GetList()->GetList();    // リストを取得
+
+	// 十字架のリストの中身を確認する
+	for (CCross* pCross : list)
 	{
-		//オブジェクトを取得
-		CObject* pObj = CObject::GetTop(nCntPriority);
+		D3DXVECTOR3 pos = pCross->GetPos();
+		D3DXVECTOR3 Size = pCross->GetSize();
 
-		while (pObj != nullptr)
+		pos += Move;
+
+		if (Move.x > 0.0f)
 		{
-			CObject* pObjNext = pObj->GetNext();
+			if (m_DevilPos.x + m_DevilSize.x < pos.x - GritSize)
+			{
+				pos.x = -m_DevilSize.x + m_DevilPos.x - GritSize + Move.x;
+			}
+		}
+		if (Move.x < 0.0f)
+		{
+			if (m_DevilPos.x - m_DevilSize.x > pos.x + GritSize)
+			{
+				pos.x = m_DevilSize.x + m_DevilPos.x + GritSize + Move.x;
+			}
+		}
+		if (Move.z > 0.0f)
+		{
+			if (m_DevilPos.z + m_DevilSize.z < pos.z - GritSize)
+			{
+				pos.z = -m_DevilSize.z + m_DevilPos.z - GritSize + Move.z;
+			}
+		}
+		if (Move.z < 0.0f)
+		{
+			if (m_DevilPos.z - m_DevilSize.z > pos.z + GritSize)
+			{
+				pos.z = m_DevilSize.z + m_DevilPos.z + GritSize + Move.z;
+			}
+		}
 
-			CObject::TYPE type = pObj->GetType();			//種類を取得
+		// 位置設定
+		pCross->SetPos(pos);
+	}
+}
 
-			if (type == TYPE_CROSS)
-			{//種類が敵の時
+//====================================================================
+// ボワボワのスクロール
+//====================================================================
+void CDevil::BowabowaScroll(D3DXVECTOR3 Move, float GritSize)
+{
+	// ボワボワのリスト構造が無ければ抜ける
+	if (CBowabowa::GetList() == nullptr) { return; }
+	std::list<CBowabowa*> list = CBowabowa::GetList()->GetList();    // リストを取得
 
-				CCross* pCross = (CCross*)pObj;	// ブロック情報の取得
+	// ボワボワのリストの中身を確認する
+	for (CBowabowa* pBowabowa : list)
+	{
+		D3DXVECTOR3 pos = pBowabowa->GetPos();
+		D3DXVECTOR3 Size = pBowabowa->GetSize();
 
-				D3DXVECTOR3 pos = pCross->GetPos();
-				D3DXVECTOR3 Size = pCross->GetSize();
+		pos += Move;
 
-				pos += Move;
+		if (Move.x > 0.0f)
+		{
+			if (m_DevilSize.x < pos.x)
+			{
+				pos.x = -m_DevilSize.x + Move.x - 100.0f;
+			}
+		}
+		if (Move.x < 0.0f)
+		{
+			if (-m_DevilSize.x > pos.x)
+			{
+				pos.x = m_DevilSize.x + Move.x + 100.0f;
+			}
+		}
+		if (Move.z > 0.0f)
+		{
+			if (m_DevilSize.z < pos.z)
+			{
+				pos.z = -m_DevilSize.z + Move.z - 100.0f;
+			}
+		}
+		if (Move.z < 0.0f)
+		{
+			if (-m_DevilSize.z > pos.z)
+			{
+				pos.z = m_DevilSize.z + Move.z + 100.0f;
+			}
+		}
 
-				if (Move.x > 0.0f)
+		pBowabowa->SetPos(pos);
+	}
+}
+
+//====================================================================
+// 敵のスクロール
+//====================================================================
+void CDevil::EnemyScroll(D3DXVECTOR3 Move, float GritSize)
+{
+	// 敵のリスト構造が無ければ抜ける
+	if (CEnemy::GetList() == nullptr) { return; }
+	std::list<CEnemy*> list = CEnemy::GetList()->GetList();    // リストを取得
+
+	// 敵のリストの中身を確認する
+	for (CEnemy* pEnemy : list)
+	{
+		D3DXVECTOR3 pos = pEnemy->GetPos();
+		D3DXVECTOR3 Size = pEnemy->GetSize();
+
+		pos += Move;
+
+		pEnemy->SetPos(pos);
+	}
+}
+
+//====================================================================
+// レールブロックのスクロール
+//====================================================================
+void CDevil::RailBlockScroll(D3DXVECTOR3 Move, float GritSize)
+{
+	// レールブロックのリスト構造が無ければ抜ける
+	if (CRailBlock::GetList() == nullptr) { return; }
+	std::list<CRailBlock*> list = CRailBlock::GetList()->GetList();    // リストを取得
+
+	// レールブロックのリストの中身を確認する
+	for (CRailBlock* pRailBlock : list)
+	{
+		D3DXVECTOR3 pos = pRailBlock->GetPos();
+		pos += Move;
+		pRailBlock->SetPos(pos);
+	}
+}
+
+//====================================================================
+// プレイヤーのスクロール
+//====================================================================
+void CDevil::PlayerScroll(D3DXVECTOR3 Move, float GritSize)
+{
+	// プレイヤーのリスト構造が無ければ抜ける
+	if (CPlayer::GetList() == nullptr) { return; }
+	std::list<CPlayer*> list = CPlayer::GetList()->GetList();    // リストを取得
+
+	// プレイヤーのリストの中身を確認する
+	for (CPlayer* pPlayer : list)
+	{
+		if (pPlayer->GetState() != CPlayer::STATE_EGG)
+		{
+			D3DXVECTOR3 pos = pPlayer->GetPos();
+			D3DXVECTOR3 Size = pPlayer->GetSize();
+
+			pos += Move;
+
+			if (Move.x > 0.0f)
+			{
+				if (pos.x + (GritSize * 0.5f) > m_DevilPos.x + m_DevilSize.x)
 				{
-					if (m_DevilPos.x + m_DevilSize.x < pos.x - m_GritSize)
-					{
-						pos.x = -m_DevilSize.x + m_DevilPos.x - m_GritSize + Move.x;
-					}
-				}
-				if (Move.x < 0.0f)
-				{
-					if (m_DevilPos.x - m_DevilSize.x > pos.x + m_GritSize)
-					{
-						pos.x = m_DevilSize.x + m_DevilPos.x + m_GritSize + Move.x;
-					}
-				}
-				if (Move.z > 0.0f)
-				{
-					if (m_DevilPos.z + m_DevilSize.z < pos.z - m_GritSize)
-					{
-						pos.z = -m_DevilSize.z + m_DevilPos.z - m_GritSize + Move.z;
-					}
-				}
-				if (Move.z < 0.0f)
-				{
-					if (m_DevilPos.z - m_DevilSize.z > pos.z + m_GritSize)
-					{
-						pos.z = m_DevilSize.z + m_DevilPos.z + m_GritSize + Move.z;
-					}
-				}
+					pos.x = m_DevilPos.x + m_DevilSize.x - (GritSize * 0.5f) + Move.x;
+					CollisionPressPlayer(pPlayer, pos, Size);
 
-				pCross->SetPos(pos);
+					CEffect* pEffect = CEffect::Create();
+					pEffect->SetPos(pos);
+					pEffect->SetColor(D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
+					pEffect->SetRadius(100.0f);
+				}
+			}
+			if (Move.x < 0.0f)
+			{
+				if (pos.x - (GritSize * 0.5f) < m_DevilPos.x - m_DevilSize.x)
+				{
+					pos.x = m_DevilPos.x - m_DevilSize.x + (GritSize * 0.5f) + Move.x;
+					CollisionPressPlayer(pPlayer, pos, Size);
+
+					CEffect* pEffect = CEffect::Create();
+					pEffect->SetPos(pos);
+					pEffect->SetColor(D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
+					pEffect->SetRadius(100.0f);
+				}
+			}
+			if (Move.z > 0.0f)
+			{
+				if (pos.z + (GritSize * 0.5f) > m_DevilPos.z + m_DevilSize.z)
+				{
+					pos.z = m_DevilPos.z + m_DevilSize.z - (GritSize * 0.5f) + Move.x;
+					CollisionPressPlayer(pPlayer, pos, Size);
+
+					CEffect* pEffect = CEffect::Create();
+					pEffect->SetPos(pos);
+					pEffect->SetColor(D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
+					pEffect->SetRadius(100.0f);
+				}
+			}
+			if (Move.z < 0.0f)
+			{
+				if (pos.z - (GritSize * 0.5f) < m_DevilPos.z - m_DevilSize.z)
+				{
+					pos.z = m_DevilPos.z - m_DevilSize.z + (GritSize * 0.5f) + Move.z;
+					CollisionPressPlayer(pPlayer, pos, Size);
+
+					CEffect* pEffect = CEffect::Create();
+					pEffect->SetPos(pos);
+					pEffect->SetColor(D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
+					pEffect->SetRadius(100.0f);
+				}
 			}
 
-			if (type == TYPE_BOWABOWA)
-			{//種類が敵の時
+			pPlayer->SetPos(pos);
+		}
+		else
+		{// 卵状態の時、ブロックが存在しない位置にホーミングする
 
-				CBowabowa* pBowabowa = (CBowabowa*)pObj;	// ブロック情報の取得
+			int WightNumber = pPlayer->GetWightNumber();
+			int HeightNumber = pPlayer->GetHeightNumber();
+			if (!CMapSystem::GetInstance()->GetGritBool(WightNumber, HeightNumber))
+			{
+				D3DXVECTOR3 PlayerPos = pPlayer->GetPos();
+				D3DXVECTOR3 AnswerPos = INITVECTOR3;
+				AnswerPos = CMapSystem::GetInstance()->GetGritPos(WightNumber, HeightNumber);
 
-				D3DXVECTOR3 pos = pBowabowa->GetPos();
-				D3DXVECTOR3 Size = pBowabowa->GetSize();
-
-				pos += Move;
-
-				if (Move.x > 0.0f)
+				if (pPlayer->GetGritCenter())
 				{
-					if (m_DevilSize.x < pos.x)
-					{
-						pos.x = -m_DevilSize.x + Move.x - 100.0f;
-					}
-				}
-				if (Move.x < 0.0f)
-				{
-					if (-m_DevilSize.x > pos.x)
-					{
-						pos.x = m_DevilSize.x + Move.x + 100.0f;
-					}
-				}
-				if (Move.z > 0.0f)
-				{
-					if (m_DevilSize.z < pos.z)
-					{
-						pos.z = -m_DevilSize.z + Move.z - 100.0f;
-					}
-				}
-				if (Move.z < 0.0f)
-				{
-					if (-m_DevilSize.z > pos.z)
-					{
-						pos.z = m_DevilSize.z + Move.z + 100.0f;
-					}
-				}
-
-				pBowabowa->SetPos(pos);
-			}
-
-			if (type == TYPE_ENEMY3D)
-			{//種類が敵の時
-
-				CEnemy* pEnemy = (CEnemy*)pObj;	// ブロック情報の取得
-
-				D3DXVECTOR3 pos = pEnemy->GetPos();
-				D3DXVECTOR3 Size = pEnemy->GetSize();
-
-				pos += Move;
-
-				pEnemy->SetPos(pos);
-			}
-
-			if (type == TYPE_RAILBLOCK)
-			{//種類が敵の時
-
-				CRailBlock* pRBlock = (CRailBlock*)pObj;	// ブロック情報の取得
-
-				D3DXVECTOR3 pos = pRBlock->GetPos();
-				pos += Move;
-				pRBlock->SetPos(pos);
-			}
-
-			if (type == TYPE_PLAYER3D)
-			{//種類がブロックの時
-
-				CPlayer* pPlayer = (CPlayer*)pObj;	// ブロック情報の取得
-
-				if (pPlayer->GetState() != CPlayer::STATE_EGG)
-				{
-					D3DXVECTOR3 pos = pPlayer->GetPos();
-					D3DXVECTOR3 Size = pPlayer->GetSize();
-
-					pos += Move;
-
-					if (Move.x > 0.0f)
-					{
-						if (pos.x + (m_GritSize * 0.5f) > m_DevilPos.x + m_DevilSize.x)
-						{
-							pos.x = m_DevilPos.x + m_DevilSize.x - (m_GritSize * 0.5f) + Move.x;
-							CollisionPressPlayer(pPlayer, pos, Size);
-
-							CEffect* pEffect = CEffect::Create();
-							pEffect->SetPos(pos);
-							pEffect->SetColor(D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
-							pEffect->SetRadius(100.0f);
-						}
-					}
-					if (Move.x < 0.0f)
-					{
-						if (pos.x - (m_GritSize * 0.5f) < m_DevilPos.x - m_DevilSize.x)
-						{
-							pos.x = m_DevilPos.x - m_DevilSize.x + (m_GritSize * 0.5f) + Move.x;
-							CollisionPressPlayer(pPlayer, pos, Size);
-
-							CEffect* pEffect = CEffect::Create();
-							pEffect->SetPos(pos);
-							pEffect->SetColor(D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
-							pEffect->SetRadius(100.0f);
-						}
-					}
-					if (Move.z > 0.0f)
-					{
-						if (pos.z + (m_GritSize * 0.5f) > m_DevilPos.z + m_DevilSize.z)
-						{
-							pos.z = m_DevilPos.z + m_DevilSize.z - (m_GritSize * 0.5f) + Move.x;
-							CollisionPressPlayer(pPlayer, pos, Size);
-
-							CEffect* pEffect = CEffect::Create();
-							pEffect->SetPos(pos);
-							pEffect->SetColor(D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
-							pEffect->SetRadius(100.0f);
-						}
-					}
-					if (Move.z < 0.0f)
-					{
-						if (pos.z - (m_GritSize * 0.5f) < m_DevilPos.z - m_DevilSize.z)
-						{
-							pos.z = m_DevilPos.z - m_DevilSize.z + (m_GritSize * 0.5f) + Move.z;
-							CollisionPressPlayer(pPlayer, pos, Size);
-
-							CEffect* pEffect = CEffect::Create();
-							pEffect->SetPos(pos);
-							pEffect->SetColor(D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
-							pEffect->SetRadius(100.0f);
-						}
-					}
-
-					pPlayer->SetPos(pos);
+					pPlayer->SetPos(AnswerPos);
 				}
 				else
-				{// 卵状態の時、ブロックが存在しない位置にホーミングする
-
-					int WightNumber = pPlayer->GetWightNumber();
-					int HeightNumber = pPlayer->GetHeightNumber();
-					if (!CMapSystem::GetInstance()->GetGritBool(WightNumber, HeightNumber))
-					{
-						D3DXVECTOR3 PlayerPos = pPlayer->GetPos();
-						D3DXVECTOR3 AnswerPos = INITVECTOR3;
-						AnswerPos = CMapSystem::GetInstance()->GetGritPos(WightNumber, HeightNumber);
-
-						if (pPlayer->GetGritCenter())
-						{
-							pPlayer->SetPos(AnswerPos);
-						}
-						else
-						{
-							PlayerPos += (AnswerPos - PlayerPos) * 0.5f;
-							pPlayer->SetPos(PlayerPos);
-						}
-					}
+				{
+					PlayerPos += (AnswerPos - PlayerPos) * 0.5f;
+					pPlayer->SetPos(PlayerPos);
 				}
 			}
-			pObj = pObjNext;
 		}
 	}
 }
@@ -807,35 +849,23 @@ void CDevil::GritScroll(D3DXVECTOR3 Move)
 
 	CMapSystem::GetInstance()->SetMapPos(MapPos);
 
-	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
+	// キューブブロックのリスト構造が無ければ抜ける
+	if (CCubeBlock::GetList() == nullptr) { return; }
+	std::list<CCubeBlock*> list = CCubeBlock::GetList()->GetList();    // リストを取得
+
+	// キューブブロックのリストの中身を確認する
+	for (CCubeBlock* pCubeBlock : list)
 	{
-		//オブジェクトを取得
-		CObject* pObj = CObject::GetTop(nCntPriority);
+		// 縦横のナンバーと高さを設定する
+		D3DXVECTOR3 pos = INITVECTOR3;
+		int BlockWight = pCubeBlock->GetWightNumber();
+		int BlockHeight = pCubeBlock->GetHeightNumber();
 
-		while (pObj != nullptr)
-		{
-			CObject* pObjNext = pObj->GetNext();
+		//グリット番号を位置に変換
+		pos = CMapSystem::GetInstance()->GetGritPos(BlockWight, BlockHeight);
+		pos.y = 50.0f;
 
-			CObject::TYPE type = pObj->GetType();			//種類を取得
-
-			if (type == TYPE_CUBEBLOCK)
-			{//種類がブロックの時
-
-				CCubeBlock* pBlock = (CCubeBlock*)pObj;	// ブロック情報の取得
-
-				// 縦横のナンバーと高さを設定する
-				D3DXVECTOR3 pos = INITVECTOR3;
-				int BlockWight = pBlock->GetWightNumber();
-				int BlockHeight = pBlock->GetHeightNumber();
-
-				//グリット番号を位置に変換
-				pos = CMapSystem::GetInstance()->GetGritPos(BlockWight, BlockHeight);
-				pos.y = 50.0f;
-
-				pBlock->SetPos(pos);
-			}
-			pObj = pObjNext;
-		}
+		pCubeBlock->SetPos(pos);
 	}
 
 #ifdef _DEBUG
@@ -867,34 +897,20 @@ void CDevil::GritScroll(D3DXVECTOR3 Move)
 //====================================================================
 void CDevil::CollisionPressPlayer(CPlayer* pPlayer, D3DXVECTOR3 pos, D3DXVECTOR3 Size)
 {
-	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
+	// キューブブロックのリスト構造が無ければ抜ける
+	if (CCubeBlock::GetList() == nullptr) { return; }
+	std::list<CCubeBlock*> list = CCubeBlock::GetList()->GetList();    // リストを取得
+
+	// キューブブロックのリストの中身を確認する
+	for (CCubeBlock* pCubeBlock : list)
 	{
-		//オブジェクトを取得
-		CObject* pObj = CObject::GetTop(nCntPriority);
+		D3DXVECTOR3 Blockpos = pCubeBlock->GetPos();
+		D3DXVECTOR3 BlockSize = pCubeBlock->GetSize();
 
-		while (pObj != nullptr)
+		if (useful::CollisionRectangle2D(pos, Blockpos, Size, BlockSize, useful::COLLISION::COLLISION_ZX))
 		{
-			CObject* pObjNext = pObj->GetNext();
-
-			CObject::TYPE type = pObj->GetType();			//種類を取得
-
-			if (type == TYPE_CUBEBLOCK)
-			{//種類がブロックの時
-
-				CCubeBlock* pBlock = (CCubeBlock*)pObj;	// ブロック情報の取得
-
-				D3DXVECTOR3 Blockpos = pBlock->GetPos();
-				D3DXVECTOR3 BlockSize = pBlock->GetSize();
-
-				if (useful::CollisionRectangle2D(pos, Blockpos, Size, BlockSize, useful::COLLISION::COLLISION_ZX))
-				{
-					pPlayer->Death();
-					return;
-				}
-
-			}
-
-			pObj = pObjNext;
+			pPlayer->Death();
+			return;
 		}
 	}
 }
