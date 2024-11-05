@@ -190,31 +190,27 @@ HRESULT CGame::Init(void)
 	{
 	case 0:
 		LoadStageBlock("data\\TXT\\STAGE\\Block00.txt");
-<<<<<<< .mine
 
 		// ƒ{ƒƒ{ƒ‚Ì¶¬
-		pBowabowa = CBowabowa::Create("data\\MODEL\\Testbowabowa.x");
-		pBowabowa->SetWightNumber(9);
-		pBowabowa->SetHeightNumber(5);
+		//pBowabowa = CBowabowa::Create("data\\MODEL\\Testbowabowa.x");
+		//pBowabowa->SetWightNumber(9);
+		//pBowabowa->SetHeightNumber(5);
 
-		pCross = CCross::Create("data\\MODEL\\zyuzika.x");
-		pCross->SetWightNumber(2);
-		pCross->SetHeightNumber(4);
+		//pCross = CCross::Create("data\\MODEL\\zyuzika.x");
+		//pCross->SetWightNumber(2);
+		//pCross->SetHeightNumber(4);
 
-
-=======
-		CBowabowa* pBowabowa = nullptr;
 		pBowabowa = CBowabowa::Create("data\\MODEL\\Testbowabowa.x");
 		pBowabowa->SetWightNumber(9);
 		pBowabowa->SetHeightNumber(5);
 		pBowabowa = nullptr;
 		delete pBowabowa;
-		CCross* pCross = CCross::Create("data\\MODEL\\zyuzika.x");
+
+		pCross = CCross::Create("data\\MODEL\\zyuzika.x");
 		pCross->SetWightNumber(2);
 		pCross->SetHeightNumber(4);
 		pCross = nullptr;
 		delete pCross;
->>>>>>> .theirs
 		break;
 
 	case 1:

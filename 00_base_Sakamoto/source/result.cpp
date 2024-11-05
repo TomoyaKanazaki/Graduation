@@ -95,14 +95,14 @@ HRESULT CResult::Init(void)
 	m_pScoreTex->SetPos(SCORE_TEX_POS);
 	m_pScoreTex->SetWidth(200.0f);
 	m_pScoreTex->SetHeight(80.0f);
-	m_pScoreTex->SetTexture("data\\TEXTURE\\HGS\\result_score.png");
+	m_pScoreTex->SetTexture("data\\TEXTURE\\result_score.png");
 
 	//全体ランキング(「ランキング」)
 	CObject2D *m_pRank = CObject2D::Create();
 	m_pRank->SetPos(D3DXVECTOR3(SCREEN_WIDTH * 0.80f, SCREEN_HEIGHT * 0.185f, 0.0f));
 	m_pRank->SetWidth(340.0f);
 	m_pRank->SetHeight(180.0f);
-	m_pRank->SetTexture("data\\TEXTURE\\HGS\\ranking.png");
+	m_pRank->SetTexture("data\\TEXTURE\\ranking.png");
 
 	//全体ランキング(スコア)
 	m_pLifeRanking = CRanking::Create("data\\TXT\\LifeRanking.txt");
@@ -121,7 +121,7 @@ HRESULT CResult::Init(void)
 		m_pRank->SetPos(D3DXVECTOR3(RankPos.x - 150.0f, RankPos.y + 17.0f, RankPos.z));
 		m_pRank->SetWidth(256.0f);
 		m_pRank->SetHeight(102.4f);
-		m_pRank->SetTexture("data\\TEXTURE\\HGS\\RANKING_TEXT.png");
+		m_pRank->SetTexture("data\\TEXTURE\\RANKING_TEXT.png");
 		m_pRank->SetAnim(D3DXVECTOR2(0.0f, nCntObject * 0.2f),
 						 D3DXVECTOR2(1.0f, nCntObject * 0.2f + 0.2f));
 	}

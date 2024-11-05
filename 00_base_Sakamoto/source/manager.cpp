@@ -69,7 +69,7 @@ CManager::CManager()
 	m_pRanking = nullptr;
 	m_pBlockManager = nullptr;
 	m_typeInput = TYPE_INPUT::TYPE_NONE;
-	m_nStage = 0;
+	m_nStage = 1;
 }
 
 //====================================================================
