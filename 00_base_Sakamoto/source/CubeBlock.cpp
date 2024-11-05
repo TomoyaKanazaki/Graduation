@@ -77,7 +77,7 @@ HRESULT CCubeBlock::Init(void)
 
 	SetMultiMatrix(true);
 
-	SetTexture("data\\TEXTURE\\Wood003.png");
+	SetTexture("data\\TEXTURE\\Field\\00_wall.jpg");
 
 	//SetColor(D3DXCOLOR(0.5f, 0.5f, 0.0f, 0.5f));
 
