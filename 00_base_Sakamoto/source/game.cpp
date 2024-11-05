@@ -162,7 +162,6 @@ HRESULT CGame::Init(void)
 	CObjmeshField* pBottonField = CObjmeshField::Create(BOTTOM_FIELD_VTX_WIDTH, BOTTOM_FIELD_VTX_HEIGHT);
 	pBottonField->SetTexture(BOTTOM_FIELD_TEX);
 	pBottonField->SetPos(BOTTOM_FIELD_POS);
-
 	m_bGameEnd = false;
 
 	m_pPlayer = CPlayer::Create();
@@ -191,6 +190,7 @@ HRESULT CGame::Init(void)
 	case 0:
 		LoadStageBlock("data\\TXT\\STAGE\\Block00.txt");
 
+
 		// ƒ{ƒƒ{ƒ‚Ì¶¬
 		//pBowabowa = CBowabowa::Create("data\\MODEL\\Testbowabowa.x");
 		//pBowabowa->SetWightNumber(9);
@@ -215,27 +215,6 @@ HRESULT CGame::Init(void)
 
 	case 1:
 		LoadStageBlock("data\\TXT\\STAGE\\Block01.txt");
-		CDevilHole* pDevilHole = CDevilHole::Create("data\\MODEL\\DevilHole.x");
-		// ¹‘¶¬
-		CBible* pBible = nullptr;
-		pBible = CBible::Create("data\\MODEL\\02_item\\holybible.x");
-		pBible->SetPosType(CBible::POS_TYPE_LEFTUP);
-		pBible->SetMapScroll(false);
-
-		pBible = CBible::Create("data\\MODEL\\02_item\\holybible.x");
-		pBible->SetPosType(CBible::POS_TYPE_RIGHTUP);
-		pBible->SetMapScroll(false);
-
-		pBible = CBible::Create("data\\MODEL\\02_item\\holybible.x");
-		pBible->SetPosType(CBible::POS_TYPE_LEFTDOWN);
-		pBible->SetMapScroll(false);
-
-		pBible = CBible::Create("data\\MODEL\\02_item\\holybible.x");
-		pBible->SetPosType(CBible::POS_TYPE_RIGHTDOWN);
-		pBible->SetMapScroll(false);
-
-		pBible = nullptr;
-		delete pBible;
 
 		break;
 	}
