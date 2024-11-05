@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="SlopeDevice.cpp" />
     <ClCompile Include="source\2DEffect.cpp" />
     <ClCompile Include="source\2DUI.cpp" />
     <ClCompile Include="source\2DUI_edit.cpp" />
@@ -106,6 +107,7 @@
     <ClCompile Include="source\Xmodel.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="SlopeDevice.h" />
     <ClInclude Include="source\2DEffect.h" />
     <ClInclude Include="source\2DUI.h" />
     <ClInclude Include="source\2DUI_edit.h" />

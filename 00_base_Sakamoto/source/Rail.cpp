@@ -179,8 +179,10 @@ void CRail::Draw(void)
 //====================================================================
 void CRail::PrevSet(RAIL_POS Set)
 {
+	//引数で設定した方向にレールを置く
 	m_bRail[Set] = true;
 
+	//真ん中からのレールを設置する
 	if (m_pRailModel[0] == nullptr)
 	{
 		m_pRailModel[0] = CObjectX::Create("data\\MODEL\\TestRail.x");
@@ -212,17 +214,21 @@ void CRail::PrevSet(RAIL_POS Set)
 //====================================================================
 void CRail::NextSet(RAIL_POS Set)
 {
+	//引数で設定した方向にレールを置く
 	m_bRail[Set] = true;
 
+	//真ん中までのレールを設置する
 	if (m_pRailModel[1] == nullptr)
 	{
 		m_pRailModel[1] = CObjectX::Create("data\\MODEL\\TestRail.x");
 		m_pRailModel[1]->SetPos(CMapSystem::GetInstance()->GetGritPos(m_nMapWidth, m_nMapHeight));
 		m_pRailModel[1]->SetMultiMatrix(true);
 
+		//伸ばす前のレールの位置を取得する
 		int nMapWight = GetWightNumber();
 		int nMapHeight = GetHeightNumber();
 
+		//引数で設定した方向にレールの向き、番号を設定
 		switch (Set)
 		{
 		case CRail::RAIL_POS_UP:
@@ -253,6 +259,7 @@ void CRail::NextSet(RAIL_POS Set)
 			break;
 		}
 
+		//次のレールを設定する
 		m_pNext = CRail::Create();
 		m_pNext->SetWightNumber(nMapWight);
 		m_pNext->SetHeightNumber(nMapHeight);
