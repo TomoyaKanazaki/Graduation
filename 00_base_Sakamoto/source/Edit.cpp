@@ -762,37 +762,26 @@ void CEdit::CollisionXModel(void)
 {
 	if (m_pEditModel != nullptr)
 	{
-		for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
+		// マップモデルのリスト構造が無ければ抜ける
+		if (CMapModel::GetList() == nullptr) { return; }
+		std::list<CMapModel*> list = CMapModel::GetList()->GetList();    // リストを取得
+
+		// マップモデルリストの中身を確認する
+		for (CMapModel* pMapModel : list)
 		{
-			//オブジェクトを取得
-			CObject* pObj = CObject::GetTop(nCntPriority);
+			D3DXVECTOR3 MyPos = m_pEditModel->GetPos();
+			D3DXVECTOR3 MySize = m_pEditModel->GetSize();
+			D3DXVECTOR3 BlockPos = pMapModel->GetPos();
+			D3DXVECTOR3 BlockSize = pMapModel->GetSize();
 
-			while (pObj != nullptr)
-			{
-				CObject* pObjNext = pObj->GetNext();
-
-				CObject::TYPE type = pObj->GetType();			//種類を取得
-
-				if (type == CObject::TYPE_MAPMODEL && pObj != m_pEditModel)
-				{//種類がブロックの時
-					CMapModel* pModel = (CMapModel*)pObj;
-
-					D3DXVECTOR3 MyPos = m_pEditModel->GetPos();
-					D3DXVECTOR3 MySize = m_pEditModel->GetSize();
-					D3DXVECTOR3 BlockPos = pModel->GetPos();
-					D3DXVECTOR3 BlockSize = pModel->GetSize();
-
-					if (MyPos.x + MySize.x > BlockPos.x &&
-						MyPos.x - MySize.x < BlockPos.x &&
-						MyPos.z + MySize.z > BlockPos.z &&
-						MyPos.z - MySize.z < BlockPos.z &&
-						MyPos.y + MySize.y > BlockPos.y &&
-						MyPos.y - MySize.y < BlockPos.y)
-					{
-						pModel->Uninit();
-					}
-				}
-				pObj = pObjNext;
+			if (MyPos.x + MySize.x > BlockPos.x &&
+				MyPos.x - MySize.x < BlockPos.x &&
+				MyPos.z + MySize.z > BlockPos.z &&
+				MyPos.z - MySize.z < BlockPos.z &&
+				MyPos.y + MySize.y > BlockPos.y &&
+				MyPos.y - MySize.y < BlockPos.y)
+			{// 削除
+				pMapModel->Uninit();
 			}
 		}
 	}
