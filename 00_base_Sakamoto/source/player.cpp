@@ -85,7 +85,8 @@ CPlayer::CPlayer(int nPriority) : CObject(nPriority),
 	m_MoveState		(MOVE_STATE_NONE),
 	m_nMapWidth		(0),
 	m_nMapHeight	(0),
-	m_bGritCenter	(true)
+	m_bGritCenter	(true),
+	m_bPressObj		(false)
 {
 
 }
@@ -317,6 +318,10 @@ void CPlayer::GameUpdate(void)
 			// 位置更新処理
 			PosUpdate();
 		}
+
+		// レールブロックとの当たり判定
+		CollisionMoveRailBlock(useful::COLLISION_X);
+		CollisionMoveRailBlock(useful::COLLISION_Z);
 
 		ObjPosUpdate();
 
@@ -671,9 +676,47 @@ void CPlayer::CollisionWall(useful::COLLISION XYZ)
 }
 
 //====================================================================
-// レールブロックとの当たり判定
+// 壁との圧死判定
 //====================================================================
-void CPlayer::CollisionRailBlock(useful::COLLISION XYZ)
+void CPlayer::CollisionPressWall(useful::COLLISION XYZ)
+{
+	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
+	{
+		//オブジェクトを取得
+		CObject* pObj = CObject::GetTop(nCntPriority);
+
+		while (pObj != nullptr)
+		{
+			CObject* pObjNext = pObj->GetNext();
+
+			CObject::TYPE type = pObj->GetType();			//種類を取得
+
+			if (type == TYPE_CUBEBLOCK)
+			{//種類がブロックの時
+
+				CCubeBlock* pBlock = (CCubeBlock*)pObj;	// ブロック情報の取得
+
+				D3DXVECTOR3 pos = pBlock->GetPos();
+				D3DXVECTOR3 posOld = pBlock->GetPosOld();
+				D3DXVECTOR3 Move = pBlock->GetMove();
+				D3DXVECTOR3 Size = pBlock->GetSize();
+
+				// 矩形の当たり判定
+				if (useful::CollisionRectangle2D(m_pos, pos, m_size, Size, XYZ) == true)
+				{
+					Death();
+				}
+			}
+
+			pObj = pObjNext;
+		}
+	}
+}
+
+//====================================================================
+// 止まっているレールブロックとの当たり判定
+//====================================================================
+void CPlayer::CollisionWaitRailBlock(useful::COLLISION XYZ)
 {
 	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
 	{
@@ -702,6 +745,80 @@ void CPlayer::CollisionRailBlock(useful::COLLISION XYZ)
 					//待機状態にする
 					m_State = STATE_WAIT;
 					m_MoveState = MOVE_STATE_WAIT;
+				}
+			}
+
+			pObj = pObjNext;
+		}
+	}
+}
+
+
+//====================================================================
+// 動いているレールブロックとの当たり判定
+//====================================================================
+void CPlayer::CollisionMoveRailBlock(useful::COLLISION XYZ)
+{
+	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
+	{
+		//オブジェクトを取得
+		CObject* pObj = CObject::GetTop(nCntPriority);
+
+		while (pObj != nullptr)
+		{
+			CObject* pObjNext = pObj->GetNext();
+
+			CObject::TYPE type = pObj->GetType();			//種類を取得
+
+			if (type == TYPE_RAILBLOCK)
+			{//種類がブロックの時
+
+				CRailBlock* pBlock = (CRailBlock*)pObj;	// ブロック情報の取得
+
+				if (m_State != CPlayer::ACTION_DEATH && m_State != CPlayer::ACTION_EGG)
+				{
+					D3DXVECTOR3 pos = m_pos;
+					D3DXVECTOR3 Size = m_size;
+
+					D3DXVECTOR3 Mypos = pBlock->GetPos();
+					D3DXVECTOR3 MyposOld = pBlock->GetPosOld();
+					D3DXVECTOR3 MyMove = (Mypos - MyposOld);
+					float MySize = CMapSystem::GetInstance()->GetGritSize() * 0.5f;
+
+					switch (XYZ)
+					{
+					case useful::COLLISION_X:
+						// 矩形の当たり判定
+						if (useful::PushSquareXZ(Mypos, D3DXVECTOR3(MySize, 0.0f, MySize), MyMove, pos, Size, XYZ) == true)
+						{
+							m_Objmove.x = MyMove.x;
+							m_move.x = 0.0f;
+							m_bPressObj = true;
+							return;
+						}
+						else
+						{
+							m_Objmove.x = 0.0f;
+							m_bPressObj = false;
+						}
+						break;
+
+					case useful::COLLISION_Z:
+						// 矩形の当たり判定
+						if (useful::PushSquareXZ(Mypos, D3DXVECTOR3(MySize, 0.0f, MySize), MyMove, pos, Size, XYZ) == true)
+						{
+							m_Objmove.z = MyMove.z;
+							m_move.z = 0.0f;
+							m_bPressObj = true;
+							return;
+						}
+						else
+						{
+							m_Objmove.z = 0.0f;
+							m_bPressObj = false;
+						}
+						break;
+					}
 				}
 			}
 
@@ -883,6 +1000,36 @@ void CPlayer::CollisionStageOut(void)
 }
 
 //====================================================================
+// 画面外との圧死判定
+//====================================================================
+void CPlayer::CollisionPressStageOut(void)
+{
+	if (m_bPressObj == true)
+	{
+		D3DXVECTOR3 D_pos = CGame::GetDevil()->GetDevilPos();
+		D3DXVECTOR3 D_Size = CGame::GetDevil()->GetDevilSize();
+		float G_Size = CMapSystem::GetInstance()->GetGritSize() * 0.5f;
+
+		if (m_pos.x + G_Size > D_pos.x + D_Size.x)
+		{
+			Death();
+		}
+		if (m_pos.x - G_Size < D_pos.x - D_Size.x)
+		{
+			Death();
+		}
+		if (m_pos.z + G_Size > D_pos.z + D_Size.z)
+		{
+			Death();
+		}
+		if (m_pos.z - G_Size < D_pos.z - D_Size.z)
+		{
+			Death();
+		}
+	}
+}
+
+//====================================================================
 // プレイヤーがマップのどのマスに存在しているか設定する
 //====================================================================
 void CPlayer::MapSystemNumber(void)
@@ -964,7 +1111,7 @@ void CPlayer::PosUpdate(void)
 	// 壁との当たり判定
 	CollisionWall(useful::COLLISION_X);
 	CollisionDevilHole(useful::COLLISION_X);
-	CollisionRailBlock(useful::COLLISION_X);
+	CollisionWaitRailBlock(useful::COLLISION_X);
 
 	//Z軸の位置更新
 	m_pos.z += m_move.z * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeZ();
@@ -973,7 +1120,7 @@ void CPlayer::PosUpdate(void)
 	// 壁との当たり判定
 	CollisionWall(useful::COLLISION_Z);
 	CollisionDevilHole(useful::COLLISION_Z);
-	CollisionRailBlock(useful::COLLISION_Z);
+	CollisionWaitRailBlock(useful::COLLISION_Z);
 }
 
 //====================================================================
@@ -1011,18 +1158,11 @@ void CPlayer::ObjPosUpdate(void)
 	//X軸の位置更新
 	m_pos.x += m_Objmove.x * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeX();
 
-	//// 壁との当たり判定
-	//CollisionWall(useful::COLLISION_X);
-	//CollisionDevilHole(useful::COLLISION_X);
-	//CollisionRailBlock(useful::COLLISION_X);
-
 	//Z軸の位置更新
 	m_pos.z += m_Objmove.z * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeZ();
 
 	//// 壁との当たり判定
-	//CollisionWall(useful::COLLISION_Z);
-	//CollisionDevilHole(useful::COLLISION_Z);
-	//CollisionRailBlock(useful::COLLISION_Z);
+	CollisionPressWall(useful::COLLISION_ZX);
 }
 
 //====================================================================
@@ -1078,6 +1218,7 @@ void CPlayer::Death(void)
 
 			m_State = STATE_DEATH;
 			m_move = INITVECTOR3;
+			m_Objmove = INITVECTOR3;
 			m_nStateCount = 150;
 
 			// ダメージ音

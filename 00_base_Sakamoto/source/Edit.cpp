@@ -762,37 +762,26 @@ void CEdit::CollisionXModel(void)
 {
 	if (m_pEditModel != nullptr)
 	{
-		for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
+		// マップモデルのリスト構造が無ければ抜ける
+		if (CMapModel::GetList() == nullptr) { return; }
+		std::list<CMapModel*> list = CMapModel::GetList()->GetList();    // リストを取得
+
+		// マップモデルリストの中身を確認する
+		for (CMapModel* pMapModel : list)
 		{
-			//オブジェクトを取得
-			CObject* pObj = CObject::GetTop(nCntPriority);
+			D3DXVECTOR3 MyPos = m_pEditModel->GetPos();
+			D3DXVECTOR3 MySize = m_pEditModel->GetSize();
+			D3DXVECTOR3 BlockPos = pMapModel->GetPos();
+			D3DXVECTOR3 BlockSize = pMapModel->GetSize();
 
-			while (pObj != nullptr)
-			{
-				CObject* pObjNext = pObj->GetNext();
-
-				CObject::TYPE type = pObj->GetType();			//種類を取得
-
-				if (type == CObject::TYPE_MAPMODEL && pObj != m_pEditModel)
-				{//種類がブロックの時
-					CMapModel* pModel = (CMapModel*)pObj;
-
-					D3DXVECTOR3 MyPos = m_pEditModel->GetPos();
-					D3DXVECTOR3 MySize = m_pEditModel->GetSize();
-					D3DXVECTOR3 BlockPos = pModel->GetPos();
-					D3DXVECTOR3 BlockSize = pModel->GetSize();
-
-					if (MyPos.x + MySize.x > BlockPos.x &&
-						MyPos.x - MySize.x < BlockPos.x &&
-						MyPos.z + MySize.z > BlockPos.z &&
-						MyPos.z - MySize.z < BlockPos.z &&
-						MyPos.y + MySize.y > BlockPos.y &&
-						MyPos.y - MySize.y < BlockPos.y)
-					{
-						pModel->Uninit();
-					}
-				}
-				pObj = pObjNext;
+			if (MyPos.x + MySize.x > BlockPos.x &&
+				MyPos.x - MySize.x < BlockPos.x &&
+				MyPos.z + MySize.z > BlockPos.z &&
+				MyPos.z - MySize.z < BlockPos.z &&
+				MyPos.y + MySize.y > BlockPos.y &&
+				MyPos.y - MySize.y < BlockPos.y)
+			{// 削除
+				pMapModel->Uninit();
 			}
 		}
 	}
@@ -805,40 +794,26 @@ void CEdit::AppearCollision(void)
 {
 	if (m_pEditModel != nullptr)
 	{
-		for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
+		// マップモデルのリスト構造が無ければ抜ける
+		if (CMapModel::GetList() == nullptr) { return; }
+		std::list<CMapModel*> list = CMapModel::GetList()->GetList();    // リストを取得
+
+		// マップモデルリストの中身を確認する
+		for (CMapModel* pMapModel : list)
 		{
-			//オブジェクトを取得
-			CObject* pObj = CObject::GetTop(nCntPriority);
-
-			while (pObj != nullptr)
-			{
-				CObject* pObjNext = pObj->GetNext();
-
-				CObject::TYPE type = pObj->GetType();			//種類を取得
-
-				if (type == CObject::TYPE_MAPMODEL)
-				{//種類がマップモデル時
-					CMapModel* pModel = (CMapModel*)pObj;
-
-					if (m_bAppearCollision == true)
-					{//可視化がオンの時
-
-						//可視化ブロックの生成
-						pModel->CreateBlock();
-					}
-					else
-					{//可視化がオフの時
-
-						//可視化ブロックの削除
-						if (pModel->GetDebugBlock() != nullptr)
-						{
-							pModel->GetDebugBlock()->Uninit();
-							pModel->SetDebugBlock(nullptr);
-						}
-					}
+			if (m_bAppearCollision == true)
+			{//可視化がオンの時
+				//可視化ブロックの生成
+				pMapModel->CreateBlock();
+			}
+			else
+			{//可視化がオフの時
+				//可視化ブロックの削除
+				if (pMapModel->GetDebugBlock() != nullptr)
+				{
+					pMapModel->GetDebugBlock()->Uninit();
+					pMapModel->SetDebugBlock(nullptr);
 				}
-
-				pObj = pObjNext;
 			}
 		}
 	}
@@ -860,47 +835,36 @@ void CEdit::SaveBlock(void)
 {
 	FILE* pFile; //ファイルポインタを宣言
 
-//ファイルを開く
+	//ファイルを開く
 	pFile = fopen(DATA_BLOCK_NAME, "w");
 
 	if (pFile != nullptr)
 	{//ファイルが開けた場合
 
-	 //ステージをセーブする開始の合図
+		// ステージをセーブする開始の合図
 		fprintf(pFile, "%s\n\n", "STARTSETSTAGE");
 
-		for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
+		// キューブブロックのリスト構造が無ければ抜ける
+		if (CCubeBlock::GetList() == nullptr) { return; }
+		std::list<CCubeBlock*> list = CCubeBlock::GetList()->GetList();    // リストを取得
+
+		// キューブブロックリストの中身を確認する
+		for (CCubeBlock* pCubeBlock : list)
 		{
-			//オブジェクトを取得
-			CObject* pObj = CObject::GetTop(nCntPriority);
+			fprintf(pFile, "%s\n", "STARTSETBLOCK");
 
-			while (pObj != nullptr)
-			{
-				CObject* pObjNext = pObj->GetNext();
+			//ステージをセーブした終了の合図
+			fprintf(pFile, "WIGHT %d\n", pCubeBlock->GetWightNumber());
+			fprintf(pFile, "HEIGHT %d\n", pCubeBlock->GetHeightNumber());
+			fprintf(pFile, "TEXTURE %s\n", pCubeBlock->GetTextureName());
 
-				CObject::TYPE type = pObj->GetType();				//種類を取得
-
-				if (type == CObject::TYPE_CUBEBLOCK)
-				{//種類がブロックの時
-					CCubeBlock* pBlock = (CCubeBlock*)pObj;
-
-					fprintf(pFile, "%s\n", "STARTSETBLOCK");
-
-					//ステージをセーブした終了の合図
-					fprintf(pFile, "WIGHT %d\n", pBlock->GetWightNumber());
-					fprintf(pFile, "HEIGHT %d\n", pBlock->GetHeightNumber());
-					fprintf(pFile, "TEXTURE %s\n", pBlock->GetTextureName());
-
-					fprintf(pFile, "%s\n\n", "ENDSETBLOCK");
-				}
-
-				pObj = pObjNext;
-			}
+			fprintf(pFile, "%s\n\n", "ENDSETBLOCK");
 		}
 
 		//ステージをセーブした終了の合図
 		fprintf(pFile, "%s", "ENDSETSTAGE");
 
+		// ファイルを閉じる
 		fclose(pFile);
 	}
 	else
@@ -916,51 +880,36 @@ void CEdit::SaveXModel(void)
 {
 	FILE* pFile; //ファイルポインタを宣言
 
-//ファイルを開く
+	//ファイルを開く
 	pFile = fopen(DATA_XMODEL_NAME, "w");
-
 	if (pFile != nullptr)
 	{//ファイルが開けた場合
 
-	 //ステージをセーブする開始の合図
-		fprintf(pFile, "%s\n\n", "STARTSETSTAGE");
+	// マップモデルのリスト構造が無ければ抜ける
+		if (CMapModel::GetList() == nullptr) { return; }
+		std::list<CMapModel*> list = CMapModel::GetList()->GetList();    // リストを取得
 
-		for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
+		// マップモデルリストの中身を確認する
+		for (CMapModel* pMapModel : list)
 		{
-			//オブジェクトを取得
-			CObject* pObj = CObject::GetTop(nCntPriority);
+			fprintf(pFile, "%s\n", "STARTSETXMODEL");
 
-			while (pObj != nullptr)
+			//ステージをセーブした終了の合図
+			fprintf(pFile, "NAME %s\n", m_aModelInfo[pMapModel->GetEditIdx()].pFilename);
+			fprintf(pFile, "NUMBER %d\n", pMapModel->GetEditIdx());
+			fprintf(pFile, "POS %f %f %f\n", pMapModel->GetPos().x, pMapModel->GetPos().y, pMapModel->GetPos().z);
+			fprintf(pFile, "ROT %f %f %f\n", pMapModel->GetRot().x, pMapModel->GetRot().y, pMapModel->GetRot().z);
+			if (pMapModel->GetCollision() == true)
 			{
-				CObject* pObjNext = pObj->GetNext();
-
-				CObject::TYPE type = pObj->GetType();				//種類を取得
-
-				if (type == CObject::TYPE_MAPMODEL && pObj != m_pEditModel)
-				{//種類がブロックの時
-					CMapModel* pModel = (CMapModel*)pObj;
-
-					fprintf(pFile, "%s\n", "STARTSETXMODEL");
-
-					//ステージをセーブした終了の合図
-					fprintf(pFile, "NAME %s\n", m_aModelInfo[pModel->GetEditIdx()].pFilename);
-					fprintf(pFile, "NUMBER %d\n", pModel->GetEditIdx());
-					fprintf(pFile, "POS %f %f %f\n", pModel->GetPos().x, pModel->GetPos().y, pModel->GetPos().z);
-					fprintf(pFile, "ROT %f %f %f\n", pModel->GetRot().x, pModel->GetRot().y, pModel->GetRot().z);
-					if (pModel->GetCollision() == true)
-					{
-						fprintf(pFile, "COLLISION 1\n");
-					}
-					else
-					{
-						fprintf(pFile, "COLLISION 0\n");
-					}
-
-					fprintf(pFile, "%s\n\n", "ENDSETXMODEL");
-				}
-
-				pObj = pObjNext;
+				fprintf(pFile, "COLLISION 1\n");
 			}
+			else
+			{
+				fprintf(pFile, "COLLISION 0\n");
+			}
+
+			fprintf(pFile, "%s\n\n", "ENDSETXMODEL");
+
 		}
 
 		//ステージをセーブした終了の合図
