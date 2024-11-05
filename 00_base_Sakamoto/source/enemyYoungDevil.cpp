@@ -33,6 +33,11 @@ namespace
 	const int MOTION_BLEND_MOVE = 5;	// 移動状態のモーションブレンド時間
 }
 
+//===========================================
+// 静的メンバ変数宣言
+//===========================================
+CListManager<CEnemyYoungDevil>* CEnemyYoungDevil::m_pList = nullptr; // オブジェクトリスト
+
 //====================================================================
 //コンストラクタ
 //====================================================================
@@ -79,15 +84,17 @@ HRESULT CEnemyYoungDevil::Init(void)
 
 	SetEnemyType(CEnemy::ENEMY_MEDAMAN);	//敵の種類設定
 
+		// リストマネージャーの生成
+	if (m_pList == nullptr)
+	{
+		m_pList = CListManager<CEnemyYoungDevil>::Create();
+		if (m_pList == nullptr) { assert(false); return E_FAIL; }
+	}
+
+	// リストに自身のオブジェクトを追加・イテレーターを取得
+	m_iterator = m_pList->AddList(this);
+
 	return S_OK;
-}
-
-//====================================================================
-//自分が保持するオブジェクトの生成
-//====================================================================
-void CEnemyYoungDevil::MyObjCreate(void)
-{
-
 }
 
 //====================================================================
@@ -95,6 +102,16 @@ void CEnemyYoungDevil::MyObjCreate(void)
 //====================================================================
 void CEnemyYoungDevil::Uninit(void)
 {
+	// リストから自身のオブジェクトを削除
+	m_pList->DelList(m_iterator);
+
+	if (m_pList->GetNumAll() == 0)
+	{ // オブジェクトが一つもない場合
+
+		// リストマネージャーの破棄
+		m_pList->Release(m_pList);
+	}
+
 	// 継承クラスの終了処理
 	CEnemy::Uninit();
 
@@ -208,4 +225,12 @@ void CEnemyYoungDevil::HitDamage(float fDamage)
 	{
 		m_nStateCount = 1000;
 	}
+}
+
+//====================================================================
+//リスト取得
+//====================================================================
+CListManager<CEnemyYoungDevil>* CEnemyYoungDevil::GetList(void)
+{
+	return m_pList;
 }

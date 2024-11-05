@@ -14,7 +14,7 @@ SCRIPT			# この行は絶対消さないこと！
 #------------------------------------------------------------------------------
 # モデル数
 #------------------------------------------------------------------------------
-NUM_MODEL = 19
+NUM_MODEL = 25
 
 #------------------------------------------------------------------------------
 # モデルファイル名
@@ -23,21 +23,28 @@ MODEL_FILENAME = data/MODEL/02_devil/04_waist.x	# [0]腰
 MODEL_FILENAME = data/MODEL/02_devil/03_body.x	# [1]体
 MODEL_FILENAME = data/MODEL/02_devil/02_neck.x	# [2]首
 MODEL_FILENAME = data/MODEL/02_devil/01_jaw.x	# [3]顎
-MODEL_FILENAME = data/MODEL/02_devil/00_head_clenched.x	# [4]頭
+MODEL_FILENAME = data/MODEL/02_devil/00_head.x	# [4]頭
+
 MODEL_FILENAME = data/MODEL/02_devil/05_R_upper_arm.x	# [5]右上腕
 MODEL_FILENAME = data/MODEL/02_devil/06_R_fore_arm.x	# [6]右下腕
-MODEL_FILENAME = data/MODEL/02_devil/07_R_hand_clenched.x	# [7]右手
-MODEL_FILENAME = data/MODEL/02_devil/08_L_upper_arm.x	# [8]左上腕
-MODEL_FILENAME = data/MODEL/02_devil/09_L_fore_arm.x	# [9]左下腕
-MODEL_FILENAME = data/MODEL/02_devil/10_L_hand_clenched.x	# [10]左手
-MODEL_FILENAME = data/MODEL/02_devil/11_R_thighs.x	# [11]右腿
-MODEL_FILENAME = data/MODEL/02_devil/12_R_kness.x	# [12]右脚
-MODEL_FILENAME = data/MODEL/02_devil/13_R_feet.x	# [13]右足
-MODEL_FILENAME = data/MODEL/02_devil/14_L_thighs.x	# [14]左腿
-MODEL_FILENAME = data/MODEL/02_devil/15_L_kness.x	# [15]左脚
-MODEL_FILENAME = data/MODEL/02_devil/16_R_feet.x	# [16]左足
-MODEL_FILENAME = data/MODEL/02_devil/17_L_feather.x	# [17]左翼
-MODEL_FILENAME = data/MODEL/02_devil/18_R_feather.x	# [18]右翼
+MODEL_FILENAME = data/MODEL/02_devil/07_R_hand.x	# [7]右手
+MODEL_FILENAME = data/MODEL/02_devil/08_R_1st_joint.x	# [8]第一関節
+MODEL_FILENAME = data/MODEL/02_devil/09_R_2nd_joint.x	# [9]第二関節
+MODEL_FILENAME = data/MODEL/02_devil/10_R_3rd_joint.x	# [10]第三関節
+MODEL_FILENAME = data/MODEL/02_devil/11_L_upper_arm.x	# [11]左上腕
+MODEL_FILENAME = data/MODEL/02_devil/12_L_fore_arm.x	# [12]左下腕
+MODEL_FILENAME = data/MODEL/02_devil/13_L_hand.x	# [13]左手
+MODEL_FILENAME = data/MODEL/02_devil/14_L_1st_joint.x	# [14]第一関節
+MODEL_FILENAME = data/MODEL/02_devil/15_L_2nd_joint.x	# [15]第二関節
+MODEL_FILENAME = data/MODEL/02_devil/16_L_3rd_joint.x	# [16]第三関節
+MODEL_FILENAME = data/MODEL/02_devil/17_R_thighs.x	# [17]右腿
+MODEL_FILENAME = data/MODEL/02_devil/18_R_kness.x	# [18]右脚
+MODEL_FILENAME = data/MODEL/02_devil/19_R_feet.x	# [19]右足
+MODEL_FILENAME = data/MODEL/02_devil/20_L_thighs.x	# [20]左腿
+MODEL_FILENAME = data/MODEL/02_devil/21_L_kness.x	# [21]左脚
+MODEL_FILENAME = data/MODEL/02_devil/22_L_feet.x	# [22]左足
+MODEL_FILENAME = data/MODEL/02_devil/23_R_feather.x	# [23]左翼
+MODEL_FILENAME = data/MODEL/02_devil/24_L_feather.x	# [24]右翼
 
 #------------------------------------------------------------------------------
 # キャラクター情報
@@ -58,7 +65,7 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 0
 		PARENT = -1
-		POS = 0.00 33.57 0.00
+		POS = 0.00 93.63 0.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
@@ -66,7 +73,7 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 1
 		PARENT = 4
-		POS = 0.00 1.17 0.00
+		POS = 0.00 -5.86 0.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
@@ -74,7 +81,7 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 2
 		PARENT = 1
-		POS = 0.00 16.87 -0.29
+		POS = 0.00 43.86 -0.32
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
@@ -82,7 +89,7 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 3
 		PARENT = 2
-		POS = 0.00 3.61 0.29
+		POS = 0.00 4.17 0.87
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
@@ -90,7 +97,7 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 4
 		PARENT = 1
-		POS = 0.00 22.96 -0.58
+		POS = 0.00 45.26 -3.39
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
@@ -98,7 +105,7 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 5
 		PARENT = 1
-		POS = -9.71 11.16 0.00
+		POS = -26.95 26.75 0.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
@@ -106,7 +113,7 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 6
 		PARENT = 5
-		POS = -9.36 0.00 0.00
+		POS = -25.30 0.00 0.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
@@ -114,15 +121,15 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 7
 		PARENT = 6
-		POS = -7.66 0.29 0.00
+		POS = -20.45 1.10 0.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 8
-		PARENT = 1
-		POS = 9.88 11.16 0.00
+		PARENT = 7
+		POS = -7.75 0.55 -3.30
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
@@ -130,7 +137,7 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 9
 		PARENT = 8
-		POS = 7.88 0.00 0.00
+		POS = -3.40 0.00 0.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
@@ -138,7 +145,7 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 10
 		PARENT = 9
-		POS = 7.95 0.00 0.00
+		POS = -2.80 0.00 0.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
@@ -146,7 +153,7 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 11
 		PARENT = 0
-		POS = -4.69 -1.17 0.00
+		POS = 26.95 19.60 0.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
@@ -154,7 +161,7 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 12
 		PARENT = 11
-		POS = 0.00 -10.78 0.00
+		POS = 25.30 0.00 0.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
@@ -162,15 +169,15 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 13
 		PARENT = 12
-		POS = 0.00 -13.94 0.00
+		POS = 20.65 0.55 0.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 14
-		PARENT = 0
-		POS = 4.51 -1.89 0.00
+		PARENT = 13
+		POS = 6.75 0.55 -3.30
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
@@ -178,7 +185,7 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 15
 		PARENT = 14
-		POS = 0.00 -10.42 0.00
+		POS = 3.90 0.00 0.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
@@ -186,27 +193,76 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 16
 		PARENT = 15
-		POS = 0.00 -13.58 0.00
+		POS = 2.80 0.00 0.00
 		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 17
-		PARENT = 1
-		POS = 1.88 4.37 3.01
-		ROT = 0.00 -0.70 0.00
+		PARENT = 0
+		POS = -12.05 -13.20 0.00
+		ROT = 0.00 0.00 0.00
 		START = 1
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 18
+		PARENT = 17
+		POS = 0.00 -29.15 0.00
+		ROT = 0.00 0.00 0.00
+		START = 1
+	END_PARTSSET
+
+	PARTSSET
+		INDEX = 19
+		PARENT = 18
+		POS = 0.00 -31.75 0.00
+		ROT = 0.00 0.00 0.00
+		START = 1
+	END_PARTSSET
+
+	PARTSSET
+		INDEX = 20
+		PARENT = 0
+		POS = 11.25 -13.20 0.00
+		ROT = 0.00 0.00 0.00
+		START = 1
+	END_PARTSSET
+
+	PARTSSET
+		INDEX = 21
+		PARENT = 20
+		POS = 0.00 -29.15 0.00
+		ROT = 0.00 0.00 0.00
+		START = 1
+	END_PARTSSET
+
+	PARTSSET
+		INDEX = 22
+		PARENT = 21
+		POS = 0.00 -31.75 0.00
+		ROT = 0.00 0.00 0.00
+		START = 1
+	END_PARTSSET
+
+	PARTSSET
+		INDEX = 23
 		PARENT = 1
-		POS = -1.88 4.37 3.01
-		ROT = 0.00 0.70 0.00
+		POS = -11.00 14.85 11.00
+		ROT = 0.00 0.57 0.00
+		START = 1
+	END_PARTSSET
+
+	PARTSSET
+		INDEX = 24
+		PARENT = 1
+		POS = 11.00 14.85 11.55
+		ROT = 0.00 -0.57 0.00
 		START = 1
 	END_PARTSSET
 END_CHARACTERSET
+
 #==============================================================================
 #
 # コライダー情報
