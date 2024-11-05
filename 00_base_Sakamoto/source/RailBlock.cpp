@@ -180,16 +180,20 @@ void CRailBlock::Move(D3DXVECTOR3* Pos)
 	D3DXVECTOR3 GritPos = CMapSystem::GetInstance()->GetGritPos(GetWightNumber(), GetHeightNumber());
 	D3DXVECTOR3 GritDistance = *Pos - GritPos;	//グリットの中心とした時の相対位置、差分
 
+	//傾きによる移動量設定
 	SlopeMove.x = -SlopeRot.z * 10.0f;
 	SlopeMove.z = SlopeRot.x * 10.0f;
 
 	if (useful::CollisionCircle(GritPos, D3DXVECTOR3(Pos->x, GritPos.y, Pos->z), RAIL_WIGHT) == true)
-	{
+	{// ブロックの中心にある時に上下か左右のどちらかになるまでに移動する
+
 		Pos->x += SlopeMove.x;
 		Pos->z += SlopeMove.z;
 	}
 	else
-	{
+	{// ブロックの中心にないとき
+
+		//上下移動
 		if (GritPos.x - Pos->x >= -5.0f && GritPos.x - Pos->x <= RAIL_WIGHT)
 		{
 			Pos->z += SlopeMove.z;
@@ -199,6 +203,7 @@ void CRailBlock::Move(D3DXVECTOR3* Pos)
 			Pos->z = GritPos.z;
 		}
 
+		//左右移動
 		if (GritPos.z - Pos->z >= -5.0f && GritPos.z - Pos->z <= RAIL_WIGHT)
 		{
 			Pos->x += SlopeMove.x;
@@ -245,6 +250,7 @@ void CRailBlock::Move(D3DXVECTOR3* Pos)
 		}
 	}
 
+	// 左右のグリットの番号がエラー番号(マップ外)に飛び出てる時
 	if (CMapSystem::GetInstance()->GetGritWightNumber(Pos->x) == -1)
 	{
 		if (Pos->x > 0.0f)	//右のグリット外に出たとき
@@ -276,6 +282,7 @@ void CRailBlock::Move(D3DXVECTOR3* Pos)
 			Pos->x = GritPos.x;
 	}
 
+	// 上下のグリットの番号がエラー番号(マップ外)に飛び出てる時
 	if (CMapSystem::GetInstance()->GetGritHeightNumber(Pos->z) == -1)
 	{
 		if (Pos->z > 0.0f)	//右のグリット外に出たとき
@@ -323,6 +330,7 @@ void CRailBlock::RailCheck(void)
 	int WightNumber = GetWightNumber();
 	int HeightNumber = GetHeightNumber();
 
+	//ブロック内のリストを回してブロックとグリット番号が一致するレールの上下左右の有無を見る
 	while (1)
 	{
 		if (WightNumber == pRail->GetWightNumber() &&
@@ -413,20 +421,23 @@ void CRailBlock::CollisionPlayer(useful::COLLISION XYZ)
 //====================================================================
 void CRailBlock::RailSet(void)
 {
+	// 事前に設定したレールの設置を行う
 	m_pTop = CRail::Create();
 	m_pTop->SetWightNumber(GetWightNumber());
 	m_pTop->SetHeightNumber(GetHeightNumber());
 	m_pTop->NextSet(CRail::RAIL_POS_RIGHT);
 
-	int nMax = 5;
-	int nData[5];
+	int nMax = 5;	//レール数
+	int nData[5];	//レール番号
 
+	//方向指定[0:上][1:下][2:左][3:右]
 	nData[0] = 3;
 	nData[1] = 3;
 	nData[2] = 1;
 	nData[3] = 1;
 	nData[4] = 1;
 
+	// レール設置
 	CRail* pRail = m_pTop->GetNextRail();
 
 	for (int nCnt = 0; nCnt < nMax; nCnt++)

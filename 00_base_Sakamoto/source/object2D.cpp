@@ -184,7 +184,7 @@ void CObject2D::Draw(void)
 
 	CTexture *pTexture = CManager::GetInstance()->GetTexture();
 
-	assert(GetIdx() != -1);		//テクスチャの番号を入れ忘れた場合エラーを吐く
+	//assert(GetIdx() != -1);		//テクスチャの番号を入れ忘れた場合エラーを吐く
 
 	if (MultiTarget == true)
 	{

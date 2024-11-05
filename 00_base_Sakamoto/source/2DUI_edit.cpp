@@ -258,28 +258,21 @@ void C2DUIEdit::Update(void)
 //====================================================================
 void C2DUIEdit::DeleteObject(D3DXVECTOR3 pos)
 {
-	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
+	// 2DUIのリスト構造が無ければ抜ける
+	if (C2DUI::GetList() == nullptr) { return; }
+	std::list<C2DUI*> list = C2DUI::GetList()->GetList();    // リストを取得
+
+	// 2DUIリストの中身を確認する
+	for (C2DUI* pUI : list)
 	{
-		//オブジェクトを取得
-		CObject* pObj = CObject::GetTop(nCntPriority);
+		// 位置・サイズ取得
+		D3DXVECTOR3 UIpos = pUI->GetPos();
+		D3DXVECTOR3 size = pUI->GetSize();
 
-		while (pObj != nullptr)
-		{
-			CObject* pObjNext = pObj->GetNext();
-
-			CObject::TYPE type = pObj->GetType();				//種類を取得
-
-			if (type == CObject::TYPE_2DUI)
-			{//種類がブロックの時
-				C2DUI* pUI = (C2DUI*)pObj;
-
-				if (useful::CollisionRectangle2D(pos, pUI->GetPos(), D3DXVECTOR3(DELETE_WIGHT, DELETE_HEIGHT, 0.0f), D3DXVECTOR3(pUI->GetWidth() * 0.5f, pUI->GetHeight() * 0.5f, 0.0f),useful::COLLISION_XY) == true)
-				{
-					pUI->Uninit();
-				}
-			}
-
-			pObj = pObjNext;
+		// 矩形の当たり判定
+		if (useful::CollisionRectangle2D(pos, pUI->GetPos(), D3DXVECTOR3(DELETE_WIGHT, DELETE_HEIGHT, 0.0f), D3DXVECTOR3(pUI->GetWidth() * 0.5f, pUI->GetHeight() * 0.5f, 0.0f), useful::COLLISION_XY) == true)
+		{// UI削除
+			pUI->Uninit();
 		}
 	}
 }
@@ -321,6 +314,10 @@ void C2DUIEdit::DebugObject(void)
 //====================================================================
 void C2DUIEdit::SaveData(void)
 {
+	// 2DUIのリスト構造が無ければ抜ける
+	if (C2DUI::GetList() == nullptr) { return; }
+	std::list<C2DUI*> list = C2DUI::GetList()->GetList();    // リストを取得
+
 	FILE* pFile; //ファイルポインタを宣言
 
 	//ファイルを開く
@@ -329,47 +326,31 @@ void C2DUIEdit::SaveData(void)
 	if (pFile != nullptr)
 	{//ファイルが開けた場合
 
-	 //ステージをセーブする開始の合図
+		//ステージをセーブする開始の合図
 		fprintf(pFile, "%s\n\n", START_OK);
 
-		for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
+		// 2DUIの中身を確認する
+		for (C2DUI* pUI : list)
 		{
-			//オブジェクトを取得
-			CObject* pObj = CObject::GetTop(nCntPriority);
+			fprintf(pFile, "%s\n", UI_SET);
 
-			while (pObj != nullptr)
-			{
-				CObject* pObjNext = pObj->GetNext();
+			//位置の取得
+			fprintf(pFile, "%f ", pUI->GetPos().x);
+			fprintf(pFile, "%f ", pUI->GetPos().y);
+			fprintf(pFile, "%f\n", pUI->GetPos().z);
 
-				CObject::TYPE type = pObj->GetType();				//種類を取得
+			//向きの取得
+			fprintf(pFile, "%f ", pUI->GetRot().x);
+			fprintf(pFile, "%f ", pUI->GetRot().y);
+			fprintf(pFile, "%f\n", pUI->GetRot().z);
 
-				if (type == CObject::TYPE_2DUI)
-				{//種類がブロックの時
-					C2DUI* pUI = (C2DUI*)pObj;
+			//大きさの取得
+			fprintf(pFile, "%f ", pUI->GetWidth());
+			fprintf(pFile, "%f\n", pUI->GetHeight());
 
-					fprintf(pFile, "%s\n", UI_SET);
+			fprintf(pFile, "%s\n", pUI->GetTexture());
 
-					//位置の取得
-					fprintf(pFile, "%f ", pUI->GetPos().x);
-					fprintf(pFile, "%f ", pUI->GetPos().y);
-					fprintf(pFile, "%f\n", pUI->GetPos().z);
-
-					//向きの取得
-					fprintf(pFile, "%f ", pUI->GetRot().x);
-					fprintf(pFile, "%f ", pUI->GetRot().y);
-					fprintf(pFile, "%f\n", pUI->GetRot().z);
-
-					//大きさの取得
-					fprintf(pFile, "%f ", pUI->GetWidth());
-					fprintf(pFile, "%f\n", pUI->GetHeight());
-
-					fprintf(pFile, "%s\n", pUI->GetTexture());
-
-					fprintf(pFile, "%s\n\n", "ENDSET");
-				}
-
-				pObj = pObjNext;
-			}
+			fprintf(pFile, "%s\n\n", "ENDSET");
 		}
 
 		//ステージをセーブした終了の合図
