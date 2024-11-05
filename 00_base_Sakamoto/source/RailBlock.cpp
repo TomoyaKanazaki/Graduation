@@ -53,7 +53,7 @@ CRailBlock::~CRailBlock()
 //====================================================================
 //生成処理
 //====================================================================
-CRailBlock* CRailBlock::Create(int nMapWight, int nMapHeight)
+CRailBlock* CRailBlock::Create(int nMapWight, int nMapHeight, bool Edit, int Max, int* nMove)
 {
 	CRailBlock* pObjectBlock = nullptr;
 
@@ -64,7 +64,7 @@ CRailBlock* CRailBlock::Create(int nMapWight, int nMapHeight)
 	}
 
 	//オブジェクトの初期化処理
-	if (FAILED(pObjectBlock->Init(nMapWight, nMapHeight)))
+	if (FAILED(pObjectBlock->Init(nMapWight, nMapHeight, Edit, Max, nMove)))
 	{//初期化処理が失敗した場合
 		return nullptr;
 	}
@@ -75,7 +75,7 @@ CRailBlock* CRailBlock::Create(int nMapWight, int nMapHeight)
 //====================================================================
 //初期化処理
 //====================================================================
-HRESULT CRailBlock::Init(int nMapWight, int nMapHeight)
+HRESULT CRailBlock::Init(int nMapWight, int nMapHeight, bool Edit, int Max, int* nMove)
 {
 	SetWightNumber(nMapWight);
 	SetHeightNumber(nMapHeight);
@@ -89,9 +89,12 @@ HRESULT CRailBlock::Init(int nMapWight, int nMapHeight)
 
 	SetType(TYPE_RAILBLOCK);
 
-	RailSet();
+	if (Edit == false)
+	{
+		RailSet(Max, nMove);
 
-	RailCheck();
+		RailCheck();
+	}
 
 	if (m_pList == nullptr)
 	{// リストマネージャー生成
@@ -428,7 +431,7 @@ void CRailBlock::CollisionPlayer(useful::COLLISION XYZ)
 //====================================================================
 //レールの設置処理
 //====================================================================
-void CRailBlock::RailSet(void)
+void CRailBlock::RailSet(int Max, int* nMove)
 {
 	// 事前に設定したレールの設置を行う
 	m_pTop = CRail::Create();
@@ -436,27 +439,119 @@ void CRailBlock::RailSet(void)
 	m_pTop->SetHeightNumber(GetHeightNumber());
 	m_pTop->NextSet(CRail::RAIL_POS_RIGHT);
 
-	int nMax = 5;	//レール数
-	int nData[5];	//レール番号
-
-	//方向指定[0:上][1:下][2:左][3:右]
-	nData[0] = 3;
-	nData[1] = 3;
-	nData[2] = 1;
-	nData[3] = 1;
-	nData[4] = 1;
+	int nMax = Max;	//レール数
+	int nData[64];	//レール番号
 
 	// レール設置
 	CRail* pRail = m_pTop->GetNextRail();
 
 	for (int nCnt = 0; nCnt < nMax; nCnt++)
 	{
-		pRail->NextSet((CRail::RAIL_POS)nData[nCnt]);
+		pRail->NextSet((CRail::RAIL_POS)nMove[nCnt]);
 
 		pRail = pRail->GetNextRail();
 	}
 
 	m_pCur = pRail;
+}
+
+//====================================================================
+//エディット用のレールの設置処理
+//====================================================================
+void CRailBlock::EditRailSet(int Number)
+{
+	int nWightNumber = GetWightNumber();
+	int nHeightNumber = GetHeightNumber();
+
+	if (m_pTop == nullptr)
+	{
+		// 事前に設定したレールの設置を行う
+		m_pTop = CRail::Create();
+		m_pTop->SetWightNumber(nWightNumber);
+		m_pTop->SetHeightNumber(nHeightNumber);
+		m_pTop->NextSet((CRail::RAIL_POS)Number);
+
+		m_pCur = m_pTop->GetNextRail();
+	}
+	else
+	{
+		// レール設置
+		CRail* pRail = m_pCur;
+
+		nWightNumber = pRail->GetWightNumber();
+		nHeightNumber = pRail->GetHeightNumber();
+
+		pRail->SetWightNumber(nWightNumber);
+		pRail->SetHeightNumber(nHeightNumber);
+		pRail->NextSet((CRail::RAIL_POS)Number);
+
+		m_pCur = pRail->GetNextRail();
+	}
+}
+
+//====================================================================
+//エディット用のレールの設置処理
+//====================================================================
+void CRailBlock::EditRailUpdate(void)
+{
+	CRail* pRail = m_pTop;
+	int WightNumber = GetWightNumber();
+	int HeightNumber = GetHeightNumber();
+
+	if (pRail == nullptr)
+	{
+		return;
+	}
+
+
+	//ブロック内のリストを回してブロックとグリット番号が一致するレールの上下左右の有無を見る
+	while (1)
+	{
+		if (pRail == m_pTop)
+		{
+			pRail->SetWightNumber(WightNumber);
+			pRail->SetHeightNumber(HeightNumber);
+		}
+		else
+		{
+			switch (pRail->GetPrevRail()->GetNextNumber())
+			{
+			case 0:
+				pRail->SetWightNumber(WightNumber);
+				pRail->SetHeightNumber(HeightNumber - 1);
+				break;
+
+			case 1:
+				pRail->SetWightNumber(WightNumber);
+				pRail->SetHeightNumber(HeightNumber + 1);
+				break;
+
+			case 2:
+				pRail->SetWightNumber(WightNumber - 1);
+				pRail->SetHeightNumber(HeightNumber);
+				break;
+
+			case 3:
+				pRail->SetWightNumber(WightNumber + 1);
+				pRail->SetHeightNumber(HeightNumber);
+				break;
+			}
+		}
+
+		WightNumber = pRail->GetWightNumber();
+		HeightNumber = pRail->GetHeightNumber();
+
+		if (pRail == m_pCur)
+		{
+			break;
+		}
+
+		pRail = pRail->GetNextRail();
+		if (pRail == nullptr)
+		{
+			pRail = m_pCur;
+		}
+	}
 }
 
 //====================================================================

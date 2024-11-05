@@ -53,6 +53,7 @@ public:
 	CRail* GetNextRail(void) { return m_pNext; }
 
 	bool GetRailOK(int nCnt) { return m_bRail[nCnt]; }
+	int GetNextNumber(void) { return m_bNextNumber; }
 
 	// 静的メンバ関数
 	static CListManager<CRail>* GetList(void); // リスト取得
@@ -61,6 +62,7 @@ private:
 
 	CObjectX* m_pRailModel[2];
 	bool m_bRail[RAIL_POS_MAX];
+	int m_bNextNumber;
 
 	int m_nMapWidth;	// マップの横番号
 	int m_nMapHeight;	// マップの縦番号

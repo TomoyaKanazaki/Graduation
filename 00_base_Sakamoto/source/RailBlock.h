@@ -19,12 +19,15 @@ public:
 	CRailBlock(int nPriority = 3);
 	~CRailBlock();
 
-	static CRailBlock* Create(int nMapWight, int nMapHeight);
+	static CRailBlock* Create(int nMapWight, int nMapHeight, bool Edit, int Max, int *nMove);
 
-	HRESULT Init(int nMapWight, int nMapHeight);
+	HRESULT Init(int nMapWight, int nMapHeight, bool Edit, int Max = 0, int* nMove = 0);
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);
+
+	void EditRailSet(int Number);
+	void EditRailUpdate(void);
 
 	// 静的メンバ関数
 	static CListManager<CRailBlock>* GetList(void); // リスト取得
@@ -33,7 +36,7 @@ private:
 
 	void Move(D3DXVECTOR3 *Pos);
 	void RailCheck();
-	void RailSet();
+	void RailSet(int Max, int* nMove);
 	void CollisionPlayer(useful::COLLISION XYZ);	//レールブロックとの当たり判定
 
 	int StartWightNumber;

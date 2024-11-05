@@ -216,6 +216,7 @@ void CRail::NextSet(RAIL_POS Set)
 {
 	//引数で設定した方向にレールを置く
 	m_bRail[Set] = true;
+	m_bNextNumber = Set;
 
 	//真ん中までのレールを設置する
 	if (m_pRailModel[1] == nullptr)

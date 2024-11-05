@@ -12,6 +12,8 @@
 #include "input.h"
 #include "objmeshCube.h"
 #include "CubeBlock.h"
+#include "RailBlock.h"
+#include "Rail.h"
 #include "debugproc.h"
 #include "MapModel.h"
 #include "XModel.h"
@@ -118,6 +120,7 @@ CEdit::CEdit()
 	m_nModelNumber = 0;
 	m_nGimmickNumber = 0;
 	m_nBlockTextureIdx = 0;
+	m_nRailMax = 0;
 
 	m_pEditBlock = nullptr;
 	if (m_pEditBlock == nullptr)
@@ -134,6 +137,14 @@ CEdit::CEdit()
 		m_pEditModel = CMapModel::Create(m_aModelInfo[m_nModelNumber].pFilename);
 		m_pEditModel->SetAppear(false);
 		AppearCollision();
+	}
+
+	m_EditRailBlock = nullptr;
+	if (m_EditRailBlock == nullptr)
+	{
+		m_EditRailBlock = CRailBlock::Create(0, 0, true, 0, 0);
+		m_EditRailBlock->SetPos(D3DXVECTOR3(0.0f, 50.0f, 0.0f));
+		m_EditRailBlock->SetAppear(false);
 	}
 
 	m_EditPos = D3DXVECTOR3(0.0f, 50.0f, 0.0f);
@@ -207,20 +218,30 @@ void CEdit::Update(void)
 		// Y軸の位置初期化
 		m_EditPos.y = 0.0f;
 
-		if (m_EditType == EDITTYPE_MODELHIT)
+		if (m_EditType == EDITTYPE_RAILBLOCK)
 		{
 			m_EditType = EDITTYPE_BLOCK;
 			m_pEditBlock->SetAppear(true);
 			m_pEditModel->SetAppear(false);
+			m_EditRailBlock->SetAppear(false);
 
-			m_EditPos.y = BLOCK_INIT_POS_Y[m_nBlockNumber];
-			m_EditSize = BLOCK_INIT_SIZE[m_nBlockNumber];
 		}
 		else if (m_EditType == EDITTYPE_BLOCK)
 		{
-			m_EditType = EDITTYPE_MODELHIT;
+			m_EditType = EDITTYPE_RAILBLOCK;
 			m_pEditBlock->SetAppear(false);
 			m_pEditModel->SetAppear(false);
+			m_EditRailBlock->SetAppear(true);
+		}
+		else if (m_EditType == EDITTYPE_MODELHIT)
+		{
+			m_EditType = EDITTYPE_BLOCK;
+			m_pEditBlock->SetAppear(true);
+			m_pEditModel->SetAppear(false);
+			m_EditRailBlock->SetAppear(false);
+
+			m_EditPos.y = BLOCK_INIT_POS_Y[m_nBlockNumber];
+			m_EditSize = BLOCK_INIT_SIZE[m_nBlockNumber];
 		}
 	}
 
@@ -249,9 +270,10 @@ void CEdit::Update(void)
 		UpdateXModel();
 
 		break;
-	case CEdit::EDITTYPE_MODELNOT:
-		break;
-	case CEdit::EDITTYPE_ENEMY:
+	case CEdit::EDITTYPE_RAILBLOCK:
+
+		UpdateRailBlock();
+
 		break;
 	case CEdit::EDITTYPE_MAX:
 		break;
@@ -385,6 +407,74 @@ void CEdit::UpdateBlock(void)
 
 	//デバッグ表示の取得
 	DebugProc::Print(DebugProc::POINT_LEFT, "ブロックのサイズ [%f]:[%f]:[%f]\n", m_pEditBlock->GetSize().x, m_pEditBlock->GetSize().y, m_pEditBlock->GetSize().z);
+	DebugProc::Print(DebugProc::POINT_LEFT, "サイズ変更キー : X軸 [Q- : E+] \n");
+	DebugProc::Print(DebugProc::POINT_LEFT, "サイズ変更キー : Y軸 [R- : Y+] \n");
+	DebugProc::Print(DebugProc::POINT_LEFT, "サイズ変更キー : Z軸 [U- : O+] \n");
+	DebugProc::Print(DebugProc::POINT_LEFT, "ブロックのテンプレート変更キー : [7 : 8] \n");
+	DebugProc::Print(DebugProc::POINT_LEFT, "ブロックのテクスチャ変更キー : [5 : 6] \n");
+}
+
+//====================================================================
+//	レールブロックの更新処理
+//====================================================================
+void CEdit::UpdateRailBlock(void)
+{
+	//キーボードの取得
+	CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
+	D3DXVECTOR3 MapPos = CMapSystem::GetInstance()->GetMapPos();
+
+	m_EditRailBlock->SetAppear(true);
+	m_EditRailBlock->SetWightNumber(m_MapGritWight);
+	m_EditRailBlock->SetHeightNumber(m_MapGritHeight);
+
+	m_EditRailBlock->SetSize(m_EditSize);
+	m_EditRailBlock->EditRailUpdate();
+
+	if (pInputKeyboard->GetTrigger(DIK_RETURN) == true)
+	{
+
+		CMapSystem::GetInstance()->SetGritBool(m_MapGritWight, m_MapGritHeight, true);
+		CRailBlock* pBlock = CRailBlock::Create(m_MapGritWight, m_MapGritHeight, false, m_nRailMax, &m_nRailMove[0]);
+		pBlock->SetPos(CMapSystem::GetInstance()->GetGritPos(m_MapGritWight, m_MapGritHeight));
+		pBlock->SetSize(D3DXVECTOR3(50.0f, 50.0f, 50.0f));
+		m_nRailMax = 0;
+	}
+
+	if (pInputKeyboard->GetTrigger(DIK_UP) == true)
+	{
+		m_nRailMove[m_nRailMax] = 0;
+		m_EditRailBlock->EditRailSet(0);
+		m_nRailMax++;
+	}
+
+	if (pInputKeyboard->GetTrigger(DIK_DOWN) == true)
+	{
+		m_nRailMove[m_nRailMax] = 1;
+		m_EditRailBlock->EditRailSet(1);
+		m_nRailMax++;
+	}
+
+	if (pInputKeyboard->GetTrigger(DIK_LEFT) == true)
+	{
+		m_nRailMove[m_nRailMax] = 2;
+		m_EditRailBlock->EditRailSet(2);
+		m_nRailMax++;
+	}
+
+	if (pInputKeyboard->GetTrigger(DIK_RIGHT) == true)
+	{
+		m_nRailMove[m_nRailMax] = 3;
+		m_EditRailBlock->EditRailSet(3);
+		m_nRailMax++;
+	}
+
+	if (pInputKeyboard->GetTrigger(DIK_BACKSPACE) == true)
+	{
+		CollisionBlock();
+	}
+
+	//デバッグ表示の取得
+	DebugProc::Print(DebugProc::POINT_LEFT, "ブロックのサイズ [%f]:[%f]:[%f]\n", m_EditRailBlock->GetSize().x, m_EditRailBlock->GetSize().y, m_EditRailBlock->GetSize().z);
 	DebugProc::Print(DebugProc::POINT_LEFT, "サイズ変更キー : X軸 [Q- : E+] \n");
 	DebugProc::Print(DebugProc::POINT_LEFT, "サイズ変更キー : Y軸 [R- : Y+] \n");
 	DebugProc::Print(DebugProc::POINT_LEFT, "サイズ変更キー : Z軸 [U- : O+] \n");

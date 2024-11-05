@@ -15,6 +15,7 @@ class CObjmeshCube;
 class CMapModel;
 class CStair;
 class CGimmick;
+class CRailBlock;
 
 //マップクラス
 class CEdit
@@ -101,9 +102,8 @@ public:
 	enum EDITTYPE
 	{
 		EDITTYPE_BLOCK = 0,
+		EDITTYPE_RAILBLOCK,
 		EDITTYPE_MODELHIT,
-		EDITTYPE_MODELNOT,
-		EDITTYPE_ENEMY,
 		EDITTYPE_MAX,
 	};
 
@@ -114,36 +114,40 @@ public:
 protected:
 
 private:
-	void Move(void);			//移動処理
-	void CollisionBlock(void);	//ブロックとの当たり判定
-	void CollisionXModel(void);	//Xモデルとの当たり判定
-	void SaveData(void);		//エディット情報の保存
-	void SaveBlock(void);		//ブロックの保存
-	void SaveXModel(void);		//Xモデルの保存
-	void UpdateBlock(void);		//ブロックの更新
-	void UpdateXModel(void);	//Xモデルの更新
-	void AppearCollision(void);	//当たり判定の可視化
+	void Move(void);				//移動処理
+	void CollisionBlock(void);		//ブロックとの当たり判定
+	void CollisionXModel(void);		//Xモデルとの当たり判定
+	void SaveData(void);			//エディット情報の保存
+	void SaveBlock(void);			//ブロックの保存
+	void SaveXModel(void);			//Xモデルの保存
+	void UpdateBlock(void);			//ブロックの更新
+	void UpdateRailBlock(void);		//レールブロックの更新
+	void UpdateXModel(void);		//Xモデルの更新
+	void AppearCollision(void);		//当たり判定の可視化
 
-	int m_nPressCount;			//ボタン入力カウント
-	int m_nBlockTextureIdx;		//ブロックのテクスチャ番号
-	D3DXVECTOR3 m_EditPos;		//設置位置
+	int m_nPressCount;				//ボタン入力カウント
+	int m_nBlockTextureIdx;			//ブロックのテクスチャ番号
+	D3DXVECTOR3 m_EditPos;			//設置位置
 
-	int m_MapGritWight;			//グリットの横位置
-	int m_MapGritHeight;		//グリットの縦位置
+	int m_MapGritWight;				//グリットの横位置
+	int m_MapGritHeight;			//グリットの縦位置
 
-	D3DXVECTOR3 m_EditRot;		//設置角度
-	D3DXVECTOR3 m_EditSize;		//設置サイズ
-	float MoveWidth;			//移動幅
-	float m_fRotValue;			//回転幅
-	EDITTYPE m_EditType;		//エディットで配置するオブジェクトの種類
-	CObjmeshCube* m_pEditBlock;	//ブロックのポインタ
-	CMapModel* m_pEditModel;	//マップモデルのポインタ
+	D3DXVECTOR3 m_EditRot;			//設置角度
+	D3DXVECTOR3 m_EditSize;			//設置サイズ
+	float MoveWidth;				//移動幅
+	float m_fRotValue;				//回転幅
+	EDITTYPE m_EditType;			//エディットで配置するオブジェクトの種類
+	CObjmeshCube* m_pEditBlock;		//ブロックのポインタ
+	CMapModel* m_pEditModel;		//マップモデルのポインタ
+	CRailBlock* m_EditRailBlock;	//レールブロックのポインタ
 	
-	int m_nModelNumber;			//移動幅
-	int m_nGimmickNumber;		//ギミック番号
-	int m_nBlockNumber;			//ブロック番号
-	bool m_bModelCollision;		//当たり判定を付与するかどうか
-	bool m_bAppearCollision;	//当たり判定を可視化するかどうか
+	int m_nRailMax;					//レールブロックのレールの最大数
+	int m_nRailMove[32];					//レールブロックのレールの移動先
+	int m_nModelNumber;				//移動幅
+	int m_nGimmickNumber;			//ギミック番号
+	int m_nBlockNumber;				//ブロック番号
+	bool m_bModelCollision;			//当たり判定を付与するかどうか
+	bool m_bAppearCollision;		//当たり判定を可視化するかどうか
 
 	static OBJINFO m_aModelInfo[OBJ_HIT_MAX];	// テクスチャの情報
 };
