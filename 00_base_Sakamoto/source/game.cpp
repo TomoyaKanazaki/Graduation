@@ -55,14 +55,18 @@
 
 #include "bowabowa.h"
 
+#include "SlopeDevice.h"
+
 namespace
 {
 	const int SAMPLE_NAMESPACE = 0;
 
 	const int BOTTOM_FIELD_VTX_WIDTH = 32;		// 下床の横数
 	const int BOTTOM_FIELD_VTX_HEIGHT = 32;		// 下床の縦数
-	const char* BOTTOM_FIELD_TEX = "data\\TEXTURE\\Field\\Tile000.png";		// 下床のテクスチャ
+	const char* BOTTOM_FIELD_TEX = "data\\TEXTURE\\Field\\Tile001.jpg";		// 下床のテクスチャ
 	const D3DXVECTOR3 BOTTOM_FIELD_POS = D3DXVECTOR3(0.0f, -500.0f, 0.0f);	// 下床の位置
+
+	const char* SLOPE_DEVICE_MODEL = "data\\TXT\\MOTION\\02_staging\\00_SlopeDevice\\motion_slopedevice.txt";
 }
 
 //静的メンバ変数宣言
@@ -159,8 +163,8 @@ HRESULT CGame::Init(void)
 	m_pMapField->SetPos(INITVECTOR3);
 
 	// 傾き装置（見た目だけの仮）
-	CObjectX* pObjX = CObjectX::Create("data\\MODEL\\mawasiguruma.x");
-	pObjX->SetPos(D3DXVECTOR3(900.0f, 0.0f, -600.0f));
+	//CSlopeDevice* pSlopeDevice = CSlopeDevice::Create(SLOPE_DEVICE_MODEL,SLOPE_DEVICE_MODEL);
+	//pSlopeDevice->SetPos(D3DXVECTOR3(900.0f, 0.0f, -600.0f));
 
 	CObjectX* pObjX2 = CObjectX::Create("data\\MODEL\\mawasiguruma.x");
 	pObjX2->SetPos(D3DXVECTOR3(900.0f, 0.0f, 600.0f));
@@ -188,11 +192,13 @@ HRESULT CGame::Init(void)
 	m_pScore = CScore::Create();
 	m_pScore->SetScore(CManager::GetInstance()->GetEndScore());
 
-	int nData[5] = {0,0,0,0,0};
-	CMapSystem::GetInstance()->SetGritBool(8, 6, true);
-	CRailBlock* pBlock = CRailBlock::Create(8, 6, false, 5, &nData[0]);
-	pBlock->SetPos(D3DXVECTOR3(0.0f, 50.0f, 0.0f));
-	pBlock->SetSize(D3DXVECTOR3(50.0f, 50.0f, 50.0f));
+	//int nData[8] = {0,2,1,3,3,1,2,0};
+	//CMapSystem::GetInstance()->SetGritBool(8, 6, true);
+	//CRailBlock* pBlock = CRailBlock::Create(8, 6, false, 8, &nData[0]);
+	//pBlock->SetPos(D3DXVECTOR3(0.0f, 50.0f, 0.0f));
+	//pBlock->SetSize(D3DXVECTOR3(50.0f, 50.0f, 50.0f));
+
+	LoadStageRailBlock("data\\TXT\\STAGE\\RailBlock.txt");
 
 	//CMapSystem::GetInstance()->SetGritBool(8, 7, true);
 	//pBlock = CRailBlock::Create(8, 7);
@@ -536,6 +542,75 @@ void CGame::LoadStageBlock(const char* pFilename)
 					{
 						break;
 					}
+				}
+				else if (strcmp(&aSetMessage[0], "ENDSETSTAGE") == 0)
+				{
+					break;
+				}
+			}
+		}
+		fclose(pFile);
+	}
+	else
+	{//ファイルが開けなかった場合
+		printf("***ファイルを開けませんでした***\n");
+	}
+}
+
+//====================================================================
+// レールブロックの読み込み配置
+//====================================================================
+void CGame::LoadStageRailBlock(const char* pFilename)
+{
+	//ファイルを開く
+	FILE* pFile = fopen(pFilename, "r");
+
+	if (pFile != nullptr)
+	{//ファイルが開けた場合
+
+		char Getoff[32] = {};
+		char boolLife[32] = {};
+		char aString[128] = {};			//ゴミ箱
+		char aStartMessage[32] = {};	//スタートメッセージ
+		char aSetMessage[32] = {};		//セットメッセージ
+		char aEndMessage[32] = {};		//終了メッセージ
+
+		fscanf(pFile, "%s", &aStartMessage[0]);
+		if (strcmp(&aStartMessage[0], "STARTSETSTAGE") == 0)
+		{
+			CMapSystem* pMapSystem = CMapSystem::GetInstance();
+			D3DXVECTOR3 MapSystemPos = pMapSystem->GetMapPos();
+			float MapSystemGritSize = pMapSystem->GetGritSize() * 0.5f;
+
+			while (1)
+			{
+				fscanf(pFile, "%s", &aSetMessage[0]);
+				if (strcmp(&aSetMessage[0], "STARTSETRAILBLOCK") == 0)
+				{
+					int WightNumber, HeightNumber, nMax, RailMove[64];
+
+					fscanf(pFile, "%s", &aString[0]);
+					fscanf(pFile, "%d", &WightNumber);
+
+					fscanf(pFile, "%s", &aString[0]);
+					fscanf(pFile, "%d", &HeightNumber);
+
+					fscanf(pFile, "%s", &aString[0]);
+					fscanf(pFile, "%d", &nMax);
+
+					fscanf(pFile, "%s", &aString[0]);
+
+					for (int nCnt = 0; nCnt < nMax; nCnt++)
+					{
+						fscanf(pFile, "%d", &RailMove[nCnt]);
+					}
+
+					CMapSystem::GetInstance()->SetGritBool(WightNumber, HeightNumber, true);
+					CRailBlock* pBlock = CRailBlock::Create(WightNumber, HeightNumber, false, nMax, &RailMove[0]);
+					pBlock->SetPos(D3DXVECTOR3(pBlock->GetPos().x, 50.0f, pBlock->GetPos().z));
+					pBlock->SetSize(D3DXVECTOR3(50.0f, 50.0f, 50.0f));
+
+					fscanf(pFile, "%s", &aEndMessage[0]);
 				}
 				else if (strcmp(&aSetMessage[0], "ENDSETSTAGE") == 0)
 				{

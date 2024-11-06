@@ -37,7 +37,7 @@ public:
 		ACTION_MAX,			// 最大
 	};
 
-	static CSlopeDevice* Create(char* pModelName);
+	static CSlopeDevice* Create(const char* pModelNameSlopeDevice, const char* pModelNameEnemy);
 
 	HRESULT Init(void);
 	void Uninit(void);
@@ -57,7 +57,11 @@ public:
 	static CListManager<CSlopeDevice>* GetList(void); // リスト取得
 
 private:
+	void InitModel(const char* pModelNameSlopeDevice, const char* pModelNameEnemy);
+
 	void StateManager(void);		// 状態管理
+
+	void LoadModel(const char* pFilename);
 
 	D3DXVECTOR3 m_pos;			//位置
 	D3DXVECTOR3 m_posOld;		//過去の位置
@@ -74,6 +78,7 @@ private:
 	CMotion* m_pMotion;
 	char* m_aModelName[MODEL_NUM];
 	int m_nNumModel;
+	char m_cFileName[128];		//ファイルの名前
 
 	//マップとのマトリックス情報
 	bool m_bMultiMatrix;					// マトリックスの掛け合わせをするかどうか

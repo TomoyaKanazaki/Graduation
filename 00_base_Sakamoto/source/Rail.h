@@ -34,6 +34,7 @@ public:
 
 	HRESULT Init(void);
 	void Uninit(void);
+	void SetNULL(void);
 	void Update(void);
 	void TitleUpdate(void);
 	void GameUpdate(void);
@@ -52,6 +53,7 @@ public:
 	void SetNextRail(CRail* Set) { m_pNext = Set; }
 	CRail* GetNextRail(void) { return m_pNext; }
 
+	void SetRailOK(int nCnt, bool Set) { m_bRail[nCnt] = Set; }
 	bool GetRailOK(int nCnt) { return m_bRail[nCnt]; }
 	int GetNextNumber(void) { return m_bNextNumber; }
 
@@ -70,11 +72,11 @@ private:
 	CRail* m_pPrev;		// 前のレールへのポインタ
 	CRail* m_pNext;		// 次のレールへのポインタ
 
-	// 静的メンバ変数
-	static CListManager<CRail>* m_pList; // オブジェクトリスト
+	//// 静的メンバ変数
+	//static CListManager<CRail>* m_pList; // オブジェクトリスト
 
-	// メンバ変数
-	CListManager<CRail>::AIterator m_iterator; // イテレーター
+	//// メンバ変数
+	//CListManager<CRail>::AIterator m_iterator; // イテレーター
 
 };
 #endif
