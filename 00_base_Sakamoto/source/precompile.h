@@ -21,6 +21,7 @@
 #include <cstdlib>
 
 #include <string>			// •¶Žš—ñ
+#include <string.h>
 
 
 #include "useful.h"
