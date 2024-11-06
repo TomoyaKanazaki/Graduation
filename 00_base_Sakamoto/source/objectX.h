@@ -17,10 +17,10 @@ public:
 	CObjectX(int nPriority = 7);
 	~CObjectX();
 
-	static CObjectX *Create(char *pModelName);
+	static CObjectX *Create(const char *pModelName);
 
 	virtual HRESULT Init(void);
-	virtual HRESULT Init(char* pModelName);
+	virtual HRESULT Init(const char* pModelName);
 	virtual void Uninit(void);
 	void SetNULL(void);
 	virtual void Update(void);

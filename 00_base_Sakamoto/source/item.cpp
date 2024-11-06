@@ -12,6 +12,27 @@
 #include "effect.h"
 #include "MapSystem.h"
 #include "bible.h"
+#include "game.h"
+#include "score.h"
+
+//==========================================
+//  定数定義
+//==========================================
+namespace
+{
+	// 加算するスコア
+	const int ITEM_SCORE[] =
+	{
+		10, // 十字架
+		10, // 聖書
+		10 // ぼわぼわ
+	};
+}
+
+//==========================================
+//  静的警告処理
+//==========================================
+static_assert(NUM_ARRAY(ITEM_SCORE) == CItem::TYPE_MAX, "ERROR : Type Count Missmatch");
 
 //====================================================================
 // コンストラクタ
@@ -47,7 +68,7 @@ CItem::~CItem()
 //====================================================================
 // 生成
 //====================================================================
-CItem* CItem::Create(TYPE eType, const D3DXVECTOR3& pos)
+CItem* CItem::Create(const TYPE eType, const GRID& pos)
 {
 	// インスタンス生成
 	CItem* pItem = nullptr;
@@ -74,8 +95,14 @@ CItem* CItem::Create(TYPE eType, const D3DXVECTOR3& pos)
 		}
 	}
 
-	// 位置
-	pItem->SetPos(pos);
+	// 初期化処理
+	pItem->Init();
+
+	// 位置の設定
+	pItem->SetGrid(pos);
+
+	// タイプの設定
+	pItem->m_eType = eType;
 
 	return pItem;
 }
@@ -83,7 +110,7 @@ CItem* CItem::Create(TYPE eType, const D3DXVECTOR3& pos)
 //====================================================================
 // 初期化
 //====================================================================
-HRESULT CItem::Init(char* pModelName)
+HRESULT CItem::Init(const char* pModelName)
 {
 	// 継承クラスの初期化
 	CObjectX::Init(pModelName);
@@ -145,6 +172,15 @@ void CItem::Draw()
 	CObjectX::Draw();
 }
 
+//==========================================
+//  マップ番号の設定
+//==========================================
+void CItem::SetGrid(const GRID& pos)
+{
+	SetWightNumber(pos.x);
+	SetHeightNumber(pos.y);
+}
+
 //====================================================================
 // プレイヤーとの当たり判定
 //====================================================================
@@ -163,7 +199,8 @@ bool CItem::CollisionPlayer()
 		// 矩形の当たり判定
 		if (useful::CollisionCircle(m_pos, pos, size.x))
 		{
-			Hit(player);
+			// 取得に成功している場合スコアを加算する
+			if (Hit(player)) { CGame::GetScore()->AddScore(ITEM_SCORE[m_eType]); }
 			return true;
 		}
 	}

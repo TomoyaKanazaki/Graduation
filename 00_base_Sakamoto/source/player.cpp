@@ -1115,9 +1115,9 @@ void CPlayer::Death(void)
 		{
 			// ¹‘¶¬
 			CBible* pBible = nullptr;
-			pBible = CBible::Create("data\\MODEL\\TestCross.x");
-			pBible->SetWightNumber(m_nMapWidth);
-			pBible->SetHeightNumber(m_nMapHeight);
+			//pBible = CBible::Create("data\\MODEL\\TestCross.x");
+			//pBible->SetWightNumber(m_nMapWidth);
+			//pBible->SetHeightNumber(m_nMapHeight);
 			pBible->SetMapScroll(true);
 
 			// ƒAƒCƒeƒ€‚ğŠ‚µ‚Ä‚¢‚È‚¢ó‘Ô‚É‚·‚é

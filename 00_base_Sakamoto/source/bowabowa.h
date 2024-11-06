@@ -30,10 +30,9 @@ public:
 	};
 
 	// 静的メンバ関数
-	static CBowabowa* Create(char* pModelName);
 	static CListManager<CBowabowa>* GetList(void); // リスト取得
 
-	HRESULT Init(char* pModelName);
+	HRESULT Init();
 	void Uninit(void);
 	void Update(void);
 	void TitleUpdate(void);
@@ -41,7 +40,7 @@ public:
 	void Draw(void);
 	void Take(void);
 
-	void Hit(CPlayer* pPlayer) override;
+	bool Hit(CPlayer* pPlayer) override;
 
 private:
 	void StateManager(void);		//状態管理

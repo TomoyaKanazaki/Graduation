@@ -19,6 +19,7 @@ namespace
 	const int CROSS_DELETTIME = 600;	// 十字架消滅時間
 	const D3DXVECTOR3 INIT_POS = D3DXVECTOR3(0.0f, 0.0f, 200.0f);		//当たり判定
 	const D3DXVECTOR3 SAMPLE_SIZE = D3DXVECTOR3(20.0f, 20.0f, 20.0f);		//当たり判定
+	const char* MODEL_PASS = "data\\MODEL\\zyuzika.x"; // モデルパス
 }
 
 //===========================================
@@ -31,7 +32,7 @@ CListManager<CCross>* CCross::m_pList = nullptr; // オブジェクトリスト
 //====================================================================
 CCross::CCross(int nPriority) : CItem(nPriority)
 {
-	m_nDeletCont = 0;
+	m_nDeleteCont = 0;
 	SetSize(SAMPLE_SIZE);
 	SetPos(INITVECTOR3);
 }
@@ -45,37 +46,15 @@ CCross::~CCross()
 }
 
 //====================================================================
-//生成処理
-//====================================================================
-CCross* CCross::Create(char* pModelName)
-{
-	CCross* pCross = nullptr;
-
-	if (pCross == nullptr)
-	{
-		//オブジェクト2Dの生成
-		pCross = new CCross();
-	}
-
-	//オブジェクトの初期化処理
-	if (FAILED(pCross->Init(pModelName)))
-	{//初期化処理が失敗した場合
-		return nullptr;
-	}
-
-	return pCross;
-}
-
-//====================================================================
 //初期化処理
 //====================================================================
-HRESULT CCross::Init(char* pModelName)
+HRESULT CCross::Init()
 {
-	m_nDeletCont = 0;
+	m_nDeleteCont = 0;
 
 	SetType(CObject::TYPE_CROSS);
 
-	CItem::Init(pModelName);
+	CItem::Init(MODEL_PASS);
 
 	//モードごとに初期値を設定出来る
 	switch (CScene::GetMode())
@@ -208,16 +187,17 @@ void CCross::Draw(void)
 //====================================================================
 //　ヒット処理
 //====================================================================
-void CCross::Hit(CPlayer* pPlayer)
+bool CCross::Hit(CPlayer* pPlayer)
 {
 	if (pPlayer->GetItemType() != CPlayer::TYPE_NONE
 		&& pPlayer->GetItemType() != CPlayer::TYPE_CROSS)
 	{
-		return;
+		return false;
 	}
 
 	// プレイヤーのアイテムを設定
 	pPlayer->SetItemType(CPlayer::TYPE_CROSS);
+	return true;
 }
 
 //====================================================================

@@ -57,7 +57,7 @@ CObjectX::~CObjectX()
 //====================================================================
 //¶¬ˆ—
 //====================================================================
-CObjectX *CObjectX::Create(char* pModelName)
+CObjectX *CObjectX::Create(const char* pModelName)
 {
 	CObjectX *pObjectX = nullptr;
 
@@ -87,7 +87,7 @@ HRESULT CObjectX::Init()
 //====================================================================
 //‰Šú‰»ˆ—
 //====================================================================
-HRESULT CObjectX::Init(char* pModelName)
+HRESULT CObjectX::Init(const char* pModelName)
 {
 	//Xƒtƒ@ƒCƒ‹‚ÌŠ„‚è“–‚Ä
 	CXModel* pXModel = CManager::GetInstance()->GetXModel();

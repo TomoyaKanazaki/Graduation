@@ -428,6 +428,9 @@ void CRailBlock::RailSet(int Max, int* nMove)
 	m_pTop->NextSet((CRail::RAIL_POS)nMove[0]);
 	m_nMove[0] = nMove[0];
 
+	int nMax = Max;	//レール数
+	//int nData[64];	//レール番号
+
 	// レール設置
 	CRail* pRail = m_pTop->GetNextRail();
 

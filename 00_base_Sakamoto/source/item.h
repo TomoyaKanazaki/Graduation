@@ -31,21 +31,34 @@ public:
 	
 	enum TYPE
 	{// アイテムの種類
-		TYPE_NONE = 0,
-		TYPE_CROSS,		// 十字架
+		TYPE_CROSS = 0,	// 十字架
 		TYPE_BIBLE,		// 聖書
 		TYPE_BOWABOWA,	// ぼわぼわ
-		TYPE_MAX
+		TYPE_MAX,
+		TYPE_NONE
 	};
 
-	static CItem* Create(TYPE eType, const D3DXVECTOR3& pos);
+	// 特殊な座標系
+	struct GRID
+	{
+		// コンストラクタ
+		GRID() {};
+		GRID(int X, int Y) { x = X; y = Y; };
 
-	HRESULT Init(char* pModelName);
+		int x;
+		int y;
+	};
+
+	HRESULT Init(const char* pModelName);
+	HRESULT Init() { assert(false); return E_FAIL; }; // 呼ばれてはならない
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);
 
-	virtual void Move() { ; }
+	// 静的メンバ関数
+	static CItem* Create(const TYPE eType, const GRID& pos);
+
+	virtual void Move() {}
 
 	// テクスチャ番号取得
 	int GetIdx(void) { return m_nIdxTexture; }
@@ -79,6 +92,9 @@ public:
 	// 状態管理の取得
 	int GetStateCounter() { return m_nStateCount; }
 
+	// マップ番号の設定
+	virtual void SetGrid(const GRID& pos);
+
 	// マップの横番号の設定・取得
 	void SetWightNumber(int Wight) { m_nMapWidth = Wight; }
 	int GetWightNumber() { return m_nMapWidth; }
@@ -92,7 +108,7 @@ public:
 	bool GetMapScroll() { return m_bMapScroll; }
 
 	bool CollisionPlayer();
-	virtual void Hit(CPlayer* pPlayer) = 0;
+	virtual bool Hit(CPlayer* pPlayer) = 0;
 
 private:
 
