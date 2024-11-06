@@ -85,6 +85,8 @@ HRESULT CRailBlock::Init(int nMapWight, int nMapHeight, bool Edit, int Max, int*
 
 	CCubeBlock::Init();
 
+	SetPos(CMapSystem::GetInstance()->GetGritPos(StartWightNumber, StartHeightNumber));
+
 	SetTexture("data\\TEXTURE\\Wood001.png");
 
 	SetType(TYPE_RAILBLOCK);
@@ -424,6 +426,7 @@ void CRailBlock::RailSet(int Max, int* nMove)
 	m_pTop->SetWightNumber(GetWightNumber());
 	m_pTop->SetHeightNumber(GetHeightNumber());
 	m_pTop->NextSet((CRail::RAIL_POS)nMove[0]);
+	m_nMove[0] = nMove[0];
 
 	// レール設置
 	CRail* pRail = m_pTop->GetNextRail();
@@ -593,6 +596,38 @@ void CRailBlock::EditRailUpdate(void)
 			pRail = m_pCur;
 		}
 	}
+}
+
+//====================================================================
+//終了処理
+//====================================================================
+void CRailBlock::RailDelete(void)
+{
+	//自身が所持するレールを全て削除する
+	CRail* pRail = m_pTop;
+	while (1)
+	{
+		if (pRail != nullptr)
+		{
+			pRail->Uninit();
+
+			pRail = pRail->GetNextRail();
+		}
+		else
+		{
+			break;
+		}
+	}
+	m_pTop = nullptr;
+	m_pCur = nullptr;
+}
+
+//====================================================================
+//終了処理
+//====================================================================
+int CRailBlock::GetRailMove(int nCnt)
+{
+	return m_nMove[nCnt];
 }
 
 //====================================================================

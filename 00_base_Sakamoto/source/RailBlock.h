@@ -28,8 +28,9 @@ public:
 
 	void EditRailSet(int Number);
 	void EditRailUpdate(void);
+	void RailDelete();
 	int GetRailMax() { return m_nMax; }
-	int GetRailMove(int nCnt) { return m_nMove[nCnt]; }
+	int GetRailMove(int nCnt);
 
 	// 静的メンバ関数
 	static CListManager<CRailBlock>* GetList(void); // リスト取得

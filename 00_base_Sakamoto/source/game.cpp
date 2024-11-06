@@ -626,17 +626,12 @@ void CGame::LoadStageRailBlock(const char* pFilename)
 						fscanf(pFile, "%d", &RailMove[nCnt]);
 					}
 
-					int nData[8] = { 0,2,1,3,3,1,2,0 };
 					CMapSystem::GetInstance()->SetGritBool(WightNumber, HeightNumber, true);
 					CRailBlock* pBlock = CRailBlock::Create(WightNumber, HeightNumber, false, nMax, &RailMove[0]);
-					pBlock->SetPos(D3DXVECTOR3(0.0f, 50.0f, 0.0f));
+					pBlock->SetPos(D3DXVECTOR3(pBlock->GetPos().x, 50.0f, pBlock->GetPos().z));
 					pBlock->SetSize(D3DXVECTOR3(50.0f, 50.0f, 50.0f));
 
 					fscanf(pFile, "%s", &aEndMessage[0]);
-					if (strcmp(&aEndMessage[0], "ENDSETRAILBLOCK") == 0)
-					{
-						break;
-					}
 				}
 				else if (strcmp(&aSetMessage[0], "ENDSETSTAGE") == 0)
 				{

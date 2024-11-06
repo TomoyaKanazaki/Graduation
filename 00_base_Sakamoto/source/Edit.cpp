@@ -439,6 +439,7 @@ void CEdit::UpdateRailBlock(void)
 		pBlock->SetPos(CMapSystem::GetInstance()->GetGritPos(m_MapGritWight, m_MapGritHeight));
 		pBlock->SetSize(D3DXVECTOR3(50.0f, 50.0f, 50.0f));
 		m_nRailMax = 0;
+		m_EditRailBlock->RailDelete();
 	}
 
 	if (pInputKeyboard->GetTrigger(DIK_UP) == true)
@@ -476,11 +477,6 @@ void CEdit::UpdateRailBlock(void)
 
 	//デバッグ表示の取得
 	DebugProc::Print(DebugProc::POINT_LEFT, "ブロックのサイズ [%f]:[%f]:[%f]\n", m_EditRailBlock->GetSize().x, m_EditRailBlock->GetSize().y, m_EditRailBlock->GetSize().z);
-	DebugProc::Print(DebugProc::POINT_LEFT, "サイズ変更キー : X軸 [Q- : E+] \n");
-	DebugProc::Print(DebugProc::POINT_LEFT, "サイズ変更キー : Y軸 [R- : Y+] \n");
-	DebugProc::Print(DebugProc::POINT_LEFT, "サイズ変更キー : Z軸 [U- : O+] \n");
-	DebugProc::Print(DebugProc::POINT_LEFT, "ブロックのテンプレート変更キー : [7 : 8] \n");
-	DebugProc::Print(DebugProc::POINT_LEFT, "ブロックのテクスチャ変更キー : [5 : 6] \n");
 }
 
 //====================================================================
