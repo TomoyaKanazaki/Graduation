@@ -78,6 +78,7 @@ public:
 private:
 	static void StageClear(int Stage);
 	static void LoadStageBlock(const char* pFilename);
+	static void LoadStageRailBlock(const char* pFilename);
 	static void LoadStageMapModel(const char* pFilename);
 
 	static void EventUpdate(void);

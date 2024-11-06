@@ -34,6 +34,7 @@ public:
 
 	HRESULT Init(void);
 	void Uninit(void);
+	void SetNULL(void);
 	void Update(void);
 	void TitleUpdate(void);
 	void GameUpdate(void);
@@ -71,11 +72,11 @@ private:
 	CRail* m_pPrev;		// 前のレールへのポインタ
 	CRail* m_pNext;		// 次のレールへのポインタ
 
-	// 静的メンバ変数
-	static CListManager<CRail>* m_pList; // オブジェクトリスト
+	//// 静的メンバ変数
+	//static CListManager<CRail>* m_pList; // オブジェクトリスト
 
-	// メンバ変数
-	CListManager<CRail>::AIterator m_iterator; // イテレーター
+	//// メンバ変数
+	//CListManager<CRail>::AIterator m_iterator; // イテレーター
 
 };
 #endif

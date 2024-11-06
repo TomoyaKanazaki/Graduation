@@ -28,6 +28,8 @@ public:
 
 	void EditRailSet(int Number);
 	void EditRailUpdate(void);
+	int GetRailMax() { return m_nMax; }
+	int GetRailMove(int nCnt) { return m_nMove[nCnt]; }
 
 	// 静的メンバ関数
 	static CListManager<CRailBlock>* GetList(void); // リスト取得
@@ -43,6 +45,8 @@ private:
 	int StartHeightNumber;
 
 	bool bMoveOK[4];
+	int m_nMax;
+	int m_nMove[64];
 	CRail* m_pTop;		// 先頭のレールへのポインタ
 	CRail* m_pCur;		// 最後尾のレールへのポインタ
 

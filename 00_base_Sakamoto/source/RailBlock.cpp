@@ -123,6 +123,24 @@ void CRailBlock::Uninit(void)
 		m_pList->Release(m_pList);
 	}
 
+	//自身が所持するレールを全て削除する
+	CRail* pRail = m_pTop;
+	while (1)
+	{
+		if (pRail != nullptr)
+		{
+			pRail->Uninit();
+
+			pRail = pRail->GetNextRail();
+		}
+		else
+		{
+			break;
+		}
+	}
+	m_pTop = nullptr;
+	m_pCur = nullptr;
+
 	CCubeBlock::Uninit();
 }
 
@@ -399,8 +417,7 @@ void CRailBlock::RailAddWrite(void)
 //====================================================================
 void CRailBlock::RailSet(int Max, int* nMove)
 {
-	int nMax = Max;		//レール数
-	int nData[64];		//レール番号
+	m_nMax = Max;		//レール数
 
 	// 事前に設定したレールの設置を行う
 	m_pTop = CRail::Create();
@@ -411,8 +428,9 @@ void CRailBlock::RailSet(int Max, int* nMove)
 	// レール設置
 	CRail* pRail = m_pTop->GetNextRail();
 
-	for (int nCnt = 1; nCnt < nMax; nCnt++)
+	for (int nCnt = 1; nCnt < m_nMax; nCnt++)
 	{
+		m_nMove[nCnt] = nMove[nCnt];
 		pRail->NextSet((CRail::RAIL_POS)nMove[nCnt]);
 
 		//設置したレールと置いてあるレールの位置が同じときに移動可能方向を追加する

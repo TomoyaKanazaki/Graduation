@@ -116,9 +116,11 @@ protected:
 private:
 	void Move(void);				//移動処理
 	void CollisionBlock(void);		//ブロックとの当たり判定
+	void CollisionRailBlock(void);	//レールブロックとの当たり判定
 	void CollisionXModel(void);		//Xモデルとの当たり判定
 	void SaveData(void);			//エディット情報の保存
 	void SaveBlock(void);			//ブロックの保存
+	void SaveRailBlock(void);			//レールブロックの保存
 	void SaveXModel(void);			//Xモデルの保存
 	void UpdateBlock(void);			//ブロックの更新
 	void UpdateRailBlock(void);		//レールブロックの更新
