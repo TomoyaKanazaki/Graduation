@@ -55,6 +55,8 @@
 
 #include "bowabowa.h"
 
+#include "SlopeDevice.h"
+
 namespace
 {
 	const int SAMPLE_NAMESPACE = 0;
@@ -63,6 +65,8 @@ namespace
 	const int BOTTOM_FIELD_VTX_HEIGHT = 32;		// 下床の縦数
 	const char* BOTTOM_FIELD_TEX = "data\\TEXTURE\\Field\\Tile001.jpg";		// 下床のテクスチャ
 	const D3DXVECTOR3 BOTTOM_FIELD_POS = D3DXVECTOR3(0.0f, -500.0f, 0.0f);	// 下床の位置
+
+	const char* SLOPE_DEVICE_MODEL = "data\\TXT\\MOTION\\02_staging\\00_SlopeDevice\\motion_slopedevice.txt";
 }
 
 //静的メンバ変数宣言
@@ -159,8 +163,8 @@ HRESULT CGame::Init(void)
 	m_pMapField->SetPos(INITVECTOR3);
 
 	// 傾き装置（見た目だけの仮）
-	CObjectX* pObjX = CObjectX::Create("data\\MODEL\\mawasiguruma.x");
-	pObjX->SetPos(D3DXVECTOR3(900.0f, 0.0f, -600.0f));
+	//CSlopeDevice* pSlopeDevice = CSlopeDevice::Create(SLOPE_DEVICE_MODEL,SLOPE_DEVICE_MODEL);
+	//pSlopeDevice->SetPos(D3DXVECTOR3(900.0f, 0.0f, -600.0f));
 
 	CObjectX* pObjX2 = CObjectX::Create("data\\MODEL\\mawasiguruma.x");
 	pObjX2->SetPos(D3DXVECTOR3(900.0f, 0.0f, 600.0f));
