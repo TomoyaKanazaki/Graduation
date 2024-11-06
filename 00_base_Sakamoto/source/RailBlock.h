@@ -36,6 +36,7 @@ private:
 
 	void Move(D3DXVECTOR3 *Pos);
 	void RailCheck();
+	void RailAddWrite();
 	void RailSet(int Max, int* nMove);
 
 	int StartWightNumber;

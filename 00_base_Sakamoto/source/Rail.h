@@ -52,6 +52,7 @@ public:
 	void SetNextRail(CRail* Set) { m_pNext = Set; }
 	CRail* GetNextRail(void) { return m_pNext; }
 
+	void SetRailOK(int nCnt, bool Set) { m_bRail[nCnt] = Set; }
 	bool GetRailOK(int nCnt) { return m_bRail[nCnt]; }
 	int GetNextNumber(void) { return m_bNextNumber; }
 
