@@ -12,6 +12,8 @@
 #include "player.h"
 #include "MapSystem.h"
 #include "effect.h"
+#include "game.h"
+#include "objmeshField.h"
 
 //==========================================
 //  定数定義
@@ -20,6 +22,7 @@ namespace
 {
 	const D3DXVECTOR3 SAMPLE_SIZE = D3DXVECTOR3(20.0f, 20.0f, 20.0f);		//当たり判定
 	const char* MODEL_PASS = "data\\MODEL\\02_item\\holybible.x"; // モデルパス
+	const float MOVE_SCALE = 141.421356f; // 移動幅
 }
 
 //===========================================
@@ -156,20 +159,42 @@ void CBible::Draw(void)
 //====================================================================
 void CBible::Move()
 {
-	D3DXVECTOR3 pos = GetPos();
+	// フィールドの座標を取得
+	D3DXVECTOR3 posField = CGame::GetMapField()->GetPos();
+
+	// 自身の座標を取得 
+	D3DXVECTOR3 posThis = GetPos();
+
+	// 自身の座標とフィールドを結ぶ時の向きを算出
+	D3DXVECTOR3 vec = posThis - posField;
+	float rot = atan2f(vec.z, vec.x);
+
+	// 経過時間を取得
+	m_fMoveTime += DeltaTime::Get();
+
+	// 移動幅に経過時間をかけ合わせる
+	float fScale = sinf(m_fMoveTime) * MOVE_SCALE;
+
+	// 移動幅をxz成分に分割する
+	float x = fScale * cosf(rot);
+	float z = fScale * sinf(rot);
+
+	// 基準位置に移動量を加算する
+	posThis.x = m_posBase.x + x;
+	posThis.z = m_posBase.z + z;
 
 #ifdef _DEBUG
 
 	CEffect* pEffect = CEffect::Create();
-	pEffect->SetPos(pos);
+	pEffect->SetPos(posThis);
 	pEffect->SetColor(D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f));
 	pEffect->SetRadius(50.0f);
 
 #endif // _DEBUG
 
 	//位置更新
-	CItem::SetPos(pos);
-	CObjectX::SetPos(pos);
+	CItem::SetPos(posThis);
+	CObjectX::SetPos(posThis);
 }
 
 //==========================================

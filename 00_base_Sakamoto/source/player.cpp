@@ -1114,11 +1114,7 @@ void CPlayer::Death(void)
 		if (m_eItemType == TYPE_BIBLE)
 		{
 			// ¹‘¶¬
-			CBible* pBible = nullptr;
-			//pBible = CBible::Create("data\\MODEL\\TestCross.x");
-			//pBible->SetWightNumber(m_nMapWidth);
-			//pBible->SetHeightNumber(m_nMapHeight);
-			pBible->SetMapScroll(true);
+			CItem::Create(CItem::TYPE_BIBLE, CItem::GRID(m_nMapWidth, m_nMapHeight));
 
 			// ƒAƒCƒeƒ€‚ğŠ‚µ‚Ä‚¢‚È‚¢ó‘Ô‚É‚·‚é
 			SetItemType(TYPE_NONE);

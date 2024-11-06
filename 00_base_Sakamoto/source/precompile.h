@@ -26,6 +26,7 @@
 #include "useful.h"
 #include "debugproc.h"
 #include "listManager.h"
+#include "deltatime.h"
 
 //メモリリーク出力用マクロ
 #define _CRTDBG_MAP_ALLOC

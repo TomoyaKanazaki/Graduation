@@ -113,6 +113,9 @@ int	WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hinstancePrev, LPSTR lpCmdLine
 		pTime = CGame::GetTime();
 	}
 
+	// システム時間の初期化
+	DeltaTime::Init();
+
 	//メッセージループ
 	while (1)
 	{//Windowsの処理
@@ -148,6 +151,9 @@ int	WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hinstancePrev, LPSTR lpCmdLine
 
 				if (pManager != nullptr)
 				{
+					// 時間を更新
+					DeltaTime::Update();
+
 					//更新処理
 					pManager->Update();
 

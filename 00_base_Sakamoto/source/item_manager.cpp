@@ -211,7 +211,7 @@ void CItemManager::ItemSeting()
 			if (m_pItems->pType[i] == CItem::TYPE_BIBLE) { continue; }
 
 			// アイテムの生成
-			CItem::Create(m_pItems->pType[i], m_pItems->pPos[i]);
+			//CItem::Create(m_pItems->pType[i], m_pItems->pPos[i]);
 		}
 
 		break;
@@ -225,7 +225,7 @@ void CItemManager::ItemSeting()
 			if (m_pItems->pType[i] != CItem::TYPE_BIBLE) { continue; }
 
 			// アイテムの生成
-			CItem::Create(m_pItems->pType[i], m_pItems->pPos[i]);
+			//CItem::Create(m_pItems->pType[i], m_pItems->pPos[i]);
 		}
 
 		break;
