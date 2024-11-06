@@ -19,6 +19,7 @@
 namespace
 {
 	const D3DXVECTOR3 SAMPLE_SIZE = D3DXVECTOR3(20.0f, 20.0f, 20.0f);		//当たり判定
+	const char* MODEL_PASS = "data\\MODEL\\02_item\\holybible.x"; // モデルパス
 }
 
 //===========================================
@@ -29,7 +30,8 @@ CListManager<CBible>* CBible::m_pList = nullptr; // オブジェクトリスト
 //====================================================================
 // コンストラクタ
 //====================================================================
-CBible::CBible(int nPriority) : CItem(nPriority)
+CBible::CBible(int nPriority) : CItem(nPriority),
+m_posBase(INITVECTOR3)
 {
 	SetSize(SAMPLE_SIZE);
 	SetPos(INITVECTOR3);
@@ -45,26 +47,12 @@ CBible::~CBible()
 }
 
 //====================================================================
-// 生成
-//====================================================================
-CBible* CBible::Create(char* pModelName)
-{
-	// インスタンス生成
-	CBible* pBible = new CBible;
-
-	// 初期化
-	pBible->Init(pModelName);
-
-	return pBible;
-}
-
-//====================================================================
 // 初期化
 //====================================================================
-HRESULT CBible::Init(char* pModelName)
+HRESULT CBible::Init()
 {
 	// 継承クラスの初期化
-	CItem::Init(pModelName);
+	CItem::Init(MODEL_PASS);
 
 	SetType(CObject::TYPE_BIBLE);
 
@@ -77,6 +65,9 @@ HRESULT CBible::Init(char* pModelName)
 
 	// リストに自身のオブジェクトを追加・イテレーターを取得
 	m_iterator = m_pList->AddList(this);
+
+	// スクロールの対象から外す
+	SetMapScroll(false);
 
 	return S_OK;
 }
@@ -166,66 +157,6 @@ void CBible::Draw(void)
 void CBible::Move()
 {
 	D3DXVECTOR3 pos = GetPos();
-	D3DXVECTOR3 posOld = GetPosold();
-	D3DXVECTOR3 rot = GetRot();
-
-	m_fMove += D3DX_PI * 0.01f;
-
-	D3DXVECTOR3 GritPos = INITVECTOR3;
-	float MaxX = 0.0f;
-	float MaxZ = 0.0f;
-
-	//更新前の位置を過去の位置とする
-	posOld = pos;
-
-	switch (m_PosType)
-	{
-	case CBible::POS_TYPE_LEFTUP:
-
-		GritPos = CMapSystem::GetInstance()->GetStartGritPos(1.5f, 1.5f);
-
-		pos.x = GritPos.x - sinf(m_fMove) * CMapSystem::GetInstance()->GetGritSize() * 0.5f;
-		pos.y = 0.0f;
-		pos.z = GritPos.z + sinf(m_fMove) * CMapSystem::GetInstance()->GetGritSize() * 0.5f;
-
-		break;
-	case CBible::POS_TYPE_RIGHTUP:
-
-		MaxX = (float)CMapSystem::GetInstance()->GetWightMax();
-		GritPos = CMapSystem::GetInstance()->GetStartGritPos(MaxX - 1.5f, 1.5f);
-
-		pos.x = GritPos.x + sinf(m_fMove) * CMapSystem::GetInstance()->GetGritSize() * 0.5f;
-		pos.y = 0.0f;
-		pos.z = GritPos.z + sinf(m_fMove) * CMapSystem::GetInstance()->GetGritSize() * 0.5f;
-
-		break;
-	case CBible::POS_TYPE_LEFTDOWN:
-
-		MaxZ = (float)CMapSystem::GetInstance()->GetHeightMax();
-		GritPos = CMapSystem::GetInstance()->GetStartGritPos(1.5f, MaxZ - 1.5f);
-
-		pos.x = GritPos.x + sinf(-m_fMove) * CMapSystem::GetInstance()->GetGritSize() * 0.5f;
-		pos.y = 0.0f;
-		pos.z = GritPos.z + sinf(-m_fMove) * CMapSystem::GetInstance()->GetGritSize() * 0.5f;
-
-		break;
-	case CBible::POS_TYPE_RIGHTDOWN:
-
-		MaxX = (float)CMapSystem::GetInstance()->GetWightMax();
-		MaxZ = (float)CMapSystem::GetInstance()->GetHeightMax();
-		GritPos = CMapSystem::GetInstance()->GetStartGritPos(MaxX - 1.5f, MaxZ - 1.5f);
-
-		pos.x = GritPos.x - sinf(-m_fMove) * CMapSystem::GetInstance()->GetGritSize() * 0.5f;
-		pos.y = 0.0f;
-		pos.z = GritPos.z + sinf(-m_fMove) * CMapSystem::GetInstance()->GetGritSize() * 0.5f;
-
-		break;
-
-	default:
-		break;
-	}
-
-	float Scaling = GetScaling();
 
 #ifdef _DEBUG
 
@@ -239,21 +170,33 @@ void CBible::Move()
 	//位置更新
 	CItem::SetPos(pos);
 	CObjectX::SetPos(pos);
-	CObjectX::SetRot(rot);
+}
 
-	//大きさの設定
-	SetScaling(Scaling);
+//==========================================
+//  マップ番号の設定
+//==========================================
+void CBible::SetGrid(const GRID& pos)
+{
+	// 親クラスの設定処理を呼び出す
+	CItem::SetGrid(pos);
+
+	// グリッド情報から自身の座標を算出する
+	m_posBase = CMapSystem::GetInstance()->GetGritPos(pos.x, pos.y);
+
+	// 位置を設定
+	CItem::SetPos(m_posBase);
+	CObjectX::SetPos(m_posBase);
 }
 
 //====================================================================
 // 状態管理
 //====================================================================
-void CBible::Hit(CPlayer* pPlayer)
+bool CBible::Hit(CPlayer* pPlayer)
 {
 	if (pPlayer->GetItemType() != CPlayer::TYPE_NONE
 		&& pPlayer->GetItemType() != CPlayer::TYPE_BIBLE)
 	{
-		return;
+		return false;
 	}
 
 	// プレイヤーのアイテムを設定
@@ -261,6 +204,7 @@ void CBible::Hit(CPlayer* pPlayer)
 
 	// 自身の削除
 	Uninit();
+	return true;
 }
 
 //====================================================================

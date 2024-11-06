@@ -18,6 +18,9 @@
 #define SAFE_DELETE(p)		if ((p) != nullptr) { delete(p);			(p) = nullptr; }	// 配列を使用しないdeleteを使用する破棄マクロ
 #define SAFE_DEL_ARRAY(p)	if ((p) != nullptr) { delete[](p);			(p) = nullptr; }	// 配列を使用したdelete[]を使用する破棄マクロ
 
+// 使用頻度の高い関数マクロ
+#define NUM_ARRAY(a)	(sizeof((a)) / sizeof((a)[0]))	// 配列の要素数計算
+
 // 名前空間
 namespace useful
 {

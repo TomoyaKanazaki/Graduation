@@ -19,6 +19,7 @@
 namespace
 {
 	const D3DXVECTOR3 SAMPLE_SIZE = D3DXVECTOR3(20.0f, 20.0f, 20.0f);		//当たり判定
+	const char* MODEL_PASS = "data\\MODEL\\Testbowabowa.x"; // モデルパス
 }
 
 //===========================================
@@ -44,35 +45,13 @@ CBowabowa::~CBowabowa()
 }
 
 //====================================================================
-//生成処理
-//====================================================================
-CBowabowa* CBowabowa::Create(char* pModelName)
-{
-	CBowabowa* pBowabowa = nullptr;
-
-	if (pBowabowa == nullptr)
-	{
-		//オブジェクト2Dの生成
-		pBowabowa = new CBowabowa();
-	}
-
-	//オブジェクトの初期化処理
-	if (FAILED(pBowabowa->Init(pModelName)))
-	{//初期化処理が失敗した場合
-		return nullptr;
-	}
-
-	return pBowabowa;
-}
-
-//====================================================================
 //初期化処理
 //====================================================================
-HRESULT CBowabowa::Init(char* pModelName)
+HRESULT CBowabowa::Init()
 {
 	SetType(CObject::TYPE_BOWABOWA);
 
-	CItem::Init(pModelName);
+	CItem::Init(MODEL_PASS);
 
 	//モードごとに初期値を設定出来る
 	switch (CScene::GetMode())
@@ -238,16 +217,17 @@ void CBowabowa::Take(void)
 //==========================================
 // ヒット処理
 //==========================================
-void CBowabowa::Hit(CPlayer* pPlayer)
+bool CBowabowa::Hit(CPlayer* pPlayer)
 {
 	// 十字架を持ってない場合関数を抜ける
 	if (pPlayer->GetItemType() != CPlayer::TYPE_CROSS)
 	{
-		return;
+		return false;
 	}
 
 	// 削除
 	Uninit();
+	return true;
 }
 
 //==========================================
