@@ -61,7 +61,7 @@ namespace
 
 	const int BOTTOM_FIELD_VTX_WIDTH = 32;		// 下床の横数
 	const int BOTTOM_FIELD_VTX_HEIGHT = 32;		// 下床の縦数
-	const char* BOTTOM_FIELD_TEX = "data\\TEXTURE\\Field\\Tile000.png";		// 下床のテクスチャ
+	const char* BOTTOM_FIELD_TEX = "data\\TEXTURE\\Field\\Tile001.jpg";		// 下床のテクスチャ
 	const D3DXVECTOR3 BOTTOM_FIELD_POS = D3DXVECTOR3(0.0f, -500.0f, 0.0f);	// 下床の位置
 }
 
