@@ -23,7 +23,7 @@ namespace
 //====================================================================
 //静的メンバ変数宣言
 //====================================================================
-CListManager<CRail>* CRail::m_pList = nullptr; // オブジェクトリスト
+//CListManager<CRail>* CRail::m_pList = nullptr; // オブジェクトリスト
 
 //====================================================================
 //コンストラクタ
@@ -94,14 +94,14 @@ HRESULT CRail::Init()
 		break;
 	}
 
-	if (m_pList == nullptr)
-	{// リストマネージャー生成
-		m_pList = CListManager<CRail>::Create();
-		if (m_pList == nullptr) { assert(false); return E_FAIL; }
-	}
+	//if (m_pList == nullptr)
+	//{// リストマネージャー生成
+	//	m_pList = CListManager<CRail>::Create();
+	//	if (m_pList == nullptr) { assert(false); return E_FAIL; }
+	//}
 
-	// リストに自身のオブジェクトを追加・イテレーターを取得
-	m_iterator = m_pList->AddList(this);
+	//// リストに自身のオブジェクトを追加・イテレーターを取得
+	//m_iterator = m_pList->AddList(this);
 
 	return S_OK;
 }
@@ -111,14 +111,38 @@ HRESULT CRail::Init()
 //====================================================================
 void CRail::Uninit(void)
 {
-	// リストから自身のオブジェクトを削除
-	m_pList->DelList(m_iterator);
+	for (int nCnt = 0; nCnt < 2; nCnt++)
+	{
+		if (m_pRailModel[nCnt] != nullptr)
+		{
+			m_pRailModel[nCnt]->SetDeathFlag(true);
+		}
+	}
 
-	if (m_pList->GetNumAll() == 0)
-	{ // オブジェクトが一つもない場合
+	SetDeathFlag(true);
 
-		// リストマネージャーの破棄
-		m_pList->Release(m_pList);
+	//// リストから自身のオブジェクトを削除
+	//m_pList->DelList(m_iterator);
+
+	//if (m_pList->GetNumAll() == 0)
+	//{ // オブジェクトが一つもない場合
+
+	//	// リストマネージャーの破棄
+	//	m_pList->Release(m_pList);
+	//}
+}
+
+//====================================================================
+//終了処理
+//====================================================================
+void CRail::SetNULL(void)
+{
+	for (int nCnt = 0; nCnt < 2; nCnt++)
+	{
+		if (m_pRailModel[nCnt] != nullptr)
+		{
+			m_pRailModel[nCnt] = nullptr;
+		}
 	}
 }
 
@@ -274,5 +298,6 @@ void CRail::NextSet(RAIL_POS Set)
 //====================================================================
 CListManager<CRail>* CRail::GetList(void)
 {
-	return m_pList;
+	return nullptr;
+	//return m_pList;
 }

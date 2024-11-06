@@ -1269,6 +1269,8 @@ bool CPlayer::SortObject(D3DXVECTOR3 pos)
 			}
 		}
 	}
+
+	return false;
 }
 
 //==========================================

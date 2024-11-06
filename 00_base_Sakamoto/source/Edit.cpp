@@ -25,6 +25,7 @@
 namespace
 {
 	const char* DATA_BLOCK_NAME("data\\TXT\\STAGE\\Block.txt");
+	const char* DATA_RAILBLOCK_NAME("data\\TXT\\STAGE\\RailBlock.txt");
 	const char* DATA_XMODEL_NAME("data\\TXT\\STAGE\\XModel.txt");
 	const char* DATA_STAIR_NAME("data\\TXT\\STAGE\\Stair.txt");
 	const char* DATA_GIMMICK_NAME("data\\TXT\\STAGE\\Gimmick.txt");
@@ -470,7 +471,7 @@ void CEdit::UpdateRailBlock(void)
 
 	if (pInputKeyboard->GetTrigger(DIK_BACKSPACE) == true)
 	{
-		CollisionBlock();
+		CollisionRailBlock();
 	}
 
 	//デバッグ表示の取得
@@ -835,6 +836,40 @@ void CEdit::CollisionBlock(void)
 }
 
 //====================================================================
+//レールブロックの当たり判定処理
+//====================================================================
+void CEdit::CollisionRailBlock(void)
+{
+	if (m_EditRailBlock != nullptr)
+	{
+		// マップモデルのリスト構造が無ければ抜ける
+		if (CRailBlock::GetList() == nullptr) { return; }
+		std::list<CRailBlock*> list = CRailBlock::GetList()->GetList();    // リストを取得
+
+		// マップモデルリストの中身を確認する
+		for (CRailBlock* pRailBlock : list)
+		{
+			D3DXVECTOR3 MyPos = m_EditRailBlock->GetPos();
+			D3DXVECTOR3 MySize = m_EditRailBlock->GetSize() * 2.0f;
+			D3DXVECTOR3 BlockPos = pRailBlock->GetPos();
+			D3DXVECTOR3 BlockSize = pRailBlock->GetSize();
+			D3DXVECTOR3 BlockMove = pRailBlock->GetMove();
+
+			if (BlockPos.x + BlockSize.x > MyPos.x &&
+				BlockPos.x - BlockSize.x < MyPos.x &&
+				BlockPos.z + BlockSize.z > MyPos.z &&
+				BlockPos.z - BlockSize.z < MyPos.z &&
+				BlockPos.y + BlockSize.y > MyPos.y &&
+				BlockPos.y - BlockSize.y < MyPos.y &&
+				m_EditRailBlock != pRailBlock)
+			{
+				pRailBlock->Uninit();
+			}
+		}
+	}
+}
+
+//====================================================================
 //ブロックの当たり判定処理
 //====================================================================
 void CEdit::CollisionXModel(void)
@@ -904,6 +939,7 @@ void CEdit::AppearCollision(void)
 void CEdit::SaveData(void)
 {
 	SaveBlock();
+	SaveRailBlock();
 	SaveXModel();
 }
 
@@ -938,6 +974,61 @@ void CEdit::SaveBlock(void)
 			fprintf(pFile, "TEXTURE %s\n", pCubeBlock->GetTextureName());
 
 			fprintf(pFile, "%s\n\n", "ENDSETBLOCK");
+		}
+
+		//ステージをセーブした終了の合図
+		fprintf(pFile, "%s", "ENDSETSTAGE");
+
+		// ファイルを閉じる
+		fclose(pFile);
+	}
+	else
+	{//ファイルが開けなかった場合
+		printf("***ファイルを開けませんでした***\n");
+	}
+}
+
+//====================================================================
+//レールブロックの保存処理
+//====================================================================
+void CEdit::SaveRailBlock(void)
+{
+	FILE* pFile; //ファイルポインタを宣言
+
+	//ファイルを開く
+	pFile = fopen(DATA_RAILBLOCK_NAME, "w");
+
+	if (pFile != nullptr)
+	{//ファイルが開けた場合
+
+		// ステージをセーブする開始の合図
+		fprintf(pFile, "%s\n\n", "STARTSETSTAGE");
+
+		// キューブブロックのリスト構造が無ければ抜ける
+		if (CRailBlock::GetList() == nullptr) { return; }
+		std::list<CRailBlock*> list = CRailBlock::GetList()->GetList();    // リストを取得
+
+		// キューブブロックリストの中身を確認する
+		for (CRailBlock* pRailBlock : list)
+		{
+			if (pRailBlock != m_EditRailBlock)
+			{
+				fprintf(pFile, "%s\n", "STARTSETRAILBLOCK");
+
+				//ステージをセーブした終了の合図
+				fprintf(pFile, "WIGHT %d\n", pRailBlock->GetWightNumber());
+				fprintf(pFile, "HEIGHT %d\n", pRailBlock->GetHeightNumber());
+				fprintf(pFile, "MAX %d\n", pRailBlock->GetRailMax());
+				fprintf(pFile, "MOVE ");
+
+				for (int nCnt = 0; nCnt < pRailBlock->GetRailMax(); nCnt++)
+				{
+					fprintf(pFile, "%d ", pRailBlock->GetRailMove(nCnt));
+				}
+				fprintf(pFile, "\n");
+
+				fprintf(pFile, "%s\n\n", "ENDSETRAILBLOCK");
+			}
 		}
 
 		//ステージをセーブした終了の合図
