@@ -21,10 +21,8 @@
 namespace
 {
 	const D3DXVECTOR3 COLLISION_SIZE = D3DXVECTOR3(20.0f, 20.0f, 20.0f);		//当たり判定
-	const int APPEA = 4;	// 出現数の最大数
 	const char* MODEL_PASS = "data\\MODEL\\02_item\\holybible.x"; // モデルパス
-	const float MOVE_SCALE = sqrtf(50.0f * 50.0f * 2.0f); // 移動幅
-	const float DELTE_TIME = 600.0f;	// 自動で消える時間
+	const float MOVE_SCALE = 50.0f; // 移動幅
 }
 
 //===========================================
@@ -37,7 +35,7 @@ CListManager<CSoftCream>* CSoftCream::m_pList = nullptr; // オブジェクトリスト
 //====================================================================
 CSoftCream::CSoftCream(int nPriority) : CItem(nPriority),
 m_nAppea(0),	// 出現順
-m_fMove(0.0f),	// 移動量
+m_fMove(0.0f, 0.0f, 0.0f),	// 移動量
 m_fConuter(0.0f)	// 削除カウンター
 {
 	SetSize(COLLISION_SIZE);
@@ -123,7 +121,16 @@ void CSoftCream::Draw(void)
 //====================================================================
 void CSoftCream::Move()
 {
+	// フィールドの座標を取得
+	D3DXVECTOR3 posField = CGame::GetMapField()->GetPos();
 
+	// 自身の座標を取得 
+	D3DXVECTOR3 posThis = GetPos();
+
+	// 移動量加算
+	posThis.x += MOVE_SCALE;
+
+	SetPos(posThis);
 }
 
 //====================================================================
