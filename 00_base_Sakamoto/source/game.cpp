@@ -61,8 +61,8 @@ namespace
 {
 	const int SAMPLE_NAMESPACE = 0;
 
-	const int BOTTOM_FIELD_VTX_WIDTH = 32;		// 下床の横数
-	const int BOTTOM_FIELD_VTX_HEIGHT = 32;		// 下床の縦数
+	const int BOTTOM_FIELD_VTX_WIDTH = 64;		// 下床の横数
+	const int BOTTOM_FIELD_VTX_HEIGHT = 64;		// 下床の縦数
 	const char* BOTTOM_FIELD_TEX = "data\\TEXTURE\\Field\\Tile001.jpg";		// 下床のテクスチャ
 	const D3DXVECTOR3 BOTTOM_FIELD_POS = D3DXVECTOR3(0.0f, -260.0f, 0.0f);	// 下床の位置
 	const int BIBLE_OUTGRIT = 2;	// 聖書がマップの外側から何マス内側にいるか
@@ -713,8 +713,8 @@ void CGame::SetBgObjTest(void)
 {
 	// 傾き装置（見た目だけの仮）
 	{
-		//CSlopeDevice* pSlopeDevice = CSlopeDevice::Create(SLOPE_DEVICE_MODEL,SLOPE_DEVICE_MODEL);
-		//pSlopeDevice->SetPos(D3DXVECTOR3(900.0f, 0.0f, -600.0f));
+		CSlopeDevice* pSlopeDevice = CSlopeDevice::Create(SLOPE_DEVICE_MODEL,SLOPE_DEVICE_MODEL);
+		pSlopeDevice->SetPos(D3DXVECTOR3(1400.0f, BOTTOM_FIELD_POS.y, -600.0f));
 
 		CObjectX* pMawasiguruma1 = CObjectX::Create("data\\MODEL\\mawasiguruma.x");
 		pMawasiguruma1->SetPos(D3DXVECTOR3(1400.0f, BOTTOM_FIELD_POS.y, 600.0f));
