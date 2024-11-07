@@ -823,7 +823,8 @@ void CEdit::CollisionBlock(void)
 				BlockPos.z + BlockSize.z > MyPos.z &&
 				BlockPos.z - BlockSize.z < MyPos.z &&
 				BlockPos.y + BlockSize.y > MyPos.y &&
-				BlockPos.y - BlockSize.y < MyPos.y)
+				BlockPos.y - BlockSize.y < MyPos.y &&
+				m_pEditBlock != pCubeModel)
 			{
 				pCubeModel->Uninit();
 			}
