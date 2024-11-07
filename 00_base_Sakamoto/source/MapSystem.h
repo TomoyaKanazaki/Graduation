@@ -20,6 +20,18 @@ class CObject2D;
 class CMapSystem
 {
 public:
+
+	// 特殊な座標系を管理する構造体
+	struct GRID
+	{
+		// コンストラクタ
+		GRID() {};
+		GRID(int X, int Z) { x = X; z = Z; };
+
+		int x;
+		int z;
+	};
+
 	CMapSystem();
 	~CMapSystem();
 

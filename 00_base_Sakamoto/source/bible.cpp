@@ -10,7 +10,6 @@
 #include "texture.h"
 #include "XModel.h"
 #include "player.h"
-#include "MapSystem.h"
 #include "effect.h"
 #include "game.h"
 #include "objmeshField.h"
@@ -145,7 +144,7 @@ void CBible::Move()
 //==========================================
 //  マップ番号の設定
 //==========================================
-void CBible::SetGrid(const GRID& pos)
+void CBible::SetGrid(const CMapSystem::GRID &pos)
 {
 	// 親クラスの設定処理を呼び出す
 	CItem::SetGrid(pos);

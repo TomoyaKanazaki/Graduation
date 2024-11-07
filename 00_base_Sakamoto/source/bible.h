@@ -9,6 +9,7 @@
 
 #include "main.h"
 #include "item.h"
+#include "MapSystem.h"
 
 //‘O•ûéŒ¾
 class CObjGauge2D;
@@ -28,7 +29,7 @@ public:
 
 	void Move();
 
-	void SetGrid(const GRID& pos) override;
+	void SetGrid(const CMapSystem::GRID& pos) override;
 	bool Hit(CPlayer* pPlayer) override;
 
 	// Ã“Iƒƒ“ƒoŠÖ”
