@@ -108,7 +108,7 @@ CItem* CItem::Create(const TYPE eType, const GRID& pos)
 //====================================================================
 HRESULT CItem::Init(const char* pModelName)
 {
-	// 継承クラスの初期化
+	// 親クラスの初期化
 	CObjectX::Init(pModelName);
 
 	//マップとのマトリックスの掛け合わせをオンにする
@@ -180,7 +180,7 @@ void CItem::Draw()
 void CItem::SetGrid(const GRID& pos)
 {
 	SetWightNumber(pos.x);
-	SetHeightNumber(pos.y);
+	SetHeightNumber(pos.z);
 }
 
 //====================================================================

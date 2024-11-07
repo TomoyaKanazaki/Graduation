@@ -32,10 +32,10 @@ public:
 	{
 		// コンストラクタ
 		GRID() {};
-		GRID(int X, int Y) { x = X; y = Y; };
+		GRID(int X, int Z) { x = X; z = Z; };
 
 		int x;
-		int y;
+		int z;
 	};
 
 	// メンバ変数
