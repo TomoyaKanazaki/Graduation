@@ -201,7 +201,7 @@ HRESULT CGame::Init(void)
 		CItem::Create(CItem::TYPE_BOWABOWA, CItem::GRID(9, 5));
 
 		// è\éöâÀÇÃê∂ê¨
-		CItem::Create(CItem::TYPE_CROSS, CItem::GRID(2, 4));
+		CItem::Create(CItem::TYPE_CROSS, CItem::GRID(5, 9));
 
 		break;
 

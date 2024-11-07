@@ -121,11 +121,6 @@ void CSoftCream::Draw(void)
 //====================================================================
 void CSoftCream::Move()
 {
-	// フィールドの座標を取得
-	D3DXVECTOR3 posField = CGame::GetMapField()->GetPos();
-
-	// 自身の座標を取得 
-	D3DXVECTOR3 posThis = GetPos();
 
 }
 
