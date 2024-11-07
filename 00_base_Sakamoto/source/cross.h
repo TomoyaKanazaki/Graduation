@@ -21,19 +21,9 @@ public:
 	CCross(int nPriority = 3);
 	~CCross();
 
-	//サンプルの状態
-	enum STATE
-	{
-		STATE_NORMAL = 0,	//通常
-		STATE_ACTION,		//行動
-		STATE_MAX,
-	};
-
 	HRESULT Init();
 	void Uninit(void);
 	void Update(void);
-	void TitleUpdate(void);
-	void GameUpdate(void);
 	void Draw(void);
 
 	bool Hit(CPlayer* pPlayer) override;
@@ -42,9 +32,7 @@ public:
 	static CListManager<CCross>* GetList(void); // リスト取得
 
 private:
-	void StateManager(void);	//状態管理
 
-	int m_nDeleteCont;		// 削除カウンター
 
 	// 静的メンバ変数
 	static CListManager<CCross>* m_pList; // オブジェクトリスト

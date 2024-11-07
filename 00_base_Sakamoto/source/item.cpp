@@ -39,7 +39,6 @@ static_assert(NUM_ARRAY(ITEM_SCORE) == CItem::TYPE_MAX, "ERROR : Type Count Miss
 //====================================================================
 CItem::CItem(int nPriority) : CObjectX(nPriority)
 {
-	m_eState = STATE_NORMAL;	// 状態
 	m_eType = TYPE_NONE;		// 種類
 	m_nIdxXModel = 0;			// Xモデル番号
 	m_nIdxTexture = -1;			// テクスチャ番号
@@ -140,15 +139,6 @@ void CItem::Update()
 		m_pos = CMapSystem::GetInstance()->GetGritPos(m_nMapWidth, m_nMapHeight);
 		m_pos.y = 0.0f;
 
-#ifdef _DEBUG
-
-		CEffect* pEffect = CEffect::Create();
-		pEffect->SetPos(m_pos);
-		pEffect->SetColor(D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f));
-		pEffect->SetRadius(50.0f);
-
-#endif // _DEBUG
-
 		CObjectX::SetPos(m_pos);
 
 		// 継承クラスの更新
@@ -161,6 +151,15 @@ void CItem::Update()
 
 	// プレイヤーとアイテムの判定
 	CollisionPlayer();
+
+#ifdef _DEBUG
+
+	CEffect* pEffect = CEffect::Create();
+	pEffect->SetPos(m_pos);
+	pEffect->SetColor(D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f));
+	pEffect->SetRadius(50.0f);
+
+#endif // _DEBUG
 }
 
 //====================================================================
