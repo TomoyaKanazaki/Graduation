@@ -49,7 +49,7 @@ public:
 	void Update(void);
 	void Draw(void);
 
-	virtual void Move() {} // 移動処理
+	virtual void Move(D3DXVECTOR3& pos) {} // 移動処理
 
 	// テクスチャ番号取得
 	int GetIdx(void) { return m_nIdxTexture; }

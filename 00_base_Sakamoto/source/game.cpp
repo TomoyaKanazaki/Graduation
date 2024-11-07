@@ -204,7 +204,7 @@ HRESULT CGame::Init(void)
 		CItem::Create(CItem::TYPE_CROSS, CItem::GRID(5, 9));
 
 		// ソフトクリームの生成
-		CItem::Create(CItem::TYPE_SOFTCREAM, CItem::GRID(6, 2));
+		CItem::Create(CItem::TYPE_SOFTCREAM, CItem::GRID(1, 13));
 
 		break;
 
