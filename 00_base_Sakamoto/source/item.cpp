@@ -14,6 +14,7 @@
 #include "bible.h"
 #include "game.h"
 #include "score.h"
+#include "softcream.h"
 
 //==========================================
 //  定数定義
@@ -84,6 +85,10 @@ CItem* CItem::Create(const TYPE eType, const GRID& pos)
 
 		case CItem::TYPE_BOWABOWA:	// ぼわぼわ
 			pItem = new CBowabowa;
+			break;
+
+		case CItem::TYPE_SOFTCREAM:	// ソフトクリーム
+			pItem = new CSoftCream;
 			break;
 
 		default:
