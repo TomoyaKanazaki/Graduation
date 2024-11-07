@@ -49,9 +49,11 @@ CCross::~CCross()
 //====================================================================
 HRESULT CCross::Init()
 {
-	SetType(CObject::TYPE_CROSS);
+	// 親クラスの初期化
+	if (FAILED(CItem::Init(MODEL_PASS))) { assert(false); return E_FAIL; }
 
-	CItem::Init(MODEL_PASS);
+	// オブジェクトの種類を設定
+	SetType(CObject::TYPE_CROSS);
 
 	// リストマネージャーの生成
 	if (m_pList == nullptr)

@@ -53,14 +53,14 @@ CBible::~CBible()
 //====================================================================
 HRESULT CBible::Init()
 {
-	// 継承クラスの初期化
-	CItem::Init(MODEL_PASS);
+	// 親クラスの初期化
+	if (FAILED(CItem::Init(MODEL_PASS))) { assert(false); return E_FAIL; }
+
+	// オブジェクトの種類を設定
+	SetType(CObject::TYPE_BIBLE);
 
 	// スクロールの対象から外す
 	SetMapScroll(false);
-
-	// オブジェクトのタイプを設定する
-	SetType(CObject::TYPE_BIBLE);
 
 	// リストマネージャーの生成
 	if (m_pList == nullptr)
