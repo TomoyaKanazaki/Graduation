@@ -83,6 +83,8 @@ private:
 
 	static void EventUpdate(void);
 
+	static void SetBgObjTest(void);
+
 	void Sample(void);								//サンプル系が入ってるヨ
 
 	//インゲーム用変数

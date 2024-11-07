@@ -29,6 +29,8 @@ namespace
 		10, // ぼわぼわ
 		10 // ソフトクリーム
 	};
+
+	const float POS_Y = 50.0f; // 少し高い位置に生成する
 }
 
 //==========================================
@@ -114,11 +116,15 @@ CItem* CItem::Create(const TYPE eType, const GRID& pos)
 //====================================================================
 HRESULT CItem::Init(const char* pModelName)
 {
-	// 継承クラスの初期化
+	// 親クラスの初期化
 	CObjectX::Init(pModelName);
 
-	//マップとのマトリックスの掛け合わせをオンにする
+	// マップとのマトリックスの掛け合わせをオンにする
 	SetMultiMatrix(true);
+
+	// 少し高い位置に生成する
+	D3DXVECTOR3 pos = D3DXVECTOR3(0.0f, POS_Y, 0.0f);
+	SetPos(pos);
 
 	return S_OK;
 }
@@ -143,8 +149,9 @@ void CItem::Update()
 
 	if (m_bMapScroll == true)
 	{
-		pos = CMapSystem::GetInstance()->GetGritPos(m_nMapWidth, m_nMapHeight);
-		pos.y = 0.0f;
+		D3DXVECTOR3 posGrid = CMapSystem::GetInstance()->GetGritPos(m_nMapWidth, m_nMapHeight);
+		pos.x = posGrid.x;
+		pos.z = posGrid.z;
 	}
 	else
 	{
@@ -186,7 +193,7 @@ void CItem::Draw()
 void CItem::SetGrid(const GRID& pos)
 {
 	SetWightNumber(pos.x);
-	SetHeightNumber(pos.y);
+	SetHeightNumber(pos.z);
 }
 
 //====================================================================
