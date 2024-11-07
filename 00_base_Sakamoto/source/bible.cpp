@@ -22,7 +22,7 @@ namespace
 {
 	const D3DXVECTOR3 SAMPLE_SIZE = D3DXVECTOR3(20.0f, 20.0f, 20.0f);		//当たり判定
 	const char* MODEL_PASS = "data\\MODEL\\02_item\\holybible.x"; // モデルパス
-	const float MOVE_SCALE = 141.421356f; // 移動幅
+	const float MOVE_SCALE = sqrtf(50.0f * 50.0f * 2.0f); // 移動幅
 }
 
 //===========================================
@@ -38,7 +38,6 @@ m_posBase(INITVECTOR3)
 {
 	SetSize(SAMPLE_SIZE);
 	SetPos(INITVECTOR3);
-	m_fMove = 0.0f;
 }
 
 //====================================================================
@@ -57,6 +56,10 @@ HRESULT CBible::Init()
 	// 継承クラスの初期化
 	CItem::Init(MODEL_PASS);
 
+	// スクロールの対象から外す
+	SetMapScroll(false);
+
+	// オブジェクトのタイプを設定する
 	SetType(CObject::TYPE_BIBLE);
 
 	// リストマネージャーの生成
@@ -68,9 +71,6 @@ HRESULT CBible::Init()
 
 	// リストに自身のオブジェクトを追加・イテレーターを取得
 	m_iterator = m_pList->AddList(this);
-
-	// スクロールの対象から外す
-	SetMapScroll(false);
 
 	return S_OK;
 }
@@ -99,48 +99,6 @@ void CBible::Uninit(void)
 //====================================================================
 void CBible::Update(void)
 {
-	switch (CScene::GetMode())
-	{
-	case CScene::MODE_TITLE:
-		TitleUpdate();
-		break;
-
-	case CScene::MODE_GAME:
-	case CScene::MODE_TUTORIAL:
-
-		GameUpdate();
-		break;
-
-	case CScene::MODE_RESULT:
-		break;
-	}
-}
-
-//====================================================================
-// タイトルでの更新
-//====================================================================
-void CBible::TitleUpdate(void)
-{
-	D3DXVECTOR3 pos = GetPos();
-	D3DXVECTOR3 move = GetMove();
-
-	//位置更新
-	pos += move;
-
-	SetPos(pos);
-
-	//頂点情報の更新
-	CItem::Update();
-}
-
-//====================================================================
-// ゲームでの更新
-//====================================================================
-void CBible::GameUpdate(void)
-{
-	//状態管理
-	StateManager();
-
 	//親クラスの更新
 	CItem::Update();
 }
@@ -230,29 +188,6 @@ bool CBible::Hit(CPlayer* pPlayer)
 	// 自身の削除
 	Uninit();
 	return true;
-}
-
-//====================================================================
-//状態管理
-//====================================================================
-void CBible::StateManager(void)
-{
-	CItem::STATE State = GetState();
-
-	int nStateCounter = GetStateCounter();
-
-	switch (State)
-	{
-	case STATE_NORMAL:
-		break;
-	case STATE_ACTION:
-		break;
-	}
-
-	if (nStateCounter > 0)
-	{
-		nStateCounter--;
-	}
 }
 
 //==========================================
