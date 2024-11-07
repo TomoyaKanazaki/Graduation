@@ -13,6 +13,7 @@
 namespace
 {
 	float GRID_SIZE = 100.0f;	// グリッドのサイズ
+	D3DXVECTOR3 MAP_SIZE = D3DXVECTOR3(750.0f, 0.0f, 550.0f);		// 横の当たり判定
 }
 
 //静的メンバ変数宣言
@@ -36,6 +37,8 @@ CMapSystem::CMapSystem()
 	m_MapPos = D3DXVECTOR3((m_WightMax * 0.5f) * -100.0f, 0.0f, (m_HeightMax * 0.5f) * 100.0f);
 	m_InitPos = m_MapPos;
 	m_fGritSize = GRID_SIZE;
+	m_MapSize = MAP_SIZE;
+	m_MapSize = D3DXVECTOR3((NUM_WIGHT - 1) * 50.0f, 0.0f, (NUM_HEIGHT - 1) * 50.0f);
 }
 
 //====================================================================
@@ -110,9 +113,6 @@ D3DXVECTOR3 CMapSystem::GetStartGritPos(float Wight, float Height)
 {
 	D3DXVECTOR3 Pos;
 
-	D3DXVECTOR3 DevilPos = CGame::GetDevil()->GetDevilPos();
-	D3DXVECTOR3 DevilSize = CGame::GetDevil()->GetDevilSize();
-
 	if (Wight < 0 || Wight >= (float)m_WightMax ||
 		Height < 0 || Height >= (float)m_HeightMax)
 	{
@@ -135,7 +135,6 @@ D3DXVECTOR3 CMapSystem::GetGritPos(int Wight, int Height)
 	D3DXVECTOR3 Pos;
 
 	D3DXVECTOR3 DevilPos = CGame::GetDevil()->GetDevilPos();
-	D3DXVECTOR3 DevilSize = CGame::GetDevil()->GetDevilSize();
 
 	//グリット番号が最大値以上や最小値以下の時、範囲内に納める処理
 	Wight = useful::RangeNumber(m_WightMax, 0, Wight);
@@ -144,18 +143,18 @@ D3DXVECTOR3 CMapSystem::GetGritPos(int Wight, int Height)
 	//　グリットの位置にエフェクトを表示
 	Pos.x = m_MapPos.x + (Wight * m_fGritSize);
 
-	if (Pos.x > DevilPos.x + (DevilSize.x))
+	if (Pos.x > DevilPos.x + (m_MapSize.x))
 	{
-		Pos.x = Pos.x - (DevilPos.x + (DevilSize.x * 2.0f)) - m_fGritSize;
+		Pos.x = Pos.x - (DevilPos.x + (m_MapSize.x * 2.0f)) - m_fGritSize;
 	}
 
 	Pos.y = 0.0f;
 
 	Pos.z = m_MapPos.z - (Height * m_fGritSize);
 
-	if (Pos.z < DevilPos.z - (DevilSize.z))
+	if (Pos.z < DevilPos.z - (m_MapSize.z))
 	{
-		Pos.z = Pos.z + (DevilPos.z + (DevilSize.z * 2.0f)) + m_fGritSize;
+		Pos.z = Pos.z + (DevilPos.z + (m_MapSize.z * 2.0f)) + m_fGritSize;
 	}
 
 	return Pos;
@@ -168,15 +167,14 @@ int CMapSystem::GetGritWightNumber(float PosX)
 {
 	CDevil* pDevil = CGame::GetDevil();
 	D3DXVECTOR3 DevilPos = pDevil->GetDevilPos();
-	D3DXVECTOR3 DevilSize = pDevil->GetDevilSize();
 
 	for (int nCntW = 0; nCntW < m_WightMax; nCntW++)
 	{
 		float fCountPosX = m_MapPos.x + (nCntW * m_fGritSize);
 
-		if (fCountPosX > DevilPos.x + (DevilSize.x))
+		if (fCountPosX > DevilPos.x + (m_MapSize.x))
 		{
-			fCountPosX = fCountPosX - (DevilPos.x + (DevilSize.x * 2.0f)) - m_fGritSize;
+			fCountPosX = fCountPosX - (DevilPos.x + (m_MapSize.x * 2.0f)) - m_fGritSize;
 		}
 
 		if (PosX < fCountPosX + (m_fGritSize * 0.5f) &&
@@ -196,15 +194,14 @@ int CMapSystem::GetGritHeightNumber(float PosZ)
 {
 	CDevil* pDevil = CGame::GetDevil();
 	D3DXVECTOR3 DevilPos = pDevil->GetDevilPos();
-	D3DXVECTOR3 DevilSize = pDevil->GetDevilSize();
 
 	for (int nCntH = 0; nCntH < m_HeightMax; nCntH++)
 	{
 		float fCountPosZ = m_MapPos.z - (nCntH * m_fGritSize);
 
-		if (fCountPosZ < DevilPos.z - (DevilSize.z))
+		if (fCountPosZ < DevilPos.z - (m_MapSize.z))
 		{
-			fCountPosZ = fCountPosZ + (DevilPos.z + (DevilSize.z * 2.0f)) + m_fGritSize;
+			fCountPosZ = fCountPosZ + (DevilPos.z + (m_MapSize.z * 2.0f)) + m_fGritSize;
 		}
 
 		if (PosZ < fCountPosZ + (m_fGritSize * 0.5f) &&

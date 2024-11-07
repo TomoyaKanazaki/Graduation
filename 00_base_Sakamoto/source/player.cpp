@@ -891,30 +891,30 @@ void CPlayer::CollisionEnemy(void)
 void CPlayer::CollisionStageOut(void)
 {
 	D3DXVECTOR3 D_pos = CGame::GetDevil()->GetDevilPos();
-	D3DXVECTOR3 D_Size = CGame::GetDevil()->GetDevilSize();
+	D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
 	float G_Size = CMapSystem::GetInstance()->GetGritSize() * 0.5f;
 
-	if (m_pos.x + G_Size > D_pos.x + D_Size.x)
+	if (m_pos.x + G_Size > D_pos.x + MapSize.x)
 	{
-		m_pos.x = D_pos.x + D_Size.x - G_Size;
+		m_pos.x = D_pos.x + MapSize.x - G_Size;
 		m_State = STATE_WAIT;
 		m_move.x = 0.0f;
 	}
-	if (m_pos.x - G_Size < D_pos.x - D_Size.x)
+	if (m_pos.x - G_Size < D_pos.x - MapSize.x)
 	{
-		m_pos.x = D_pos.x - D_Size.x + G_Size;
+		m_pos.x = D_pos.x - MapSize.x + G_Size;
 		m_State = STATE_WAIT;
 		m_move.x = 0.0f;
 	}
-	if (m_pos.z + G_Size > D_pos.z + D_Size.z)
+	if (m_pos.z + G_Size > D_pos.z + MapSize.z)
 	{
-		m_pos.z = D_pos.z + D_Size.z - G_Size;
+		m_pos.z = D_pos.z + MapSize.z - G_Size;
 		m_State = STATE_WAIT;
 		m_move.z = 0.0f;
 	}
-	if (m_pos.z - G_Size < D_pos.z - D_Size.z)
+	if (m_pos.z - G_Size < D_pos.z - MapSize.z)
 	{
-		m_pos.z = D_pos.z - D_Size.z + G_Size;
+		m_pos.z = D_pos.z - MapSize.z + G_Size;
 		m_State = STATE_WAIT;
 		m_move.z = 0.0f;
 	}
@@ -928,22 +928,22 @@ void CPlayer::CollisionPressStageOut(void)
 	if (m_bPressObj == true)
 	{
 		D3DXVECTOR3 D_pos = CGame::GetDevil()->GetDevilPos();
-		D3DXVECTOR3 D_Size = CGame::GetDevil()->GetDevilSize();
+		D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
 		float G_Size = CMapSystem::GetInstance()->GetGritSize() * 0.5f;
 
-		if (m_pos.x + G_Size > D_pos.x + D_Size.x)
+		if (m_pos.x + G_Size > D_pos.x + MapSize.x)
 		{
 			Death();
 		}
-		if (m_pos.x - G_Size < D_pos.x - D_Size.x)
+		if (m_pos.x - G_Size < D_pos.x - MapSize.x)
 		{
 			Death();
 		}
-		if (m_pos.z + G_Size > D_pos.z + D_Size.z)
+		if (m_pos.z + G_Size > D_pos.z + MapSize.z)
 		{
 			Death();
 		}
-		if (m_pos.z - G_Size < D_pos.z - D_Size.z)
+		if (m_pos.z - G_Size < D_pos.z - MapSize.z)
 		{
 			Death();
 		}
