@@ -59,6 +59,9 @@ public:
 	void SetPos(D3DXVECTOR3 pos) { m_pos = pos; }
 	D3DXVECTOR3 GetPos(void) { return m_pos; }
 
+	void SetRot(D3DXVECTOR3 rot) { m_rot = rot; }
+	D3DXVECTOR3 GetRot(void) { return m_rot; }
+
 	void SetMultiMatrix(bool Set) { m_bMultiMatrix = Set; }
 	bool GetMultiMatrix(void) { return m_bMultiMatrix; }
 	void SetUseMultiMatrix(D3DXMATRIX Set) { m_UseMultiMatrix = Set; }
