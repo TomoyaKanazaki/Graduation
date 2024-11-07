@@ -163,19 +163,40 @@ HRESULT CGame::Init(void)
 	m_pMapField->SetPos(INITVECTOR3);
 
 	// 傾き装置（見た目だけの仮）
-	//CSlopeDevice* pSlopeDevice = CSlopeDevice::Create(SLOPE_DEVICE_MODEL,SLOPE_DEVICE_MODEL);
-	//pSlopeDevice->SetPos(D3DXVECTOR3(900.0f, 0.0f, -600.0f));
+	{
+		//CSlopeDevice* pSlopeDevice = CSlopeDevice::Create(SLOPE_DEVICE_MODEL,SLOPE_DEVICE_MODEL);
+		//pSlopeDevice->SetPos(D3DXVECTOR3(900.0f, 0.0f, -600.0f));
 
-	CObjectX* pObjX2 = CObjectX::Create("data\\MODEL\\mawasiguruma.x");
-	pObjX2->SetPos(D3DXVECTOR3(900.0f, 0.0f, 600.0f));
-	pObjX2->SetRot(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
+		CObjectX* pMawasiguruma1 = CObjectX::Create("data\\MODEL\\mawasiguruma.x");
+		pMawasiguruma1->SetPos(D3DXVECTOR3(900.0f, 0.0f, 600.0f));
+		pMawasiguruma1->SetRot(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
 
-	CObjectX* pObjX3 = CObjectX::Create("data\\MODEL\\mawasiguruma.x");
-	pObjX3->SetPos(D3DXVECTOR3(-900.0f, 0.0f, -600.0f));
+		CObjectX* pMawasiguruma2 = CObjectX::Create("data\\MODEL\\mawasiguruma.x");
+		pMawasiguruma2->SetPos(D3DXVECTOR3(-900.0f, 0.0f, -600.0f));
 
-	CObjectX* pObjX4 = CObjectX::Create("data\\MODEL\\mawasiguruma.x");
-	pObjX4->SetPos(D3DXVECTOR3(-900.0f, 0.0f, 600.0f));
-	pObjX4->SetRot(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
+		CObjectX* pMawasiguruma3 = CObjectX::Create("data\\MODEL\\mawasiguruma.x");
+		pMawasiguruma3->SetPos(D3DXVECTOR3(-900.0f, 0.0f, 600.0f));
+		pMawasiguruma3->SetRot(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
+	}
+
+	// ジャッキ
+	{
+		//CObjectX* pJack1 = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\jack.x");
+		//pJack1->SetPos(D3DXVECTOR3(900.0f, 0.0f, 600.0f));
+		//pJack1->SetRot(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
+
+		//CObjectX* pJack2 = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\jack.x");
+		//pJack2->SetPos(D3DXVECTOR3(900.0f, 0.0f, -600.0f));
+		//pJack2->SetRot(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
+
+		//CObjectX* pJack3 = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\jack.x");
+		//pJack3->SetPos(D3DXVECTOR3(-900.0f, 0.0f, 600.0f));
+		//pJack3->SetRot(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
+
+		//CObjectX* pJack4 = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\jack.x");
+		//pJack4->SetPos(D3DXVECTOR3(-900.0f, 0.0f, -600.0f));
+		//pJack4->SetRot(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
+	}
 
 	// 下床の生成
 	CObjmeshField* pBottonField = CObjmeshField::Create(BOTTOM_FIELD_VTX_WIDTH, BOTTOM_FIELD_VTX_HEIGHT);
