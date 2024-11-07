@@ -25,7 +25,8 @@ namespace
 	{
 		10, // 十字架
 		10, // 聖書
-		10 // ぼわぼわ
+		10, // ぼわぼわ
+		10 // ソフトクリーム
 	};
 }
 
@@ -47,10 +48,7 @@ CItem::CItem(int nPriority) : CObjectX(nPriority)
 	m_Scaling = 0.0f;			// 大きさ
 	m_bCollision = false;		// 当たり判定
 	m_CollisionPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// 判定座標
-	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);			// 位置
-	m_posOld = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		// 過去の位置
 	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);			// 移動量
-	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);			// 向き
 	m_nMapWidth = 1;			// マップの横番号
 	m_nMapHeight = 0;			// マップの縦番号
 	m_bMapScroll = true;
@@ -134,15 +132,14 @@ void CItem::Uninit()
 //====================================================================
 void CItem::Update()
 {
+	// 自身の情報を取得する
+	D3DXVECTOR3 pos = GetPos();
+	D3DXVECTOR3 rot = GetRot();
+
 	if (m_bMapScroll == true)
 	{
-		m_pos = CMapSystem::GetInstance()->GetGritPos(m_nMapWidth, m_nMapHeight);
-		m_pos.y = 0.0f;
-
-		CObjectX::SetPos(m_pos);
-
-		// 継承クラスの更新
-		CObjectX::Update();
+		pos = CMapSystem::GetInstance()->GetGritPos(m_nMapWidth, m_nMapHeight);
+		pos.y = 0.0f;
 	}
 	else
 	{
@@ -152,10 +149,17 @@ void CItem::Update()
 	// プレイヤーとアイテムの判定
 	CollisionPlayer();
 
+	// 情報の更新
+	SetPos(pos);
+	SetRot(rot);
+
+	// 親クラスの更新処理
+	CObjectX::Update();
+
 #ifdef _DEBUG
 
 	CEffect* pEffect = CEffect::Create();
-	pEffect->SetPos(m_pos);
+	pEffect->SetPos(pos);
 	pEffect->SetColor(D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f));
 	pEffect->SetRadius(50.0f);
 
@@ -189,6 +193,9 @@ bool CItem::CollisionPlayer()
 	if (CPlayer::GetList() == nullptr) { return false; }
 	std::list<CPlayer*> list = CPlayer::GetList()->GetList();    // リストを取得
 
+	// 自身の座標を取得する
+	D3DXVECTOR3 posThis = GetPos();
+
 	// プレイヤーリストの中身を確認する
 	for (CPlayer* player : list)
 	{
@@ -196,7 +203,7 @@ bool CItem::CollisionPlayer()
 		D3DXVECTOR3 size = player->GetSize();
 
 		// 矩形の当たり判定
-		if (useful::CollisionCircle(m_pos, pos, size.x))
+		if (useful::CollisionCircle(posThis, pos, size.x))
 		{
 			// 取得に成功している場合スコアを加算する
 			if (Hit(player)) { CGame::GetScore()->AddScore(ITEM_SCORE[m_eType]); }

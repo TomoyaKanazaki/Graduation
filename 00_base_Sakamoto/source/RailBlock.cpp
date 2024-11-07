@@ -83,7 +83,9 @@ HRESULT CRailBlock::Init(int nMapWight, int nMapHeight, bool Edit, int Max, int*
 	StartWightNumber = nMapWight;
 	StartHeightNumber = nMapHeight;
 
-	CCubeBlock::Init();
+	SetMultiMatrix(true);
+
+	CObjmeshCube::Init();
 
 	SetPos(CMapSystem::GetInstance()->GetGritPos(StartWightNumber, StartHeightNumber));
 
@@ -143,7 +145,7 @@ void CRailBlock::Uninit(void)
 	m_pTop = nullptr;
 	m_pCur = nullptr;
 
-	CCubeBlock::Uninit();
+	CObjmeshCube::Uninit();
 }
 
 //====================================================================
