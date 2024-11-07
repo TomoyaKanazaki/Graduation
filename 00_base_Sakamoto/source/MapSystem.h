@@ -13,8 +13,8 @@
 class CObject2D;
 
 //マクロ定義
-#define NUM_WIGHT (16)
-#define NUM_HEIGHT (12)
+#define NUM_WIGHT (23)
+#define NUM_HEIGHT (15)
 
 //フェードのクラス宣言
 class CMapSystem

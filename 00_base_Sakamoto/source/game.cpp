@@ -65,6 +65,7 @@ namespace
 	const int BOTTOM_FIELD_VTX_HEIGHT = 32;		// 下床の縦数
 	const char* BOTTOM_FIELD_TEX = "data\\TEXTURE\\Field\\Tile001.jpg";		// 下床のテクスチャ
 	const D3DXVECTOR3 BOTTOM_FIELD_POS = D3DXVECTOR3(0.0f, -500.0f, 0.0f);	// 下床の位置
+	const int BIBLE_OUTGRIT = 2;	// 聖書がマップの外側から何マス内側にいるか
 
 	const char* SLOPE_DEVICE_MODEL = "data\\TXT\\MOTION\\02_staging\\00_SlopeDevice\\motion_slopedevice.txt";
 }
@@ -155,11 +156,16 @@ HRESULT CGame::Init(void)
 	m_pTime->SetStartTime(timeGetTime());
 	m_pTime->SetTime(0);
 
-	//ステージ背景や床の生成
+	//ステージ背景の生成
 	m_pMeshDomeUp = CObjmeshDome::Create();
 	m_pMeshDomeUp->SetTexture("data\\TEXTURE\\rain_clown.jpg");
 
-	m_pMapField = CObjmeshField::Create(16, 12);
+	//マップのグリットの最大値を取得
+	int nMapWightMax = CMapSystem::GetInstance()->GetWightMax();
+	int nMapHeigtMax = CMapSystem::GetInstance()->GetHeightMax();
+
+	//床の生成
+	m_pMapField = CObjmeshField::Create(nMapWightMax, nMapHeigtMax);
 	m_pMapField->SetPos(INITVECTOR3);
 
 	// 傾き装置（見た目だけの仮）
@@ -183,36 +189,25 @@ HRESULT CGame::Init(void)
 	pBottonField->SetPos(BOTTOM_FIELD_POS);
 	m_bGameEnd = false;
 
-	m_pPlayer = CPlayer::Create();
-	m_pPlayer->SetPos(D3DXVECTOR3(0.0f, 0.0f, 100.0f));
-
+	//デビルの生成
 	m_pDevil = CDevil::Create();
 	m_pDevil->SetPos(D3DXVECTOR3(0.0f, 100.0f, 500.0f));
+
+	//プレイヤーの生成
+	m_pPlayer = CPlayer::Create();
+	m_pPlayer->SetPos(CMapSystem::GetInstance()->GetGritPos(11,5));
 
 	m_pScore = CScore::Create();
 	m_pScore->SetScore(CManager::GetInstance()->GetEndScore());
 
-	//int nData[8] = {0,2,1,3,3,1,2,0};
-	//CMapSystem::GetInstance()->SetGritBool(8, 6, true);
-	//CRailBlock* pBlock = CRailBlock::Create(8, 6, false, 8, &nData[0]);
-	//pBlock->SetPos(D3DXVECTOR3(0.0f, 50.0f, 0.0f));
-	//pBlock->SetSize(D3DXVECTOR3(50.0f, 50.0f, 50.0f));
-
+	//レールブロックの生成
 	LoadStageRailBlock("data\\TXT\\STAGE\\RailBlock.txt");
-
-	//CMapSystem::GetInstance()->SetGritBool(8, 7, true);
-	//pBlock = CRailBlock::Create(8, 7);
-	//pBlock->SetPos(D3DXVECTOR3(0.0f, 50.0f, 0.0f));
-	//pBlock->SetSize(D3DXVECTOR3(50.0f, 50.0f, 50.0f));
-
-	//CRail* pRail = CRail::Create("data\\MODEL\\TestRail.x");
-	//pRail->SetPos(D3DXVECTOR3(100.0f, 0.0f, 0.0f));
 
 	//ステージの読み込み
 	switch (CManager::GetInstance()->GetStage())
 	{
 	case 0:
-		LoadStageBlock("data\\TXT\\STAGE\\Block00.txt");
+		LoadStageBlock("data\\TXT\\STAGE\\Block.txt");
 
 		// ボワボワの生成
 		CItem::Create(CItem::TYPE_BOWABOWA, CItem::GRID(9, 5));
@@ -223,15 +218,15 @@ HRESULT CGame::Init(void)
 		break;
 
 	case 1:
-		LoadStageBlock("data\\TXT\\STAGE\\Block01.txt");
+		LoadStageBlock("data\\TXT\\STAGE\\Block.txt");
 
 		CDevilHole* pDevilHole = CDevilHole::Create("data\\MODEL\\DevilHole.x");
 
 		// 聖書生成
-		CItem::Create(CItem::TYPE_BIBLE, CItem::GRID(2, 2));
-		CItem::Create(CItem::TYPE_BIBLE, CItem::GRID(14, 2));
-		CItem::Create(CItem::TYPE_BIBLE, CItem::GRID(2, 10));
-		CItem::Create(CItem::TYPE_BIBLE, CItem::GRID(14, 10));
+		CItem::Create(CItem::TYPE_BIBLE, CItem::GRID(BIBLE_OUTGRIT, BIBLE_OUTGRIT));
+		CItem::Create(CItem::TYPE_BIBLE, CItem::GRID(nMapWightMax - BIBLE_OUTGRIT, BIBLE_OUTGRIT));
+		CItem::Create(CItem::TYPE_BIBLE, CItem::GRID(BIBLE_OUTGRIT, nMapHeigtMax - BIBLE_OUTGRIT));
+		CItem::Create(CItem::TYPE_BIBLE, CItem::GRID(nMapWightMax - BIBLE_OUTGRIT, nMapHeigtMax - BIBLE_OUTGRIT));
 
 		break;
 	}
@@ -243,13 +238,13 @@ HRESULT CGame::Init(void)
 	pScrollAllow->SetPos((D3DXVECTOR3(1200.0f, 120.0f, 0.0f)));
 
 	CEnemyMedaman* pMedaman = CEnemyMedaman::Create("data\\TXT\\MOTION\\01_enemy\\motion_medaman.txt");
-	pMedaman->SetPos(D3DXVECTOR3(-300.0f, 0.0f, 0.0f));
+	pMedaman->SetPos(D3DXVECTOR3(CMapSystem::GetInstance()->GetGritPos(9, 7)));
 
 	CEnemyBonbon* pBonbon = CEnemyBonbon::Create("data\\TXT\\MOTION\\01_enemy\\motion_bonbon.txt");
-	pBonbon->SetPos(D3DXVECTOR3(-300.0f, 0.0f, 0.0f));
+	pBonbon->SetPos(D3DXVECTOR3(CMapSystem::GetInstance()->GetGritPos(9, 7)));
 
 	CEnemyYoungDevil* pYoungDevil = CEnemyYoungDevil::Create("data\\TXT\\MOTION\\01_enemy\\motion_smalldevil.txt");
-	pYoungDevil->SetPos(D3DXVECTOR3(-300.0f, 0.0f, 0.0f));
+	pYoungDevil->SetPos(D3DXVECTOR3(CMapSystem::GetInstance()->GetGritPos(9, 7)));
 
 #if _DEBUG
 	if (m_pEdit == nullptr)
