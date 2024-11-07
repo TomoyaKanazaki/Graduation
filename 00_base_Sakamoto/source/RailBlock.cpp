@@ -11,7 +11,6 @@
 #include "Rail.h"
 #include "game.h"
 #include "Devil.h"
-#include "MapSystem.h"
 #include "debugproc.h"
 #include "player.h"
 
@@ -80,14 +79,14 @@ HRESULT CRailBlock::Init(int nMapWight, int nMapHeight, bool Edit, int Max, int*
 	SetWightNumber(nMapWight);
 	SetHeightNumber(nMapHeight);
 
-	StartWightNumber = nMapWight;
-	StartHeightNumber = nMapHeight;
+	m_StartGrid.x = nMapWight;
+	m_StartGrid.z = nMapHeight;
 
 	SetMultiMatrix(true);
 
 	CObjmeshCube::Init();
 
-	SetPos(CMapSystem::GetInstance()->GetGritPos(StartWightNumber, StartHeightNumber));
+	SetPos(CMapSystem::GetInstance()->GetGritPos(m_StartGrid.x, m_StartGrid.z));
 
 	SetTexture("data\\TEXTURE\\Wood001.png");
 

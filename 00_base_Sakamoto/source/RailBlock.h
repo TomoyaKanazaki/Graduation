@@ -9,6 +9,7 @@
 
 #include "main.h"
 #include "CubeBlock.h"
+#include "MapSystem.h"
 
 class CRail;
 
@@ -42,8 +43,7 @@ private:
 	void RailAddWrite();
 	void RailSet(int Max, int* nMove);
 
-	int StartWightNumber;
-	int StartHeightNumber;
+	CMapSystem::GRID m_StartGrid;	//開始時のグリット番号
 
 	bool bMoveOK[4];
 	int m_nMax;

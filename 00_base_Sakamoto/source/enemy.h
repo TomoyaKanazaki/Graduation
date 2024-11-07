@@ -9,6 +9,7 @@
 
 #include "object.h"
 #include "useful.h"
+#include "MapSystem.h"
 
 //前方宣言
 class CModel;
@@ -94,6 +95,10 @@ public:
 	void SetUseMultiMatrix(D3DXMATRIX Set) { m_UseMultiMatrix = Set; }
 	D3DXMATRIX GetUseMultiMatrix(void) { return m_UseMultiMatrix; }
 
+	// マップ番号の設定
+	virtual void SetGrid(const CMapSystem::GRID& pos) { m_Grid = pos; }
+	CMapSystem::GRID GetGrid(void) { return m_Grid; }
+
 	// 静的メンバ関数
 	static CListManager<CEnemy>* GetList(void); // リスト取得
 
@@ -116,8 +121,7 @@ private:
 	void SearchWall(void);								// 壁のサーチ判定
 	void MapSystemNumber(void);							// どのマスに存在しているか設定する
 
-	int m_nMapWidth;			//マップの横番号
-	int m_nMapHeight;			//マップの縦番号
+	CMapSystem::GRID m_Grid;	//グリット番号
 
 	void LoadLevelData(const char* pFilename);
 
