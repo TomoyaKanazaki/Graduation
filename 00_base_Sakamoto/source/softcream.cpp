@@ -21,8 +21,10 @@
 namespace
 {
 	const D3DXVECTOR3 SAMPLE_SIZE = D3DXVECTOR3(20.0f, 20.0f, 20.0f);		//当たり判定
+	const int APPEA = 4;	// 出現数の最大数
 	const char* MODEL_PASS = "data\\MODEL\\02_item\\holybible.x"; // モデルパス
 	const float MOVE_SCALE = sqrtf(50.0f * 50.0f * 2.0f); // 移動幅
+	const float DELTE_TIME = 600.0f;	// 自動で消える時間
 }
 
 //===========================================
@@ -34,6 +36,9 @@ CListManager<CSoftCream>* CSoftCream::m_pList = nullptr; // オブジェクトリスト
 // コンストラクタ
 //====================================================================
 CSoftCream::CSoftCream(int nPriority) : CItem(nPriority),
+m_nAppea(0),	// 出現順
+m_fMove(0.0f),	// 移動量
+m_fConuter(0.0f)	// 削除カウンター
 {
 	SetSize(SAMPLE_SIZE);
 	SetPos(INITVECTOR3);
@@ -129,9 +134,6 @@ bool CSoftCream::Hit(CPlayer* pPlayer)
 	{
 		return false;
 	}
-
-	// プレイヤーのアイテムを設定
-	pPlayer->SetItemType(CPlayer::TYPE_BIBLE);
 
 	// 自身の削除
 	Uninit();
