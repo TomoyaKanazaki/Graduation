@@ -18,6 +18,7 @@ class CCross : public CItem
 {
 public:
 
+	// メンバ関数
 	CCross(int nPriority = 3);
 	~CCross();
 
@@ -33,6 +34,8 @@ public:
 
 private:
 
+	// メンバ関数
+	void Rotation();
 
 	// 静的メンバ変数
 	static CListManager<CCross>* m_pList; // オブジェクトリスト

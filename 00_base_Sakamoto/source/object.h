@@ -62,6 +62,7 @@ public:
 		TYPE_BIBLE,
 		TYPE_RAILBLOCK,
 		TYPE_RAIL,
+		TYPE_SOFTCREAM,
 		TYPE_MAX,
 	};
 

@@ -49,9 +49,11 @@ CBowabowa::~CBowabowa()
 //====================================================================
 HRESULT CBowabowa::Init()
 {
-	SetType(CObject::TYPE_BOWABOWA);
+	// 親クラスの初期化
+	if(FAILED(CItem::Init(MODEL_PASS))){ assert(false); return E_FAIL; }
 
-	CItem::Init(MODEL_PASS);
+	// オブジェクトの種類を設定
+	SetType(CObject::TYPE_BOWABOWA);
 
 	// リストマネージャーの生成
 	if (m_pList == nullptr)
@@ -81,6 +83,7 @@ void CBowabowa::Uninit(void)
 		m_pList->Release(m_pList);
 	}
 
+	// 親クラスの終了処理
 	CItem::Uninit();
 }
 
@@ -89,7 +92,7 @@ void CBowabowa::Uninit(void)
 //====================================================================
 void CBowabowa::Update(void)
 {
-	//親クラスの更新
+	// 親クラスの更新処理
 	CItem::Update();
 }
 
@@ -98,18 +101,8 @@ void CBowabowa::Update(void)
 //====================================================================
 void CBowabowa::Draw(void)
 {
+	// 親クラスの描画処理
 	CItem::Draw();
-}
-
-//====================================================================
-//状態管理
-//====================================================================
-void CBowabowa::Take(void)
-{
-	CGame::AddBowabowa(-1);
-	CScore *pScore = CGame::GetScore();
-	pScore->AddScore(100);
-	Uninit();
 }
 
 //==========================================

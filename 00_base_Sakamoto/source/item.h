@@ -56,21 +56,9 @@ public:
 	// Xモデル番号取得
 	int GetIdxXModel(void) { return -1; }
 
-	//位置設定・取得
-	void SetPos(const D3DXVECTOR3& pos) { m_pos = pos; }
-	D3DXVECTOR3 GetPos(void) { return m_pos; }
-
-	//位置設定・取得
-	void SetPosold(const D3DXVECTOR3& posold) { m_posOld = posold; }
-	D3DXVECTOR3 GetPosold(void) { return m_posOld; }
-
 	//移動量設定・取得
 	void SetMove(const D3DXVECTOR3& move) { m_move = move; }
 	D3DXVECTOR3 GetMove(void) { return m_move; }
-
-	//向き設定・取得
-	void SetRot(const D3DXVECTOR3& rot) { m_rot = rot; }
-	D3DXVECTOR3 GetRot(void) { return m_rot; }
 
 	//大きさ設定・取得
 	void SetScaling(const float& Scaling) { m_Scaling = Scaling; }
@@ -116,10 +104,7 @@ private:
 	bool m_bMapScroll;		//マップのスクロール
 
 	D3DXVECTOR3 m_CollisionPos;	//当たり判定用の座標
-	D3DXVECTOR3 m_pos;			//位置	
-	D3DXVECTOR3 m_posOld;		//過去の位置	
 	D3DXVECTOR3 m_move;			//移動量	
-	D3DXVECTOR3 m_rot;			//向き	
 
 	int m_nMapWidth;			//マップの横番号
 	int m_nMapHeight;			//マップの縦番号

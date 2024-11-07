@@ -28,7 +28,6 @@ public:
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);
-	void Take(void);
 
 	bool Hit(CPlayer* pPlayer) override;
 
