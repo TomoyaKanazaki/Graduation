@@ -40,7 +40,6 @@ namespace
 {
 	float SCROOL_SPEED = 5.0f;					// スクロールの移動速度
 	float STAGE_ROT_LIMIT = D3DX_PI * 0.25f;	// スクロールの移動速度
-	D3DXVECTOR3 COLLISION_SIZE = D3DXVECTOR3(750.0f, 0.0f, 550.0f);		// 横の当たり判定
 }
 
 //===========================================
@@ -53,8 +52,7 @@ CListManager<CDevil>* CDevil::m_pList = nullptr; // オブジェクトリスト
 //====================================================================
 CDevil::CDevil(int nPriority) : CObject(nPriority)
 {
-	SetSize(COLLISION_SIZE);
-	m_DevilSize = COLLISION_SIZE;
+	SetSize(D3DXVECTOR3(750.0f, 0.0f, 550.0f));
 	m_pos = INITVECTOR3;
 	m_move = INITVECTOR3;
 	m_Objmove = INITVECTOR3;
@@ -246,6 +244,7 @@ void CDevil::GameUpdate(void)
 		m_pMotion->Update();
 	}
 
+	D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
 	CEffect* pTestEffect = nullptr;
 
 	for (int nCnt = 0; nCnt < 4; nCnt++)
@@ -255,16 +254,16 @@ void CDevil::GameUpdate(void)
 		switch (nCnt)
 		{
 		case 0:
-			pTestEffect->SetPos(D3DXVECTOR3(m_DevilPos.x + m_DevilSize.x, m_DevilPos.y, m_DevilPos.z + m_DevilSize.z));
+			pTestEffect->SetPos(D3DXVECTOR3(m_DevilPos.x + MapSize.x, m_DevilPos.y, m_DevilPos.z + MapSize.z));
 			break;
 		case 1:
-			pTestEffect->SetPos(D3DXVECTOR3(m_DevilPos.x - m_DevilSize.x, m_DevilPos.y, m_DevilPos.z + m_DevilSize.z));
+			pTestEffect->SetPos(D3DXVECTOR3(m_DevilPos.x - MapSize.x, m_DevilPos.y, m_DevilPos.z + MapSize.z));
 			break;
 		case 2:
-			pTestEffect->SetPos(D3DXVECTOR3(m_DevilPos.x + m_DevilSize.x, m_DevilPos.y, m_DevilPos.z - m_DevilSize.z));
+			pTestEffect->SetPos(D3DXVECTOR3(m_DevilPos.x + MapSize.x, m_DevilPos.y, m_DevilPos.z - MapSize.z));
 			break;
 		case 3:
-			pTestEffect->SetPos(D3DXVECTOR3(m_DevilPos.x - m_DevilSize.x, m_DevilPos.y, m_DevilPos.z - m_DevilSize.z));
+			pTestEffect->SetPos(D3DXVECTOR3(m_DevilPos.x - MapSize.x, m_DevilPos.y, m_DevilPos.z - MapSize.z));
 			break;
 		}
 
@@ -589,6 +588,7 @@ void CDevil::CrossScroll(D3DXVECTOR3 Move, float GritSize)
 	// 十字架のリストの中身を確認する
 	for (CCross* pCross : list)
 	{
+		D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
 		D3DXVECTOR3 pos = pCross->GetPos();
 		D3DXVECTOR3 Size = pCross->GetSize();
 
@@ -596,30 +596,30 @@ void CDevil::CrossScroll(D3DXVECTOR3 Move, float GritSize)
 
 		if (Move.x > 0.0f)
 		{
-			if (m_DevilPos.x + m_DevilSize.x < pos.x - GritSize)
+			if (m_DevilPos.x + MapSize.x < pos.x - GritSize)
 			{
-				pos.x = -m_DevilSize.x + m_DevilPos.x - GritSize + Move.x;
+				pos.x = -MapSize.x + m_DevilPos.x - GritSize + Move.x;
 			}
 		}
 		if (Move.x < 0.0f)
 		{
-			if (m_DevilPos.x - m_DevilSize.x > pos.x + GritSize)
+			if (m_DevilPos.x - MapSize.x > pos.x + GritSize)
 			{
-				pos.x = m_DevilSize.x + m_DevilPos.x + GritSize + Move.x;
+				pos.x = MapSize.x + m_DevilPos.x + GritSize + Move.x;
 			}
 		}
 		if (Move.z > 0.0f)
 		{
-			if (m_DevilPos.z + m_DevilSize.z < pos.z - GritSize)
+			if (m_DevilPos.z + MapSize.z < pos.z - GritSize)
 			{
-				pos.z = -m_DevilSize.z + m_DevilPos.z - GritSize + Move.z;
+				pos.z = -MapSize.z + m_DevilPos.z - GritSize + Move.z;
 			}
 		}
 		if (Move.z < 0.0f)
 		{
-			if (m_DevilPos.z - m_DevilSize.z > pos.z + GritSize)
+			if (m_DevilPos.z - MapSize.z > pos.z + GritSize)
 			{
-				pos.z = m_DevilSize.z + m_DevilPos.z + GritSize + Move.z;
+				pos.z = MapSize.z + m_DevilPos.z + GritSize + Move.z;
 			}
 		}
 
@@ -642,35 +642,36 @@ void CDevil::BowabowaScroll(D3DXVECTOR3 Move, float GritSize)
 	{
 		D3DXVECTOR3 pos = pBowabowa->GetPos();
 		D3DXVECTOR3 Size = pBowabowa->GetSize();
+		D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
 
 		pos += Move;
 
 		if (Move.x > 0.0f)
 		{
-			if (m_DevilSize.x < pos.x)
+			if (MapSize.x < pos.x)
 			{
-				pos.x = -m_DevilSize.x + Move.x - 100.0f;
+				pos.x = -MapSize.x + Move.x - 100.0f;
 			}
 		}
 		if (Move.x < 0.0f)
 		{
-			if (-m_DevilSize.x > pos.x)
+			if (-MapSize.x > pos.x)
 			{
-				pos.x = m_DevilSize.x + Move.x + 100.0f;
+				pos.x = MapSize.x + Move.x + 100.0f;
 			}
 		}
 		if (Move.z > 0.0f)
 		{
-			if (m_DevilSize.z < pos.z)
+			if (MapSize.z < pos.z)
 			{
-				pos.z = -m_DevilSize.z + Move.z - 100.0f;
+				pos.z = -MapSize.z + Move.z - 100.0f;
 			}
 		}
 		if (Move.z < 0.0f)
 		{
-			if (-m_DevilSize.z > pos.z)
+			if (-MapSize.z > pos.z)
 			{
-				pos.z = m_DevilSize.z + Move.z + 100.0f;
+				pos.z = MapSize.z + Move.z + 100.0f;
 			}
 		}
 
@@ -733,14 +734,15 @@ void CDevil::PlayerScroll(D3DXVECTOR3 Move, float GritSize)
 		{
 			D3DXVECTOR3 pos = pPlayer->GetPos();
 			D3DXVECTOR3 Size = pPlayer->GetSize();
+			D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
 
 			pos += Move;
 
 			if (Move.x > 0.0f)
 			{
-				if (pos.x + (GritSize * 0.5f) > m_DevilPos.x + m_DevilSize.x)
+				if (pos.x + (GritSize * 0.5f) > m_DevilPos.x + MapSize.x)
 				{
-					pos.x = m_DevilPos.x + m_DevilSize.x - (GritSize * 0.5f) + Move.x;
+					pos.x = m_DevilPos.x + MapSize.x - (GritSize * 0.5f) + Move.x;
 					CollisionPressPlayer(pPlayer, pos, Size);
 
 					CEffect* pEffect = CEffect::Create();
@@ -751,9 +753,9 @@ void CDevil::PlayerScroll(D3DXVECTOR3 Move, float GritSize)
 			}
 			if (Move.x < 0.0f)
 			{
-				if (pos.x - (GritSize * 0.5f) < m_DevilPos.x - m_DevilSize.x)
+				if (pos.x - (GritSize * 0.5f) < m_DevilPos.x - MapSize.x)
 				{
-					pos.x = m_DevilPos.x - m_DevilSize.x + (GritSize * 0.5f) + Move.x;
+					pos.x = m_DevilPos.x - MapSize.x + (GritSize * 0.5f) + Move.x;
 					CollisionPressPlayer(pPlayer, pos, Size);
 
 					CEffect* pEffect = CEffect::Create();
@@ -764,9 +766,9 @@ void CDevil::PlayerScroll(D3DXVECTOR3 Move, float GritSize)
 			}
 			if (Move.z > 0.0f)
 			{
-				if (pos.z + (GritSize * 0.5f) > m_DevilPos.z + m_DevilSize.z)
+				if (pos.z + (GritSize * 0.5f) > m_DevilPos.z + MapSize.z)
 				{
-					pos.z = m_DevilPos.z + m_DevilSize.z - (GritSize * 0.5f) + Move.x;
+					pos.z = m_DevilPos.z + MapSize.z - (GritSize * 0.5f) + Move.x;
 					CollisionPressPlayer(pPlayer, pos, Size);
 
 					CEffect* pEffect = CEffect::Create();
@@ -777,9 +779,9 @@ void CDevil::PlayerScroll(D3DXVECTOR3 Move, float GritSize)
 			}
 			if (Move.z < 0.0f)
 			{
-				if (pos.z - (GritSize * 0.5f) < m_DevilPos.z - m_DevilSize.z)
+				if (pos.z - (GritSize * 0.5f) < m_DevilPos.z - MapSize.z)
 				{
-					pos.z = m_DevilPos.z - m_DevilSize.z + (GritSize * 0.5f) + Move.z;
+					pos.z = m_DevilPos.z - MapSize.z + (GritSize * 0.5f) + Move.z;
 					CollisionPressPlayer(pPlayer, pos, Size);
 
 					CEffect* pEffect = CEffect::Create();
@@ -828,21 +830,22 @@ void CDevil::GritScroll(D3DXVECTOR3 Move)
 	float MapGrit = CMapSystem::GetInstance()->GetGritSize();
 	MapPos += Move;
 	m_MapDifference = -(InitPos - MapPos);
+	D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
 
 	if ((InitPos.x - MapPos.x) > 0.0f)
 	{// 左範囲
-		MapPos.x = InitPos.x + (m_DevilSize.x * 2.0f) + MapGrit + Move.x;
+		MapPos.x = InitPos.x + (MapSize.x * 2.0f) + MapGrit + Move.x;
 	}
-	if ((InitPos.x - MapPos.x + MapGrit) < (-m_DevilSize.x * 2.0f))
+	if ((InitPos.x - MapPos.x + MapGrit) < (-MapSize.x * 2.0f))
 	{// 右範囲
 		MapPos.x = InitPos.x + Move.x;
 	}
 
 	if ((InitPos.z - MapPos.z) < 0.0f)
 	{// 上範囲
-		MapPos.z = InitPos.z + (-m_DevilSize.z * 2.0f) - MapGrit + Move.z;
+		MapPos.z = InitPos.z + (-MapSize.z * 2.0f) - MapGrit + Move.z;
 	}
-	if ((InitPos.z - MapPos.z - MapGrit) > (m_DevilSize.z * 2.0f))
+	if ((InitPos.z - MapPos.z - MapGrit) > (MapSize.z * 2.0f))
 	{// 下範囲
 		MapPos.z = InitPos.z + Move.z;
 	}
