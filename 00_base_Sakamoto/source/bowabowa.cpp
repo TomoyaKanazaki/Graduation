@@ -49,24 +49,11 @@ CBowabowa::~CBowabowa()
 //====================================================================
 HRESULT CBowabowa::Init()
 {
+	// 親クラスの初期化
+	if(FAILED(CItem::Init(MODEL_PASS))){ assert(false); return E_FAIL; }
+
+	// オブジェクトの種類を設定
 	SetType(CObject::TYPE_BOWABOWA);
-
-	CItem::Init(MODEL_PASS);
-
-	//モードごとに初期値を設定出来る
-	switch (CScene::GetMode())
-	{
-	case CScene::MODE_TITLE:
-		break;
-
-	case CScene::MODE_GAME:
-	case CScene::MODE_TUTORIAL:
-		CGame::AddBowabowa(1);
-		break;
-
-	case CScene::MODE_RESULT:
-		break;
-	}
 
 	// リストマネージャーの生成
 	if (m_pList == nullptr)
@@ -104,72 +91,7 @@ void CBowabowa::Uninit(void)
 //====================================================================
 void CBowabowa::Update(void)
 {
-	switch (CScene::GetMode())
-	{
-	case CScene::MODE_TITLE:
-		TitleUpdate();
-		break;
 
-	case CScene::MODE_GAME:
-	case CScene::MODE_TUTORIAL:
-
-		GameUpdate();
-		break;
-
-	case CScene::MODE_RESULT:
-		break;
-	}
-}
-
-//====================================================================
-//タイトルでの更新処理
-//====================================================================
-void CBowabowa::TitleUpdate(void)
-{
-	D3DXVECTOR3 pos = GetPos();
-	D3DXVECTOR3 move = GetMove();
-
-	//位置更新
-	pos += move;
-
-	SetPos(pos);
-
-	//頂点情報の更新
-	CItem::Update();
-}
-
-//====================================================================
-//ゲームでの更新処理
-//====================================================================
-void CBowabowa::GameUpdate(void)
-{
-	D3DXVECTOR3 pos = GetPos();
-	D3DXVECTOR3 posOld = GetPosold();
-	D3DXVECTOR3 rot = GetRot();
-
-	float Scaling = GetScaling();
-
-	//更新前の位置を過去の位置とする
-	posOld = pos;
-
-	//位置更新
-	CObjectX::SetPos(pos);
-	CObjectX::SetRot(rot);
-
-	//画面外判定
-	if (pos.y < 0.0f)
-	{
-
-	}
-
-	//大きさの設定
-	SetScaling(Scaling);
-
-	//状態管理
-	StateManager();
-
-	//頂点情報の更新
-	CItem::Update();
 }
 
 //====================================================================
@@ -178,29 +100,6 @@ void CBowabowa::GameUpdate(void)
 void CBowabowa::Draw(void)
 {
 	CItem::Draw();
-}
-
-//====================================================================
-//状態管理
-//====================================================================
-void CBowabowa::StateManager(void)
-{
-	CItem::STATE State = GetState();
-
-	int nStateCounter = GetStateCounter();
-
-	switch (State)
-	{
-	case STATE_NORMAL:
-		break;
-	case STATE_ACTION:
-		break;
-	}
-
-	if (nStateCounter > 0)
-	{
-		nStateCounter--;
-	}
 }
 
 //====================================================================

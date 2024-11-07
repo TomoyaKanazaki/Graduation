@@ -18,17 +18,6 @@ class CItem : public CObjectX
 {
 public:
 
-	CItem(int nPriority = 3);
-	~CItem();
-
-	//サンプルの状態
-	enum STATE
-	{
-		STATE_NORMAL = 0,	//通常
-		STATE_ACTION,		//行動
-		STATE_MAX,
-	};
-	
 	enum TYPE
 	{// アイテムの種類
 		TYPE_CROSS = 0,	// 十字架
@@ -38,7 +27,7 @@ public:
 		TYPE_NONE
 	};
 
-	// 特殊な座標系
+	// 特殊な座標系を管理する構造体
 	struct GRID
 	{
 		// コンストラクタ
@@ -49,16 +38,17 @@ public:
 		int y;
 	};
 
+	// メンバ変数
+	CItem(int nPriority = 3);
+	~CItem();
+
 	HRESULT Init(const char* pModelName);
 	HRESULT Init() { assert(false); return E_FAIL; }; // 呼ばれてはならない
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);
 
-	// 静的メンバ関数
-	static CItem* Create(const TYPE eType, const GRID& pos);
-
-	virtual void Move() {}
+	virtual void Move() {} // 移動処理
 
 	// テクスチャ番号取得
 	int GetIdx(void) { return m_nIdxTexture; }
@@ -86,9 +76,6 @@ public:
 	void SetScaling(const float& Scaling) { m_Scaling = Scaling; }
 	float GetScaling(void) { return m_Scaling; }
 
-	// 状態取得
-	STATE GetState() { return m_eState; }
-
 	// 状態管理の取得
 	int GetStateCounter() { return m_nStateCount; }
 
@@ -110,9 +97,11 @@ public:
 	bool CollisionPlayer();
 	virtual bool Hit(CPlayer* pPlayer) = 0;
 
+	// 静的メンバ関数
+	static CItem* Create(const TYPE eType, const GRID& pos);
+
 private:
 
-	STATE m_eState;		// 状態
 	TYPE m_eType;		// 種類
 
 	int m_nIdxXModel;		//Xモデルの番号

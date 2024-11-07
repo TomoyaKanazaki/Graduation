@@ -46,6 +46,9 @@ public:
 	int GetHeightMax(void) { return m_HeightMax; }
 	float GetGritSize(void) { return m_fGritSize; }
 
+	void SetMapSize(D3DXVECTOR3 size) { m_MapSize = size; }
+	D3DXVECTOR3 GetMapSize(void) { return m_MapSize; }
+
 public:
 	static CMapSystem* pMapSystem;
 
@@ -55,6 +58,7 @@ public:
 	int m_WightMax;
 	int m_HeightMax;
 	float m_fGritSize;
+	D3DXVECTOR3 m_MapSize;		//ƒ}ƒbƒv‚Ì‹«ŠEü‚Ì‘å‚«‚³
 };
 
 #endif
