@@ -23,6 +23,7 @@ public:
 		TYPE_CROSS = 0,	// 十字架
 		TYPE_BIBLE,		// 聖書
 		TYPE_BOWABOWA,	// ぼわぼわ
+		TYPE_SOFTCREAM,	// ソフトクリーム
 		TYPE_MAX,
 		TYPE_NONE
 	};
