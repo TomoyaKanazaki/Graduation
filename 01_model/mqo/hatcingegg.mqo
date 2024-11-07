@@ -4,8 +4,8 @@ Format Text Ver 1.0
 Scene {
 	pos 24.6669 48.2940 2400.0002
 	lookat 0.0000 0.0000 0.0000
-	head 24.9367
-	pich 0.0792
+	head 25.0967
+	pich -0.0508
 	bank 0.0000
 	ortho 1
 	zoom2 0.8692
@@ -326,7 +326,7 @@ Object "egg" {
 	}
 }
 Object "upper part" {
-	visible 15
+	visible 0
 	locking 0
 	shading 1
 	facet 59.5
