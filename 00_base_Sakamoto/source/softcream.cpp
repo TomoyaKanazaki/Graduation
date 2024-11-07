@@ -103,6 +103,8 @@ void CSoftCream::Uninit(void)
 //====================================================================
 void CSoftCream::Update(void)
 {
+	DebugProc::Print(DebugProc::POINT_CENTER, "ソフトクリーム座標 : %f, %f, %f\n", GetPos().x, GetPos().y, GetPos().z);
+
 	//親クラスの更新
 	CItem::Update();
 }

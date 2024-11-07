@@ -136,22 +136,26 @@ D3DXVECTOR3 CMapSystem::GetGritPos(int Wight, int Height)
 
 	D3DXVECTOR3 DevilPos = CGame::GetDevil()->GetDevilPos();
 
-	//グリット番号が最大値以上や最小値以下の時、範囲内に納める処理
+	// グリット番号が最大値以上や最小値以下の時、範囲内に納める処理
 	Wight = useful::RangeNumber(m_WightMax, 0, Wight);
 	Height = useful::RangeNumber(m_HeightMax, 0, Height);
 
-	//　グリットの位置にエフェクトを表示
+	// グリットの横番号の位置を設定する
 	Pos.x = m_MapPos.x + (Wight * m_fGritSize);
 
+	//境界線の外側にグリットがある場合反対側に移動させる
 	if (Pos.x > DevilPos.x + (m_MapSize.x))
 	{
 		Pos.x = Pos.x - (DevilPos.x + (m_MapSize.x * 2.0f)) - m_fGritSize;
 	}
 
+	// 高さの位置を設定する
 	Pos.y = 0.0f;
 
+	// グリットの縦番号の位置を設定する
 	Pos.z = m_MapPos.z - (Height * m_fGritSize);
 
+	//境界線の外側にグリットがある場合反対側に移動させる
 	if (Pos.z < DevilPos.z - (m_MapSize.z))
 	{
 		Pos.z = Pos.z + (DevilPos.z + (m_MapSize.z * 2.0f)) + m_fGritSize;

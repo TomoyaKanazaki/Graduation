@@ -36,8 +36,9 @@
 //===========================================
 namespace
 {
-	const D3DXVECTOR3 COLLISION_SIZE = D3DXVECTOR3(45.0f, 60.0f, 45.0f);		//横の当たり判定
+	const D3DXVECTOR3 COLLISION_SIZE = D3DXVECTOR3(35.0f, 60.0f, 35.0f);		//横の当たり判定
 	const float LIFE = 1.0f;	// 体力
+	const float GRIT_OK = 45.0f;			//移動可能なグリットの範囲内
 
 	const float DISTANCE_RECEDE = 200.0f;	//近づく距離
 	const float DISTANCE_APPROACH = 100.0f;	//遠ざかる距離
@@ -418,7 +419,10 @@ void CEnemy::CollisionWall(useful::COLLISION XYZ)
 		// 矩形の当たり判定
 		if (useful::CollisionBlock(pos, posOld, Move, Size, &m_pos, m_posOld, &m_move, &m_Objmove, m_size, &bNullJump, XYZ) == true)
 		{
+			//待機状態にする
 			m_State = E_STATE_WAIT;
+
+			m_pos = CMapSystem::GetInstance()->GetGritPos(m_nMapWidth, m_nMapHeight);
 		}
 	}
 }
@@ -466,21 +470,21 @@ void CEnemy::CollisionOut()
 		float GritSize = CMapSystem::GetInstance()->GetGritSize();
 
 		// ステージ外の当たり判定
-		if (Pos.x + MapSize.x + GritSize < m_pos.x)
+		if (Pos.x + MapSize.x < m_pos.x)
 		{
 			m_pos.x = Pos.x -MapSize.x - GritSize;
 		}
 		if (Pos.x - MapSize.x - GritSize > m_pos.x)
 		{
-			m_pos.x = Pos.x + MapSize.x + GritSize;
+			m_pos.x = Pos.x + MapSize.x;
 		}
-		if (Pos.z + MapSize.z + GritSize < m_pos.z)
+		if (Pos.z + MapSize.z < m_pos.z)
 		{
 			m_pos.z = Pos.z - MapSize.z - GritSize;
 		}
 		if (Pos.z - MapSize.z - GritSize > m_pos.z)
 		{
-			m_pos.z = Pos.z + MapSize.z + GritSize;
+			m_pos.z = Pos.z + MapSize.z;
 		}
 	}
 }
@@ -639,10 +643,10 @@ void CEnemy::SearchWall(void)
 
 	DebugProc::Print(DebugProc::POINT_LEFT, "敵の位置 %f %f %f\n", MyGritPos.x, MyGritPos.y, MyGritPos.z);
 
-	if (m_pos.x <= MyGritPos.x + ((MapGritSize * 0.5f) - m_size.x) &&
-		m_pos.x >= MyGritPos.x - ((MapGritSize * 0.5f) - m_size.x) &&
-		m_pos.z <= MyGritPos.z + ((MapGritSize * 0.5f) - m_size.z) &&
-		m_pos.z >= MyGritPos.z - ((MapGritSize * 0.5f) - m_size.z))
+	if (m_pos.x <= MyGritPos.x + ((MapGritSize * 0.5f) - GRIT_OK) &&
+		m_pos.x >= MyGritPos.x - ((MapGritSize * 0.5f) - GRIT_OK) &&
+		m_pos.z <= MyGritPos.z + ((MapGritSize * 0.5f) - GRIT_OK) &&
+		m_pos.z >= MyGritPos.z - ((MapGritSize * 0.5f) - GRIT_OK))
 	{// グリットの中心位置に立っているなら操作を受け付ける
 
 		if (!m_OKR && OKR)
