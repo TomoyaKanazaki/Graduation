@@ -83,6 +83,7 @@ void CCross::Uninit(void)
 		m_pList->Release(m_pList);
 	}
 
+	// 親クラスの終了処理
 	CItem::Uninit();
 }
 
@@ -91,7 +92,8 @@ void CCross::Uninit(void)
 //====================================================================
 void CCross::Update(void)
 {
-
+	// 親クラスの更新処理
+	CItem::Update();
 }
 
 //====================================================================
@@ -99,6 +101,7 @@ void CCross::Update(void)
 //====================================================================
 void CCross::Draw(void)
 {
+	// 親クラスの描画処理
 	CItem::Draw();
 }
 
