@@ -144,7 +144,7 @@ CEdit::CEdit()
 	if (m_EditRailBlock == nullptr)
 	{
 		m_EditRailBlock = CRailBlock::Create(0, 0, true, 0, 0);
-		m_EditRailBlock->SetPos(D3DXVECTOR3(0.0f, 50.0f, 0.0f));
+		m_EditRailBlock->SetPos(D3DXVECTOR3(-1000.0f, 50.0f, -1000.0f));
 		m_EditRailBlock->SetAppear(false);
 	}
 

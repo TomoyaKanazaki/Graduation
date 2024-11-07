@@ -158,6 +158,7 @@ void CRailBlock::Update(void)
 
 	Move(&Pos);
 
+	// 横番号が前回と一致しない時にグリットのブロックの有無を切り替える
 	if (GetWightNumber() != CMapSystem::GetInstance()->GetGritWightNumber(Pos.x))
 	{
 		CMapSystem::GetInstance()->SetGritBool(GetWightNumber(), GetHeightNumber(), false);
@@ -167,6 +168,7 @@ void CRailBlock::Update(void)
 		RailCheck();
 	}
 
+	// 縦番号が前回と一致しない時にグリットのブロックの有無を切り替える
 	if (GetHeightNumber() != CMapSystem::GetInstance()->GetGritHeightNumber(Pos.z))
 	{
 		CMapSystem::GetInstance()->SetGritBool(GetWightNumber(), GetHeightNumber(), false);

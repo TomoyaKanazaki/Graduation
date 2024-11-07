@@ -315,17 +315,17 @@ void CPlayer::GameUpdate(void)
 		// カメラ更新処理
 		CameraPosUpdate();
 
-		if (m_State == STATE_WALK)
-		{
-			// 位置更新処理
-			PosUpdate();
-		}
-
 		// レールブロックとの当たり判定
 		CollisionMoveRailBlock(useful::COLLISION_X);
 		CollisionMoveRailBlock(useful::COLLISION_Z);
 
 		ObjPosUpdate();
+
+		if (m_State == STATE_WALK)
+		{
+			// 位置更新処理
+			PosUpdate();
+		}
 
 		if (m_State != STATE_EGG)
 		{
@@ -694,6 +694,11 @@ void CPlayer::CollisionPressWall(useful::COLLISION XYZ)
 //====================================================================
 void CPlayer::CollisionWaitRailBlock(useful::COLLISION XYZ)
 {
+	if (m_bPressObj == true)
+	{
+		return;
+	}
+
 	// レールブロックのリスト構造が無ければ抜ける
 	if (CRailBlock::GetList() == nullptr) { return; }
 	std::list<CRailBlock*> list = CRailBlock::GetList()->GetList();    // リストを取得
@@ -1114,7 +1119,7 @@ void CPlayer::Death(void)
 		if (m_eItemType == TYPE_BIBLE)
 		{
 			// 聖書生成
-			CItem::Create(CItem::TYPE_BIBLE, CItem::GRID(m_nMapWidth, m_nMapHeight));
+			CItem::Create(CItem::TYPE_BIBLE, CMapSystem::GRID(m_nMapWidth, m_nMapHeight));
 
 			// アイテムを所持していない状態にする
 			SetItemType(TYPE_NONE);

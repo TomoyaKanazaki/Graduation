@@ -873,24 +873,24 @@ void CDevil::GritScroll(D3DXVECTOR3 Move)
 
 #ifdef _DEBUG
 
-	//　グリットの位置にエフェクトを表示
-	for (int nCntW = 0; nCntW < MapWightMax; nCntW++)
-	{
-		for (int nCntH = 0; nCntH < MapHeightMax; nCntH++)
-		{
-			//グリット番号を位置に変換
-			D3DXVECTOR3 CountPos = CMapSystem::GetInstance()->GetGritPos(nCntW, nCntH);
-			CountPos.y = 50.0f;
+	////　グリットの位置にエフェクトを表示
+	//for (int nCntW = 0; nCntW < MapWightMax; nCntW++)
+	//{
+	//	for (int nCntH = 0; nCntH < MapHeightMax; nCntH++)
+	//	{
+	//		//グリット番号を位置に変換
+	//		D3DXVECTOR3 CountPos = CMapSystem::GetInstance()->GetGritPos(nCntW, nCntH);
+	//		CountPos.y = 50.0f;
 
-			if (CMapSystem::GetInstance()->GetGritBool(nCntW, nCntH))
-			{// ブロックが存在するグリットのみエフェクトを表示
+	//		if (CMapSystem::GetInstance()->GetGritBool(nCntW, nCntH))
+	//		{// ブロックが存在するグリットのみエフェクトを表示
 
-				CEffect* pEffect = CEffect::Create();
-				pEffect->SetPos(CountPos);
-				pEffect->SetLife(10);
-			}
-		}
-	}
+	//			CEffect* pEffect = CEffect::Create();
+	//			pEffect->SetPos(CountPos);
+	//			pEffect->SetLife(10);
+	//		}
+	//	}
+	//}
 
 #endif // _DEBUG
 }

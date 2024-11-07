@@ -9,6 +9,7 @@
 
 #include "main.h"
 #include "objectX.h"
+#include "MapSystem.h"
 
 // 前方宣言
 class CPlayer;
@@ -28,17 +29,6 @@ public:
 		TYPE_NONE
 	};
 
-	// 特殊な座標系を管理する構造体
-	struct GRID
-	{
-		// コンストラクタ
-		GRID() {};
-		GRID(int X, int Z) { x = X; z = Z; };
-
-		int x;
-		int z;
-	};
-
 	// メンバ変数
 	CItem(int nPriority = 3);
 	~CItem();
@@ -49,7 +39,7 @@ public:
 	void Update(void);
 	void Draw(void);
 
-	virtual void Move() {} // 移動処理
+	virtual void Move(D3DXVECTOR3& pos) {} // 移動処理
 
 	// テクスチャ番号取得
 	int GetIdx(void) { return m_nIdxTexture; }
@@ -69,15 +59,16 @@ public:
 	int GetStateCounter() { return m_nStateCount; }
 
 	// マップ番号の設定
-	virtual void SetGrid(const GRID& pos);
+	virtual void SetGrid(const CMapSystem::GRID& pos) { m_Grid = pos; }
+	CMapSystem::GRID GetGrid(void) { return m_Grid; }
 
-	// マップの横番号の設定・取得
-	void SetWightNumber(int Wight) { m_nMapWidth = Wight; }
-	int GetWightNumber() { return m_nMapWidth; }
+	//// マップの横番号の設定・取得
+	//void SetWightNumber(int Wight) { m_nMapWidth = Wight; }
+	//int GetWightNumber() { return m_nMapWidth; }
 
-	// マップの縦番号の設定・取得
-	void SetHeightNumber(int Height) { m_nMapHeight = Height; }
-	int GetHeightNumber() { return m_nMapHeight; }
+	//// マップの縦番号の設定・取得
+	//void SetHeightNumber(int Height) { m_nMapHeight = Height; }
+	//int GetHeightNumber() { return m_nMapHeight; }
 
 	// スクロールするかどうかの設定・取得
 	void SetMapScroll(bool Height) { m_bMapScroll = Height; }
@@ -87,7 +78,7 @@ public:
 	virtual bool Hit(CPlayer* pPlayer) = 0;
 
 	// 静的メンバ関数
-	static CItem* Create(const TYPE eType, const GRID& pos);
+	static CItem* Create(const TYPE eType, const CMapSystem::GRID& pos);
 
 private:
 
@@ -107,8 +98,9 @@ private:
 	D3DXVECTOR3 m_CollisionPos;	//当たり判定用の座標
 	D3DXVECTOR3 m_move;			//移動量	
 
-	int m_nMapWidth;			//マップの横番号
-	int m_nMapHeight;			//マップの縦番号
+	CMapSystem::GRID m_Grid;	// マップ番号
+	//int m_nMapWidth;			//マップの横番号
+	//int m_nMapHeight;			//マップの縦番号
 };
 
 #endif

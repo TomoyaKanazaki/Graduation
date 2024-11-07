@@ -14,7 +14,6 @@
 #include "bible.h"
 #include "game.h"
 #include "score.h"
-#include "softcream.h"
 
 //==========================================
 //  定数定義
@@ -29,8 +28,6 @@ namespace
 		10, // ぼわぼわ
 		10 // ソフトクリーム
 	};
-
-	const float POS_Y = 50.0f; // 少し高い位置に生成する
 }
 
 //==========================================
@@ -52,8 +49,8 @@ CItem::CItem(int nPriority) : CObjectX(nPriority)
 	m_bCollision = false;		// 当たり判定
 	m_CollisionPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// 判定座標
 	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);			// 移動量
-	m_nMapWidth = 1;			// マップの横番号
-	m_nMapHeight = 0;			// マップの縦番号
+	m_Grid.x = 1;			// マップの横番号
+	m_Grid.z = 0;			// マップの縦番号
 	m_bMapScroll = true;
 }
 
@@ -68,7 +65,7 @@ CItem::~CItem()
 //====================================================================
 // 生成
 //====================================================================
-CItem* CItem::Create(const TYPE eType, const GRID& pos)
+CItem* CItem::Create(const TYPE eType, const CMapSystem::GRID& pos)
 {
 	// インスタンス生成
 	CItem* pItem = nullptr;
@@ -87,10 +84,6 @@ CItem* CItem::Create(const TYPE eType, const GRID& pos)
 
 		case CItem::TYPE_BOWABOWA:	// ぼわぼわ
 			pItem = new CBowabowa;
-			break;
-
-		case CItem::TYPE_SOFTCREAM:	// ソフトクリーム
-			pItem = new CSoftCream;
 			break;
 
 		default:
@@ -116,15 +109,11 @@ CItem* CItem::Create(const TYPE eType, const GRID& pos)
 //====================================================================
 HRESULT CItem::Init(const char* pModelName)
 {
-	// 親クラスの初期化
+	// 継承クラスの初期化
 	CObjectX::Init(pModelName);
 
-	// マップとのマトリックスの掛け合わせをオンにする
+	//マップとのマトリックスの掛け合わせをオンにする
 	SetMultiMatrix(true);
-
-	// 少し高い位置に生成する
-	D3DXVECTOR3 pos = D3DXVECTOR3(0.0f, POS_Y, 0.0f);
-	SetPos(pos);
 
 	return S_OK;
 }
@@ -149,13 +138,12 @@ void CItem::Update()
 
 	if (m_bMapScroll == true)
 	{
-		D3DXVECTOR3 posGrid = CMapSystem::GetInstance()->GetGritPos(m_nMapWidth, m_nMapHeight);
-		pos.x = posGrid.x;
-		pos.z = posGrid.z;
+		pos = CMapSystem::GetInstance()->GetGritPos(m_Grid.x, m_Grid.z);
+		pos.y = 0.0f;
 	}
 	else
 	{
-		Move();
+		Move(pos);
 	}
 
 	// プレイヤーとアイテムの判定
@@ -185,15 +173,6 @@ void CItem::Draw()
 {
 	// 継承クラスの描画
 	CObjectX::Draw();
-}
-
-//==========================================
-//  マップ番号の設定
-//==========================================
-void CItem::SetGrid(const GRID& pos)
-{
-	SetWightNumber(pos.x);
-	SetHeightNumber(pos.z);
 }
 
 //====================================================================
