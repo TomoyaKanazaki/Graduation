@@ -236,6 +236,9 @@ HRESULT CGame::Init(void)
 		// 十字架の生成
 		CItem::Create(CItem::TYPE_CROSS, CItem::GRID(5, 9));
 
+		// ソフトクリームの生成
+		CItem::Create(CItem::TYPE_SOFTCREAM, CItem::GRID(6, 2));
+
 		break;
 
 	case 1:
