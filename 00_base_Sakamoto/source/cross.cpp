@@ -20,6 +20,7 @@ namespace
 	const D3DXVECTOR3 INIT_POS = D3DXVECTOR3(0.0f, 0.0f, 200.0f);		//当たり判定
 	const D3DXVECTOR3 SAMPLE_SIZE = D3DXVECTOR3(20.0f, 20.0f, 20.0f);		//当たり判定
 	const char* MODEL_PASS = "data\\MODEL\\zyuzika.x"; // モデルパス
+	const D3DXVECTOR3 ADD_ROT = D3DXVECTOR3(0.01f, 0.01f, 0.01f); // 回転量
 }
 
 //===========================================
@@ -92,6 +93,9 @@ void CCross::Uninit(void)
 //====================================================================
 void CCross::Update(void)
 {
+	// 回転
+	Rotation();
+
 	// 親クラスの更新処理
 	CItem::Update();
 }
@@ -127,4 +131,19 @@ bool CCross::Hit(CPlayer* pPlayer)
 CListManager<CCross>* CCross::GetList(void)
 {
 	return m_pList;
+}
+
+//==========================================
+//  回転する処理
+//==========================================
+void CCross::Rotation()
+{
+	// 現在の向きを取得する
+	D3DXVECTOR3 rot = GetRot();
+
+	// 向きを加算
+	rot += ADD_ROT;
+
+	// 向きを適用
+	SetRot(rot);
 }
