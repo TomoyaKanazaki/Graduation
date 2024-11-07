@@ -23,6 +23,7 @@
 //==========================================
 namespace
 {
+	const D3DXVECTOR3 ROTATE_ADD = D3DXVECTOR3(0.0f, 0.0f, 0.05f);
 }
 
 //====================================================================
@@ -271,7 +272,11 @@ void CSlopeDevice::StateManager(void)
 	{
 	case STATE_NORMAL:
 		break;
-	case STATE_ACTION:
+	case STATE_ROTATE:
+
+		// ƒ[ƒ‰[‚Æ‰ñ‚µŽÔ‰ñ“]ˆ—
+		Rotate(SETUP_TYPE_ROLLRE, ROTATE_ADD);
+		Rotate(SETUP_TYPE_MAWASIGURMA, ROTATE_ADD);
 		break;
 	}
 
@@ -279,6 +284,30 @@ void CSlopeDevice::StateManager(void)
 	{
 		m_nStateCount--;
 	}
+}
+
+//====================================================================
+// ‰ñ“]ˆ—
+//====================================================================
+void CSlopeDevice::Rotate(int nNldxModel,D3DXVECTOR3 rotate)
+{
+	// ƒ‚ƒfƒ‹‚Ì‰ñ“]Ž²‚ðŽæ“¾
+	D3DXVECTOR3 rot = m_apModel[nNldxModel]->GetStartRot();
+	
+	if (m_rot.y == 0.0f)
+	{
+		// ‰ñ“]—ÊŒ¸ŽZ
+		rot += rotate;
+	}
+	else if (m_rot.y == D3DX_PI)
+	{
+		// ‰ñ“]—Ê‰ÁŽZ
+		rot -= rotate;
+	}
+
+
+	// ƒ‚ƒfƒ‹‚Ì‰ñ“]Ý’è
+	m_apModel[nNldxModel]->SetStartRot(rot);
 }
 
 //====================================================================

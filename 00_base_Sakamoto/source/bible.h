@@ -27,7 +27,7 @@ public:
 	void Update(void);
 	void Draw(void);
 
-	void Move();
+	void Move(D3DXVECTOR3& pos) override;
 
 	void SetGrid(const CMapSystem::GRID& pos) override;
 	bool Hit(CPlayer* pPlayer) override;

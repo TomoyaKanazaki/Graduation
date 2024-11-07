@@ -114,16 +114,13 @@ void CBible::Draw(void)
 //====================================================================
 // 動きの制御
 //====================================================================
-void CBible::Move()
+void CBible::Move(D3DXVECTOR3& pos)
 {
 	// フィールドの座標を取得
 	D3DXVECTOR3 posField = CGame::GetMapField()->GetPos();
 
-	// 自身の座標を取得 
-	D3DXVECTOR3 posThis = GetPos();
-
 	// 自身の座標とフィールドを結ぶ時の向きを算出
-	D3DXVECTOR3 vec = posThis - posField;
+	D3DXVECTOR3 vec = pos - posField;
 	float rot = atan2f(vec.z, vec.x);
 
 	// 経過時間を取得
@@ -137,8 +134,8 @@ void CBible::Move()
 	float z = fScale * sinf(rot);
 
 	// 基準位置に移動量を加算する
-	posThis.x = m_posBase.x + x;
-	posThis.z = m_posBase.z + z;
+	pos.x = m_posBase.x + x;
+	pos.z = m_posBase.z + z;
 }
 
 //==========================================

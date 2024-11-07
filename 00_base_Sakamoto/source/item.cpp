@@ -143,7 +143,7 @@ void CItem::Update()
 	}
 	else
 	{
-		Move();
+		Move(pos);
 	}
 
 	// プレイヤーとアイテムの判定

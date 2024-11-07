@@ -21,10 +21,11 @@
 namespace
 {
 	const D3DXVECTOR3 COLLISION_SIZE = D3DXVECTOR3(20.0f, 20.0f, 20.0f);		//当たり判定
-	const int APPEA = 4;	// 出現数の最大数
-	const char* MODEL_PASS = "data\\MODEL\\02_item\\holybible.x"; // モデルパス
-	const float MOVE_SCALE = sqrtf(50.0f * 50.0f * 2.0f); // 移動幅
-	const float DELTE_TIME = 600.0f;	// 自動で消える時間
+	const char* MODEL_PASS = "data\\MODEL\\02_item\\softcream.x"; // モデルパス
+	const float MOVE_SCALE = 950.0f; // 移動幅
+
+	// TODO : 本仕様の時に必ず消す
+	float fMove = 0;
 }
 
 //===========================================
@@ -35,10 +36,7 @@ CListManager<CSoftCream>* CSoftCream::m_pList = nullptr; // オブジェクトリスト
 //====================================================================
 // コンストラクタ
 //====================================================================
-CSoftCream::CSoftCream(int nPriority) : CItem(nPriority),
-m_nAppea(0),	// 出現順
-m_fMove(0.0f),	// 移動量
-m_fConuter(0.0f)	// 削除カウンター
+CSoftCream::CSoftCream(int nPriority) : CItem(nPriority)
 {
 	SetSize(COLLISION_SIZE);
 	SetPos(INITVECTOR3);
@@ -121,9 +119,29 @@ void CSoftCream::Draw(void)
 //====================================================================
 // 動きの制御
 //====================================================================
-void CSoftCream::Move()
+void CSoftCream::Move(D3DXVECTOR3& pos)
 {
+	// 移動量加算
+	pos.x += MOVE_SCALE * DeltaTime::Get() * sinf(fMove);
 
+	// TODO : 本仕様の時に必ず消す
+	fMove += DeltaTime::Get();
+}
+
+//==========================================
+//  マップ番号の設定
+//==========================================
+void CSoftCream::SetGrid(const CMapSystem::GRID& pos)
+{
+	// 親クラスの設定処理を呼び出す
+	CItem::SetGrid(pos);
+
+	// グリッド情報から自身の座標を算出する
+	D3DXVECTOR3 posThis = CMapSystem::GetInstance()->GetGritPos(pos.x, pos.z);
+
+	// 位置を設定
+	CItem::SetPos(posThis);
+	CObjectX::SetPos(posThis);
 }
 
 //====================================================================
