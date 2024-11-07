@@ -64,7 +64,7 @@ namespace
 	const int BOTTOM_FIELD_VTX_WIDTH = 32;		// 下床の横数
 	const int BOTTOM_FIELD_VTX_HEIGHT = 32;		// 下床の縦数
 	const char* BOTTOM_FIELD_TEX = "data\\TEXTURE\\Field\\Tile001.jpg";		// 下床のテクスチャ
-	const D3DXVECTOR3 BOTTOM_FIELD_POS = D3DXVECTOR3(0.0f, -500.0f, 0.0f);	// 下床の位置
+	const D3DXVECTOR3 BOTTOM_FIELD_POS = D3DXVECTOR3(0.0f, -260.0f, 0.0f);	// 下床の位置
 	const int BIBLE_OUTGRIT = 2;	// 聖書がマップの外側から何マス内側にいるか
 
 	const char* SLOPE_DEVICE_MODEL = "data\\TXT\\MOTION\\02_staging\\00_SlopeDevice\\motion_slopedevice.txt";
@@ -174,34 +174,34 @@ HRESULT CGame::Init(void)
 		//pSlopeDevice->SetPos(D3DXVECTOR3(900.0f, 0.0f, -600.0f));
 
 		CObjectX* pMawasiguruma1 = CObjectX::Create("data\\MODEL\\mawasiguruma.x");
-		pMawasiguruma1->SetPos(D3DXVECTOR3(900.0f, 0.0f, 600.0f));
+		pMawasiguruma1->SetPos(D3DXVECTOR3(1000.0f, BOTTOM_FIELD_POS.y, 600.0f));
 		pMawasiguruma1->SetRot(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
 
 		CObjectX* pMawasiguruma2 = CObjectX::Create("data\\MODEL\\mawasiguruma.x");
-		pMawasiguruma2->SetPos(D3DXVECTOR3(-900.0f, 0.0f, -600.0f));
+		pMawasiguruma2->SetPos(D3DXVECTOR3(-1000.0f, BOTTOM_FIELD_POS.y, -600.0f));
 
 		CObjectX* pMawasiguruma3 = CObjectX::Create("data\\MODEL\\mawasiguruma.x");
-		pMawasiguruma3->SetPos(D3DXVECTOR3(-900.0f, 0.0f, 600.0f));
+		pMawasiguruma3->SetPos(D3DXVECTOR3(-1000.0f, BOTTOM_FIELD_POS.y, 600.0f));
 		pMawasiguruma3->SetRot(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
 	}
 
 	// ジャッキ
 	{
-		//CObjectX* pJack1 = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\jack.x");
-		//pJack1->SetPos(D3DXVECTOR3(900.0f, 0.0f, 600.0f));
-		//pJack1->SetRot(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
+		CObjectX* pJack1 = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\jack.x");
+		pJack1->SetPos(D3DXVECTOR3(700.0f, BOTTOM_FIELD_POS.y, 500.0f));
+		pJack1->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
 
-		//CObjectX* pJack2 = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\jack.x");
-		//pJack2->SetPos(D3DXVECTOR3(900.0f, 0.0f, -600.0f));
-		//pJack2->SetRot(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
+		CObjectX* pJack2 = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\jack.x");
+		pJack2->SetPos(D3DXVECTOR3(700.0f, BOTTOM_FIELD_POS.y, -500.0f));
+		pJack2->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
 
-		//CObjectX* pJack3 = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\jack.x");
-		//pJack3->SetPos(D3DXVECTOR3(-900.0f, 0.0f, 600.0f));
-		//pJack3->SetRot(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
+		CObjectX* pJack3 = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\jack.x");
+		pJack3->SetPos(D3DXVECTOR3(-700.0f, BOTTOM_FIELD_POS.y, 500.0f));
+		pJack3->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
 
-		//CObjectX* pJack4 = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\jack.x");
-		//pJack4->SetPos(D3DXVECTOR3(-900.0f, 0.0f, -600.0f));
-		//pJack4->SetRot(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
+		CObjectX* pJack4 = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\jack.x");
+		pJack4->SetPos(D3DXVECTOR3(-700.0f, BOTTOM_FIELD_POS.y, -500.0f));
+		pJack4->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
 	}
 
 	// 下床の生成
@@ -234,7 +234,7 @@ HRESULT CGame::Init(void)
 		CItem::Create(CItem::TYPE_BOWABOWA, CItem::GRID(9, 5));
 
 		// 十字架の生成
-		CItem::Create(CItem::TYPE_CROSS, CItem::GRID(2, 4));
+		CItem::Create(CItem::TYPE_CROSS, CItem::GRID(5, 9));
 
 		break;
 

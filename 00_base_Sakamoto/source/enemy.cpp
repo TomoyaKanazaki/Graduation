@@ -463,23 +463,24 @@ void CEnemy::CollisionOut()
 	{
 		D3DXVECTOR3 Pos = pDevil->GetDevilPos();
 		D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
+		float GritSize = CMapSystem::GetInstance()->GetGritSize();
 
 		// ステージ外の当たり判定
-		if (Pos.x + MapSize.x < m_pos.x)
+		if (Pos.x + MapSize.x + GritSize < m_pos.x)
 		{
-			m_pos.x = -MapSize.x + Pos.x;
+			m_pos.x = Pos.x -MapSize.x - GritSize;
 		}
-		if (Pos.x - MapSize.x > m_pos.x)
+		if (Pos.x - MapSize.x - GritSize > m_pos.x)
 		{
-			m_pos.x = MapSize.x + Pos.x;
+			m_pos.x = Pos.x + MapSize.x + GritSize;
 		}
-		if (Pos.z + MapSize.z < m_pos.z)
+		if (Pos.z + MapSize.z + GritSize < m_pos.z)
 		{
-			m_pos.z = -MapSize.z + Pos.z;
+			m_pos.z = Pos.z - MapSize.z - GritSize;
 		}
-		if (Pos.z - MapSize.z > m_pos.z)
+		if (Pos.z - MapSize.z - GritSize > m_pos.z)
 		{
-			m_pos.z = MapSize.z + Pos.z;
+			m_pos.z = Pos.z + MapSize.z + GritSize;
 		}
 	}
 }
