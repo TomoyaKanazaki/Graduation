@@ -33,9 +33,11 @@ private:
 
 	// メンバ変数
 	CListManager<CSoftCream>::AIterator m_iterator; // イテレーター
+
 	int m_nAppea;		// 出現順
-	float m_fMove;		// 移動量
 	float m_fConuter;	// 削除カウンター
+
+	D3DXVECTOR3 m_fMove;		// 移動量
 
 	// 静的メンバ変数
 	static CListManager<CSoftCream>* m_pList; // オブジェクトリスト
