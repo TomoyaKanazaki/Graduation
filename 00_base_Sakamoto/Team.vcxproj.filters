@@ -292,6 +292,9 @@
     <ClCompile Include="source\deltatime.cpp">
       <Filter>ソース ファイル\00_System</Filter>
     </ClCompile>
+    <ClCompile Include="source\softcream.cpp">
+      <Filter>ソース ファイル\10_item</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\SampleLevelModel.h">
@@ -536,6 +539,9 @@
     </ClInclude>
     <ClInclude Include="source\deltatime.h">
       <Filter>ソース ファイル\00_System</Filter>
+    </ClInclude>
+    <ClInclude Include="source\softcream.h">
+      <Filter>ソース ファイル\10_item</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
