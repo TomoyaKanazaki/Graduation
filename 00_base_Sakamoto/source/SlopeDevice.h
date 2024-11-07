@@ -26,7 +26,7 @@ public:
 	enum STATE
 	{
 		STATE_NORMAL = 0,	// 通常
-		STATE_ACTION,		// 行動
+		STATE_ROTATE,		// 回転
 		STATE_MAX,
 	};
 
@@ -35,6 +35,16 @@ public:
 	{
 		ACTION_NEUTRAL = 0,	// 待機状態
 		ACTION_MAX,			// 最大
+	};
+
+	// モーション
+	enum SETUP_TYPE
+	{
+		SETUP_TYPE_FOUNDATION = 0,	// 土台
+		SETUP_TYPE_MAWASIGURMA,		// 回し車
+		SETUP_TYPE_ROLLRE,			// ローラー
+		SETUP_TYPE_HEAD,			// 先っぽ
+		SETUP_TYPE_MAX,				// 最大
 	};
 
 	static CSlopeDevice* Create(const char* pModelNameSlopeDevice, const char* pModelNameEnemy);
@@ -49,6 +59,9 @@ public:
 	void SetPos(D3DXVECTOR3 pos) { m_pos = pos; }
 	D3DXVECTOR3 GetPos(void) { return m_pos; }
 
+	void SetRot(D3DXVECTOR3 rot) { m_rot = rot; }
+	D3DXVECTOR3 GetRot(void) { return m_rot; }
+
 	void SetMultiMatrix(bool Set) { m_bMultiMatrix = Set; }
 	bool GetMultiMatrix(void) { return m_bMultiMatrix; }
 	void SetUseMultiMatrix(D3DXMATRIX Set) { m_UseMultiMatrix = Set; }
@@ -59,7 +72,8 @@ public:
 private:
 	void InitModel(const char* pModelNameSlopeDevice, const char* pModelNameEnemy);
 
-	void StateManager(void);		// 状態管理
+	void StateManager(void);
+	void Rotate(int nNldxModel, D3DXVECTOR3 rotate);
 
 	void LoadModel(const char* pFilename);
 
