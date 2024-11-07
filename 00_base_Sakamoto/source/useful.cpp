@@ -285,19 +285,17 @@ bool useful::CollisionWindow(D3DXVECTOR3 pos)
 //====================================================================
 bool useful::CollisionCircle(D3DXVECTOR3 pos1, D3DXVECTOR3 pos2, float nRadiusOut)
 {
-	bool nHit = false;
-
 	if (sqrtf((pos1.x - pos2.x) * (pos1.x - pos2.x)
 		+ (pos1.y - pos2.y) * (pos1.y - pos2.y)) <= nRadiusOut)
 	{//‰~‚Ì”»’è‚ª“–‚½‚Á‚½
 		if (sqrtf((pos1.x - pos2.x) * (pos1.x - pos2.x)
 			+ (pos1.z - pos2.z) * (pos1.z - pos2.z)) <= nRadiusOut)
 		{//‰~‚Ì”»’è‚ª“–‚½‚Á‚½
-			nHit = true;
+			return true;
 		}
 	}
 
-	return nHit;
+	return false;
 }
 
 //====================================================================
