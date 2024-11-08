@@ -198,13 +198,37 @@ HRESULT CGame::Init(void)
 		LoadStageBlock("data\\TXT\\STAGE\\Block.txt");
 
 		// ボワボワの生成
-		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(9, 5));
+		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(7, 11));
+		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(8, 11));
+		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(9, 11));
+		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(10, 11));
+		
+		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(11, 11));
+		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(12, 11));
+		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(13, 11));
+		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(14, 11));
+		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(15, 11));
+
+		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(6, 2));
+		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(7, 2));
+		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(8, 2));
+		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(9, 2));
+		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(10, 2));
+		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(12, 2));
+		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(13, 2));
+		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(14, 2));
+		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(15, 2));
+		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(16, 2));
 
 		// 十字架の生成
-		CItem::Create(CItem::TYPE_CROSS, CMapSystem::GRID(5, 9));
+		CItem::Create(CItem::TYPE_CROSS, CMapSystem::GRID(11, 2));
+		CItem::Create(CItem::TYPE_CROSS, CMapSystem::GRID(20, 4));
+		CItem::Create(CItem::TYPE_CROSS, CMapSystem::GRID(22, 9));
+		CItem::Create(CItem::TYPE_CROSS, CMapSystem::GRID(6, 11));
+		CItem::Create(CItem::TYPE_CROSS, CMapSystem::GRID(16, 11));
 
 		// ソフトクリームの生成
-		CItem::Create(CItem::TYPE_SOFTCREAM, CMapSystem::GRID(1, 13));
+		CItem::Create(CItem::TYPE_SOFTCREAM, CMapSystem::GRID(1, 7));
 
 		break;
 

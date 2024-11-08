@@ -151,10 +151,6 @@ HRESULT CPlayer::Init(void)
 	//モデルの生成
 	LoadLevelData("data\\TXT\\motion_tamagon.txt");
 
-	// プレイヤーの指定パーツ削除
-	SetPartsDisp(9, false);		// 十字架のモデル非表示
-	SetPartsDisp(10, false);	// 聖書のモデル非表示
-
 	//モーションの生成
 	if (m_pMotion == nullptr)
 	{
@@ -166,24 +162,13 @@ HRESULT CPlayer::Init(void)
 	m_pMotion->SetModel(&m_apModel[0], m_nNumModel);
 	m_pMotion->LoadData("data\\TXT\\motion_tamagon.txt");
 
-	switch (CScene::GetMode())
-	{
-	case CScene::MODE_TITLE:
-		break;
-
-	case CScene::MODE_GAME:
-	case CScene::MODE_TUTORIAL:
-
-		break;
-
-	case CScene::MODE_RESULT:
-		break;
-	}
-
 	m_pLifeUi = CLifeUi::Create();
 
 	// 数値
 	m_pLifeUi->GetNumber()->SetPos(D3DXVECTOR3(LIFE_POS.x + 200.0f, LIFE_POS.y, LIFE_POS.z));
+
+	// アイテム状態を設定
+	SetItemType(CPlayer::TYPE_NONE);
 
 	// 体力
 	m_pLifeUi->SetPos(LIFE_POS);

@@ -44,8 +44,6 @@
     <ClCompile Include="source\input.cpp" />
     <ClCompile Include="source\inputManager.cpp" />
     <ClCompile Include="source\item.cpp" />
-    <ClCompile Include="source\item_manager.cpp" />
-    <ClCompile Include="source\item_manager.h" />
     <ClCompile Include="source\LevelModelEffect.cpp" />
     <ClCompile Include="source\LifeUi.cpp" />
     <ClCompile Include="source\light.cpp" />
