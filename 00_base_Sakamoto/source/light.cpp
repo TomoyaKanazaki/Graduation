@@ -73,13 +73,13 @@ HRESULT CLight::Init(void)
 			switch (nCntlight)
 			{
 			case 0:
-				vecDir[nCntlight] = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
+				vecDir[nCntlight] = D3DXVECTOR3(0.22f, -0.87f, 0.44f);
 				break;
 			case 1:
-				vecDir[nCntlight] = D3DXVECTOR3(-1.0f, -1.0f, -1.0f);
+				vecDir[nCntlight] = D3DXVECTOR3(-0.18f, 0.88f, -0.44f);
 				break;
 			case 2:
-				vecDir[nCntlight] = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
+				vecDir[nCntlight] = D3DXVECTOR3(0.89f, -0.11f, 0.44f);
 				break;
 			}
 
