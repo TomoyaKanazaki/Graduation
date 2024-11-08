@@ -299,11 +299,11 @@ void CPlayer::GameUpdate(void)
 		// カメラ更新処理
 		CameraPosUpdate();
 
+		ObjPosUpdate();
+
 		// レールブロックとの当たり判定
 		CollisionMoveRailBlock(useful::COLLISION_X);
 		CollisionMoveRailBlock(useful::COLLISION_Z);
-
-		ObjPosUpdate();
 
 		if (m_State == STATE_WALK)
 		{
@@ -692,8 +692,17 @@ void CPlayer::CollisionWaitRailBlock(useful::COLLISION XYZ)
 	{
 		D3DXVECTOR3 pos = pRailBlock->GetPos();
 		D3DXVECTOR3 posOld = pRailBlock->GetPosOld();
-		D3DXVECTOR3 Move = pRailBlock->GetMove();
+		D3DXVECTOR3 Move = (pos - posOld);
 		D3DXVECTOR3 Size = pRailBlock->GetSize();
+
+		if (abs(Move.x) > 0.01f)
+		{
+			return;
+		}
+		if (abs(Move.z) > 0.01f)
+		{
+			return;
+		}
 
 		// 矩形の当たり判定
 		if (useful::CollisionBlock(pos, pos, Move, Size, &m_pos, m_posOld, &m_move, &m_Objmove, m_size, &m_bJump, XYZ) == true)
@@ -701,6 +710,7 @@ void CPlayer::CollisionWaitRailBlock(useful::COLLISION XYZ)
 			//待機状態にする
 			m_State = STATE_WAIT;
 			m_MoveState = MOVE_STATE_WAIT;
+			m_pos = CMapSystem::GetInstance()->GetGritPos(m_Grid.x, m_Grid.z);
 		}
 	}
 }
@@ -719,6 +729,7 @@ void CPlayer::CollisionMoveRailBlock(useful::COLLISION XYZ)
 	{
 		D3DXVECTOR3 pos = m_pos;
 		D3DXVECTOR3 Size = m_size;
+		D3DXVECTOR3 Move = m_move;
 
 		D3DXVECTOR3 Mypos = pRailBlock->GetPos();
 		D3DXVECTOR3 MyposOld = pRailBlock->GetPosOld();
