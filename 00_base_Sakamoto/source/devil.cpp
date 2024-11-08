@@ -38,7 +38,7 @@
 //===========================================
 namespace
 {
-	float SCROOL_SPEED = 1.5f;					// スクロールの移動速度
+	float SCROOL_SPEED = 30.0f;					// スクロールの移動速度
 	float STAGE_ROT_LIMIT = D3DX_PI * 0.25f;	// スクロールの移動速度
 }
 
@@ -516,12 +516,15 @@ void CDevil::StateManager(void)
 
 	case STATE_SCROLL:
 
-		//Move(m_DevilArrow);
+		if (m_nStateCount % 25 == 0)
+		{
+			Move(m_DevilArrow);
+		}
 
 		if (m_nStateCount <= 0)
 		{
 			m_State = STATE_WAIT;
-			m_nStateCount = 180;
+			m_nStateCount = 120;
 		}
 
 		break;
