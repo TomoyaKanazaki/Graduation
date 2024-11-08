@@ -116,11 +116,8 @@ void CCross::Draw(void)
 //====================================================================
 bool CCross::Hit(CPlayer* pPlayer)
 {
-	if (pPlayer->GetItemType() != CPlayer::TYPE_NONE
-		&& pPlayer->GetItemType() != CPlayer::TYPE_CROSS)
-	{
-		return false;
-	}
+	// 既に十字架を持っていた場合関数を抜ける
+	if (pPlayer->GetItemType() == CPlayer::TYPE_CROSS) { return false; }
 
 	// プレイヤーのアイテムを設定
 	pPlayer->SetItemType(CPlayer::TYPE_CROSS);
