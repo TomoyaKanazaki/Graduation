@@ -820,7 +820,7 @@ void CPlayer::SearchWall(void)
 }
 
 //====================================================================
-// マップモデルの当たり判定
+// デビルホールとの当たり判定
 //====================================================================
 void CPlayer::CollisionDevilHole(useful::COLLISION XYZ)
 {
@@ -836,11 +836,11 @@ void CPlayer::CollisionDevilHole(useful::COLLISION XYZ)
 		D3DXVECTOR3 Size = pDevilHole->GetSize();
 
 		// 矩形の当たり判定
-		if (useful::CollisionBlock(pos, posOld, INITVECTOR3, Size, &m_pos, m_posOld, &m_move, &m_Objmove, m_size, &m_bJump, XYZ) == true)
+		if (useful::CollisionBlock(pos, pos, INITVECTOR3, Size, &m_pos, m_posOld, &m_move, &m_Objmove, m_size, &m_bJump, XYZ) == true)
 		{
 			//待機状態にする
 			m_State = STATE_WAIT;
-
+			m_MoveState = MOVE_STATE_WAIT;
 			m_pos = CMapSystem::GetInstance()->GetGritPos(m_Grid.x, m_Grid.z);
 		}
 	}

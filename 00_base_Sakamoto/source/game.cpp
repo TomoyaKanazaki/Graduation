@@ -47,7 +47,6 @@
 #include "enemyMedaman.h"
 #include "enemyBonbon.h"
 #include "enemyYoungDevil.h"
-#include "item_manager.h"
 #include "bible.h"
 #include "MapSystem.h"
 #include "RailBlock.h"
@@ -236,6 +235,8 @@ HRESULT CGame::Init(void)
 		LoadStageBlock("data\\TXT\\STAGE\\Block.txt");
 
 		CDevilHole* pDevilHole = CDevilHole::Create("data\\MODEL\\DevilHole.x");
+		pDevilHole->SetGrid(CMapSystem::GRID(11,7));
+		CMapSystem::GetInstance()->SetGritBool(11, 7, true);
 
 		// ¹‘¶¬
 		CItem::Create(CItem::TYPE_BIBLE, CMapSystem::GRID(BIBLE_OUTGRIT, BIBLE_OUTGRIT));
@@ -540,18 +541,18 @@ void CGame::LoadStageBlock(const char* pFilename)
 					fscanf(pFile, "%s", &aString[0]);
 					fscanf(pFile, "%d", &HeightNumber);
 
+					fscanf(pFile, "%s", &aString[0]);
+					fscanf(pFile, "%s", &aString[0]);
+
 					pMapSystem->SetGritBool(WightNumber, HeightNumber, true);
 					CCubeBlock* pBlock = CCubeBlock::Create();
 					pBlock->SetWightNumber(WightNumber);
 					pBlock->SetHeightNumber(HeightNumber);
 					pBlock->SetPos(D3DXVECTOR3(MapSystemPos.x + WightNumber * 100.0f, 50.0f, MapSystemPos.z - HeightNumber * 100.0f));
 					pBlock->SetSize(D3DXVECTOR3(MapSystemGritSize, MapSystemGritSize, MapSystemGritSize));
+					pBlock->SetTexture(&aString[0]);
 
 					fscanf(pFile, "%s", &aEndMessage[0]);
-					if (strcmp(&aEndMessage[0], "ENDSETBLOCK") == 0)
-					{
-						break;
-					}
 				}
 				else if (strcmp(&aSetMessage[0], "ENDSETSTAGE") == 0)
 				{
