@@ -159,11 +159,8 @@ void CBible::SetGrid(const CMapSystem::GRID &pos)
 //====================================================================
 bool CBible::Hit(CPlayer* pPlayer)
 {
-	if (pPlayer->GetItemType() != CPlayer::TYPE_NONE
-		&& pPlayer->GetItemType() != CPlayer::TYPE_BIBLE)
-	{
-		return false;
-	}
+	// 既に聖書を持っている場合関数を抜ける
+	if (pPlayer->GetItemType() == CPlayer::TYPE_BIBLE) { return false; }
 
 	// プレイヤーのアイテムを設定
 	pPlayer->SetItemType(CPlayer::TYPE_BIBLE);
