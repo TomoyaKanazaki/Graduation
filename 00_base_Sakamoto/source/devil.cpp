@@ -38,7 +38,8 @@
 //===========================================
 namespace
 {
-	float SCROOL_SPEED = 30.0f;					// スクロールの移動速度
+	float SCROOL_SPEED01 = 1.5f;					// スクロールの移動速度
+	float SCROOL_SPEED02 = 25.0f;					// スクロールの移動速度
 	float STAGE_ROT_LIMIT = D3DX_PI * 0.25f;	// スクロールの移動速度
 }
 
@@ -225,50 +226,50 @@ void CDevil::GameUpdate(void)
 {
 	// TODO : ランダム移動やめる
 #ifndef _DEBUG
-		// カウンターのリセット
-		if (m_fActionCount >= 5.0f)
-		{
-			ACTION_TYPE action = m_Action;
+		//// カウンターのリセット
+		//if (m_fActionCount >= 5.0f)
+		//{
+		//	ACTION_TYPE action = m_Action;
 
-			do
-			{
-				m_Action = (ACTION_TYPE)(rand() % ACTION_MAX);
-			} while (m_Action == action);
+		//	do
+		//	{
+		//		m_Action = (ACTION_TYPE)(rand() % ACTION_MAX);
+		//	} while (m_Action == action);
 
-			m_fActionCount = 0.0f;
-		}
+		//	m_fActionCount = 0.0f;
+		//}
 
-		// カウンターの加算
-		m_fActionCount += DeltaTime::Get();
-		DebugProc::Print(DebugProc::POINT_CENTER, "移動カウンター : %f\n", m_fActionCount);
+		//// カウンターの加算
+		//m_fActionCount += DeltaTime::Get();
+		//DebugProc::Print(DebugProc::POINT_CENTER, "移動カウンター : %f\n", m_fActionCount);
 
-		// 移動
-		switch (m_Action)
-		{
-		case ACTION_NEUTRAL:
-			ObjectScroll(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-			DebugProc::Print(DebugProc::POINT_CENTER, "待機\n");
-			break;
-		case ACTION_SIGNAL_UP:
-			ObjectScroll(D3DXVECTOR3(0.0f, 0.0f, SCROOL_SPEED));
-			DebugProc::Print(DebugProc::POINT_CENTER, "上\n");
-			break;
-		case ACTION_SIGNAL_DOWN:
-			ObjectScroll(D3DXVECTOR3(0.0f, 0.0f, -SCROOL_SPEED));
-			DebugProc::Print(DebugProc::POINT_CENTER, "下\n");
-			break;
-		case ACTION_SIGNAL_LEFT:
-			ObjectScroll(D3DXVECTOR3(-SCROOL_SPEED, 0.0f, 0.0f));
-			DebugProc::Print(DebugProc::POINT_CENTER, "左\n");
-			break;
-		case ACTION_SIGNAL_RIGHT:
-			ObjectScroll(D3DXVECTOR3(SCROOL_SPEED, 0.0f, 0.0f));
-			DebugProc::Print(DebugProc::POINT_CENTER, "右\n");
-			break;
-		default:
-			assert(false);
-			break;
-		}
+		//// 移動
+		//switch (m_Action)
+		//{
+		//case ACTION_NEUTRAL:
+		//	ObjectScroll(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+		//	DebugProc::Print(DebugProc::POINT_CENTER, "待機\n");
+		//	break;
+		//case ACTION_SIGNAL_UP:
+		//	ObjectScroll(D3DXVECTOR3(0.0f, 0.0f, SCROOL_SPEED01));
+		//	DebugProc::Print(DebugProc::POINT_CENTER, "上\n");
+		//	break;
+		//case ACTION_SIGNAL_DOWN:
+		//	ObjectScroll(D3DXVECTOR3(0.0f, 0.0f, -SCROOL_SPEED01));
+		//	DebugProc::Print(DebugProc::POINT_CENTER, "下\n");
+		//	break;
+		//case ACTION_SIGNAL_LEFT:
+		//	ObjectScroll(D3DXVECTOR3(-SCROOL_SPEED01, 0.0f, 0.0f));
+		//	DebugProc::Print(DebugProc::POINT_CENTER, "左\n");
+		//	break;
+		//case ACTION_SIGNAL_RIGHT:
+		//	ObjectScroll(D3DXVECTOR3(SCROOL_SPEED01, 0.0f, 0.0f));
+		//	DebugProc::Print(DebugProc::POINT_CENTER, "右\n");
+		//	break;
+		//default:
+		//	assert(false);
+		//	break;
+		//}
 #endif // !_DEBUG
 
 	// 過去の位置に代入
@@ -382,33 +383,69 @@ void CDevil::Move(int Arroow)
 {
 	D3DXVECTOR3 NormarizeMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
+
+#if SCROLL_ID == 0
+
 	switch (Arroow)
 	{
 	case 0:
 
-		ObjectScroll(D3DXVECTOR3(0.0f, 0.0f, SCROOL_SPEED));
-		m_move.z = SCROOL_SPEED;
+		ObjectScroll(D3DXVECTOR3(0.0f, 0.0f, SCROOL_SPEED01));
+		m_move.z = SCROOL_SPEED01;
 
 		break;
 	case 1:
 
-		ObjectScroll(D3DXVECTOR3(0.0f, 0.0f, -SCROOL_SPEED));
-		m_move.z = -SCROOL_SPEED;
+		ObjectScroll(D3DXVECTOR3(0.0f, 0.0f, -SCROOL_SPEED01));
+		m_move.z = -SCROOL_SPEED01;
 
 		break;
 	case 2:
 
-		ObjectScroll(D3DXVECTOR3(-SCROOL_SPEED, 0.0f, 0.0f));
-		m_move.x = -SCROOL_SPEED;
+		ObjectScroll(D3DXVECTOR3(-SCROOL_SPEED01, 0.0f, 0.0f));
+		m_move.x = -SCROOL_SPEED01;
 
 		break;
 	case 3:
 
-		ObjectScroll(D3DXVECTOR3(SCROOL_SPEED, 0.0f, 0.0f));
-		m_move.x = SCROOL_SPEED;
+		ObjectScroll(D3DXVECTOR3(SCROOL_SPEED01, 0.0f, 0.0f));
+		m_move.x = SCROOL_SPEED01;
 
 		break;
 	}
+
+#else
+
+	switch (Arroow)
+	{
+	case 0:
+
+		ObjectScroll(D3DXVECTOR3(0.0f, 0.0f, SCROOL_SPEED02));
+		m_move.z = SCROOL_SPEED02;
+
+		break;
+	case 1:
+
+		ObjectScroll(D3DXVECTOR3(0.0f, 0.0f, -SCROOL_SPEED02));
+		m_move.z = -SCROOL_SPEED02;
+
+		break;
+	case 2:
+
+		ObjectScroll(D3DXVECTOR3(-SCROOL_SPEED02, 0.0f, 0.0f));
+		m_move.x = -SCROOL_SPEED02;
+
+		break;
+	case 3:
+
+		ObjectScroll(D3DXVECTOR3(SCROOL_SPEED02, 0.0f, 0.0f));
+		m_move.x = SCROOL_SPEED02;
+
+		break;
+	}
+
+
+#endif // SCROLL_ID
 }
 
 //====================================================================
@@ -516,10 +553,17 @@ void CDevil::StateManager(void)
 
 	case STATE_SCROLL:
 
+#if SCROLL_ID == 0
+		Move(m_DevilArrow);
+#else
+
 		if (m_nStateCount % 25 == 0)
 		{
 			Move(m_DevilArrow);
 		}
+
+
+#endif // SCROLL_ID
 
 		if (m_nStateCount <= 0)
 		{

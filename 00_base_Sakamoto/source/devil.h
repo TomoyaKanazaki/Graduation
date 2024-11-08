@@ -10,6 +10,8 @@
 #include "object.h"
 #include "useful.h"
 
+#define SCROLL_ID 0
+
 //‘O•ûéŒ¾
 class CModel;
 class CMotion;

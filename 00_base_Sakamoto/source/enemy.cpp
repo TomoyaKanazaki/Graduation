@@ -86,6 +86,8 @@ CEnemy::CEnemy(int nPriority) :CObject(nPriority)
 
 	m_Grid.x = 0;
 	m_Grid.z = 0;
+
+	m_nBugCounter = 0;
 }
 
 //====================================================================
@@ -431,25 +433,25 @@ void CEnemy::CollisionWall(useful::COLLISION XYZ)
 //====================================================================
 void CEnemy::CollisionDevilHole(useful::COLLISION XYZ)
 {
-	// デビルホールのリスト構造が無ければ抜ける
-	if (CDevilHole::GetList() == nullptr) { return; }
-	std::list<CDevilHole*> list = CDevilHole::GetList()->GetList();    // リストを取得
+	//// デビルホールのリスト構造が無ければ抜ける
+	//if (CDevilHole::GetList() == nullptr) { return; }
+	//std::list<CDevilHole*> list = CDevilHole::GetList()->GetList();    // リストを取得
 
-	// デビルホールリストの中身を確認する
-	for (CDevilHole* pDevilHole : list)
-	{
-		D3DXVECTOR3 pos = pDevilHole->GetPos();
-		D3DXVECTOR3 posOld = pDevilHole->GetPosOld();
-		D3DXVECTOR3 Size = pDevilHole->GetSize();
-		bool bNullJump;
+	//// デビルホールリストの中身を確認する
+	//for (CDevilHole* pDevilHole : list)
+	//{
+	//	D3DXVECTOR3 pos = pDevilHole->GetPos();
+	//	D3DXVECTOR3 posOld = pDevilHole->GetPosOld();
+	//	D3DXVECTOR3 Size = pDevilHole->GetSize();
+	//	bool bNullJump;
 
-		// 矩形の当たり判定
-		if (useful::CollisionBlock(pos, posOld, INITVECTOR3, Size, &m_pos, m_posOld, &m_move, &m_Objmove, m_size, &bNullJump, XYZ) == true)
-		{
-			//待機状態にする
-			m_State = E_STATE_WAIT;
-		}
-	}
+	//	// 矩形の当たり判定
+	//	if (useful::CollisionBlock(pos, posOld, INITVECTOR3, Size, &m_pos, m_posOld, &m_move, &m_Objmove, m_size, &bNullJump, XYZ) == true)
+	//	{
+	//		//待機状態にする
+	//		m_State = E_STATE_WAIT;
+	//	}
+	//}
 }
 
 //====================================================================
@@ -529,6 +531,18 @@ void CEnemy::StateManager()
 		break;
 
 	case CEnemy::E_STATE_WALK:
+
+		if (abs(m_move.x) < 0.01f && abs(m_move.z) < 0.01f)
+		{
+			m_nBugCounter++;
+
+			if (m_nBugCounter > 180)
+			{
+				m_pos = CMapSystem::GetInstance()->GetGritPos(m_Grid.x, m_Grid.z);
+				m_nBugCounter = 0;
+			}
+		}
+
 		break;
 
 	case CEnemy::E_STATE_EGG:

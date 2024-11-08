@@ -149,6 +149,8 @@ private:
 	bool m_OKU;					//上への進行が許されるかどうか
 	bool m_OKD;					//下への進行が許されるかどうか
 
+	int m_nBugCounter;			//敵がスタックした時間
+
 	CSlowManager* m_pSlow;		// スロー情報
 
 	//階層構造とモーションのポインタ
