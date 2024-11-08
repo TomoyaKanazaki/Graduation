@@ -41,6 +41,8 @@ CDevilHole::CDevilHole(int nPriority) : CObjectX(nPriority)
 	m_nStateCount = 0;
 	m_Scaling = 1.0f;
 	m_fColorA = 0.0f;
+	m_Grid.x = 0;
+	m_Grid.z = 0;
 	
 	for (int nCnt = 0; nCnt < DIRECTION; nCnt++)
 	{
@@ -102,6 +104,9 @@ HRESULT CDevilHole::Init(char* pModelName)
 	case CScene::MODE_RESULT:
 		break;
 	}
+
+	//マップとのマトリックスの掛け合わせをオンにする
+	SetMultiMatrix(true);
 
 	if (m_pList == nullptr)
 	{// リストマネージャー生成
@@ -185,15 +190,36 @@ void CDevilHole::GameUpdate(void)
 	//クリア判定処理
 	ClearJudge();
 
+	m_pos = CMapSystem::GetInstance()->GetGritPos(m_Grid.x, m_Grid.z);
+
+	for (int nCnt = 0; nCnt < DIRECTION; nCnt++)
+	{
+		if (m_pHoleKey[nCnt] != nullptr)
+		{
+			switch (nCnt)
+			{
+			case 0:	//上
+				m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(m_pos.x, m_pos.y, m_pos.z + 20.0f));
+				break;
+
+			case 1:	//下
+				m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(m_pos.x, m_pos.y, m_pos.z - 20.0f));
+				break;
+
+			case 2:	//右
+				m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(m_pos.x + 20.0f, m_pos.y, m_pos.z));
+				break;
+
+			case 3:	//左
+				m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(m_pos.x - 20.0f, m_pos.y, m_pos.z));
+				break;
+			}
+		}
+	}
+
 	//位置更新
 	CObjectX::SetPos(m_pos);
 	CObjectX::SetRot(m_rot);
-
-	//画面外判定
-	if (m_pos.y < 0.0f)
-	{
-
-	}
 
 	//大きさの設定
 	SetScaling(D3DXVECTOR3(m_Scaling, m_Scaling, m_Scaling));
@@ -260,19 +286,19 @@ void CDevilHole::CollisionOpen(void)
 			switch (nCnt)
 			{
 			case 0:	//上
-				pos.z += 100.0f;
+				pos.z += 200.0f;
 				break;
 
 			case 1:	//下
-				pos.z -= 100.0f;
+				pos.z -= 200.0f;
 				break;
 
 			case 2:	//右
-				pos.x += 100.0f;
+				pos.x += 200.0f;
 				break;
 
 			case 3:	//左
-				pos.x -= 100.0f;
+				pos.x -= 200.0f;
 				break;
 			}
 
@@ -281,6 +307,7 @@ void CDevilHole::CollisionOpen(void)
 				m_bSet[nCnt] == false)
 			{
 				m_pHoleKey[nCnt] = CObjectX::Create("data\\MODEL\\DevilKey.x");
+				m_pHoleKey[nCnt]->SetMultiMatrix(true);
 
 				switch (nCnt)
 				{

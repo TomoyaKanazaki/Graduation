@@ -96,8 +96,6 @@ void CCross::Update(void)
 	// 回転
 	Rotation();
 
-	DebugProc::Print(DebugProc::POINT_CENTER, "十字架座標 : %f, %f, %f\n", GetPos().x, GetPos().y, GetPos().z);
-
 	// 親クラスの更新処理
 	CItem::Update();
 }
@@ -116,11 +114,8 @@ void CCross::Draw(void)
 //====================================================================
 bool CCross::Hit(CPlayer* pPlayer)
 {
-	if (pPlayer->GetItemType() != CPlayer::TYPE_NONE
-		&& pPlayer->GetItemType() != CPlayer::TYPE_CROSS)
-	{
-		return false;
-	}
+	// 既に十字架を持っていた場合関数を抜ける
+	if (pPlayer->GetItemType() == CPlayer::TYPE_CROSS) { return false; }
 
 	// プレイヤーのアイテムを設定
 	pPlayer->SetItemType(CPlayer::TYPE_CROSS);

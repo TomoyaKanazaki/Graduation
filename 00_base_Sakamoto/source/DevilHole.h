@@ -9,6 +9,7 @@
 
 #include "main.h"
 #include "objectX.h"
+#include "MapSystem.h"
 
 //前方宣言
 class CObjGauge2D;
@@ -43,6 +44,10 @@ public:
 	void SetPos(D3DXVECTOR3 pos) { m_pos = pos; }
 	D3DXVECTOR3 GetPos(void) { return m_pos; }
 
+	// マップ番号の設定
+	virtual void SetGrid(const CMapSystem::GRID& pos) { m_Grid = pos; }
+	CMapSystem::GRID GetGrid(void) { return m_Grid; }
+
 	// 静的メンバ関数
 	static CListManager<CDevilHole>* GetList(void); // リスト取得
 
@@ -50,6 +55,8 @@ private:
 	void StateManager(void);	//状態管理
 	void CollisionOpen(void);	//解除判定
 	void ClearJudge(void);		//クリア判定処理
+
+	CMapSystem::GRID m_Grid;	//グリット番号
 
 	int m_nIdxXModel;				//Xモデルの番号
 	D3DXVECTOR3 m_CollisionPos;		//当たり判定用の座標

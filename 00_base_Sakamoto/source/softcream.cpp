@@ -151,12 +151,6 @@ void CSoftCream::SetGrid(const CMapSystem::GRID& pos)
 //====================================================================
 bool CSoftCream::Hit(CPlayer* pPlayer)
 {
-	if (pPlayer->GetItemType() != CPlayer::TYPE_NONE
-		&& pPlayer->GetItemType() != CPlayer::TYPE_BIBLE)
-	{
-		return false;
-	}
-
 	// ©g‚Ìíœ
 	Uninit();
 	return true;

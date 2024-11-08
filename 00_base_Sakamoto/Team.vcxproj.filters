@@ -256,17 +256,11 @@
     <ClCompile Include="source\cross.cpp">
       <Filter>ソース ファイル\10_item</Filter>
     </ClCompile>
-    <ClCompile Include="source\item_manager.cpp">
-      <Filter>ソース ファイル\10_item</Filter>
-    </ClCompile>
     <ClCompile Include="source\bible.cpp">
       <Filter>ソース ファイル\10_item</Filter>
     </ClCompile>
     <ClCompile Include="source\listManager.cpp">
       <Filter>ソース ファイル\00_System</Filter>
-    </ClCompile>
-    <ClCompile Include="source\item_manager.h">
-      <Filter>ソース ファイル\10_item</Filter>
     </ClCompile>
     <ClCompile Include="source\DevilHole.cpp">
       <Filter>ソース ファイル\07_Map</Filter>

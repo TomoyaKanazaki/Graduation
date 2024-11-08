@@ -24,10 +24,10 @@ namespace
 	// 加算するスコア
 	const int ITEM_SCORE[] =
 	{
-		10, // 十字架
-		10, // 聖書
-		10, // ぼわぼわ
-		10 // ソフトクリーム
+		100, // 十字架
+		100, // 聖書
+		100, // ぼわぼわ
+		400, // ソフトクリーム
 	};
 }
 
@@ -162,15 +162,6 @@ void CItem::Update()
 
 	// 親クラスの更新処理
 	CObjectX::Update();
-
-#ifdef _DEBUG
-
-	CEffect* pEffect = CEffect::Create();
-	pEffect->SetPos(pos);
-	pEffect->SetColor(D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f));
-	pEffect->SetRadius(50.0f);
-
-#endif // _DEBUG
 }
 
 //====================================================================
