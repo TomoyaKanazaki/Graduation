@@ -587,8 +587,36 @@ void CPlayer::StateManager(void)
 	case STATE_DEATH:
 		if (m_nStateCount == 0)
 		{
-			m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-			m_State = STATE_EGG;
+			int WMax = CMapSystem::GetInstance()->GetWightMax();
+			int HMax = CMapSystem::GetInstance()->GetHeightMax();
+			CMapSystem::GRID ReivelPos = CMapSystem::GRID(0, 0);
+			ReivelPos.x = CMapSystem::GetInstance()->GetGritWightNumber(-100.0f);
+			ReivelPos.z = CMapSystem::GetInstance()->GetGritHeightNumber(100.0f);
+
+			for (int nSetW = ReivelPos.x, nCntW = 0; nCntW < WMax; nSetW++, nCntW++)
+			{
+				if (nSetW >= WMax)
+				{
+					nSetW = nSetW - WMax;
+				}
+
+				for (int nSetH = ReivelPos.z, nCntH = 0; nCntH < HMax; nCntH++,  nCntH++)
+				{
+					if (nSetH >= HMax)
+					{
+						nSetH = nSetH - HMax;
+					}
+
+					if (CMapSystem::GetInstance()->GetGritBool(nSetW, nSetH) == false)
+					{
+						SetGrid(CMapSystem::GRID(nSetW, nSetH));
+						m_pos = CMapSystem::GetInstance()->GetGritPos(nSetW, nSetH);
+						m_State = STATE_EGG;
+						return;
+					}
+
+				}
+			}
 		}
 
 		break;
