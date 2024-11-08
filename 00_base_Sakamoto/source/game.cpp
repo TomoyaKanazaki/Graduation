@@ -162,6 +162,8 @@ HRESULT CGame::Init(void)
 	// 背景モデル設定処理（仮）
 	SetBgObjTest();
 
+	CMapSystem::GetInstance()->Init();
+
 	//マップのグリットの最大値を取得
 	int nMapWightMax = CMapSystem::GetInstance()->GetWightMax();
 	int nMapHeigtMax = CMapSystem::GetInstance()->GetHeightMax();
@@ -190,11 +192,18 @@ HRESULT CGame::Init(void)
 	//レールブロックの生成
 	LoadStageRailBlock("data\\TXT\\STAGE\\RailBlock.txt");
 
+	CDevilHole* pDevilHole = nullptr;
+
 	//ステージの読み込み
 	switch (CManager::GetInstance()->GetStage())
 	{
 	case 0:
 		LoadStageBlock("data\\TXT\\STAGE\\Block.txt");
+
+		pDevilHole = CDevilHole::Create("data\\MODEL\\DevilHole.x");
+		pDevilHole->SetGrid(CMapSystem::GRID(11, 7));
+		CMapSystem::GetInstance()->SetGritBool(11, 7, true);
+
 		// TODO : 外部書き出しを利用する
 		{
 			// 幅・高さ取得
@@ -253,7 +262,7 @@ HRESULT CGame::Init(void)
 	case 1:
 		LoadStageBlock("data\\TXT\\STAGE\\Block.txt");
 
-		CDevilHole* pDevilHole = CDevilHole::Create("data\\MODEL\\DevilHole.x");
+		pDevilHole = CDevilHole::Create("data\\MODEL\\DevilHole.x");
 		pDevilHole->SetGrid(CMapSystem::GRID(11,7));
 		CMapSystem::GetInstance()->SetGritBool(11, 7, true);
 
@@ -266,7 +275,7 @@ HRESULT CGame::Init(void)
 		break;
 	}
 
-	int n = CBowabowa::GetList()->GetNumAll();
+	//int n = CBowabowa::GetList()->GetNumAll();
 
 	CScrollArrow* pScrollAllow = nullptr;
 	pScrollAllow = CScrollArrow::Create();

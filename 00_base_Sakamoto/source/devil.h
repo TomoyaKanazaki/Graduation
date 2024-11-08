@@ -48,13 +48,11 @@ public:
 		ACTION_MAX,					// 最大
 	};
 
-	//プレイヤーの状態
+	//デビルの状態
 	enum STATE
 	{
-		STATE_NORMAL = 0,	//通常
-		STATE_DEATH,		//死亡
-		STATE_WAIT,			//待機
-		STATE_DAMAGE,		//ダメージ
+		STATE_WAIT = 0,		//待機
+		STATE_SCROLL,		//スクロール状態
 		STATE_MAX,			//最大
 	};
 
@@ -96,7 +94,7 @@ public:
 private:
 	void ActionState(void);		//モーションと状態の管理
 	void StateManager(void);	//状態管理
-	void Move(void);			//移動処理
+	void Move(int Arroow);		//移動処理
 	void Rot(void);				//移動方向処理
 
 	void ObjectScroll(D3DXVECTOR3 Move);	//オブジェクトのスクロール
@@ -134,6 +132,7 @@ private:
 
 	CSlowManager* m_pSlow;			// スロー
 	D3DXVECTOR3 m_DevilRot;			// デビルパワーによって傾く値
+	int m_DevilArrow;				// デビルパワーの方向
 
 	//階層構造とモーションのポインタ
 	CModel* m_apModel[64];
