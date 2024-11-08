@@ -22,7 +22,8 @@ namespace
 {
 	const D3DXVECTOR3 COLLISION_SIZE = D3DXVECTOR3(20.0f, 20.0f, 20.0f);		//当たり判定
 	const char* MODEL_PASS = "data\\MODEL\\02_item\\softcream.x"; // モデルパス
-	const float MOVE_SCALE = 950.0f; // 移動幅
+	const float MOVE_SCALE_X = 1050.0f; // 移動幅
+	const float MOVE_SCALE_Z = 650.0f; // 移動幅
 
 	// TODO : 本仕様の時に必ず消す
 	float fMove = 0;
@@ -122,7 +123,8 @@ void CSoftCream::Draw(void)
 void CSoftCream::Move(D3DXVECTOR3& pos)
 {
 	// 移動量加算
-	pos.x += MOVE_SCALE * DeltaTime::Get() * sinf(fMove);
+	pos.x += MOVE_SCALE_X * DeltaTime::Get() * sinf(fMove);
+	pos.z += MOVE_SCALE_Z * DeltaTime::Get() * cosf(fMove);
 
 	// TODO : 本仕様の時に必ず消す
 	fMove += DeltaTime::Get();

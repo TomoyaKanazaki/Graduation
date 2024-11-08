@@ -201,10 +201,14 @@ HRESULT CGame::Init(void)
 		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(9, 5));
 
 		// 十字架の生成
-		CItem::Create(CItem::TYPE_CROSS, CMapSystem::GRID(5, 9));
+		CItem::Create(CItem::TYPE_CROSS, CMapSystem::GRID(11, 2));
+		CItem::Create(CItem::TYPE_CROSS, CMapSystem::GRID(20, 4));
+		CItem::Create(CItem::TYPE_CROSS, CMapSystem::GRID(22, 9));
+		CItem::Create(CItem::TYPE_CROSS, CMapSystem::GRID(6, 11));
+		CItem::Create(CItem::TYPE_CROSS, CMapSystem::GRID(16, 11));
 
 		// ソフトクリームの生成
-		CItem::Create(CItem::TYPE_SOFTCREAM, CMapSystem::GRID(1, 13));
+		CItem::Create(CItem::TYPE_SOFTCREAM, CMapSystem::GRID(1, 7));
 
 		break;
 
