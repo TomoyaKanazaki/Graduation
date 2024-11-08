@@ -772,13 +772,19 @@ void CGame::SetBgObjTest(void)
 {
 	// 傾き装置（見た目だけの仮）
 	{
-		//pSlopeDevice->SetPos(D3DXVECTOR3(900.0f, 0.0f, -600.0f));
+		CSlopeDevice* pSlopeDevice0 = CSlopeDevice::Create(SLOPE_DEVICE_MODEL, SLOPE_DEVICE_MODEL);
+		pSlopeDevice0->SetPos(D3DXVECTOR3(1400.0f, BOTTOM_FIELD_POS.y, -500.0f));
 
-		//pMawasiguruma1->SetRot(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
+		CSlopeDevice* pSlopeDevice1 = CSlopeDevice::Create(SLOPE_DEVICE_MODEL, SLOPE_DEVICE_MODEL);
+		pSlopeDevice1->SetPos(D3DXVECTOR3(1400.0f, BOTTOM_FIELD_POS.y, 500.0f));
+		pSlopeDevice1->SetRot(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
 
-		//pMawasiguruma2->SetPos(D3DXVECTOR3(-1400.0f, BOTTOM_FIELD_POS.y, -600.0f));
+		CSlopeDevice* pSlopeDevice2 = CSlopeDevice::Create(SLOPE_DEVICE_MODEL, SLOPE_DEVICE_MODEL);
+		pSlopeDevice2->SetPos(D3DXVECTOR3(-1400.0f, BOTTOM_FIELD_POS.y, -500.0f));
 
-		//pMawasiguruma3->SetRot(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
+		CSlopeDevice* pSlopeDevice3 = CSlopeDevice::Create(SLOPE_DEVICE_MODEL, SLOPE_DEVICE_MODEL);
+		pSlopeDevice3->SetPos(D3DXVECTOR3(-1400.0f, BOTTOM_FIELD_POS.y, 500.0f));
+		pSlopeDevice3->SetRot(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
 	}
 
 	// ジャッキ

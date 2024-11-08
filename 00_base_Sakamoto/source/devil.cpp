@@ -38,7 +38,7 @@
 //===========================================
 namespace
 {
-	float SCROOL_SPEED = 5.0f;					// スクロールの移動速度
+	float SCROOL_SPEED = 1.5f;					// スクロールの移動速度
 	float STAGE_ROT_LIMIT = D3DX_PI * 0.25f;	// スクロールの移動速度
 }
 
@@ -58,7 +58,7 @@ CDevil::CDevil(int nPriority) : CObject(nPriority)
 	m_Objmove = INITVECTOR3;
 	m_rot = D3DXVECTOR3(0.0f,0.0f, 0.0f);
 	m_AutoMoveRot = D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f);
-	m_nActionCount = 0;
+	m_fActionCount = 0.0f;
 	m_Action = ACTION_NEUTRAL;
 	m_AtkAction = ACTION_NEUTRAL;
 	m_State = STATE_WAIT;
@@ -223,6 +223,54 @@ void CDevil::TitleUpdate(void)
 //====================================================================
 void CDevil::GameUpdate(void)
 {
+	// TODO : ランダム移動やめる
+#ifndef _DEBUG
+		// カウンターのリセット
+		if (m_fActionCount >= 5.0f)
+		{
+			ACTION_TYPE action = m_Action;
+
+			do
+			{
+				m_Action = (ACTION_TYPE)(rand() % ACTION_MAX);
+			} while (m_Action == action);
+
+			m_fActionCount = 0.0f;
+		}
+
+		// カウンターの加算
+		m_fActionCount += DeltaTime::Get();
+		DebugProc::Print(DebugProc::POINT_CENTER, "移動カウンター : %f\n", m_fActionCount);
+
+		// 移動
+		switch (m_Action)
+		{
+		case ACTION_NEUTRAL:
+			ObjectScroll(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+			DebugProc::Print(DebugProc::POINT_CENTER, "待機\n");
+			break;
+		case ACTION_SIGNAL_UP:
+			ObjectScroll(D3DXVECTOR3(0.0f, 0.0f, SCROOL_SPEED));
+			DebugProc::Print(DebugProc::POINT_CENTER, "上\n");
+			break;
+		case ACTION_SIGNAL_DOWN:
+			ObjectScroll(D3DXVECTOR3(0.0f, 0.0f, -SCROOL_SPEED));
+			DebugProc::Print(DebugProc::POINT_CENTER, "下\n");
+			break;
+		case ACTION_SIGNAL_LEFT:
+			ObjectScroll(D3DXVECTOR3(-SCROOL_SPEED, 0.0f, 0.0f));
+			DebugProc::Print(DebugProc::POINT_CENTER, "左\n");
+			break;
+		case ACTION_SIGNAL_RIGHT:
+			ObjectScroll(D3DXVECTOR3(SCROOL_SPEED, 0.0f, 0.0f));
+			DebugProc::Print(DebugProc::POINT_CENTER, "右\n");
+			break;
+		default:
+			assert(false);
+			break;
+		}
+#endif // !_DEBUG
+
 	// 過去の位置に代入
 	m_posOld = m_pos;
 
@@ -429,23 +477,23 @@ void CDevil::Rot(void)
 void CDevil::ActionState(void)
 {
 	// 移動モーション
-	if (m_move.x > 0.1f || m_move.x < -0.1f || m_move.z > 0.1f || m_move.z < -0.1f)
-	{
-		if (m_Action != ACTION_SIGNAL_UP)
-		{
-			m_Action = ACTION_SIGNAL_UP;
-			m_pMotion->Set(ACTION_SIGNAL_UP, 5);
-		}
-	}
-	// ニュートラルモーション
-	else
-	{
-		if (m_Action != ACTION_NEUTRAL)
-		{
-			m_Action = ACTION_NEUTRAL;
-			m_pMotion->Set(ACTION_NEUTRAL, 5);
-		}
-	}
+	//if (m_move.x > 0.1f || m_move.x < -0.1f || m_move.z > 0.1f || m_move.z < -0.1f)
+	//{
+	//	if (m_Action != ACTION_SIGNAL_UP)
+	//	{
+	//		m_Action = ACTION_SIGNAL_UP;
+	//		m_pMotion->Set(ACTION_SIGNAL_UP, 5);
+	//	}
+	//}
+	//// ニュートラルモーション
+	//else
+	//{
+	//	if (m_Action != ACTION_NEUTRAL)
+	//	{
+	//		m_Action = ACTION_NEUTRAL;
+	//		m_pMotion->Set(ACTION_NEUTRAL, 5);
+	//	}
+	//}
 }
 
 //====================================================================
