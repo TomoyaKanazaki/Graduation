@@ -84,7 +84,7 @@ CTitle::~CTitle()
 //====================================================================
 HRESULT CTitle::Init(void)
 {
-	CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_BGM_TITLE);
+	//CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_BGM_TITLE);
 
 	CTexture *pTexture = CManager::GetInstance()->GetTexture();
 
@@ -166,7 +166,7 @@ void CTitle::Select(void)
 	if (CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_RETURN) == true)
 	{
 		CManager::GetInstance()->SetTypeInput(CManager::GetInstance()->TYPE_MNK);	// 入力タイプ：キーマウ
-		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_ENTER_PUSH);
+		//CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_ENTER_PUSH);
 
 		// ゲーム遷移
 		CFade::SetFade(CScene::MODE_GAME);
@@ -174,7 +174,7 @@ void CTitle::Select(void)
 	else if (CManager::GetInstance()->GetInputJoyPad()->GetTrigger(CInputJoypad::BUTTON_A, 0) == true)
 	{
 		CManager::GetInstance()->SetTypeInput(CManager::GetInstance()->TYPE_JOYPAD);	// 入力タイプ：パッド
-		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_ENTER_PUSH);
+		//CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_ENTER_PUSH);
 
 		// ゲーム遷移
 		CFade::SetFade(CScene::MODE_GAME);

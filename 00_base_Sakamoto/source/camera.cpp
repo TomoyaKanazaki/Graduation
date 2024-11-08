@@ -479,7 +479,7 @@ void CCamera::FollowCamera(void)
 		pInputJoypad->GetTrigger(CInputJoypad::BUTTON_L, 0) == true)
 	{
 		//ƒQ[ƒ€‚ÌSE‚ðÄ¶‚·‚é
-		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_ATTENTION);
+		//CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_ATTENTION);
 
 		m_bAttention = m_bAttention ? false : true;
 	}
