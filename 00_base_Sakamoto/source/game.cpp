@@ -254,6 +254,8 @@ HRESULT CGame::Init(void)
 		LoadStageBlock("data\\TXT\\STAGE\\Block.txt");
 
 		CDevilHole* pDevilHole = CDevilHole::Create("data\\MODEL\\DevilHole.x");
+		pDevilHole->SetGrid(CMapSystem::GRID(11,7));
+		CMapSystem::GetInstance()->SetGritBool(11, 7, true);
 
 		// 聖書生成
 		CItem::Create(CItem::TYPE_BIBLE, CMapSystem::GRID(BIBLE_OUTGRIT, BIBLE_OUTGRIT));
@@ -561,18 +563,18 @@ void CGame::LoadStageBlock(const char* pFilename)
 					fscanf(pFile, "%s", &aString[0]);
 					fscanf(pFile, "%d", &HeightNumber);
 
+					fscanf(pFile, "%s", &aString[0]);
+					fscanf(pFile, "%s", &aString[0]);
+
 					pMapSystem->SetGritBool(WightNumber, HeightNumber, true);
 					CCubeBlock* pBlock = CCubeBlock::Create();
 					pBlock->SetWightNumber(WightNumber);
 					pBlock->SetHeightNumber(HeightNumber);
 					pBlock->SetPos(D3DXVECTOR3(MapSystemPos.x + WightNumber * 100.0f, 50.0f, MapSystemPos.z - HeightNumber * 100.0f));
 					pBlock->SetSize(D3DXVECTOR3(MapSystemGritSize, MapSystemGritSize, MapSystemGritSize));
+					pBlock->SetTexture(&aString[0]);
 
 					fscanf(pFile, "%s", &aEndMessage[0]);
-					if (strcmp(&aEndMessage[0], "ENDSETBLOCK") == 0)
-					{
-						break;
-					}
 				}
 				else if (strcmp(&aSetMessage[0], "ENDSETSTAGE") == 0)
 				{
@@ -761,13 +763,19 @@ void CGame::SetBgObjTest(void)
 {
 	// 傾き装置（見た目だけの仮）
 	{
-		//pSlopeDevice->SetPos(D3DXVECTOR3(900.0f, 0.0f, -600.0f));
+		CSlopeDevice* pSlopeDevice0 = CSlopeDevice::Create(SLOPE_DEVICE_MODEL, SLOPE_DEVICE_MODEL);
+		pSlopeDevice0->SetPos(D3DXVECTOR3(1400.0f, BOTTOM_FIELD_POS.y, -500.0f));
 
-		//pMawasiguruma1->SetRot(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
+		CSlopeDevice* pSlopeDevice1 = CSlopeDevice::Create(SLOPE_DEVICE_MODEL, SLOPE_DEVICE_MODEL);
+		pSlopeDevice1->SetPos(D3DXVECTOR3(1400.0f, BOTTOM_FIELD_POS.y, 500.0f));
+		pSlopeDevice1->SetRot(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
 
-		//pMawasiguruma2->SetPos(D3DXVECTOR3(-1400.0f, BOTTOM_FIELD_POS.y, -600.0f));
+		CSlopeDevice* pSlopeDevice2 = CSlopeDevice::Create(SLOPE_DEVICE_MODEL, SLOPE_DEVICE_MODEL);
+		pSlopeDevice2->SetPos(D3DXVECTOR3(-1400.0f, BOTTOM_FIELD_POS.y, -500.0f));
 
-		//pMawasiguruma3->SetRot(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
+		CSlopeDevice* pSlopeDevice3 = CSlopeDevice::Create(SLOPE_DEVICE_MODEL, SLOPE_DEVICE_MODEL);
+		pSlopeDevice3->SetPos(D3DXVECTOR3(-1400.0f, BOTTOM_FIELD_POS.y, 500.0f));
+		pSlopeDevice3->SetRot(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
 	}
 
 	// ジャッキ

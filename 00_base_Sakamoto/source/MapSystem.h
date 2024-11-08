@@ -64,7 +64,7 @@ public:
 public:
 	static CMapSystem* pMapSystem;
 
-	static bool m_nMapGrit[NUM_WIGHT][NUM_HEIGHT];
+	static bool m_nMapGrit[NUM_WIGHT][NUM_HEIGHT];	//グリットにブロックが存在していたらtrue
 	D3DXVECTOR3 m_InitPos;
 	D3DXVECTOR3 m_MapPos;
 	int m_WightMax;
