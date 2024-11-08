@@ -203,8 +203,8 @@ HRESULT CGame::Init(void)
 		// 十字架の生成
 		CItem::Create(CItem::TYPE_CROSS, CMapSystem::GRID(5, 9));
 
-		//// ソフトクリームの生成
-		//CItem::Create(CItem::TYPE_SOFTCREAM, CMapSystem::GRID(1, 13));
+		// ソフトクリームの生成
+		CItem::Create(CItem::TYPE_SOFTCREAM, CMapSystem::GRID(1, 13));
 
 		break;
 

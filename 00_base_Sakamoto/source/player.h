@@ -142,7 +142,7 @@ public:
 	static CListManager<CPlayer>* GetList(void);	// リスト取得
 
 private:
-	void MyObjCreate(void);							//自分が保持するオブジェクトの生成
+
 	void ActionState(void);							//モーションと状態の管理
 	void StateManager(void);						//状態管理
 	void Move(void);								//移動処理

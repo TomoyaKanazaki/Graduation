@@ -62,14 +62,6 @@ public:
 	virtual void SetGrid(const CMapSystem::GRID& pos) { m_Grid = pos; }
 	CMapSystem::GRID GetGrid(void) { return m_Grid; }
 
-	//// マップの横番号の設定・取得
-	//void SetWightNumber(int Wight) { m_nMapWidth = Wight; }
-	//int GetWightNumber() { return m_nMapWidth; }
-
-	//// マップの縦番号の設定・取得
-	//void SetHeightNumber(int Height) { m_nMapHeight = Height; }
-	//int GetHeightNumber() { return m_nMapHeight; }
-
 	// スクロールするかどうかの設定・取得
 	void SetMapScroll(bool Height) { m_bMapScroll = Height; }
 	bool GetMapScroll() { return m_bMapScroll; }
@@ -99,8 +91,6 @@ private:
 	D3DXVECTOR3 m_move;			//移動量	
 
 	CMapSystem::GRID m_Grid;	// マップ番号
-	//int m_nMapWidth;			//マップの横番号
-	//int m_nMapHeight;			//マップの縦番号
 };
 
 #endif

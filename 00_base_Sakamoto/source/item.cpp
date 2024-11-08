@@ -86,6 +86,10 @@ CItem* CItem::Create(const TYPE eType, const CMapSystem::GRID& pos)
 			pItem = new CBowabowa;
 			break;
 
+		case CItem::TYPE_SOFTCREAM:	// ‚Ú‚í‚Ú‚í
+			pItem = new CBowabowa;
+			break;
+
 		default:
 			assert(false);
 			break;

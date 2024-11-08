@@ -125,12 +125,6 @@ CPlayer* CPlayer::Create()
 //====================================================================
 HRESULT CPlayer::Init(void)
 {
-	if (CScene::GetMode() == CScene::MODE_GAME ||
-		CScene::GetMode() == CScene::MODE_TUTORIAL)
-	{
-		MyObjCreate();
-	}
-	
 	// サイズの設定
 	m_size = COLLISION_SIZE;
 
@@ -209,14 +203,6 @@ HRESULT CPlayer::Init(void)
 	m_iterator = m_pList->AddList(this);
 
 	return S_OK;
-}
-
-//====================================================================
-//自分が保持するオブジェクトの生成
-//====================================================================
-void CPlayer::MyObjCreate(void)
-{
-	//オブジェクト生成
 }
 
 //====================================================================
