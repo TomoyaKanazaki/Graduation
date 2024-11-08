@@ -11,7 +11,6 @@
 #include "Rail.h"
 #include "game.h"
 #include "Devil.h"
-#include "MapSystem.h"
 #include "debugproc.h"
 #include "player.h"
 
@@ -80,14 +79,14 @@ HRESULT CRailBlock::Init(int nMapWight, int nMapHeight, bool Edit, int Max, int*
 	SetWightNumber(nMapWight);
 	SetHeightNumber(nMapHeight);
 
-	StartWightNumber = nMapWight;
-	StartHeightNumber = nMapHeight;
+	m_StartGrid.x = nMapWight;
+	m_StartGrid.z = nMapHeight;
 
 	SetMultiMatrix(true);
 
 	CObjmeshCube::Init();
 
-	SetPos(CMapSystem::GetInstance()->GetGritPos(StartWightNumber, StartHeightNumber));
+	SetPos(CMapSystem::GetInstance()->GetGritPos(m_StartGrid.x, m_StartGrid.z));
 
 	SetTexture("data\\TEXTURE\\Wood001.png");
 
@@ -158,6 +157,7 @@ void CRailBlock::Update(void)
 
 	Move(&Pos);
 
+	// 横番号が前回と一致しない時にグリットのブロックの有無を切り替える
 	if (GetWightNumber() != CMapSystem::GetInstance()->GetGritWightNumber(Pos.x))
 	{
 		CMapSystem::GetInstance()->SetGritBool(GetWightNumber(), GetHeightNumber(), false);
@@ -167,6 +167,7 @@ void CRailBlock::Update(void)
 		RailCheck();
 	}
 
+	// 縦番号が前回と一致しない時にグリットのブロックの有無を切り替える
 	if (GetHeightNumber() != CMapSystem::GetInstance()->GetGritHeightNumber(Pos.z))
 	{
 		CMapSystem::GetInstance()->SetGritBool(GetWightNumber(), GetHeightNumber(), false);

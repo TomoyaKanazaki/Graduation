@@ -27,7 +27,6 @@
 #include "Effect.h"
 #include "devil.h"
 #include "DevilHole.h"
-#include "MapSystem.h"
 #include "objmeshField.h"
 #include "sound.h"
 
@@ -85,8 +84,8 @@ CEnemy::CEnemy(int nPriority) :CObject(nPriority)
 	m_OKU = true;
 	m_OKD = true;
 
-	m_nMapWidth = 0;
-	m_nMapHeight = 0;
+	m_Grid.x = 0;
+	m_Grid.z = 0;
 }
 
 //====================================================================
@@ -244,7 +243,7 @@ void CEnemy::GameUpdate(void)
 		m_pMotion->Update();
 	}
 
-	DebugProc::Print(DebugProc::POINT_LEFT, "[“G]‰¡ %d : c %d\n", m_nMapWidth, m_nMapHeight);
+	DebugProc::Print(DebugProc::POINT_LEFT, "[“G]‰¡ %d : c %d\n", m_Grid.x, m_Grid.z);
 }
 
 //====================================================================
@@ -422,7 +421,7 @@ void CEnemy::CollisionWall(useful::COLLISION XYZ)
 			//‘Ò‹@ó‘Ô‚É‚·‚é
 			m_State = E_STATE_WAIT;
 
-			m_pos = CMapSystem::GetInstance()->GetGritPos(m_nMapWidth, m_nMapHeight);
+			m_pos = CMapSystem::GetInstance()->GetGritPos(m_Grid.x, m_Grid.z);
 		}
 	}
 }
@@ -622,23 +621,23 @@ void CEnemy::SearchWall(void)
 	int nMapHeightMax = pMapSystem->GetHeightMax();
 	D3DXVECTOR3 MapSystemPos = pMapSystem->GetMapPos();
 
-	int nRNumber = m_nMapWidth + 1;
-	int nLNumber = m_nMapWidth - 1;
-	int nUNumber = m_nMapHeight - 1;
-	int nDNumber = m_nMapHeight + 1;
+	int nRNumber = m_Grid.x + 1;
+	int nLNumber = m_Grid.x - 1;
+	int nUNumber = m_Grid.z - 1;
+	int nDNumber = m_Grid.z + 1;
 
 	nRNumber = useful::RangeNumber(nMapWightMax, 0, nRNumber);
 	nLNumber = useful::RangeNumber(nMapWightMax, 0, nLNumber);
 	nUNumber = useful::RangeNumber(nMapHeightMax, 0, nUNumber);
 	nDNumber = useful::RangeNumber(nMapHeightMax, 0, nDNumber);
 
-	OKR = !pMapSystem->GetGritBool(nRNumber, m_nMapHeight);
-	OKL = !pMapSystem->GetGritBool(nLNumber, m_nMapHeight);
-	OKU = !pMapSystem->GetGritBool(m_nMapWidth, nUNumber);
-	OKD = !pMapSystem->GetGritBool(m_nMapWidth, nDNumber);
+	OKR = !pMapSystem->GetGritBool(nRNumber, m_Grid.z);
+	OKL = !pMapSystem->GetGritBool(nLNumber, m_Grid.z);
+	OKU = !pMapSystem->GetGritBool(m_Grid.x, nUNumber);
+	OKD = !pMapSystem->GetGritBool(m_Grid.x, nDNumber);
 
 	//Ž©•ª‚Ì—§‚Á‚Ä‚¢‚éƒOƒŠƒbƒg‚Ì’†SˆÊ’u‚ð‹‚ß‚é
-	D3DXVECTOR3 MyGritPos = CMapSystem::GetInstance()->GetGritPos(m_nMapWidth, m_nMapHeight);;
+	D3DXVECTOR3 MyGritPos = CMapSystem::GetInstance()->GetGritPos(m_Grid.x, m_Grid.z);;
 	float MapGritSize = pMapSystem->GetGritSize();
 
 	DebugProc::Print(DebugProc::POINT_LEFT, "“G‚ÌˆÊ’u %f %f %f\n", MyGritPos.x, MyGritPos.y, MyGritPos.z);
@@ -685,8 +684,8 @@ void CEnemy::SearchWall(void)
 //====================================================================
 void CEnemy::MapSystemNumber(void)
 {
-	m_nMapWidth = CMapSystem::GetInstance()->GetGritWightNumber(m_pos.x);
-	m_nMapHeight = CMapSystem::GetInstance()->GetGritHeightNumber(m_pos.z);
+	m_Grid.x = CMapSystem::GetInstance()->GetGritWightNumber(m_pos.x);
+	m_Grid.z = CMapSystem::GetInstance()->GetGritHeightNumber(m_pos.z);
 }
 
 //====================================================================

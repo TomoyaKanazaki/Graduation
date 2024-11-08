@@ -31,7 +31,6 @@
 #include "fire.h"
 #include "DevilHole.h"
 #include "devil.h"
-#include "MapSystem.h"
 #include "bible.h"
 #include "RailBlock.h"
 #include "objmeshField.h"
@@ -85,8 +84,7 @@ CPlayer::CPlayer(int nPriority) : CObject(nPriority),
 	m_nLife			(0),
 	m_eItemType		(TYPE_NONE),
 	m_MoveState		(MOVE_STATE_NONE),
-	m_nMapWidth		(0),
-	m_nMapHeight	(0),
+	m_Grid			(0,0),
 	m_bGritCenter	(true),
 	m_bPressObj		(false)
 {
@@ -315,17 +313,17 @@ void CPlayer::GameUpdate(void)
 		// カメラ更新処理
 		CameraPosUpdate();
 
-		if (m_State == STATE_WALK)
-		{
-			// 位置更新処理
-			PosUpdate();
-		}
-
 		// レールブロックとの当たり判定
 		CollisionMoveRailBlock(useful::COLLISION_X);
 		CollisionMoveRailBlock(useful::COLLISION_Z);
 
 		ObjPosUpdate();
+
+		if (m_State == STATE_WALK)
+		{
+			// 位置更新処理
+			PosUpdate();
+		}
 
 		if (m_State != STATE_EGG)
 		{
@@ -358,7 +356,7 @@ void CPlayer::GameUpdate(void)
 	//デバッグ表示
 	DebugProc::Print(DebugProc::POINT_LEFT,"[自分]位置 %f : %f : %f\n", m_pos.x, m_pos.y, m_pos.z);
 	DebugProc::Print(DebugProc::POINT_LEFT, "[自分]向き %f : %f : %f\n", m_rot.x, m_rot.y, m_rot.z);
-	DebugProc::Print(DebugProc::POINT_LEFT,"[自分]横 %d : 縦 %d\n", m_nMapWidth, m_nMapHeight);
+	DebugProc::Print(DebugProc::POINT_LEFT,"[自分]横 %d : 縦 %d\n", m_Grid.x, m_Grid.z);
 }
 
 //====================================================================
@@ -659,7 +657,7 @@ void CPlayer::CollisionWall(useful::COLLISION XYZ)
 			//待機状態にする
 			m_State = STATE_WAIT;
 			m_MoveState = MOVE_STATE_WAIT;
-			m_pos = CMapSystem::GetInstance()->GetGritPos(m_nMapWidth, m_nMapHeight);
+			m_pos = CMapSystem::GetInstance()->GetGritPos(m_Grid.x, m_Grid.z);
 		}
 	}
 }
@@ -694,6 +692,11 @@ void CPlayer::CollisionPressWall(useful::COLLISION XYZ)
 //====================================================================
 void CPlayer::CollisionWaitRailBlock(useful::COLLISION XYZ)
 {
+	if (m_bPressObj == true)
+	{
+		return;
+	}
+
 	// レールブロックのリスト構造が無ければ抜ける
 	if (CRailBlock::GetList() == nullptr) { return; }
 	std::list<CRailBlock*> list = CRailBlock::GetList()->GetList();    // リストを取得
@@ -789,23 +792,23 @@ void CPlayer::SearchWall(void)
 	int nMapHeightMax = pMapSystem->GetHeightMax();
 	D3DXVECTOR3 MapSystemPos = pMapSystem->GetMapPos();
 
-	int nRNumber = m_nMapWidth + 1;
-	int nLNumber = m_nMapWidth - 1;
-	int nUNumber = m_nMapHeight - 1;
-	int nDNumber = m_nMapHeight + 1;
+	int nRNumber = m_Grid.x + 1;
+	int nLNumber = m_Grid.x - 1;
+	int nUNumber = m_Grid.z - 1;
+	int nDNumber = m_Grid.z + 1;
 
 	nRNumber = useful::RangeNumber(nMapWightMax, 0, nRNumber);
 	nLNumber = useful::RangeNumber(nMapWightMax, 0, nLNumber);
 	nUNumber = useful::RangeNumber(nMapHeightMax, 0, nUNumber);
 	nDNumber = useful::RangeNumber(nMapHeightMax, 0, nDNumber);
 
-	OKR = !pMapSystem->GetGritBool(nRNumber, m_nMapHeight);
-	OKL = !pMapSystem->GetGritBool(nLNumber, m_nMapHeight);
-	OKU = !pMapSystem->GetGritBool(m_nMapWidth, nUNumber);
-	OKD = !pMapSystem->GetGritBool(m_nMapWidth, nDNumber);
+	OKR = !pMapSystem->GetGritBool(nRNumber, m_Grid.z);
+	OKL = !pMapSystem->GetGritBool(nLNumber, m_Grid.z);
+	OKU = !pMapSystem->GetGritBool(m_Grid.x, nUNumber);
+	OKD = !pMapSystem->GetGritBool(m_Grid.x, nDNumber);
 
 	//自分の立っているグリットの中心位置を求める
-	D3DXVECTOR3 MyGritPos = CMapSystem::GetInstance()->GetGritPos(m_nMapWidth, m_nMapHeight);
+	D3DXVECTOR3 MyGritPos = CMapSystem::GetInstance()->GetGritPos(m_Grid.x, m_Grid.z);
 	float MapGritSize = pMapSystem->GetGritSize();
 
 	DebugProc::Print(DebugProc::POINT_LEFT, "自分がいるグリットの中心位置 %f %f %f\n", MyGritPos.x, MyGritPos.y, MyGritPos.z);
@@ -856,7 +859,7 @@ void CPlayer::CollisionDevilHole(useful::COLLISION XYZ)
 			//待機状態にする
 			m_State = STATE_WAIT;
 
-			m_pos = CMapSystem::GetInstance()->GetGritPos(m_nMapWidth, m_nMapHeight);
+			m_pos = CMapSystem::GetInstance()->GetGritPos(m_Grid.x, m_Grid.z);
 		}
 	}
 }
@@ -955,8 +958,8 @@ void CPlayer::CollisionPressStageOut(void)
 //====================================================================
 void CPlayer::MapSystemNumber(void)
 {
-	m_nMapWidth = CMapSystem::GetInstance()->GetGritWightNumber(m_pos.x);
-	m_nMapHeight = CMapSystem::GetInstance()->GetGritHeightNumber(m_pos.z);
+	m_Grid.x = CMapSystem::GetInstance()->GetGritWightNumber(m_pos.x);
+	m_Grid.z = CMapSystem::GetInstance()->GetGritHeightNumber(m_pos.z);
 }
 
 //====================================================================
@@ -1114,7 +1117,7 @@ void CPlayer::Death(void)
 		if (m_eItemType == TYPE_BIBLE)
 		{
 			// 聖書生成
-			CItem::Create(CItem::TYPE_BIBLE, CItem::GRID(m_nMapWidth, m_nMapHeight));
+			CItem::Create(CItem::TYPE_BIBLE, CMapSystem::GRID(m_Grid.x, m_Grid.z));
 
 			// アイテムを所持していない状態にする
 			SetItemType(TYPE_NONE);

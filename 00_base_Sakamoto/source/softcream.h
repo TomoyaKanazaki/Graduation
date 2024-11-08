@@ -6,6 +6,7 @@
 //============================================
 #pragma once
 #include "item.h"
+#include "MapSystem.h"
 
 //==========================================
 //  クラス定義
@@ -24,7 +25,7 @@ public:
 
 	void Move(D3DXVECTOR3& pos) override;
 
-	void SetGrid(const GRID& pos) override;
+	void SetGrid(const CMapSystem::GRID& pos) override;
 	bool Hit(CPlayer* pPlayer) override;
 
 	// 静的メンバ関数

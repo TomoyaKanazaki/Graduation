@@ -131,7 +131,7 @@ void CSoftCream::Move(D3DXVECTOR3& pos)
 //==========================================
 //  マップ番号の設定
 //==========================================
-void CSoftCream::SetGrid(const GRID& pos)
+void CSoftCream::SetGrid(const CMapSystem::GRID& pos)
 {
 	// 親クラスの設定処理を呼び出す
 	CItem::SetGrid(pos);

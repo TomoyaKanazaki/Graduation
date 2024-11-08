@@ -796,13 +796,12 @@ void CDevil::PlayerScroll(D3DXVECTOR3 Move, float GritSize)
 		else
 		{// 卵状態の時、ブロックが存在しない位置にホーミングする
 
-			int WightNumber = pPlayer->GetWightNumber();
-			int HeightNumber = pPlayer->GetHeightNumber();
-			if (!CMapSystem::GetInstance()->GetGritBool(WightNumber, HeightNumber))
+			CMapSystem::GRID Grit = pPlayer->GetGrid();;
+			if (!CMapSystem::GetInstance()->GetGritBool(Grit.x, Grit.z))
 			{
 				D3DXVECTOR3 PlayerPos = pPlayer->GetPos();
 				D3DXVECTOR3 AnswerPos = INITVECTOR3;
-				AnswerPos = CMapSystem::GetInstance()->GetGritPos(WightNumber, HeightNumber);
+				AnswerPos = CMapSystem::GetInstance()->GetGritPos(Grit.x, Grit.z);
 
 				if (pPlayer->GetGritCenter())
 				{
@@ -873,24 +872,24 @@ void CDevil::GritScroll(D3DXVECTOR3 Move)
 
 #ifdef _DEBUG
 
-	//　グリットの位置にエフェクトを表示
-	for (int nCntW = 0; nCntW < MapWightMax; nCntW++)
-	{
-		for (int nCntH = 0; nCntH < MapHeightMax; nCntH++)
-		{
-			//グリット番号を位置に変換
-			D3DXVECTOR3 CountPos = CMapSystem::GetInstance()->GetGritPos(nCntW, nCntH);
-			CountPos.y = 50.0f;
+	////　グリットの位置にエフェクトを表示
+	//for (int nCntW = 0; nCntW < MapWightMax; nCntW++)
+	//{
+	//	for (int nCntH = 0; nCntH < MapHeightMax; nCntH++)
+	//	{
+	//		//グリット番号を位置に変換
+	//		D3DXVECTOR3 CountPos = CMapSystem::GetInstance()->GetGritPos(nCntW, nCntH);
+	//		CountPos.y = 50.0f;
 
-			if (CMapSystem::GetInstance()->GetGritBool(nCntW, nCntH))
-			{// ブロックが存在するグリットのみエフェクトを表示
+	//		if (CMapSystem::GetInstance()->GetGritBool(nCntW, nCntH))
+	//		{// ブロックが存在するグリットのみエフェクトを表示
 
-				CEffect* pEffect = CEffect::Create();
-				pEffect->SetPos(CountPos);
-				pEffect->SetLife(10);
-			}
-		}
-	}
+	//			CEffect* pEffect = CEffect::Create();
+	//			pEffect->SetPos(CountPos);
+	//			pEffect->SetLife(10);
+	//		}
+	//	}
+	//}
 
 #endif // _DEBUG
 }

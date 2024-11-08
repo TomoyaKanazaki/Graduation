@@ -9,6 +9,7 @@
 
 #include "object.h"
 #include "useful.h"
+#include "MapSystem.h"
 
 //前方宣言
 class CModel;
@@ -125,9 +126,11 @@ public:
 	void SetUseItem(bool bUse) { m_UseItem = bUse; }
 	bool GetbUseItem() { return m_UseItem; }
 
-	int GetWightNumber() { return m_nMapWidth; }
-	int GetHeightNumber() { return m_nMapHeight; }
 	bool GetGritCenter() { return m_bGritCenter; }
+
+	// マップ番号の設定
+	virtual void SetGrid(const CMapSystem::GRID& pos) { m_Grid = pos; }
+	CMapSystem::GRID GetGrid(void) { return m_Grid; }
 
 	void Death(void);
 	bool SortObject(D3DXVECTOR3 pos);					// オブジェクトとのソート処理
@@ -186,8 +189,7 @@ private:
 
 	float m_CollisionRot;		//当たり判定用の向き
 
-	int m_nMapWidth;			//マップの横番号
-	int m_nMapHeight;			//マップの縦番号
+	CMapSystem::GRID m_Grid;	//グリット番号
 	bool m_bGritCenter;			//グリットの中心位置にいるかどうか
 
 	int m_nLife;				//ライフ
