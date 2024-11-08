@@ -23,7 +23,6 @@
 #include "time.h"
 #include "tutorial.h"
 #include "logo.h"
-#include "item_manager.h"
 #include "MapSystem.h"
 
 #ifdef _DEBUG
