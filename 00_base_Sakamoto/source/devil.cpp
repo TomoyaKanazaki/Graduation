@@ -223,54 +223,6 @@ void CDevil::TitleUpdate(void)
 //====================================================================
 void CDevil::GameUpdate(void)
 {
-	// TODO : ランダム移動やめる
-#ifndef _DEBUG
-		// カウンターのリセット
-		if (m_fActionCount >= 5.0f)
-		{
-			ACTION_TYPE action = m_Action;
-
-			do
-			{
-				m_Action = (ACTION_TYPE)(rand() % ACTION_MAX);
-			} while (m_Action == action);
-
-			m_fActionCount = 0.0f;
-		}
-
-		// カウンターの加算
-		m_fActionCount += DeltaTime::Get();
-		DebugProc::Print(DebugProc::POINT_CENTER, "移動カウンター : %f\n", m_fActionCount);
-
-		// 移動
-		switch (m_Action)
-		{
-		case ACTION_NEUTRAL:
-			ObjectScroll(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-			DebugProc::Print(DebugProc::POINT_CENTER, "待機\n");
-			break;
-		case ACTION_SIGNAL_UP:
-			ObjectScroll(D3DXVECTOR3(0.0f, 0.0f, SCROOL_SPEED));
-			DebugProc::Print(DebugProc::POINT_CENTER, "上\n");
-			break;
-		case ACTION_SIGNAL_DOWN:
-			ObjectScroll(D3DXVECTOR3(0.0f, 0.0f, -SCROOL_SPEED));
-			DebugProc::Print(DebugProc::POINT_CENTER, "下\n");
-			break;
-		case ACTION_SIGNAL_LEFT:
-			ObjectScroll(D3DXVECTOR3(-SCROOL_SPEED, 0.0f, 0.0f));
-			DebugProc::Print(DebugProc::POINT_CENTER, "左\n");
-			break;
-		case ACTION_SIGNAL_RIGHT:
-			ObjectScroll(D3DXVECTOR3(SCROOL_SPEED, 0.0f, 0.0f));
-			DebugProc::Print(DebugProc::POINT_CENTER, "右\n");
-			break;
-		default:
-			assert(false);
-			break;
-		}
-#endif // !_DEBUG
-
 	// 過去の位置に代入
 	m_posOld = m_pos;
 
