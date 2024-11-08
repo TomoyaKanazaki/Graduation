@@ -63,7 +63,7 @@ namespace
 	const int BOTTOM_FIELD_VTX_WIDTH = 64;		// 下床の横数
 	const int BOTTOM_FIELD_VTX_HEIGHT = 64;		// 下床の縦数
 	const char* BOTTOM_FIELD_TEX = "data\\TEXTURE\\Field\\Tile001.jpg";		// 下床のテクスチャ
-	const D3DXVECTOR3 BOTTOM_FIELD_POS = D3DXVECTOR3(0.0f, -260.0f, 0.0f);	// 下床の位置
+	const D3DXVECTOR3 BOTTOM_FIELD_POS = D3DXVECTOR3(0.0f, -1500.0f, 0.0f);	// 下床の位置
 	const int BIBLE_OUTGRIT = 2;	// 聖書がマップの外側から何マス内側にいるか
 
 	const char* SLOPE_DEVICE_MODEL = "data\\TXT\\MOTION\\02_staging\\00_SlopeDevice\\motion_slopedevice.txt";
@@ -772,38 +772,46 @@ void CGame::SetBgObjTest(void)
 {
 	// 傾き装置（見た目だけの仮）
 	{
-		CSlopeDevice* pSlopeDevice0 = CSlopeDevice::Create(SLOPE_DEVICE_MODEL, SLOPE_DEVICE_MODEL);
-		pSlopeDevice0->SetPos(D3DXVECTOR3(1400.0f, BOTTOM_FIELD_POS.y, -500.0f));
+		CSlopeDevice* pSlopeDevice = CSlopeDevice::Create(SLOPE_DEVICE_MODEL, SLOPE_DEVICE_MODEL);
+		pSlopeDevice->SetPos(D3DXVECTOR3(1800.0f, BOTTOM_FIELD_POS.y, -500.0f));
 
-		CSlopeDevice* pSlopeDevice1 = CSlopeDevice::Create(SLOPE_DEVICE_MODEL, SLOPE_DEVICE_MODEL);
-		pSlopeDevice1->SetPos(D3DXVECTOR3(1400.0f, BOTTOM_FIELD_POS.y, 500.0f));
-		pSlopeDevice1->SetRot(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
+		pSlopeDevice = CSlopeDevice::Create(SLOPE_DEVICE_MODEL, SLOPE_DEVICE_MODEL);
+		pSlopeDevice->SetPos(D3DXVECTOR3(1800.0f, BOTTOM_FIELD_POS.y, 500.0f));
+		pSlopeDevice->SetRot(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
 
-		CSlopeDevice* pSlopeDevice2 = CSlopeDevice::Create(SLOPE_DEVICE_MODEL, SLOPE_DEVICE_MODEL);
-		pSlopeDevice2->SetPos(D3DXVECTOR3(-1400.0f, BOTTOM_FIELD_POS.y, -500.0f));
+		pSlopeDevice = CSlopeDevice::Create(SLOPE_DEVICE_MODEL, SLOPE_DEVICE_MODEL);
+		pSlopeDevice->SetPos(D3DXVECTOR3(-1800.0f, BOTTOM_FIELD_POS.y, -500.0f));
 
-		CSlopeDevice* pSlopeDevice3 = CSlopeDevice::Create(SLOPE_DEVICE_MODEL, SLOPE_DEVICE_MODEL);
-		pSlopeDevice3->SetPos(D3DXVECTOR3(-1400.0f, BOTTOM_FIELD_POS.y, 500.0f));
-		pSlopeDevice3->SetRot(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
+		pSlopeDevice = CSlopeDevice::Create(SLOPE_DEVICE_MODEL, SLOPE_DEVICE_MODEL);
+		pSlopeDevice->SetPos(D3DXVECTOR3(-1800.0f, BOTTOM_FIELD_POS.y, 500.0f));
+		pSlopeDevice->SetRot(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
 	}
 
 	// ジャッキ
 	{
-		CObjectX* pJack1 = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\jack.x");
-		pJack1->SetPos(D3DXVECTOR3(1100.0f, BOTTOM_FIELD_POS.y, 700.0f));
-		pJack1->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
+		CObjectX* pJack = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\jack.x");
+		pJack->SetPos(D3DXVECTOR3(1300.0f, BOTTOM_FIELD_POS.y, 500.0f));
+		pJack->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
+		CObjectX* pPost = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\post.x");
+		pPost->SetPos(D3DXVECTOR3(900.0f, BOTTOM_FIELD_POS.y, 500.0f));
 
-		CObjectX* pJack2 = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\jack.x");
-		pJack2->SetPos(D3DXVECTOR3(1100.0f, BOTTOM_FIELD_POS.y, -700.0f));
-		pJack2->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
+		pJack = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\jack.x");
+		pJack->SetPos(D3DXVECTOR3(1300.0f, BOTTOM_FIELD_POS.y, -500.0f));
+		pJack->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
+		pPost = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\post.x");
+		pPost->SetPos(D3DXVECTOR3(900.0f, BOTTOM_FIELD_POS.y, -500.0f));
 
-		CObjectX* pJack3 = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\jack.x");
-		pJack3->SetPos(D3DXVECTOR3(-1100.0f, BOTTOM_FIELD_POS.y, 700.0f));
-		pJack3->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
+		pJack = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\jack.x");
+		pJack->SetPos(D3DXVECTOR3(-1300.0f, BOTTOM_FIELD_POS.y, 500.0f));
+		pJack->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
+		pPost = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\post.x");
+		pPost->SetPos(D3DXVECTOR3(-900.0f, BOTTOM_FIELD_POS.y, 500.0f));
 
-		CObjectX* pJack4 = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\jack.x");
-		pJack4->SetPos(D3DXVECTOR3(-1100.0f, BOTTOM_FIELD_POS.y, -700.0f));
-		pJack4->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
+		pJack = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\jack.x");
+		pJack->SetPos(D3DXVECTOR3(-1300.0f, BOTTOM_FIELD_POS.y, -500.0f));
+		pJack->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
+		pPost = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\post.x");
+		pPost->SetPos(D3DXVECTOR3(-900.0f, BOTTOM_FIELD_POS.y, -500.0f));
 	}
 }
 
