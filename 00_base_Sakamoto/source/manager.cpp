@@ -394,7 +394,7 @@ void CManager::Update(void)
 	{
 		//条件？ 処理１：処理２;
 		m_Pause = m_Pause ? false : true;
-		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_BOSS_DASH);
+		//CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_BOSS_DASH);
 	}
 
 	//シーンの更新処理

@@ -1124,7 +1124,7 @@ void CPlayer::Death(void)
 			m_nStateCount = 150;
 
 			// ƒ_ƒ[ƒW‰¹
-			CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_DAMAGE_PLAYER);
+			//CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_DAMAGE_PLAYER);
 		}
 	}
 }

@@ -170,7 +170,7 @@ void CPause::Update(void)
 			pInputJoypad->GetTrigger(CInputJoypad::BUTTON_UP, 0) == true ||
 			pInputJoypad->Get_LStick_Trigger(CInputJoypad::LSTICK_UP, 0) == true)
 		{
-			CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_SELECT_PUSH);
+			//CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_SELECT_PUSH);
 			m_PauseSelect--;
 
 			if (m_PauseSelect < 0)
@@ -183,7 +183,7 @@ void CPause::Update(void)
 			pInputJoypad->GetTrigger(CInputJoypad::BUTTON_DOWN, 0) == true ||
 			pInputJoypad->Get_LStick_Trigger(CInputJoypad::LSTICK_DOWN, 0) == true)
 		{
-			CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_SELECT_PUSH);
+			//CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_SELECT_PUSH);
 			m_PauseSelect++;
 
 			if (m_PauseSelect > MAX_PAUSE - 1)
