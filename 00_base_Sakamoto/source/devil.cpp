@@ -61,7 +61,7 @@ CDevil::CDevil(int nPriority) : CObject(nPriority)
 	m_nActionCount = 0;
 	m_Action = ACTION_NEUTRAL;
 	m_AtkAction = ACTION_NEUTRAL;
-	m_State = STATE_NORMAL;
+	m_State = STATE_WAIT;
 	m_nStateCount = 0;
 	m_CollisionRot = 0.0f;
 	m_pMotion = nullptr;
@@ -226,9 +226,6 @@ void CDevil::GameUpdate(void)
 	// 過去の位置に代入
 	m_posOld = m_pos;
 
-	// 移動処理
-	Move();
-
 	// 向き移動処理
 	Rot();
 
@@ -333,60 +330,37 @@ void CDevil::Draw(void)
 //====================================================================
 //移動処理
 //====================================================================
-void CDevil::Move(void)
+void CDevil::Move(int Arroow)
 {
-	//キーボードの取得
-	CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
-	CInputJoypad* pInputJoypad = CManager::GetInstance()->GetInputJoyPad();
-	D3DXVECTOR3 CameraRot = CManager::GetInstance()->GetCamera()->GetRot();
-
 	D3DXVECTOR3 NormarizeMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
-	//キーボードの移動処理
-	if (pInputKeyboard->GetPress(DIK_UP))
+	switch (Arroow)
 	{
+	case 0:
+
 		ObjectScroll(D3DXVECTOR3(0.0f, 0.0f, SCROOL_SPEED));
+		m_move.z = SCROOL_SPEED;
 
-	}
-	if (pInputKeyboard->GetPress(DIK_DOWN))
-	{
+		break;
+	case 1:
+
 		ObjectScroll(D3DXVECTOR3(0.0f, 0.0f, -SCROOL_SPEED));
-	}
+		m_move.z = -SCROOL_SPEED;
 
-	if (pInputKeyboard->GetPress(DIK_LEFT))
-	{
+		break;
+	case 2:
+
 		ObjectScroll(D3DXVECTOR3(-SCROOL_SPEED, 0.0f, 0.0f));
-	}
-	if (pInputKeyboard->GetPress(DIK_RIGHT))
-	{
+		m_move.x = -SCROOL_SPEED;
+
+		break;
+	case 3:
+
 		ObjectScroll(D3DXVECTOR3(SCROOL_SPEED, 0.0f, 0.0f));
+		m_move.x = SCROOL_SPEED;
+
+		break;
 	}
-
-	if (pInputKeyboard->GetPress(DIK_UP) == false && pInputKeyboard->GetPress(DIK_LEFT) == false && pInputKeyboard->GetPress(DIK_DOWN) == false && pInputKeyboard->GetPress(DIK_RIGHT) == false)
-	{
-		//左スティックによる前後移動	
-		m_DevilPos.z += pInputJoypad->Get_Stick_Left(0).y * SCROOL_SPEED;
-		m_DevilPos.x += pInputJoypad->Get_Stick_Left(0).y * SCROOL_SPEED;
-
-		//左スティックによる左右移動
-		m_DevilPos.x += pInputJoypad->Get_Stick_Left(0).x * SCROOL_SPEED;
-		m_DevilPos.z -= pInputJoypad->Get_Stick_Left(0).x * SCROOL_SPEED;
-	}
-
-	if (pInputKeyboard->GetPress(DIK_UP) == true || pInputKeyboard->GetPress(DIK_LEFT) == true || pInputKeyboard->GetPress(DIK_DOWN) == true || pInputKeyboard->GetPress(DIK_RIGHT) == true)
-	{
-		float JunpPawer = NormarizeMove.y;
-		NormarizeMove.y = 0.0f;
-
-		D3DXVec3Normalize(&NormarizeMove, &NormarizeMove);
-
-		NormarizeMove.x *= SCROOL_SPEED;
-		NormarizeMove.y = JunpPawer;
-		NormarizeMove.z *= SCROOL_SPEED;
-	}
-
-	m_move += NormarizeMove;
-
 }
 
 //====================================================================
@@ -481,22 +455,27 @@ void CDevil::StateManager(void)
 {
 	switch (m_State)
 	{
-	case STATE_NORMAL:
-		//	スローをdefaultへ
-		CSlowManager::SetValueDefault();
-		break;
-
-	case STATE_DEATH:
-		break;
-
 	case STATE_WAIT:
+
+		if (m_nStateCount <= 0)
+		{
+			m_State = STATE_SCROLL;
+			m_nStateCount = 300;
+			m_DevilArrow = rand() % 4;
+		}
+
 		break;
 
-	case STATE_DAMAGE:
-		if (m_nStateCount == 0)
+	case STATE_SCROLL:
+
+		//Move(m_DevilArrow);
+
+		if (m_nStateCount <= 0)
 		{
-			m_State = STATE_NORMAL;
+			m_State = STATE_WAIT;
+			m_nStateCount = 180;
 		}
+
 		break;
 	}
 
@@ -513,11 +492,36 @@ void CDevil::DebugKey(void)
 {
 #ifdef _DEBUG
 
+	//キーボードの取得
+	CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
+	CInputJoypad* pInputJoypad = CManager::GetInstance()->GetInputJoyPad();
+	D3DXVECTOR3 CameraRot = CManager::GetInstance()->GetCamera()->GetRot();
+
 	CInputMouse* pMouse = CManager::GetInstance()->GetInputMouse();
 
 	if (pMouse->GetTrigger(pMouse->PUSH_WHEEL))
 	{
 		HitDamage(10.0f);
+	}
+
+	//キーボードの移動処理
+	if (pInputKeyboard->GetPress(DIK_UP))
+	{
+		Move(0);
+
+	}
+	if (pInputKeyboard->GetPress(DIK_DOWN))
+	{
+		Move(1);
+	}
+
+	if (pInputKeyboard->GetPress(DIK_LEFT))
+	{
+		Move(2);
+	}
+	if (pInputKeyboard->GetPress(DIK_RIGHT))
+	{
+		Move(3);
 	}
 
 #endif // !_DEBUG
