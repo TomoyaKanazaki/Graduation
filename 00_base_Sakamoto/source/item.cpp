@@ -14,6 +14,7 @@
 #include "bible.h"
 #include "game.h"
 #include "score.h"
+#include "softcream.h"
 
 //==========================================
 //  定数定義
@@ -86,6 +87,10 @@ CItem* CItem::Create(const TYPE eType, const CMapSystem::GRID& pos)
 			pItem = new CBowabowa;
 			break;
 
+		case CItem::TYPE_SOFTCREAM:	// ぼわぼわ
+			pItem = new CSoftCream;
+			break;
+
 		default:
 			assert(false);
 			break;
@@ -138,8 +143,10 @@ void CItem::Update()
 
 	if (m_bMapScroll == true)
 	{
-		pos = CMapSystem::GetInstance()->GetGritPos(m_Grid.x, m_Grid.z);
-		pos.y = 0.0f;
+		// グリッドに沿った座標を取得、設定
+		D3DXVECTOR3 posGrid = CMapSystem::GetInstance()->GetGritPos(m_Grid.x, m_Grid.z);
+		pos.x = posGrid.x;
+		pos.z = posGrid.z;
 	}
 	else
 	{
