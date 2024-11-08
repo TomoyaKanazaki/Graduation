@@ -195,29 +195,48 @@ HRESULT CGame::Init(void)
 	{
 	case 0:
 		LoadStageBlock("data\\TXT\\STAGE\\Block.txt");
+		// TODO : 外部書き出しを利用する
+		{
+			// 幅・高さ取得
+			int nWidth = CMapSystem::GetInstance()->GetWightMax();
+			int nHeight = CMapSystem::GetInstance()->GetHeightMax();
+
+			for (int i = 1; i < nWidth; i++)
+			{
+				for (int nCnt = 1; nCnt < nHeight; nCnt++)
+				{// アイテム無い場所にボワボワ生成
+					if (CMapSystem::GetInstance()->GetGritBool(i, nCnt)) { continue; }
+
+					if (rand() % 5) { continue; }
+
+					CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(i, nCnt));
+				}
+			}
+		}
+
 
 		// ボワボワの生成
-		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(7, 11));
-		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(8, 11));
-		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(9, 11));
-		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(10, 11));
-		
-		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(11, 11));
-		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(12, 11));
-		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(13, 11));
-		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(14, 11));
-		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(15, 11));
+		//CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(7, 11));
+		//CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(8, 11));
+		//CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(9, 11));
+		//CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(10, 11));
+		//
+		//CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(11, 11));
+		//CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(12, 11));
+		//CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(13, 11));
+		//CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(14, 11));
+		//CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(15, 11));
 
-		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(6, 2));
-		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(7, 2));
-		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(8, 2));
-		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(9, 2));
-		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(10, 2));
-		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(12, 2));
-		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(13, 2));
-		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(14, 2));
-		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(15, 2));
-		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(16, 2));
+		//CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(6, 2));
+		//CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(7, 2));
+		//CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(8, 2));
+		//CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(9, 2));
+		//CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(10, 2));
+		//CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(12, 2));
+		//CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(13, 2));
+		//CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(14, 2));
+		//CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(15, 2));
+		//CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(16, 2));
 
 		// 十字架の生成
 		CItem::Create(CItem::TYPE_CROSS, CMapSystem::GRID(11, 2));
@@ -235,6 +254,8 @@ HRESULT CGame::Init(void)
 		LoadStageBlock("data\\TXT\\STAGE\\Block.txt");
 
 		CDevilHole* pDevilHole = CDevilHole::Create("data\\MODEL\\DevilHole.x");
+		pDevilHole->SetGrid(CMapSystem::GRID(11,7));
+		CMapSystem::GetInstance()->SetGritBool(11, 7, true);
 
 		// 聖書生成
 		CItem::Create(CItem::TYPE_BIBLE, CMapSystem::GRID(BIBLE_OUTGRIT, BIBLE_OUTGRIT));
@@ -244,6 +265,9 @@ HRESULT CGame::Init(void)
 
 		break;
 	}
+
+	int n = CBowabowa::GetList()->GetNumAll();
+
 	CScrollArrow* pScrollAllow = nullptr;
 	pScrollAllow = CScrollArrow::Create();
 	pScrollAllow->SetPos((D3DXVECTOR3(80.0f, 120.0f, 0.0f)));
@@ -539,18 +563,18 @@ void CGame::LoadStageBlock(const char* pFilename)
 					fscanf(pFile, "%s", &aString[0]);
 					fscanf(pFile, "%d", &HeightNumber);
 
+					fscanf(pFile, "%s", &aString[0]);
+					fscanf(pFile, "%s", &aString[0]);
+
 					pMapSystem->SetGritBool(WightNumber, HeightNumber, true);
 					CCubeBlock* pBlock = CCubeBlock::Create();
 					pBlock->SetWightNumber(WightNumber);
 					pBlock->SetHeightNumber(HeightNumber);
 					pBlock->SetPos(D3DXVECTOR3(MapSystemPos.x + WightNumber * 100.0f, 50.0f, MapSystemPos.z - HeightNumber * 100.0f));
 					pBlock->SetSize(D3DXVECTOR3(MapSystemGritSize, MapSystemGritSize, MapSystemGritSize));
+					pBlock->SetTexture(&aString[0]);
 
 					fscanf(pFile, "%s", &aEndMessage[0]);
-					if (strcmp(&aEndMessage[0], "ENDSETBLOCK") == 0)
-					{
-						break;
-					}
 				}
 				else if (strcmp(&aSetMessage[0], "ENDSETSTAGE") == 0)
 				{
@@ -739,13 +763,19 @@ void CGame::SetBgObjTest(void)
 {
 	// 傾き装置（見た目だけの仮）
 	{
-		//pSlopeDevice->SetPos(D3DXVECTOR3(900.0f, 0.0f, -600.0f));
+		CSlopeDevice* pSlopeDevice0 = CSlopeDevice::Create(SLOPE_DEVICE_MODEL, SLOPE_DEVICE_MODEL);
+		pSlopeDevice0->SetPos(D3DXVECTOR3(1400.0f, BOTTOM_FIELD_POS.y, -500.0f));
 
-		//pMawasiguruma1->SetRot(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
+		CSlopeDevice* pSlopeDevice1 = CSlopeDevice::Create(SLOPE_DEVICE_MODEL, SLOPE_DEVICE_MODEL);
+		pSlopeDevice1->SetPos(D3DXVECTOR3(1400.0f, BOTTOM_FIELD_POS.y, 500.0f));
+		pSlopeDevice1->SetRot(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
 
-		//pMawasiguruma2->SetPos(D3DXVECTOR3(-1400.0f, BOTTOM_FIELD_POS.y, -600.0f));
+		CSlopeDevice* pSlopeDevice2 = CSlopeDevice::Create(SLOPE_DEVICE_MODEL, SLOPE_DEVICE_MODEL);
+		pSlopeDevice2->SetPos(D3DXVECTOR3(-1400.0f, BOTTOM_FIELD_POS.y, -500.0f));
 
-		//pMawasiguruma3->SetRot(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
+		CSlopeDevice* pSlopeDevice3 = CSlopeDevice::Create(SLOPE_DEVICE_MODEL, SLOPE_DEVICE_MODEL);
+		pSlopeDevice3->SetPos(D3DXVECTOR3(-1400.0f, BOTTOM_FIELD_POS.y, 500.0f));
+		pSlopeDevice3->SetRot(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
 	}
 
 	// ジャッキ

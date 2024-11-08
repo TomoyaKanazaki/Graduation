@@ -126,7 +126,7 @@ private:
 	D3DXVECTOR3 m_DevilPos;			//デビルパワーがマップのブロックにデビルスクロールする位置、テスト用
 	D3DXVECTOR3 m_MapDifference;	//マップを動かした時の差分
 	D3DXMATRIX m_mtxWorld;			//ワールドマトリックス
-	int m_nActionCount;				//行動のカウント
+	float m_fActionCount;				//行動のカウント
 	STATE m_State;					//状態
 	int m_nStateCount;				//状態管理用カウント
 
