@@ -202,6 +202,7 @@ HRESULT CGame::Init(void)
 		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(8, 11));
 		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(9, 11));
 		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(10, 11));
+		
 		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(11, 11));
 		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(12, 11));
 		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(13, 11));
