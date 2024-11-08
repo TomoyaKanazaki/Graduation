@@ -198,7 +198,26 @@ HRESULT CGame::Init(void)
 		LoadStageBlock("data\\TXT\\STAGE\\Block.txt");
 
 		// É{ÉèÉ{ÉèÇÃê∂ê¨
-		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(9, 5));
+		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(7, 11));
+		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(8, 11));
+		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(9, 11));
+		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(10, 11));
+		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(11, 11));
+		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(12, 11));
+		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(13, 11));
+		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(14, 11));
+		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(15, 11));
+
+		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(6, 2));
+		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(7, 2));
+		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(8, 2));
+		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(9, 2));
+		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(10, 2));
+		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(12, 2));
+		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(13, 2));
+		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(14, 2));
+		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(15, 2));
+		CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(16, 2));
 
 		// è\éöâÀÇÃê∂ê¨
 		CItem::Create(CItem::TYPE_CROSS, CMapSystem::GRID(11, 2));
