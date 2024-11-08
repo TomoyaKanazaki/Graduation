@@ -47,7 +47,6 @@
 #include "enemyMedaman.h"
 #include "enemyBonbon.h"
 #include "enemyYoungDevil.h"
-#include "item_manager.h"
 #include "bible.h"
 #include "MapSystem.h"
 #include "RailBlock.h"
