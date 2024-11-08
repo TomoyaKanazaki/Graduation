@@ -96,8 +96,6 @@ void CCross::Update(void)
 	// 回転
 	Rotation();
 
-	DebugProc::Print(DebugProc::POINT_CENTER, "十字架座標 : %f, %f, %f\n", GetPos().x, GetPos().y, GetPos().z);
-
 	// 親クラスの更新処理
 	CItem::Update();
 }

@@ -162,15 +162,6 @@ void CItem::Update()
 
 	// 親クラスの更新処理
 	CObjectX::Update();
-
-#ifdef _DEBUG
-
-	CEffect* pEffect = CEffect::Create();
-	pEffect->SetPos(pos);
-	pEffect->SetColor(D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f));
-	pEffect->SetRadius(50.0f);
-
-#endif // _DEBUG
 }
 
 //====================================================================
