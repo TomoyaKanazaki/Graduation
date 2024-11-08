@@ -395,7 +395,7 @@ void CPlayer::Move(void)
 	m_bInput = false;
 
 	//キーボードの移動処理
-	if ((pInputKeyboard->GetPress(DIK_W) && m_OKU) ||
+	if ((pInputKeyboard->GetPress(DIK_W) && m_OKU && m_bGritCenter) ||
 		(pInputKeyboard->GetPress(DIK_W) && m_MoveState == MOVE_STATE_DOWN))
 	{
 		NormarizeMove.z += 1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
@@ -404,7 +404,7 @@ void CPlayer::Move(void)
 		m_bInput = true;
 		m_MoveState = MOVE_STATE_UP;
 	}
-	else if ((pInputKeyboard->GetPress(DIK_S) && m_OKD) ||
+	else if ((pInputKeyboard->GetPress(DIK_S) && m_OKD && m_bGritCenter) ||
 		(pInputKeyboard->GetPress(DIK_S) && m_MoveState == MOVE_STATE_UP))
 	{
 		NormarizeMove.z += -1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
@@ -413,7 +413,7 @@ void CPlayer::Move(void)
 		m_bInput = true;
 		m_MoveState = MOVE_STATE_DOWN;
 	}
-	else if ((pInputKeyboard->GetPress(DIK_A) && m_OKL) ||
+	else if ((pInputKeyboard->GetPress(DIK_A) && m_OKL && m_bGritCenter) ||
 		(pInputKeyboard->GetPress(DIK_A) && m_MoveState == MOVE_STATE_RIGHT))
 	{
 		NormarizeMove.x += -1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
@@ -422,7 +422,7 @@ void CPlayer::Move(void)
 		m_bInput = true;
 		m_MoveState = MOVE_STATE_LEFT;
 	}
-	else if ((pInputKeyboard->GetPress(DIK_D) && m_OKR) ||
+	else if ((pInputKeyboard->GetPress(DIK_D) && m_OKR && m_bGritCenter) ||
 		(pInputKeyboard->GetPress(DIK_D) && m_MoveState == MOVE_STATE_LEFT))
 	{
 		NormarizeMove.x += 1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
