@@ -289,6 +289,9 @@
     <ClCompile Include="source\softcream.cpp">
       <Filter>ソース ファイル\10_item</Filter>
     </ClCompile>
+    <ClCompile Include="source\friedegg.cpp">
+      <Filter>ソース ファイル\10_item</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\SampleLevelModel.h">
@@ -535,6 +538,9 @@
       <Filter>ソース ファイル\00_System</Filter>
     </ClInclude>
     <ClInclude Include="source\softcream.h">
+      <Filter>ソース ファイル\10_item</Filter>
+    </ClInclude>
+    <ClInclude Include="source\friedegg.h">
       <Filter>ソース ファイル\10_item</Filter>
     </ClInclude>
   </ItemGroup>

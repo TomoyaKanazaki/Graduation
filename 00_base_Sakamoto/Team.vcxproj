@@ -40,6 +40,7 @@
     <ClCompile Include="source\enemyYoungDevil.cpp" />
     <ClCompile Include="source\fade.cpp" />
     <ClCompile Include="source\fire.cpp" />
+    <ClCompile Include="source\friedegg.cpp" />
     <ClCompile Include="source\game.cpp" />
     <ClCompile Include="source\input.cpp" />
     <ClCompile Include="source\inputManager.cpp" />
@@ -127,6 +128,7 @@
     <ClInclude Include="source\enemyYoungDevil.h" />
     <ClInclude Include="source\fade.h" />
     <ClInclude Include="source\fire.h" />
+    <ClInclude Include="source\friedegg.h" />
     <ClInclude Include="source\game.h" />
     <ClInclude Include="source\input.h" />
     <ClInclude Include="source\inputManager.h" />

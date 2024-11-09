@@ -27,8 +27,6 @@ public:
 	void Update(void);
 	void Draw(void);
 
-	void Move(D3DXVECTOR3& pos) override;
-
 	void SetGrid(const CMapSystem::GRID& pos) override;
 	bool Hit(CPlayer* pPlayer) override;
 
@@ -36,6 +34,9 @@ public:
 	static CListManager<CBible>* GetList(void); // リスト取得
 
 private:
+
+	// メンバ関数
+	void Move(D3DXVECTOR3& pos) override;
 
 	// メンバ変数
 	CListManager<CBible>::AIterator m_iterator; // イテレーター

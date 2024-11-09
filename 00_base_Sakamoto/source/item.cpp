@@ -28,6 +28,7 @@ namespace
 		100, // 聖書
 		100, // ぼわぼわ
 		400, // ソフトクリーム
+		200 // 目玉焼き
 	};
 }
 
@@ -91,6 +92,11 @@ CItem* CItem::Create(const TYPE eType, const CMapSystem::GRID& pos)
 			pItem = new CSoftCream;
 			break;
 
+		case CItem::TYPE_FRIEDEGG: // 目玉焼き
+			// 必ずオーバーライド先を呼び出すこと
+			assert(false);
+			break;
+
 		default:
 			assert(false);
 			break;
@@ -152,10 +158,9 @@ void CItem::Update()
 		pos.x = posGrid.x;
 		pos.z = posGrid.z;
 	}
-	else
-	{
-		Move(pos);
-	}
+
+	// 移動処理
+	Move(pos);
 
 	// プレイヤーとアイテムの判定
 	CollisionPlayer();

@@ -35,6 +35,7 @@ public:
 		ENEMY_BONBON,
 		ENEMY_LITTLEDEVIL,
 		ENEMY_MAX,
+		ENEMY_NONE
 	};
 
 	//“G‚Ìó‘Ô
