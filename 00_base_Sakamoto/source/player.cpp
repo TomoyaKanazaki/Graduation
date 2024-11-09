@@ -498,6 +498,9 @@ void CPlayer::Attack(void)
 
 		if (pInputKeyboard->GetTrigger(DIK_SPACE) == true)
 		{
+			// 火炎放射
+			CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_FIRE);
+
 			CFire::Create("data\\model\\BlockTest.x", m_pos, m_rot);
 			m_State = STATE_ATTACK;
 			m_nStateCount = FIRE_STOPTIME;
@@ -582,11 +585,38 @@ void CPlayer::StateManager(void)
 		break;
 
 	case STATE_DEATH:
-
 		if (m_nStateCount == 0)
 		{
-			m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-			m_State = STATE_EGG;
+			int WMax = CMapSystem::GetInstance()->GetWightMax();
+			int HMax = CMapSystem::GetInstance()->GetHeightMax();
+			CMapSystem::GRID ReivelPos = CMapSystem::GRID(0, 0);
+			ReivelPos.x = CMapSystem::GetInstance()->GetGritWightNumber(-100.0f);
+			ReivelPos.z = CMapSystem::GetInstance()->GetGritHeightNumber(100.0f);
+
+			for (int nSetW = ReivelPos.x, nCntW = 0; nCntW < WMax; nSetW++, nCntW++)
+			{
+				if (nSetW >= WMax)
+				{
+					nSetW = nSetW - WMax;
+				}
+
+				for (int nSetH = ReivelPos.z, nCntH = 0; nCntH < HMax; nCntH++,  nCntH++)
+				{
+					if (nSetH >= HMax)
+					{
+						nSetH = nSetH - HMax;
+					}
+
+					if (CMapSystem::GetInstance()->GetGritBool(nSetW, nSetH) == false)
+					{
+						SetGrid(CMapSystem::GRID(nSetW, nSetH));
+						m_pos = CMapSystem::GetInstance()->GetGritPos(nSetW, nSetH);
+						m_State = STATE_EGG;
+						return;
+					}
+
+				}
+			}
 		}
 
 		break;
@@ -1107,6 +1137,9 @@ void CPlayer::Death(void)
 
 		if (m_nLife < 0)
 		{
+			// 死亡音
+			CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_DEATH);
+
 			CGame::SetGameEnd(true);
 			CGame::SetGameClear(false);
 			CManager::GetInstance()->SetStage(0);
@@ -1123,8 +1156,8 @@ void CPlayer::Death(void)
 			m_Objmove = INITVECTOR3;
 			m_nStateCount = 150;
 
-			// ダメージ音
-			CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_DAMAGE_PLAYER);
+			// ダメージ音(仮)
+			CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_DEATH);
 		}
 	}
 }

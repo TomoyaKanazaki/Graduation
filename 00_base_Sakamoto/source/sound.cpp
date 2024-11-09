@@ -2,53 +2,14 @@
 
 CSound::SOUNDINFO CSound::m_aSoundInfo[SOUND_LABEL_MAX] =
 {
-	{ "data/BGM/Title.wav", -1 },				// タイトルBGM
-	{ "data/BGM/electronic.wav", -1 },				// ゲームBGM
-	{ "data/BGM/Boss_H_100.wav", -1 },			// ボスBGM
-	{ "data/BGM/Result.wav", -1 },				// リザルトBGM
-	{ "data/SE/Select.wav", 0 },				// 選択音
-	{ "data/SE/Enter.wav", 0 },					// 決定音
-	{ "data/SE/Warning.wav", 0 },				// 警告音
-	{ "data/SE/Boss_Attack_shot.wav", 0 },		// ボスの射撃音
-	{ "data/SE/Boss_Attack_wall.wav", 0 },		// ボスの雨攻撃発動音
-
-	{ "data/SE/BossDash.wav", 0 },				// ボスのダッシュ
-	{ "data/SE/BossSmoke.wav", 0 },				// ボスの煙玉
-	{ "data/SE/BossSlash.wav", 0 },				// ボスの斬撃
-	{ "data/SE/BossBlockSyuriken.wav", 0 },		// ボスの手裏剣防御
-	{ "data/SE/BossSyuriken.wav", 0 },			// ボスの手裏剣
-	{ "data/SE/BossBackJump.wav", 0 },			// ボスの後ろ飛び
-	{ "data/SE/BossKabuto.wav", 0 },			// ボスの兜割り
-	{ "data/SE/BossMow.wav", 0 },				// ボスの薙ぎ払い
-	{ "data/SE/Damage_Boss.wav", 0 },			// ボスのダメージオン
-
-	{ "data/SE/Damage_Player.wav", 0 },			// プレイヤーダメージ音
-	{ "data/SE/Attack_Normal.wav", 0 },			// プレイヤー通常攻撃音
-	{ "data/SE/Attack_Big.wav", 0 },			// プレイヤー空中攻撃音
-	{ "data/SE/Dodge.wav", 0 },					// プレイヤー回避音
-	{ "data/SE/PlayerJump.wav", 0 },			// プレイヤージャンプ音
-
-	{ "data/SE/Attention.wav", 0 },				// 注目切り替え音
-	{ "data/SE/Deathdamage.wav", 0 },			// 死亡ダメージ音
-	{ "data/SE/DeathExplosion.wav", 0 },		// 死亡爆発音
-	{ "data/SE/GOGOGO.wav", 0 },				// ゴゴゴゴゴゴゴ音
-	{ "data/SE/Howl.wav", 0 },					// 咆哮音
-	{ "data/BGM/Tutorial.wav", -1 },			// チュートリアルBGM
-	{ "data/SE/Sword_Swing_00.wav", 0 },		// 忍刀空振り音_01
-	{ "data/SE/Sword_Swing_01.wav", 0 },		// 忍刀空振り音_02
-	{ "data/SE/Sword_Hit.wav", 0 },				// 忍刀ヒット音
-	{ "data/SE/shuriken_shot.wav", 0 },			// 手裏剣発射音
-	{ "data/SE/shuriken_Hit.wav", 0 },			// 手裏剣ヒット音
-	{ "data/SE/Target_Switching.wav", 0 },		// ターゲット切り替え音
-	{ "data/SE/Guard.wav", 0 },					// 刀のガード音
-	{ "data/SE/Writing_brush_01.wav", 0 },		// 筆で書く音
-	{ "data/SE/Scroll_open.wav", 0 },			// 巻物を開く音
-	{ "data/SE/Fire_activation.wav", 0 },		// 火遁発動
-	{ "data/SE/Fire_activation01.wav", 0 },		// 火遁発動
-	{ "data/SE/Bottle_break.wav", 0 },			// 瓶が壊れた音
-	{ "data/SE/Box_break.wav", 0 },				// 木箱が壊れた音
-	{ "data/SE/Bow.wav", 0 },					// 弓を撃った音
-	{ "data/SE/Battle_Entry.wav", 0 },			// 戦闘突入音
+	{ "data/SE/00_SE_death.wav", 0 },				// プレイヤーの死亡
+	{ "data/SE/01_SE_devilhole.wav", 0 },				// デビルホール
+	{ "data/SE/02_SE_egg_break.wav", 0 },				// 卵が割れる
+	{ "data/SE/03_SE_enem_rotation.wav", 0 },				// 方向転換
+	{ "data/SE/04_SE_fire.wav", 0 },				// 火炎放射
+	{ "data/SE/05_SE_getitem.wav", 0 },				// 聖書取得
+	{ "data/SE/06_SE_stageclear.wav", 0 },				// ステージクリア
+	{ "data/SE/07_SE_walking.wav", 0 },				// 歩き
 };
 
 //=============================================================================
