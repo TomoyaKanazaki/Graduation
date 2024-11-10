@@ -60,7 +60,7 @@ public:
 	};
 
 	D3DMATRIX GetMtxWorld(void) { return m_mtxWorld; }
-	static CEnemy* Create(char* aModelName);
+	static CEnemy* Create(const ENEMY_TYPE eType, const CMapSystem::GRID& grid);
 	HRESULT Init(void);
 	virtual void Uninit(void);
 	void Update(void);
@@ -120,7 +120,6 @@ private:
 	void MyObjCreate(void);								// 自分が保持するオブジェクトの生成
 	void MoveSelect(void);								// 移動方向の選択
 	void SearchWall(void);								// 壁のサーチ判定
-	void MapSystemNumber(void);							// どのマスに存在しているか設定する
 
 	CMapSystem::GRID m_Grid;	//グリット番号
 

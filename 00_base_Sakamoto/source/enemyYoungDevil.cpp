@@ -31,6 +31,8 @@ namespace
 
 	const int MOTION_BLEND_NEUTRAL = 5;	// 待機状態のモーションブレンド時間
 	const int MOTION_BLEND_MOVE = 5;	// 移動状態のモーションブレンド時間
+
+	const char* MODEL_PASS = "data\\TXT\\MOTION\\01_enemy\\motion_smalldevil.txt"; // モデルパス
 }
 
 //===========================================
@@ -55,26 +57,6 @@ CEnemyYoungDevil::~CEnemyYoungDevil()
 }
 
 //====================================================================
-//生成処理
-//====================================================================
-CEnemyYoungDevil* CEnemyYoungDevil::Create(const char* pFilename)
-{
-	// 生成
-	CEnemyYoungDevil* pInstance = new CEnemyYoungDevil();
-
-	// 初期化処理
-	if (FAILED(pInstance->Init()))
-	{//初期化処理が失敗した場合
-		return nullptr;
-	}
-
-	// モデル関連の初期化
-	pInstance->InitModel(pFilename);
-
-	return pInstance;
-}
-
-//====================================================================
 //初期化処理
 //====================================================================
 HRESULT CEnemyYoungDevil::Init(void)
@@ -84,7 +66,10 @@ HRESULT CEnemyYoungDevil::Init(void)
 
 	SetEnemyType(CEnemy::ENEMY_MEDAMAN);	//敵の種類設定
 
-		// リストマネージャーの生成
+	// 見た目の設定
+	InitModel(MODEL_PASS);
+
+	// リストマネージャーの生成
 	if (m_pList == nullptr)
 	{
 		m_pList = CListManager<CEnemyYoungDevil>::Create();

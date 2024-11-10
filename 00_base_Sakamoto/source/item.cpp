@@ -169,6 +169,8 @@ void CItem::Update()
 	SetPos(pos);
 	SetRot(rot);
 
+	// TODO : 自身の座標からグリッドの値を取得、設定する
+
 	// 親クラスの更新処理
 	CObjectX::Update();
 }

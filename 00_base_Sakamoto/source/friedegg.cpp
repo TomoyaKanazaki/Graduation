@@ -94,8 +94,8 @@ void CFriedEgg::Update(void)
 	// 消滅条件を満たした場合
 	if (m_fDeleteTimer >= DELET_TIME)
 	{
-		// TODO : 敵を生成する
-
+		// 敵を生成する
+		CEnemy::Create(m_eCreateType, GetGrid());
 
 		// 自身を終了し関数を抜ける
 		Uninit();
@@ -104,6 +104,8 @@ void CFriedEgg::Update(void)
 
 	// 親クラスの更新処理
 	CItem::Update();
+
+	DebugProc::Print(DebugProc::POINT_CENTER, "目玉焼き : %f, %f\n", GetPos().x, GetPos().z);
 }
 
 //====================================================================
