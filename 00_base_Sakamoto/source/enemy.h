@@ -10,17 +10,16 @@
 #include "object.h"
 #include "useful.h"
 #include "MapSystem.h"
+#include "AStar.h"
 
 //前方宣言
-class CModel;
-class CMotion;
+class CCharacter;
 class CObject3D;
 class CLevelModelEffect;
 class CSlowManager;
 
 #define SCREEN_POS_NUM	(8)		// スクリーン座標の数
 #define SEARCH_POS_NUM	(32)	// 探索位置の数
-#define MODEL_NUM		(64)	// モデルの数
 
 //オブジェクトプレイヤークラス
 class CEnemy : public CObject
@@ -78,16 +77,9 @@ public:
 	D3DXVECTOR3 GetRot(void) { return m_rot; }
 	void SetSize(D3DXVECTOR3 size) { m_size = size; }
 	D3DXVECTOR3 GetSize(void) { return m_size; }
-	const char* GetTextModelName(void) { return &m_cFileName[0]; }
 
-	CModel** GetLevelModel(void) { return &m_apModel[0]; }
-	CModel* GetLevelModel(int nIdx) { return m_apModel[nIdx]; }
+	CCharacter* GetCharacter(void);
 
-	CMotion* GetMotion(void){
-		if (m_pMotion != nullptr) { return m_pMotion; }
-		else { return nullptr; }}
-
-	int GetNumModel(void) { return m_nNumModel; }
 	void SetEnemyType(ENEMY_TYPE Type) { m_EnemyType = Type; }
 	ENEMY_TYPE GetEnemyType(void) { return m_EnemyType; }
 
@@ -123,8 +115,6 @@ private:
 
 	CMapSystem::GRID m_Grid;	//グリット番号
 
-	void LoadLevelData(const char* pFilename);
-
 	int m_nLife;				// 体力
 
 	D3DXVECTOR3 m_pos;			//位置
@@ -138,7 +128,6 @@ private:
 	ENEMY_TYPE m_EnemyType;		//敵の種類
 
 	float m_ColorA;				//不透明度
-	char m_cFileName[128];		//ファイルの名前
 
 	E_STATE m_State;			//状態
 	int m_nStateCount;			//状態管理用カウント
@@ -153,11 +142,8 @@ private:
 
 	CSlowManager* m_pSlow;		// スロー情報
 
-	//階層構造とモーションのポインタ
-	CModel* m_apModel[MODEL_NUM];
-	CMotion* m_pMotion;
-	char* m_aModelName[MODEL_NUM];
-	int m_nNumModel;
+	// キャラクターのポインタ
+	CCharacter* m_pCharacter;
 
 	//マップとのマトリックス情報
 	bool m_bMultiMatrix;					//マトリックスの掛け合わせをするかどうか

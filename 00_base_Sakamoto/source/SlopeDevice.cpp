@@ -268,6 +268,11 @@ void CSlopeDevice::StateManager(void)
 //====================================================================
 void CSlopeDevice::Rotate(int nNldxModel,D3DXVECTOR3 rotate)
 {
+	if (m_pCharacter == nullptr)
+	{
+		return;
+	}
+
 	// ƒ‚ƒfƒ‹‚ÌŽæ“¾
 	CModel* pModel = m_pCharacter->GetModel(nNldxModel);
 
