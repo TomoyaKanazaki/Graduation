@@ -258,8 +258,7 @@ void CEnemy::GameUpdate(void)
 	UpdatePos();
 
 	// ©•ª‚Ì”Ô†‚ğİ’è
-	m_Grid.x = CMapSystem::GetInstance()->CMapSystem::CalcGridX(m_pos.x);
-	m_Grid.z = CMapSystem::GetInstance()->CMapSystem::CalcGridZ(m_pos.z);
+	m_Grid = CMapSystem::GetInstance()->CMapSystem::CalcGrid(m_pos);
 
 	//°‚Ì”»’è
 	if (m_pos.y <= 0.0f)
