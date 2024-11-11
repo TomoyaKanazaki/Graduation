@@ -49,7 +49,7 @@ AStar::uint AStar::Node::getScore()
 // 経路を生成するクラス
 //===============================================================
 AStar::Generator::Generator()
-{// 、A*アルゴリズムの主要な部分を管理
+{// A*アルゴリズムの主要な部分を管理
     // 斜め移動を無効
     setDiagonalMovement(false);
 
@@ -57,7 +57,8 @@ AStar::Generator::Generator()
     setHeuristic(&Heuristic::manhattan);
 
     // 移動方向のベクトルのリスト。上下左右と斜め
-    direction = {
+    direction =
+    {
         { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 },
         { -1, -1 }, { 1, 1 }, { -1, 1 }, { 1, -1 }
     };
@@ -127,8 +128,8 @@ void AStar::Generator::clearCollisions()
 AStar::CoordinateList AStar::Generator::findPath(Vec2i source_, Vec2i target_)
 {
     Node *current = nullptr;
-    NodeSet openSet;    // 探索対象のノード
-    NodeSet closedSet;  // 探索済みのノード
+    NodeSet openSet;        // 探索対象のノード
+    NodeSet closedSet;      // 探索済みのノード
     openSet.reserve(100);
     closedSet.reserve(100);
     openSet.push_back(new Node(source_));
@@ -246,7 +247,7 @@ bool AStar::Generator::detectCollision(Vec2i coordinates_)
 }
 
 //===============================================================
-// 2つの座標の差（x と y の差）を返す
+// 2つの座標の差（xとyの差）を返す
 //===============================================================
 AStar::Vec2i AStar::Heuristic::getDelta(Vec2i source_, Vec2i target_)
 {

@@ -10,6 +10,7 @@
 #include "object.h"
 #include "useful.h"
 #include "MapSystem.h"
+#include "AStar.h"
 
 //‘O•ûéŒ¾
 class CModel;
