@@ -158,20 +158,20 @@ void CRailBlock::Update(void)
 	Move(&Pos);
 
 	// 横番号が前回と一致しない時にグリットのブロックの有無を切り替える
-	if (GetWightNumber() != CMapSystem::GetInstance()->GetGritWightNumber(Pos.x))
+	if (GetWightNumber() != CMapSystem::GetInstance()->CalcGridX(Pos.x))
 	{
 		CMapSystem::GetInstance()->SetGritBool(GetWightNumber(), GetHeightNumber(), false);
-		SetWightNumber(CMapSystem::GetInstance()->GetGritWightNumber(Pos.x));
+		SetWightNumber(CMapSystem::GetInstance()->CalcGridX(Pos.x));
 		CMapSystem::GetInstance()->SetGritBool(GetWightNumber(), GetHeightNumber(), true);
 
 		RailCheck();
 	}
 
 	// 縦番号が前回と一致しない時にグリットのブロックの有無を切り替える
-	if (GetHeightNumber() != CMapSystem::GetInstance()->GetGritHeightNumber(Pos.z))
+	if (GetHeightNumber() != CMapSystem::GetInstance()->CalcGridZ(Pos.z))
 	{
 		CMapSystem::GetInstance()->SetGritBool(GetWightNumber(), GetHeightNumber(), false);
-		SetHeightNumber(CMapSystem::GetInstance()->GetGritHeightNumber(Pos.z));
+		SetHeightNumber(CMapSystem::GetInstance()->CalcGridZ(Pos.z));
 		CMapSystem::GetInstance()->SetGritBool(GetWightNumber(), GetHeightNumber(), true);
 
 		RailCheck();
@@ -274,7 +274,7 @@ void CRailBlock::Move(D3DXVECTOR3* Pos)
 	}
 
 	// 左右のグリットの番号がエラー番号(マップ外)に飛び出てる時
-	if (CMapSystem::GetInstance()->GetGritWightNumber(Pos->x) == -1)
+	if (CMapSystem::GetInstance()->CalcGridX(Pos->x) == -1)
 	{
 		if (Pos->x > 0.0f)	//右のグリット外に出たとき
 		{
@@ -306,7 +306,7 @@ void CRailBlock::Move(D3DXVECTOR3* Pos)
 	}
 
 	// 上下のグリットの番号がエラー番号(マップ外)に飛び出てる時
-	if (CMapSystem::GetInstance()->GetGritHeightNumber(Pos->z) == -1)
+	if (CMapSystem::GetInstance()->CalcGridZ(Pos->z) == -1)
 	{
 		if (Pos->z > 0.0f)	//右のグリット外に出たとき
 		{
