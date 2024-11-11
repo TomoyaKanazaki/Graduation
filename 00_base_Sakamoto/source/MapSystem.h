@@ -63,6 +63,8 @@ public:
 	void SetMapSize(D3DXVECTOR3 size) { m_MapSize = size; }
 	D3DXVECTOR3 GetMapSize(void) { return m_MapSize; }
 
+	static void Load(const char* pFilename); // ƒ}ƒbƒvî•ñ‚Ì“Ç‚İ‚İ
+
 public:
 
 	static CMapSystem* pMapSystem;

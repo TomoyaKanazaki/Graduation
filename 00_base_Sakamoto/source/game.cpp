@@ -199,7 +199,7 @@ HRESULT CGame::Init(void)
 	switch (CManager::GetInstance()->GetStage())
 	{
 	case 0:
-		LoadStageBlock("data\\TXT\\STAGE\\Block.txt");
+		CMapSystem::Load("data\\TXT\\STAGE\\Block.txt");
 
 		pDevilHole = CDevilHole::Create("data\\MODEL\\DevilHole.x");
 		pDevilHole->SetGrid(CMapSystem::GRID(11, 7));
@@ -237,7 +237,7 @@ HRESULT CGame::Init(void)
 		break;
 
 	case 1:
-		LoadStageBlock("data\\TXT\\STAGE\\Block.txt");
+		CMapSystem::Load("data\\TXT\\STAGE\\Block.txt");
 
 		pDevilHole = CDevilHole::Create("data\\MODEL\\DevilHole.x");
 		pDevilHole->SetGrid(CMapSystem::GRID(11,7));
@@ -509,71 +509,6 @@ void CGame::DeleteMap(void)
 
 			pObj = pObjNext;
 		}
-	}
-}
-
-//====================================================================
-// ブロックの読み込み配置
-//====================================================================
-void CGame::LoadStageBlock(const char* pFilename)
-{
-	//ファイルを開く
-	FILE* pFile = fopen(pFilename, "r");
-
-	if (pFile != nullptr)
-	{//ファイルが開けた場合
-
-		char Getoff[32] = {};
-		char boolLife[32] = {};
-		char aString[128] = {};			//ゴミ箱
-		char aStartMessage[32] = {};	//スタートメッセージ
-		char aSetMessage[32] = {};		//セットメッセージ
-		char aEndMessage[32] = {};		//終了メッセージ
-
-		fscanf(pFile, "%s", &aStartMessage[0]);
-		if (strcmp(&aStartMessage[0], "STARTSETSTAGE") == 0)
-		{
-			CMapSystem *pMapSystem = CMapSystem::GetInstance();
-			D3DXVECTOR3 MapSystemPos = pMapSystem->GetMapPos();
-			float MapSystemGritSize = pMapSystem->GetGritSize() * 0.5f;
-
-			while (1)
-			{
-				fscanf(pFile, "%s", &aSetMessage[0]);
-				if (strcmp(&aSetMessage[0], "STARTSETBLOCK") == 0)
-				{
-					int WightNumber, HeightNumber;
-
-					fscanf(pFile, "%s", &aString[0]);
-					fscanf(pFile, "%d", &WightNumber);
-
-					fscanf(pFile, "%s", &aString[0]);
-					fscanf(pFile, "%d", &HeightNumber);
-
-					fscanf(pFile, "%s", &aString[0]);
-					fscanf(pFile, "%s", &aString[0]);
-
-					pMapSystem->SetGritBool(WightNumber, HeightNumber, true);
-					CCubeBlock* pBlock = CCubeBlock::Create();
-					pBlock->SetWightNumber(WightNumber);
-					pBlock->SetHeightNumber(HeightNumber);
-					pBlock->SetPos(D3DXVECTOR3(MapSystemPos.x + WightNumber * 100.0f, 50.0f, MapSystemPos.z - HeightNumber * 100.0f));
-					pBlock->SetSize(D3DXVECTOR3(MapSystemGritSize, MapSystemGritSize, MapSystemGritSize));
-					pBlock->SetTexture(&aString[0]);
-
-					fscanf(pFile, "%s", &aEndMessage[0]);
-				}
-				else if (strcmp(&aSetMessage[0], "ENDSETSTAGE") == 0)
-				{
-					break;
-				}
-			}
-		}
-		fclose(pFile);
-	}
-	else
-	{//ファイルが開けなかった場合
-		printf("***ファイルを開けませんでした***\n");
 	}
 }
 

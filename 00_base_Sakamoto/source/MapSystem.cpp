@@ -9,6 +9,9 @@
 #include "game.h"
 #include "Devil.h"
 
+#include "AStar.h"
+#include "CubeBlock.h"
+
 // 定数定義
 namespace
 {
@@ -76,6 +79,15 @@ void CMapSystem::Init()
 
 	m_MapPos = D3DXVECTOR3((m_WightMax * 0.5f) * -100.0f, 0.0f, (m_HeightMax * 0.5f) * 100.0f);
 	m_InitPos = m_MapPos;
+
+	// 経路探索用の情報を取得
+	AStar::Generator::Create();
+	auto generator = AStar::Generator::GetInstance();
+
+	// 経路探索用情報の設定
+	generator->setWorldSize({ NUM_WIGHT, NUM_HEIGHT }); // 世界の大きさ
+	generator->setHeuristic(AStar::Heuristic::euclidean); // 最短ルート計測の種類
+	generator->setDiagonalMovement(false); // 斜め移動をオフ
 }
 
 //====================================================================
@@ -88,6 +100,9 @@ void CMapSystem::Uninit(void)
 		delete pMapSystem;
 		pMapSystem = nullptr;
 	}
+
+	delete AStar::Generator::GetInstance();
+
 }
 
 //====================================================================
@@ -209,6 +224,85 @@ CMapSystem::GRID CMapSystem::CalcGrid(const D3DXVECTOR3& pos)
 	}
 
 	return grid;
+}
+
+//==========================================
+//  マップ情報の読み込み
+//==========================================
+void CMapSystem::Load(const char* pFilename)
+{
+	// TODO : csv対応したい
+
+	// 経路探索用の情報を取得
+	auto generator = AStar::Generator::GetInstance();
+	if (generator == nullptr)
+	{
+		assert(false);
+		generator = AStar::Generator::Create();
+	}
+
+		//ファイルを開く
+	FILE* pFile = fopen(pFilename, "r");
+
+	if (pFile != nullptr)
+	{//ファイルが開けた場合
+
+		char Getoff[32] = {};
+		char boolLife[32] = {};
+		char aString[128] = {};			//ゴミ箱
+		char aStartMessage[32] = {};	//スタートメッセージ
+		char aSetMessage[32] = {};		//セットメッセージ
+		char aEndMessage[32] = {};		//終了メッセージ
+
+		fscanf(pFile, "%s", &aStartMessage[0]);
+		if (strcmp(&aStartMessage[0], "STARTSETSTAGE") == 0)
+		{
+			CMapSystem* pMapSystem = CMapSystem::GetInstance();
+			D3DXVECTOR3 MapSystemPos = pMapSystem->GetMapPos();
+			float MapSystemGritSize = pMapSystem->GetGritSize() * 0.5f;
+
+			while (1)
+			{
+				fscanf(pFile, "%s", &aSetMessage[0]);
+				if (strcmp(&aSetMessage[0], "STARTSETBLOCK") == 0)
+				{
+					int WightNumber, HeightNumber;
+
+					fscanf(pFile, "%s", &aString[0]);
+					fscanf(pFile, "%d", &WightNumber);
+
+					fscanf(pFile, "%s", &aString[0]);
+					fscanf(pFile, "%d", &HeightNumber);
+
+					fscanf(pFile, "%s", &aString[0]);
+					fscanf(pFile, "%s", &aString[0]);
+
+					pMapSystem->SetGritBool(WightNumber, HeightNumber, true);
+					CCubeBlock* pBlock = CCubeBlock::Create();
+					pBlock->SetWightNumber(WightNumber);
+					pBlock->SetHeightNumber(HeightNumber);
+					pBlock->SetPos(D3DXVECTOR3(MapSystemPos.x + WightNumber * 100.0f, 50.0f, MapSystemPos.z - HeightNumber * 100.0f));
+					pBlock->SetSize(D3DXVECTOR3(MapSystemGritSize, MapSystemGritSize, MapSystemGritSize));
+					pBlock->SetTexture(&aString[0]);
+
+					// 経路探索用情報の設定
+					generator->addCollision({ WightNumber, HeightNumber }); // 通過不可地点を追加
+
+					fscanf(pFile, "%s", &aEndMessage[0]);
+				}
+				else if (strcmp(&aSetMessage[0], "ENDSETSTAGE") == 0)
+				{
+					break;
+				}
+			}
+		}
+		fclose(pFile);
+	}
+	else
+	{//ファイルが開けなかった場合
+		printf("***ファイルを開けませんでした***\n");
+	}
+
 }
 
 //==========================================
