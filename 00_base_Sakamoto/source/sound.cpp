@@ -2,6 +2,7 @@
 
 CSound::SOUNDINFO CSound::m_aSoundInfo[SOUND_LABEL_MAX] =
 {
+	// SE
 	{ "data/SE/00_SE_death.wav", 0 },				// プレイヤーの死亡
 	{ "data/SE/01_SE_devilhole.wav", 0 },				// デビルホール
 	{ "data/SE/02_SE_egg_break.wav", 0 },				// 卵が割れる
@@ -10,6 +11,20 @@ CSound::SOUNDINFO CSound::m_aSoundInfo[SOUND_LABEL_MAX] =
 	{ "data/SE/05_SE_getitem.wav", 0 },				// 聖書取得
 	{ "data/SE/06_SE_stageclear.wav", 0 },				// ステージクリア
 	{ "data/SE/07_SE_walking.wav", 0 },				// 歩き
+	{ "data/SE/08_SE_flap.wav", 0 },				// 羽ばたき
+	{ "data/SE/09_SE_result.wav", 0 },				// リザルト
+	{ "data/SE/10_SE_fail.wav", 0 },				// 失敗
+	{ "data/SE/11_SE_explosion.wav", 0 },				// 爆発
+	{ "data/SE/12_SE_born.wav", 0 },				// 生まれる
+	{ "data/SE/13_SE_eat.wav", 0 },				// 捕食
+	{ "data/SE/14_SE_getbible.wav", 0 },				// 聖書
+
+	// BGM
+	{ "data/BGM/00_BGM_title.wav", -1 },				// 聖書
+	{ "data/BGM/01_BGM_result.wav", -1 },				// 聖書
+	{ "data/BGM/02_BGM_stage1.wav", -1 },				// 聖書
+	{ "data/BGM/03_BGM_stage2.wav", -1 },				// 聖書
+
 };
 
 //=============================================================================
