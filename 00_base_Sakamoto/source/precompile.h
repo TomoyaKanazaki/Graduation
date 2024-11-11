@@ -23,11 +23,11 @@
 #include <string>			// 文字列
 #include <string.h>
 
-
 #include "useful.h"
 #include "debugproc.h"
 #include "listManager.h"
 #include "deltatime.h"
+#include <algorithm>
 
 //メモリリーク出力用マクロ
 #define _CRTDBG_MAP_ALLOC
