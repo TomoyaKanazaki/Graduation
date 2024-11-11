@@ -139,6 +139,7 @@ CEnemy* CEnemy::Create(const ENEMY_TYPE eType, const CMapSystem::GRID& grid)
 
 	// À•W‚ðÝ’è
 	pEnemy->SetGrid(grid);
+	pEnemy->SetPos(CMapSystem::GetInstance()->GetGritPos(grid.x, grid.z));
 
 	// 
 	pEnemy->m_EnemyType = eType;
