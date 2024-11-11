@@ -169,7 +169,7 @@ HRESULT CGame::Init(void)
 	int nMapHeigtMax = CMapSystem::GetInstance()->GetHeightMax();
 
 	//è∞ÇÃê∂ê¨
-	m_pMapField = CObjmeshField::Create(nMapWightMax, nMapHeigtMax);
+	m_pMapField = CObjmeshField::Create(nMapWightMax -1, nMapHeigtMax - 1);
 	m_pMapField->SetPos(INITVECTOR3);
 
 	// â∫è∞ÇÃê∂ê¨

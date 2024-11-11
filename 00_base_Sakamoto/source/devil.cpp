@@ -38,7 +38,7 @@
 //===========================================
 namespace
 {
-	float SCROOL_SPEED01 = 1.5f;					// スクロールの移動速度
+	float SCROOL_SPEED01 = 5.5f;					// スクロールの移動速度
 	float SCROOL_SPEED02 = 25.0f;					// スクロールの移動速度
 	float STAGE_ROT_LIMIT = D3DX_PI * 0.25f;	// スクロールの移動速度
 }
@@ -506,7 +506,7 @@ void CDevil::StateManager(void)
 	case STATE_SCROLL:
 
 #if SCROLL_ID == 0
-		Move(m_DevilArrow);
+		//Move(m_DevilArrow);
 #else
 
 		if (m_nStateCount % 25 == 0)
@@ -937,6 +937,7 @@ void CDevil::GritScroll(D3DXVECTOR3 Move)
 
 	//			CEffect* pEffect = CEffect::Create();
 	//			pEffect->SetPos(CountPos);
+	//			pEffect->SetRadius(20.0f);
 	//			pEffect->SetLife(10);
 	//		}
 	//	}
