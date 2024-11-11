@@ -22,6 +22,7 @@
     <ClCompile Include="source\2DEffect.cpp" />
     <ClCompile Include="source\2DUI.cpp" />
     <ClCompile Include="source\2DUI_edit.cpp" />
+    <ClCompile Include="source\AStar.cpp" />
     <ClCompile Include="source\bible.cpp" />
     <ClCompile Include="source\bowabowa.cpp" />
     <ClCompile Include="source\camera.cpp" />
@@ -111,6 +112,7 @@
     <ClInclude Include="source\2DEffect.h" />
     <ClInclude Include="source\2DUI.h" />
     <ClInclude Include="source\2DUI_edit.h" />
+    <ClInclude Include="source\AStar.h" />
     <ClInclude Include="source\bible.h" />
     <ClInclude Include="source\bowabowa.h" />
     <ClInclude Include="source\camera.h" />
