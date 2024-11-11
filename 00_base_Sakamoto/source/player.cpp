@@ -908,27 +908,27 @@ void CPlayer::CollisionStageOut(void)
 {
 	D3DXVECTOR3 D_pos = CGame::GetDevil()->GetDevilPos();
 	D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
-	float G_Size = CMapSystem::GetInstance()->GetGritSize() * 0.5f;
+	float G_Size = CMapSystem::GetInstance()->GetGritSize();
 
-	if (m_pos.x + G_Size > D_pos.x + MapSize.x)
+	if (m_pos.x + G_Size > D_pos.x + MapSize.x)	// âE
 	{
 		m_pos.x = D_pos.x + MapSize.x - G_Size;
 		m_State = STATE_WAIT;
 		m_move.x = 0.0f;
 	}
-	if (m_pos.x - G_Size < D_pos.x - MapSize.x)
+	if (m_pos.x - G_Size < D_pos.x - MapSize.x)	// ç∂
 	{
 		m_pos.x = D_pos.x - MapSize.x + G_Size;
 		m_State = STATE_WAIT;
 		m_move.x = 0.0f;
 	}
-	if (m_pos.z + G_Size > D_pos.z + MapSize.z)
+	if (m_pos.z + G_Size > D_pos.z + MapSize.z)	// è„
 	{
 		m_pos.z = D_pos.z + MapSize.z - G_Size;
 		m_State = STATE_WAIT;
 		m_move.z = 0.0f;
 	}
-	if (m_pos.z - G_Size < D_pos.z - MapSize.z)
+	if (m_pos.z - G_Size < D_pos.z - MapSize.z)	// â∫
 	{
 		m_pos.z = D_pos.z - MapSize.z + G_Size;
 		m_State = STATE_WAIT;

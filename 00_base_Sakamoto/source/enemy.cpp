@@ -139,6 +139,7 @@ CEnemy* CEnemy::Create(const ENEMY_TYPE eType, const CMapSystem::GRID& grid)
 
 	// 座標を設定
 	pEnemy->SetGrid(grid);
+	pEnemy->SetPos(CMapSystem::GetInstance()->GetGritPos(grid.x, grid.z));
 
 	// 
 	pEnemy->m_EnemyType = eType;
@@ -258,8 +259,7 @@ void CEnemy::GameUpdate(void)
 	UpdatePos();
 
 	// 自分の番号を設定
-	m_Grid.x = CMapSystem::GetInstance()->CMapSystem::CalcGridX(m_pos.x);
-	m_Grid.z = CMapSystem::GetInstance()->CMapSystem::CalcGridZ(m_pos.z);
+	m_Grid = CMapSystem::GetInstance()->CMapSystem::CalcGrid(m_pos);
 
 	//床の判定
 	if (m_pos.y <= 0.0f)
@@ -503,21 +503,21 @@ void CEnemy::CollisionOut()
 		float GritSize = CMapSystem::GetInstance()->GetGritSize();
 
 		// ステージ外の当たり判定
-		if (Pos.x + MapSize.x < m_pos.x)
+		if (Pos.x + MapSize.x < m_pos.x) // 右
 		{
 			m_pos.x = Pos.x -MapSize.x - GritSize;
 		}
-		if (Pos.x - MapSize.x - GritSize > m_pos.x)
+		if (Pos.x - MapSize.x - GritSize > m_pos.x) // 左
 		{
 			m_pos.x = Pos.x + MapSize.x;
 		}
-		if (Pos.z + MapSize.z < m_pos.z)
+		if (Pos.z + MapSize.z + GritSize < m_pos.z) // 上
 		{
-			m_pos.z = Pos.z - MapSize.z - GritSize;
+			m_pos.z = Pos.z - MapSize.z;
 		}
-		if (Pos.z - MapSize.z - GritSize > m_pos.z)
+		if (Pos.z - MapSize.z > m_pos.z) // 下
 		{
-			m_pos.z = Pos.z + MapSize.z;
+			m_pos.z = Pos.z + MapSize.z + GritSize;
 		}
 	}
 }
