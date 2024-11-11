@@ -198,6 +198,8 @@ void CRollRock::GameUpdate(void)
 	// 移動した分だけ回転
 	m_rot.x += (m_pos.z - m_posOld.z) * D3DX_PI * 0.01f;
 
+	CollisionOut();
+
 	//位置更新
 	CObjectX::SetPos(m_pos);
 	CObjectX::SetRot(m_rot);
@@ -254,6 +256,42 @@ void CRollRock::CollisionWall(useful::COLLISION XYZ)
 		if (useful::CollisionBlock(pos, pos, Move, Size, &m_pos, m_posOld, &m_move, &ObjMove, MySize, &Jump, XYZ) == true)
 		{
 
+		}
+	}
+}
+
+//====================================================================
+// ステージ外との当たり判定
+//====================================================================
+void CRollRock::CollisionOut()
+{
+	// キューブブロックのリスト構造が無ければ抜ける
+	if (CDevil::GetList() == nullptr) { return; }
+	std::list<CDevil*> list = CDevil::GetList()->GetList();    // リストを取得
+
+	// キューブブロックリストの中身を確認する
+	for (CDevil* pDevil : list)
+	{
+		D3DXVECTOR3 Pos = pDevil->GetDevilPos();
+		D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
+		float GritSize = CMapSystem::GetInstance()->GetGritSize();
+
+		// ステージ外の当たり判定
+		if (Pos.x + MapSize.x < m_pos.x) // 右
+		{
+			m_pos.x = Pos.x - MapSize.x - GritSize;
+		}
+		if (Pos.x - MapSize.x - GritSize > m_pos.x) // 左
+		{
+			m_pos.x = Pos.x + MapSize.x;
+		}
+		if (Pos.z + MapSize.z + GritSize < m_pos.z) // 上
+		{
+			m_pos.z = Pos.z - MapSize.z;
+		}
+		if (Pos.z - MapSize.z > m_pos.z) // 下
+		{
+			m_pos.z = Pos.z + MapSize.z + GritSize;
 		}
 	}
 }

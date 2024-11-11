@@ -42,6 +42,7 @@ public:
 private:
 	void Move(void);
 	void CollisionWall(useful::COLLISION XYZ);		//壁との当たり判定
+	void CollisionOut();							//ステージ外との当たり判定
 
 	CMapSystem::GRID m_Grid;	//グリット番号
 	int m_nIdxXModel;				//Xモデルの番号
