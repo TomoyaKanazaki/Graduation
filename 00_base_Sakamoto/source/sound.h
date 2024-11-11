@@ -14,6 +14,7 @@ public:
 	//*****************************************************************************
 	typedef enum
 	{
+		// SE
 		SOUND_LABEL_SE_DEATH = 0,	// タマゴンの死亡
 		SOUND_LABEL_SE_DEVILHOLE,	// デビルホール
 		SOUND_LABEL_SE_BREAKEGG,	// 卵が割れる
@@ -22,6 +23,20 @@ public:
 		SOUND_LABEL_SE_GET_BIBLE,	// 聖書の取得
 		SOUND_LABEL_SE_STAGECLEAR,	// ステージクリア
 		SOUND_LABEL_SE_WALK,	// タマゴンの徒歩	
+		SOUND_LABEL_SE_FLAP,	// 羽ばたき	
+		SOUND_LABEL_SE_RESULT,	// リザルトの効果音
+		SOUND_LABEL_SE_FAIL,	// 失敗時
+		SOUND_LABEL_SE_EXPLOSION,	// 爆発
+		SOUND_LABEL_SE_BORN,	// タマゴンが生まれる
+		SOUND_LABEL_SE_EAT,	// タマゴンの捕食
+		SOUND_LABEL_SE_GET_CROSS,	// 十字架
+
+		// BGM
+		SOUND_LABEL_BGM_TITLE,	// タイトルbgm
+		SOUND_LABEL_BGM_RESULT,	// リザルトbgm
+		SOUND_LABEL_BGM_STAGE1,	// ステージ1bgm	
+		SOUND_LABEL_BGM_STAGE2,	// ステージ2bgm	
+
 		SOUND_LABEL_MAX,
 	} SOUND_LABEL;
 
