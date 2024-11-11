@@ -268,13 +268,16 @@ void CSlopeDevice::StateManager(void)
 //====================================================================
 void CSlopeDevice::Rotate(int nNldxModel,D3DXVECTOR3 rotate)
 {
-	// ƒ‚ƒfƒ‹‚Ì‰ñ“]Ž²‚ðŽæ“¾
-	if (m_pCharacter->GetModel(nNldxModel) == nullptr)
+	// ƒ‚ƒfƒ‹‚ÌŽæ“¾
+	CModel* pModel = m_pCharacter->GetModel(nNldxModel);
+
+	if (pModel == nullptr)
 	{
 		return;
 	}
 
-	D3DXVECTOR3 rot = m_pCharacter->GetModel(nNldxModel)->GetStartRot();
+	// ƒ‚ƒfƒ‹‚Ì‰ñ“]Ž²‚ðŽæ“¾
+	D3DXVECTOR3 rot = pModel->GetStartRot();
 	
 	if (m_rot.y == 0.0f)
 	{
@@ -288,7 +291,7 @@ void CSlopeDevice::Rotate(int nNldxModel,D3DXVECTOR3 rotate)
 	}
 
 	// ƒ‚ƒfƒ‹‚Ì‰ñ“]Ý’è
-	m_pCharacter->GetModel(nNldxModel)->SetStartRot(rot);
+	pModel->SetStartRot(rot);
 }
 
 //====================================================================

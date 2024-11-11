@@ -26,8 +26,8 @@ public:
 	void Update(void);
 	void Draw(void);
 
-	CModel* GetModel(int nCnt) { if (m_apModel[nCnt] != nullptr) { return m_apModel[nCnt]; } }
-	CMotion* GetMotion(void) { if (m_pMotion != nullptr) { return m_pMotion; } }
+	CModel* GetModel(int nCnt);
+	CMotion* GetMotion(void);
 
 private:
 
