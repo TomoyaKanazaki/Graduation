@@ -11,8 +11,7 @@
 
 #define MODEL_NUM		(64)	// モデルの数
 
-class CModel;
-class CMotion;
+class CCharacter;
 
 //オブジェクトプレイヤークラス
 class CSlopeDevice : public CObject
@@ -75,8 +74,6 @@ private:
 	void StateManager(void);
 	void Rotate(int nNldxModel, D3DXVECTOR3 rotate);
 
-	void LoadModel(const char* pFilename);
-
 	D3DXVECTOR3 m_pos;			//位置
 	D3DXVECTOR3 m_posOld;		//過去の位置
 	D3DXVECTOR3 m_rot;			//向き
@@ -87,12 +84,7 @@ private:
 	STATE m_State;					//状態
 	int m_nStateCount;				//状態管理用変数
 
-	//階層構造とモーションのポインタ
-	CModel* m_apModel[MODEL_NUM];
-	CMotion* m_pMotion;
-	char* m_aModelName[MODEL_NUM];
-	int m_nNumModel;
-	char m_cFileName[128];		//ファイルの名前
+	CCharacter* m_pCharacter;			// キャラクターのクラス
 
 	//マップとのマトリックス情報
 	bool m_bMultiMatrix;					// マトリックスの掛け合わせをするかどうか

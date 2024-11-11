@@ -7,7 +7,11 @@
 #ifndef _CHARACTER_H_
 #define _CHARACTER_H_
 
-#include "object.h"
+class CModel;
+class CMotion;
+
+#define MODEL_NUM		(64)	// モデルの数
+#define FILE_NAME_SIZE	(128)	// ファイル名の最大文字数
 
 //オブジェクトプレイヤークラス
 class CCharacter
@@ -22,9 +26,17 @@ public:
 	void Update(void);
 	void Draw(void);
 
+	CModel* GetModel(int nCnt) { if (m_apModel[nCnt] != nullptr) { return m_apModel[nCnt]; } }
+	CMotion* GetMotion(void) { if (m_pMotion != nullptr) { return m_pMotion; } }
+
 private:
 
+	void LoadModel(const char* pFilename);
 
+	CModel* m_apModel[MODEL_NUM];
+	CMotion* m_pMotion;
+	char m_aModelName[FILE_NAME_SIZE];
+	int m_nNumModel;
 };
 
 #endif
