@@ -157,7 +157,6 @@ private:
 	void CollisionEnemy(void);						// 敵との当たり判定
 	void CollisionStageOut(void);					// ステージ外の当たり判定
 	void CollisionPressStageOut(void);				// ステージ外の圧死判定
-	void MapSystemNumber(void);						// プレイヤーがマップのどのマスに存在しているか設定する
 
 	void CameraPosUpdate(void);	//カメラ位置更新処理
 	void PosUpdate(void);		//位置更新処理

@@ -30,6 +30,11 @@
 #include "objmeshField.h"
 #include "sound.h"
 
+#include "enemyBonbon.h"
+#include "enemyMedaman.h"
+#include "enemyYoungDevil.h"
+#include "friedegg.h"
+
 //===========================================
 // 定数定義
 //===========================================
@@ -101,21 +106,44 @@ CEnemy::~CEnemy()
 //====================================================================
 //生成処理
 //====================================================================
-CEnemy* CEnemy::Create(char* aModelName)
+CEnemy* CEnemy::Create(const ENEMY_TYPE eType, const CMapSystem::GRID& grid)
 {
-	// 生成
-	CEnemy* pInstance = new CEnemy();
+	// ポインタ宣言
+	CEnemy* pEnemy = nullptr;
+
+	// タイプごとのインスタンス生成
+	switch (eType)
+	{
+	case ENEMY_MEDAMAN: // めだまん
+		pEnemy = new CEnemyMedaman;
+		break;
+
+	case ENEMY_BONBON: // ぼんぼん
+		pEnemy = new CEnemyBonbon;
+		break;
+
+	case ENEMY_LITTLEDEVIL: // こでびる
+		pEnemy = new CEnemyYoungDevil;
+		break;
+
+	default:
+		assert(false);
+		break;
+	}
 
 	//初期化処理
-	if (FAILED(pInstance->Init()))
+	if (FAILED(pEnemy->Init()))
 	{//初期化処理が失敗した場合
 		return nullptr;
 	}
-	
-	// モデル関連初期化処理
-	pInstance->InitModel(aModelName);
 
-	return pInstance;
+	// 座標を設定
+	pEnemy->SetGrid(grid);
+
+	// 
+	pEnemy->m_EnemyType = eType;
+
+	return pEnemy;
 }
 
 //====================================================================
@@ -230,7 +258,7 @@ void CEnemy::GameUpdate(void)
 	UpdatePos();
 
 	// 自分の番号を設定
-	MapSystemNumber();
+	m_Grid = CMapSystem::GetInstance()->CMapSystem::CalcGrid(m_pos);
 
 	//床の判定
 	if (m_pos.y <= 0.0f)
@@ -301,6 +329,9 @@ bool CEnemy::Hit(int nLife)
 	if (m_nLife < 0)
 	{// 体力0以下
 		Uninit();
+
+		// 目玉焼きを生成
+		CFriedEgg::Create(m_EnemyType, m_Grid);
 	}
 
 	return true;
@@ -691,15 +722,6 @@ void CEnemy::SearchWall(void)
 		m_OKU = false;	//上
 		m_OKD = false;	//下
 	}
-}
-
-//====================================================================
-// マップのどのマスに存在しているか設定する
-//====================================================================
-void CEnemy::MapSystemNumber(void)
-{
-	m_Grid.x = CMapSystem::GetInstance()->GetGritWightNumber(m_pos.x);
-	m_Grid.z = CMapSystem::GetInstance()->GetGritHeightNumber(m_pos.z);
 }
 
 //====================================================================

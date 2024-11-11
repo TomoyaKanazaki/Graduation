@@ -25,6 +25,7 @@ public:
 		TYPE_BIBLE,		// 聖書
 		TYPE_BOWABOWA,	// ぼわぼわ
 		TYPE_SOFTCREAM,	// ソフトクリーム
+		TYPE_FRIEDEGG,	// 目玉焼き
 		TYPE_MAX,
 		TYPE_NONE
 	};
@@ -38,8 +39,6 @@ public:
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);
-
-	virtual void Move(D3DXVECTOR3& pos) {} // 移動処理
 
 	// テクスチャ番号取得
 	int GetIdx(void) { return m_nIdxTexture; }
@@ -73,6 +72,9 @@ public:
 	static CItem* Create(const TYPE eType, const CMapSystem::GRID& pos);
 
 private:
+
+	// メンバ関数
+	virtual void Move(D3DXVECTOR3& pos) {} // 移動処理
 
 	TYPE m_eType;		// 種類
 

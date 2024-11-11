@@ -307,7 +307,7 @@ void CPlayer::GameUpdate(void)
 	}
 
 	// プレイヤーがマップのどのマスに存在しているか設定する
-	MapSystemNumber();
+	m_Grid = CMapSystem::GetInstance()->CMapSystem::CalcGrid(m_pos);
 
 	//状態の管理
 	StateManager();
@@ -590,8 +590,7 @@ void CPlayer::StateManager(void)
 			int WMax = CMapSystem::GetInstance()->GetWightMax();
 			int HMax = CMapSystem::GetInstance()->GetHeightMax();
 			CMapSystem::GRID ReivelPos = CMapSystem::GRID(0, 0);
-			ReivelPos.x = CMapSystem::GetInstance()->GetGritWightNumber(-100.0f);
-			ReivelPos.z = CMapSystem::GetInstance()->GetGritHeightNumber(100.0f);
+			ReivelPos = CMapSystem::GetInstance()->CalcGrid(D3DXVECTOR3(-100.0f, 0.0f, 100.0f));
 
 			for (int nSetW = ReivelPos.x, nCntW = 0; nCntW < WMax; nSetW++, nCntW++)
 			{
@@ -963,15 +962,6 @@ void CPlayer::CollisionPressStageOut(void)
 			Death();
 		}
 	}
-}
-
-//====================================================================
-// プレイヤーがマップのどのマスに存在しているか設定する
-//====================================================================
-void CPlayer::MapSystemNumber(void)
-{
-	m_Grid.x = CMapSystem::GetInstance()->GetGritWightNumber(m_pos.x);
-	m_Grid.z = CMapSystem::GetInstance()->GetGritHeightNumber(m_pos.z);
 }
 
 //====================================================================

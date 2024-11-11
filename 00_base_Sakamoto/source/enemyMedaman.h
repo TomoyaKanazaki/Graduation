@@ -27,7 +27,6 @@ public:
 		ACTION_MAX,			// 最大
 	};
 
-	static CEnemyMedaman* Create(const char* pFilename);
 	HRESULT Init(void);
 	void Uninit(void);
 	void Update(void);
@@ -42,7 +41,6 @@ public:
 
 private:
 
-	void MyObjCreate(void);								//自分が保持するオブジェクトの生成
 	void ActionState(void);								//モーションと状態の管理
 	void StateManager(void);							//状態管理
 	void SetDamage(float Damage);						//ダメージの判定

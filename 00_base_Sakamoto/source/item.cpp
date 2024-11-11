@@ -28,6 +28,7 @@ namespace
 		100, // 聖書
 		100, // ぼわぼわ
 		400, // ソフトクリーム
+		200 // 目玉焼き
 	};
 }
 
@@ -91,6 +92,11 @@ CItem* CItem::Create(const TYPE eType, const CMapSystem::GRID& pos)
 			pItem = new CSoftCream;
 			break;
 
+		case CItem::TYPE_FRIEDEGG: // 目玉焼き
+			// 必ずオーバーライド先を呼び出すこと
+			assert(false);
+			break;
+
 		default:
 			assert(false);
 			break;
@@ -120,6 +126,10 @@ HRESULT CItem::Init(const char* pModelName)
 	//マップとのマトリックスの掛け合わせをオンにする
 	SetMultiMatrix(true);
 
+	D3DXVECTOR3 pos = GetPos();
+	pos.y = 50.0f;
+	SetPos(pos);
+
 	return S_OK;
 }
 
@@ -148,10 +158,9 @@ void CItem::Update()
 		pos.x = posGrid.x;
 		pos.z = posGrid.z;
 	}
-	else
-	{
-		Move(pos);
-	}
+
+	// 移動処理
+	Move(pos);
 
 	// プレイヤーとアイテムの判定
 	CollisionPlayer();
@@ -159,6 +168,8 @@ void CItem::Update()
 	// 情報の更新
 	SetPos(pos);
 	SetRot(rot);
+
+	// TODO : 自身の座標からグリッドの値を取得、設定する
 
 	// 親クラスの更新処理
 	CObjectX::Update();
@@ -188,16 +199,18 @@ bool CItem::CollisionPlayer()
 	// プレイヤーリストの中身を確認する
 	for (CPlayer* player : list)
 	{
-		D3DXVECTOR3 pos = player->GetPos();
-		D3DXVECTOR3 size = player->GetSize();
+		// プレイヤーの座標(グリッド単位)を取得
+		CMapSystem::GRID gridPlayer = player->GetGrid();
 
-		// 矩形の当たり判定
-		if (useful::CollisionCircle(posThis, pos, size.x))
-		{
-			// 取得に成功している場合スコアを加算する
-			if (Hit(player)) { CGame::GetScore()->AddScore(ITEM_SCORE[m_eType]); }
-			return true;
-		}
+		// 存在座標が一致していない場合次に進む
+		if (m_Grid.x != gridPlayer.x || m_Grid.z != gridPlayer.z)
+		{ continue; }
+
+		// 取得に失敗した場合次に進む
+		if (!Hit(player)) { continue; }
+
+		// スコアを加算する
+		CGame::GetScore()->AddScore(ITEM_SCORE[m_eType]);
 	}
 
 	return false;

@@ -223,30 +223,6 @@ HRESULT CGame::Init(void)
 			}
 		}
 
-
-		// É{ÉèÉ{ÉèÇÃê∂ê¨
-		//CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(7, 11));
-		//CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(8, 11));
-		//CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(9, 11));
-		//CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(10, 11));
-		//
-		//CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(11, 11));
-		//CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(12, 11));
-		//CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(13, 11));
-		//CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(14, 11));
-		//CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(15, 11));
-
-		//CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(6, 2));
-		//CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(7, 2));
-		//CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(8, 2));
-		//CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(9, 2));
-		//CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(10, 2));
-		//CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(12, 2));
-		//CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(13, 2));
-		//CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(14, 2));
-		//CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(15, 2));
-		//CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(16, 2));
-
 		// è\éöâÀÇÃê∂ê¨
 		CItem::Create(CItem::TYPE_CROSS, CMapSystem::GRID(11, 2));
 		CItem::Create(CItem::TYPE_CROSS, CMapSystem::GRID(20, 4));
@@ -284,14 +260,10 @@ HRESULT CGame::Init(void)
 	pScrollAllow = CScrollArrow::Create();
 	pScrollAllow->SetPos((D3DXVECTOR3(1200.0f, 120.0f, 0.0f)));
 
-	CEnemyMedaman* pMedaman = CEnemyMedaman::Create("data\\TXT\\MOTION\\01_enemy\\motion_medaman.txt");
-	pMedaman->SetPos(D3DXVECTOR3(CMapSystem::GetInstance()->GetGritPos(9, 7)));
-
-	CEnemyBonbon* pBonbon = CEnemyBonbon::Create("data\\TXT\\MOTION\\01_enemy\\motion_bonbon.txt");
-	pBonbon->SetPos(D3DXVECTOR3(CMapSystem::GetInstance()->GetGritPos(9, 7)));
-
-	CEnemyYoungDevil* pYoungDevil = CEnemyYoungDevil::Create("data\\TXT\\MOTION\\01_enemy\\motion_smalldevil.txt");
-	pYoungDevil->SetPos(D3DXVECTOR3(CMapSystem::GetInstance()->GetGritPos(9, 7)));
+	// ìGÇÃê∂ê¨
+	CEnemy::Create(CEnemy::ENEMY_MEDAMAN, CMapSystem::GRID(9, 7));
+	CEnemy::Create(CEnemy::ENEMY_BONBON, CMapSystem::GRID(9, 7));
+	CEnemy::Create(CEnemy::ENEMY_LITTLEDEVIL, CMapSystem::GRID(9, 7));
 
 #if _DEBUG
 	if (m_pEdit == nullptr)
