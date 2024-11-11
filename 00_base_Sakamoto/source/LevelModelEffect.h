@@ -1,10 +1,12 @@
 //============================================
 //
-//	プレイヤーの処理 [LevelModelEffect.h]
+//	プレイヤーのレベルエフェクト処理 [LevelModelEffect.h]
 //	Author:sakamoto kai
 //
 //============================================
-#pragma once
+
+#ifndef _LEVEL_MODEL_EFFECT_H_
+#define _LEVEL_MODEL_EFFECT_H_
 
 #include "object.h"
 
@@ -12,7 +14,7 @@
 class CModel;
 class CMotion;
 
-//オブジェクトプレイヤークラス
+// プレイヤーのレベルエフェクト処理クラス
 class CLevelModelEffect : public CObject
 {
 public:
@@ -68,3 +70,4 @@ private:
 	// メンバ変数
 	CListManager<CLevelModelEffect>::AIterator m_iterator; // イテレーター
 };
+#endif
