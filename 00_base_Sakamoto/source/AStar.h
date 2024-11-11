@@ -63,6 +63,7 @@ namespace AStar
 
     public:
         Generator();
+        ~Generator() { delete m_pGenerator; m_pGenerator = nullptr; }
         void setWorldSize(Vec2i worldSize_);        // 探索するグリッド（ワールド）のサイズを設定
         void setDiagonalMovement(bool enable_);     // 斜め移動の許可を設定。trueだと8方向(斜め含む)に移動可能
         void setHeuristic(HeuristicFunction heuristic_);        // ヒューリスティック関数を設定
@@ -71,12 +72,19 @@ namespace AStar
         void removeCollision(Vec2i coordinates_);   // 指定した座標の障害物を削除
         void clearCollisions();     // すべての障害物を削除
 
+        // 静的メンバ関数
+        static Generator* GetInstance() { return m_pGenerator; } // 自身の取得
+        static Generator* Create(); //生成処理
+
     private:
         HeuristicFunction heuristic;        // ヒューリスティック関数
         CoordinateList direction;   // 移動方向を格納するリスト（通常は上下左右、斜めも含む）
         CoordinateList walls;       // 障害物を格納するリスト
         Vec2i worldSize;    // 探索対象のグリッドのサイズ
         uint directions;    // 移動方向の数（4方向または8方向）
+
+        // シングルトン
+        static Generator* m_pGenerator;
     };
 
     class Heuristic

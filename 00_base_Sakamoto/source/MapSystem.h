@@ -9,6 +9,7 @@
 
 #include "main.h"
 #include "manager.h"
+#include "AStar.h"
 
 class CObject2D;
 
@@ -63,6 +64,7 @@ public:
 	D3DXVECTOR3 GetMapSize(void) { return m_MapSize; }
 
 public:
+
 	static CMapSystem* pMapSystem;
 
 	static bool m_nMapGrit[NUM_WIGHT][NUM_HEIGHT];	//グリットにブロックが存在していたらtrue
