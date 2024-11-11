@@ -125,10 +125,11 @@ void CSlopeDevice::Uninit(void)
 		m_pList->Release(m_pList);
 	}
 
-	//モーションの終了処理
+	// キャラクターの終了処理
 	if (m_pCharacter != nullptr)
 	{
-		//モーションの破棄
+		// キャラクターの破棄
+		m_pCharacter->Uninit();
 		delete m_pCharacter;
 		m_pCharacter = nullptr;
 	}
@@ -165,7 +166,7 @@ void CSlopeDevice::TitleUpdate(void)
 {
 	if (m_pCharacter != nullptr)
 	{
-		//モーションの更新
+		// キャラクターの更新
 		m_pCharacter->Update();
 	}
 }
@@ -180,7 +181,7 @@ void CSlopeDevice::GameUpdate(void)
 
 	if (m_pCharacter != nullptr)
 	{
-		//モーションの更新
+		// キャラクターの更新
 		m_pCharacter->Update();
 	}
 }
@@ -233,7 +234,7 @@ void CSlopeDevice::Draw(void)
 //====================================================================
 void CSlopeDevice::InitModel(const char* pModelNameSlopeDevice, const char* pModelNameEnemy)
 {
-	if (m_pCharacter != nullptr)
+	if (m_pCharacter == nullptr)
 	{
 		m_pCharacter = CCharacter::Create(pModelNameSlopeDevice);
 	}
