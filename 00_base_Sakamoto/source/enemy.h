@@ -77,7 +77,6 @@ public:
 	D3DXVECTOR3 GetRot(void) { return m_rot; }
 	void SetSize(D3DXVECTOR3 size) { m_size = size; }
 	D3DXVECTOR3 GetSize(void) { return m_size; }
-	const char* GetTextModelName(void) { return &m_cFileName[0]; }
 
 	CCharacter* GetCharacter(void);
 
@@ -116,8 +115,6 @@ private:
 
 	CMapSystem::GRID m_Grid;	//グリット番号
 
-	void LoadLevelData(const char* pFilename);
-
 	int m_nLife;				// 体力
 
 	D3DXVECTOR3 m_pos;			//位置
@@ -131,7 +128,6 @@ private:
 	ENEMY_TYPE m_EnemyType;		//敵の種類
 
 	float m_ColorA;				//不透明度
-	char m_cFileName[128];		//ファイルの名前
 
 	E_STATE m_State;			//状態
 	int m_nStateCount;			//状態管理用カウント
