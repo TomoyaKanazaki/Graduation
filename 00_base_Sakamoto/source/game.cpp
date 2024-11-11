@@ -51,6 +51,7 @@
 #include "MapSystem.h"
 #include "RailBlock.h"
 #include "Rail.h"
+#include "RollRock.h"
 
 #include "bowabowa.h"
 
@@ -252,6 +253,11 @@ HRESULT CGame::Init(void)
 	}
 
 	//int n = CBowabowa::GetList()->GetNumAll();
+
+	//“]‚ª‚éŠâ‚Ì¶¬
+	CRollRock *pRock = CRollRock::Create("data\\MODEL\\BlockTest.x");
+	D3DXVECTOR3 RockPos = CMapSystem::GetInstance()->GetGritPos(16, 2);
+	pRock->SetPos(D3DXVECTOR3(RockPos.x, 50.0f, RockPos.z));
 
 	CScrollArrow* pScrollAllow = nullptr;
 	pScrollAllow = CScrollArrow::Create();

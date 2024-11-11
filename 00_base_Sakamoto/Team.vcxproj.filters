@@ -301,6 +301,9 @@
     <ClCompile Include="source\AStar.cpp">
       <Filter>ソース ファイル\11_algorithm</Filter>
     </ClCompile>
+    <ClCompile Include="source\RollRock.cpp">
+      <Filter>ソース ファイル\07_Map</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\SampleLevelModel.h">
@@ -557,6 +560,9 @@
     </ClInclude>
     <ClInclude Include="source\AStar.h">
       <Filter>ソース ファイル\11_algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="source\RollRock.h">
+      <Filter>ソース ファイル\07_Map</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

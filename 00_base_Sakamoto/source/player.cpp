@@ -34,6 +34,8 @@
 #include "bible.h"
 #include "RailBlock.h"
 #include "objmeshField.h"
+#include "CubeBlock.h"
+#include "RollRock.h"
 
 //===========================================
 // 定数定義
@@ -60,33 +62,33 @@ CListManager<CPlayer>* CPlayer::m_pList = nullptr; // オブジェクトリスト
 //コンストラクタ
 //====================================================================
 CPlayer::CPlayer(int nPriority) : CObject(nPriority),
-	m_size			(INITVECTOR3),
-	m_pos			(INITVECTOR3),
-	m_move			(INITVECTOR3),
-	m_Objmove		(INITVECTOR3),
-	m_rot			(INITVECTOR3),
-	m_AutoMoveRot	(INITVECTOR3),
-	m_bJump			(false),
-	m_nActionCount	(0),
-	m_Action		(ACTION_NONE),
-	m_AtkAction		(ACTION_NONE),
-	m_State			(STATE_EGG),
-	m_nStateCount	(0),
-	m_AtkPos		(INITVECTOR3),
-	m_CollisionRot	(0.0f),
-	m_pMotion		(nullptr),
-	m_OKL			(true),
-	m_OKR			(true),
-	m_OKU			(true),
-	m_OKD			(true),
-	m_bInput		(false),
-	m_pLifeUi		(nullptr),
-	m_nLife			(0),
-	m_eItemType		(TYPE_NONE),
-	m_MoveState		(MOVE_STATE_NONE),
-	m_Grid			(0,0),
-	m_bGritCenter	(true),
-	m_bPressObj		(false)
+m_size(INITVECTOR3),
+m_pos(INITVECTOR3),
+m_move(INITVECTOR3),
+m_Objmove(INITVECTOR3),
+m_rot(INITVECTOR3),
+m_AutoMoveRot(INITVECTOR3),
+m_bJump(false),
+m_nActionCount(0),
+m_Action(ACTION_NONE),
+m_AtkAction(ACTION_NONE),
+m_State(STATE_EGG),
+m_nStateCount(0),
+m_AtkPos(INITVECTOR3),
+m_CollisionRot(0.0f),
+m_pMotion(nullptr),
+m_OKL(true),
+m_OKR(true),
+m_OKU(true),
+m_OKD(true),
+m_bInput(false),
+m_pLifeUi(nullptr),
+m_nLife(0),
+m_eItemType(TYPE_NONE),
+m_MoveState(MOVE_STATE_NONE),
+m_Grid(0, 0),
+m_bGritCenter(true),
+m_bPressObj(false)
 {
 
 }
@@ -290,6 +292,9 @@ void CPlayer::GameUpdate(void)
 		CollisionMoveRailBlock(useful::COLLISION_X);
 		CollisionMoveRailBlock(useful::COLLISION_Z);
 
+		CollisionMoveRock(useful::COLLISION_X);
+		CollisionMoveRock(useful::COLLISION_Z);
+
 		if (m_State == STATE_WALK)
 		{
 			// 位置更新処理
@@ -326,9 +331,9 @@ void CPlayer::GameUpdate(void)
 	DebugKey();
 
 	//デバッグ表示
-	DebugProc::Print(DebugProc::POINT_LEFT,"[自分]位置 %f : %f : %f\n", m_pos.x, m_pos.y, m_pos.z);
+	DebugProc::Print(DebugProc::POINT_LEFT, "[自分]位置 %f : %f : %f\n", m_pos.x, m_pos.y, m_pos.z);
 	DebugProc::Print(DebugProc::POINT_LEFT, "[自分]向き %f : %f : %f\n", m_rot.x, m_rot.y, m_rot.z);
-	DebugProc::Print(DebugProc::POINT_LEFT,"[自分]横 %d : 縦 %d\n", m_Grid.x, m_Grid.z);
+	DebugProc::Print(DebugProc::POINT_LEFT, "[自分]横 %d : 縦 %d\n", m_Grid.x, m_Grid.z);
 }
 
 //====================================================================
@@ -601,7 +606,7 @@ void CPlayer::StateManager(void)
 					nSetW = nSetW - WMax;
 				}
 
-				for (int nSetH = ReivelPos.z, nCntH = 0; nCntH < HMax; nCntH++,  nCntH++)
+				for (int nSetH = ReivelPos.z, nCntH = 0; nCntH < HMax; nCntH++, nCntH++)
 				{
 					if (nSetH >= HMax)
 					{
@@ -791,6 +796,109 @@ void CPlayer::CollisionMoveRailBlock(useful::COLLISION XYZ)
 }
 
 //====================================================================
+// 止まっている岩との当たり判定
+//====================================================================
+void CPlayer::CollisionWaitRock(useful::COLLISION XYZ)
+{
+	if (m_bPressObj == true)
+	{
+		return;
+	}
+
+	// レールブロックのリスト構造が無ければ抜ける
+	if (CRollRock::GetList() == nullptr) { return; }
+	std::list<CRollRock*> list = CRollRock::GetList()->GetList();    // リストを取得
+
+	// レールブロックリストの中身を確認する
+	for (CRollRock* pRailBlock : list)
+	{
+		D3DXVECTOR3 pos = D3DXVECTOR3(pRailBlock->GetPos().x, 0.0f, pRailBlock->GetPos().z);
+		D3DXVECTOR3 posOld = pRailBlock->GetPosOld();
+		D3DXVECTOR3 Move = (pos - posOld);
+		D3DXVECTOR3 Size = pRailBlock->GetSize();
+
+		if (abs(Move.x) > 0.0f)
+		{
+			return;
+		}
+		if (abs(Move.z) > 0.0f)
+		{
+			return;
+		}
+
+		// 矩形の当たり判定
+		if (useful::CollisionBlock(pos, pos, Move, Size, &m_pos, m_posOld, &m_move, &m_Objmove, m_size, &m_bJump, XYZ) == true)
+		{
+			//待機状態にする
+			m_State = STATE_WAIT;
+			m_MoveState = MOVE_STATE_WAIT;
+			m_pos = CMapSystem::GetInstance()->GetGritPos(m_Grid.x, m_Grid.z);
+		}
+	}
+}
+
+//====================================================================
+// 動いている岩との当たり判定
+//====================================================================
+void CPlayer::CollisionMoveRock(useful::COLLISION XYZ)
+{
+	// レールブロックのリスト構造が無ければ抜ける
+	if (CRollRock::GetList() == nullptr) { return; }
+	std::list<CRollRock*> list = CRollRock::GetList()->GetList();    // リストを取得
+
+	// レールブロックリストの中身を確認する
+	for (CRollRock* pRailBlock : list)
+	{
+		D3DXVECTOR3 pos = m_pos;
+		D3DXVECTOR3 Size = m_size;
+		D3DXVECTOR3 Move = m_move;
+
+		D3DXVECTOR3 Mypos = pRailBlock->GetPos();
+		D3DXVECTOR3 MyposOld = pRailBlock->GetPosOld();
+		D3DXVECTOR3 MyMove = (Mypos - MyposOld);
+		float MySize = CMapSystem::GetInstance()->GetGritSize() * 0.5f;
+
+		if (abs(MyMove.x) > 0.0f || abs(MyMove.z) > 0.0f)
+		{
+			switch (XYZ)
+			{
+			case useful::COLLISION_X:
+				// 矩形の当たり判定
+				if (useful::PushSquareXZ(Mypos, D3DXVECTOR3(MySize, 0.0f, MySize), MyMove, pos, Size, XYZ) == true)
+				{
+					m_Objmove.x = MyMove.x;
+					m_move.x = 0.0f;
+					m_bPressObj = true;
+					return;
+				}
+				else
+				{
+					m_Objmove.x = 0.0f;
+					m_bPressObj = false;
+				}
+				break;
+
+			case useful::COLLISION_Z:
+				// 矩形の当たり判定
+				if (useful::PushSquareXZ(Mypos, D3DXVECTOR3(MySize, 0.0f, MySize), MyMove, pos, Size, XYZ) == true)
+				{
+					m_Objmove.z = MyMove.z;
+					m_move.z = 0.0f;
+					m_bPressObj = true;
+					return;
+				}
+				else
+				{
+					m_Objmove.z = 0.0f;
+					m_bPressObj = false;
+				}
+				break;
+			}
+		}
+	}
+}
+
+//====================================================================
 // 上下左右に壁が存在するかの判定
 //====================================================================
 void CPlayer::SearchWall(void)
@@ -800,7 +908,7 @@ void CPlayer::SearchWall(void)
 	bool OKU = true;	//上
 	bool OKD = true;	//下
 
-	CMapSystem *pMapSystem = CMapSystem::GetInstance();
+	CMapSystem* pMapSystem = CMapSystem::GetInstance();
 	int nMapWightMax = pMapSystem->GetWightMax();
 	int nMapHeightMax = pMapSystem->GetHeightMax();
 	D3DXVECTOR3 MapSystemPos = pMapSystem->GetMapPos();
@@ -1040,6 +1148,7 @@ void CPlayer::PosUpdate(void)
 	CollisionWall(useful::COLLISION_X);
 	CollisionDevilHole(useful::COLLISION_X);
 	CollisionWaitRailBlock(useful::COLLISION_X);
+	CollisionWaitRock(useful::COLLISION_X);
 
 	//Z軸の位置更新
 	m_pos.z += m_move.z * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeZ();
@@ -1049,6 +1158,7 @@ void CPlayer::PosUpdate(void)
 	CollisionWall(useful::COLLISION_Z);
 	CollisionDevilHole(useful::COLLISION_Z);
 	CollisionWaitRailBlock(useful::COLLISION_Z);
+	CollisionWaitRock(useful::COLLISION_Z);
 }
 
 //====================================================================
@@ -1102,7 +1212,7 @@ void CPlayer::RotUpdate(void)
 	D3DXVECTOR3 rotDiff = m_rotDest - m_rot;
 
 	// 正規化
-	useful::NormalizeAngle(&rotDiff);			
+	useful::NormalizeAngle(&rotDiff);
 
 	// 向きの更新処理
 	m_rot += (rotDiff * 0.5);

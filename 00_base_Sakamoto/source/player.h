@@ -152,6 +152,8 @@ private:
 	void CollisionPressWall(useful::COLLISION XYZ);	//壁との圧死判定
 	void CollisionWaitRailBlock(useful::COLLISION XYZ);	//止まっているレールブロックとの当たり判定
 	void CollisionMoveRailBlock(useful::COLLISION XYZ);	//動いているレールブロックとの当たり判定
+	void CollisionWaitRock(useful::COLLISION XYZ);	//止まっている岩との当たり判定
+	void CollisionMoveRock(useful::COLLISION XYZ);	//動いている岩との当たり判定
 	void SearchWall(void);							//壁のサーチ判定
 	void CollisionDevilHole(useful::COLLISION XYZ);	//デビルホールとの当たり判定
 	void CollisionEnemy(void);						// 敵との当たり判定
