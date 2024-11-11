@@ -167,12 +167,11 @@ D3DXVECTOR3 CMapSystem::GetGritPos(int Wight, int Height)
 //==========================================
 //  グリッドを算出
 //==========================================
-CMapSystem::GRID CMapSystem::CalcGrid(const D3DXVECTOR3& pos)
+int CMapSystem::CalcGridX(const float posX)
 {
 	// 算出に使用する変数
 	CDevil* pDevil = CGame::GetDevil();
 	D3DXVECTOR3 DevilPos = pDevil->GetDevilPos();
-	GRID grid;
 
 	// x座標の算出
 	for (int i = 0; i < m_WightMax; i++)
@@ -184,12 +183,25 @@ CMapSystem::GRID CMapSystem::CalcGrid(const D3DXVECTOR3& pos)
 			fCountPosX = fCountPosX - (DevilPos.x + (m_MapSize.x * 2.0f)) - m_fGritSize;
 		}
 
-		if (pos.x < fCountPosX + (m_fGritSize * 0.5f) &&
-			pos.x >= fCountPosX - (m_fGritSize * 0.5f))
+		if (posX < fCountPosX + (m_fGritSize * 0.5f) &&
+			posX >= fCountPosX - (m_fGritSize * 0.5f))
 		{
-			grid.x = i;
+			return i;
 		}
 	}
+
+	// グリット外なら-1を返す
+	return -1;
+}
+
+//==========================================
+//  グリッドを算出
+//==========================================
+int CMapSystem::CalcGridZ(const float posZ)
+{
+	// 算出に使用する変数
+	CDevil* pDevil = CGame::GetDevil();
+	D3DXVECTOR3 DevilPos = pDevil->GetDevilPos();
 
 	for (int i = 0; i < m_HeightMax; i++)
 	{
@@ -200,12 +212,13 @@ CMapSystem::GRID CMapSystem::CalcGrid(const D3DXVECTOR3& pos)
 			fCountPosZ = fCountPosZ + (DevilPos.z + (m_MapSize.z * 2.0f)) + m_fGritSize;
 		}
 
-		if (pos.z < fCountPosZ + (m_fGritSize * 0.5f) &&
-			pos.z >= fCountPosZ - (m_fGritSize * 0.5f))
+		if (posZ < fCountPosZ + (m_fGritSize * 0.5f) &&
+			posZ >= fCountPosZ - (m_fGritSize * 0.5f))
 		{
-			grid.z = i;
+			return i;
 		}
 	}
 
-	return grid;
+	// グリット外なら-1を返す
+	return -1;
 }
