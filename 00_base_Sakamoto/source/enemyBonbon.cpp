@@ -11,6 +11,7 @@
 #include "renderer.h"
 #include "model.h"
 #include "motion.h"
+#include "character.h"
 #include "game.h"
 #include "tutorial.h"
 #include "object3D.h"
@@ -151,6 +152,22 @@ void CEnemyBonbon::GameUpdate(void)
 //====================================================================
 void CEnemyBonbon::ActionState(void)
 {
+	// キャラクター取得
+	CCharacter* pCharacter = GetCharacter();
+
+	if (pCharacter == nullptr)
+	{
+		return;
+	}
+
+	// モーション取得
+	CMotion* pMotion = pCharacter->GetMotion();
+
+	if (pMotion == nullptr)
+	{
+		return;
+	}
+
 	// 情報取得
 	D3DXVECTOR3 move = GetMove();	// 移動量
 
@@ -160,7 +177,7 @@ void CEnemyBonbon::ActionState(void)
 		if (m_Action != ACTION_MOVE)
 		{
 			m_Action = ACTION_MOVE;
-			GetMotion()->Set(ACTION_MOVE, MOTION_BLEND_NEUTRAL);
+			pMotion->Set(ACTION_MOVE, MOTION_BLEND_NEUTRAL);
 		}
 	}
 	// ニュートラルモーション
@@ -169,7 +186,7 @@ void CEnemyBonbon::ActionState(void)
 		if (m_Action != ACTION_NEUTRAL)
 		{
 			m_Action = ACTION_NEUTRAL;
-			GetMotion()->Set(ACTION_NEUTRAL, MOTION_BLEND_MOVE);
+			pMotion->Set(ACTION_NEUTRAL, MOTION_BLEND_MOVE);
 		}
 	}
 }
