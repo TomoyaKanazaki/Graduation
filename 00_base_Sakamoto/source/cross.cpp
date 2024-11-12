@@ -10,6 +10,7 @@
 #include "texture.h"
 #include "XModel.h"
 #include "player.h"
+#include "sound.h"
 
 //==========================================
 //  定数定義
@@ -119,6 +120,8 @@ bool CCross::Hit(CPlayer* pPlayer)
 
 	// プレイヤーのアイテムを設定
 	pPlayer->SetItemType(CPlayer::TYPE_CROSS);
+
+	CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_GET_CROSS);
 	return true;
 }
 

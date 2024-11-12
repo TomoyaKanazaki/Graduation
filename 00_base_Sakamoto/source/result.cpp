@@ -61,7 +61,7 @@ CResult::~CResult()
 HRESULT CResult::Init(void)
 {
 	CTexture *pTexture = CManager::GetInstance()->GetTexture();;
-	//CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_BGM_RESULT);
+	CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_BGM_RESULT);
 
 	m_LifeData = CManager::GetInstance()->GetEndScore();
 

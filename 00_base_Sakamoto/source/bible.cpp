@@ -13,6 +13,7 @@
 #include "effect.h"
 #include "game.h"
 #include "objmeshField.h"
+#include "sound.h"
 
 //==========================================
 //  定数定義
@@ -164,6 +165,8 @@ bool CBible::Hit(CPlayer* pPlayer)
 
 	// プレイヤーのアイテムを設定
 	pPlayer->SetItemType(CPlayer::TYPE_BIBLE);
+
+	CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_GET_BIBLE);
 
 	// 自身の削除
 	Uninit();

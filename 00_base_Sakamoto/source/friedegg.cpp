@@ -7,6 +7,8 @@
 #include "friedegg.h"
 #include "XModel.h"
 #include "player.h"
+#include "manager.h"
+#include "sound.h"
 
 //==========================================
 //  ’è”’è‹`
@@ -127,6 +129,8 @@ bool CFriedEgg::Hit(CPlayer* pPlayer)
 
 	// ˆÚ“®ƒtƒ‰ƒO‚ðfalse‚É‚·‚é
 	m_bMove = false;
+
+	CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_EAT);
 
 	return true;
 }
