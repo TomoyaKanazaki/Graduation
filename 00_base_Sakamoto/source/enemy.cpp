@@ -199,40 +199,7 @@ void CEnemy::Uninit(void)
 //====================================================================
 void CEnemy::Update(void)
 {
-	switch (CScene::GetMode())
-	{
-	case CScene::MODE_TITLE:
-		TitleUpdate();
-		break;
 
-	case CScene::MODE_GAME:
-	case CScene::MODE_TUTORIAL:
-
-		GameUpdate();
-		break;
-
-	case CScene::MODE_RESULT:
-		break;
-	}
-}
-
-//====================================================================
-//タイトルでの更新処理
-//====================================================================
-void CEnemy::TitleUpdate(void)
-{
-	// キャラクターの更新
-	if (m_pCharacter != nullptr)
-	{
-		m_pCharacter->Update();
-	}
-}
-
-//====================================================================
-//ゲームでの更新処理
-//====================================================================
-void CEnemy::GameUpdate(void)
-{
 	// 過去の位置を記録
 	m_posOld = m_pos;
 
