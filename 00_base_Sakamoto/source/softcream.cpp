@@ -139,7 +139,7 @@ void CSoftCream::SetGrid(const CMapSystem::GRID& pos)
 	CItem::SetGrid(pos);
 
 	// グリッド情報から自身の座標を算出する
-	D3DXVECTOR3 posThis = CMapSystem::GetInstance()->GetGritPos(pos.x, pos.z);
+	D3DXVECTOR3 posThis = CMapSystem::GetInstance()->GetGritPos(pos);
 
 	// 位置を設定
 	CItem::SetPos(posThis);

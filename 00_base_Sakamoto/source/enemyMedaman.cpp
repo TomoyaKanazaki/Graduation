@@ -109,42 +109,11 @@ void CEnemyMedaman::Uninit(void)
 //====================================================================
 void CEnemyMedaman::Update(void)
 {
-	switch (CScene::GetMode())
-	{
-	case CScene::MODE_TITLE:
-		TitleUpdate();
-		break;
-
-	case CScene::MODE_GAME:
-	case CScene::MODE_TUTORIAL:
-
-		GameUpdate();
-		break;
-
-	case CScene::MODE_RESULT:
-		break;
-	}
-}
-
-//====================================================================
-//タイトルでの更新処理
-//====================================================================
-void CEnemyMedaman::TitleUpdate(void)
-{
-	// 継承クラスのタイトル更新処理
-	CEnemy::TitleUpdate();
-}
-
-//====================================================================
-//ゲームでの更新処理
-//====================================================================
-void CEnemyMedaman::GameUpdate(void)
-{
-	// 継承クラスのゲーム更新処理
-	CEnemy::GameUpdate();
-
 	//モーションの管理
 	ActionState();
+
+	// 親更新
+	CEnemy::Update();
 }
 
 //====================================================================

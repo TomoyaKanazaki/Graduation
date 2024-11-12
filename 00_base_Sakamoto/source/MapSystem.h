@@ -31,6 +31,11 @@ public:
 
 		int x;
 		int z;
+
+		// オペレーター
+		GRID& operator = (const AStar::Vec2i vec); // A*ライブラリとの互換用
+		bool operator == (const GRID& grid); // グリッド同士の比較
+		bool operator != (const GRID& grid); // グリッド同士の比較
 	};
 
 	CMapSystem();
@@ -45,7 +50,7 @@ public:
 
 	// グリット位置の取得
 	D3DXVECTOR3 GetStartGritPos(float Wight, float Height);
-	D3DXVECTOR3 GetGritPos(int Wight, int Height);
+	D3DXVECTOR3 GetGritPos(const GRID& grid);
 	int CalcGridX(const float posX);
 	int CalcGridZ(const float posZ);
 	GRID CalcGrid(const D3DXVECTOR3& pos);

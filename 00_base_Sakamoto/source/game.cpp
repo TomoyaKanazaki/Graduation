@@ -185,7 +185,7 @@ HRESULT CGame::Init(void)
 
 	//ƒvƒŒƒCƒ„[‚Ì¶¬
 	m_pPlayer = CPlayer::Create();
-	m_pPlayer->SetPos(CMapSystem::GetInstance()->GetGritPos(11,5));
+	m_pPlayer->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(11,5)));
 
 	m_pScore = CScore::Create();
 	m_pScore->SetScore(CManager::GetInstance()->GetEndScore());
@@ -256,7 +256,7 @@ HRESULT CGame::Init(void)
 
 	//“]‚ª‚éŠâ‚Ì¶¬
 	CRollRock *pRock = CRollRock::Create("data\\MODEL\\BlockTest.x");
-	D3DXVECTOR3 RockPos = CMapSystem::GetInstance()->GetGritPos(16, 2);
+	D3DXVECTOR3 RockPos = CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(16, 2));
 	pRock->SetPos(D3DXVECTOR3(RockPos.x, 50.0f, RockPos.z));
 
 	CScrollArrow* pScrollAllow = nullptr;

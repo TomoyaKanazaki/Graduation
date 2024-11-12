@@ -147,7 +147,7 @@ void CBible::SetGrid(const CMapSystem::GRID &pos)
 	CItem::SetGrid(pos);
 
 	// グリッド情報から自身の座標を算出する
-	m_posBase = CMapSystem::GetInstance()->GetGritPos(pos.x, pos.z);
+	m_posBase = CMapSystem::GetInstance()->GetGritPos(pos);
 
 	// 位置を設定
 	CItem::SetPos(m_posBase);

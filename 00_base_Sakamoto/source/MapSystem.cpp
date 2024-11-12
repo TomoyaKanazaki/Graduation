@@ -145,18 +145,19 @@ D3DXVECTOR3 CMapSystem::GetStartGritPos(float Wight, float Height)
 //====================================================================
 // グリットの位置取得
 //====================================================================
-D3DXVECTOR3 CMapSystem::GetGritPos(int Wight, int Height)
+D3DXVECTOR3 CMapSystem::GetGritPos(const GRID& grid)
 {
 	D3DXVECTOR3 Pos;
 
 	D3DXVECTOR3 DevilPos = CGame::GetDevil()->GetDevilPos();
 
 	// グリット番号が最大値以上や最小値以下の時、範囲内に納める処理
-	Wight = useful::RangeNumber(m_WightMax, 0, Wight);
-	Height = useful::RangeNumber(m_HeightMax, 0, Height);
+	CMapSystem::GRID temp = grid;
+	temp.x = useful::RangeNumber(m_WightMax, 0, grid.x);
+	temp.z = useful::RangeNumber(m_HeightMax, 0, grid.z);
 
 	// グリットの横番号の位置を設定する
-	Pos.x = m_MapPos.x + (Wight * m_fGritSize);
+	Pos.x = m_MapPos.x + (temp.x * m_fGritSize);
 
 	//境界線の外側にグリットがある場合反対側に移動させる
 	if (Pos.x > DevilPos.x + (m_MapSize.x))
@@ -168,7 +169,7 @@ D3DXVECTOR3 CMapSystem::GetGritPos(int Wight, int Height)
 	Pos.y = 0.0f;
 
 	// グリットの縦番号の位置を設定する
-	Pos.z = m_MapPos.z - (Height * m_fGritSize);
+	Pos.z = m_MapPos.z - (temp.z * m_fGritSize);
 
 	//境界線の外側にグリットがある場合反対側に移動させる
 	if (Pos.z < DevilPos.z - (m_MapSize.z))
@@ -362,4 +363,30 @@ int CMapSystem::CalcGridZ(const float posZ)
 
 	// グリット外なら-1を返す
 	return -1;
+}
+
+//==========================================
+//  代入演算子のオペレータ
+//==========================================
+CMapSystem::GRID& CMapSystem::GRID::operator=(const AStar::Vec2i vec)
+{
+	x += vec.x;
+	z += vec.y;
+	return *this;
+}
+
+//==========================================
+//  グリッド同士の比較演算子
+//==========================================
+bool CMapSystem::GRID::operator==(const GRID& grid)
+{
+	return (x == grid.x && z == grid.z);
+}
+
+//==========================================
+//  グリッド同士の比較演算子
+//==========================================
+bool CMapSystem::GRID::operator!=(const GRID& grid)
+{
+	return (x != grid.x || z != grid.z);
 }

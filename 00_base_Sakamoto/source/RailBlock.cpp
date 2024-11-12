@@ -86,7 +86,7 @@ HRESULT CRailBlock::Init(int nMapWight, int nMapHeight, bool Edit, int Max, int*
 
 	CObjmeshCube::Init();
 
-	SetPos(CMapSystem::GetInstance()->GetGritPos(m_StartGrid.x, m_StartGrid.z));
+	SetPos(CMapSystem::GetInstance()->GetGritPos(m_StartGrid));
 
 	SetTexture("data\\TEXTURE\\Wood001.png");
 
@@ -200,7 +200,7 @@ void CRailBlock::Move(D3DXVECTOR3* Pos)
 
 	D3DXVECTOR3 SlopeMove = INITVECTOR3;
 	D3DXVECTOR3 SlopeRot = CGame::GetDevil()->GetDevilRot();
-	D3DXVECTOR3 GritPos = CMapSystem::GetInstance()->GetGritPos(GetWightNumber(), GetHeightNumber());
+	D3DXVECTOR3 GritPos = CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(GetWightNumber(), GetHeightNumber()));
 	D3DXVECTOR3 GritDistance = *Pos - GritPos;	//グリットの中心とした時の相対位置、差分
 
 	//傾きによる移動量設定
@@ -281,12 +281,12 @@ void CRailBlock::Move(D3DXVECTOR3* Pos)
 			if (SlopeMove.x > 0.0f && bMoveOK[3])	//X軸の動きが[+]で右にレールが存在する時
 			{
 				//１つ右のグリットに移動
-				GritPos = CMapSystem::GetInstance()->GetGritPos(GetWightNumber() + 1, GetHeightNumber());
+				GritPos = CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(GetWightNumber() + 1, GetHeightNumber()));
 			}
 			else
 			{
 				// 現在のグリットに移動
-				GritPos = CMapSystem::GetInstance()->GetGritPos(GetWightNumber(), GetHeightNumber());
+				GritPos = CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(GetWightNumber(), GetHeightNumber()));
 			}
 		}
 		else if (Pos->x < 0.0f)	//左のグリット外に出たとき
@@ -294,12 +294,12 @@ void CRailBlock::Move(D3DXVECTOR3* Pos)
 			if (SlopeMove.x < 0.0f && bMoveOK[2])	//X軸の動きが[-]で左にレールが存在する時
 			{
 				//１つ右のグリットに移動
-				GritPos = CMapSystem::GetInstance()->GetGritPos(GetWightNumber() - 1, GetHeightNumber());
+				GritPos = CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(GetWightNumber() - 1, GetHeightNumber()));
 			}
 			else
 			{
 				// 現在のグリットに移動
-				GritPos = CMapSystem::GetInstance()->GetGritPos(GetWightNumber(), GetHeightNumber());
+				GritPos = CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(GetWightNumber(), GetHeightNumber()));
 			}
 		}
 			Pos->x = GritPos.x;
@@ -313,12 +313,12 @@ void CRailBlock::Move(D3DXVECTOR3* Pos)
 			if (SlopeMove.z > 0.0f && bMoveOK[0])	//Z軸の動きが[+]で右にレールが存在する時
 			{
 				//１つ右のグリットに移動
-				GritPos = CMapSystem::GetInstance()->GetGritPos(GetWightNumber(), GetHeightNumber() - 1);
+				GritPos = CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(GetWightNumber(), GetHeightNumber() - 1));
 			}
 			else
 			{
 				// 現在のグリットに移動
-				GritPos = CMapSystem::GetInstance()->GetGritPos(GetWightNumber(), GetHeightNumber());
+				GritPos = CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(GetWightNumber(), GetHeightNumber()));
 			}
 		}
 		else if (Pos->z < 0.0f)	//左のグリット外に出たとき
@@ -326,12 +326,12 @@ void CRailBlock::Move(D3DXVECTOR3* Pos)
 			if (SlopeMove.z < 0.0f && bMoveOK[1])	//Z軸の動きが[-]で左にレールが存在する時
 			{
 				//１つ右のグリットに移動
-				GritPos = CMapSystem::GetInstance()->GetGritPos(GetWightNumber(), GetHeightNumber() + 1);
+				GritPos = CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(GetWightNumber(), GetHeightNumber() + 1));
 			}
 			else
 			{
 				// 現在のグリットに移動
-				GritPos = CMapSystem::GetInstance()->GetGritPos(GetWightNumber(), GetHeightNumber());
+				GritPos = CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(GetWightNumber(), GetHeightNumber()));
 			}
 		}
 		Pos->z = GritPos.z;

@@ -63,8 +63,6 @@ public:
 	HRESULT Init(void);
 	virtual void Uninit(void);
 	void Update(void);
-	void TitleUpdate(void);
-	void GameUpdate(void);
 	void Draw(void);
 
 	virtual bool Hit(int nLife);
