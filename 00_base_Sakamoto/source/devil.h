@@ -68,8 +68,8 @@ public:
 	void TutorialUpdate(void);
 	void Draw(void);
 
-	float MoveSlopeX(void);		//傾き中の移動量変動
-	float MoveSlopeZ(void);		//傾き中の移動量変動
+	float MoveSlopeX(float Move);		//傾き中の移動量変動
+	float MoveSlopeZ(float Move);		//傾き中の移動量変動
 
 	void SetPos(D3DXVECTOR3 pos) { m_pos = pos; }
 	D3DXVECTOR3 GetPos(void) { return m_pos; }
@@ -104,6 +104,7 @@ private:
 	void BowabowaScroll(D3DXVECTOR3 Move, float GritSize);	// ボワボワのスクロール
 	void EnemyScroll(D3DXVECTOR3 Move, float GritSize);		// 敵のスクロール
 	void RailBlockScroll(D3DXVECTOR3 Move, float GritSize);	// レールブロックのスクロール
+	void RollRockScroll(D3DXVECTOR3 Move, float GritSize);	// 転がる岩のスクロール
 	void PlayerScroll(D3DXVECTOR3 Move, float GritSize);	// プレイヤーのスクロール
 
 	void GritScroll(D3DXVECTOR3 Move);		//グリットのスクロール
