@@ -199,7 +199,6 @@ void CEnemy::Uninit(void)
 //====================================================================
 void CEnemy::Update(void)
 {
-
 	// 過去の位置を記録
 	m_posOld = m_pos;
 
@@ -218,6 +217,9 @@ void CEnemy::Update(void)
 	// 自分の番号を設定
 	m_Grid = CMapSystem::GetInstance()->CMapSystem::CalcGrid(m_pos);
 
+	// プレイヤーへの最短経路
+	m_pPath = AStar::Generator::GetInstance()->FindPlayer({ m_Grid.x, m_Grid.z });
+
 	//床の判定
 	if (m_pos.y <= 0.0f)
 	{
@@ -231,6 +233,7 @@ void CEnemy::Update(void)
 		m_pCharacter->Update();
 	}
 
+	// デバッグ表示
 	DebugProc::Print(DebugProc::POINT_LEFT, "[敵]横 %d : 縦 %d\n", m_Grid.x, m_Grid.z);
 }
 
