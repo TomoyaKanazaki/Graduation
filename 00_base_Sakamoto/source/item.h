@@ -75,7 +75,7 @@ public:
 private:
 
 	// ƒƒ“ƒoŠÖ”
-	virtual void Move(D3DXVECTOR3& pos) { SetGrid(CMapSystem::GetInstance()->CalcGrid(pos)); } // ˆÚ“®ˆ—
+	virtual void Move(D3DXVECTOR3& pos) {  } // ˆÚ“®ˆ—
 
 	TYPE m_eType;		// í—Ş
 
