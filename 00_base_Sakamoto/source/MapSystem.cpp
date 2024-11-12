@@ -374,3 +374,19 @@ CMapSystem::GRID& CMapSystem::GRID::operator=(const AStar::Vec2i vec)
 	z += vec.y;
 	return *this;
 }
+
+//==========================================
+//  ƒOƒŠƒbƒh“¯Žm‚Ì”äŠr‰‰ŽZŽq
+//==========================================
+bool CMapSystem::GRID::operator==(const GRID& grid)
+{
+	return (x == grid.x && z == grid.z);
+}
+
+//==========================================
+//  ƒOƒŠƒbƒh“¯Žm‚Ì”äŠr‰‰ŽZŽq
+//==========================================
+bool CMapSystem::GRID::operator!=(const GRID& grid)
+{
+	return (x != grid.x || z != grid.z);
+}

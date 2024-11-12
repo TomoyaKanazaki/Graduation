@@ -202,7 +202,7 @@ bool CItem::CollisionPlayer()
 		CMapSystem::GRID gridPlayer = player->GetGrid();
 
 		// ‘¶İÀ•W‚ªˆê’v‚µ‚Ä‚¢‚È‚¢ê‡Ÿ‚Éi‚Ş
-		if (m_Grid.x != gridPlayer.x || m_Grid.z != gridPlayer.z)
+		if (m_Grid != gridPlayer)
 		{ continue; }
 
 		// æ“¾‚É¸”s‚µ‚½ê‡Ÿ‚Éi‚Ş

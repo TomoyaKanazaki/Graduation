@@ -32,7 +32,10 @@ public:
 		int x;
 		int z;
 
-		GRID& operator = (CONST AStar::Vec2i);
+		// オペレーター
+		GRID& operator = (const AStar::Vec2i vec); // A*ライブラリとの互換用
+		bool operator == (const GRID& grid); // グリッド同士の比較
+		bool operator != (const GRID& grid); // グリッド同士の比較
 	};
 
 	CMapSystem();
