@@ -84,7 +84,7 @@ CTitle::~CTitle()
 //====================================================================
 HRESULT CTitle::Init(void)
 {
-	//CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_BGM_TITLE);
+	CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_BGM_TITLE);
 
 	CTexture *pTexture = CManager::GetInstance()->GetTexture();
 
