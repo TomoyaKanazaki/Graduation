@@ -128,6 +128,8 @@ void CSoftCream::Move(D3DXVECTOR3& pos)
 
 	// TODO : 本仕様の時に必ず消す
 	fMove += DeltaTime::Get();
+
+	DebugProc::Print(DebugProc::POINT_CENTER, "ソフトクリーム : %f\n", fMove);
 }
 
 //==========================================

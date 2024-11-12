@@ -51,6 +51,9 @@ HRESULT CFriedEgg::Init()
 	// オブジェクトの種類を設定
 	SetType(CObject::TYPE_FRIEDEGG);
 
+	// タイプの設定
+	SetItem(CItem::TYPE_FRIEDEGG);
+
 	// リストマネージャーの生成
 	if (m_pList == nullptr)
 	{

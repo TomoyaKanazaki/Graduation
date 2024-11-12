@@ -62,11 +62,12 @@ public:
 	CMapSystem::GRID GetGrid(void) { return m_Grid; }
 
 	// スクロールするかどうかの設定・取得
-	void SetMapScroll(bool Height) { m_bMapScroll = Height; }
+	void SetMapScroll(bool frag) { m_bMapScroll = frag; }
 	bool GetMapScroll() { return m_bMapScroll; }
 
 	bool CollisionPlayer();
 	virtual bool Hit(CPlayer* pPlayer) = 0;
+	void SetItem(const TYPE eType) { m_eType = eType; }
 
 	// 静的メンバ関数
 	static CItem* Create(const TYPE eType, const CMapSystem::GRID& pos);
@@ -74,7 +75,7 @@ public:
 private:
 
 	// メンバ関数
-	virtual void Move(D3DXVECTOR3& pos) {} // 移動処理
+	virtual void Move(D3DXVECTOR3& pos) { SetGrid(CMapSystem::GetInstance()->CalcGrid(pos)); } // 移動処理
 
 	TYPE m_eType;		// 種類
 

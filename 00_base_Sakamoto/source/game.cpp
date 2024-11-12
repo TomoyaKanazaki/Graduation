@@ -385,7 +385,7 @@ void CGame::Update(void)
 		switch (CManager::GetInstance()->GetStage())
 		{
 		case 0:
-			// ボワボワのリスト構造が無ければ抜ける
+			 // ボワボワのリスト構造が無ければ抜ける
 			if (CBowabowa::GetList() == nullptr)
 			{
 				m_bGameEnd = true;
