@@ -107,7 +107,6 @@ private:
 	void UpdatePos(void);								// 位置更新処理
 	void Rot(void);										//移動方向処理
 	virtual void Death(void);							// 死亡処理
-	void MyObjCreate(void);								// 自分が保持するオブジェクトの生成
 	void MoveSelect(void);								// 移動方向の選択
 	void SearchWall(void);								// 壁のサーチ判定
 
@@ -152,7 +151,7 @@ private:
 
 	// メンバ変数
 	CListManager<CEnemy>::AIterator m_iterator; // イテレーター
-	AStar::CoordinateList m_pPath;
+	std::vector<CMapSystem::GRID> m_Path;
 
 };
 

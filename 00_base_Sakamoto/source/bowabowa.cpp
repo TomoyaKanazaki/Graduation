@@ -12,6 +12,7 @@
 #include "game.h"
 #include "score.h"
 #include "player.h"
+#include "sound.h"
 
 //==========================================
 //  ’è”’è‹`
@@ -115,6 +116,8 @@ bool CBowabowa::Hit(CPlayer* pPlayer)
 	{
 		return false;
 	}
+
+	CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_GET_BOWA);
 
 	// íœ
 	Uninit();

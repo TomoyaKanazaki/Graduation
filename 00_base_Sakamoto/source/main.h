@@ -7,12 +7,6 @@
 #ifndef _MAIN_H_
 #define _MAIN_H_
 
-//#include <windows.h>
-//#include "d3dx9.h"						//描画処理に必要
-//#define DIRECTINPUT_VERSION (0x0800)	//ビルド時の警告対処用マクロ
-//#include "dinput.h"						//入力処理に必要
-//#include "xaudio2.h"					//サウンド処理
-
 //ライブラリのリンク
 #pragma comment (lib,"d3d9.lib")		//描画処理に必要
 #pragma comment (lib,"d3dx9.lib")		//[d3d9.lib]の拡張ライブラリ

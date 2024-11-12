@@ -88,7 +88,7 @@ CItem* CItem::Create(const TYPE eType, const CMapSystem::GRID& pos)
 			pItem = new CBowabowa;
 			break;
 
-		case CItem::TYPE_SOFTCREAM:	// ぼわぼわ
+		case CItem::TYPE_SOFTCREAM:	// ソフトクリーム
 			pItem = new CSoftCream;
 			break;
 
@@ -110,7 +110,7 @@ CItem* CItem::Create(const TYPE eType, const CMapSystem::GRID& pos)
 	pItem->SetGrid(pos);
 
 	// タイプの設定
-	pItem->m_eType = eType;
+	pItem->SetItem(eType);
 
 	return pItem;
 }
@@ -151,7 +151,7 @@ void CItem::Update()
 	D3DXVECTOR3 pos = GetPos();
 	D3DXVECTOR3 rot = GetRot();
 
-	if (m_bMapScroll == true)
+	if (m_bMapScroll)
 	{
 		// グリッドに沿った座標を取得、設定
 		D3DXVECTOR3 posGrid = CMapSystem::GetInstance()->GetGritPos(m_Grid);
@@ -168,7 +168,7 @@ void CItem::Update()
 	// 情報の更新
 	SetPos(pos);
 	SetRot(rot);
-	SetGrid(CMapSystem::GetInstance()->CalcGrid(pos));
+	m_Grid = CMapSystem::GetInstance()->CalcGrid(pos);
 
 	// 親クラスの更新処理
 	CObjectX::Update();

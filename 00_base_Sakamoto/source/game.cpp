@@ -185,7 +185,7 @@ HRESULT CGame::Init(void)
 
 	//プレイヤーの生成
 	m_pPlayer = CPlayer::Create();
-	m_pPlayer->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(11,5)));
+	m_pPlayer->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(11,9)));
 
 	m_pScore = CScore::Create();
 	m_pScore->SetScore(CManager::GetInstance()->GetEndScore());
@@ -268,8 +268,8 @@ HRESULT CGame::Init(void)
 
 	// 敵の生成
 	CEnemy::Create(CEnemy::ENEMY_MEDAMAN, CMapSystem::GRID(9, 7));
-	CEnemy::Create(CEnemy::ENEMY_BONBON, CMapSystem::GRID(9, 7));
-	CEnemy::Create(CEnemy::ENEMY_LITTLEDEVIL, CMapSystem::GRID(9, 7));
+	CEnemy::Create(CEnemy::ENEMY_BONBON, CMapSystem::GRID(11, 5));
+	CEnemy::Create(CEnemy::ENEMY_LITTLEDEVIL, CMapSystem::GRID(13, 7));
 
 #if _DEBUG
 	if (m_pEdit == nullptr)
@@ -385,7 +385,7 @@ void CGame::Update(void)
 		switch (CManager::GetInstance()->GetStage())
 		{
 		case 0:
-			// ボワボワのリスト構造が無ければ抜ける
+			 // ボワボワのリスト構造が無ければ抜ける
 			if (CBowabowa::GetList() == nullptr)
 			{
 				m_bGameEnd = true;

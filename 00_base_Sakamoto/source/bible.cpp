@@ -99,6 +99,8 @@ void CBible::Uninit(void)
 //====================================================================
 void CBible::Update(void)
 {
+	DebugProc::Print(DebugProc::POINT_CENTER, "聖書座標 : %d, %d\n", GetGrid().x, GetGrid().z);
+
 	//親クラスの更新
 	CItem::Update();
 }

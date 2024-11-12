@@ -18,6 +18,7 @@ CSound::SOUNDINFO CSound::m_aSoundInfo[SOUND_LABEL_MAX] =
 	{ "data/SE/12_SE_born.wav", 0 },				// 生まれる
 	{ "data/SE/13_SE_eat.wav", 0 },				// 捕食
 	{ "data/SE/14_SE_getbible.wav", 0 },				// 聖書
+	{ "data/SE/15_SE_getboa.wav", 0 },				// ぼあ
 
 	// BGM
 	{ "data/BGM/00_BGM_title.wav", -1 },				// タイトル

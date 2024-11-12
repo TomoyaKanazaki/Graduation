@@ -218,7 +218,7 @@ void CEnemy::Update(void)
 	m_Grid = CMapSystem::GetInstance()->CMapSystem::CalcGrid(m_pos);
 
 	// プレイヤーへの最短経路
-	m_pPath = AStar::Generator::GetInstance()->FindPlayer({ m_Grid.x, m_Grid.z });
+	//m_pPath = AStar::Generator::GetInstance()->FindPlayer({ m_Grid.x, m_Grid.z });
 
 	//床の判定
 	if (m_pos.y <= 0.0f)
