@@ -154,7 +154,7 @@ void CItem::Update()
 	if (m_bMapScroll == true)
 	{
 		// グリッドに沿った座標を取得、設定
-		D3DXVECTOR3 posGrid = CMapSystem::GetInstance()->GetGritPos(m_Grid.x, m_Grid.z);
+		D3DXVECTOR3 posGrid = CMapSystem::GetInstance()->GetGritPos(m_Grid);
 		pos.x = posGrid.x;
 		pos.z = posGrid.z;
 	}
@@ -202,7 +202,7 @@ bool CItem::CollisionPlayer()
 		CMapSystem::GRID gridPlayer = player->GetGrid();
 
 		// 存在座標が一致していない場合次に進む
-		if (m_Grid.x != gridPlayer.x || m_Grid.z != gridPlayer.z)
+		if (m_Grid != gridPlayer)
 		{ continue; }
 
 		// 取得に失敗した場合次に進む

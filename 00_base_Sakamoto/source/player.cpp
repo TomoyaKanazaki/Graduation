@@ -616,7 +616,7 @@ void CPlayer::StateManager(void)
 					if (CMapSystem::GetInstance()->GetGritBool(nSetW, nSetH) == false)
 					{
 						SetGrid(CMapSystem::GRID(nSetW, nSetH));
-						m_pos = CMapSystem::GetInstance()->GetGritPos(nSetW, nSetH);
+						m_pos = CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(nSetW, nSetH));
 						m_State = STATE_EGG;
 						return;
 					}
@@ -664,7 +664,7 @@ void CPlayer::CollisionWall(useful::COLLISION XYZ)
 			//待機状態にする
 			m_State = STATE_WAIT;
 			m_MoveState = MOVE_STATE_WAIT;
-			m_pos = CMapSystem::GetInstance()->GetGritPos(m_Grid.x, m_Grid.z);
+			m_pos = CMapSystem::GetInstance()->GetGritPos(m_Grid);
 		}
 	}
 }
@@ -731,7 +731,7 @@ void CPlayer::CollisionWaitRailBlock(useful::COLLISION XYZ)
 			//待機状態にする
 			m_State = STATE_WAIT;
 			m_MoveState = MOVE_STATE_WAIT;
-			m_pos = CMapSystem::GetInstance()->GetGritPos(m_Grid.x, m_Grid.z);
+			m_pos = CMapSystem::GetInstance()->GetGritPos(m_Grid);
 		}
 	}
 }
@@ -832,7 +832,7 @@ void CPlayer::CollisionWaitRock(useful::COLLISION XYZ)
 			//待機状態にする
 			m_State = STATE_WAIT;
 			m_MoveState = MOVE_STATE_WAIT;
-			m_pos = CMapSystem::GetInstance()->GetGritPos(m_Grid.x, m_Grid.z);
+			m_pos = CMapSystem::GetInstance()->GetGritPos(m_Grid);
 		}
 	}
 }
@@ -929,7 +929,7 @@ void CPlayer::SearchWall(void)
 	OKD = !pMapSystem->GetGritBool(m_Grid.x, nDNumber);
 
 	//自分の立っているグリットの中心位置を求める
-	D3DXVECTOR3 MyGritPos = CMapSystem::GetInstance()->GetGritPos(m_Grid.x, m_Grid.z);
+	D3DXVECTOR3 MyGritPos = CMapSystem::GetInstance()->GetGritPos(m_Grid);
 	float MapGritSize = pMapSystem->GetGritSize();
 
 	DebugProc::Print(DebugProc::POINT_LEFT, "自分がいるグリットの中心位置 %f %f %f\n", MyGritPos.x, MyGritPos.y, MyGritPos.z);
@@ -980,7 +980,7 @@ void CPlayer::CollisionDevilHole(useful::COLLISION XYZ)
 			//待機状態にする
 			m_State = STATE_WAIT;
 			m_MoveState = MOVE_STATE_WAIT;
-			m_pos = CMapSystem::GetInstance()->GetGritPos(m_Grid.x, m_Grid.z);
+			m_pos = CMapSystem::GetInstance()->GetGritPos(m_Grid);
 		}
 	}
 }

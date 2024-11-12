@@ -77,7 +77,6 @@ public:
 	static bool GetSlow(void) { return m_Slow; }
 private:
 	static void StageClear(int Stage);
-	static void LoadStageBlock(const char* pFilename);
 	static void LoadStageRailBlock(const char* pFilename);
 	static void LoadStageMapModel(const char* pFilename);
 

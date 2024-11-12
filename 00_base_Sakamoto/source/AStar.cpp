@@ -9,10 +9,17 @@
 #include <algorithm>
 #include <math.h>
 
+#include "player.h"
+
 //===============================================================
 // 定数定義
 //===============================================================
 using namespace std::placeholders;      // 場所の保持
+
+//==========================================
+//  静的メンバ変数宣言
+//==========================================
+AStar::Generator* AStar::Generator::m_pGenerator = nullptr; // ジェネレータ
 
 //===============================================================
 // 2つのVec2iオブジェクトが同じ座標を持つかチェック
@@ -122,6 +129,21 @@ void AStar::Generator::clearCollisions()
     walls.clear();
 }
 
+//==========================================
+//  生成処理
+//==========================================
+AStar::Generator* AStar::Generator::Create()
+{
+    // 既にインスタンスが存在している場合それを返す
+    if (m_pGenerator != nullptr) { return m_pGenerator; }
+
+    // メモリを確保
+    m_pGenerator = new Generator;
+
+    // 確保したアドレスを返す
+    return m_pGenerator;
+}
+
 //===============================================================
 // 指定したスタートとゴールの間の経路を探索
 //===============================================================
@@ -202,6 +224,51 @@ AStar::CoordinateList AStar::Generator::findPath(Vec2i source_, Vec2i target_)
     releaseNodes(closedSet);
 
     return path;
+}
+
+//==========================================
+//  プレイヤーへの最短経路を求める
+//==========================================
+AStar::CoordinateList AStar::Generator::FindPlayer(Vec2i grid)
+{
+    // プレイヤーリストを取得
+    if (CPlayer::GetList() == nullptr) { assert(false); }
+    std::list<CPlayer*> list = CPlayer::GetList()->GetList();    // リストを取得
+
+    // 最短経路の情報を保存する変数
+    std::vector<CoordinateList> root;
+
+    // 各プレイヤーに向けた最短経路を取得
+    for (CPlayer* player : list)
+    {
+        // プレイヤーの存在するグリッド番号を取得
+        CMapSystem::GRID playerGrid = player->GetGrid();
+
+        // 最短経路を取得
+        CoordinateList coordinate = findPath({ playerGrid.x, playerGrid.z }, { grid.x, grid.y });
+
+        // 最短経路を記録する
+        root.push_back(coordinate);
+    }
+
+    // 経路の数が１の場合そのまま値を返す
+    if (root.size() == 1)
+    {
+        return root.front();
+    }
+
+    // 複数存在した場合最も要素数の少ないものを採用する
+    CoordinateList Min = root.front();
+    for (CoordinateList temp : root)
+    {
+        // 要素数の比較
+        if (Min.size() > temp.size())
+        {
+            Min = temp;
+        }
+    }
+
+    return Min;
 }
 
 //===============================================================

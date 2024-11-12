@@ -185,7 +185,7 @@ void CRail::GameUpdate(void)
 	{
 		if (m_pRailModel[nCnt] != nullptr)
 		{
-			m_pRailModel[nCnt]->SetPos(CMapSystem::GetInstance()->GetGritPos(m_nMapWidth, m_nMapHeight));
+			m_pRailModel[nCnt]->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(m_nMapWidth, m_nMapHeight)));
 		}
 	}
 }
@@ -210,7 +210,7 @@ void CRail::PrevSet(RAIL_POS Set)
 	if (m_pRailModel[0] == nullptr)
 	{
 		m_pRailModel[0] = CObjectX::Create("data\\MODEL\\TestRail.x");
-		m_pRailModel[0]->SetPos(CMapSystem::GetInstance()->GetGritPos(m_nMapWidth, m_nMapHeight));
+		m_pRailModel[0]->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(m_nMapWidth, m_nMapHeight)));
 		m_pRailModel[0]->SetMultiMatrix(true);
 
 		switch (Set)
@@ -246,7 +246,7 @@ void CRail::NextSet(RAIL_POS Set)
 	if (m_pRailModel[1] == nullptr)
 	{
 		m_pRailModel[1] = CObjectX::Create("data\\MODEL\\TestRail.x");
-		m_pRailModel[1]->SetPos(CMapSystem::GetInstance()->GetGritPos(m_nMapWidth, m_nMapHeight));
+		m_pRailModel[1]->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(m_nMapWidth, m_nMapHeight)));
 		m_pRailModel[1]->SetMultiMatrix(true);
 
 		//L‚Î‚·‘O‚ÌƒŒ[ƒ‹‚ÌˆÊ’u‚ğæ“¾‚·‚é
