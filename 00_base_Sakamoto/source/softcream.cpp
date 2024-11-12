@@ -102,9 +102,6 @@ void CSoftCream::Uninit(void)
 //====================================================================
 void CSoftCream::Update(void)
 {
-	DebugProc::Print(DebugProc::POINT_CENTER, "ソフトクリーム座標 : %f, %f, %f\n", GetPos().x, GetPos().y, GetPos().z);
-	DebugProc::Print(DebugProc::POINT_CENTER, "ソフトクリーム座標 : %d, %d\n", GetGrid().x, GetGrid().z);
-
 	//親クラスの更新
 	CItem::Update();
 }
@@ -129,8 +126,6 @@ void CSoftCream::Move(D3DXVECTOR3& pos)
 
 	// TODO : 本仕様の時に必ず消す
 	fMove += DeltaTime::Get();
-
-	DebugProc::Print(DebugProc::POINT_CENTER, "ソフトクリーム : %f\n", fMove);
 }
 
 //==========================================
