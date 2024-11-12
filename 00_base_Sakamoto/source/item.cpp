@@ -168,6 +168,7 @@ void CItem::Update()
 	// 情報の更新
 	SetPos(pos);
 	SetRot(rot);
+	m_Grid = CMapSystem::GetInstance()->CalcGrid(pos);
 
 	// 親クラスの更新処理
 	CObjectX::Update();
