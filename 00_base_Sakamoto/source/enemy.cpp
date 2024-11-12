@@ -134,7 +134,7 @@ CEnemy* CEnemy::Create(const ENEMY_TYPE eType, const CMapSystem::GRID& grid)
 
 	// 座標を設定
 	pEnemy->SetGrid(grid);
-	pEnemy->SetPos(CMapSystem::GetInstance()->GetGritPos(grid.x, grid.z));
+	pEnemy->SetPos(CMapSystem::GetInstance()->GetGritPos(grid));
 
 	// 
 	pEnemy->m_EnemyType = eType;
@@ -463,7 +463,7 @@ void CEnemy::CollisionWall(useful::COLLISION XYZ)
 			//待機状態にする
 			m_State = E_STATE_WAIT;
 
-			m_pos = CMapSystem::GetInstance()->GetGritPos(m_Grid.x, m_Grid.z);
+			m_pos = CMapSystem::GetInstance()->GetGritPos(m_Grid);
 		}
 	}
 }
@@ -591,7 +591,7 @@ void CEnemy::StateManager()
 
 			if (m_nBugCounter > 180)
 			{
-				m_pos = CMapSystem::GetInstance()->GetGritPos(m_Grid.x, m_Grid.z);
+				m_pos = CMapSystem::GetInstance()->GetGritPos(m_Grid);
 				m_nBugCounter = 0;
 			}
 		}
@@ -704,7 +704,7 @@ void CEnemy::SearchWall(void)
 	OKD = !pMapSystem->GetGritBool(m_Grid.x, nDNumber);
 
 	//自分の立っているグリットの中心位置を求める
-	D3DXVECTOR3 MyGritPos = CMapSystem::GetInstance()->GetGritPos(m_Grid.x, m_Grid.z);;
+	D3DXVECTOR3 MyGritPos = CMapSystem::GetInstance()->GetGritPos(m_Grid);;
 	float MapGritSize = pMapSystem->GetGritSize();
 
 	DebugProc::Print(DebugProc::POINT_LEFT, "敵の位置 %f %f %f\n", MyGritPos.x, MyGritPos.y, MyGritPos.z);

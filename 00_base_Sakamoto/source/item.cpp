@@ -154,7 +154,7 @@ void CItem::Update()
 	if (m_bMapScroll == true)
 	{
 		// グリッドに沿った座標を取得、設定
-		D3DXVECTOR3 posGrid = CMapSystem::GetInstance()->GetGritPos(m_Grid.x, m_Grid.z);
+		D3DXVECTOR3 posGrid = CMapSystem::GetInstance()->GetGritPos(m_Grid);
 		pos.x = posGrid.x;
 		pos.z = posGrid.z;
 	}

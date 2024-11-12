@@ -852,7 +852,7 @@ void CDevil::PlayerScroll(D3DXVECTOR3 Move, float GritSize)
 			{
 				D3DXVECTOR3 PlayerPos = pPlayer->GetPos();
 				D3DXVECTOR3 AnswerPos = INITVECTOR3;
-				AnswerPos = CMapSystem::GetInstance()->GetGritPos(Grit.x, Grit.z);
+				AnswerPos = CMapSystem::GetInstance()->GetGritPos(Grit);
 
 				if (pPlayer->GetGritCenter())
 				{
@@ -911,11 +911,14 @@ void CDevil::GritScroll(D3DXVECTOR3 Move)
 	{
 		// 縦横のナンバーと高さを設定する
 		D3DXVECTOR3 pos = INITVECTOR3;
-		int BlockWight = pCubeBlock->GetWightNumber();
-		int BlockHeight = pCubeBlock->GetHeightNumber();
+		CMapSystem::GRID grid = CMapSystem::GRID
+		(
+			pCubeBlock->GetWightNumber(),
+			pCubeBlock->GetHeightNumber()
+		);
 
 		//グリット番号を位置に変換
-		pos = CMapSystem::GetInstance()->GetGritPos(BlockWight, BlockHeight);
+		pos = CMapSystem::GetInstance()->GetGritPos(grid);
 		pos.y = 50.0f;
 
 		pCubeBlock->SetPos(pos);
