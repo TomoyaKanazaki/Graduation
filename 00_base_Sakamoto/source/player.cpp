@@ -286,13 +286,13 @@ void CPlayer::GameUpdate(void)
 		// カメラ更新処理
 		CameraPosUpdate();
 
-		ObjPosUpdate();
-
 		if (m_State == STATE_WALK)
 		{
 			// 位置更新処理
 			PosUpdate();
 		}
+
+		ObjPosUpdate();
 
 		if (m_State != STATE_EGG)
 		{
@@ -752,6 +752,7 @@ void CPlayer::CollisionMoveRailBlock(useful::COLLISION XYZ)
 	for (CRailBlock* pRailBlock : list)
 	{
 		D3DXVECTOR3 pos = m_pos;
+		D3DXVECTOR3 posOld = m_posOld;
 		D3DXVECTOR3 Size = m_size;
 		D3DXVECTOR3 Move = m_move;
 
@@ -764,7 +765,7 @@ void CPlayer::CollisionMoveRailBlock(useful::COLLISION XYZ)
 		{
 		case useful::COLLISION_X:
 			// 矩形の当たり判定
-			if (useful::PushSquareXZ(Mypos, D3DXVECTOR3(MySize, 0.0f, MySize), MyMove, pos, Size, XYZ) == true)
+			if (useful::PushSquareXZ(Mypos, D3DXVECTOR3(MySize, 0.0f, MySize), MyMove, pos, posOld, Size, &m_Objmove, XYZ) == true)
 			{
 				m_Objmove.x = MyMove.x;
 				m_move.x = 0.0f;
@@ -780,7 +781,7 @@ void CPlayer::CollisionMoveRailBlock(useful::COLLISION XYZ)
 
 		case useful::COLLISION_Z:
 			// 矩形の当たり判定
-			if (useful::PushSquareXZ(Mypos, D3DXVECTOR3(MySize, 0.0f, MySize), MyMove, pos, Size, XYZ) == true)
+			if (useful::PushSquareXZ(Mypos, D3DXVECTOR3(MySize, 0.0f, MySize), MyMove, pos, posOld, Size, &m_Objmove, XYZ) == true)
 			{
 				m_Objmove.z = MyMove.z;
 				m_move.z = 0.0f;
@@ -860,56 +861,35 @@ void CPlayer::CollisionMoveRock(useful::COLLISION XYZ)
 	// レールブロックリストの中身を確認する
 	for (CRollRock* pRock : list)
 	{
-		D3DXVECTOR3 pos = m_pos;
-		D3DXVECTOR3 Size = m_size;
-		D3DXVECTOR3 Move = m_move;
+		D3DXVECTOR3 D_pos = CGame::GetDevil()->GetDevilPos();
+		D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
+		float G_Size = CMapSystem::GetInstance()->GetGritSize();
 
 		D3DXVECTOR3 Mypos = pRock->GetPos();
-		D3DXVECTOR3 MyposOld = pRock->GetPosOld();
-		D3DXVECTOR3 MyMove = pRock->GetMove();
-		float MySize = CMapSystem::GetInstance()->GetGritSize() * 0.5f;
 
-		switch (XYZ)
+		if (Mypos.x < D_pos.x + MapSize.x - G_Size &&
+			Mypos.x > D_pos.x - MapSize.x + G_Size &&
+			Mypos.z < D_pos.z + MapSize.z - G_Size &&
+			Mypos.z > D_pos.z - MapSize.z + G_Size)
 		{
-		case useful::COLLISION_X:
+			D3DXVECTOR3 MyposOld = pRock->GetPosOld();
+			D3DXVECTOR3 MyMove = pRock->GetMove();
+			float MySize = CMapSystem::GetInstance()->GetGritSize() * 0.5f;
 
-			if (abs(MyMove.x) > 0.0f)
+			D3DXVECTOR3 pos = m_pos;
+			D3DXVECTOR3 posOld = m_posOld;
+			D3DXVECTOR3 Size = m_size;
+			D3DXVECTOR3 Move = m_move;
+			bool a = false;
+
+			// 矩形の当たり判定
+			if (useful::CollisionBlock(Mypos, MyposOld, MyMove, D3DXVECTOR3(MySize, MySize, MySize), &m_pos, m_posOld, &m_move, &m_Objmove, m_size, &a, XYZ) == true)
 			{
-				// 矩形の当たり判定
-				if (useful::PushSquareXZ(Mypos, D3DXVECTOR3(MySize, 0.0f, MySize), MyMove, pos, Size, XYZ) == true)
-				{
-					m_Objmove.x = MyMove.x;
-					m_move.x = 0.0f;
-					m_bPressObj = true;
-					return;
-				}
-				else
-				{
-					m_Objmove.x = 0.0f;
-					m_bPressObj = false;
-				}
+				//m_Objmove.x = MyMove.x;
+				//m_move.x = 0.0f;
+				//m_bPressObj = true;
+				return;
 			}
-			break;
-
-		case useful::COLLISION_Z:
-
-			if (abs(MyMove.z) > 0.0f)
-			{
-				// 矩形の当たり判定
-				if (useful::PushSquareXZ(Mypos, D3DXVECTOR3(MySize, 0.0f, MySize), MyMove, pos, Size, XYZ) == true)
-				{
-					m_Objmove.z = MyMove.z;
-					m_move.z = 0.0f;
-					m_bPressObj = true;
-					return;
-				}
-				else
-				{
-					m_Objmove.z = 0.0f;
-					m_bPressObj = false;
-				}
-			}
-			break;
 		}
 	}
 }

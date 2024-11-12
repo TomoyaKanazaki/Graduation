@@ -109,14 +109,35 @@ bool useful::PointSquareXZ(D3DXVECTOR3 Point, D3DXVECTOR3 pos, D3DXVECTOR3 Size)
 //====================================================================
 //矩形の押し出し判定
 //====================================================================
-bool useful::PushSquareXZ(D3DXVECTOR3 PosMy, D3DXVECTOR3 SizeMy, D3DXVECTOR3 MoveMy, D3DXVECTOR3 PosPair, D3DXVECTOR3 SizePair, useful::COLLISION XYZ)
+bool useful::PushSquareXZ(D3DXVECTOR3 PosMy, D3DXVECTOR3 SizeMy, D3DXVECTOR3 MoveMy, D3DXVECTOR3 PosPair, D3DXVECTOR3 PosOldPair, D3DXVECTOR3 SizePair, D3DXVECTOR3* pObjMove, useful::COLLISION XYZ)
 {
 	switch (XYZ)
 	{
 	case useful::COLLISION_X:
+		//// 押し出し判定
+		//if (PosMy.x - SizeMy.x + MoveMy.x < PosPair.x + SizePair.x &&
+		//	PosMy.x + SizeMy.x + MoveMy.x > PosPair.x - SizePair.x &&
+		//	PosMy.z + SizeMy.z > PosPair.z - SizePair.z &&
+		//	PosMy.z - SizeMy.z < PosPair.z + SizePair.z
+		//	)
+		//{
+		//	return true;
+		//}
+
 		// 押し出し判定
-		if (PosMy.x - SizeMy.x + MoveMy.x < PosPair.x + SizePair.x &&
-			PosMy.x + SizeMy.x + MoveMy.x > PosPair.x - SizePair.x &&
+		if (PosMy.x - SizeMy.x < PosPair.x + SizePair.x &&
+			PosMy.x - SizeMy.x >= PosOldPair.x + SizePair.x &&
+			PosMy.z + SizeMy.z > PosPair.z - SizePair.z &&
+			PosMy.z - SizeMy.z < PosPair.z + SizePair.z
+			)
+		{
+			pObjMove->x = MoveMy.x;
+			return true;
+		}
+
+		// 押し出し判定
+		if (PosMy.x + SizeMy.x > PosPair.x - SizePair.x &&
+			PosMy.x + SizeMy.x <= PosOldPair.x - SizePair.x &&
 			PosMy.z + SizeMy.z > PosPair.z - SizePair.z &&
 			PosMy.z - SizeMy.z < PosPair.z + SizePair.z
 			)

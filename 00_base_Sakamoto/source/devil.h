@@ -10,7 +10,7 @@
 #include "object.h"
 #include "useful.h"
 
-#define SCROLL_ID 0
+#define SCROLL_ID 2
 
 //‘O•ûéŒ¾
 class CModel;
