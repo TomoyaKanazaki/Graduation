@@ -42,8 +42,7 @@ namespace
 	float SCROOL_SPEED01 = 1.5f;				// スクロールの移動速度
 	float SCROOL_SPEED02 = 25.0f;				// スクロールの移動速度
 	float STAGE_ROT_LIMIT = D3DX_PI * 0.15f;	// 傾きの角度制限
-	float SLOPE_SPEED01 = 0.0075f;				// 傾きの移動速度
-	//float SLOPE_SPEED01 = 0.00075f;				// 傾きの移動速度
+	float SLOPE_SPEED01 = 0.00075f;				// 傾きの移動速度
 	float SLOPE_SPEED02 = 0.0125f;				// 傾きの移動速度
 }
 
