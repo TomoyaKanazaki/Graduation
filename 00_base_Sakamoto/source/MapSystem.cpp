@@ -364,3 +364,13 @@ int CMapSystem::CalcGridZ(const float posZ)
 	// グリット外なら-1を返す
 	return -1;
 }
+
+//==========================================
+//  代入演算子のオペレータ
+//==========================================
+CMapSystem::GRID& CMapSystem::GRID::operator=(const AStar::Vec2i vec)
+{
+	x += vec.x;
+	z += vec.y;
+	return *this;
+}

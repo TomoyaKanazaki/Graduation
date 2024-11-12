@@ -31,6 +31,8 @@ public:
 
 		int x;
 		int z;
+
+		GRID& operator = (CONST AStar::Vec2i);
 	};
 
 	CMapSystem();
