@@ -151,7 +151,7 @@ private:
 
 	// メンバ変数
 	CListManager<CEnemy>::AIterator m_iterator; // イテレーター
-	AStar::CoordinateList m_pPath;
+	std::vector<CMapSystem::GRID> m_Path;
 
 };
 

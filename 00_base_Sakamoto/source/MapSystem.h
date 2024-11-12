@@ -29,11 +29,14 @@ public:
 		GRID() {};
 		GRID(int X, int Z) { x = X; z = Z; };
 
+		// デストラクタ
+		~GRID() {};
+
 		int x;
 		int z;
 
 		// オペレーター
-		GRID& operator = (const AStar::Vec2i vec); // A*ライブラリとの互換用
+		GRID& operator = (const AStar::Vec2i& vec); // A*ライブラリとの互換用
 		bool operator == (const GRID& grid); // グリッド同士の比較
 		bool operator != (const GRID& grid); // グリッド同士の比較
 	};

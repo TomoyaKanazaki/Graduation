@@ -368,10 +368,10 @@ int CMapSystem::CalcGridZ(const float posZ)
 //==========================================
 //  代入演算子のオペレータ
 //==========================================
-CMapSystem::GRID& CMapSystem::GRID::operator=(const AStar::Vec2i vec)
+CMapSystem::GRID& CMapSystem::GRID::operator=(const AStar::Vec2i& vec)
 {
-	x += vec.x;
-	z += vec.y;
+	x = vec.x;
+	z = vec.y;
 	return *this;
 }
 

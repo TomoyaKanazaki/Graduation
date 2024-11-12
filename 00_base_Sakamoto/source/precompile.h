@@ -17,8 +17,7 @@
 #include <stdio.h>
 #include <cmath>
 #include <list>
-
-#include <cstdlib>
+#include <vector>
 
 #include <string>			// 文字列
 #include <string.h>
@@ -29,21 +28,16 @@
 #include "deltatime.h"
 #include <algorithm>
 
-//メモリリーク出力用マクロ
 #define _CRTDBG_MAP_ALLOC
-#include <crtdbg.h>
+#include <crtdbg.h>		// メモリリーク検出に必要
+
 #ifdef _DEBUG
-#define CHECK_MEM_LEAK
+//#define CHECK_MEM_LEAK
 #endif // _DEBUG
+
+//普段使用禁止
 #ifdef CHECK_MEM_LEAK
-#ifdef new
-#undef new
-#endif
+#define new new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
 #endif // CHECK_MEM_LEAK
-//
-////普段使用禁止
-//#ifdef CHECK_MEM_LEAK
-//#define new new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
-//#endif // CHECK_MEM_LEAK
 
 #endif	//_PRECOMPILE_H_
