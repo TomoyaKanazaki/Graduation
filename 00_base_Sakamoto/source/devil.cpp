@@ -31,6 +31,7 @@
 #include "debugproc.h"
 #include "objmeshField.h"
 #include "railblock.h"
+#include "RollRock.h"
 #include "sound.h"
 
 //===========================================
@@ -38,8 +39,8 @@
 //===========================================
 namespace
 {
-	float SCROOL_SPEED01 = 5.5f;					// スクロールの移動速度
-	float SCROOL_SPEED02 = 25.0f;					// スクロールの移動速度
+	float SCROOL_SPEED01 = 5.5f;				// スクロールの移動速度
+	float SCROOL_SPEED02 = 25.0f;				// スクロールの移動速度
 	float STAGE_ROT_LIMIT = D3DX_PI * 0.25f;	// スクロールの移動速度
 }
 
@@ -623,6 +624,9 @@ void CDevil::ObjectScroll(D3DXVECTOR3 Move)
 	// レールブロックのスクロール
 	RailBlockScroll(Move, m_GritSize);
 
+	// 転がる岩のスクロール
+	RollRockScroll(Move, m_GritSize);
+
 	// プレイヤーのスクロール
 	PlayerScroll(Move, m_GritSize);
 }
@@ -762,6 +766,24 @@ void CDevil::RailBlockScroll(D3DXVECTOR3 Move, float GritSize)
 
 	// レールブロックのリストの中身を確認する
 	for (CRailBlock* pRailBlock : list)
+	{
+		D3DXVECTOR3 pos = pRailBlock->GetPos();
+		pos += Move;
+		pRailBlock->SetPos(pos);
+	}
+}
+
+//====================================================================
+// 転がる岩のスクロール
+//====================================================================
+void CDevil::RollRockScroll(D3DXVECTOR3 Move, float GritSize)
+{
+	// レールブロックのリスト構造が無ければ抜ける
+	if (CRollRock::GetList() == nullptr) { return; }
+	std::list<CRollRock*> list = CRollRock::GetList()->GetList();    // リストを取得
+
+	// レールブロックのリストの中身を確認する
+	for (CRollRock* pRailBlock : list)
 	{
 		D3DXVECTOR3 pos = pRailBlock->GetPos();
 		pos += Move;
@@ -975,7 +997,7 @@ void CDevil::CollisionPressPlayer(CPlayer* pPlayer, D3DXVECTOR3 pos, D3DXVECTOR3
 //====================================================================
 //傾き中の移動量変動
 //====================================================================
-float CDevil::MoveSlopeX(void)
+float CDevil::MoveSlopeX(float Move)
 {
 	float fSlopeMove = 1.0f;
 
@@ -985,11 +1007,11 @@ float CDevil::MoveSlopeX(void)
 		DevilRot = m_DevilRot;
 	}
 
-	if (m_move.x > 0.0f)
+	if (Move > 0.0f)
 	{
 		fSlopeMove = (D3DX_PI / (D3DX_PI + DevilRot.z));
 	}
-	else if (m_move.x < 0.0f)
+	else if (Move < 0.0f)
 	{
 		fSlopeMove = (D3DX_PI / (D3DX_PI - DevilRot.z));
 	}
@@ -1000,7 +1022,7 @@ float CDevil::MoveSlopeX(void)
 //====================================================================
 //傾き中の移動量変動
 //====================================================================
-float CDevil::MoveSlopeZ(void)
+float CDevil::MoveSlopeZ(float Move)
 {
 	float fSlopeMove = 1.0f;
 
@@ -1010,11 +1032,11 @@ float CDevil::MoveSlopeZ(void)
 		DevilRot = CGame::GetDevil()->GetDevilRot();
 	}
 
-	if (m_move.z > 0.0f)
+	if (Move > 0.0f)
 	{
 		fSlopeMove = (D3DX_PI / (D3DX_PI - DevilRot.x));
 	}
-	else if (m_move.z < 0.0f)
+	else if (Move < 0.0f)
 	{
 		fSlopeMove = (D3DX_PI / (D3DX_PI + DevilRot.x));
 	}

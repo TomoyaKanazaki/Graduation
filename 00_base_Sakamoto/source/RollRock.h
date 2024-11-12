@@ -36,6 +36,10 @@ public:
 	void SetPos(D3DXVECTOR3 pos) { m_pos = pos; }
 	D3DXVECTOR3 GetPos(void) { return m_pos; }
 
+	// マップ番号の設定
+	virtual void SetGrid(const CMapSystem::GRID& pos) { m_Grid = pos; }
+	CMapSystem::GRID GetGrid(void) { return m_Grid; }
+
 	// 静的メンバ関数
 	static CListManager<CRollRock>* GetList(void); // リスト取得
 
@@ -44,7 +48,7 @@ private:
 	void CollisionWall(useful::COLLISION XYZ);		//壁との当たり判定
 	void CollisionOut();							//ステージ外との当たり判定
 
-	CMapSystem::GRID m_Grid;	//グリット番号
+	CMapSystem::GRID m_Grid;		//グリット番号
 	int m_nIdxXModel;				//Xモデルの番号
 	D3DXVECTOR3 m_CollisionPos;		//当たり判定用の座標
 	bool m_bCollision;				//当たり判定用の座標
@@ -56,6 +60,11 @@ private:
 	D3DXVECTOR3 m_move;				//移動量	
 	D3DXVECTOR3 m_rot;				//向き	
 	float m_fColorA;				//不透明度
+
+	bool m_OKL;					//左への進行が許されるかどうか
+	bool m_OKR;					//右への進行が許されるかどうか
+	bool m_OKU;					//上への進行が許されるかどうか
+	bool m_OKD;					//下への進行が許されるかどうか
 
 		// 静的メンバ変数
 	static CListManager<CRollRock>* m_pList; // オブジェクトリスト
