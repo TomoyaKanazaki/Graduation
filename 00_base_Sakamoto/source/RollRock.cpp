@@ -240,94 +240,94 @@ void CRollRock::Draw(void)
 //====================================================================
 void CRollRock::Move(void)
 {
-	D3DXVECTOR3 SlopeRot = CGame::GetDevil()->GetDevilRot();
+	//D3DXVECTOR3 SlopeRot = CGame::GetDevil()->GetDevilRot();
 
-	// 傾きによる移動量設定
-	m_move.x = -SlopeRot.z * 10.0f;
-	m_move.z = SlopeRot.x * 10.0f;
+	//// 傾きによる移動量設定
+	//m_move.x = -SlopeRot.z * 10.0f;
+	//m_move.z = SlopeRot.x * 10.0f;
 
-	//自分の立っているグリットの中心位置を求める
-	D3DXVECTOR3 MyGritPos = CMapSystem::GetInstance()->GetGritPos(m_Grid.x, m_Grid.z);
-	float MapGritSize = CMapSystem::GetInstance()->GetGritSize();
+	////自分の立っているグリットの中心位置を求める
+	////D3DXVECTOR3 MyGritPos = CMapSystem::GetInstance()->GetGritPos(m_Grid.x, m_Grid.z);
+	//float MapGritSize = CMapSystem::GetInstance()->GetGritSize();
 
-	if (m_pos.x <= MyGritPos.x + ((MapGritSize * 0.5f) - (GRIT_OK * m_OKR)) &&	//左
-		m_pos.x >= MyGritPos.x - ((MapGritSize * 0.5f) - (GRIT_OK * m_OKL)) &&	//右
-		m_pos.z <= MyGritPos.z + ((MapGritSize * 0.5f)) &&	//上
-		m_pos.z >= MyGritPos.z - ((MapGritSize * 0.5f)))	//下
-	{// グリットの中心位置に立っているか
+	//if (m_pos.x <= MyGritPos.x + ((MapGritSize * 0.5f) - (GRIT_OK * m_OKR)) &&	//左
+	//	m_pos.x >= MyGritPos.x - ((MapGritSize * 0.5f) - (GRIT_OK * m_OKL)) &&	//右
+	//	m_pos.z <= MyGritPos.z + ((MapGritSize * 0.5f)) &&	//上
+	//	m_pos.z >= MyGritPos.z - ((MapGritSize * 0.5f)))	//下
+	//{// グリットの中心位置に立っているか
 
-		int nRGridX = m_Grid.x + 1;
-		int nLGridX = m_Grid.x - 1;
+	//	int nRGridX = m_Grid.x + 1;
+	//	int nLGridX = m_Grid.x - 1;
 
-		nRGridX = useful::RangeNumber(CMapSystem::GetInstance()->GetWightMax(), 0, nRGridX);
-		nLGridX = useful::RangeNumber(CMapSystem::GetInstance()->GetWightMax(), 0, nLGridX);
+	//	nRGridX = useful::RangeNumber(CMapSystem::GetInstance()->GetWightMax(), 0, nRGridX);
+	//	nLGridX = useful::RangeNumber(CMapSystem::GetInstance()->GetWightMax(), 0, nLGridX);
 
-		if (CMapSystem::GetInstance()->GetGritBool(nRGridX, m_Grid.z) == true)
-		{//右
-			m_OKR = false;	
-		}
-		else
-		{
-			m_OKR = true;
-		}
+	//	if (CMapSystem::GetInstance()->GetGritBool(nRGridX, m_Grid.z) == true)
+	//	{//右
+	//		m_OKR = false;	
+	//	}
+	//	else
+	//	{
+	//		m_OKR = true;
+	//	}
 
-		if (CMapSystem::GetInstance()->GetGritBool(nLGridX, m_Grid.z) == true)
-		{//左
-			m_OKL = false;
-		}
-		else
-		{
-			m_OKL = true;
-		}
-	}
+	//	if (CMapSystem::GetInstance()->GetGritBool(nLGridX, m_Grid.z) == true)
+	//	{//左
+	//		m_OKL = false;
+	//	}
+	//	else
+	//	{
+	//		m_OKL = true;
+	//	}
+	//}
 
-	if (m_pos.x <= MyGritPos.x + ((MapGritSize * 0.5f)) &&	//左
-		m_pos.x >= MyGritPos.x - ((MapGritSize * 0.5f)) &&	//右
-		m_pos.z <= MyGritPos.z + ((MapGritSize * 0.5f) - (GRIT_OK * m_OKD)) &&	//上
-		m_pos.z >= MyGritPos.z - ((MapGritSize * 0.5f) - (GRIT_OK * m_OKU)))	//下
-	{// グリットの中心位置に立っているか
+	//if (m_pos.x <= MyGritPos.x + ((MapGritSize * 0.5f)) &&	//左
+	//	m_pos.x >= MyGritPos.x - ((MapGritSize * 0.5f)) &&	//右
+	//	m_pos.z <= MyGritPos.z + ((MapGritSize * 0.5f) - (GRIT_OK * m_OKD)) &&	//上
+	//	m_pos.z >= MyGritPos.z - ((MapGritSize * 0.5f) - (GRIT_OK * m_OKU)))	//下
+	//{// グリットの中心位置に立っているか
 
-		int nUGridZ = m_Grid.z - 1;
-		int nDGridZ = m_Grid.z + 1;
+	//	int nUGridZ = m_Grid.z - 1;
+	//	int nDGridZ = m_Grid.z + 1;
 
-		nUGridZ = useful::RangeNumber(CMapSystem::GetInstance()->GetHeightMax(), 0, nUGridZ);
-		nDGridZ = useful::RangeNumber(CMapSystem::GetInstance()->GetHeightMax(), 0, nDGridZ);
+	//	nUGridZ = useful::RangeNumber(CMapSystem::GetInstance()->GetHeightMax(), 0, nUGridZ);
+	//	nDGridZ = useful::RangeNumber(CMapSystem::GetInstance()->GetHeightMax(), 0, nDGridZ);
 
-		if (CMapSystem::GetInstance()->GetGritBool(m_Grid.x, nUGridZ) == true)
-		{//上
-			m_OKU = false;
-		}
-		else
-		{
-			m_OKU = true;
-		}
+	//	if (CMapSystem::GetInstance()->GetGritBool(m_Grid.x, nUGridZ) == true)
+	//	{//上
+	//		m_OKU = false;
+	//	}
+	//	else
+	//	{
+	//		m_OKU = true;
+	//	}
 
-		if (CMapSystem::GetInstance()->GetGritBool(m_Grid.x, nDGridZ) == true)
-		{//下
-			m_OKD = false;
-		}
-		else
-		{
-			m_OKD = true;
-		}
-	}
+	//	if (CMapSystem::GetInstance()->GetGritBool(m_Grid.x, nDGridZ) == true)
+	//	{//下
+	//		m_OKD = false;
+	//	}
+	//	else
+	//	{
+	//		m_OKD = true;
+	//	}
+	//}
 
-	if (!m_OKR && m_move.x > 0.0f)
-	{
-		m_move.x = 0.0f;
-	}
-	if (!m_OKL && m_move.x < 0.0f)
-	{
-		m_move.x = 0.0f;
-	}
-	if (!m_OKU && m_move.z > 0.0f)
-	{
-		m_move.z = 0.0f;
-	}
-	if (!m_OKD && m_move.z < 0.0f)
-	{
-		m_move.z = 0.0f;
-	}
+	//if (!m_OKR && m_move.x > 0.0f)
+	//{
+	//	m_move.x = 0.0f;
+	//}
+	//if (!m_OKL && m_move.x < 0.0f)
+	//{
+	//	m_move.x = 0.0f;
+	//}
+	//if (!m_OKU && m_move.z > 0.0f)
+	//{
+	//	m_move.z = 0.0f;
+	//}
+	//if (!m_OKD && m_move.z < 0.0f)
+	//{
+	//	m_move.z = 0.0f;
+	//}
 }
 
 //====================================================================
