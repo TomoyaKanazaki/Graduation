@@ -35,6 +35,8 @@ public:
 	int GetIdxXModel(void) { return -1; }
 	void SetPos(D3DXVECTOR3 pos) { m_pos = pos; }
 	D3DXVECTOR3 GetPos(void) { return m_pos; }
+	void SetMove(D3DXVECTOR3 pos) { m_move = pos; }
+	D3DXVECTOR3 GetMove(void) { return m_move; }
 
 	// É}ÉbÉvî‘çÜÇÃê›íË
 	virtual void SetGrid(const CMapSystem::GRID& pos) { m_Grid = pos; }

@@ -55,6 +55,7 @@ public:
 	{
 		STATE_WAIT = 0,		//待機
 		STATE_SCROLL,		//スクロール状態
+		STATE_SLOPE,		//傾き状態
 		STATE_MAX,			//最大
 	};
 
@@ -97,7 +98,8 @@ private:
 	void ActionState(void);		//モーションと状態の管理
 	void StateManager(void);	//状態管理
 	void Move(int Arroow);		//移動処理
-	void Rot(void);				//移動方向処理
+	void BackSlope(void);	//傾き処理
+	void Slope(int Arroow);		//傾き処理
 
 	void ObjectScroll(D3DXVECTOR3 Move);	//オブジェクトのスクロール
 	void CrossScroll(D3DXVECTOR3 Move, float GritSize);		// 十字架のスクロール
@@ -130,6 +132,7 @@ private:
 	float m_fActionCount;				//行動のカウント
 	STATE m_State;					//状態
 	int m_nStateCount;				//状態管理用カウント
+	bool m_bSlope;					//傾き状態かどうか
 
 	float m_CollisionRot;			//当たり判定用の向き
 
