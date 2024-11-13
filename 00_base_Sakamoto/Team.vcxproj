@@ -60,6 +60,7 @@
     <ClCompile Include="source\model.cpp" />
     <ClCompile Include="source\modelEffect.cpp" />
     <ClCompile Include="source\motion.cpp" />
+    <ClCompile Include="source\MyEffekseer.cpp" />
     <ClCompile Include="source\number.cpp" />
     <ClCompile Include="source\numberBillboard.cpp" />
     <ClCompile Include="source\numberFall.cpp" />
@@ -151,6 +152,7 @@
     <ClInclude Include="source\model.h" />
     <ClInclude Include="source\modelEffect.h" />
     <ClInclude Include="source\motion.h" />
+    <ClInclude Include="source\MyEffekseer.h" />
     <ClInclude Include="source\number.h" />
     <ClInclude Include="source\numberBillboard.h" />
     <ClInclude Include="source\numberFall.h" />
@@ -276,7 +278,7 @@
       <SDLCheck>true</SDLCheck>
       <PrecompiledHeaderFile>precompile.h</PrecompiledHeaderFile>
       <ForcedIncludeFiles>precompile.h</ForcedIncludeFiles>
-      <AdditionalIncludeDirectories>..\hidapi;source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\student\Desktop\Graduation\00_base_Sakamoto\source\lib\Effekseer\Include\EffekseerRendererGL;C:\Users\student\Desktop\Graduation\00_base_Sakamoto\source\lib\Effekseer\Include\EffekseerRendererDX9;C:\Users\student\Desktop\Graduation\00_base_Sakamoto\source\lib\Effekseer\Include\Effekseer;..\hidapi;source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -284,7 +286,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\windows\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\student\Desktop\Graduation\00_base_Sakamoto\source\lib\Effekseer\Lib;..\windows\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>setupapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Bscmake />
@@ -314,7 +316,7 @@
       <SDLCheck>true</SDLCheck>
       <PrecompiledHeaderFile>precompile.h</PrecompiledHeaderFile>
       <ForcedIncludeFiles>precompile.h</ForcedIncludeFiles>
-      <AdditionalIncludeDirectories>..\hidapi;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\student\Desktop\Graduation\00_base_Sakamoto\source\lib\Effekseer\Include\EffekseerRendererGL;C:\Users\student\Desktop\Graduation\00_base_Sakamoto\source\lib\Effekseer\Include\EffekseerRendererDX9;C:\Users\student\Desktop\Graduation\00_base_Sakamoto\source\lib\Effekseer\Include\Effekseer;..\hidapi;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <SupportJustMyCode>true</SupportJustMyCode>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -324,7 +326,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\windows\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\student\Desktop\Graduation\00_base_Sakamoto\source\lib\Effekseer\Lib;..\windows\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>setupapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImageHasSafeExceptionHandlers />
     </Link>
