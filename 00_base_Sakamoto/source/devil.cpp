@@ -39,9 +39,11 @@
 //===========================================
 namespace
 {
-	float SCROOL_SPEED01 = 5.5f;				// スクロールの移動速度
+	float SCROOL_SPEED01 = 1.5f;				// スクロールの移動速度
 	float SCROOL_SPEED02 = 25.0f;				// スクロールの移動速度
-	float STAGE_ROT_LIMIT = D3DX_PI * 0.25f;	// スクロールの移動速度
+	float STAGE_ROT_LIMIT = D3DX_PI * 0.15f;	// 傾きの角度制限
+	float SLOPE_SPEED01 = 0.00075f;				// 傾きの移動速度
+	float SLOPE_SPEED02 = 0.0125f;				// 傾きの移動速度
 }
 
 //===========================================
@@ -70,6 +72,7 @@ CDevil::CDevil(int nPriority) : CObject(nPriority)
 	m_DevilPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_MapDifference = INITVECTOR3;
 	m_DevilRot = INITVECTOR3;
+	m_bSlope = false;
 }
 
 //====================================================================
@@ -228,9 +231,6 @@ void CDevil::GameUpdate(void)
 	// 過去の位置に代入
 	m_posOld = m_pos;
 
-	// 向き移動処理
-	Rot();
-
 	// マップの傾き
 	m_DevilRot = CGame::GetMapField()->GetRot();
 
@@ -367,7 +367,7 @@ void CDevil::Move(int Arroow)
 		break;
 	}
 
-#else
+#elif SCROLL_ID == 1
 
 	switch (Arroow)
 	{
@@ -396,66 +396,124 @@ void CDevil::Move(int Arroow)
 
 		break;
 	}
+#else
+	switch (Arroow)
+	{
+	case 0:
 
+		ObjectScroll(D3DXVECTOR3(0.0f, 0.0f, SCROOL_SPEED01));
+		m_move.z = SCROOL_SPEED01;
 
+		break;
+	case 1:
+
+		ObjectScroll(D3DXVECTOR3(0.0f, 0.0f, -SCROOL_SPEED01));
+		m_move.z = -SCROOL_SPEED01;
+
+		break;
+	case 2:
+
+		ObjectScroll(D3DXVECTOR3(-SCROOL_SPEED01, 0.0f, 0.0f));
+		m_move.x = -SCROOL_SPEED01;
+
+		break;
+	case 3:
+
+		ObjectScroll(D3DXVECTOR3(SCROOL_SPEED01, 0.0f, 0.0f));
+		m_move.x = SCROOL_SPEED01;
+
+		break;
+	}
 #endif // SCROLL_ID
 }
 
 //====================================================================
 //移動方向処理
 //====================================================================
-void CDevil::Rot(void)
+void CDevil::BackSlope(void)
 {
-	//キーボードの取得
-	CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
-	CInputMouse* pInputMouse = CManager::GetInstance()->GetInputMouse();
-	CInputJoypad* pInputJoypad = CManager::GetInstance()->GetInputJoyPad();
-	D3DXVECTOR3 CameraRot = CManager::GetInstance()->GetCamera()->GetRot();
-	
+	CObjmeshField* pMapField = CGame::GetMapField();
+	D3DXVECTOR3 MapRot = pMapField->GetRot();
+
+	if (MapRot.x > 0.0f)
+	{
+		MapRot.x -= D3DX_PI * SLOPE_SPEED01;
+	}
+
+	if (MapRot.x < 0.0f)
+	{
+		MapRot.x += D3DX_PI * SLOPE_SPEED01;
+	}
+
+	if (MapRot.z > 0.0f)
+	{
+		MapRot.z -= D3DX_PI * SLOPE_SPEED01;
+	}
+
+	if (MapRot.z < 0.0f)
+	{
+		MapRot.z += D3DX_PI * SLOPE_SPEED01;
+	}
+
+	if (abs(MapRot.x) <= 0.0f && abs(MapRot.z) <= 0.0f)
+	{
+		STATE_WAIT;
+		m_nStateCount = 120;
+	}
+
+	pMapField->SetRot(MapRot);
+}
+
+//====================================================================
+//移動方向処理
+//====================================================================
+void CDevil::Slope(int Arroow)
+{	
 	CObjmeshField *pMapField = CGame::GetMapField();
 	D3DXVECTOR3 MapRot = pMapField->GetRot();
 
-	if (pInputKeyboard->GetPress(DIK_5))
+	switch (Arroow)
 	{
-		MapRot = INITVECTOR3;
-	}
+	case 0:
 
-	if (pInputKeyboard->GetPress(DIK_6))
-	{
-		MapRot.x += D3DX_PI * 0.005f;
+		MapRot.x += D3DX_PI * SLOPE_SPEED01;
 
 		if (MapRot.x > STAGE_ROT_LIMIT)
 		{
 			MapRot.x = STAGE_ROT_LIMIT;
 		}
-	}
-	if (pInputKeyboard->GetPress(DIK_7))
-	{
-		MapRot.x -= D3DX_PI * 0.005f;
+
+		break;
+	case 1:
+
+		MapRot.x -= D3DX_PI * SLOPE_SPEED01;
 
 		if (MapRot.x < -STAGE_ROT_LIMIT)
 		{
 			MapRot.x = -STAGE_ROT_LIMIT;
 		}
-	}
 
-	if (pInputKeyboard->GetPress(DIK_8))
-	{
-		MapRot.z += D3DX_PI * 0.005f;
+		break;
+	case 2:
+
+		MapRot.z += D3DX_PI * SLOPE_SPEED01;
 
 		if (MapRot.z > STAGE_ROT_LIMIT)
 		{
 			MapRot.z = STAGE_ROT_LIMIT;
 		}
-	}
-	if (pInputKeyboard->GetPress(DIK_9))
-	{
-		MapRot.z -= D3DX_PI * 0.005f;
+
+		break;
+	case 3:
+
+		MapRot.z -= D3DX_PI * SLOPE_SPEED01;
 
 		if (MapRot.z < -STAGE_ROT_LIMIT)
 		{
 			MapRot.z = -STAGE_ROT_LIMIT;
 		}
+
+		break;
 	}
 
 	pMapField->SetRot(MapRot);
@@ -497,8 +555,19 @@ void CDevil::StateManager(void)
 
 		if (m_nStateCount <= 0)
 		{
-			m_State = STATE_SCROLL;
-			m_nStateCount = 300;
+			int nRand = rand() % 101;
+			if (nRand <= 50)
+			{
+				m_State = STATE_SLOPE;
+				m_nStateCount = 300;
+
+				m_bSlope = !m_bSlope;
+			}
+			else
+			{
+				m_State = STATE_SCROLL;
+				m_nStateCount = 300;
+			}
 			m_DevilArrow = rand() % 4;
 		}
 
@@ -507,14 +576,45 @@ void CDevil::StateManager(void)
 	case STATE_SCROLL:
 
 #if SCROLL_ID == 0
-		//Move(m_DevilArrow);
-#else
+		Move(m_DevilArrow);
+#elif SCROLL_ID == 1
 
 		if (m_nStateCount % 25 == 0)
 		{
 			Move(m_DevilArrow);
 		}
+#else
 
+#endif // SCROLL_ID
+
+		if (m_nStateCount <= 0)
+		{
+			m_State = STATE_WAIT;
+			m_nStateCount = 120;
+		}
+
+		break;
+
+	case STATE_SLOPE:
+
+#if SCROLL_ID == 0
+
+		if (m_bSlope)
+		{
+			Slope(m_DevilArrow);
+		}
+		else
+		{
+			BackSlope();
+		}
+#elif SCROLL_ID == 1
+
+		if (m_nStateCount % 25 == 0)
+		{
+			Slope(m_DevilArrow);
+		}
+
+#else
 
 #endif // SCROLL_ID
 
@@ -572,6 +672,30 @@ void CDevil::DebugKey(void)
 		Move(3);
 	}
 
+	if (pInputKeyboard->GetPress(DIK_5))
+	{
+		CObjmeshField* pMapField = CGame::GetMapField();
+		D3DXVECTOR3 MapRot = pMapField->GetRot();
+		MapRot = INITVECTOR3;
+		pMapField->SetRot(MapRot);
+	}
+
+	if (pInputKeyboard->GetPress(DIK_6))
+	{
+		Slope(0);
+	}
+	if (pInputKeyboard->GetPress(DIK_7))
+	{
+		Slope(1);
+	}
+	if (pInputKeyboard->GetPress(DIK_8))
+	{
+		Slope(2);
+	}
+	if (pInputKeyboard->GetPress(DIK_9))
+	{
+		Slope(3);
+	}
 #endif // !_DEBUG
 }
 
