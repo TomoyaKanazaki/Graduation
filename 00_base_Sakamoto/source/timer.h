@@ -1,11 +1,11 @@
 //============================================
 //
-//	タイムの処理 [time.h]
+//	タイムの処理 [timer.h]
 //	Author:sakamoto kai
 //
 //============================================
-#ifndef _TIME_H_
-#define _TIME_H_
+#ifndef _TIMER_H_
+#define _TIMER_H_
 
 #include "main.h"
 #include "object.h"
@@ -18,13 +18,13 @@ class CObject;
 class CNumber;
 
 //多重背景クラス
-class CTime : public CObject
+class CTimer : public CObject
 {
 public:
-	CTime(int nPriority = 5);
-	~CTime();
+	CTimer(int nPriority = 5);
+	~CTimer();
 
-	static CTime* Create();
+	static CTimer* Create();
 	static void SetTime(int Time) { m_nTime = Time; }
 	static int GetTime(void) { return m_nTime; }
 	static void SetPos(D3DXVECTOR3 pos) { m_pos = pos; }
