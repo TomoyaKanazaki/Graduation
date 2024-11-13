@@ -109,6 +109,7 @@ private:
 	virtual void Death(void);							// 死亡処理
 	void MoveSelect(void);								// 移動方向の選択
 	void SearchWall(void);								// 壁のサーチ判定
+	void Coordinate(); // 最短経路探索
 
 	CMapSystem::GRID m_Grid;	//グリット番号
 
@@ -151,8 +152,8 @@ private:
 
 	// メンバ変数
 	CListManager<CEnemy>::AIterator m_iterator; // イテレーター
-	std::vector<CMapSystem::GRID> m_Path;
-
+	CMapSystem::GRID* m_pPath; // プレイヤーへの最短経路
+	float m_fCoordinateTimer; // 経路探索間隔
 };
 
 #endif
