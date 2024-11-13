@@ -37,9 +37,9 @@ CMapSystem::CMapSystem()
 	}
 	m_WightMax = NUM_WIGHT;
 	m_HeightMax = NUM_HEIGHT;
-	m_MapPos = D3DXVECTOR3((m_WightMax * 0.5f) * -100.0f, 0.0f, (m_HeightMax * 0.5f) * 100.0f);
-	m_InitPos = m_MapPos;
 	m_fGritSize = GRID_SIZE;
+	m_MapPos = D3DXVECTOR3((((m_WightMax * 0.5f) * -100.0f) + m_fGritSize * 0.5f), 0.0f, (((m_HeightMax * 0.5f) * 100.0f) - m_fGritSize * 0.5f));
+	m_InitPos = m_MapPos;
 	m_MapSize = MAP_SIZE;
 	m_MapSize = D3DXVECTOR3((NUM_WIGHT - 1) * 50.0f, 0.0f, (NUM_HEIGHT - 1) * 50.0f);
 }
@@ -77,7 +77,7 @@ void CMapSystem::Init()
 		}
 	}
 
-	m_MapPos = D3DXVECTOR3((m_WightMax * 0.5f) * -100.0f, 0.0f, (m_HeightMax * 0.5f) * 100.0f);
+	m_MapPos = D3DXVECTOR3((((m_WightMax * 0.5f) * -100.0f) + m_fGritSize * 0.5f), 0.0f, (((m_HeightMax * 0.5f) * 100.0f) - m_fGritSize * 0.5f));
 	m_InitPos = m_MapPos;
 
 	// åoòHíTçıópÇÃèÓïÒÇéÊìæ
@@ -102,7 +102,6 @@ void CMapSystem::Uninit(void)
 	}
 
 	delete AStar::Generator::GetInstance();
-
 }
 
 //====================================================================
