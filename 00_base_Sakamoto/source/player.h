@@ -223,6 +223,7 @@ private:
 
 	// メンバ変数
 	CListManager<CPlayer>::AIterator m_iterator; // イテレーター
+	float m_fCrossTimer; // 十字架を持っていられる時間
 };
 
 #endif
