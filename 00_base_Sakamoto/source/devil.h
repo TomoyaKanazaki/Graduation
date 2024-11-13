@@ -9,6 +9,7 @@
 
 #include "object.h"
 #include "useful.h"
+#include "MapSystem.h"
 
 #define SCROLL_ID 1
 
@@ -98,8 +99,9 @@ private:
 	void ActionState(void);		//モーションと状態の管理
 	void StateManager(void);	//状態管理
 	void Move(int Arroow);		//移動処理
-	void BackSlope(void);	//傾き処理
+	void BackSlope(void);		//傾き処理
 	void Slope(int Arroow);		//傾き処理
+	void CollisionOut();		//ステージ外にいるオブジェクトの処理
 
 	void ObjectScroll(D3DXVECTOR3 Move);	//オブジェクトのスクロール
 	void CrossScroll(D3DXVECTOR3 Move, float GritSize);		// 十字架のスクロール
@@ -133,6 +135,9 @@ private:
 	STATE m_State;					//状態
 	int m_nStateCount;				//状態管理用カウント
 	bool m_bSlope;					//傾き状態かどうか
+
+	CMapSystem::GRID m_MinGrid;		//マップで一番左上にあるブロックの番号
+	CMapSystem::GRID m_MaxGrid;		//マップで一番右下にあるブロックの番号
 
 	float m_CollisionRot;			//当たり判定用の向き
 

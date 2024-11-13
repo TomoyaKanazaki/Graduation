@@ -27,7 +27,6 @@
 #include "effect.h"
 #include "bowabowa.h"
 #include "Cross.h"
-#include "MapSystem.h"
 #include "debugproc.h"
 #include "objmeshField.h"
 #include "railblock.h"
@@ -39,10 +38,20 @@
 //===========================================
 namespace
 {
-	float SCROOL_SPEED01 = 1.5f;				// スクロールの移動速度
-	float SCROOL_SPEED02 = 25.0f;				// スクロールの移動速度
+	int SCROOL_TIME = 300;						// スクロール時間
+
+	float SCROOL_SPEED01 = 5.5f;				// スクロールの移動速度
+
+	int SCROOL_COUNT = 12;						// スクロールの移動回数
+	int SCROOL_MOVEGRID = 3;					// スクロールの移動マス幅
+	float SCROOL_SPEED02 = (CMapSystem::GetInstance()->GetGritSize() * SCROOL_MOVEGRID) / SCROOL_COUNT;				// スクロールの移動速度
+
+	int SLOPE_TIME = 300;						// 傾き操作時間
+	int SLOPE_RAND = 50;						// 傾き発生確率
 	float STAGE_ROT_LIMIT = D3DX_PI * 0.15f;	// 傾きの角度制限
+
 	float SLOPE_SPEED01 = 0.00075f;				// 傾きの移動速度
+
 	float SLOPE_SPEED02 = 0.0125f;				// 傾きの移動速度
 }
 
@@ -73,6 +82,8 @@ CDevil::CDevil(int nPriority) : CObject(nPriority)
 	m_MapDifference = INITVECTOR3;
 	m_DevilRot = INITVECTOR3;
 	m_bSlope = false;
+	m_MinGrid = CMapSystem::GRID(0, 0);
+	m_MaxGrid = CMapSystem::GRID(NUM_WIGHT - 1, NUM_HEIGHT - 1);
 }
 
 //====================================================================
@@ -237,6 +248,12 @@ void CDevil::GameUpdate(void)
 	//状態の管理
 	StateManager();
 
+	//デバッグキーの処理と設定
+	DebugKey();
+
+	//ステージ外にいるオブジェクトの処理
+	CollisionOut();
+
 	if (m_pMotion != nullptr)
 	{
 		//モーションの更新
@@ -246,36 +263,33 @@ void CDevil::GameUpdate(void)
 	D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
 	CEffect* pTestEffect = nullptr;
 
-	for (int nCnt = 0; nCnt < 4; nCnt++)
-	{
-		pTestEffect = CEffect::Create();
-
-		switch (nCnt)
-		{
-		case 0:
-			pTestEffect->SetPos(D3DXVECTOR3(m_DevilPos.x + MapSize.x, m_DevilPos.y, m_DevilPos.z + MapSize.z));
-			break;
-		case 1:
-			pTestEffect->SetPos(D3DXVECTOR3(m_DevilPos.x - MapSize.x, m_DevilPos.y, m_DevilPos.z + MapSize.z));
-			break;
-		case 2:
-			pTestEffect->SetPos(D3DXVECTOR3(m_DevilPos.x + MapSize.x, m_DevilPos.y, m_DevilPos.z - MapSize.z));
-			break;
-		case 3:
-			pTestEffect->SetPos(D3DXVECTOR3(m_DevilPos.x - MapSize.x, m_DevilPos.y, m_DevilPos.z - MapSize.z));
-			break;
-		}
-
-		pTestEffect->SetLife(20);
-		pTestEffect->SetRadius(20.0f);
-		pTestEffect->SetColor(D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
-	}
+	//for (int nCnt = 0; nCnt < 4; nCnt++)
+	//{
+	//	pTestEffect = CEffect::Create();
+	//
+	//	switch (nCnt)
+	//	{
+	//	case 0:
+	//		pTestEffect->SetPos(D3DXVECTOR3(m_DevilPos.x + MapSize.x, m_DevilPos.y, m_DevilPos.z + MapSize.z));
+	//		break;
+	//	case 1:
+	//		pTestEffect->SetPos(D3DXVECTOR3(m_DevilPos.x - MapSize.x, m_DevilPos.y, m_DevilPos.z + MapSize.z));
+	//		break;
+	//	case 2:
+	//		pTestEffect->SetPos(D3DXVECTOR3(m_DevilPos.x + MapSize.x, m_DevilPos.y, m_DevilPos.z - MapSize.z));
+	//		break;
+	//	case 3:
+	//		pTestEffect->SetPos(D3DXVECTOR3(m_DevilPos.x - MapSize.x, m_DevilPos.y, m_DevilPos.z - MapSize.z));
+	//		break;
+	//	}
+	//
+	//	pTestEffect->SetLife(20);
+	//	pTestEffect->SetRadius(20.0f);
+	//	pTestEffect->SetColor(D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
+	//}
 
 	//モーションの管理
 	ActionState();
-
-	//デバッグキーの処理と設定
-	DebugKey();
 
 	D3DXVECTOR3 InitPos = CMapSystem::GetInstance()->GetInitPos();
 	D3DXVECTOR3 MapPos = CMapSystem::GetInstance()->GetMapPos();
@@ -287,6 +301,9 @@ void CDevil::GameUpdate(void)
 	DebugProc::Print(DebugProc::POINT_LEFT, "[マップの傾きX]：[ X+ : 6 ] [ X- : 7 ]\n");
 	DebugProc::Print(DebugProc::POINT_LEFT, "[マップの傾きZ]：[ Z+ : 8 ] [ Z- : 9 ]\n");
 	DebugProc::Print(DebugProc::POINT_LEFT, "[マップの傾きリセット]：[ 5 ]\n");
+
+	DebugProc::Print(DebugProc::POINT_RIGHT, "[最小番号]左 %d : 上 %d\n", m_MinGrid.x, m_MinGrid.z);
+	DebugProc::Print(DebugProc::POINT_RIGHT, "[最大番号]右 %d : 下 %d\n", m_MaxGrid.x, m_MaxGrid.z);
 }
 
 //====================================================================
@@ -664,6 +681,101 @@ void CDevil::Slope(int Arroow)
 }
 
 //====================================================================
+// ステージ外との当たり判定
+//====================================================================
+void CDevil::CollisionOut()
+{
+	// キューブブロックのリスト構造が無ければ抜ける
+	if (CEnemy::GetList() == nullptr) { return; }
+	std::list<CEnemy*> list = CEnemy::GetList()->GetList();    // リストを取得
+
+	// キューブブロックリストの中身を確認する
+	for (CEnemy* pEnemy : list)
+	{
+		//D3DXVECTOR3 EnemyPos = pEnemy->GetPos();
+		//D3DXVECTOR3 Pos = m_DevilPos;
+		//D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
+		//float GritSize = CMapSystem::GetInstance()->GetGritSize();
+		//float Alignment = 0.0f;
+
+		//// ステージ外の当たり判定
+		//if (Pos.x + MapSize.x < EnemyPos.x) // 右
+		//{
+		//	Alignment = EnemyPos.x - (Pos.x + MapSize.x);				//はみ出した移動量分を算出する
+		//	EnemyPos.x = Pos.x - MapSize.x - GritSize + Alignment;		//位置設定
+		//}
+		//if (Pos.x - MapSize.x - GritSize > EnemyPos.x) // 左
+		//{
+		//	Alignment = EnemyPos.x - (Pos.x - MapSize.x - GritSize);	//はみ出した移動量分を算出する
+		//	EnemyPos.x = Pos.x + MapSize.x + Alignment;					//位置設定
+		//}
+		//if (Pos.z + MapSize.z + GritSize < EnemyPos.z) // 上
+		//{
+		//	Alignment = EnemyPos.z - (Pos.z + MapSize.z + GritSize);	//はみ出した移動量分を算出する
+		//	EnemyPos.z = Pos.z - MapSize.z + Alignment;					//位置設定
+		//}
+		//if (Pos.z - MapSize.z > EnemyPos.z) // 下
+		//{
+		//	Alignment = EnemyPos.z - (Pos.z - MapSize.z);				//はみ出した移動量分を算出する
+		//	EnemyPos.z = Pos.z + MapSize.z + GritSize + Alignment;		//位置設定
+		//}
+
+		//pEnemy->SetPos(EnemyPos);
+
+		CMapSystem::GRID EnemyGrid = pEnemy->GetGrid();
+		D3DXVECTOR3 EnemyPos = pEnemy->GetPos();
+		D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
+		float GritSize = CMapSystem::GetInstance()->GetGritSize() * 0.5f;
+
+		//m_MinGrid = CMapSystem::GRID(0, 0);
+		//m_MaxGrid = CMapSystem::GRID(NUM_WIGHT - 1, NUM_HEIGHT - 1);
+
+		//m_MinGrid.x = CMapSystem::GetInstance()->CalcGridX(m_DevilPos.x - MapSize.x - GritSize);	//左
+		//m_MinGrid.z = CMapSystem::GetInstance()->CalcGridZ(m_DevilPos.z + MapSize.z + GritSize);	//上
+		//m_MaxGrid.x = CMapSystem::GetInstance()->CalcGridX(m_DevilPos.x + MapSize.x - GritSize);	//右
+		//m_MaxGrid.z = CMapSystem::GetInstance()->CalcGridZ(m_DevilPos.z - MapSize.z + GritSize);	//下
+
+		//CEffect* pEffect = CEffect::Create();
+		//pEffect->SetPos(D3DXVECTOR3(m_DevilPos.x - MapSize.x - GritSize, 0.0f, m_DevilPos.z + MapSize.z + GritSize));
+		//pEffect->SetRadius(25.0f);
+		//pEffect->SetColor(D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
+		//pEffect = CEffect::Create();
+		//pEffect->SetPos(D3DXVECTOR3(m_DevilPos.x + MapSize.x - GritSize, 0.0f, m_DevilPos.z - MapSize.z + GritSize));
+		//pEffect->SetRadius(25.0f);
+		//pEffect->SetColor(D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
+
+		if (EnemyGrid.x == -1)
+		{
+			if (EnemyPos.x > 0.0f)
+			{
+				m_MinGrid.x = CMapSystem::GetInstance()->CalcGridX(m_DevilPos.x - MapSize.x - GritSize);	//左
+				EnemyPos = CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(m_MinGrid.x,pEnemy->GetGrid().z));
+			}
+			else
+			{
+				m_MaxGrid.x = CMapSystem::GetInstance()->CalcGridX(m_DevilPos.x + MapSize.x - GritSize);	//右
+				EnemyPos = CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(m_MaxGrid.x, pEnemy->GetGrid().z));
+			}
+		}
+		else if (EnemyGrid.z == -1)
+		{
+			if (EnemyPos.z < 0.0f)
+			{
+				m_MinGrid.z = CMapSystem::GetInstance()->CalcGridZ(m_DevilPos.z + MapSize.z + GritSize);	//上
+				EnemyPos = CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(pEnemy->GetGrid().x, m_MinGrid.z));
+			}
+			else
+			{
+				m_MaxGrid.z = CMapSystem::GetInstance()->CalcGridZ(m_DevilPos.z - MapSize.z + GritSize);	//下
+				EnemyPos = CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(pEnemy->GetGrid().x, m_MaxGrid.z));
+			}
+		}
+
+		pEnemy->SetPos(EnemyPos);
+	}
+}
+
+//====================================================================
 //モーションと状態の管理
 //====================================================================
 void CDevil::ActionState(void)
@@ -700,17 +812,17 @@ void CDevil::StateManager(void)
 		if (m_nStateCount <= 0)
 		{
 			int nRand = rand() % 101;
-			if (nRand <= 50)
+			if (nRand <= SLOPE_RAND)
 			{
 				m_State = STATE_SLOPE;
-				m_nStateCount = 300;
+				m_nStateCount = SLOPE_TIME;
 
 				m_bSlope = !m_bSlope;
 			}
 			else
 			{
 				m_State = STATE_SCROLL;
-				m_nStateCount = 300;
+				m_nStateCount = SCROOL_TIME;
 			}
 			m_DevilArrow = rand() % 4;
 		}
@@ -723,7 +835,7 @@ void CDevil::StateManager(void)
 		Move(m_DevilArrow);
 #elif SCROLL_ID == 1
 
-		if (m_nStateCount % 25 == 0)
+		if (m_nStateCount % (SCROOL_TIME / SCROOL_COUNT) == 0)
 		{
 			Move(m_DevilArrow);
 		}

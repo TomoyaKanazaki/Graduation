@@ -315,6 +315,8 @@ void CGame::Update(void)
 
 	DebugProc::Print(DebugProc::POINT_LEFT, "ゲームスピード : %f\n", CManager::GetInstance()->GetGameSpeed());
 
+	CMapSystem::GetInstance()->Update();
+
 #if _DEBUG
 	if (pInputKeyboard->GetTrigger(DIK_0) == true)
 	{
