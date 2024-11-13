@@ -22,7 +22,7 @@
 #include "Pause.h"
 #include "camera.h"
 #include "sound.h"
-#include "time.h"
+#include "timer.h"
 #include "Score.h"
 #include "debugproc.h"
 #include "Xmodel.h"
@@ -63,7 +63,7 @@ namespace
 
 	const int BOTTOM_FIELD_VTX_WIDTH = 64;		// 下床の横数
 	const int BOTTOM_FIELD_VTX_HEIGHT = 64;		// 下床の縦数
-	const char* BOTTOM_FIELD_TEX = "data\\TEXTURE\\Field\\Tile001.jpg";		// 下床のテクスチャ
+	const char* BOTTOM_FIELD_TEX = "data\\TEXTURE\\Field\\outside.jpg";		// 下床のテクスチャ
 	const D3DXVECTOR3 BOTTOM_FIELD_POS = D3DXVECTOR3(0.0f, -1500.0f, 0.0f);	// 下床の位置
 	const int BIBLE_OUTGRIT = 2;	// 聖書がマップの外側から何マス内側にいるか
 
@@ -74,7 +74,7 @@ namespace
 CEdit* CGame::m_pEdit = nullptr;
 CPause* CGame::m_pPause = nullptr;
 CScore* CGame::m_pScore = nullptr;
-CTime* CGame::m_pTime = nullptr;
+CTimer* CGame::m_pTime = nullptr;
 CObject2D* CGame::m_p2DSample = nullptr;
 CObject3D* CGame::m_p3DSample = nullptr;
 CObjectBillboard* CGame::m_pBillboardSample = nullptr;
@@ -152,7 +152,7 @@ HRESULT CGame::Init(void)
 	CGame::GetTime()->SetStopTime(false);
 
 	// タイムの生成
-	m_pTime = CTime::Create();
+	m_pTime = CTimer::Create();
 	m_pTime->SetStartTime(timeGetTime());
 	m_pTime->SetTime(0);
 

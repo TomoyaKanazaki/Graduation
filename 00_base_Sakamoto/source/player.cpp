@@ -51,6 +51,8 @@ namespace
 
 	const D3DXVECTOR3 COLLISION_SIZE = D3DXVECTOR3(35.0f, 40.0f, 35.0f);		//横の当たり判定
 	const D3DXVECTOR3 LIFE_POS = D3DXVECTOR3(50.0f, 650.0f, 0.0f);
+
+	const float CROSS_TIME = 10.0f; // 十字架を所持していられる時間
 }
 
 //===========================================
@@ -88,7 +90,8 @@ m_eItemType(TYPE_NONE),
 m_MoveState(MOVE_STATE_NONE),
 m_Grid(0, 0),
 m_bGritCenter(true),
-m_bPressObj(false)
+m_bPressObj(false),
+m_fCrossTimer(0.0f)
 {
 
 }
@@ -277,10 +280,26 @@ void CPlayer::GameUpdate(void)
 		// 向き移動処理
 		Rot();
 
-
 		if (m_eItemType != TYPE_NONE)
 		{
 			Attack();
+		}
+
+		// 十字架を持っている場合
+		if (m_eItemType == TYPE_CROSS)
+		{
+			// タイマーを加算
+			m_fCrossTimer += DeltaTime::Get();
+
+			// 十字架の所持可能時間を超過した場合
+			if (m_fCrossTimer >= CROSS_TIME)
+			{
+				// 所持時間タイマーをリセット
+				m_fCrossTimer = 0.0f;
+
+				// アイテムを所持していない状態にする
+				SetItemType(TYPE_NONE);
+			}
 		}
 
 		// カメラ更新処理
@@ -1210,14 +1229,14 @@ void CPlayer::Death(void)
 	{
 		m_nLife--;
 
+		// アイテムを所持していない状態にする
+		SetItemType(TYPE_NONE);
+
 		// 聖書を所持しているときにその場に聖書を落とす
 		if (m_eItemType == TYPE_BIBLE)
 		{
 			// 聖書生成
 			CItem::Create(CItem::TYPE_BIBLE, CMapSystem::GRID(m_Grid.x, m_Grid.z));
-
-			// アイテムを所持していない状態にする
-			SetItemType(TYPE_NONE);
 		}
 
 		if (m_nLife < 0)
@@ -1386,6 +1405,10 @@ void CPlayer::SetItemType(ITEM_TYPE eType)
 	case TYPE_CROSS:
 		SetPartsDisp(9, true);		// 十字架のモデル表示
 		SetPartsDisp(10, false);	// 聖書のモデル非表示
+
+		// 所持時間タイマーをリセット
+		m_fCrossTimer = 0.0f;
+
 		break;
 
 	case TYPE_BIBLE:

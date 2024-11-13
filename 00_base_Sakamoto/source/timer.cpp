@@ -1,10 +1,10 @@
 //============================================
 //
-//	タイムの処理 [time.cpp]
+//	タイムの処理 [timer.cpp]
 //	Author:sakamoto kai
 //
 //============================================
-#include "time.h"
+#include "timer.h"
 #include "number.h"
 
 //==========================================
@@ -17,18 +17,18 @@ namespace
 }
 
 //静的メンバ変数宣言
-CNumber* CTime::m_apObject[NUM_TIME] = {};
-D3DXVECTOR3 CTime::m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-int CTime::m_nTime = 0;
-int CTime::m_nCount = 0;
-int CTime::m_StartTime = 0;
-int CTime::m_nNumber[NUM_TIME] = { 0 };
-bool CTime::m_StopTime = false;
+CNumber* CTimer::m_apObject[NUM_TIME] = {};
+D3DXVECTOR3 CTimer::m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+int CTimer::m_nTime = 0;
+int CTimer::m_nCount = 0;
+int CTimer::m_StartTime = 0;
+int CTimer::m_nNumber[NUM_TIME] = { 0 };
+bool CTimer::m_StopTime = false;
 
 //====================================================================
 //コンストラクタ
 //====================================================================
-CTime::CTime(int nPriority) : CObject(nPriority)
+CTimer::CTimer(int nPriority) : CObject(nPriority)
 {
 
 }
@@ -36,7 +36,7 @@ CTime::CTime(int nPriority) : CObject(nPriority)
 //====================================================================
 //デストラクタ
 //====================================================================
-CTime::~CTime()
+CTimer::~CTimer()
 {
 
 }
@@ -44,14 +44,14 @@ CTime::~CTime()
 //====================================================================
 //生成処理
 //====================================================================
-CTime* CTime::Create()
+CTimer* CTimer::Create()
 {
-	CTime* pMultiBG = nullptr;
+	CTimer* pMultiBG = nullptr;
 
 	if (pMultiBG == nullptr)
 	{
 		//オブジェクト2Dの生成
-		pMultiBG = new CTime();
+		pMultiBG = new CTimer();
 	}
 
 	//オブジェクトの初期化処理
@@ -66,7 +66,7 @@ CTime* CTime::Create()
 //====================================================================
 //タイムの初期化
 //====================================================================
-HRESULT CTime::Init(void)
+HRESULT CTimer::Init(void)
 {
 	SetType(CObject::TYPE_TIME);
 
@@ -110,7 +110,7 @@ HRESULT CTime::Init(void)
 //====================================================================
 //タイムの終了
 //====================================================================
-void CTime::Uninit(void)
+void CTimer::Uninit(void)
 {
 	SetDeathFlag(true);
 }
@@ -118,7 +118,7 @@ void CTime::Uninit(void)
 //====================================================================
 //所持ポインタの終了
 //====================================================================
-void CTime::SetNULL(void)
+void CTimer::SetNULL(void)
 {
 	for (int nCntObject = 0; nCntObject < NUM_TIME; nCntObject++)
 	{
@@ -129,7 +129,7 @@ void CTime::SetNULL(void)
 //====================================================================
 //タイムの更新
 //====================================================================
-void CTime::Update(void)
+void CTimer::Update(void)
 {
 	int nTime = m_nTime / 1000;
 
@@ -162,7 +162,7 @@ void CTime::Update(void)
 //====================================================================
 //タイムの描画
 //====================================================================
-void CTime::Draw(void)
+void CTimer::Draw(void)
 {
 
 }
@@ -170,7 +170,7 @@ void CTime::Draw(void)
 //====================================================================
 //タイムの描画
 //====================================================================
-void CTime::FloatSetTime(int Time)
+void CTimer::FloatSetTime(int Time)
 {
 	if (m_StopTime == false)
 	{
@@ -181,7 +181,7 @@ void CTime::FloatSetTime(int Time)
 //====================================================================
 //タイムの描画
 //====================================================================
-void CTime::SetStartTime(int Time)
+void CTimer::SetStartTime(int Time)
 {
 	m_StartTime = Time;
 
@@ -197,7 +197,7 @@ void CTime::SetStartTime(int Time)
 //====================================================================
 //タイムの情報取得
 //====================================================================
-int CTime::GetTimeNumber(void)
+int CTimer::GetTimeNumber(void)
 {
 	int nTime = m_nTime / 1000;
 	int ReturnTime = 0;

@@ -115,6 +115,9 @@ void CCross::Draw(void)
 //====================================================================
 bool CCross::Hit(CPlayer* pPlayer)
 {
+	// 十字架所持時間のリセット
+	pPlayer->ResetCrossTimer();
+
 	// 既に十字架を持っていた場合関数を抜ける
 	if (pPlayer->GetItemType() == CPlayer::TYPE_CROSS) { return false; }
 

@@ -23,7 +23,7 @@ class CXModel;
 class CLevelUP;
 class CFade;
 class CSound;
-class CTime;
+class CTimer;
 class CRanking;
 class CBlockManager;
 class CItemManager;

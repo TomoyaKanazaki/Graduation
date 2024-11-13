@@ -45,7 +45,6 @@ public:
 		ACTION_WAIT = 0,		// 待機
 		ACTION_MOVE,			// 移動
 		ACTION_EGG,				// 卵状態(未完成００
-		//ACTION_ATTACK,			// 攻撃状態(未完成０１
 		ACTION_DEATH,			// 死亡状態(未完成０２
 		ACTION_MAX,				// 最大
 		ACTION_NONE
@@ -138,6 +137,8 @@ public:
 	void SetItemType(ITEM_TYPE eType);
 	ITEM_TYPE GetItemType() { return m_eItemType; }		// アイテムの種類取得
 
+	void ResetCrossTimer() { m_fCrossTimer = 0.0f; } // 十字架所持時間の初期化
+
 	// 静的メンバ関数
 	static CListManager<CPlayer>* GetList(void);	// リスト取得
 
@@ -223,6 +224,7 @@ private:
 
 	// メンバ変数
 	CListManager<CPlayer>::AIterator m_iterator; // イテレーター
+	float m_fCrossTimer; // 十字架を持っていられる時間
 };
 
 #endif
