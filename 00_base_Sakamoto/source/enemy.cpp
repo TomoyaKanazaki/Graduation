@@ -47,6 +47,8 @@ namespace
 
 	const float DISTANCE_RECEDE = 200.0f;	//近づく距離
 	const float DISTANCE_APPROACH = 100.0f;	//遠ざかる距離
+
+	const float COORDDINATE_RATE = 5.0f; // 経路探索を行う間隔
 }
 
 //===========================================
@@ -57,7 +59,9 @@ CListManager<CEnemy>* CEnemy::m_pList = nullptr; // オブジェクトリスト
 //====================================================================
 //コンストラクタ
 //====================================================================
-CEnemy::CEnemy(int nPriority) :CObject(nPriority)
+CEnemy::CEnemy(int nPriority) :CObject(nPriority),
+m_pPath(nullptr),
+m_fCoordinateTimer(0.0f)
 {
 	m_pos = INITVECTOR3;
 	m_posOld = INITVECTOR3;
@@ -136,7 +140,7 @@ CEnemy* CEnemy::Create(const ENEMY_TYPE eType, const CMapSystem::GRID& grid)
 	pEnemy->SetGrid(grid);
 	pEnemy->SetPos(CMapSystem::GetInstance()->GetGritPos(grid));
 
-	// 
+	// 敵のタイプを設定
 	pEnemy->m_EnemyType = eType;
 
 	return pEnemy;
@@ -174,6 +178,9 @@ HRESULT CEnemy::Init(void)
 //====================================================================
 void CEnemy::Uninit(void)
 {
+	// メモリを削除
+	if (m_pPath != nullptr) { delete[] m_pPath; };
+
 	// リストから自身のオブジェクトを削除
 	m_pList->DelList(m_iterator);
 
@@ -206,19 +213,19 @@ void CEnemy::Update(void)
 	SearchWall();
 
 	// 状態の更新
-	StateManager();
+	//StateManager();
 
 	// 移動方向処理
 	Rot();
 
 	// 位置更新処理
-	UpdatePos();
+	//UpdatePos();
 
 	// 自分の番号を設定
 	m_Grid = CMapSystem::GetInstance()->CMapSystem::CalcGrid(m_pos);
 
-	// プレイヤーへの最短経路
-	//m_pPath = AStar::Generator::GetInstance()->FindPlayer({ m_Grid.x, m_Grid.z });
+	// プレイヤーへの最短経路探索
+	Coordinate();
 
 	//床の判定
 	if (m_pos.y <= 0.0f)
@@ -713,6 +720,37 @@ void CEnemy::SearchWall(void)
 		m_OKL = false;	//左
 		m_OKU = false;	//上
 		m_OKD = false;	//下
+	}
+}
+
+//==========================================
+//  最短経路探索
+//==========================================
+void CEnemy::Coordinate()
+{
+	// 探索タイマーを加算
+	m_fCoordinateTimer += DeltaTime::Get();
+
+	// 探索のタイミングでない場合関数を抜ける
+	if (m_fCoordinateTimer < COORDDINATE_RATE) { return; }
+
+	// タイマーのリセット
+	m_fCoordinateTimer -= COORDDINATE_RATE;
+
+	// 最短経路を取得
+	AStar::CoordinateList Path = AStar::Generator::GetInstance()->FindPlayer({ m_Grid.x, m_Grid.z });
+	int nNumGrid = Path.size();
+
+	// メモリを削除
+	if (m_pPath != nullptr) { delete[] m_pPath; };
+
+	// 最短経路に必要なグリッド数分メモリを確保
+	m_pPath = new CMapSystem::GRID[nNumGrid];
+
+	// 確保したメモリに最短経路のグリッドを格納
+	for (int i = 0; i < nNumGrid; ++i)
+	{
+		m_pPath[i] = Path.at(i);
 	}
 }
 
