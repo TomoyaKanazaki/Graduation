@@ -435,6 +435,8 @@ void CDevil::BackSlope(void)
 	CObjmeshField* pMapField = CGame::GetMapField();
 	D3DXVECTOR3 MapRot = pMapField->GetRot();
 
+#if SCROLL_ID == 0
+
 	if (MapRot.x > 0.0f)
 	{
 		MapRot.x -= D3DX_PI * SLOPE_SPEED01;
@@ -455,6 +457,52 @@ void CDevil::BackSlope(void)
 		MapRot.z += D3DX_PI * SLOPE_SPEED01;
 	}
 
+#elif SCROLL_ID == 1
+
+	if (MapRot.x > 0.0f)
+	{
+		MapRot.x -= D3DX_PI * SLOPE_SPEED02;
+	}
+
+	if (MapRot.x < 0.0f)
+	{
+		MapRot.x += D3DX_PI * SLOPE_SPEED02;
+	}
+
+	if (MapRot.z > 0.0f)
+	{
+		MapRot.z -= D3DX_PI * SLOPE_SPEED02;
+	}
+
+	if (MapRot.z < 0.0f)
+	{
+		MapRot.z += D3DX_PI * SLOPE_SPEED02;
+	}
+
+#else
+
+	if (MapRot.x > 0.0f)
+	{
+		MapRot.x -= D3DX_PI * SLOPE_SPEED01;
+	}
+
+	if (MapRot.x < 0.0f)
+	{
+		MapRot.x += D3DX_PI * SLOPE_SPEED01;
+	}
+
+	if (MapRot.z > 0.0f)
+	{
+		MapRot.z -= D3DX_PI * SLOPE_SPEED01;
+	}
+
+	if (MapRot.z < 0.0f)
+	{
+		MapRot.z += D3DX_PI * SLOPE_SPEED01;
+	}
+
+#endif // SCROLL_ID
+
 	if (abs(MapRot.x) <= 0.0f && abs(MapRot.z) <= 0.0f)
 	{
 		STATE_WAIT;
@@ -471,6 +519,100 @@ void CDevil::Slope(int Arroow)
 {	
 	CObjmeshField *pMapField = CGame::GetMapField();
 	D3DXVECTOR3 MapRot = pMapField->GetRot();
+
+#if SCROLL_ID == 0
+
+	switch (Arroow)
+	{
+	case 0:
+
+		MapRot.x += D3DX_PI * SLOPE_SPEED01;
+
+		if (MapRot.x > STAGE_ROT_LIMIT)
+		{
+			MapRot.x = STAGE_ROT_LIMIT;
+}
+
+		break;
+	case 1:
+
+		MapRot.x -= D3DX_PI * SLOPE_SPEED01;
+
+		if (MapRot.x < -STAGE_ROT_LIMIT)
+		{
+			MapRot.x = -STAGE_ROT_LIMIT;
+		}
+
+		break;
+	case 2:
+
+		MapRot.z += D3DX_PI * SLOPE_SPEED01;
+
+		if (MapRot.z > STAGE_ROT_LIMIT)
+		{
+			MapRot.z = STAGE_ROT_LIMIT;
+		}
+
+		break;
+	case 3:
+
+		MapRot.z -= D3DX_PI * SLOPE_SPEED01;
+
+		if (MapRot.z < -STAGE_ROT_LIMIT)
+		{
+			MapRot.z = -STAGE_ROT_LIMIT;
+		}
+
+		break;
+	}
+
+#elif SCROLL_ID == 1
+
+	switch (Arroow)
+	{
+	case 0:
+
+		MapRot.x += D3DX_PI * SLOPE_SPEED02;
+
+		if (MapRot.x > STAGE_ROT_LIMIT)
+		{
+			MapRot.x = STAGE_ROT_LIMIT;
+		}
+
+		break;
+	case 1:
+
+		MapRot.x -= D3DX_PI * SLOPE_SPEED02;
+
+		if (MapRot.x < -STAGE_ROT_LIMIT)
+		{
+			MapRot.x = -STAGE_ROT_LIMIT;
+		}
+
+		break;
+	case 2:
+
+		MapRot.z += D3DX_PI * SLOPE_SPEED02;
+
+		if (MapRot.z > STAGE_ROT_LIMIT)
+		{
+			MapRot.z = STAGE_ROT_LIMIT;
+		}
+
+		break;
+	case 3:
+
+		MapRot.z -= D3DX_PI * SLOPE_SPEED02;
+
+		if (MapRot.z < -STAGE_ROT_LIMIT)
+		{
+			MapRot.z = -STAGE_ROT_LIMIT;
+		}
+
+		break;
+	}
+
+#else
 
 	switch (Arroow)
 	{
@@ -515,6 +657,8 @@ void CDevil::Slope(int Arroow)
 
 		break;
 	}
+
+#endif // SCROLL_ID
 
 	pMapField->SetRot(MapRot);
 }
@@ -611,7 +755,14 @@ void CDevil::StateManager(void)
 
 		if (m_nStateCount % 25 == 0)
 		{
-			Slope(m_DevilArrow);
+			if (m_bSlope)
+			{
+				Slope(m_DevilArrow);
+			}
+			else
+			{
+				BackSlope();
+			}
 		}
 
 #else
