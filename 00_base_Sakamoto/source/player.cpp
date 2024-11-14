@@ -1446,9 +1446,6 @@ void CPlayer::Death(void)
 	{
 		m_nLife--;
 
-		// アイテムを所持していない状態にする
-		SetItemType(TYPE_NONE);
-
 		// 聖書を所持しているときにその場に聖書を落とす
 		if (m_eItemType == TYPE_BIBLE)
 		{
@@ -1480,6 +1477,9 @@ void CPlayer::Death(void)
 			// ダメージ音(仮)
 			CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_DEATH);
 		}
+
+		// アイテムを所持していない状態にする
+		SetItemType(TYPE_NONE);
 	}
 }
 
