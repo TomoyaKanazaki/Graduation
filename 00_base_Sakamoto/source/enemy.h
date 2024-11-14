@@ -95,7 +95,7 @@ public:
 
 protected:
 
-	void InitModel(const char* pFilename);				// ƒ‚ƒfƒ‹‚Ì‰Šú‰»
+	HRESULT InitModel(const char* pFilename);				// ƒ‚ƒfƒ‹‚Ì‰Šú‰»
 
 private:
 

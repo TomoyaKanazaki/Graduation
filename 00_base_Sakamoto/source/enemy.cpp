@@ -333,20 +333,29 @@ CCharacter* CEnemy::GetCharacter(void)
 	}
 
 	assert(("キャラクターの取得失敗", false));
-
 	return nullptr;
 }
 
 //====================================================================
 // モデル関連の初期化処理
 //====================================================================
-void CEnemy::InitModel(const char* pFilename)
+HRESULT CEnemy::InitModel(const char* pFilename)
 {
 	// キャラクターの更新
 	if (m_pCharacter == nullptr)
 	{
-		m_pCharacter = CCharacter::Create(pFilename);
+		if (m_pCharacter == nullptr)
+		{
+			m_pCharacter = CCharacter::Create(pFilename);
+
+			if (m_pCharacter == nullptr)
+			{
+				return E_FAIL;
+			}
+		}
 	}
+
+	return S_OK;
 }
 
 //====================================================================
