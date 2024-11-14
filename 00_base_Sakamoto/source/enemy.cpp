@@ -48,10 +48,20 @@ namespace
 	const float DISTANCE_RECEDE = 200.0f;	//近づく距離
 	const float DISTANCE_APPROACH = 100.0f;	//遠ざかる距離
 
-	const float COORDDINATE_RATE = 5.0f; // 経路探索を行う間隔
+	const float COORDDINATE_RATE[] = // 経路探索を行う間隔
+	{
+		5.0f,
+		3.0f,
+		1.0f
+	};
 	const float TARGET_DIFF = 5.0f; // 許容範囲
-	const float MOVE_ASTAR = 50.0f; // 追跡時の移動速度
+	const float MOVE_ASTAR = 150.0f; // 追跡時の移動速度
 }
+
+//==========================================
+//  静的警告処理
+//==========================================
+static_assert(NUM_ARRAY(COORDDINATE_RATE) == CEnemy::ENEMY_MAX, "ERROR : Type Count Missmatch");
 
 //===========================================
 // 静的メンバ変数宣言
@@ -323,20 +333,29 @@ CCharacter* CEnemy::GetCharacter(void)
 	}
 
 	assert(("キャラクターの取得失敗", false));
-
 	return nullptr;
 }
 
 //====================================================================
 // モデル関連の初期化処理
 //====================================================================
-void CEnemy::InitModel(const char* pFilename)
+HRESULT CEnemy::InitModel(const char* pFilename)
 {
 	// キャラクターの更新
 	if (m_pCharacter == nullptr)
 	{
-		m_pCharacter = CCharacter::Create(pFilename);
+		if (m_pCharacter == nullptr)
+		{
+			m_pCharacter = CCharacter::Create(pFilename);
+
+			if (m_pCharacter == nullptr)
+			{
+				return E_FAIL;
+			}
+		}
 	}
+
+	return S_OK;
 }
 
 //====================================================================
@@ -739,13 +758,13 @@ void CEnemy::Coordinate()
 	m_fCoordinateTimer += DeltaTime::Get();
 
 	// 探索のタイミングでない場合関数を抜ける
-	if (m_fCoordinateTimer < COORDDINATE_RATE) { return; }
+	if (m_fCoordinateTimer < COORDDINATE_RATE[m_EnemyType]) { return; }
 
 	// 最短経路の次の目標をリセット
-	m_nTargetIndex = 0;
+	m_nTargetIndex = 1;
 
 	// タイマーのリセット
-	m_fCoordinateTimer -= COORDDINATE_RATE;
+	m_fCoordinateTimer -= COORDDINATE_RATE[m_EnemyType];
 
 	// 最短経路を取得
 	AStar::CoordinateList Path = AStar::Generator::GetInstance()->FindPlayer({ m_Grid.x, m_Grid.z });
@@ -784,9 +803,9 @@ void CEnemy::Route()
 	D3DXVECTOR3 path = CMapSystem::GetInstance()->GetGritPos(m_pPath[m_nTargetIndex]);
 
 	// 次に向かうグリッドに重なったらその次の目標を設定
-	if (path.x - pos.x <= TARGET_DIFF &&
-		path.z - pos.z <= TARGET_DIFF) // 一定範囲内であれば
-	{/* 座標の比較 */
+	if (fabsf(path.x - pos.x) <= TARGET_DIFF &&
+		fabsf(path.z - pos.z) <= TARGET_DIFF) // 一定範囲内であれば
+	{
 		// インデックス番号を加算
 		m_nTargetIndex++;
 		path = CMapSystem::GetInstance()->GetGritPos(m_pPath[m_nTargetIndex]);
@@ -794,7 +813,7 @@ void CEnemy::Route()
 
 	// 次の目標が存在しなかったら関数を抜ける
 	if (m_nTargetIndex >= m_nNumCoordinate)
-	{ 
+	{
 		return;
 	}
 
@@ -802,7 +821,9 @@ void CEnemy::Route()
 	float RotDest = atan2f(path.z - pos.z, path.x - pos.x);
 
 	// 次の目標位置に移動
-	move = (path - pos) * DeltaTime::Get();
+	move = path - pos;
+	D3DXVec3Normalize(&move, &move);
+	move *= DeltaTime::Get() * MOVE_ASTAR;
 
 	// 位置更新
 	pos += move;

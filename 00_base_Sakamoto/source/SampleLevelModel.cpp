@@ -8,6 +8,7 @@
 #include "object.h"
 #include "manager.h"
 #include "renderer.h"
+#include "character.h"
 #include "model.h"
 #include "motion.h"
 #include "game.h"
@@ -45,6 +46,8 @@ CSampleLvModel::CSampleLvModel(int nPriority) :CObject(nPriority)
 	m_nStateCount = 0;
 	m_AtkPos = INITVECTOR3;
 	m_CollisionRot = 0.0f;
+
+	m_pCharacter = nullptr;
 }
 
 //====================================================================
@@ -82,27 +85,34 @@ CSampleLvModel* CSampleLvModel::Create()
 //====================================================================
 HRESULT CSampleLvModel::Init(void)
 {
-	//モデルの生成
-	LoadLevelData("data\\TXT\\motion_player.txt");
-
-	//モーションの生成
-	if (m_pMotion == nullptr)
-	{
-		//モーションの生成
-		m_pMotion = new CMotion;
-	}
-
-	//初期化処理
-	m_pMotion->SetModel(&m_apModel[0], m_nNumModel);
-	m_pMotion->LoadData("data\\TXT\\motion_player.txt");
-
 	//種類設定
 	SetType(CObject::TYPE_SAMPLE);
+
+	// キャラクターの生成
+	if (m_pCharacter == nullptr)
+	{
+		m_pCharacter->Create("data\\TXT\\motion_player.txt");
+
+		if (m_pCharacter == nullptr)
+		{
+			return E_FAIL;
+		}
+	}
+
+	CMotion* pMotion = m_pCharacter->GetMotion();
+
+	if (pMotion == nullptr)
+	{
+		return E_FAIL;
+	}
 
 	switch (CScene::GetMode())
 	{
 	case CScene::MODE_TITLE:
-		m_pMotion->Set(ACTION_TITLE, 0);
+
+		// モーション設定
+		pMotion->Set(ACTION_TITLE, 0);
+
 		break;
 
 	case CScene::MODE_GAME:
@@ -130,19 +140,13 @@ void CSampleLvModel::MyObjCreate(void)
 //====================================================================
 void CSampleLvModel::Uninit(void)
 {
-	for (int nCntModel = 0; nCntModel < m_nNumModel; nCntModel++)
+	// キャラクターの終了処理
+	if (m_pCharacter != nullptr)
 	{
-		m_apModel[nCntModel]->Uninit();
-		delete m_apModel[nCntModel];
-		m_apModel[nCntModel] = nullptr;
-	}
-
-	//モーションの終了処理
-	if (m_pMotion != nullptr)
-	{
-		//モーションの破棄
-		delete m_pMotion;
-		m_pMotion = nullptr;
+		// キャラクターの破棄
+		m_pCharacter->Uninit();
+		delete m_pCharacter;
+		m_pCharacter = nullptr;
 	}
 
 	SetDeathFlag(true);
@@ -175,8 +179,11 @@ void CSampleLvModel::Update(void)
 //====================================================================
 void CSampleLvModel::TitleUpdate(void)
 {
-	//モーションの更新
-	m_pMotion->Update();
+	// キャラクターの更新
+	if (m_pCharacter != nullptr)
+	{
+		m_pCharacter->Update();
+	}
 }
 
 //====================================================================
@@ -290,8 +297,11 @@ void CSampleLvModel::GameUpdate(void)
 	//状態の管理
 	StateManager();
 
-	//モーションの更新
-	m_pMotion->Update();
+	// キャラクターの更新
+	if (m_pCharacter != nullptr)
+	{
+		m_pCharacter->Update();
+	}
 }
 
 //====================================================================
@@ -299,13 +309,26 @@ void CSampleLvModel::GameUpdate(void)
 //====================================================================
 void CSampleLvModel::ActionState(void)
 {
+	// キャラクターの生成
+	if (m_pCharacter == nullptr)
+	{
+		return;
+	}
+
+	CMotion* pMotion = m_pCharacter->GetMotion();
+
+	if (pMotion == nullptr)
+	{
+		return;
+	}
+
 	//ジャンプモーション
 	if (m_bJump == true)
 	{
 		if (m_Action != ACTION_JAMP)
 		{
 			m_Action = ACTION_JAMP;
-			m_pMotion->Set(ACTION_JAMP, 5);
+			pMotion->Set(ACTION_JAMP, 5);
 		}
 	}
 	//移動モーション
@@ -314,7 +337,7 @@ void CSampleLvModel::ActionState(void)
 		if (m_Action != ACTION_MOVE)
 		{
 			m_Action = ACTION_MOVE;
-			m_pMotion->Set(ACTION_MOVE, 5);
+			pMotion->Set(ACTION_MOVE, 5);
 		}
 	}
 	//ニュートラルモーション
@@ -323,7 +346,7 @@ void CSampleLvModel::ActionState(void)
 		if (m_Action != ACTION_WAIT)
 		{
 			m_Action = ACTION_WAIT;
-			m_pMotion->Set(ACTION_WAIT, 5);
+			pMotion->Set(ACTION_WAIT, 5);
 		}
 	}
 }
@@ -379,147 +402,9 @@ void CSampleLvModel::Draw(void)
 	//ワールドマトリックスの設定
 	m_pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
 
-	//モデルの描画(全パーツ)
-	for (int nCntModel = 0; nCntModel < m_nNumModel; nCntModel++)
+	// キャラクターの描画
+	if (m_pCharacter != nullptr)
 	{
-		m_apModel[nCntModel]->Draw();
-	}
-}
-
-//====================================================================
-//ロード処理
-//====================================================================
-void CSampleLvModel::LoadLevelData(const char* pFilename)
-{
-	FILE* pFile; //ファイルポインタを宣言
-
-	//ファイルを開く
-	pFile = fopen(pFilename, "r");
-
-	if (pFile != nullptr)
-	{//ファイルが開けた場合
-
-		int ModelParent = 0;
-		D3DXVECTOR3 ModelPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-		D3DXVECTOR3 ModelRot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-		char ModelName[128] = {};
-		int nCntModel = 0;
-		int nCntParts = 0;
-		int nCntMotion = 0;
-		int nCntKeySet = 0;
-		int nCntKey = 0;
-
-		char aString[128] = {};				//ゴミ箱
-		char aMessage[128] = {};			//スタートとエンドのメッセージ
-		char aBool[128] = {};				//bool変換用メッセージ
-
-		// 読み込み開始-----------------------------------------------------
-		while (1)
-		{//「SCRIPT」を探す
-			fscanf(pFile, "%s", &aMessage[0]);
-			if (strcmp(&aMessage[0], "SCRIPT") == 0)
-			{
-				// モデル数読み込み-----------------------------------------------------
-				while (1)
-				{//「NUM_MODEL」を探す
-					fscanf(pFile, "%s", &aMessage[0]);
-					if (strcmp(&aMessage[0], "NUM_MODEL") == 0)
-					{
-						fscanf(pFile, "%s", &aString[0]);
-						fscanf(pFile, "%d", &m_nNumModel);		//モデル数の設定
-						break;
-					}
-				}
-
-				//モデルファイルの読み込み
-				while (1)
-				{//「MODEL_FILENAME」を探す
-					fscanf(pFile, "%s", &aMessage[0]);
-					if (strcmp(&aMessage[0], "MODEL_FILENAME") == 0)
-					{
-						fscanf(pFile, "%s", &aString[0]);
-						fscanf(pFile, "%s", &ModelName[0]);		//読み込むモデルのパスを取得
-
-						m_apModel[nCntModel] = CModel::Create(&ModelName[0]);
-						nCntModel++;
-					}
-					if (nCntModel >= m_nNumModel)
-					{
-						nCntModel = 0;
-						break;
-					}
-				}
-
-				// キャラクター情報読み込み-----------------------------------------------------
-				while (1)
-				{//「PARTSSET」を探す
-					fscanf(pFile, "%s", &aMessage[0]);
-					if (strcmp(&aMessage[0], "PARTSSET") == 0)
-					{
-						while (1)
-						{//各種変数を探す
-							fscanf(pFile, "%s", &aMessage[0]);
-							if (strcmp(&aMessage[0], "INDEX") == 0)
-							{
-								fscanf(pFile, "%s", &aString[0]);
-								fscanf(pFile, "%d", &nCntModel);	//インデックスを設定
-							}
-							if (strcmp(&aMessage[0], "PARENT") == 0)
-							{
-								fscanf(pFile, "%s", &aString[0]);
-								fscanf(pFile, "%d", &ModelParent);	//親モデルのインデックスを設定
-
-								if (ModelParent == -1)
-								{
-									m_apModel[nCntModel]->SetParent(nullptr);
-								}
-								else
-								{
-									m_apModel[nCntModel]->SetParent(m_apModel[ModelParent]);
-								}
-							}
-							if (strcmp(&aMessage[0], "POS") == 0)
-							{
-								fscanf(pFile, "%s", &aString[0]);
-								fscanf(pFile, "%f", &ModelPos.x);				//位置(オフセット)の初期設定
-								fscanf(pFile, "%f", &ModelPos.y);				//位置(オフセット)の初期設定
-								fscanf(pFile, "%f", &ModelPos.z);				//位置(オフセット)の初期設定
-
-								m_apModel[nCntModel]->SetPos(ModelPos);
-								m_apModel[nCntModel]->SetStartPos(ModelPos);
-							}
-							if (strcmp(&aMessage[0], "ROT") == 0)
-							{
-								fscanf(pFile, "%s", &aString[0]);
-								fscanf(pFile, "%f", &ModelRot.x);				////向きの初期設定
-								fscanf(pFile, "%f", &ModelRot.y);				////向きの初期設定
-								fscanf(pFile, "%f", &ModelRot.z);				////向きの初期設定
-
-								m_apModel[nCntModel]->SetRot(ModelRot);
-								m_apModel[nCntModel]->SetStartRot(ModelRot);
-							}
-							if (strcmp(&aMessage[0], "END_PARTSSET") == 0)
-							{
-								break;
-							}
-						}
-						nCntModel++;
-						if (nCntModel >= m_nNumModel)
-						{
-							break;
-						}
-					}
-				}
-			}
-			if (strcmp(&aMessage[0], "END_SCRIPT") == 0)
-			{
-				break;
-			}
-		}
-		fclose(pFile);
-	}
-	else
-	{//ファイルが開けなかった場合
-		printf("***ファイルを開けませんでした***\n");
+		m_pCharacter->Draw();
 	}
 }

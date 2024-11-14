@@ -55,6 +55,12 @@ namespace
 	const D3DXVECTOR3 LIFE_POS = D3DXVECTOR3(50.0f, 650.0f, 0.0f);
 
 	const float CROSS_TIME = 10.0f; // 十字架を所持していられる時間
+
+	const float EGG_GRAVITY = 0.98f;	 //移動量の減衰速度
+	const D3DXVECTOR3 EGG_MOVE = D3DXVECTOR3(10.0f, 10.0f, 10.0f);	 //移動量の減衰速度
+	const float EGG_ROT = D3DX_PI * 0.006f;	 //回転速度
+	const float EGG_MOVE_DEL = 0.9f;	 //移動量の減衰速度
+	const float EGG_COLOR_DEL_A = 0.01f; //不透明度の減衰速度
 }
 
 //===========================================
@@ -279,8 +285,17 @@ void CPlayer::GameUpdate(void)
 		//壁があるか判断
 		SearchWall();
 
-		// 移動処理
-		Move();
+		if (
+			(m_State != STATE_EGG && CollisionStageIn() == true && 
+			CMapSystem::GetInstance()->GetGritBool(m_Grid.x,m_Grid.z) == false)||
+			(m_State == STATE_EGG && CollisionStageIn() == true &&
+			CMapSystem::GetInstance()->GetGritBool(m_Grid.x, m_Grid.z) == false &&
+			m_bGritCenter == true)
+			)
+		{// ステージ内にいる かつ ブロックの無いグリッド上の時
+			// 移動処理
+			Move();
+		}
 
 		// 向き移動処理
 		Rot();
@@ -522,7 +537,28 @@ void CPlayer::Move(void)
 					m_apModel[nCnt]->SetDisp(true);
 				}
 			}
-			m_EggMove = D3DXVECTOR3(-10.0f, 10.0f, 0.0f);
+
+			m_EggMove.y = EGG_MOVE.y;
+
+			switch (m_MoveState)
+			{
+			case CPlayer::MOVE_STATE_LEFT:
+				m_EggMove.x = EGG_MOVE.x;
+				m_EggMove.z = 0.0f;
+				break;
+			case CPlayer::MOVE_STATE_RIGHT:
+				m_EggMove.x = -EGG_MOVE.x;
+				m_EggMove.z = 0.0f;
+				break;
+			case CPlayer::MOVE_STATE_UP:
+				m_EggMove.x = 0.0f;
+				m_EggMove.z = -EGG_MOVE.z;
+				break;
+			case CPlayer::MOVE_STATE_DOWN:
+				m_EggMove.x = 0.0f;
+				m_EggMove.z = EGG_MOVE.z;
+				break;
+			}
 		}
 
 		SetItemType(m_eItemType);
@@ -571,7 +607,33 @@ void CPlayer::Attack(void)
 			// 火炎放射
 			CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_FIRE);
 
-			MyEffekseer::EffectCreate(CMyEffekseer::TYPE_HIT, false, m_pos, m_rot);
+			//計算用マトリックス
+			D3DXMATRIX mtxRot, mtxTrans;
+
+			//ワールドマトリックスの初期化
+			D3DXMatrixIdentity(&m_mtxWorld);
+
+			//向きを反映
+			D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
+
+			D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
+
+			//位置を反映
+			D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);
+
+			D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
+
+			if (m_bMultiMatrix)
+			{
+				SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
+
+				//算出したマトリクスをかけ合わせる
+				D3DXMatrixMultiply(&m_mtxWorld,
+					&m_mtxWorld,
+					&m_UseMultiMatrix);
+			}
+
+			MyEffekseer::EffectCreate(CMyEffekseer::TYPE_HIT, false, D3DXVECTOR3(m_mtxWorld._41, m_mtxWorld._42, m_mtxWorld._43), m_rot);
 
 			CFire::Create("data\\model\\fireball.x", m_pos, m_rot);
 			m_State = STATE_ATTACK;
@@ -706,12 +768,14 @@ void CPlayer::StateManager(void)
 		if (m_pUpEgg == nullptr)
 		{
 			m_pUpEgg = CObjectX::Create("data\\MODEL\\00_tamagon\\upper_egg.x");
+			m_pUpEgg->SetMatColor(D3DXCOLOR(0.263529f, 0.570980f, 0.238431f, 1.0f));
 			m_pUpEgg->SetMultiMatrix(true);
 		}
 
 		if (m_pDownEgg == nullptr)
 		{
 			m_pDownEgg = CObjectX::Create("data\\MODEL\\00_tamagon\\downer_egg.x");
+			m_pDownEgg->SetMatColor(D3DXCOLOR(0.263529f, 0.570980f, 0.238431f, 1.0f));
 			m_pDownEgg->SetMultiMatrix(true);
 		}
 		break;
@@ -1103,6 +1167,26 @@ void CPlayer::CollisionStageOut(void)
 }
 
 //====================================================================
+// ステージ内にいるかどうか
+//====================================================================
+bool CPlayer::CollisionStageIn(void)
+{
+	D3DXVECTOR3 D_pos = CGame::GetDevil()->GetDevilPos();
+	D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
+	float G_Size = CMapSystem::GetInstance()->GetGritSize();
+
+	if (m_pos.x + G_Size <= D_pos.x + MapSize.x &&
+		m_pos.x - G_Size >= D_pos.x - MapSize.x &&
+		m_pos.z + G_Size <= D_pos.z + MapSize.z &&
+		m_pos.z - G_Size >= D_pos.z - MapSize.z)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+//====================================================================
 // 画面外との圧死判定
 //====================================================================
 void CPlayer::CollisionPressStageOut(void)
@@ -1302,26 +1386,53 @@ void CPlayer::EggMove(void)
 		if (m_pUpEgg != nullptr)
 		{
 			D3DXVECTOR3 pos = m_pUpEgg->GetPos();
-			//D3DXVECTOR3 Color = m_pUpEgg-();
+			D3DXVECTOR3 rot = m_pUpEgg->GetRot();
+			float ColorA = m_pUpEgg->GetMatColor().a;
 
-			m_EggMove.y -= 0.98f;
+			ColorA -= EGG_COLOR_DEL_A;
+
+			m_EggMove.y -= EGG_GRAVITY;
 
 			pos += m_EggMove;
 
-			m_EggMove.x = m_EggMove.x * 0.9f;
-			m_EggMove.z = m_EggMove.z * 0.9f;
+			rot.z -= m_EggMove.x * EGG_ROT;
+			rot.x += m_EggMove.z * EGG_ROT;
 
-			if (pos.y < CGame::GetMapField()->GetPos().y)
+			m_EggMove.x = m_EggMove.x * EGG_MOVE_DEL;
+			m_EggMove.z = m_EggMove.z * EGG_MOVE_DEL;
+
+			if (pos.y < CGame::GetMapField()->GetPos().y + 30.0f)
 			{
-				pos.y = CGame::GetMapField()->GetPos().y;
+				pos.y = CGame::GetMapField()->GetPos().y + 30.0f;
+			}
+			else
+			{
+				m_pUpEgg->SetRot(rot);
 			}
 
 			m_pUpEgg->SetPos(pos);
+			m_pUpEgg->SetMatColorA(ColorA);
+
+			if (ColorA <= 0.0f)
+			{
+				m_pUpEgg->Uninit();
+				m_pUpEgg = nullptr;
+			}
 		}
 
 		if (m_pDownEgg != nullptr)
 		{
+			float ColorA = m_pDownEgg->GetMatColor().a;
 
+			ColorA -= EGG_COLOR_DEL_A;
+
+			m_pDownEgg->SetMatColorA(ColorA);
+
+			if (ColorA <= 0.0f)
+			{
+				m_pDownEgg->Uninit();
+				m_pDownEgg = nullptr;
+			}
 		}
 	}
 }

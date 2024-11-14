@@ -57,7 +57,7 @@ private:
 	D3DCOLORVALUE m_Color;		//色
 	float m_fDel;				//色の減衰
 
-	CCharacter* m_pCharacter;	// キャラクタークラス
+	CCharacter* m_pCharacter;	// キャラクタークラスのポインタ
 
 	// 静的メンバ変数
 	static CListManager<CLevelModelEffect>* m_pList; // オブジェクトリスト
