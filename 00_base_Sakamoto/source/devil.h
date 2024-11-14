@@ -14,8 +14,9 @@
 #define SCROLL_ID 1
 
 //前方宣言
-class CModel;
-class CMotion;
+
+class CCharacter;
+
 class CObject2D;
 class CObject3D;
 class CObjGauge2D;
@@ -116,8 +117,6 @@ private:
 
 	void DebugKey(void);		//デバッグキー
 
-	void LoadLevelData(const char* pFilename);
-
 	ACTION_TYPE m_Action;
 	ACTION_TYPE m_AtkAction;		//攻撃状態記録用変数
 	D3DXVECTOR3 m_pos;				//位置
@@ -145,11 +144,7 @@ private:
 	D3DXVECTOR3 m_DevilRot;			// デビルパワーによって傾く値
 	int m_DevilArrow;				// デビルパワーの方向
 
-	//階層構造とモーションのポインタ
-	CModel* m_apModel[64];
-	CMotion* m_pMotion;
-	char* m_aModelName[64];
-	int m_nNumModel;
+	CCharacter* m_pCharacter;		// キャラクターのクラス
 
 	// 静的メンバ変数
 	static CListManager<CDevil>* m_pList; // オブジェクトリスト

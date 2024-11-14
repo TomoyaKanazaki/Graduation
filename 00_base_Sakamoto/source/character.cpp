@@ -70,8 +70,11 @@ HRESULT CCharacter::Init(const char* pModelName)
 	}
 
 	//初期化処理
-	m_pMotion->SetModel(&m_apModel[0], m_nNumModel);
-	m_pMotion->LoadData(pModelName);
+	if (m_pMotion != nullptr)
+	{
+		m_pMotion->SetModel(&m_apModel[0], m_nNumModel);
+		m_pMotion->LoadData(pModelName);
+	}
 
 	return S_OK;
 }
@@ -83,9 +86,12 @@ void CCharacter::Uninit(void)
 {
 	for (int nCntModel = 0; nCntModel < m_nNumModel; nCntModel++)
 	{
-		m_apModel[nCntModel]->Uninit();
-		delete m_apModel[nCntModel];
-		m_apModel[nCntModel] = nullptr;
+		if (m_apModel[nCntModel] != nullptr)
+		{
+			m_apModel[nCntModel]->Uninit();
+			delete m_apModel[nCntModel];
+			m_apModel[nCntModel] = nullptr;
+		}
 	}
 
 	//モーションの終了処理
@@ -117,7 +123,10 @@ void CCharacter::Draw(void)
 	//モデルの描画(全パーツ)
 	for (int nCntModel = 0; nCntModel < m_nNumModel; nCntModel++)
 	{
-		m_apModel[nCntModel]->Draw();
+		if (m_apModel[nCntModel] != nullptr)
+		{
+			m_apModel[nCntModel]->Draw();
+		}
 	}
 }
 
