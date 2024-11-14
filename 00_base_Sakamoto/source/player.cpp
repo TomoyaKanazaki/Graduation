@@ -93,7 +93,8 @@ m_MoveState(MOVE_STATE_NONE),
 m_Grid(0, 0),
 m_bGritCenter(true),
 m_bPressObj(false),
-m_fCrossTimer(0.0f)
+m_fCrossTimer(0.0f),
+m_pEgg(nullptr)
 {
 
 }
@@ -487,6 +488,19 @@ void CPlayer::Move(void)
 		//à⁄ìÆó Çë„ì¸
 		m_move = NormarizeMove;
 
+		if (m_State == STATE_EGG)
+		{
+			for (int nCnt = 0; nCnt < m_nNumModel; nCnt++)
+			{
+				if (m_apModel[nCnt] != nullptr)
+				{
+					m_apModel[nCnt]->SetDisp(true);
+				}
+			}
+		}
+
+		SetItemType(m_eItemType);
+
 		//à⁄ìÆèÛë‘Ç…Ç∑ÇÈ
 		m_State = STATE_WALK;
 	}
@@ -654,10 +668,19 @@ void CPlayer::StateManager(void)
 		break;
 
 	case STATE_EGG:
-		//if (m_nStateCount == 0)
-		//{
-		//	m_State = STATE_WAIT;
-		//}
+
+		for (int nCnt = 0; nCnt < m_nNumModel; nCnt++)
+		{
+			if (m_apModel[nCnt] != nullptr)
+			{
+				m_apModel[nCnt]->SetDisp(false);
+			}
+		}
+
+		//m_pEgg = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\jack.x");
+		//m_pEgg->SetPos(m_pos);
+		//m_pEgg->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
+
 		break;
 	}
 
