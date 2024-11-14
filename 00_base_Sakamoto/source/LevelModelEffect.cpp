@@ -8,6 +8,7 @@
 #include "object.h"
 #include "manager.h"
 #include "renderer.h"
+#include "character.h"
 #include "model.h"
 #include "motion.h"
 #include "input.h"
@@ -82,20 +83,13 @@ CLevelModelEffect* CLevelModelEffect::Create()
 //====================================================================
 HRESULT CLevelModelEffect::Init(void)
 {
-	//モデルの生成
-	LoadLevelData("data\\TXT\\motion_foot_light_spear.txt");
-
-	//モーションの生成
-	if (m_pMotion == nullptr)
-	{
-		//モーションの生成
-		m_pMotion = new CMotion;
-	}
-	//初期化処理
-	m_pMotion->SetModel(&m_apModel[0], m_nNumModel);
-	m_pMotion->LoadData("data\\TXT\\motion_foot_light_spear.txt");
-
 	SetType(CObject::TYPE_PLAYEREFFECT);
+
+	// キャラクタークラスの生成
+	if (m_pCharacter != nullptr)
+	{
+		m_pCharacter->Create("data\\TXT\\motion_foot_light_spear.txt");
+	}
 
 	if (m_pList == nullptr)
 	{// リストマネージャー生成
@@ -124,19 +118,13 @@ void CLevelModelEffect::Uninit(void)
 		m_pList->Release(m_pList);
 	}
 
-	for (int nCntModel = 0; nCntModel < m_nNumModel; nCntModel++)
+	// キャラクターの終了処理
+	if (m_pCharacter != nullptr)
 	{
-		m_apModel[nCntModel]->Uninit();
-		delete m_apModel[nCntModel];
-		m_apModel[nCntModel] = nullptr;
-	}
-
-	//モーションの終了処理
-	if (m_pMotion != nullptr)
-	{
-		//モーションの破棄
-		delete m_pMotion;
-		m_pMotion = nullptr;
+		// キャラクターの破棄
+		m_pCharacter->Uninit();
+		delete m_pCharacter;
+		m_pCharacter = nullptr;
 	}
 
 	SetDeathFlag(true);
@@ -149,11 +137,23 @@ void CLevelModelEffect::Update(void)
 {
 	m_Color.a -= m_fDel;
 
-	//モデルの更新(全パーツ)
-	for (int nCntModel = 0; nCntModel < m_nNumModel; nCntModel++)
+	if (m_pCharacter != nullptr)
 	{
-		m_apModel[nCntModel]->SetColorType(CModel::COLORTYPE_TRUE_ALL);
-		m_apModel[nCntModel]->SetColor(m_Color);
+		// モデル数を取得
+		int nNumModel = m_pCharacter->GetNumModel();
+
+		for (int nCnt = 0; nCnt < nNumModel; nCnt++)
+		{
+			// モデルの取得処理
+			CModel* pModel = m_pCharacter->GetModel(nCnt);
+
+			if (pModel != nullptr)
+			{
+				// 色設定処理
+				pModel->SetColorType(CModel::COLORTYPE_TRUE_ALL);
+				pModel->SetColor(m_Color);
+			}
+		}
 	}
 
 	if (m_Color.a < 0.0f)
@@ -170,7 +170,16 @@ void CLevelModelEffect::Update(void)
 //====================================================================
 void CLevelModelEffect::SetAllPose(int nType, int nKey, float nCounter)
 {
-	m_pMotion->SetStopPose(nType, nKey, nCounter);
+	if (m_pCharacter != nullptr)
+	{
+		// モーションの取得処理
+		CMotion* pMotion = m_pCharacter->GetMotion();
+
+		if (pMotion != nullptr)
+		{
+			pMotion->SetStopPose(nType, nKey, nCounter);
+		}
+	}
 }
 
 //====================================================================
@@ -178,15 +187,32 @@ void CLevelModelEffect::SetAllPose(int nType, int nKey, float nCounter)
 //====================================================================
 void CLevelModelEffect::SetPose(int nType, int nKey, float nCounter, int nModelNumber)
 {
-	for (int nCntModel = 0; nCntModel < m_nNumModel; nCntModel++)
+	if (m_pCharacter != nullptr)
 	{
-		if (nCntModel != nModelNumber)
+		// モデル数を取得
+		int nNumModel = m_pCharacter->GetNumModel();
+
+		for (int nCnt = 0; nCnt < nNumModel; nCnt++)
 		{
-			m_apModel[nCntModel]->SetDisp(false);
+			// モーションの取得処理
+			CModel* pModel = m_pCharacter->GetModel(nCnt);
+
+			if (pModel != nullptr)
+			{
+				// 色設定処理
+				pModel->SetDisp(false);
+			}
+		}
+
+		// モーションの取得処理
+		CMotion* pMotion = m_pCharacter->GetMotion();
+
+		if (pMotion != nullptr)
+		{
+			pMotion->SetStopPose(nType, nKey, nCounter);
 		}
 	}
 
-	m_pMotion->SetStopPose(nType, nKey, nCounter);
 }
 
 //====================================================================
@@ -214,148 +240,10 @@ void CLevelModelEffect::Draw(void)
 	//ワールドマトリックスの設定
 	m_pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
 
-	//モデルの描画(全パーツ)
-	for (int nCntModel = 0; nCntModel < m_nNumModel; nCntModel++)
+	// キャラクターの描画
+	if (m_pCharacter != nullptr)
 	{
-		m_apModel[nCntModel]->Draw();
-	}
-}
-
-//====================================================================
-//ロード処理
-//====================================================================
-void CLevelModelEffect::LoadLevelData(const char* pFilename)
-{
-	FILE* pFile; //ファイルポインタを宣言
-
-	//ファイルを開く
-	pFile = fopen(pFilename, "r");
-
-	if (pFile != nullptr)
-	{//ファイルが開けた場合
-
-		int ModelParent = 0;
-		D3DXVECTOR3 ModelPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-		D3DXVECTOR3 ModelRot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-		char ModelName[128] = {};
-		int nCntModel = 0;
-		int nCntParts = 0;
-		int nCntMotion = 0;
-		int nCntKeySet = 0;
-		int nCntKey = 0;
-
-		char aString[128] = {};				//ゴミ箱
-		char aMessage[128] = {};			//スタートとエンドのメッセージ
-		char aBool[128] = {};				//bool変換用メッセージ
-
-		// 読み込み開始-----------------------------------------------------
-		while (1)
-		{//「SCRIPT」を探す
-			fscanf(pFile, "%s", &aMessage[0]);
-			if (strcmp(&aMessage[0], "SCRIPT") == 0)
-			{
-				// モデル数読み込み-----------------------------------------------------
-				while (1)
-				{//「NUM_MODEL」を探す
-					fscanf(pFile, "%s", &aMessage[0]);
-					if (strcmp(&aMessage[0], "NUM_MODEL") == 0)
-					{
-						fscanf(pFile, "%s", &aString[0]);
-						fscanf(pFile, "%d", &m_nNumModel);		//モデル数の設定
-						break;
-					}
-				}
-
-				//モデルファイルの読み込み
-				while (1)
-				{//「MODEL_FILENAME」を探す
-					fscanf(pFile, "%s", &aMessage[0]);
-					if (strcmp(&aMessage[0], "MODEL_FILENAME") == 0)
-					{
-						fscanf(pFile, "%s", &aString[0]);
-						fscanf(pFile, "%s", &ModelName[0]);		//読み込むモデルのパスを取得
-
-						m_apModel[nCntModel] = CModel::Create(&ModelName[0]);
-						nCntModel++;
-					}
-					if (nCntModel >= m_nNumModel)
-					{
-						nCntModel = 0;
-						break;
-					}
-				}
-
-				// キャラクター情報読み込み-----------------------------------------------------
-				while (1)
-				{//「PARTSSET」を探す
-					fscanf(pFile, "%s", &aMessage[0]);
-					if (strcmp(&aMessage[0], "PARTSSET") == 0)
-					{
-						while (1)
-						{//各種変数を探す
-							fscanf(pFile, "%s", &aMessage[0]);
-							if (strcmp(&aMessage[0], "INDEX") == 0)
-							{
-								fscanf(pFile, "%s", &aString[0]);
-								fscanf(pFile, "%d", &nCntModel);	//インデックスを設定
-							}
-							if (strcmp(&aMessage[0], "PARENT") == 0)
-							{
-								fscanf(pFile, "%s", &aString[0]);
-								fscanf(pFile, "%d", &ModelParent);	//親モデルのインデックスを設定
-
-								if (ModelParent == -1)
-								{
-									m_apModel[nCntModel]->SetParent(nullptr);
-								}
-								else
-								{
-									m_apModel[nCntModel]->SetParent(m_apModel[ModelParent]);
-								}
-							}
-							if (strcmp(&aMessage[0], "POS") == 0)
-							{
-								fscanf(pFile, "%s", &aString[0]);
-								fscanf(pFile, "%f", &ModelPos.x);				//位置(オフセット)の初期設定
-								fscanf(pFile, "%f", &ModelPos.y);				//位置(オフセット)の初期設定
-								fscanf(pFile, "%f", &ModelPos.z);				//位置(オフセット)の初期設定
-
-								m_apModel[nCntModel]->SetPos(ModelPos);
-								m_apModel[nCntModel]->SetStartPos(ModelPos);
-							}
-							if (strcmp(&aMessage[0], "ROT") == 0)
-							{
-								fscanf(pFile, "%s", &aString[0]);
-								fscanf(pFile, "%f", &ModelRot.x);				////向きの初期設定
-								fscanf(pFile, "%f", &ModelRot.y);				////向きの初期設定
-								fscanf(pFile, "%f", &ModelRot.z);				////向きの初期設定
-
-								m_apModel[nCntModel]->SetRot(ModelRot);
-								m_apModel[nCntModel]->SetStartRot(ModelRot);
-							}
-							if (strcmp(&aMessage[0], "END_PARTSSET") == 0)
-							{
-								break;
-							}
-						}
-						nCntModel++;
-						if (nCntModel >= m_nNumModel)
-						{
-							break;
-						}
-					}
-				}
-			}
-			if (strcmp(&aMessage[0], "END_SCRIPT") == 0)
-			{
-				break;
-			}
-		}
-		fclose(pFile);
-	}
-	else
-	{//ファイルが開けなかった場合
-		printf("***ファイルを開けませんでした***\n");
+		m_pCharacter->Draw();
 	}
 }
 
