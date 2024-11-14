@@ -89,6 +89,11 @@ HRESULT CLevelModelEffect::Init(void)
 	if (m_pCharacter == nullptr)
 	{
 		m_pCharacter->Create("data\\TXT\\motion_foot_light_spear.txt");
+
+		if (m_pCharacter == nullptr)
+		{
+			return E_FAIL;
+		}
 	}
 
 	if (m_pList == nullptr)
@@ -137,22 +142,25 @@ void CLevelModelEffect::Update(void)
 {
 	m_Color.a -= m_fDel;
 
-	if (m_pCharacter != nullptr)
+	if (m_pCharacter == nullptr)
 	{
-		// モデル数を取得
-		int nNumModel = m_pCharacter->GetNumModel();
+		assert(("キャラクタークラスがないよ", false));
+		return;
+	}
 
-		for (int nCnt = 0; nCnt < nNumModel; nCnt++)
+	// モデル数を取得
+	int nNumModel = m_pCharacter->GetNumModel();
+
+	for (int nCnt = 0; nCnt < nNumModel; nCnt++)
+	{
+		// モデルの取得処理
+		CModel* pModel = m_pCharacter->GetModel(nCnt);
+
+		if (pModel != nullptr)
 		{
-			// モデルの取得処理
-			CModel* pModel = m_pCharacter->GetModel(nCnt);
-
-			if (pModel != nullptr)
-			{
-				// 色設定処理
-				pModel->SetColorType(CModel::COLORTYPE_TRUE_ALL);
-				pModel->SetColor(m_Color);
-			}
+			// 色設定処理
+			pModel->SetColorType(CModel::COLORTYPE_TRUE_ALL);
+			pModel->SetColor(m_Color);
 		}
 	}
 
@@ -170,16 +178,22 @@ void CLevelModelEffect::Update(void)
 //====================================================================
 void CLevelModelEffect::SetAllPose(int nType, int nKey, float nCounter)
 {
-	if (m_pCharacter != nullptr)
+	if (m_pCharacter == nullptr)
 	{
-		// モーションの取得処理
-		CMotion* pMotion = m_pCharacter->GetMotion();
-
-		if (pMotion != nullptr)
-		{
-			pMotion->SetStopPose(nType, nKey, nCounter);
-		}
+		// アサート
+		assert(("キャラクタークラスがないよ", false));
+		return;
 	}
+
+	// モーションの取得処理
+	CMotion* pMotion = m_pCharacter->GetMotion();
+
+	if (pMotion == nullptr)
+	{
+		return;
+	}
+
+	pMotion->SetStopPose(nType, nKey, nCounter);
 }
 
 //====================================================================
@@ -187,32 +201,37 @@ void CLevelModelEffect::SetAllPose(int nType, int nKey, float nCounter)
 //====================================================================
 void CLevelModelEffect::SetPose(int nType, int nKey, float nCounter, int nModelNumber)
 {
-	if (m_pCharacter != nullptr)
+	if (m_pCharacter == nullptr)
 	{
-		// モデル数を取得
-		int nNumModel = m_pCharacter->GetNumModel();
+		// アサート
+		assert(("キャラクタークラスがないよ", false));
+		return;
+	}
 
-		for (int nCnt = 0; nCnt < nNumModel; nCnt++)
-		{
-			// モーションの取得処理
-			CModel* pModel = m_pCharacter->GetModel(nCnt);
+	// モーションの取得処理
+	CMotion* pMotion = m_pCharacter->GetMotion();
 
-			if (pModel != nullptr)
-			{
-				// 色設定処理
-				pModel->SetDisp(false);
-			}
-		}
+	if (pMotion == nullptr)
+	{
+		return;
+	}
 
+	// モデル数を取得
+	int nNumModel = m_pCharacter->GetNumModel();
+
+	for (int nCnt = 0; nCnt < nNumModel; nCnt++)
+	{
 		// モーションの取得処理
-		CMotion* pMotion = m_pCharacter->GetMotion();
+		CModel* pModel = m_pCharacter->GetModel(nCnt);
 
-		if (pMotion != nullptr)
+		if (pModel != nullptr)
 		{
-			pMotion->SetStopPose(nType, nKey, nCounter);
+			// 表示有無設定
+			pModel->SetDisp(false);
 		}
 	}
 
+	pMotion->SetStopPose(nType, nKey, nCounter);
 }
 
 //====================================================================
