@@ -12,8 +12,7 @@
 #include "MapSystem.h"
 
 //前方宣言
-class CModel;
-class CMotion;
+class CCharacter;
 class CObject2D;
 class CObject3D;
 class CObjGauge2D;
@@ -215,11 +214,7 @@ private:
 	CObjectX* m_pDownEgg;		//卵モデルの下
 	D3DXVECTOR3 m_EggMove;		//卵の動き
 
-	//階層構造とモーションのポインタ
-	CModel* m_apModel[64];
-	CMotion* m_pMotion;
-	char* m_aModelName[64];
-	int m_nNumModel;
+	CCharacter* m_pCharacter;		// キャラクターのクラス
 	CLifeUi* m_pLifeUi;
 
 	//マップとのマトリックス情報
