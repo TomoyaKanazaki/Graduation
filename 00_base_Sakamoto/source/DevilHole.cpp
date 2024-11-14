@@ -43,6 +43,10 @@ CDevilHole::CDevilHole(int nPriority) : CObjectX(nPriority)
 	m_fColorA = 0.0f;
 	m_Grid.x = 0;
 	m_Grid.z = 0;
+	m_pos = INITVECTOR3;	
+	m_posOld = INITVECTOR3;
+	m_move = INITVECTOR3;
+	m_rot = INITVECTOR3;
 	
 	for (int nCnt = 0; nCnt < DIRECTION; nCnt++)
 	{
@@ -219,7 +223,6 @@ void CDevilHole::GameUpdate(void)
 
 	//ˆÊ’uXV
 	CObjectX::SetPos(m_pos);
-	CObjectX::SetRot(m_rot);
 
 	//‘å‚«‚³‚ÌÝ’è
 	SetScaling(D3DXVECTOR3(m_Scaling, m_Scaling, m_Scaling));

@@ -39,7 +39,11 @@ CResult::CResult()
 	m_pLifeRanking = nullptr;
 	m_ClearText = nullptr;
 	m_pScoreTex = nullptr;
-	m_apLife[6] = {};
+
+	for (int nCnt = 0; nCnt < 6; nCnt++)
+	{
+		m_apLife[nCnt] = nullptr;
+	}
 	m_AddScoreCount = 0;
 	m_LifeData = 0;
 
