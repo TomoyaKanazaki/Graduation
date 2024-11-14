@@ -28,6 +28,7 @@ class CEnemy;
 class CBoss;
 class CLifeUi;
 class CFire;
+class CObjectX;
 
 //オブジェクトプレイヤークラス
 class CPlayer : public CObject
@@ -207,6 +208,8 @@ private:
 	CSlowManager* m_pSlow;		// スロー
 
 	ITEM_TYPE m_eItemType;		// 持ってるアイテムの種類
+
+	CObjectX* m_pEgg;				//卵モデル
 
 	//階層構造とモーションのポインタ
 	CModel* m_apModel[64];
