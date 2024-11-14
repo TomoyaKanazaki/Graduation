@@ -282,6 +282,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -320,6 +321,7 @@
       <SupportJustMyCode>true</SupportJustMyCode>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
