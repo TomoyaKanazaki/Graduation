@@ -285,8 +285,17 @@ void CPlayer::GameUpdate(void)
 		//壁があるか判断
 		SearchWall();
 
-		// 移動処理
-		Move();
+		if (
+			(m_State != STATE_EGG && CollisionStageIn() == true && 
+			CMapSystem::GetInstance()->GetGritBool(m_Grid.x,m_Grid.z) == false)||
+			(m_State == STATE_EGG && CollisionStageIn() == true &&
+			CMapSystem::GetInstance()->GetGritBool(m_Grid.x, m_Grid.z) == false &&
+			m_bGritCenter == true)
+			)
+		{// ステージ内にいる かつ ブロックの無いグリッド上の時
+			// 移動処理
+			Move();
+		}
 
 		// 向き移動処理
 		Rot();
@@ -1129,6 +1138,26 @@ void CPlayer::CollisionStageOut(void)
 		m_State = STATE_WAIT;
 		m_move.z = 0.0f;
 	}
+}
+
+//====================================================================
+// ステージ内にいるかどうか
+//====================================================================
+bool CPlayer::CollisionStageIn(void)
+{
+	D3DXVECTOR3 D_pos = CGame::GetDevil()->GetDevilPos();
+	D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
+	float G_Size = CMapSystem::GetInstance()->GetGritSize();
+
+	if (m_pos.x + G_Size <= D_pos.x + MapSize.x &&
+		m_pos.x - G_Size >= D_pos.x - MapSize.x &&
+		m_pos.z + G_Size <= D_pos.z + MapSize.z &&
+		m_pos.z - G_Size >= D_pos.z - MapSize.z)
+	{
+		return true;
+	}
+
+	return false;
 }
 
 //====================================================================

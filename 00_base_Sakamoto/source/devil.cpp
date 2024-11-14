@@ -1275,7 +1275,7 @@ void CDevil::PlayerScroll(D3DXVECTOR3 Move, float GritSize)
 				}
 				else
 				{
-					PlayerPos += (AnswerPos - PlayerPos) * 0.5f;
+					PlayerPos += (AnswerPos - PlayerPos);
 					pPlayer->SetPos(PlayerPos);
 				}
 			}
