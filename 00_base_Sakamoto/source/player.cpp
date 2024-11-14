@@ -362,7 +362,7 @@ void CPlayer::TutorialUpdate(void)
 void CPlayer::Draw(void)
 {
 	//デバイスの取得
-	LPDIRECT3DDEVICE9 m_pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
 	D3DXMATRIX mtxRot, mtxTrans;	//計算用マトリックス
 
 	//ワールドマトリックスの初期化
@@ -389,13 +389,33 @@ void CPlayer::Draw(void)
 	}
 
 	//ワールドマトリックスの設定
-	m_pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
+	pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
+
+	//ステンシルバッファ有効
+	pDevice->SetRenderState(D3DRS_STENCILENABLE, TRUE);
+
+	//ステンシルバッファと比較する参照値の設定 => ref
+	pDevice->SetRenderState(D3DRS_STENCILREF, 1);
+
+	//ステンシルバッファの値に対してのマスク設定 => 0xff(全て真)
+	pDevice->SetRenderState(D3DRS_STENCILMASK, 255);
+
+	//ステンシルバッファの比較方法 => (参照値 => ステンシルバッファの参照値)なら合格
+	pDevice->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_GREATEREQUAL);
+
+	//ステンシルテスト結果に対しての反映設定
+	pDevice->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_REPLACE);	// Zテスト・ステンシルテスト成功
+	pDevice->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP);		// Zテスト・ステンシルテスト失敗
+	pDevice->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_KEEP);		// Zテスト失敗・ステンシルテスト成功
 
 	//モデルの描画(全パーツ)
 	for (int nCntModel = 0; nCntModel < m_nNumModel; nCntModel++)
 	{
 		m_apModel[nCntModel]->Draw();
 	}
+
+	//ステンシルバッファ無効
+	pDevice->SetRenderState(D3DRS_STENCILENABLE, FALSE);
 }
 
 //====================================================================

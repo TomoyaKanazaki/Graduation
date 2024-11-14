@@ -57,6 +57,8 @@
 
 #include "SlopeDevice.h"
 
+#include "mask.h"
+
 namespace
 {
 	const int SAMPLE_NAMESPACE = 0;
@@ -88,6 +90,8 @@ CCubeBlock* CGame::m_pCubeBlock = nullptr;
 CPlayer* CGame::m_pPlayer = nullptr;
 CDevil* CGame::m_pDevil = nullptr;
 CBoss* CGame::m_pBoss = nullptr;
+CMask* CGame::m_pMask = nullptr;
+
 bool CGame::m_bGameEnd = false;
 bool CGame::m_bGameClear = false;
 bool CGame::m_bEvent = false;
@@ -95,16 +99,19 @@ bool CGame::m_bEventEnd = false;
 bool CGame::m_Wireframe = false;
 bool CGame::m_Slow = false;
 bool CGame::m_bDevilHoleFinish = false;
+
 int CGame::m_nTutorialWave = 0;
 int CGame::m_nEventCount = 0;
 int CGame::m_nEventWave = 0;
 int CGame::m_nEventNumber = 0;
 int CGame::m_nNumBowabowa = 0;
+
 float CGame::m_fEvectFinish = 0.0f;
 float CGame::m_fEventAngle = 0.0f;
 float CGame::m_EventHeight = 0.0f;
 float CGame::m_NameColorA = 0.0f;
 float CGame::m_BGColorA = 1.0f;
+
 D3DXVECTOR3 CGame::m_EventPos = D3DXVECTOR3(0.0f, 300.0f, 0.0f);
 D3DXVECTOR3 CGame::m_BGRot = INITVECTOR3;
 
@@ -144,6 +151,9 @@ HRESULT CGame::Init(void)
 {
 	////BGMの再生
 	//CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_BGM_TUTORIAL);
+
+	// 2Dマスクの生成
+	//m_pMask = CMask::Create(7);
 
 	//クリアフラグのデフォルトをオンにしておく
 	m_bGameClear = true;
@@ -268,8 +278,8 @@ HRESULT CGame::Init(void)
 
 	// 敵の生成
 	CEnemy::Create(CEnemy::ENEMY_MEDAMAN, CMapSystem::GRID(9, 7));
-	CEnemy::Create(CEnemy::ENEMY_BONBON, CMapSystem::GRID(11, 5));
-	CEnemy::Create(CEnemy::ENEMY_LITTLEDEVIL, CMapSystem::GRID(13, 7));
+	//CEnemy::Create(CEnemy::ENEMY_BONBON, CMapSystem::GRID(11, 5));
+	//CEnemy::Create(CEnemy::ENEMY_LITTLEDEVIL, CMapSystem::GRID(13, 7));
 
 #if _DEBUG
 	if (m_pEdit == nullptr)

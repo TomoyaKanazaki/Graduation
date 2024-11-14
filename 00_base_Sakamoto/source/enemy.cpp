@@ -49,6 +49,8 @@ namespace
 	const float DISTANCE_APPROACH = 100.0f;	//遠ざかる距離
 
 	const float COORDDINATE_RATE = 5.0f; // 経路探索を行う間隔
+	const float TARGET_DIFF = 5.0f; // 許容範囲
+	const float MOVE_ASTAR = 50.0f; // 追跡時の移動速度
 }
 
 //===========================================
@@ -61,7 +63,9 @@ CListManager<CEnemy>* CEnemy::m_pList = nullptr; // オブジェクトリスト
 //====================================================================
 CEnemy::CEnemy(int nPriority) :CObject(nPriority),
 m_pPath(nullptr),
-m_fCoordinateTimer(0.0f)
+m_fCoordinateTimer(0.0f),
+m_nTargetIndex(0),
+m_nNumCoordinate(0)
 {
 	m_pos = INITVECTOR3;
 	m_posOld = INITVECTOR3;
@@ -226,6 +230,9 @@ void CEnemy::Update(void)
 
 	// プレイヤーへの最短経路探索
 	Coordinate();
+
+	// 最短系露をたどる
+	Route();
 
 	//床の判定
 	if (m_pos.y <= 0.0f)
@@ -734,28 +741,84 @@ void CEnemy::Coordinate()
 	// 探索のタイミングでない場合関数を抜ける
 	if (m_fCoordinateTimer < COORDDINATE_RATE) { return; }
 
+	// 最短経路の次の目標をリセット
+	m_nTargetIndex = 0;
+
 	// タイマーのリセット
 	m_fCoordinateTimer -= COORDDINATE_RATE;
 
 	// 最短経路を取得
 	AStar::CoordinateList Path = AStar::Generator::GetInstance()->FindPlayer({ m_Grid.x, m_Grid.z });
-	int nNumGrid = Path.size();
+	m_nNumCoordinate = Path.size();
 
 	// メモリを削除
 	if (m_pPath != nullptr) { delete[] m_pPath; };
 
 	// 最短経路に必要なグリッド数分メモリを確保
-	m_pPath = new CMapSystem::GRID[nNumGrid];
+	m_pPath = new CMapSystem::GRID[m_nNumCoordinate];
 
 	// 確保したメモリに最短経路のグリッドを格納
-	for (int i = 0; i < nNumGrid; ++i)
+	for (int i = 0; i < m_nNumCoordinate; ++i)
 	{
 		m_pPath[i] = Path.at(i);
 	}
 }
 
+//==========================================
+// 最短経路をたどる
+//==========================================
+void CEnemy::Route()
+{
+	// 自身の位置・移動量取得
+	D3DXVECTOR3 pos = GetPos();
+	D3DXVECTOR3 move = GetMove();
+	D3DXVECTOR3 rot = GetRot();
+
+	// 最短経路が無いとき
+	if (m_pPath == nullptr)
+	{
+		return;
+	}
+
+	// 目標地点の座標を求める
+	D3DXVECTOR3 path = CMapSystem::GetInstance()->GetGritPos(m_pPath[m_nTargetIndex]);
+
+	// 次に向かうグリッドに重なったらその次の目標を設定
+	if (path.x - pos.x <= TARGET_DIFF &&
+		path.z - pos.z <= TARGET_DIFF) // 一定範囲内であれば
+	{/* 座標の比較 */
+		// インデックス番号を加算
+		m_nTargetIndex++;
+		path = CMapSystem::GetInstance()->GetGritPos(m_pPath[m_nTargetIndex]);
+	}
+
+	// 次の目標が存在しなかったら関数を抜ける
+	if (m_nTargetIndex >= m_nNumCoordinate)
+	{ 
+		return;
+	}
+
+	// 次の目標位置との角度
+	float RotDest = atan2f(path.z - pos.z, path.x - pos.x);
+
+	// 次の目標位置に移動
+	move = (path - pos) * DeltaTime::Get();
+
+	// 位置更新
+	pos += move;
+
+	//目的の向き
+	float DiffRot = (RotDest - rot.y) * 0.1f;
+	rot.y += DiffRot;
+
+	// 位置・移動量設定
+	SetPos(pos);
+	SetMove(move);
+	SetRot(rot);
+}
+
 //====================================================================
-//リスト取得
+// リスト取得
 //====================================================================
 CListManager<CEnemy>* CEnemy::GetList(void)
 {

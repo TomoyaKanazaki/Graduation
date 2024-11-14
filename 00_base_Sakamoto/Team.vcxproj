@@ -56,6 +56,7 @@
     <ClCompile Include="source\manager.cpp" />
     <ClCompile Include="source\MapModel.cpp" />
     <ClCompile Include="source\MapSystem.cpp" />
+    <ClCompile Include="source\mask.cpp" />
     <ClCompile Include="source\MiniMapCamera.cpp" />
     <ClCompile Include="source\model.cpp" />
     <ClCompile Include="source\modelEffect.cpp" />
@@ -147,6 +148,7 @@
     <ClInclude Include="source\manager.h" />
     <ClInclude Include="source\MapModel.h" />
     <ClInclude Include="source\MapSystem.h" />
+    <ClInclude Include="source\mask.h" />
     <ClInclude Include="source\MiniMapCamera.h" />
     <ClInclude Include="source\model.h" />
     <ClInclude Include="source\modelEffect.h" />
