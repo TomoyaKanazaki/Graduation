@@ -94,7 +94,9 @@ m_Grid(0, 0),
 m_bGritCenter(true),
 m_bPressObj(false),
 m_fCrossTimer(0.0f),
-m_pEgg(nullptr)
+m_pUpEgg(nullptr),
+m_pDownEgg(nullptr),
+m_EggMove(INITVECTOR3)
 {
 
 }
@@ -333,6 +335,9 @@ void CPlayer::GameUpdate(void)
 	//状態の管理
 	StateManager();
 
+	//卵の動き
+	EggMove();
+
 	if (m_pMotion != nullptr)
 	{
 		//モーションの更新
@@ -497,6 +502,7 @@ void CPlayer::Move(void)
 					m_apModel[nCnt]->SetDisp(true);
 				}
 			}
+			m_EggMove = D3DXVECTOR3(-10.0f, 10.0f, 0.0f);
 		}
 
 		SetItemType(m_eItemType);
@@ -677,10 +683,17 @@ void CPlayer::StateManager(void)
 			}
 		}
 
-		//m_pEgg = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\jack.x");
-		//m_pEgg->SetPos(m_pos);
-		//m_pEgg->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
+		if (m_pUpEgg == nullptr)
+		{
+			m_pUpEgg = CObjectX::Create("data\\MODEL\\00_tamagon\\upper_egg.x");
+			m_pUpEgg->SetMultiMatrix(true);
+		}
 
+		if (m_pDownEgg == nullptr)
+		{
+			m_pDownEgg = CObjectX::Create("data\\MODEL\\00_tamagon\\downer_egg.x");
+			m_pDownEgg->SetMultiMatrix(true);
+		}
 		break;
 	}
 
@@ -1245,6 +1258,52 @@ void CPlayer::RotUpdate(void)
 
 	// 向きの更新処理
 	m_rot += (rotDiff * 0.5);
+}
+
+//====================================================================
+//卵の動き
+//====================================================================
+void CPlayer::EggMove(void)
+{
+	if (m_State == STATE_EGG)
+	{
+		if (m_pUpEgg != nullptr)
+		{
+			m_pUpEgg->SetPos(D3DXVECTOR3(m_pos.x, m_pos.y + 65.0f, m_pos.z));
+		}
+		if (m_pDownEgg != nullptr)
+		{
+			m_pDownEgg->SetPos(D3DXVECTOR3(m_pos.x, m_pos.y + 65.0f, m_pos.z));
+		}
+		m_EggMove = INITVECTOR3;
+	}
+	else
+	{
+		if (m_pUpEgg != nullptr)
+		{
+			D3DXVECTOR3 pos = m_pUpEgg->GetPos();
+			//D3DXVECTOR3 Color = m_pUpEgg-();
+
+			m_EggMove.y -= 0.98f;
+
+			pos += m_EggMove;
+
+			m_EggMove.x = m_EggMove.x * 0.9f;
+			m_EggMove.z = m_EggMove.z * 0.9f;
+
+			if (pos.y < CGame::GetMapField()->GetPos().y)
+			{
+				pos.y = CGame::GetMapField()->GetPos().y;
+			}
+
+			m_pUpEgg->SetPos(pos);
+		}
+
+		if (m_pDownEgg != nullptr)
+		{
+
+		}
+	}
 }
 
 //====================================================================

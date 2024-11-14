@@ -166,6 +166,7 @@ private:
 	void PosUpdate(void);		//位置更新処理
 	void ObjPosUpdate(void);	//オブジェクトによる位置更新処理
 	void RotUpdate(void);		//向き更新処理
+	void EggMove(void);			//卵の動き
 
 	void DebugKey(void);		//デバッグキー
 
@@ -209,7 +210,9 @@ private:
 
 	ITEM_TYPE m_eItemType;		// 持ってるアイテムの種類
 
-	CObjectX* m_pEgg;				//卵モデル
+	CObjectX* m_pUpEgg;			//卵モデルの上
+	CObjectX* m_pDownEgg;		//卵モデルの下
+	D3DXVECTOR3 m_EggMove;		//卵の動き
 
 	//階層構造とモーションのポインタ
 	CModel* m_apModel[64];
