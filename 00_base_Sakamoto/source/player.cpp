@@ -8,6 +8,7 @@
 #include "object.h"
 #include "manager.h"
 #include "renderer.h"
+#include "character.h"
 #include "model.h"
 #include "motion.h"
 #include "game.h"
@@ -86,7 +87,7 @@ m_State(STATE_EGG),
 m_nStateCount(0),
 m_AtkPos(INITVECTOR3),
 m_CollisionRot(0.0f),
-m_pMotion(nullptr),
+m_pCharacter(nullptr),
 m_OKL(true),
 m_OKR(true),
 m_OKU(true),
@@ -164,19 +165,10 @@ HRESULT CPlayer::Init(void)
 	//マップとのマトリックスの掛け合わせをオンにする
 	SetMultiMatrix(true);
 
-	//モデルの生成
-	LoadLevelData("data\\TXT\\motion_tamagon.txt");
-
-	//モーションの生成
-	if (m_pMotion == nullptr)
+	if (m_pCharacter == nullptr)
 	{
-		//モーションの生成
-		m_pMotion = new CMotion;
+		m_pCharacter = CCharacter::Create("data\\TXT\\motion_tamagon.txt");
 	}
-
-	//初期化処理
-	m_pMotion->SetModel(&m_apModel[0], m_nNumModel);
-	m_pMotion->LoadData("data\\TXT\\motion_tamagon.txt");
 
 	m_pLifeUi = CLifeUi::Create();
 
@@ -221,19 +213,13 @@ void CPlayer::Uninit(void)
 		m_pList->Release(m_pList);
 	}
 
-	for (int nCntModel = 0; nCntModel < m_nNumModel; nCntModel++)
+	// キャラクターの終了処理
+	if (m_pCharacter != nullptr)
 	{
-		m_apModel[nCntModel]->Uninit();
-		delete m_apModel[nCntModel];
-		m_apModel[nCntModel] = nullptr;
-	}
-
-	//モーションの終了処理
-	if (m_pMotion != nullptr)
-	{
-		//モーションの破棄
-		delete m_pMotion;
-		m_pMotion = nullptr;
+		// キャラクターの破棄
+		m_pCharacter->Uninit();
+		delete m_pCharacter;
+		m_pCharacter = nullptr;
 	}
 
 	SetDeathFlag(true);
@@ -268,8 +254,11 @@ void CPlayer::Update(void)
 //====================================================================
 void CPlayer::TitleUpdate(void)
 {
-	//モーションの更新
-	m_pMotion->Update();
+	// キャラクター更新処理
+	if (m_pCharacter != nullptr)
+	{
+		m_pCharacter->Update();
+	}
 }
 
 //====================================================================
@@ -353,10 +342,10 @@ void CPlayer::GameUpdate(void)
 	//卵の動き
 	EggMove();
 
-	if (m_pMotion != nullptr)
+	// キャラクター更新処理
+	if (m_pCharacter != nullptr)
 	{
-		//モーションの更新
-		m_pMotion->Update();
+		m_pCharacter->Update();
 	}
 
 	//モーションの管理
@@ -431,10 +420,10 @@ void CPlayer::Draw(void)
 	pDevice->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP);		// Zテスト・ステンシルテスト失敗
 	pDevice->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_KEEP);		// Zテスト失敗・ステンシルテスト成功
 
-	//モデルの描画(全パーツ)
-	for (int nCntModel = 0; nCntModel < m_nNumModel; nCntModel++)
+	// キャラクター描画処理
+	if (m_pCharacter != nullptr)
 	{
-		m_apModel[nCntModel]->Draw();
+		m_pCharacter->Draw();
 	}
 
 	//ステンシルバッファ無効
@@ -452,6 +441,12 @@ void CPlayer::Move(void)
 	D3DXVECTOR3 CameraRot = CManager::GetInstance()->GetCamera()->GetRot();
 
 	D3DXVECTOR3 NormarizeMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
+	if (m_pCharacter == nullptr)
+	{
+		assert(("キャラクターがない", false));
+		return;
+	}
 
 	m_bInput = false;
 
@@ -530,11 +525,16 @@ void CPlayer::Move(void)
 
 		if (m_State == STATE_EGG)
 		{
-			for (int nCnt = 0; nCnt < m_nNumModel; nCnt++)
+			// モデル数の取得
+			int nNumModel = m_pCharacter->GetNumModel();
+
+			for (int nCnt = 0; nCnt < nNumModel; nCnt++)
 			{
-				if (m_apModel[nCnt] != nullptr)
+				CModel* pModel = m_pCharacter->GetModel(nCnt);
+				
+				if (pModel != nullptr)
 				{
-					m_apModel[nCnt]->SetDisp(true);
+					pModel->SetDisp(true);
 				}
 			}
 
@@ -647,13 +647,27 @@ void CPlayer::Attack(void)
 //====================================================================
 void CPlayer::ActionState(void)
 {
+	// モデル数の取得
+	if (m_pCharacter == nullptr)
+	{
+		assert(("キャラクターがない", false));
+		return;
+	}
+
+	CMotion* pMotion = m_pCharacter->GetMotion();
+
+	if (pMotion == nullptr)
+	{
+		return;
+	}
+
 	//移動モーション
 	if (m_State == STATE_DEATH)
 	{
 		if (m_Action != ACTION_DEATH)
 		{
 			m_Action = ACTION_DEATH;
-			m_pMotion->Set(ACTION_DEATH, 5);
+			pMotion->Set(ACTION_DEATH, 5);
 		}
 	}
 	//卵モーション
@@ -662,7 +676,7 @@ void CPlayer::ActionState(void)
 		if (m_Action != ACTION_EGG)
 		{
 			m_Action = ACTION_EGG;
-			m_pMotion->Set(ACTION_EGG, 5);
+			pMotion->Set(ACTION_EGG, 5);
 		}
 	}
 	//移動モーション
@@ -671,7 +685,7 @@ void CPlayer::ActionState(void)
 		if (m_Action != ACTION_WAIT)
 		{
 			m_Action = ACTION_WAIT;
-			m_pMotion->Set(ACTION_WAIT, 5);
+			pMotion->Set(ACTION_WAIT, 5);
 		}
 	}
 	//移動モーション
@@ -680,7 +694,7 @@ void CPlayer::ActionState(void)
 		if (m_Action != ACTION_MOVE)
 		{
 			m_Action = ACTION_MOVE;
-			m_pMotion->Set(ACTION_MOVE, 5);
+			pMotion->Set(ACTION_MOVE, 5);
 		}
 	}
 	//ニュートラルモーション
@@ -689,7 +703,7 @@ void CPlayer::ActionState(void)
 		if (m_Action != ACTION_WAIT)
 		{
 			m_Action = ACTION_WAIT;
-			m_pMotion->Set(ACTION_WAIT, 5);
+			pMotion->Set(ACTION_WAIT, 5);
 		}
 	}
 }
@@ -757,11 +771,16 @@ void CPlayer::StateManager(void)
 
 	case STATE_EGG:
 
-		for (int nCnt = 0; nCnt < m_nNumModel; nCnt++)
+		// モデル数の取得
+		int nNumModel = m_pCharacter->GetNumModel();
+
+		for (int nCnt = 0; nCnt < nNumModel; nCnt++)
 		{
-			if (m_apModel[nCnt] != nullptr)
+			CModel* pModel = m_pCharacter->GetModel(nCnt);
+
+			if (pModel != nullptr)
 			{
-				m_apModel[nCnt]->SetDisp(false);
+				pModel->SetDisp(false);
 			}
 		}
 
@@ -1446,9 +1465,6 @@ void CPlayer::Death(void)
 	{
 		m_nLife--;
 
-		// アイテムを所持していない状態にする
-		SetItemType(TYPE_NONE);
-
 		// 聖書を所持しているときにその場に聖書を落とす
 		if (m_eItemType == TYPE_BIBLE)
 		{
@@ -1480,6 +1496,9 @@ void CPlayer::Death(void)
 			// ダメージ音(仮)
 			CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_DEATH);
 		}
+
+		// アイテムを所持していない状態にする
+		SetItemType(TYPE_NONE);
 	}
 }
 
@@ -1518,10 +1537,24 @@ void CPlayer::DebugKey(void)
 //====================================================================
 void CPlayer::SetAction(ACTION_TYPE Action, float BlendTime)
 {
+	// モデル数の取得
+	if (m_pCharacter == nullptr)
+	{
+		assert(("キャラクターがない", false));
+		return;
+	}
+
+	CMotion* pMotion = m_pCharacter->GetMotion();
+
+	if (pMotion == nullptr)
+	{
+		return;
+	}
+
 	if (m_Action != Action)
 	{
 		m_Action = Action;
-		m_pMotion->Set(Action, BlendTime);
+		pMotion->Set(Action, BlendTime);
 	}
 }
 
@@ -1530,11 +1563,22 @@ void CPlayer::SetAction(ACTION_TYPE Action, float BlendTime)
 //====================================================================
 void CPlayer::SetModelDisp(bool Sst)
 {
-	for (int nCnt = 0; nCnt < m_nNumModel; nCnt++)
+	// モデル数の取得
+	if (m_pCharacter == nullptr)
 	{
-		if (m_apModel[nCnt] != nullptr)
+		assert(("キャラクターがない",false));
+		return;
+	}
+
+	int nNumModel = m_pCharacter->GetNumModel();
+
+	for (int nCnt = 0; nCnt < nNumModel; nCnt++)
+	{
+		CModel* pModel = m_pCharacter->GetModel(nCnt);
+
+		if (pModel != nullptr)
 		{
-			m_apModel[nCnt]->SetDisp(Sst);
+			pModel->SetDisp(Sst);
 		}
 	}
 }
@@ -1641,151 +1685,22 @@ void CPlayer::SetItemType(ITEM_TYPE eType)
 }
 
 //====================================================================
-//ロード処理
-//====================================================================
-void CPlayer::LoadLevelData(const char* pFilename)
-{
-	FILE* pFile; //ファイルポインタを宣言
-
-	//ファイルを開く
-	pFile = fopen(pFilename, "r");
-
-	if (pFile != nullptr)
-	{//ファイルが開けた場合
-
-		int ModelParent = 0;
-		D3DXVECTOR3 ModelPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-		D3DXVECTOR3 ModelRot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-		char ModelName[128] = {};
-		int nCntModel = 0;
-		int nCntParts = 0;
-		int nCntMotion = 0;
-		int nCntKeySet = 0;
-		int nCntKey = 0;
-
-		char aString[128] = {};				//ゴミ箱
-		char aMessage[128] = {};			//スタートとエンドのメッセージ
-		char aBool[128] = {};				//bool変換用メッセージ
-
-		// 読み込み開始-----------------------------------------------------
-		while (1)
-		{//「SCRIPT」を探す
-			fscanf(pFile, "%s", &aMessage[0]);
-			if (strcmp(&aMessage[0], "SCRIPT") == 0)
-			{
-				// モデル数読み込み-----------------------------------------------------
-				while (1)
-				{//「NUM_MODEL」を探す
-					fscanf(pFile, "%s", &aMessage[0]);
-					if (strcmp(&aMessage[0], "NUM_MODEL") == 0)
-					{
-						fscanf(pFile, "%s", &aString[0]);
-						fscanf(pFile, "%d", &m_nNumModel);		//モデル数の設定
-						break;
-					}
-				}
-
-				//モデルファイルの読み込み
-				while (1)
-				{//「MODEL_FILENAME」を探す
-					fscanf(pFile, "%s", &aMessage[0]);
-					if (strcmp(&aMessage[0], "MODEL_FILENAME") == 0)
-					{
-						fscanf(pFile, "%s", &aString[0]);
-						fscanf(pFile, "%s", &ModelName[0]);		//読み込むモデルのパスを取得
-
-						m_apModel[nCntModel] = CModel::Create(&ModelName[0]);
-						nCntModel++;
-					}
-					if (nCntModel >= m_nNumModel)
-					{
-						nCntModel = 0;
-						break;
-					}
-				}
-
-				// キャラクター情報読み込み-----------------------------------------------------
-				while (1)
-				{//「PARTSSET」を探す
-					fscanf(pFile, "%s", &aMessage[0]);
-					if (strcmp(&aMessage[0], "PARTSSET") == 0)
-					{
-						while (1)
-						{//各種変数を探す
-							fscanf(pFile, "%s", &aMessage[0]);
-							if (strcmp(&aMessage[0], "INDEX") == 0)
-							{
-								fscanf(pFile, "%s", &aString[0]);
-								fscanf(pFile, "%d", &nCntModel);	//インデックスを設定
-							}
-							if (strcmp(&aMessage[0], "PARENT") == 0)
-							{
-								fscanf(pFile, "%s", &aString[0]);
-								fscanf(pFile, "%d", &ModelParent);	//親モデルのインデックスを設定
-
-								if (ModelParent == -1)
-								{
-									m_apModel[nCntModel]->SetParent(nullptr);
-								}
-								else
-								{
-									m_apModel[nCntModel]->SetParent(m_apModel[ModelParent]);
-								}
-							}
-							if (strcmp(&aMessage[0], "POS") == 0)
-							{
-								fscanf(pFile, "%s", &aString[0]);
-								fscanf(pFile, "%f", &ModelPos.x);				//位置(オフセット)の初期設定
-								fscanf(pFile, "%f", &ModelPos.y);				//位置(オフセット)の初期設定
-								fscanf(pFile, "%f", &ModelPos.z);				//位置(オフセット)の初期設定
-
-								m_apModel[nCntModel]->SetPos(ModelPos);
-								m_apModel[nCntModel]->SetStartPos(ModelPos);
-							}
-							if (strcmp(&aMessage[0], "ROT") == 0)
-							{
-								fscanf(pFile, "%s", &aString[0]);
-								fscanf(pFile, "%f", &ModelRot.x);				////向きの初期設定
-								fscanf(pFile, "%f", &ModelRot.y);				////向きの初期設定
-								fscanf(pFile, "%f", &ModelRot.z);				////向きの初期設定
-
-								m_apModel[nCntModel]->SetRot(ModelRot);
-								m_apModel[nCntModel]->SetStartRot(ModelRot);
-							}
-							if (strcmp(&aMessage[0], "END_PARTSSET") == 0)
-							{
-								break;
-							}
-						}
-						nCntModel++;
-						if (nCntModel >= m_nNumModel)
-						{
-							break;
-						}
-					}
-				}
-			}
-			if (strcmp(&aMessage[0], "END_SCRIPT") == 0)
-			{
-				break;
-			}
-		}
-		fclose(pFile);
-	}
-	else
-	{//ファイルが開けなかった場合
-		printf("***ファイルを開けませんでした***\n");
-	}
-}
-
-//====================================================================
 // プレイヤーの指定モデル消去
 //====================================================================
 void CPlayer::SetPartsDisp(int nParts, bool Set)
 {
-	if (m_apModel[nParts] != nullptr)
+	// モデル数の取得
+	if (m_pCharacter == nullptr)
 	{
-		m_apModel[nParts]->SetDisp(Set);
+		assert(("キャラクターがない", false));
+		return;
+	}
+
+	CModel* pModel = m_pCharacter->GetModel(nParts);
+
+	if (pModel != nullptr)
+	{
+		pModel->SetDisp(Set);
 	}
 }
 
