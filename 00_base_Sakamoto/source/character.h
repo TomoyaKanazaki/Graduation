@@ -24,6 +24,7 @@ public:
 
 	static CCharacter* Create(const char* pModelName);
 	HRESULT Init(const char* pModelName);
+	virtual HRESULT Init(void) { return S_OK; };
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);

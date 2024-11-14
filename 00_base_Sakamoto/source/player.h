@@ -12,6 +12,7 @@
 #include "MapSystem.h"
 
 //前方宣言
+class CCharacter;
 class CObject2D;
 class CObject3D;
 class CObjGauge2D;
@@ -29,7 +30,7 @@ class CFire;
 class CObjectX;
 
 //オブジェクトプレイヤークラス
-class CPlayer : public CCharacter
+class CPlayer : public CObject
 {
 private:
 	static const int ENCOUNT_MAX = 128;
@@ -213,6 +214,7 @@ private:
 	CObjectX* m_pDownEgg;		//卵モデルの下
 	D3DXVECTOR3 m_EggMove;		//卵の動き
 
+	CCharacter* m_pCharacter;		// キャラクターのクラス
 	CLifeUi* m_pLifeUi;
 
 	//マップとのマトリックス情報
