@@ -46,6 +46,10 @@ CCharacter* CCharacter::Create(const char* pModelName)
 	//オブジェクトの初期化処理
 	if (FAILED(pInstance->Init(pModelName)))
 	{//初期化処理が失敗した場合
+
+		// アサート
+		assert(("キャラクタークラスの生成失敗", false));
+
 		return nullptr;
 	}
 

@@ -72,7 +72,10 @@ CSlopeDevice* CSlopeDevice::Create(const char* pModelNameSlopeDevice, const char
 	}
 
 	// モデル関連初期化処理
-	pInstance->InitModel(pModelNameSlopeDevice, pModelNameEnemy);
+	if (FAILED(pInstance->InitModel(pModelNameSlopeDevice, pModelNameEnemy)))
+	{// 初期化処理が失敗した場合
+		return nullptr;
+	}
 
 	return pInstance;
 }
@@ -233,12 +236,19 @@ void CSlopeDevice::Draw(void)
 //====================================================================
 // モデル関連の初期化処理
 //====================================================================
-void CSlopeDevice::InitModel(const char* pModelNameSlopeDevice, const char* pModelNameEnemy)
+HRESULT CSlopeDevice::InitModel(const char* pModelNameSlopeDevice, const char* pModelNameEnemy)
 {
 	if (m_pCharacter == nullptr)
 	{
 		m_pCharacter = CCharacter::Create(pModelNameSlopeDevice);
+
+		if (m_pCharacter == nullptr)
+		{
+			return E_FAIL;
+		}
 	}
+
+	return S_OK;
 }
 
 //====================================================================
@@ -271,6 +281,8 @@ void CSlopeDevice::Rotate(int nNldxModel,D3DXVECTOR3 rotate)
 {
 	if (m_pCharacter == nullptr)
 	{
+		// アサート
+		assert(("キャラクタークラスがないよ", false));
 		return;
 	}
 

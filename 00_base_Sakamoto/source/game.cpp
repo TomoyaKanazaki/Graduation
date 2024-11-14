@@ -278,8 +278,8 @@ HRESULT CGame::Init(void)
 
 	// ìGÇÃê∂ê¨
 	CEnemy::Create(CEnemy::ENEMY_MEDAMAN, CMapSystem::GRID(9, 7));
-	//CEnemy::Create(CEnemy::ENEMY_BONBON, CMapSystem::GRID(11, 5));
-	//CEnemy::Create(CEnemy::ENEMY_LITTLEDEVIL, CMapSystem::GRID(13, 7));
+	CEnemy::Create(CEnemy::ENEMY_BONBON, CMapSystem::GRID(11, 5));
+	CEnemy::Create(CEnemy::ENEMY_LITTLEDEVIL, CMapSystem::GRID(13, 7));
 
 #if _DEBUG
 	if (m_pEdit == nullptr)
