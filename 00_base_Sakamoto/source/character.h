@@ -7,8 +7,7 @@
 #ifndef _CHARACTER_H_
 #define _CHARACTER_H_
 
-#include "object.h"
-
+class CObject;
 class CModel;
 class CMotion;
 
@@ -16,7 +15,7 @@ class CMotion;
 #define FILE_NAME_SIZE	(128)	// ファイル名の最大文字数
 
 //オブジェクトプレイヤークラス
-class CCharacter : public CObject
+class CCharacter
 {
 public:
 	CCharacter();
