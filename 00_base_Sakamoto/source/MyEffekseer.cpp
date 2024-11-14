@@ -158,7 +158,7 @@ void CMyEffekseer::Init(void)
 	SetupEffekseerModules(m_EfkManager);
 
 	// “Š‰es—ñ‚ğİ’è
-	m_ProjectionMatrix.PerspectiveFovLH(90.0f / 180.0f * 3.14f, (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 1.0f, 500.0f);
+	m_ProjectionMatrix.PerspectiveFovLH(0.5f * D3DX_PI, (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 1.0f, 500.0f);
 
 	// ƒJƒƒ‰s—ñ‚ğİ’è
 	m_CameraMatrix.LookAtLH(m_ViewerPosition, ::Effekseer::Vector3D(0.0f, 0.0f, 0.0f), ::Effekseer::Vector3D(0.0f, 1.0f, 0.0f));
