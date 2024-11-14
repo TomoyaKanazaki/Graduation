@@ -55,6 +55,12 @@ namespace
 	const D3DXVECTOR3 LIFE_POS = D3DXVECTOR3(50.0f, 650.0f, 0.0f);
 
 	const float CROSS_TIME = 10.0f; // 十字架を所持していられる時間
+
+	const float EGG_GRAVITY = 0.98f;	 //移動量の減衰速度
+	const D3DXVECTOR3 EGG_MOVE = D3DXVECTOR3(10.0f, 10.0f, 10.0f);	 //移動量の減衰速度
+	const float EGG_ROT = D3DX_PI * 0.006f;	 //回転速度
+	const float EGG_MOVE_DEL = 0.9f;	 //移動量の減衰速度
+	const float EGG_COLOR_DEL_A = 0.01f; //不透明度の減衰速度
 }
 
 //===========================================
@@ -522,7 +528,28 @@ void CPlayer::Move(void)
 					m_apModel[nCnt]->SetDisp(true);
 				}
 			}
-			m_EggMove = D3DXVECTOR3(-10.0f, 10.0f, 0.0f);
+
+			m_EggMove.y = EGG_MOVE.y;
+
+			switch (m_MoveState)
+			{
+			case CPlayer::MOVE_STATE_LEFT:
+				m_EggMove.x = EGG_MOVE.x;
+				m_EggMove.z = 0.0f;
+				break;
+			case CPlayer::MOVE_STATE_RIGHT:
+				m_EggMove.x = -EGG_MOVE.x;
+				m_EggMove.z = 0.0f;
+				break;
+			case CPlayer::MOVE_STATE_UP:
+				m_EggMove.x = 0.0f;
+				m_EggMove.z = -EGG_MOVE.z;
+				break;
+			case CPlayer::MOVE_STATE_DOWN:
+				m_EggMove.x = 0.0f;
+				m_EggMove.z = EGG_MOVE.z;
+				break;
+			}
 		}
 
 		SetItemType(m_eItemType);
@@ -706,12 +733,14 @@ void CPlayer::StateManager(void)
 		if (m_pUpEgg == nullptr)
 		{
 			m_pUpEgg = CObjectX::Create("data\\MODEL\\00_tamagon\\upper_egg.x");
+			m_pUpEgg->SetMatColor(D3DXCOLOR(0.263529f, 0.570980f, 0.238431f, 1.0f));
 			m_pUpEgg->SetMultiMatrix(true);
 		}
 
 		if (m_pDownEgg == nullptr)
 		{
 			m_pDownEgg = CObjectX::Create("data\\MODEL\\00_tamagon\\downer_egg.x");
+			m_pDownEgg->SetMatColor(D3DXCOLOR(0.263529f, 0.570980f, 0.238431f, 1.0f));
 			m_pDownEgg->SetMultiMatrix(true);
 		}
 		break;
@@ -1302,26 +1331,53 @@ void CPlayer::EggMove(void)
 		if (m_pUpEgg != nullptr)
 		{
 			D3DXVECTOR3 pos = m_pUpEgg->GetPos();
-			//D3DXVECTOR3 Color = m_pUpEgg-();
+			D3DXVECTOR3 rot = m_pUpEgg->GetRot();
+			float ColorA = m_pUpEgg->GetMatColor().a;
 
-			m_EggMove.y -= 0.98f;
+			ColorA -= EGG_COLOR_DEL_A;
+
+			m_EggMove.y -= EGG_GRAVITY;
 
 			pos += m_EggMove;
 
-			m_EggMove.x = m_EggMove.x * 0.9f;
-			m_EggMove.z = m_EggMove.z * 0.9f;
+			rot.z -= m_EggMove.x * EGG_ROT;
+			rot.x += m_EggMove.z * EGG_ROT;
 
-			if (pos.y < CGame::GetMapField()->GetPos().y)
+			m_EggMove.x = m_EggMove.x * EGG_MOVE_DEL;
+			m_EggMove.z = m_EggMove.z * EGG_MOVE_DEL;
+
+			if (pos.y < CGame::GetMapField()->GetPos().y + 30.0f)
 			{
-				pos.y = CGame::GetMapField()->GetPos().y;
+				pos.y = CGame::GetMapField()->GetPos().y + 30.0f;
+			}
+			else
+			{
+				m_pUpEgg->SetRot(rot);
 			}
 
 			m_pUpEgg->SetPos(pos);
+			m_pUpEgg->SetMatColorA(ColorA);
+
+			if (ColorA <= 0.0f)
+			{
+				m_pUpEgg->Uninit();
+				m_pUpEgg = nullptr;
+			}
 		}
 
 		if (m_pDownEgg != nullptr)
 		{
+			float ColorA = m_pDownEgg->GetMatColor().a;
 
+			ColorA -= EGG_COLOR_DEL_A;
+
+			m_pDownEgg->SetMatColorA(ColorA);
+
+			if (ColorA <= 0.0f)
+			{
+				m_pDownEgg->Uninit();
+				m_pDownEgg = nullptr;
+			}
 		}
 	}
 }

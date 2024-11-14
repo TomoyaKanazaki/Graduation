@@ -44,7 +44,9 @@ public:
 	D3DXVECTOR3 GetPosOld(void) { return m_posOld; }
 	void SetRot(D3DXVECTOR3 rot) { m_rot = rot; }
 	D3DXVECTOR3 GetRot(void) { return m_rot; }
+	void SetMatColorA(float SetColorA) { m_MatColor.a = SetColorA; m_bUseColor = true; }
 	void SetMatColor(D3DXCOLOR SetColor) { m_MatColor = SetColor; m_bUseColor = true; }
+	D3DXCOLOR GetMatColor(void) { return m_MatColor; }
 	void SetMatAlpha(float SetAlpha) { m_StateMat.MatD3D.Diffuse.a = SetAlpha; }
 	void SetDefColor(void) { m_bUseColor = false; }
 	void SetScaling(D3DXVECTOR3 Scaling) { m_Scaling = Scaling; }
