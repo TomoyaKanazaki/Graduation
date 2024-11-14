@@ -160,6 +160,7 @@ private:
 	void CollisionDevilHole(useful::COLLISION XYZ);	//デビルホールとの当たり判定
 	void CollisionEnemy(void);						// 敵との当たり判定
 	void CollisionStageOut(void);					// ステージ外の当たり判定
+	bool CollisionStageIn(void);					// ステージ内にいるかどうか
 	void CollisionPressStageOut(void);				// ステージ外の圧死判定
 
 	void CameraPosUpdate(void);	//カメラ位置更新処理

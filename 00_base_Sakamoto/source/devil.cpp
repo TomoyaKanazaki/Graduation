@@ -129,6 +129,11 @@ HRESULT CDevil::Init(void)
 	if (m_pCharacter == nullptr)
 	{
 		m_pCharacter = CCharacter::Create("data\\TXT\\MOTION\\01_enemy\\motion_devil.txt");
+
+		if(m_pCharacter == nullptr)
+		{
+			return E_FAIL;
+		}
 	}
 
 	switch (CScene::GetMode())
@@ -957,16 +962,25 @@ void CDevil::DebugKey(void)
 //====================================================================
 void CDevil::SetAction(ACTION_TYPE Action, float BlendTime)
 {
-	if (m_pCharacter != nullptr)
+	if (m_pCharacter == nullptr)
 	{
-		// モーションの取得処理
-		CMotion* pMotion = m_pCharacter->GetMotion();
+		// アサート
+		assert(("キャラクタークラスがないよ", false));
+		return;
+	}
 
-		if (m_Action != Action && pMotion != nullptr)
-		{
-			m_Action = Action;
-			pMotion->Set(Action, BlendTime);
-		}
+	// モーションの取得処理
+	CMotion* pMotion = m_pCharacter->GetMotion();
+
+	if (pMotion == nullptr)
+	{
+		return;
+	}
+
+	if (m_Action != Action)
+	{
+		m_Action = Action;
+		pMotion->Set(Action, BlendTime);
 	}
 }
 
@@ -975,21 +989,26 @@ void CDevil::SetAction(ACTION_TYPE Action, float BlendTime)
 //====================================================================
 void CDevil::SetModelDisp(bool Sst)
 {
-	if (m_pCharacter != nullptr)
+	if (m_pCharacter == nullptr)
 	{
-		// モデル数を取得
-		int nNumModel = m_pCharacter->GetNumModel();
+		// アサート
+		assert(("キャラクタークラスがないよ", false));
 
-		for (int nCnt = 0; nCnt < nNumModel; nCnt++)
+		return;
+	}
+
+	// モデル数を取得
+	int nNumModel = m_pCharacter->GetNumModel();
+
+	for (int nCnt = 0; nCnt < nNumModel; nCnt++)
+	{
+		// モーションの取得処理
+		CModel* pModel = m_pCharacter->GetModel(nCnt);
+
+		if (pModel != nullptr)
 		{
-			// モーションの取得処理
-			CModel* pModel = m_pCharacter->GetModel(nCnt);
-
-			if (pModel != nullptr)
-			{
-				// 表示設定
-				pModel->SetDisp(Sst);
-			}
+			// 表示設定
+			pModel->SetDisp(Sst);
 		}
 	}
 }
@@ -1275,7 +1294,7 @@ void CDevil::PlayerScroll(D3DXVECTOR3 Move, float GritSize)
 				}
 				else
 				{
-					PlayerPos += (AnswerPos - PlayerPos) * 0.5f;
+					PlayerPos += (AnswerPos - PlayerPos);
 					pPlayer->SetPos(PlayerPos);
 				}
 			}

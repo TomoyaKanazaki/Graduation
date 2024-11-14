@@ -69,7 +69,7 @@ public:
 	static CListManager<CSlopeDevice>* GetList(void); // ƒŠƒXƒgŽæ“¾
 
 private:
-	void InitModel(const char* pModelNameSlopeDevice, const char* pModelNameEnemy);
+	HRESULT InitModel(const char* pModelNameSlopeDevice, const char* pModelNameEnemy);
 
 	void StateManager(void);
 	void Rotate(int nNldxModel, D3DXVECTOR3 rotate);

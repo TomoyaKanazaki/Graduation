@@ -92,19 +92,26 @@ HRESULT CSampleLvModel::Init(void)
 	if (m_pCharacter == nullptr)
 	{
 		m_pCharacter->Create("data\\TXT\\motion_player.txt");
+
+		if (m_pCharacter == nullptr)
+		{
+			return E_FAIL;
+		}
 	}
 
 	CMotion* pMotion = m_pCharacter->GetMotion();
+
+	if (pMotion == nullptr)
+	{
+		return E_FAIL;
+	}
 
 	switch (CScene::GetMode())
 	{
 	case CScene::MODE_TITLE:
 
-		if (pMotion != nullptr)
-		{
-			// モーション設定
-			pMotion->Set(ACTION_TITLE, 0);
-		}
+		// モーション設定
+		pMotion->Set(ACTION_TITLE, 0);
 
 		break;
 
