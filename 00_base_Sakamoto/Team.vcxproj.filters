@@ -196,7 +196,7 @@
     <ClCompile Include="source\number.cpp">
       <Filter>ソース ファイル\05_UI_2D</Filter>
     </ClCompile>
-    <ClCompile Include="source\time.cpp">
+    <ClCompile Include="source\timer.cpp">
       <Filter>ソース ファイル\05_UI_2D</Filter>
     </ClCompile>
     <ClCompile Include="source\numberBillboard.cpp">
@@ -477,7 +477,7 @@
     <ClInclude Include="source\score.h">
       <Filter>ソース ファイル\05_UI_2D</Filter>
     </ClInclude>
-    <ClInclude Include="source\time.h">
+    <ClInclude Include="source\timer.h">
       <Filter>ソース ファイル\05_UI_2D</Filter>
     </ClInclude>
     <ClInclude Include="source\numberBillboard.h">
