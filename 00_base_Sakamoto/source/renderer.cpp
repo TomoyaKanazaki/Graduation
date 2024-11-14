@@ -13,6 +13,8 @@
 #include "fade.h"
 #include "Pause.h"
 
+#include "MyEffekseer.h"
+
 //====================================================================
 //コンストラクタ
 //====================================================================
@@ -437,6 +439,12 @@ void CRenderer::Draw(void)
 
 			//全てのオブジェクト2Dの描画処理
 			CObject::DrawAll(0);
+
+			CMyEffekseer* effect = CManager::GetInstance()->GetEffecseer();
+			if (effect != nullptr)
+			{
+				effect->Draw();
+			}
 
 			//ビューポートの設定
 			m_pD3DDevice->SetViewport(&viewportDef);

@@ -53,7 +53,7 @@ namespace MyEffekseer
 	CEffekseer* EffectCreate(CMyEffekseer::TYPE type, bool bLoop, D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 scale)
 	{
 		// エフェクシア取得
-		CMyEffekseer* pMyEffekseer = CManager::GetInstance()->GetMyEffekseer();
+		CMyEffekseer* pMyEffekseer = CManager::GetInstance()->GetEffecseer();
 
 		// 使用されていない場合処理を抜ける
 		if (pMyEffekseer == nullptr)
@@ -95,8 +95,10 @@ CEffekseer* CMyEffekseer::CreateEffect(const char* FileName, ::Effekseer::Vector
 		return nullptr;
 
 	// char16_tに変換
-	std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> converter;
-	std::u16string string16t = converter.from_bytes(FileName);
+	std::string file = FileName;
+	int len = MultiByteToWideChar(CP_UTF8, 0, file.c_str(), -1, nullptr, 0);
+	std::u16string string16t(len, 0);
+	MultiByteToWideChar(CP_UTF8, 0, file.c_str(), -1, reinterpret_cast<LPWSTR>(&string16t[0]), len);
 
 	// エフェクトの読込
 	Effekseer::EffectRef effect = Effekseer::Effect::Create(m_EfkManager, string16t.c_str());
@@ -253,8 +255,8 @@ void CMyEffekseer::Draw(void)
 	if (pCamera == nullptr)
 		return;
 
-	auto ViewMatrix = pCamera->GetView();
-	auto Projection = pCamera->GetProjection();
+	auto ViewMatrix = pCamera->GetViewMatrix();
+	auto Projection = pCamera->GetProjectionMatrix();
 
 	for (int i = 0; i < 4; i++)
 	{
