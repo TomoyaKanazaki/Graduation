@@ -9,6 +9,7 @@
 #include "object.h"
 #include "manager.h"
 #include "renderer.h"
+#include "character.h"
 #include "model.h"
 #include "motion.h"
 #include "game.h"
@@ -77,7 +78,7 @@ CDevil::CDevil(int nPriority) : CObject(nPriority)
 	m_State = STATE_WAIT;
 	m_nStateCount = 0;
 	m_CollisionRot = 0.0f;
-	m_pMotion = nullptr;
+	m_pCharacter = nullptr;
 	m_DevilPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_MapDifference = INITVECTOR3;
 	m_DevilRot = INITVECTOR3;
@@ -124,19 +125,11 @@ HRESULT CDevil::Init(void)
 	//種類設定
 	SetType(CObject::TYPE_DEVIL);
 
-	//モデルの生成
-	LoadLevelData("data\\TXT\\MOTION\\01_enemy\\motion_devil.txt");
-
-	//モーションの生成
-	if (m_pMotion == nullptr)
+	// キャラクタークラスの生成処理
+	if (m_pCharacter == nullptr)
 	{
-		//モーションの生成
-		m_pMotion = new CMotion;
+		m_pCharacter = CCharacter::Create("data\\TXT\\MOTION\\01_enemy\\motion_devil.txt");
 	}
-
-	//初期化処理
-	m_pMotion->SetModel(&m_apModel[0], m_nNumModel);
-	m_pMotion->LoadData("data\\TXT\\MOTION\\01_enemy\\motion_devil.txt");
 
 	switch (CScene::GetMode())
 	{
@@ -183,19 +176,13 @@ void CDevil::Uninit(void)
 		m_pList->Release(m_pList);
 	}
 
-	for (int nCntModel = 0; nCntModel < m_nNumModel; nCntModel++)
-	{
-		m_apModel[nCntModel]->Uninit();
-		delete m_apModel[nCntModel];
-		m_apModel[nCntModel] = nullptr;
-	}
-
 	//モーションの終了処理
-	if (m_pMotion != nullptr)
+	if (m_pCharacter != nullptr)
 	{
 		//モーションの破棄
-		delete m_pMotion;
-		m_pMotion = nullptr;
+		m_pCharacter->Uninit();
+		delete m_pCharacter;
+		m_pCharacter = nullptr;
 	}
 
 	SetDeathFlag(true);
@@ -230,8 +217,11 @@ void CDevil::Update(void)
 //====================================================================
 void CDevil::TitleUpdate(void)
 {
-	//モーションの更新
-	m_pMotion->Update();
+	// キャラクターの更新
+	if (m_pCharacter != nullptr)
+	{
+		m_pCharacter->Update();
+	}
 }
 
 //====================================================================
@@ -254,10 +244,10 @@ void CDevil::GameUpdate(void)
 	//ステージ外にいるオブジェクトの処理
 	CollisionOut();
 
-	if (m_pMotion != nullptr)
+	// キャラクターの更新
+	if (m_pCharacter != nullptr)
 	{
-		//モーションの更新
-		m_pMotion->Update();
+		m_pCharacter->Update();
 	}
 
 	D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
@@ -339,10 +329,10 @@ void CDevil::Draw(void)
 	//ワールドマトリックスの設定
 	m_pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
 
-	//モデルの描画(全パーツ)
-	for (int nCntModel = 0; nCntModel < m_nNumModel; nCntModel++)
+	// キャラクターの描画
+	if (m_pCharacter != nullptr)
 	{
-		m_apModel[nCntModel]->Draw();
+		m_pCharacter->Draw();
 	}
 }
 
@@ -967,10 +957,16 @@ void CDevil::DebugKey(void)
 //====================================================================
 void CDevil::SetAction(ACTION_TYPE Action, float BlendTime)
 {
-	if (m_Action != Action)
+	if (m_pCharacter != nullptr)
 	{
-		m_Action = Action;
-		m_pMotion->Set(Action, BlendTime);
+		// モーションの取得処理
+		CMotion* pMotion = m_pCharacter->GetMotion();
+
+		if (m_Action != Action && pMotion != nullptr)
+		{
+			m_Action = Action;
+			pMotion->Set(Action, BlendTime);
+		}
 	}
 }
 
@@ -979,11 +975,21 @@ void CDevil::SetAction(ACTION_TYPE Action, float BlendTime)
 //====================================================================
 void CDevil::SetModelDisp(bool Sst)
 {
-	for (int nCnt = 0; nCnt < m_nNumModel; nCnt++)
+	if (m_pCharacter != nullptr)
 	{
-		if (m_apModel[nCnt] != nullptr)
+		// モデル数を取得
+		int nNumModel = m_pCharacter->GetNumModel();
+
+		for (int nCnt = 0; nCnt < nNumModel; nCnt++)
 		{
-			m_apModel[nCnt]->SetDisp(Sst);
+			// モーションの取得処理
+			CModel* pModel = m_pCharacter->GetModel(nCnt);
+
+			if (pModel != nullptr)
+			{
+				// 表示設定
+				pModel->SetDisp(Sst);
+			}
 		}
 	}
 }
@@ -1429,144 +1435,6 @@ float CDevil::MoveSlopeZ(float Move)
 	}
 
 	return fSlopeMove;
-}
-
-//====================================================================
-//ロード処理
-//====================================================================
-void CDevil::LoadLevelData(const char* pFilename)
-{
-	FILE* pFile; //ファイルポインタを宣言
-
-	//ファイルを開く
-	pFile = fopen(pFilename, "r");
-
-	if (pFile != nullptr)
-	{//ファイルが開けた場合
-
-		int ModelParent = 0;
-		D3DXVECTOR3 ModelPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-		D3DXVECTOR3 ModelRot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-		char ModelName[128] = {};
-		int nCntModel = 0;
-		int nCntParts = 0;
-		int nCntMotion = 0;
-		int nCntKeySet = 0;
-		int nCntKey = 0;
-
-		char aString[128] = {};				//ゴミ箱
-		char aMessage[128] = {};			//スタートとエンドのメッセージ
-		char aBool[128] = {};				//bool変換用メッセージ
-
-		// 読み込み開始-----------------------------------------------------
-		while (1)
-		{//「SCRIPT」を探す
-			fscanf(pFile, "%s", &aMessage[0]);
-			if (strcmp(&aMessage[0], "SCRIPT") == 0)
-			{
-				// モデル数読み込み-----------------------------------------------------
-				while (1)
-				{//「NUM_MODEL」を探す
-					fscanf(pFile, "%s", &aMessage[0]);
-					if (strcmp(&aMessage[0], "NUM_MODEL") == 0)
-					{
-						fscanf(pFile, "%s", &aString[0]);
-						fscanf(pFile, "%d", &m_nNumModel);		//モデル数の設定
-						break;
-					}
-				}
-
-				//モデルファイルの読み込み
-				while (1)
-				{//「MODEL_FILENAME」を探す
-					fscanf(pFile, "%s", &aMessage[0]);
-					if (strcmp(&aMessage[0], "MODEL_FILENAME") == 0)
-					{
-						fscanf(pFile, "%s", &aString[0]);
-						fscanf(pFile, "%s", &ModelName[0]);		//読み込むモデルのパスを取得
-
-						m_apModel[nCntModel] = CModel::Create(&ModelName[0]);
-						nCntModel++;
-					}
-					if (nCntModel >= m_nNumModel)
-					{
-						nCntModel = 0;
-						break;
-					}
-				}
-
-				// キャラクター情報読み込み-----------------------------------------------------
-				while (1)
-				{//「PARTSSET」を探す
-					fscanf(pFile, "%s", &aMessage[0]);
-					if (strcmp(&aMessage[0], "PARTSSET") == 0)
-					{
-						while (1)
-						{//各種変数を探す
-							fscanf(pFile, "%s", &aMessage[0]);
-							if (strcmp(&aMessage[0], "INDEX") == 0)
-							{
-								fscanf(pFile, "%s", &aString[0]);
-								fscanf(pFile, "%d", &nCntModel);	//インデックスを設定
-							}
-							if (strcmp(&aMessage[0], "PARENT") == 0)
-							{
-								fscanf(pFile, "%s", &aString[0]);
-								fscanf(pFile, "%d", &ModelParent);	//親モデルのインデックスを設定
-
-								if (ModelParent == -1)
-								{
-									m_apModel[nCntModel]->SetParent(nullptr);
-								}
-								else
-								{
-									m_apModel[nCntModel]->SetParent(m_apModel[ModelParent]);
-								}
-							}
-							if (strcmp(&aMessage[0], "POS") == 0)
-							{
-								fscanf(pFile, "%s", &aString[0]);
-								fscanf(pFile, "%f", &ModelPos.x);				//位置(オフセット)の初期設定
-								fscanf(pFile, "%f", &ModelPos.y);				//位置(オフセット)の初期設定
-								fscanf(pFile, "%f", &ModelPos.z);				//位置(オフセット)の初期設定
-
-								m_apModel[nCntModel]->SetPos(ModelPos);
-								m_apModel[nCntModel]->SetStartPos(ModelPos);
-							}
-							if (strcmp(&aMessage[0], "ROT") == 0)
-							{
-								fscanf(pFile, "%s", &aString[0]);
-								fscanf(pFile, "%f", &ModelRot.x);				//向きの初期設定
-								fscanf(pFile, "%f", &ModelRot.y);				//向きの初期設定
-								fscanf(pFile, "%f", &ModelRot.z);				//向きの初期設定
-
-								m_apModel[nCntModel]->SetRot(ModelRot);
-								m_apModel[nCntModel]->SetStartRot(ModelRot);
-							}
-							if (strcmp(&aMessage[0], "END_PARTSSET") == 0)
-							{
-								break;
-							}
-						}
-						nCntModel++;
-						if (nCntModel >= m_nNumModel)
-						{
-							break;
-						}
-					}
-				}
-			}
-			if (strcmp(&aMessage[0], "END_SCRIPT") == 0)
-			{
-				break;
-			}
-		}
-		fclose(pFile);
-	}
-	else
-	{//ファイルが開けなかった場合
-		printf("***ファイルを開けませんでした***\n");
-	}
 }
 
 //====================================================================

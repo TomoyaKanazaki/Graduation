@@ -28,6 +28,7 @@ public:
 
 	CModel* GetModel(int nCnt);
 	CMotion* GetMotion(void);
+	int GetNumModel(void) { return m_nNumModel; }
 
 private:
 
