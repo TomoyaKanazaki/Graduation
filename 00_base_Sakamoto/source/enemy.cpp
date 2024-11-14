@@ -780,12 +780,17 @@ void CEnemy::Route()
 		return;
 	}
 
+	for (int i = 0; i < m_nNumCoordinate; ++i)
+	{
+		DebugProc::Print(DebugProc::POINT_CENTER, "最短グリッド [ %d ] : %d, %d\n", i, m_pPath[i].x, m_pPath[i].z);
+	}
+
 	// 目標地点の座標を求める
 	D3DXVECTOR3 path = CMapSystem::GetInstance()->GetGritPos(m_pPath[m_nTargetIndex]);
 
 	// 次に向かうグリッドに重なったらその次の目標を設定
-	if (path.x - pos.x <= TARGET_DIFF &&
-		path.z - pos.z <= TARGET_DIFF) // 一定範囲内であれば
+	if (fabsf(path.x - pos.x) <= TARGET_DIFF &&
+		fabsf(path.z - pos.z) <= TARGET_DIFF) // 一定範囲内であれば
 	{/* 座標の比較 */
 		// インデックス番号を加算
 		m_nTargetIndex++;
@@ -797,6 +802,9 @@ void CEnemy::Route()
 	{ 
 		return;
 	}
+
+	DebugProc::Print(DebugProc::POINT_CENTER, "目標地点 [ %d ] : %d, %d\n", m_nTargetIndex, m_pPath[m_nTargetIndex].x, m_pPath[m_nTargetIndex].z);
+	DebugProc::Print(DebugProc::POINT_CENTER, "目標地点 [ %d ] : %f, %f\n", m_nTargetIndex, path.x, path.z);
 
 	// 次の目標位置との角度
 	float RotDest = atan2f(path.z - pos.z, path.x - pos.x);

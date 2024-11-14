@@ -118,7 +118,7 @@ namespace MyEffekseer
 		                     bool bLoop = false,
 		                     D3DXVECTOR3 pos = { 0.0f, 0.0f, 0.0f }, 
 		                     D3DXVECTOR3 rot = { 0.0f, 0.0f, 0.0f },
-		                     D3DXVECTOR3 scale = { 25.0f, 25.0f, 25.0f } );
+		                     D3DXVECTOR3 scale = { 125.0f, 125.0f, 125.0f } );
 }
 
 #endif

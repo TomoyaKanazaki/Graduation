@@ -571,7 +571,33 @@ void CPlayer::Attack(void)
 			// 火炎放射
 			CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_FIRE);
 
-			MyEffekseer::EffectCreate(CMyEffekseer::TYPE_HIT, false, m_pos, m_rot);
+			//計算用マトリックス
+			D3DXMATRIX mtxRot, mtxTrans;
+
+			//ワールドマトリックスの初期化
+			D3DXMatrixIdentity(&m_mtxWorld);
+
+			//向きを反映
+			D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
+
+			D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
+
+			//位置を反映
+			D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);
+
+			D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
+
+			if (m_bMultiMatrix)
+			{
+				SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
+
+				//算出したマトリクスをかけ合わせる
+				D3DXMatrixMultiply(&m_mtxWorld,
+					&m_mtxWorld,
+					&m_UseMultiMatrix);
+			}
+
+			MyEffekseer::EffectCreate(CMyEffekseer::TYPE_HIT, false, D3DXVECTOR3(m_mtxWorld._41, m_mtxWorld._42, m_mtxWorld._43), m_rot);
 
 			CFire::Create("data\\model\\fireball.x", m_pos, m_rot);
 			m_State = STATE_ATTACK;
