@@ -37,6 +37,8 @@
 #include "CubeBlock.h"
 #include "RollRock.h"
 
+#include "MyEffekseer.h"
+
 //===========================================
 // ’è”’è‹`
 //===========================================
@@ -528,6 +530,8 @@ void CPlayer::Attack(void)
 		{
 			// ‰Î‰Š•úŽË
 			CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_FIRE);
+
+			MyEffekseer::EffectCreate(CMyEffekseer::TYPE_HIT, false, m_pos, m_rot);
 
 			CFire::Create("data\\model\\fireball.x", m_pos, m_rot);
 			m_State = STATE_ATTACK;
