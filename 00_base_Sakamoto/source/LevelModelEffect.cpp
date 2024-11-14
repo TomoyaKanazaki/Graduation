@@ -86,7 +86,7 @@ HRESULT CLevelModelEffect::Init(void)
 	SetType(CObject::TYPE_PLAYEREFFECT);
 
 	// キャラクタークラスの生成
-	if (m_pCharacter != nullptr)
+	if (m_pCharacter == nullptr)
 	{
 		m_pCharacter->Create("data\\TXT\\motion_foot_light_spear.txt");
 	}

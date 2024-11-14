@@ -10,8 +10,7 @@
 #include "object.h"
 
 //前方宣言
-class CModel;
-class CMotion;
+class CCharacter;
 class CObject3D;
 
 //オブジェクトプレイヤークラス
@@ -94,11 +93,7 @@ private:
 
 	float m_CollisionRot;		//当たり判定用の向き
 
-	//階層構造とモーションのポインタ
-	CModel* m_apModel[64];
-	CMotion* m_pMotion;
-	char* m_aModelName[64];
-	int m_nNumModel;
+	CCharacter* m_pCharacter;	// キャラクタークラスのポインタ
 };
 
 #endif
