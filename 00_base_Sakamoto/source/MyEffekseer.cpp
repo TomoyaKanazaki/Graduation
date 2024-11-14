@@ -30,9 +30,8 @@ namespace
 namespace MyEffekseer
 {
 	// エフェクトの名前
-	const char* EFFECT_PATH[CMyEffekseer::TYPE_MAX] =
+	const char* EFFECT_PATH[] =
 	{
-		"",                                                // なんもない
 		"data\\EFFEKSEER\\Effect\\impact.efkefc",          // 衝撃波
 		"data\\EFFEKSEER\\Effect\\hit.efkefc",             // ヒット
 		"data\\EFFEKSEER\\Effect\\attack_impact.efkefc",   // 攻撃の予兆
@@ -69,6 +68,11 @@ namespace MyEffekseer
 		return pEffekseer;
 	}
 }
+
+//==========================================
+//  静的警告処理
+//==========================================
+static_assert(NUM_ARRAY(MyEffekseer::EFFECT_PATH) == CMyEffekseer::TYPE_MAX, "ERROR : Type Count Missmatch");
 
 //===========================================================
 // コンストラクタ

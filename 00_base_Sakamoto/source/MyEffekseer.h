@@ -28,11 +28,11 @@ public:
 	// Ží—Þ
 	enum TYPE
 	{
-		TYPE_NONE = 0,  // ‚È‚ñ‚à‚È‚¢
-		TYPE_IMPACT,    // ÕŒ‚”g
+		TYPE_IMPACT = 0,    // ÕŒ‚”g
 		TYPE_HIT,       // ƒqƒbƒg
 		TYPE_ATTACK,    // UŒ‚‚Ì—\’›
-		TYPE_MAX
+		TYPE_MAX,
+		TYPE_NONE  // ‚È‚ñ‚à‚È‚¢
 	};
 
 	void Init(void);       // ‰Šú‰»ˆ—
