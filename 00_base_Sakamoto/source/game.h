@@ -27,7 +27,7 @@ class CObjmeshDome;
 class CCubeBlock;
 class CPause;
 class CScore;
-class CTime;
+class CTimer;
 class CBoss;
 class CPlayer2D;
 class CGamePause;
@@ -54,7 +54,7 @@ public:
 	static CPause* GetPause(void) { return m_pPause; }
 	static CScore* GetScore(void) { return m_pScore; }
 	static CEdit* GetEdit(void) { return m_pEdit; }
-	static CTime* GetTime(void) { return m_pTime; }
+	static CTimer* GetTime(void) { return m_pTime; }
 	static CObjmeshField* GetMapField(void) { return m_pMapField; }
 	static CObjmeshDome* GetDomeUp(void) { return m_pMeshDomeUp; }
 	static void SetCubeBlock(CCubeBlock* pBlock) { m_pCubeBlock = pBlock; }
@@ -117,7 +117,7 @@ private:
 	static CEdit* m_pEdit;							//エディットモードのポインタ
 	static CPause* m_pPause;						//ポーズのポインタ
 	static CScore* m_pScore;						//スコアのポインタ
-	static CTime* m_pTime;							//タイムのポインタ
+	static CTimer* m_pTime;							//タイムのポインタ
 	static CObjmeshDome* m_pMeshDomeUp;				//メッシュドーム
 	static CObjmeshField* m_pMapField;				//マップフィールド
 	static CCubeBlock* m_pCubeBlock;				//キューブブロック

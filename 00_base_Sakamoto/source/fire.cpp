@@ -88,6 +88,9 @@ HRESULT CFire::Init(char* pModelName)
 	// 継承クラスの初期化
 	CObjectX::Init(pModelName);
 
+	//マップとのマトリックスの掛け合わせをオンにする
+	SetMultiMatrix(true);
+
 	// 炎の体力
 	m_nLife = FIRE_LIFE;
 

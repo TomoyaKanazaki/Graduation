@@ -14,10 +14,10 @@ NUM_MODEL = 4
 #------------------------------------------------------------------------------
 # モデルファイル名
 #------------------------------------------------------------------------------
-MODEL_FILENAME = data/MODEL/03_staging/00_SlopeDevice/00_foundation.x	# [0]土台
-MODEL_FILENAME = data/MODEL/03_staging/00_SlopeDevice/01_mawasiguruma.x	# [1]回し車
-MODEL_FILENAME = data/MODEL/03_staging/00_SlopeDevice/02_roller.x		# [2]ローラー
-MODEL_FILENAME = data/MODEL/03_staging/00_SlopeDevice/03_head.x			# [3]先っぽ
+MODEL_FILENAME = data/MODEL/03_staging/00_SlopeDevice/base.x	# [0]土台
+MODEL_FILENAME = data/MODEL/03_staging/00_SlopeDevice/wheel.x	# [1]回し車
+MODEL_FILENAME = data/MODEL/03_staging/00_SlopeDevice/tube.x		# [2]ローラー
+MODEL_FILENAME = data/MODEL/03_staging/00_SlopeDevice/conecter.x			# [3]先っぽ
 
 #------------------------------------------------------------------------------
 # キャラクター情報
@@ -31,28 +31,28 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 0
 		PARENT = -1
-		POS = 0.00 0.00 0.00
+		POS = 0.00 -2.97 0.00
 		ROT = 0.00 0.00 0.00
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 1
 		PARENT = 0
-		POS = 0.00 93.00 -12.00
+		POS = -12.24 515.47 157.05
 		ROT = 0.00 0.00 0.00
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 2
 		PARENT = 0
-		POS = 0.00 93.00 0.00
+		POS = -10.26 523.58 1058.85
 		ROT = 0.00 0.00 0.00
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 3
 		PARENT = 0
-		POS = 0.00 97.00 425.00
+		POS = 22.41 486.22 2398.95
 		ROT = 0.00 0.00 0.00
 	END_PARTSSET
 
@@ -65,9 +65,33 @@ END_CHARACTERSET
 #---------------------------------------
 MOTIONSET
 	LOOP = 1		# ループするかどうか[0:ループしない / 1:ループする]
-	NUM_KEY = 1		# キー数
+	NUM_KEY = 2		# キー数
 
-	KEYSET			# --- << KEY : 0 / 1 >> ---
+	KEYSET			# --- << KEY : 0 / 2 >> ---
+		FRAME = 50
+		KEY	# ----- [ 0 ] -----
+			POS = 0.00 0.00 0.00
+			ROT = 0.00 0.00 0.00
+		END_KEY
+
+		KEY	# ----- [ 1 ] -----
+			POS = 0.00 0.00 0.00
+			ROT = 0.00 0.00 0.00
+		END_KEY
+
+		KEY	# ----- [ 2 ] -----
+			POS = 0.00 0.00 0.00
+			ROT = 0.00 0.00 0.00
+		END_KEY
+
+		KEY	# ----- [ 3 ] -----
+			POS = 0.00 0.00 0.00
+			ROT = 0.00 0.00 0.00
+		END_KEY
+
+	END_KEYSET
+	
+		KEYSET			# --- << KEY : 1 / 2 >> ---
 		FRAME = 50
 		KEY	# ----- [ 0 ] -----
 			POS = 0.00 0.00 0.00

@@ -22,7 +22,7 @@
 #include "Pause.h"
 #include "camera.h"
 #include "sound.h"
-#include "time.h"
+#include "timer.h"
 #include "Score.h"
 #include "debugproc.h"
 #include "Xmodel.h"
@@ -76,7 +76,7 @@ namespace
 CEdit* CGame::m_pEdit = nullptr;
 CPause* CGame::m_pPause = nullptr;
 CScore* CGame::m_pScore = nullptr;
-CTime* CGame::m_pTime = nullptr;
+CTimer* CGame::m_pTime = nullptr;
 CObject2D* CGame::m_p2DSample = nullptr;
 CObject3D* CGame::m_p3DSample = nullptr;
 CObjectBillboard* CGame::m_pBillboardSample = nullptr;
@@ -162,7 +162,7 @@ HRESULT CGame::Init(void)
 	CGame::GetTime()->SetStopTime(false);
 
 	// タイムの生成
-	m_pTime = CTime::Create();
+	m_pTime = CTimer::Create();
 	m_pTime->SetStartTime(timeGetTime());
 	m_pTime->SetTime(0);
 
@@ -324,6 +324,8 @@ void CGame::Update(void)
 	CInputJoypad* pInputJoypad = CManager::GetInstance()->GetInputJoyPad();
 
 	DebugProc::Print(DebugProc::POINT_LEFT, "ゲームスピード : %f\n", CManager::GetInstance()->GetGameSpeed());
+
+	CMapSystem::GetInstance()->Update();
 
 #if _DEBUG
 	if (pInputKeyboard->GetTrigger(DIK_0) == true)
@@ -699,15 +701,7 @@ void CGame::SetBgObjTest(void)
 		pSlopeDevice->SetPos(D3DXVECTOR3(1800.0f, BOTTOM_FIELD_POS.y, -500.0f));
 
 		pSlopeDevice = CSlopeDevice::Create(SLOPE_DEVICE_MODEL, SLOPE_DEVICE_MODEL);
-		pSlopeDevice->SetPos(D3DXVECTOR3(1800.0f, BOTTOM_FIELD_POS.y, 500.0f));
-		pSlopeDevice->SetRot(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
-
-		pSlopeDevice = CSlopeDevice::Create(SLOPE_DEVICE_MODEL, SLOPE_DEVICE_MODEL);
 		pSlopeDevice->SetPos(D3DXVECTOR3(-1800.0f, BOTTOM_FIELD_POS.y, -500.0f));
-
-		pSlopeDevice = CSlopeDevice::Create(SLOPE_DEVICE_MODEL, SLOPE_DEVICE_MODEL);
-		pSlopeDevice->SetPos(D3DXVECTOR3(-1800.0f, BOTTOM_FIELD_POS.y, 500.0f));
-		pSlopeDevice->SetRot(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
 	}
 
 	// ジャッキ

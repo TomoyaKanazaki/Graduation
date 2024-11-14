@@ -61,6 +61,7 @@
     <ClCompile Include="source\model.cpp" />
     <ClCompile Include="source\modelEffect.cpp" />
     <ClCompile Include="source\motion.cpp" />
+    <ClCompile Include="source\MyEffekseer.cpp" />
     <ClCompile Include="source\number.cpp" />
     <ClCompile Include="source\numberBillboard.cpp" />
     <ClCompile Include="source\numberFall.cpp" />
@@ -104,7 +105,7 @@
     <ClCompile Include="source\softcream.cpp" />
     <ClCompile Include="source\sound.cpp" />
     <ClCompile Include="source\texture.cpp" />
-    <ClCompile Include="source\time.cpp" />
+    <ClCompile Include="source\timer.cpp" />
     <ClCompile Include="source\title.cpp" />
     <ClCompile Include="source\tutorial.cpp" />
     <ClCompile Include="source\useful.cpp" />
@@ -153,6 +154,7 @@
     <ClInclude Include="source\model.h" />
     <ClInclude Include="source\modelEffect.h" />
     <ClInclude Include="source\motion.h" />
+    <ClInclude Include="source\MyEffekseer.h" />
     <ClInclude Include="source\number.h" />
     <ClInclude Include="source\numberBillboard.h" />
     <ClInclude Include="source\numberFall.h" />
@@ -195,7 +197,7 @@
     <ClInclude Include="source\softcream.h" />
     <ClInclude Include="source\sound.h" />
     <ClInclude Include="source\texture.h" />
-    <ClInclude Include="source\time.h" />
+    <ClInclude Include="source\timer.h" />
     <ClInclude Include="source\title.h" />
     <ClInclude Include="source\tutorial.h" />
     <ClInclude Include="source\useful.h" />
@@ -278,16 +280,18 @@
       <SDLCheck>true</SDLCheck>
       <PrecompiledHeaderFile>precompile.h</PrecompiledHeaderFile>
       <ForcedIncludeFiles>precompile.h</ForcedIncludeFiles>
-      <AdditionalIncludeDirectories>..\hidapi;source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>source\lib\Effekseer\Include\EffekseerRendererGL;source\lib\Effekseer\Include\EffekseerRendererDX9;source\lib\Effekseer\Include\Effekseer;..\hidapi;source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\windows\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>source\lib\Effekseer\Lib;..\windows\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>setupapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/IGNORE:4099 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <Bscmake />
   </ItemDefinitionGroup>
@@ -316,17 +320,18 @@
       <SDLCheck>true</SDLCheck>
       <PrecompiledHeaderFile>precompile.h</PrecompiledHeaderFile>
       <ForcedIncludeFiles>precompile.h</ForcedIncludeFiles>
-      <AdditionalIncludeDirectories>..\hidapi;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>source\lib\Effekseer\Include\EffekseerRendererGL;source\lib\Effekseer\Include\EffekseerRendererDX9;source\lib\Effekseer\Include\Effekseer;..\hidapi;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <SupportJustMyCode>true</SupportJustMyCode>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\windows\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>source\lib\Effekseer\Lib;..\windows\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>setupapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImageHasSafeExceptionHandlers />
     </Link>

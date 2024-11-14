@@ -44,6 +44,7 @@ CObjectX::CObjectX(int nPriority) :CObject(nPriority)
 	m_MatColor = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 	m_bUseColor = false;
 	m_bUseMtx = false;
+	m_bMultiMatrix = false;
 }
 
 //====================================================================

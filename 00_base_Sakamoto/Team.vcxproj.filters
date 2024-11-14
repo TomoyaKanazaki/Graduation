@@ -41,7 +41,7 @@
     <Filter Include="ソース ファイル\10_item">
       <UniqueIdentifier>{f013bb6e-aa95-4944-b258-fc2e3387c870}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\11_algorithm">
+    <Filter Include="ソース ファイル\11_library">
       <UniqueIdentifier>{d4c6cca2-cae9-4185-be80-e05a03b5868b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -196,7 +196,7 @@
     <ClCompile Include="source\number.cpp">
       <Filter>ソース ファイル\05_UI_2D</Filter>
     </ClCompile>
-    <ClCompile Include="source\time.cpp">
+    <ClCompile Include="source\timer.cpp">
       <Filter>ソース ファイル\05_UI_2D</Filter>
     </ClCompile>
     <ClCompile Include="source\numberBillboard.cpp">
@@ -299,10 +299,13 @@
       <Filter>ソース ファイル\03_Direction</Filter>
     </ClCompile>
     <ClCompile Include="source\AStar.cpp">
-      <Filter>ソース ファイル\11_algorithm</Filter>
+      <Filter>ソース ファイル\11_library</Filter>
     </ClCompile>
     <ClCompile Include="source\RollRock.cpp">
       <Filter>ソース ファイル\07_Map</Filter>
+    </ClCompile>
+    <ClCompile Include="source\MyEffekseer.cpp">
+      <Filter>ソース ファイル\11_library</Filter>
     </ClCompile>
     <ClCompile Include="source\mask.cpp">
       <Filter>ソース ファイル\00_System</Filter>
@@ -480,7 +483,7 @@
     <ClInclude Include="source\score.h">
       <Filter>ソース ファイル\05_UI_2D</Filter>
     </ClInclude>
-    <ClInclude Include="source\time.h">
+    <ClInclude Include="source\timer.h">
       <Filter>ソース ファイル\05_UI_2D</Filter>
     </ClInclude>
     <ClInclude Include="source\numberBillboard.h">
@@ -562,13 +565,16 @@
       <Filter>ソース ファイル\03_Direction</Filter>
     </ClInclude>
     <ClInclude Include="source\AStar.h">
-      <Filter>ソース ファイル\11_algorithm</Filter>
+      <Filter>ソース ファイル\11_library</Filter>
     </ClInclude>
     <ClInclude Include="source\RollRock.h">
       <Filter>ソース ファイル\07_Map</Filter>
     </ClInclude>
     <ClInclude Include="source\mask.h">
       <Filter>ソース ファイル\00_System</Filter>
+    </ClInclude>
+    <ClInclude Include="source\MyEffekseer.h">
+      <Filter>ソース ファイル\11_library</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

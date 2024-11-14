@@ -23,10 +23,11 @@ class CXModel;
 class CLevelUP;
 class CFade;
 class CSound;
-class CTime;
+class CTimer;
 class CRanking;
 class CBlockManager;
 class CItemManager;
+class CMyEffekseer;
 
 //シーンクラス
 class CScene
@@ -97,6 +98,7 @@ public:
 	CRanking* GetRanking(void) { return m_pRanking; }
 	CLight* GetLight(void) { return m_pLight; }
 	CBlockManager* GetBlockManager(void) { return m_pBlockManager; }
+	CMyEffekseer* GetEffecseer(void) { return m_pEffecseer; }
 	void SetScene(CScene *Scene) { m_pScene = Scene; }
 	void SetLevelUP(CLevelUP *LevelUP) { m_LevelUP = LevelUP; }
 	void SetEdit(bool bEdit) { m_bEdit = bEdit; }
@@ -171,6 +173,7 @@ private:
 	CSound *m_pSound;					//サウンドのポインタ
 	CRanking* m_pRanking;
 	CBlockManager* m_pBlockManager;
+	CMyEffekseer* m_pEffecseer;
 	TYPE_INPUT m_typeInput;				//インプット種類
 };												
 

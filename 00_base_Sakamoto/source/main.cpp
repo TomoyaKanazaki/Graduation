@@ -7,7 +7,7 @@
 #include "main.h"
 #include "manager.h"
 #include "game.h"
-#include "time.h"
+#include "timer.h"
 
 //==========================================
 //  íËêîíËã`
@@ -107,7 +107,7 @@ int	WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hinstancePrev, LPSTR lpCmdLine
 		}
 	}
 
-	CTime* pTime = nullptr;
+	CTimer* pTime = nullptr;
 	if (CScene::GetMode() == CScene::MODE_GAME)
 	{
 		pTime = CGame::GetTime();

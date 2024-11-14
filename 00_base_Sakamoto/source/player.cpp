@@ -37,6 +37,8 @@
 #include "CubeBlock.h"
 #include "RollRock.h"
 
+#include "MyEffekseer.h"
+
 //===========================================
 // íËêîíËã`
 //===========================================
@@ -91,7 +93,8 @@ m_MoveState(MOVE_STATE_NONE),
 m_Grid(0, 0),
 m_bGritCenter(true),
 m_bPressObj(false),
-m_fCrossTimer(0.0f)
+m_fCrossTimer(0.0f),
+m_pEgg(nullptr)
 {
 
 }
@@ -505,6 +508,19 @@ void CPlayer::Move(void)
 		//à⁄ìÆó Çë„ì¸
 		m_move = NormarizeMove;
 
+		if (m_State == STATE_EGG)
+		{
+			for (int nCnt = 0; nCnt < m_nNumModel; nCnt++)
+			{
+				if (m_apModel[nCnt] != nullptr)
+				{
+					m_apModel[nCnt]->SetDisp(true);
+				}
+			}
+		}
+
+		SetItemType(m_eItemType);
+
 		//à⁄ìÆèÛë‘Ç…Ç∑ÇÈ
 		m_State = STATE_WALK;
 	}
@@ -549,7 +565,9 @@ void CPlayer::Attack(void)
 			// âŒâäï˙éÀ
 			CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_FIRE);
 
-			CFire::Create("data\\model\\BlockTest.x", m_pos, m_rot);
+			MyEffekseer::EffectCreate(CMyEffekseer::TYPE_HIT, false, m_pos, m_rot);
+
+			CFire::Create("data\\model\\fireball.x", m_pos, m_rot);
 			m_State = STATE_ATTACK;
 			m_nStateCount = FIRE_STOPTIME;
 		}
@@ -670,10 +688,19 @@ void CPlayer::StateManager(void)
 		break;
 
 	case STATE_EGG:
-		//if (m_nStateCount == 0)
-		//{
-		//	m_State = STATE_WAIT;
-		//}
+
+		for (int nCnt = 0; nCnt < m_nNumModel; nCnt++)
+		{
+			if (m_apModel[nCnt] != nullptr)
+			{
+				m_apModel[nCnt]->SetDisp(false);
+			}
+		}
+
+		//m_pEgg = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\jack.x");
+		//m_pEgg->SetPos(m_pos);
+		//m_pEgg->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
+
 		break;
 	}
 
@@ -814,9 +841,7 @@ void CPlayer::CollisionMoveRailBlock(useful::COLLISION XYZ)
 			// ãÈå`ÇÃìñÇΩÇËîªíË
 			if (useful::CollisionBlock(Mypos, MyposOld, MyMove, D3DXVECTOR3(MySize, MySize, MySize), &m_pos, m_posOld, &m_move, &m_Objmove, m_size, &a, XYZ) == true)
 			{
-				//m_Objmove.x = MyMove.x;
-				//m_move.x = 0.0f;
-				//m_bPressObj = true;
+				m_bPressObj = true;
 				return;
 			}
 		}
