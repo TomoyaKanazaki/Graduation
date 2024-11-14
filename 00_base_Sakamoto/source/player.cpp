@@ -93,7 +93,10 @@ m_MoveState(MOVE_STATE_NONE),
 m_Grid(0, 0),
 m_bGritCenter(true),
 m_bPressObj(false),
-m_fCrossTimer(0.0f)
+m_fCrossTimer(0.0f),
+m_pUpEgg(nullptr),
+m_pDownEgg(nullptr),
+m_EggMove(INITVECTOR3)
 {
 
 }
@@ -332,6 +335,9 @@ void CPlayer::GameUpdate(void)
 	//状態の管理
 	StateManager();
 
+	//卵の動き
+	EggMove();
+
 	if (m_pMotion != nullptr)
 	{
 		//モーションの更新
@@ -364,7 +370,7 @@ void CPlayer::TutorialUpdate(void)
 void CPlayer::Draw(void)
 {
 	//デバイスの取得
-	LPDIRECT3DDEVICE9 m_pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
 	D3DXMATRIX mtxRot, mtxTrans;	//計算用マトリックス
 
 	//ワールドマトリックスの初期化
@@ -391,13 +397,33 @@ void CPlayer::Draw(void)
 	}
 
 	//ワールドマトリックスの設定
-	m_pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
+	pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
+
+	//ステンシルバッファ有効
+	pDevice->SetRenderState(D3DRS_STENCILENABLE, TRUE);
+
+	//ステンシルバッファと比較する参照値の設定 => ref
+	pDevice->SetRenderState(D3DRS_STENCILREF, 1);
+
+	//ステンシルバッファの値に対してのマスク設定 => 0xff(全て真)
+	pDevice->SetRenderState(D3DRS_STENCILMASK, 255);
+
+	//ステンシルバッファの比較方法 => (参照値 => ステンシルバッファの参照値)なら合格
+	pDevice->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_GREATEREQUAL);
+
+	//ステンシルテスト結果に対しての反映設定
+	pDevice->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_REPLACE);	// Zテスト・ステンシルテスト成功
+	pDevice->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP);		// Zテスト・ステンシルテスト失敗
+	pDevice->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_KEEP);		// Zテスト失敗・ステンシルテスト成功
 
 	//モデルの描画(全パーツ)
 	for (int nCntModel = 0; nCntModel < m_nNumModel; nCntModel++)
 	{
 		m_apModel[nCntModel]->Draw();
 	}
+
+	//ステンシルバッファ無効
+	pDevice->SetRenderState(D3DRS_STENCILENABLE, FALSE);
 }
 
 //====================================================================
@@ -486,6 +512,20 @@ void CPlayer::Move(void)
 
 		//移動量を代入
 		m_move = NormarizeMove;
+
+		if (m_State == STATE_EGG)
+		{
+			for (int nCnt = 0; nCnt < m_nNumModel; nCnt++)
+			{
+				if (m_apModel[nCnt] != nullptr)
+				{
+					m_apModel[nCnt]->SetDisp(true);
+				}
+			}
+			m_EggMove = D3DXVECTOR3(-10.0f, 10.0f, 0.0f);
+		}
+
+		SetItemType(m_eItemType);
 
 		//移動状態にする
 		m_State = STATE_WALK;
@@ -654,10 +694,26 @@ void CPlayer::StateManager(void)
 		break;
 
 	case STATE_EGG:
-		//if (m_nStateCount == 0)
-		//{
-		//	m_State = STATE_WAIT;
-		//}
+
+		for (int nCnt = 0; nCnt < m_nNumModel; nCnt++)
+		{
+			if (m_apModel[nCnt] != nullptr)
+			{
+				m_apModel[nCnt]->SetDisp(false);
+			}
+		}
+
+		if (m_pUpEgg == nullptr)
+		{
+			m_pUpEgg = CObjectX::Create("data\\MODEL\\00_tamagon\\upper_egg.x");
+			m_pUpEgg->SetMultiMatrix(true);
+		}
+
+		if (m_pDownEgg == nullptr)
+		{
+			m_pDownEgg = CObjectX::Create("data\\MODEL\\00_tamagon\\downer_egg.x");
+			m_pDownEgg->SetMultiMatrix(true);
+		}
 		break;
 	}
 
@@ -1222,6 +1278,52 @@ void CPlayer::RotUpdate(void)
 
 	// 向きの更新処理
 	m_rot += (rotDiff * 0.5);
+}
+
+//====================================================================
+//卵の動き
+//====================================================================
+void CPlayer::EggMove(void)
+{
+	if (m_State == STATE_EGG)
+	{
+		if (m_pUpEgg != nullptr)
+		{
+			m_pUpEgg->SetPos(D3DXVECTOR3(m_pos.x, m_pos.y + 65.0f, m_pos.z));
+		}
+		if (m_pDownEgg != nullptr)
+		{
+			m_pDownEgg->SetPos(D3DXVECTOR3(m_pos.x, m_pos.y + 65.0f, m_pos.z));
+		}
+		m_EggMove = INITVECTOR3;
+	}
+	else
+	{
+		if (m_pUpEgg != nullptr)
+		{
+			D3DXVECTOR3 pos = m_pUpEgg->GetPos();
+			//D3DXVECTOR3 Color = m_pUpEgg-();
+
+			m_EggMove.y -= 0.98f;
+
+			pos += m_EggMove;
+
+			m_EggMove.x = m_EggMove.x * 0.9f;
+			m_EggMove.z = m_EggMove.z * 0.9f;
+
+			if (pos.y < CGame::GetMapField()->GetPos().y)
+			{
+				pos.y = CGame::GetMapField()->GetPos().y;
+			}
+
+			m_pUpEgg->SetPos(pos);
+		}
+
+		if (m_pDownEgg != nullptr)
+		{
+
+		}
+	}
 }
 
 //====================================================================

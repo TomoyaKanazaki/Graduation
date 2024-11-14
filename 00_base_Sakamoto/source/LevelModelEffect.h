@@ -11,8 +11,7 @@
 #include "object.h"
 
 //前方宣言
-class CModel;
-class CMotion;
+class CCharacter;
 
 // プレイヤーのレベルエフェクト処理クラス
 class CLevelModelEffect : public CObject
@@ -38,7 +37,6 @@ public:
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);
-	void LoadLevelData(const char* pFilename);
 	void SetPos(D3DXVECTOR3 pos) { m_pos = pos; }
 	D3DXVECTOR3 GetPos(void) { return m_pos; }
 	void SetRot(D3DXVECTOR3 rot) { m_rot = rot; }
@@ -59,10 +57,7 @@ private:
 	D3DCOLORVALUE m_Color;		//色
 	float m_fDel;				//色の減衰
 
-	CModel* m_apModel[64];
-	CMotion* m_pMotion;
-	char* m_aModelName[64];
-	int m_nNumModel;
+	CCharacter* m_pCharacter;	// キャラクタークラス
 
 	// 静的メンバ変数
 	static CListManager<CLevelModelEffect>* m_pList; // オブジェクトリスト

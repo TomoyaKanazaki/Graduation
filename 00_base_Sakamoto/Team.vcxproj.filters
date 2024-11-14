@@ -307,6 +307,9 @@
     <ClCompile Include="source\MyEffekseer.cpp">
       <Filter>ソース ファイル\11_library</Filter>
     </ClCompile>
+    <ClCompile Include="source\mask.cpp">
+      <Filter>ソース ファイル\00_System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\SampleLevelModel.h">
@@ -566,6 +569,9 @@
     </ClInclude>
     <ClInclude Include="source\RollRock.h">
       <Filter>ソース ファイル\07_Map</Filter>
+    </ClInclude>
+    <ClInclude Include="source\mask.h">
+      <Filter>ソース ファイル\00_System</Filter>
     </ClInclude>
     <ClInclude Include="source\MyEffekseer.h">
       <Filter>ソース ファイル\11_library</Filter>

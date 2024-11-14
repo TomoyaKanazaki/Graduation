@@ -28,6 +28,7 @@ class CEnemy;
 class CBoss;
 class CLifeUi;
 class CFire;
+class CObjectX;
 
 //オブジェクトプレイヤークラス
 class CPlayer : public CObject
@@ -165,6 +166,7 @@ private:
 	void PosUpdate(void);		//位置更新処理
 	void ObjPosUpdate(void);	//オブジェクトによる位置更新処理
 	void RotUpdate(void);		//向き更新処理
+	void EggMove(void);			//卵の動き
 
 	void DebugKey(void);		//デバッグキー
 
@@ -207,6 +209,10 @@ private:
 	CSlowManager* m_pSlow;		// スロー
 
 	ITEM_TYPE m_eItemType;		// 持ってるアイテムの種類
+
+	CObjectX* m_pUpEgg;			//卵モデルの上
+	CObjectX* m_pDownEgg;		//卵モデルの下
+	D3DXVECTOR3 m_EggMove;		//卵の動き
 
 	//階層構造とモーションのポインタ
 	CModel* m_apModel[64];
