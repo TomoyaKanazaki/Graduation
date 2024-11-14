@@ -21,7 +21,7 @@ class CSlowManager;
 #define SCREEN_POS_NUM	(8)		// スクリーン座標の数
 #define SEARCH_POS_NUM	(32)	// 探索位置の数
 
-//オブジェクトプレイヤークラス
+//オブジェクトエネミークラス
 class CEnemy : public CObject
 {
 public:
@@ -110,6 +110,7 @@ private:
 	void MoveSelect(void);								// 移動方向の選択
 	void SearchWall(void);								// 壁のサーチ判定
 	void Coordinate(); // 最短経路探索
+	void Route();	// 最短経路をたどる
 
 	CMapSystem::GRID m_Grid;	//グリット番号
 
@@ -154,6 +155,8 @@ private:
 	CListManager<CEnemy>::AIterator m_iterator; // イテレーター
 	CMapSystem::GRID* m_pPath; // プレイヤーへの最短経路
 	float m_fCoordinateTimer; // 経路探索間隔
+	int m_nNumCoordinate; // 最短経路の要素数
+	int m_nTargetIndex; // 次に向かうべきグリッドのインデックス
 };
 
 #endif

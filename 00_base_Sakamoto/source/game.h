@@ -32,6 +32,7 @@ class CBoss;
 class CPlayer2D;
 class CGamePause;
 class CDevil;
+class CMask;
 
 class CAim;
 
@@ -130,5 +131,7 @@ private:
 	static CObjmeshField* m_pMeshFieldSample;		//メッシュフィールドのサンプル
 	static CObjmeshWall* m_pMeshWallSample;			//メッシュウォールのサンプル
 	static CObjmeshCylinder* m_pMeshCylinderSample;	//メッシュシリンダーのサンプル
+
+	static CMask* m_pMask;	// 2Dマスク
 };
 #endif
