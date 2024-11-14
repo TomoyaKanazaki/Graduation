@@ -41,6 +41,10 @@ CRollRock::CRollRock(int nPriority) : CObjectX(nPriority)
 	m_nStateCount = 0;
 	m_Scaling = 1.0f;
 	m_fColorA = 0.0f;
+	m_pos = INITVECTOR3;
+	m_posOld = INITVECTOR3;
+	m_move = INITVECTOR3;
+	m_rot = INITVECTOR3;
 
 	m_OKL = false;
 	m_OKR = false;

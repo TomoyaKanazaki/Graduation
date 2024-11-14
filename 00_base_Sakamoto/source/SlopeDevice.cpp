@@ -46,6 +46,7 @@ CSlopeDevice::CSlopeDevice(int nPriority) : CObject(nPriority)
 	m_nStateCount = 0;
 
 	m_pCharacter = nullptr;
+	m_bMultiMatrix = false;
 }
 
 //====================================================================
