@@ -19,7 +19,7 @@ class CBible : public CItem
 {
 public:
 
-	CBible(int nPriority = 3);
+	CBible(int nPriority = 2);
 	~CBible();
 
 	HRESULT Init();

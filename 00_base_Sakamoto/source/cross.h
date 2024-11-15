@@ -19,7 +19,7 @@ class CCross : public CItem
 public:
 
 	// ƒƒ“ƒoŠÖ”
-	CCross(int nPriority = 3);
+	CCross(int nPriority = 2);
 	~CCross();
 
 	HRESULT Init();
