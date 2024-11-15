@@ -57,14 +57,14 @@ HRESULT CRenderer::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	//デバイスのプレゼンテーションパラメータの設定
 	ZeroMemory(&d3dpp, sizeof(d3dpp));	//パラメータのゼロクリア
 
-	d3dpp.BackBufferWidth = SCREEN_WIDTH;							//ゲーム画面のサイズ(幅)
-	d3dpp.BackBufferHeight = SCREEN_HEIGHT;							//ゲーム画面のサイズ(高さ)
-	d3dpp.BackBufferFormat = d3ddm.Format;							//バックバッファの形式
-	d3dpp.BackBufferCount = 1;										//バックバッファの数
-	d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;						//ダブルバッファの切り替え(映像信号に同期)
-	d3dpp.EnableAutoDepthStencil = TRUE;							//デプスバッファとシテンシルバッファを作成
-	d3dpp.AutoDepthStencilFormat = D3DFMT_D16;						//デプスバッファを16bitとして扱う
-	d3dpp.Windowed = bWindow;										//ウインドウモード
+	d3dpp.BackBufferWidth = SCREEN_WIDTH;			//ゲーム画面のサイズ(幅)
+	d3dpp.BackBufferHeight = SCREEN_HEIGHT;			//ゲーム画面のサイズ(高さ)
+	d3dpp.BackBufferFormat = d3ddm.Format;			//バックバッファの形式
+	d3dpp.BackBufferCount = 1;						//バックバッファの数
+	d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;		//ダブルバッファの切り替え(映像信号に同期)
+	d3dpp.EnableAutoDepthStencil = TRUE;			//デプスバッファとシテンシルバッファを作成
+	d3dpp.AutoDepthStencilFormat = D3DFMT_D24S8;	//デプスバッファを24bit, ステンシルバッファを8bitとして扱う
+	d3dpp.Windowed = bWindow;						//ウインドウモード
 	d3dpp.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;	//リフレッシュレート
 	d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;		//インターバル
 
@@ -155,7 +155,7 @@ HRESULT CRenderer::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 
 		//レンダリングターゲット用のテクスチャのクリア
 		m_pD3DDevice->Clear(0, nullptr,
-			(D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER),
+			(D3DCLEAR_STENCIL | D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER),
 			D3DCOLOR_RGBA(0, 0, 0, 0), 1.0f, 0);
 
 		//現在のレンダリングターゲットを取得(保存)
@@ -307,7 +307,7 @@ void CRenderer::Draw(void)
 
 	//	//画面クリア(バックバッファとZバッファのクリア)
 	//	m_pD3DDevice->Clear(0, nullptr,
-	//		(D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER),
+	//		(D3DCLEAR_STENCIL | D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER),
 	//		D3DCOLOR_RGBA(0, 0, 0, 0), 1.0f, 0);
 
 	//	//-----------------------------------------------------------------------------------
@@ -329,7 +329,7 @@ void CRenderer::Draw(void)
 
 	//	//レンダリングターゲット用のテクスチャのクリア
 	//	m_pD3DDevice->Clear(0, nullptr,
-	//		(D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER),
+	//		(D3DCLEAR_STENCIL | D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER),
 	//		D3DCOLOR_RGBA(0, 0, 0, 0), 1.0f, 0);
 
 	//	//-----------------------------------------------------------------------------------
@@ -425,7 +425,7 @@ void CRenderer::Draw(void)
 	//{
 		//画面クリア(バックバッファとZバッファのクリア)
 		m_pD3DDevice->Clear(0, nullptr,
-			(D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER),
+			(D3DCLEAR_STENCIL | D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER),
 			D3DCOLOR_RGBA(0, 0, 0, 0), 1.0f, 0);
 		//描画開始
 		if (SUCCEEDED(m_pD3DDevice->BeginScene()))
@@ -672,7 +672,7 @@ LPDIRECT3DDEVICE9 CRenderer::GetDevice(void)
 //
 //	//画面クリア(バックバッファとZバッファのクリア)
 //	m_pD3DDevice->Clear(0, nullptr,
-//		(D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER),
+//		(D3DCLEAR_STENCIL | D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER),
 //		D3DCOLOR_RGBA(0, 0, 0, 0), 1.0f, 0);
 //	//描画開始
 //	if (SUCCEEDED(m_pD3DDevice->BeginScene()))

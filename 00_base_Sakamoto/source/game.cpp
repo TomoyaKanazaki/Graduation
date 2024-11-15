@@ -153,7 +153,7 @@ HRESULT CGame::Init(void)
 	//CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_BGM_TUTORIAL);
 
 	// 2Dマスクの生成
-	//m_pMask = CMask::Create(7);
+	m_pMask = CMask::Create(7);
 
 	//クリアフラグのデフォルトをオンにしておく
 	m_bGameClear = true;
