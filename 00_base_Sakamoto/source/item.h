@@ -31,7 +31,7 @@ public:
 	};
 
 	// ƒƒ“ƒo•Ï”
-	CItem(int nPriority = 3);
+	CItem(int nPriority = 2);
 	~CItem();
 
 	HRESULT Init(const char* pModelName);
