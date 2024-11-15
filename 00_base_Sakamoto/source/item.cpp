@@ -217,8 +217,8 @@ void CItem::Draw()
 //==========================================
 void CItem::SetGrid(const CMapSystem::GRID& pos)
 {
-	// 親クラスの設定処理を呼び出す
-	CItem::SetGrid(pos);
+	//// 親クラスの設定処理を呼び出す
+	//CItem::SetGrid(pos);
 
 	// グリッド情報から自身の座標を算出する
 	m_posBase = CMapSystem::GetInstance()->GetGritPos(pos);

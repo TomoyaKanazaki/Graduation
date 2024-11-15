@@ -27,7 +27,6 @@ public:
 	void Update(void);
 	void Draw(void);
 
-	void SetGrid(const CMapSystem::GRID& pos) override;
 	bool Hit(CPlayer* pPlayer) override;
 
 	// Ã“Iƒƒ“ƒoŠÖ”

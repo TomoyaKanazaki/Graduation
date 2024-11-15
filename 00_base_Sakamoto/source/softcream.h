@@ -25,7 +25,6 @@ public:
 
 	void Move(D3DXVECTOR3& pos) override;
 
-	void SetGrid(const CMapSystem::GRID& pos) override;
 	bool Hit(CPlayer* pPlayer) override;
 
 	// Ã“Iƒƒ“ƒoŠÖ”
