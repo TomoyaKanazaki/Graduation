@@ -58,6 +58,8 @@ namespace useful
 	bool DecisionAbsolute(D3DXVECTOR3 dataMy, float fDec);
 	float PosDirection(D3DXVECTOR3 MyPos, D3DXVECTOR3 PairPos, float ChageRot);		//引数の位置の方向を向く処理
 	float DegreesToRadians(float degrees);			//度からラジアン変換
+
+	D3DXVECTOR3 CalcMatrix(const D3DXVECTOR3& pos, const D3DXVECTOR3& rot, const D3DXMATRIX& mtx);
 }
 
 #endif
