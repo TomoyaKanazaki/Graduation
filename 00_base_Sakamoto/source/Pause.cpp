@@ -64,7 +64,7 @@ HRESULT CPause::Init(void)
 {
 	for (int nCnt = 0; nCnt < MAX_FG; nCnt++)
 	{
-		m_pPauseFG[nCnt] = CObject2D::Create(7);
+		m_pPauseFG[nCnt] = CObject2D::Create();
 		m_pPauseFG[nCnt]->SetType(CObject::TYPE_TUTORIALUI);
 
 		switch (nCnt)
@@ -107,7 +107,7 @@ HRESULT CPause::Init(void)
 
 	for (int nCnt = 0; nCnt < MAX_PAUSE; nCnt++)
 	{
-		m_pPauseUI[nCnt] = CObject2D::Create(7);
+		m_pPauseUI[nCnt] = CObject2D::Create();
 		m_pPauseUI[nCnt]->SetType(CObject::TYPE_TUTORIALUI);
 		switch (nCnt)
 		{
@@ -133,7 +133,7 @@ HRESULT CPause::Init(void)
 	m_pPauseUI[1]->SetTexture("data\\TEXTURE\\pause\\pause_01.png");
 	m_pPauseUI[2]->SetTexture("data\\TEXTURE\\pause\\pause_02.png");
 
-	m_pPauseMark = CObject2D::Create(7);
+	m_pPauseMark = CObject2D::Create();
 	m_pPauseMark->SetType(CObject::TYPE_TUTORIALUI);
 	m_pPauseMark->SetWidth(140.0f);
 	m_pPauseMark->SetHeight(140.0f);
