@@ -262,8 +262,6 @@ HRESULT CGame::Init(void)
 		break;
 	}
 
-	//int n = CBowabowa::GetList()->GetNumAll();
-
 	//“]‚ª‚éŠâ‚Ì¶¬
 	CRollRock *pRock = CRollRock::Create("data\\MODEL\\BlockTest.x");
 	D3DXVECTOR3 RockPos = CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(16, 2));
