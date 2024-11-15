@@ -5,10 +5,6 @@
 //
 //======================================================================================
 #include "slowManager.h"
-#include "manager.h"
-#include "renderer.h"
-#include "debugproc.h"
-#include "input.h"
 
 // Ã“Iƒƒ“ƒo•Ï”éŒ¾
 CSlowManager* CSlowManager::m_apSlow[CAMP_MAX][MAX_SLOW_OBJ] = {};

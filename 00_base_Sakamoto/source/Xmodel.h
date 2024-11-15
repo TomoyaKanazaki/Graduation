@@ -7,8 +7,6 @@
 #ifndef _XMODEL_H_
 #define _XMODEL_H_
 
-#include "main.h"
-
 //É}ÉNÉçíËã`
 #define MAX_MODEL (512)
 

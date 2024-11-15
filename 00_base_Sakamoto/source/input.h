@@ -7,9 +7,6 @@
 #ifndef _INPUT_H_
 #define _INPUT_H_
 
-#include "main.h"
-#include "Xinput.h"
-
 #pragma comment(lib,"xinput.lib")	//“ü—Íˆ—
 
 //“ü—Í‚ÌƒNƒ‰ƒXéŒ¾

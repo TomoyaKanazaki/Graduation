@@ -5,14 +5,8 @@
 //
 //============================================
 #include "renderer.h"
-#include "object.h"
-#include "debugproc.h"
-#include "manager.h"
 #include "camera.h"
-#include "MiniMapCamera.h"
 #include "fade.h"
-#include "Pause.h"
-
 #include "MyEffekseer.h"
 
 //====================================================================

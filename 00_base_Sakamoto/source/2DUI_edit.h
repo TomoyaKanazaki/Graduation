@@ -7,9 +7,6 @@
 #ifndef _2DUI_EDIT_H_
 #define _2DUI_EDIT_H_
 
-#include "main.h"
-#include "object.h"
-
 #define LOADUI_NAME ("data\\TXT\\Set2DUI.txt")	//スタートメッセージがあるかどうかの確認
 
 //前方宣言

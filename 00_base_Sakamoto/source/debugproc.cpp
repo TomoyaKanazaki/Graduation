@@ -5,8 +5,6 @@
 // Added by Tomoya Kanazaki
 //
 //==========================================================
-#include "debugproc.h"
-#include "input.h"
 #include "manager.h"
 #include "renderer.h"
 

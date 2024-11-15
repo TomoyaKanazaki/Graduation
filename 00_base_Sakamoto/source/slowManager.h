@@ -7,10 +7,6 @@
 #ifndef _SLOWMANAGER_H_
 #define _SLOWMANAGER_H_
 
-// インクルード宣言
-#include "main.h"
-#include "object.h"
-
 // スローマネージャクラス
 class CSlowManager
 {

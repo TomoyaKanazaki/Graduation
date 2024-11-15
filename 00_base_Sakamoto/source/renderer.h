@@ -7,7 +7,6 @@
 #ifndef _RENSERER_H_
 #define _RENSERER_H_
 
-#include "main.h"
 
 //レンダラークラス
 class CRenderer
