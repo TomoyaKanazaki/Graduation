@@ -6,8 +6,6 @@
 //
 //==========================================================
 #include "debugproc.h"
-#include <string.h>
-#include <stdio.h>
 #include "input.h"
 #include "manager.h"
 #include "renderer.h"

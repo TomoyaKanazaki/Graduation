@@ -10,11 +10,6 @@
 
 //Ã“Iƒƒ“ƒo•Ï”éŒ¾
 int CXModel::m_NumAll = 0;
-//const char *CXModel::c_apModelname[] =
-//{
-//	"data\\MODEL\\Player00.x",
-//	"data\\MODEL\\block00.x",
-//};
 
 char CXModel::c_apModelname[MAX_MODEL][128] = {};
 

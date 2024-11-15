@@ -11,37 +11,6 @@
 
 //静的メンバ変数宣言
 int CTexture::m_NumAll = 0;
-//const char *CTexture::c_apTexturename[] =
-//{
-//	"data\\TEXTURE\\Player00.png",		//プレイヤー
-//	"data\\TEXTURE\\ENEMY00.png",		//敵
-//	"data\\TEXTURE\\block000.jpg",		//普通のブロック
-//	"data\\TEXTURE\\block001.png",		//壊れるブロック
-//	"data\\TEXTURE\\Life.png",			//ライフ
-//	"data\\TEXTURE\\rain.png",			//しずく
-//	"data\\TEXTURE\\watch.png",			//時計
-//	"data\\TEXTURE\\Bullet00.png",		//弾
-//	"data\\TEXTURE\\Effect000.jpg",		//エフェクト
-//	"data\\TEXTURE\\magic001.png",		//爆発
-//	"data\\TEXTURE\\Number00.png",		//数字
-//	"data\\TEXTURE\\Test.jpg",			//テスト用
-//	"data\\TEXTURE\\0.png",				//テストブロック1
-//	"data\\TEXTURE\\1.png",				//テストブロック2
-//	"data\\TEXTURE\\3.png",				//テストブロック3
-//	"data\\TEXTURE\\5.png",				//テストブロック4
-//	"data\\TEXTURE\\7.png",				//テストブロック5
-//	"data\\TEXTURE\\9.png",				//テストブロック6
-//	"data\\TEXTURE\\19.png",			//テストブロック7
-//	"data\\TEXTURE\\37.png",			//テストブロック8
-//	"data\\TEXTURE\\123.png",			//テストブロック9
-//	"data\\TEXTURE\\147.png",			//テストブロック10
-//	"data\\TEXTURE\\369.png",			//テストブロック11
-//	"data\\TEXTURE\\789.png",			//テストブロック12
-//	"data\\TEXTURE\\12347.png",			//テストブロック13
-//	"data\\TEXTURE\\12369.png",			//テストブロック14
-//	"data\\TEXTURE\\14789.png",			//テストブロック15
-//	"data\\TEXTURE\\36789.png",			//テストブロック16
-//};
 
 char CTexture::c_apTexturename[MAX_TEXTURE][128] = {};
 

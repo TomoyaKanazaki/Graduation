@@ -19,7 +19,6 @@
 #include "objmeshDome.h"
 #include "objmeshField.h"
 #include "camera.h"
-//#include "cursorUI.h"
 #include "useful.h"
 #include "MapModel.h"
 #include "light.h"
