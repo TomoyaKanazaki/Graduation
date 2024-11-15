@@ -736,3 +736,30 @@ float useful::DegreesToRadians(float degrees)
 {
 	return degrees * (D3DX_PI / 180.0f);
 }
+
+//==========================================
+//  マトリックスの計算
+//==========================================
+D3DXVECTOR3 useful::CalcMatrix(const D3DXVECTOR3& pos, const D3DXVECTOR3& rot, const D3DXMATRIX& mtx)
+{
+	//計算用マトリックス
+	D3DXMATRIX mtxRot, mtxTrans, mtxWorld;
+
+	//ワールドマトリックスの初期化
+	D3DXMatrixIdentity(&mtxWorld);
+
+	//向きを反映
+	D3DXMatrixRotationYawPitchRoll(&mtxRot, rot.y, rot.x, rot.z);
+	D3DXMatrixMultiply(&mtxWorld, &mtxWorld, &mtxRot);
+
+	//位置を反映
+	D3DXMatrixTranslation(&mtxTrans, pos.x, pos.y, pos.z);
+	D3DXMatrixMultiply(&mtxWorld, &mtxWorld, &mtxTrans);
+
+	//算出したマトリクスをかけ合わせる
+	D3DXMatrixMultiply(&mtxWorld,
+		&mtxWorld,
+		&mtx);
+
+	return D3DXVECTOR3(mtxWorld._41, mtxWorld._42, mtxWorld._43);
+}

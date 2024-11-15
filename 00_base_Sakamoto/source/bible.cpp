@@ -34,7 +34,8 @@ CListManager<CBible>* CBible::m_pList = nullptr; // オブジェクトリスト
 // コンストラクタ
 //====================================================================
 CBible::CBible(int nPriority) : CItem(nPriority),
-m_posBase(INITVECTOR3)
+m_posBase(INITVECTOR3),
+m_fMoveTime(0.0f)
 {
 	SetSize(SAMPLE_SIZE);
 	SetPos(INITVECTOR3);
@@ -99,8 +100,6 @@ void CBible::Uninit(void)
 //====================================================================
 void CBible::Update(void)
 {
-	DebugProc::Print(DebugProc::POINT_CENTER, "聖書座標 : %d, %d\n", GetGrid().x, GetGrid().z);
-
 	//親クラスの更新
 	CItem::Update();
 }

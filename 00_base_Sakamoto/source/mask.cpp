@@ -10,15 +10,6 @@
 #include "renderer.h"
 
 //========================================
-// 定数定義
-//========================================
-namespace
-{
-	float WIDTH = 1280.0f;		// 幅
-	float HEIGHT = 720.0f;		// 高さ
-}
-
-//========================================
 // コンストラクタ
 //========================================
 CMask::CMask(int nPriority) : CObject2D(nPriority)
@@ -57,11 +48,11 @@ HRESULT CMask::Init()
 	CObject2D::Init();
 
 	// 幅、高さの設定
-	SetWidth(WIDTH);
-	SetHeight(HEIGHT);
+	SetWidth(SCREEN_WIDTH_F);
+	SetHeight(SCREEN_HEIGHT_F);
 
 	// 位置設定
-	SetPos(D3DXVECTOR3(WIDTH * 0.5f, HEIGHT * 0.5f, 0.0f));
+	SetPos(SCREEN_CENTER_F);
 
 	return S_OK;
 }

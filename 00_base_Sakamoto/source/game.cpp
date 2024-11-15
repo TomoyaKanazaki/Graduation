@@ -67,7 +67,7 @@ namespace
 	const int BOTTOM_FIELD_VTX_HEIGHT = 64;		// 下床の縦数
 	const char* BOTTOM_FIELD_TEX = "data\\TEXTURE\\Field\\outside.jpg";		// 下床のテクスチャ
 	const D3DXVECTOR3 BOTTOM_FIELD_POS = D3DXVECTOR3(0.0f, -1500.0f, 0.0f);	// 下床の位置
-	const int BIBLE_OUTGRIT = 2;	// 聖書がマップの外側から何マス内側にいるか
+	const int BIBLE_OUTGRIT = 3;	// 聖書がマップの外側から何マス内側にいるか
 
 	const char* SLOPE_DEVICE_MODEL = "data\\TXT\\MOTION\\02_staging\\00_SlopeDevice\\motion_slopedevice.txt";
 }
@@ -254,10 +254,10 @@ HRESULT CGame::Init(void)
 		CMapSystem::GetInstance()->SetGritBool(11, 7, true);
 
 		// 聖書生成
-		CItem::Create(CItem::TYPE_BIBLE, CMapSystem::GRID(BIBLE_OUTGRIT, BIBLE_OUTGRIT));
-		CItem::Create(CItem::TYPE_BIBLE, CMapSystem::GRID(nMapWightMax - BIBLE_OUTGRIT, BIBLE_OUTGRIT));
-		CItem::Create(CItem::TYPE_BIBLE, CMapSystem::GRID(BIBLE_OUTGRIT, nMapHeigtMax - BIBLE_OUTGRIT));
-		CItem::Create(CItem::TYPE_BIBLE, CMapSystem::GRID(nMapWightMax - BIBLE_OUTGRIT, nMapHeigtMax - BIBLE_OUTGRIT));
+		CItem::Create(CItem::TYPE_BIBLE, CMapSystem::GRID(BIBLE_OUTGRIT - 1, BIBLE_OUTGRIT - 1));
+		CItem::Create(CItem::TYPE_BIBLE, CMapSystem::GRID(NUM_WIGHT - BIBLE_OUTGRIT, BIBLE_OUTGRIT - 1));
+		CItem::Create(CItem::TYPE_BIBLE, CMapSystem::GRID(BIBLE_OUTGRIT - 1, NUM_HEIGHT - BIBLE_OUTGRIT));
+		CItem::Create(CItem::TYPE_BIBLE, CMapSystem::GRID(NUM_WIGHT - BIBLE_OUTGRIT, NUM_HEIGHT - BIBLE_OUTGRIT));
 
 		break;
 	}
