@@ -85,6 +85,8 @@ CDevil::CDevil(int nPriority) : CObject(nPriority)
 	m_bSlope = false;
 	m_MinGrid = CMapSystem::GRID(0, 0);
 	m_MaxGrid = CMapSystem::GRID(NUM_WIGHT - 1, NUM_HEIGHT - 1);
+	m_DevilArrow = 0;
+	m_DevilArrowOld = 0;
 }
 
 //====================================================================
@@ -446,6 +448,7 @@ void CDevil::BackSlope(void)
 {
 	CObjmeshField* pMapField = CGame::GetMapField();
 	D3DXVECTOR3 MapRot = pMapField->GetRot();
+	bool bBackOK = false;
 
 #if SCROLL_ID == 0
 
@@ -474,21 +477,41 @@ void CDevil::BackSlope(void)
 	if (MapRot.x > 0.0f)
 	{
 		MapRot.x -= D3DX_PI * SLOPE_SPEED02;
+
+		if (MapRot.x <= 0.0f)
+		{
+			bBackOK = true;
+		}
 	}
 
 	if (MapRot.x < 0.0f)
 	{
 		MapRot.x += D3DX_PI * SLOPE_SPEED02;
+
+		if (MapRot.x >= 0.0f)
+		{
+			bBackOK = true;
+		}
 	}
 
 	if (MapRot.z > 0.0f)
 	{
 		MapRot.z -= D3DX_PI * SLOPE_SPEED02;
+
+		if (MapRot.z <= 0.0f)
+		{
+			bBackOK = true;
+		}
 	}
 
 	if (MapRot.z < 0.0f)
 	{
 		MapRot.z += D3DX_PI * SLOPE_SPEED02;
+
+		if (MapRot.z >= 0.0f)
+		{
+			bBackOK = true;
+		}
 	}
 
 #else
@@ -515,10 +538,12 @@ void CDevil::BackSlope(void)
 
 #endif // SCROLL_ID
 
-	if (abs(MapRot.x) <= 0.0f && abs(MapRot.z) <= 0.0f)
+	if (bBackOK)
 	{
 		STATE_WAIT;
 		m_nStateCount = 120;
+		MapRot.x = 0.0f;
+		MapRot.z = 0.0f;
 	}
 
 	pMapField->SetRot(MapRot);
@@ -804,22 +829,65 @@ void CDevil::StateManager(void)
 	{
 	case STATE_WAIT:
 
+		// èÛë‘èIóπéû
 		if (m_nStateCount <= 0)
 		{
+			// 100ÅìÇÃrand()ÇÇ‹ÇÌÇ∑
 			int nRand = rand() % 101;
+
+			// åXÇ´ÇÃéwíËÅìÇÃéû
 			if (nRand <= SLOPE_RAND)
 			{
+				// åXÇ´èÛë‘ê›íË
 				m_State = STATE_SLOPE;
-				m_nStateCount = SLOPE_TIME;
 
+				// åXÇ¢ÇƒÇ¢ÇÈèÛë‘Ç©Ç«Ç§Ç©ÇêÿÇËë÷Ç¶ÇÈ
 				m_bSlope = !m_bSlope;
+
+				if (m_bSlope)
+				{// åXÇ´èÛë‘ÇÃéû
+
+					//åXÇ´ï˚å¸éwíËèàóù
+					m_DevilArrow = rand() % 2;
+
+					if (m_DevilArrowOld == 0 || m_DevilArrowOld == 1)
+					{// ëOâÒÇÃåXÇ´ï˚å¸Ç™ç∂âEÇæÇ¡ÇΩèÍçá
+
+						// ç°âÒÇÃåXÇ´ï˚å¸ÇÕè„â∫Ç…Ç∑ÇÈ
+						if (m_DevilArrow == 0)
+						{
+							m_DevilArrow = 2;
+						}
+						else if (m_DevilArrow == 1)
+						{
+							m_DevilArrow = 3;
+						}
+					}
+
+					// ç°âÒÇÃåXÇ´ï˚å¸ÇãLò^Ç∑ÇÈ
+					m_DevilArrowOld = m_DevilArrow;
+
+					m_nStateCount = SLOPE_TIME;
+				}
+				else
+				{// åXÇ´ñﬂÇµèÛë‘ÇÃéû
+
+					// åXÇ´ÇñﬂÇ∑éûÇæÇØî{ÇÃéûä‘ÇéwíËÇµÅAñﬂÇËêÿÇ¡ÇΩÇÁåXÇ´èÛë‘ÇèIóπÇ∆Ç∑ÇÈ
+					m_nStateCount = SLOPE_TIME * 2;
+				}
 			}
 			else
-			{
+			{// åXÇ´ÇÃéwíËÅìÇ∂Ç·Ç»Ç¢éû
+
+				// ÉXÉNÉçÅ[ÉãèÛë‘ê›íË
 				m_State = STATE_SCROLL;
+
+				// ÉXÉNÉçÅ[Éãéûä‘ê›íË
 				m_nStateCount = SCROOL_TIME;
+
+				// ÉXÉNÉçÅ[Éãï˚å¸éwíË
+				m_DevilArrow = rand() % 4;
 			}
-			m_DevilArrow = rand() % 4;
 		}
 
 		break;
