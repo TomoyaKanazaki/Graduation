@@ -15,7 +15,7 @@ class CSoftCream : public CItem
 {
 public:
 
-	CSoftCream(int nPriority = 3);
+	CSoftCream(int nPriority = 2);
 	~CSoftCream();
 
 	HRESULT Init();

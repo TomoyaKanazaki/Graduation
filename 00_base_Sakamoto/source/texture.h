@@ -7,8 +7,6 @@
 #ifndef _TEXTURE_H_
 #define _TEXTURE_H_
 
-#include "main.h"
-
 //É}ÉNÉçíËã`
 #define MAX_TEXTURE (1024)
 

@@ -6,16 +6,7 @@
 //============================================
 #include "2DUI_edit.h"
 #include "2DUI.h"
-#include "object.h"
-#include "object2D.h"
-#include "renderer.h"
 #include "manager.h"
-#include "input.h"
-#include "debugproc.h"
-#include "Effect.h"
-#include "debugproc.h"
-#include "texture.h"
-#include "useful.h"
 
 //==========================================
 //  ’è”’è‹`

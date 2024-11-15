@@ -5,58 +5,23 @@
 //
 //============================================
 #include "game.h"
-#include "manager.h"
 #include "fade.h"
-#include "input.h"
-#include "object.h"
-#include "object2D.h"
-#include "object3D.h"
-#include "objectBillboard.h"
-#include "objectX.h"
 #include "objmeshField.h"
-#include "objmeshWall.h"
-#include "objmeshCylinder.h"
-#include "objmeshDome.h"
-#include "CubeBlock.h"
 #include "player.h"
-#include "Pause.h"
 #include "camera.h"
-#include "sound.h"
 #include "timer.h"
 #include "Score.h"
-#include "debugproc.h"
-#include "Xmodel.h"
-#include "texture.h"
-#include "effect.h"
 #include "Edit.h"
 #include "devil.h"
-#include "bowabowa.h"
 #include "DevilHole.h"
-
 #include "renderer.h"
-#include "SampleObj2D.h"
-#include "SampleObj3D.h"
-#include "SampleObjBillboard.h"
-#include "SampleObjX.h"
-#include "SampleLevelModel.h"
-#include "light.h"
-
 #include "slowManager.h"
-#include "cross.h"
 #include "scrollarrow.h"
-#include "enemyMedaman.h"
-#include "enemyBonbon.h"
 #include "enemyYoungDevil.h"
-#include "bible.h"
-#include "MapSystem.h"
 #include "RailBlock.h"
-#include "Rail.h"
 #include "RollRock.h"
-
 #include "bowabowa.h"
-
 #include "SlopeDevice.h"
-
 #include "mask.h"
 
 namespace
@@ -153,7 +118,7 @@ HRESULT CGame::Init(void)
 	//CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_BGM_TUTORIAL);
 
 	// 2Dマスクの生成
-	m_pMask = CMask::Create(7);
+	m_pMask = CMask::Create();
 
 	//クリアフラグのデフォルトをオンにしておく
 	m_bGameClear = true;
@@ -165,10 +130,6 @@ HRESULT CGame::Init(void)
 	m_pTime = CTimer::Create();
 	m_pTime->SetStartTime(timeGetTime());
 	m_pTime->SetTime(0);
-
-	//ステージ背景の生成
-	m_pMeshDomeUp = CObjmeshDome::Create();
-	m_pMeshDomeUp->SetTexture("data\\TEXTURE\\rain_clown.jpg");
 
 	// 背景モデル設定処理（仮）
 	SetBgObjTest();

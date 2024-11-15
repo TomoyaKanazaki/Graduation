@@ -184,9 +184,6 @@
     <ClCompile Include="source\input.cpp">
       <Filter>ソース ファイル\00_System</Filter>
     </ClCompile>
-    <ClCompile Include="source\inputManager.cpp">
-      <Filter>ソース ファイル\00_System</Filter>
-    </ClCompile>
     <ClCompile Include="source\ranking.cpp">
       <Filter>ソース ファイル\05_UI_2D</Filter>
     </ClCompile>
@@ -337,9 +334,6 @@
       <Filter>ソース ファイル\00_System</Filter>
     </ClInclude>
     <ClInclude Include="source\input.h">
-      <Filter>ソース ファイル\00_System</Filter>
-    </ClInclude>
-    <ClInclude Include="source\inputManager.h">
       <Filter>ソース ファイル\00_System</Filter>
     </ClInclude>
     <ClInclude Include="source\listManager.h">

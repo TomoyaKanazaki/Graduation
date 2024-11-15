@@ -7,8 +7,6 @@
 #ifndef _USEFUL_H_
 #define _USEFUL_H_
 
-#include "main.h"
-
 // メモリ開放マクロ
 #define SAFE_UNINIT(p)		if ((p) != nullptr) { (p)->Uninit();		(p) = nullptr; }	// Uninit関数の破棄マクロ
 #define SAFE_FREE(p)		if ((p) != nullptr) { free((p));			(p) = nullptr; }	// free関数の破棄マクロ

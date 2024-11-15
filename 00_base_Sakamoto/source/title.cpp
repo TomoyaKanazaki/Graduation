@@ -5,23 +5,11 @@
 //
 //============================================
 #include "title.h"
-#include "manager.h"
 #include "fade.h"
-#include "input.h"
 #include "object2D.h"
 #include "texture.h"
-#include "particle.h"
-#include "sound.h"
-#include "objmeshDome.h"
-#include "player.h"
-#include "CubeBlock.h"
-#include "2DUI_edit.h"
 #include "objmeshDome.h"
 #include "objmeshField.h"
-#include "camera.h"
-//#include "cursorUI.h"
-#include "useful.h"
-#include "MapModel.h"
 #include "light.h"
 #include "sound.h"
 

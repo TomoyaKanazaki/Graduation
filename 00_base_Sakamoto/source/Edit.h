@@ -7,9 +7,6 @@
 #ifndef _EDIT_H_
 #define _EDIT_H_
 
-#include "main.h"
-#include "object.h"
-
 //‘O•ûéŒ¾
 class CObjmeshCube;
 class CMapModel;

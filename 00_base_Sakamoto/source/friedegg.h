@@ -16,7 +16,7 @@ class CFriedEgg : public CItem
 public:
 
 	// ƒƒ“ƒoŠÖ”
-	CFriedEgg(int nPriority = 3);
+	CFriedEgg(int nPriority = 2);
 	~CFriedEgg();
 
 	HRESULT Init();

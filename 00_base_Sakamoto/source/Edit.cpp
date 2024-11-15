@@ -5,21 +5,10 @@
 //
 //============================================
 #include "Edit.h"
-#include "object.h"
-#include "renderer.h"
-#include "manager.h"
-#include "game.h"
-#include "input.h"
-#include "objmeshCube.h"
-#include "CubeBlock.h"
 #include "RailBlock.h"
-#include "Rail.h"
-#include "debugproc.h"
 #include "MapModel.h"
 #include "XModel.h"
 #include "CubeEffect.h"
-#include "MapSystem.h"
-#include "useful.h"
 
 //É}ÉNÉçíËã`
 namespace
