@@ -26,7 +26,8 @@ bool CMapSystem::m_nMapGrit[NUM_WIGHT][NUM_HEIGHT] = {false};
 //====================================================================
 //コンストラクタ
 //====================================================================
-CMapSystem::CMapSystem()
+CMapSystem::CMapSystem() : 
+	m_gridCenter(0, 0)
 {
 	for (int nCntW = 0; nCntW < NUM_WIGHT; nCntW++)
 	{
@@ -88,6 +89,9 @@ void CMapSystem::Init()
 	generator->setWorldSize({ NUM_WIGHT, NUM_HEIGHT }); // 世界の大きさ
 	generator->setHeuristic(AStar::Heuristic::euclidean); // 最短ルート計測の種類
 	generator->setDiagonalMovement(false); // 斜め移動をオフ
+
+	// 中心を設定
+	m_gridCenter = GRID(NUM_WIGHT / 2, NUM_HEIGHT / 2);
 }
 
 //====================================================================

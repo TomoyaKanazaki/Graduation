@@ -41,7 +41,9 @@ static_assert(NUM_ARRAY(ITEM_SCORE) == CItem::TYPE_MAX, "ERROR : Type Count Miss
 //====================================================================
 // コンストラクタ
 //====================================================================
-CItem::CItem(int nPriority) : CObjectX(nPriority)
+CItem::CItem(int nPriority) : CObjectX(nPriority),
+m_posBase(INITVECTOR3),
+m_fMoveTime(0.0f)
 {
 	m_eType = TYPE_NONE;		// 種類
 	m_nIdxXModel = 0;			// Xモデル番号
@@ -163,6 +165,9 @@ void CItem::Update()
 	// 移動処理
 	Move(pos);
 
+	// 経過時間を取得
+	m_fMoveTime += DeltaTime::Get();
+
 	// プレイヤーとアイテムの判定
 	CollisionPlayer();
 
@@ -205,6 +210,22 @@ void CItem::Draw()
 
 	//ステンシルバッファ無効
 	pDevice->SetRenderState(D3DRS_STENCILENABLE, FALSE);
+}
+
+//==========================================
+//  マップ番号の設定
+//==========================================
+void CItem::SetGrid(const CMapSystem::GRID& pos)
+{
+	// 親クラスの設定処理を呼び出す
+	CItem::SetGrid(pos);
+
+	// グリッド情報から自身の座標を算出する
+	m_posBase = CMapSystem::GetInstance()->GetGritPos(pos);
+
+	// 位置を設定
+	CItem::SetPos(m_posBase);
+	CObjectX::SetPos(m_posBase);
 }
 
 //====================================================================
