@@ -7,8 +7,6 @@
 #ifndef _OBJECT_H_
 #define _OBJECT_H_
 
-#include "main.h"
-
 //マクロ定義
 #define MAX_OBJECT (8102)	//オブジェクトの最大数
 #define PRIORITY_MAX (8)	//描画順の最大数

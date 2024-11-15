@@ -9,6 +9,13 @@
 #include "game.h"
 #include "timer.h"
 
+//ライブラリのリンク
+#pragma comment (lib,"d3d9.lib")		//描画処理に必要
+#pragma comment (lib,"d3dx9.lib")		//[d3d9.lib]の拡張ライブラリ
+#pragma comment (lib,"dxguid.lib")		//DirectXコンポーネント(部品)使用に必要
+#pragma comment (lib,"winmm.lib")		//システム時刻所得に必要
+#pragma comment (lib,"dinput8.lib")		//入力処理に必要
+
 //==========================================
 //  定数定義
 //==========================================

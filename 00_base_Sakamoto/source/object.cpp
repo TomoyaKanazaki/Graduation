@@ -8,8 +8,6 @@
 #include "manager.h"
 #include "renderer.h"
 #include "camera.h"
-#include "debugproc.h"
-#include "input.h"
 
 //==========================================
 //  ’è”’è‹`
