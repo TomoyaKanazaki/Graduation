@@ -5,11 +5,7 @@
 //
 //============================================
 #include "result.h"
-#include "manager.h"
 #include "fade.h"
-#include "input.h"
-#include "object2D.h"
-#include "texture.h"
 #include "sound.h"
 #include "camera.h"
 #include "ranking.h"

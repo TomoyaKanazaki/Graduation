@@ -5,12 +5,8 @@
 //
 //============================================
 #include "Pause.h"
-#include "manager.h"
-#include "input.h"
-#include "texture.h"
 #include "object2D.h"
 #include "Fade.h"
-#include "sound.h"
 
 //Ã“Iƒƒ“ƒo•Ï”éŒ¾
 CObject2D *CPause::m_pPauseUI[MAX_PAUSE] = {};

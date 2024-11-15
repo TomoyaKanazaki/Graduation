@@ -7,8 +7,6 @@
 #ifndef _PAUSE_H_
 #define _PAUSE_H_
 
-#include "main.h"
-
 //É}ÉNÉçíËã`
 #define MAX_PAUSE (3)
 #define MAX_FG (4)

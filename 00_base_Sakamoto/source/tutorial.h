@@ -7,7 +7,6 @@
 #ifndef _TUTORIAL_H_
 #define _TUTORIAL_H_
 
-#include "main.h"
 #include "manager.h"
 
 //‘O•ûéŒ¾
