@@ -26,9 +26,9 @@ CMask::~CMask()
 //========================================
 // 生成
 //========================================
-CMask* CMask::Create(int nPriority)
+CMask* CMask::Create()
 {
-	CMask* pMask = new CMask(nPriority);
+	CMask* pMask = new CMask();
 
 	//オブジェクトの初期化処理
 	if (FAILED(pMask->Init()))

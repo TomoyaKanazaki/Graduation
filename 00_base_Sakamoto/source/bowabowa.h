@@ -18,7 +18,7 @@ class CBowabowa : public CItem
 {
 public:
 
-	CBowabowa(int nPriority = 3);
+	CBowabowa(int nPriority = 2);
 	~CBowabowa();
 
 	// Ã“Iƒƒ“ƒoŠÖ”

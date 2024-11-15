@@ -16,10 +16,10 @@
 class CMask : public CObject2D
 {
 public:
-	CMask(int nPriority);	//コンストラクタ
+	CMask(int nPriority = 6);	//コンストラクタ
 	~CMask();	//デストラクタ
 
-	static CMask* Create(int nPriority);
+	static CMask* Create();
 
 	HRESULT Init();
 	void Uninit();
