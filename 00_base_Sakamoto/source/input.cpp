@@ -356,16 +356,16 @@ D3DXVECTOR3 CInputJoypad::Get_Stick_Left(int nPlayer)
 	D3DXVECTOR3 Stick = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
 	Stick.x = (float)m_JoyKeyState[nPlayer].Gamepad.sThumbLX / (float)SHRT_MAX;
-	//if (fabsf(Stick.x) < (float)XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE / (float)SHRT_MAX)
-	//{
-	//	Stick.x = 0.0f;
-	//}
+	if (fabsf(Stick.x) < (float)XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE / (float)SHRT_MAX)
+	{
+		Stick.x = 0.0f;
+	}
 
 	Stick.y = (float)m_JoyKeyState[nPlayer].Gamepad.sThumbLY / (float)SHRT_MAX;
-	//if (fabsf(Stick.y) < (float)XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE / (float)SHRT_MAX)
-	//{
-	//	Stick.y = 0.0f;
-	//}
+	if (fabsf(Stick.y) < (float)XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE / (float)SHRT_MAX)
+	{
+		Stick.y = 0.0f;
+	}
 
 	if (Stick.x > 0.5f || Stick.x < -0.5f &&Stick.y > 0.5f || Stick.y < -0.5f)
 	{

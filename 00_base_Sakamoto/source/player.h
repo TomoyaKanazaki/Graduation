@@ -148,7 +148,8 @@ private:
 	void StateManager(void);						//状態管理
 	void Move(void);								//移動処理
 	D3DXVECTOR3 MoveInputKey(D3DXVECTOR3 Move);		//移動入力キーボード
-	D3DXVECTOR3 MoveInputPad(void);		//移動入力パッド
+	D3DXVECTOR3 MoveInputPadStick(D3DXVECTOR3 Move);//移動入力パッドスティック
+	D3DXVECTOR3 MoveInputPadKey(D3DXVECTOR3 Move);	//移動入力パッドキー
 	void Rot(void);									//移動方向処理
 	void Attack(void);								//攻撃処理
 	void CollisionWall(useful::COLLISION XYZ);		//壁との当たり判定
