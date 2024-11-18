@@ -120,28 +120,19 @@ void CSoftCream::Draw(void)
 //====================================================================
 void CSoftCream::Move(D3DXVECTOR3& pos)
 {
+	// 移動情報を取得
+	D3DXVECTOR3 base = GetBase();
+	float time = GetMoveTime();
+
 	// 移動量加算
-	pos.x += MOVE_SCALE_X * DeltaTime::Get() * sinf(fMove);
-	pos.z += MOVE_SCALE_Z * DeltaTime::Get() * cosf(fMove);
+	float x = MOVE_SCALE_X * sinf(time);
+	float z = MOVE_SCALE_Z * cosf(time);
 
-	// TODO : 本仕様の時に必ず消す
-	fMove += DeltaTime::Get();
-}
+	// 基準位置に移動量を加算する
+	pos.x = base.x + x;
+	pos.z = base.z + z;
 
-//==========================================
-//  マップ番号の設定
-//==========================================
-void CSoftCream::SetGrid(const CMapSystem::GRID& pos)
-{
-	// 親クラスの設定処理を呼び出す
-	CItem::SetGrid(pos);
-
-	// グリッド情報から自身の座標を算出する
-	D3DXVECTOR3 posThis = CMapSystem::GetInstance()->GetGritPos(pos);
-
-	// 位置を設定
-	CItem::SetPos(posThis);
-	CObjectX::SetPos(posThis);
+	DebugProc::Print(DebugProc::POINT_CENTER, "ソフトクリーム : %f, %f\n", pos.x, pos.z);
 }
 
 //====================================================================

@@ -7,7 +7,6 @@
 #ifndef _TITLE_H_
 #define _TITLE_H_
 
-#include "main.h"
 #include "manager.h"
 
 //ƒ}ƒNƒ’è‹`

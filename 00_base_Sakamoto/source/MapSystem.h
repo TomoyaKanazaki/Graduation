@@ -57,6 +57,7 @@ public:
 	int CalcGridX(const float posX);
 	int CalcGridZ(const float posZ);
 	GRID CalcGrid(const D3DXVECTOR3& pos);
+	GRID GetCenter() { return m_gridCenter; };
 
 	void SetGritBool(int nWight, int nHeight, bool Set) { m_nMapGrit[nWight][nHeight] = Set; }
 	bool GetGritBool(int nWight, int nHeight) { return m_nMapGrit[nWight][nHeight]; }
@@ -78,6 +79,7 @@ public:
 	static CMapSystem* pMapSystem;
 
 	static bool m_nMapGrit[NUM_WIGHT][NUM_HEIGHT];	//グリットにブロックが存在していたらtrue
+	GRID m_gridCenter;
 	D3DXVECTOR3 m_InitPos;
 	D3DXVECTOR3 m_MapPos;
 	int m_WightMax;

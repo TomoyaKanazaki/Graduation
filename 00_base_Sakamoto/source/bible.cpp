@@ -33,9 +33,7 @@ CListManager<CBible>* CBible::m_pList = nullptr; // オブジェクトリスト
 //====================================================================
 // コンストラクタ
 //====================================================================
-CBible::CBible(int nPriority) : CItem(nPriority),
-m_posBase(INITVECTOR3),
-m_fMoveTime(0.0f)
+CBible::CBible(int nPriority) : CItem(nPriority)
 {
 	SetSize(SAMPLE_SIZE);
 	SetPos(INITVECTOR3);
@@ -118,6 +116,10 @@ void CBible::Draw(void)
 //====================================================================
 void CBible::Move(D3DXVECTOR3& pos)
 {
+	// 移動情報を取得
+	D3DXVECTOR3 base = GetBase();
+	float time = GetMoveTime();
+
 	// フィールドの座標を取得
 	D3DXVECTOR3 posField = CGame::GetMapField()->GetPos();
 
@@ -126,34 +128,18 @@ void CBible::Move(D3DXVECTOR3& pos)
 	float rot = atan2f(vec.z, vec.x);
 
 	// 経過時間を取得
-	m_fMoveTime += DeltaTime::Get();
+	time += DeltaTime::Get();
 
 	// 移動幅に経過時間をかけ合わせる
-	float fScale = sinf(m_fMoveTime) * MOVE_SCALE;
+	float fScale = sinf(time) * MOVE_SCALE;
 
 	// 移動幅をxz成分に分割する
 	float x = fScale * cosf(rot);
 	float z = fScale * sinf(rot);
 
 	// 基準位置に移動量を加算する
-	pos.x = m_posBase.x + x;
-	pos.z = m_posBase.z + z;
-}
-
-//==========================================
-//  マップ番号の設定
-//==========================================
-void CBible::SetGrid(const CMapSystem::GRID &pos)
-{
-	// 親クラスの設定処理を呼び出す
-	CItem::SetGrid(pos);
-
-	// グリッド情報から自身の座標を算出する
-	m_posBase = CMapSystem::GetInstance()->GetGritPos(pos);
-
-	// 位置を設定
-	CItem::SetPos(m_posBase);
-	CObjectX::SetPos(m_posBase);
+	pos.x = base.x + x;
+	pos.z = base.z + z;
 }
 
 //====================================================================

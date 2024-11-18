@@ -47,6 +47,8 @@ namespace
 {
 	const int LIFE_MAX = 2;	//初期ライフ数
 	const int FIRE_STOPTIME = 30;	//攻撃時の移動停止時間
+	const D3DXVECTOR3 RESPAWN_POS = D3DXVECTOR3(-100.0f, 2000.0f, 100.0f); // 復活位置
+	const float RESPAWN_GRAVITY = 0.3f;			//卵の重力
 
 	const float GRIT_OK = 45.0f;			//移動可能なグリットの範囲内
 	const float PLAYER_SPEED = 5.0f;		//プレイヤーの移動速度
@@ -59,9 +61,9 @@ namespace
 
 	const float EGG_GRAVITY = 0.98f;	 //移動量の減衰速度
 	const D3DXVECTOR3 EGG_MOVE = D3DXVECTOR3(10.0f, 10.0f, 10.0f);	 //移動量の減衰速度
-	const float EGG_ROT = D3DX_PI * 0.006f;	 //回転速度
-	const float EGG_MOVE_DEL = 0.9f;	 //移動量の減衰速度
-	const float EGG_COLOR_DEL_A = 0.01f; //不透明度の減衰速度
+	const float EGG_ROT = D3DX_PI * 0.006f;		//回転速度
+	const float EGG_MOVE_DEL = 0.9f;			//移動量の減衰速度
+	const float EGG_COLOR_DEL_A = 0.01f;		//不透明度の減衰速度
 }
 
 //===========================================
@@ -279,7 +281,7 @@ void CPlayer::GameUpdate(void)
 			CMapSystem::GetInstance()->GetGritBool(m_Grid.x,m_Grid.z) == false)||
 			(m_State == STATE_EGG && CollisionStageIn() == true &&
 			CMapSystem::GetInstance()->GetGritBool(m_Grid.x, m_Grid.z) == false &&
-			m_bGritCenter == true)
+			m_bGritCenter == true && m_pos.y <= 0.0f)
 			)
 		{// ステージ内にいる かつ ブロックの無いグリッド上の時
 			// 移動処理
@@ -379,6 +381,31 @@ void CPlayer::Draw(void)
 
 	//ワールドマトリックスの初期化
 	D3DXMatrixIdentity(&m_mtxWorld);
+
+	D3DXMATRIX mtxShadow;	// シャドウマトリックス
+	D3DLIGHT9 light;		// ライト情報
+	D3DXVECTOR4 posLight;	// ライトの位置
+	D3DXVECTOR3 pos, normal;	// 平面上の任意の点、法線ベクトル
+	D3DXPLANE plane;		// 平面情報
+
+	// ライトの位置設定
+	pDevice->GetLight(0, &light);
+	posLight = D3DXVECTOR4(0.0f, 0.0f, 0.0f, 0.05f);
+
+	// 平面情報を生成
+	pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+	D3DXPlaneFromPointNormal(&plane, &pos, &normal);
+
+	// シャドウマトリックスの初期化
+	
+	
+	// シャドウマトリックスの作成
+	D3DXMatrixShadow(&mtxShadow, &posLight, &plane);
+	D3DXMatrixMultiply(&mtxShadow, &m_mtxWorld, &mtxShadow);
+
+	// シャドウマトリックスの設定
+
 
 	//向きを反映
 	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
@@ -709,11 +736,12 @@ void CPlayer::StateManager(void)
 	case STATE_DEATH:
 		if (m_nStateCount == 0)
 		{
+			//指定位置からブロックが存在しないグリッドを検索してその場所に復活する処理
 			int WMax = CMapSystem::GetInstance()->GetWightMax();
 			int HMax = CMapSystem::GetInstance()->GetHeightMax();
 			CMapSystem::GRID ReivelPos = CMapSystem::GRID(0, 0);
-			ReivelPos.x = CMapSystem::GetInstance()->CalcGridX(-100.0f);
-			ReivelPos.z = CMapSystem::GetInstance()->CalcGridZ(100.0f);
+			ReivelPos.x = CMapSystem::GetInstance()->CalcGridX(RESPAWN_POS.x);
+			ReivelPos.z = CMapSystem::GetInstance()->CalcGridZ(RESPAWN_POS.z);
 
 			for (int nSetW = ReivelPos.x, nCntW = 0; nCntW < WMax; nSetW++, nCntW++)
 			{
@@ -733,6 +761,7 @@ void CPlayer::StateManager(void)
 					{
 						SetGrid(CMapSystem::GRID(nSetW, nSetH));
 						m_pos = CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(nSetW, nSetH));
+						m_pos.y = RESPAWN_POS.y;
 						m_State = STATE_EGG;
 						return;
 					}
@@ -1364,6 +1393,17 @@ void CPlayer::EggMove(void)
 {
 	if (m_State == STATE_EGG)
 	{
+		m_move.y -= RESPAWN_GRAVITY;
+
+		//Y軸の位置更新
+		m_pos.y += m_move.y * CManager::GetInstance()->GetGameSpeed();
+
+		if (m_pos.y < 0.0f)
+		{
+			m_pos.y = 0.0f;
+			m_move.y = 0.0f;
+		}
+
 		if (m_pUpEgg != nullptr)
 		{
 			m_pUpEgg->SetPos(D3DXVECTOR3(m_pos.x, m_pos.y + 65.0f, m_pos.z));

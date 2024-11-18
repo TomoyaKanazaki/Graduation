@@ -27,7 +27,6 @@ public:
 	void Update(void);
 	void Draw(void);
 
-	void SetGrid(const CMapSystem::GRID& pos) override;
 	bool Hit(CPlayer* pPlayer) override;
 
 	// 静的メンバ関数
@@ -40,8 +39,6 @@ private:
 
 	// メンバ変数
 	CListManager<CBible>::AIterator m_iterator; // イテレーター
-	D3DXVECTOR3 m_posBase; // 移動の中心座標
-	float m_fMoveTime; // 移動時間
 
 	// 静的メンバ変数
 	static CListManager<CBible>* m_pList; // オブジェクトリスト

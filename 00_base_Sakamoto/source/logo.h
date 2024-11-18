@@ -7,7 +7,6 @@
 #ifndef _logo_H_
 #define _logo_H_
 
-#include "main.h"
 #include "manager.h"
 
 //ƒ}ƒNƒ’è‹`

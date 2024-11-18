@@ -7,7 +7,6 @@
 #ifndef _RESULT_H_
 #define _RESULT_H_
 
-#include "main.h"
 #include "manager.h"
 
 //‘O•ûéŒ¾

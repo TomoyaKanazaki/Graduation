@@ -4,32 +4,18 @@
 //	Author:éà‰ ìÏèü
 //
 //============================================
-
 #include "tutorial.h"
-
-#include "manager.h"
 #include "renderer.h"
 #include "fade.h"
-
-#include "input.h"
-#include "sound.h"
-
-#include "debugproc.h"
 #include "Edit.h"
-
 #include "Pause.h"
 #include "camera.h"
-
 #include "player.h"
-
 #include "objmeshField.h"
-
 #include "slowManager.h"
-
 #include "MapModel.h"
 #include "CubeBlock.h"
 #include "objmeshDome.h"
-
 #include "object2D.h"
 #include "object3D.h"
 #include "objGauge2D.h"
