@@ -570,5 +570,8 @@
     <ClInclude Include="source\MyEffekseer.h">
       <Filter>ソース ファイル\11_library</Filter>
     </ClInclude>
+    <ClInclude Include="source\lib\magic_enum.hpp">
+      <Filter>ソース ファイル\11_library</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

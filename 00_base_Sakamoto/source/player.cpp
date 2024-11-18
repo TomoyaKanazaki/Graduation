@@ -360,6 +360,11 @@ void CPlayer::GameUpdate(void)
 	DebugProc::Print(DebugProc::POINT_LEFT, "[é©ï™]à íu %f : %f : %f\n", m_pos.x, m_pos.y, m_pos.z);
 	DebugProc::Print(DebugProc::POINT_LEFT, "[é©ï™]å¸Ç´ %f : %f : %f\n", m_rot.x, m_rot.y, m_rot.z);
 	DebugProc::Print(DebugProc::POINT_LEFT, "[é©ï™]â° %d : èc %d\n", m_Grid.x, m_Grid.z);
+	DebugProc::Print(DebugProc::POINT_LEFT, "[é©ï™]èÛë‘ : ");
+	auto str = magic_enum::enum_name(m_State);
+	DebugProc::Print(DebugProc::POINT_LEFT, str.data());
+	DebugProc::Print(DebugProc::POINT_LEFT, "\n");
+
 }
 
 //====================================================================
