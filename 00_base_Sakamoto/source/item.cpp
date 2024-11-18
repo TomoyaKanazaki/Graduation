@@ -31,6 +31,8 @@ namespace
 		400, // ソフトクリーム
 		200 // 目玉焼き
 	};
+
+	const float BASE_Y = 50.0f; // 高さ
 }
 
 //==========================================
@@ -130,7 +132,7 @@ HRESULT CItem::Init(const char* pModelName)
 	SetMultiMatrix(true);
 
 	D3DXVECTOR3 pos = GetPos();
-	pos.y = 50.0f;
+	pos.y = BASE_Y;
 	SetPos(pos);
 
 	return S_OK;
@@ -175,6 +177,8 @@ void CItem::Update()
 	SetPos(pos);
 	SetRot(rot);
 	m_Grid = CMapSystem::GetInstance()->CalcGrid(pos);
+
+	DebugProc::Print(DebugProc::POINT_CENTER, "y座標 : %f\n", pos.y);
 
 	// 親クラスの更新処理
 	CObjectX::Update();
@@ -221,7 +225,9 @@ void CItem::SetGrid(const CMapSystem::GRID& pos)
 	m_Grid = pos;
 
 	// グリッド情報から自身の座標を算出する
-	m_posBase = CMapSystem::GetInstance()->GetGritPos(pos);
+	D3DXVECTOR3 calc = CMapSystem::GetInstance()->GetGritPos(pos);
+	calc.y = BASE_Y;
+	m_posBase = calc;
 
 	// 位置を設定
 	CItem::SetPos(m_posBase);
