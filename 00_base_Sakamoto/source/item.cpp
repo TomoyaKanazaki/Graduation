@@ -176,6 +176,11 @@ void CItem::Update()
 	SetRot(rot);
 	m_Grid = CMapSystem::GetInstance()->CalcGrid(pos);
 
+	// アイテムの種類を表示してみる
+	auto str = magic_enum::enum_name(m_eType);
+	DebugProc::Print(DebugProc::POINT_CENTER, str.data());
+	DebugProc::Print(DebugProc::POINT_CENTER, "\n");
+
 	// 親クラスの更新処理
 	CObjectX::Update();
 }
