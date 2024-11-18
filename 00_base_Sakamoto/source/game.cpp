@@ -388,6 +388,20 @@ void CGame::Update(void)
 				CManager::GetInstance()->SetEndScore(m_pScore->GetScore());
 			}
 		}
+
+#ifdef _DEBUG
+
+		if (pInputKeyboard->GetTrigger(DIK_F3))
+		{
+			StageClear(0);
+		}
+
+		if (pInputKeyboard->GetTrigger(DIK_F4))
+		{
+			StageClear(1);
+		}
+
+#endif // _DEBUG
 	}
 }
 
