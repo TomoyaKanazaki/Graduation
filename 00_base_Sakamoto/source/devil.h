@@ -142,7 +142,8 @@ private:
 	CSlowManager* m_pSlow;			// スロー
 	D3DXVECTOR3 m_DevilRot;			// デビルパワーによって傾く値
 	int m_DevilArrow;				// デビルパワーの方向
-	int m_DevilArrowOld;			// 過去のデビルパワーの方向
+	int m_ScrollArrowOld;			// 過去のスクロールの方向
+	int m_SlopwArrowOld;			// 過去の傾きの方向
 	CScrollArrow* m_ScrollArrow[2];	// スクロール方向のUI 
 
 	CCharacter* m_pCharacter;		// キャラクターのクラス
