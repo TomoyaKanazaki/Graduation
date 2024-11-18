@@ -139,6 +139,7 @@
     <ClInclude Include="source\input.h" />
     <ClInclude Include="source\item.h" />
     <ClInclude Include="source\LevelModelEffect.h" />
+    <ClInclude Include="source\lib\magic_enum.hpp" />
     <ClInclude Include="source\LifeUi.h" />
     <ClInclude Include="source\light.h" />
     <ClInclude Include="source\listManager.h" />

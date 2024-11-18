@@ -58,7 +58,7 @@ public:
 	int GetStateCounter() { return m_nStateCount; }
 
 	// マップ番号の設定
-	virtual void SetGrid(const CMapSystem::GRID& pos);
+	void SetGrid(const CMapSystem::GRID& pos);
 	CMapSystem::GRID GetGrid(void) { return m_Grid; }
 
 	// スクロールするかどうかの設定・取得
