@@ -91,11 +91,6 @@
     <ClCompile Include="source\renderer.cpp" />
     <ClCompile Include="source\result.cpp" />
     <ClCompile Include="source\RollRock.cpp" />
-    <ClCompile Include="source\SampleLevelModel.cpp" />
-    <ClCompile Include="source\SampleObj2D.cpp" />
-    <ClCompile Include="source\SampleObj3D.cpp" />
-    <ClCompile Include="source\SampleObjBillboard.cpp" />
-    <ClCompile Include="source\SampleObjX.cpp" />
     <ClCompile Include="source\score.cpp" />
     <ClCompile Include="source\scrollarrow.cpp" />
     <ClCompile Include="source\shrinkingBillboard.cpp" />
@@ -183,11 +178,6 @@
     <ClInclude Include="source\renderer.h" />
     <ClInclude Include="source\result.h" />
     <ClInclude Include="source\RollRock.h" />
-    <ClInclude Include="source\SampleLevelModel.h" />
-    <ClInclude Include="source\SampleObj2D.h" />
-    <ClInclude Include="source\SampleObj3D.h" />
-    <ClInclude Include="source\SampleObjBillboard.h" />
-    <ClInclude Include="source\SampleObjX.h" />
     <ClInclude Include="source\score.h" />
     <ClInclude Include="source\scrollarrow.h" />
     <ClInclude Include="source\shrinkingBillboard.h" />
