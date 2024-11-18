@@ -249,6 +249,10 @@ bool CItem::CollisionPlayer()
 	// プレイヤーリストの中身を確認する
 	for (CPlayer* player : list)
 	{
+		// 死んでる場合は取得できない
+		if(player->GetState() == CPlayer::STATE_EGG || player->GetState() == CPlayer::STATE_DEATH)
+		{ continue; }
+
 		// プレイヤーの座標(グリッド単位)を取得
 		CMapSystem::GRID gridPlayer = player->GetGrid();
 
