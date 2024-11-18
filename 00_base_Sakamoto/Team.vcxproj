@@ -278,7 +278,7 @@
       <SDLCheck>true</SDLCheck>
       <PrecompiledHeaderFile>precompile.h</PrecompiledHeaderFile>
       <ForcedIncludeFiles>precompile.h</ForcedIncludeFiles>
-      <AdditionalIncludeDirectories>source\lib\Effekseer\Include\EffekseerRendererGL;source\lib\Effekseer\Include\EffekseerRendererDX9;source\lib\Effekseer\Include\Effekseer;..\hidapi;source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>source\lib;source\lib\Effekseer\Include\EffekseerRendererGL;source\lib\Effekseer\Include\EffekseerRendererDX9;source\lib\Effekseer\Include\Effekseer;..\hidapi;source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -318,7 +318,7 @@
       <SDLCheck>true</SDLCheck>
       <PrecompiledHeaderFile>precompile.h</PrecompiledHeaderFile>
       <ForcedIncludeFiles>precompile.h</ForcedIncludeFiles>
-      <AdditionalIncludeDirectories>source\lib\Effekseer\Include\EffekseerRendererGL;source\lib\Effekseer\Include\EffekseerRendererDX9;source\lib\Effekseer\Include\Effekseer;..\hidapi;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>source\lib;source\lib\Effekseer\Include\EffekseerRendererGL;source\lib\Effekseer\Include\EffekseerRendererDX9;source\lib\Effekseer\Include\Effekseer;..\hidapi;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <SupportJustMyCode>true</SupportJustMyCode>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <LanguageStandard>stdcpp17</LanguageStandard>

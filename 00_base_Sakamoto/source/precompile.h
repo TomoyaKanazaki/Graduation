@@ -41,7 +41,8 @@
 #include "listManager.h"	// リスト管理
 #include "input.h"			// 入力検知
 #include "debugproc.h"		// デバッグ表示
-#include "deltatime.h"
+#include "deltatime.h"		// 瞬間時間
+#include "magic_enum.hpp"	// 列挙の文字列化
 
 #pragma warning(disable : 26812)	// enumclass警告の削除
 #pragma warning(disable : 6031)		// 返り値無視警告の削除
