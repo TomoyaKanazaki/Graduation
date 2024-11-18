@@ -1393,13 +1393,19 @@ void CPlayer::EggMove(void)
 {
 	if (m_State == STATE_EGG)
 	{
-		m_move.y -= RESPAWN_GRAVITY;
+		if (m_pos.y > 0.0f)
+		{
+			//重力
+			m_move.y -= RESPAWN_GRAVITY;
+		}
 
 		//Y軸の位置更新
 		m_pos.y += m_move.y * CManager::GetInstance()->GetGameSpeed();
 
+		//卵の落下判定
 		if (m_pos.y < 0.0f)
 		{
+			//落下時に移動量と位置を０にする
 			m_pos.y = 0.0f;
 			m_move.y = 0.0f;
 		}
