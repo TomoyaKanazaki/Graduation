@@ -355,9 +355,9 @@ void CObject2D::SetColor(D3DXCOLOR col)
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
 	//頂点カラーの設定
-	pVtx[0].col =
-	pVtx[1].col =
-	pVtx[2].col =
+	pVtx[0].col = m_Color;
+	pVtx[1].col = m_Color;
+	pVtx[2].col = m_Color;
 	pVtx[3].col = m_Color;
 
 	//頂点バッファをアンロックする
@@ -377,9 +377,9 @@ void CObject2D::SetColorA(float A)
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
 	//頂点カラーの設定
-	pVtx[0].col =
-	pVtx[1].col =
-	pVtx[2].col =
+	pVtx[0].col = m_Color;
+	pVtx[1].col = m_Color;
+	pVtx[2].col = m_Color;
 	pVtx[3].col = m_Color;
 
 	//頂点バッファをアンロックする

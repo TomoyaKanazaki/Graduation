@@ -58,7 +58,7 @@ public:
 	int GetStateCounter() { return m_nStateCount; }
 
 	// マップ番号の設定
-	virtual void SetGrid(const CMapSystem::GRID& pos) { m_Grid = pos; }
+	virtual void SetGrid(const CMapSystem::GRID& pos);
 	CMapSystem::GRID GetGrid(void) { return m_Grid; }
 
 	// スクロールするかどうかの設定・取得
@@ -68,6 +68,9 @@ public:
 	bool CollisionPlayer();
 	virtual bool Hit(CPlayer* pPlayer) = 0;
 	void SetItem(const TYPE eType) { m_eType = eType; }
+
+	D3DXVECTOR3 GetBase() { return m_posBase; } // 移動の中心位置を取得
+	float GetMoveTime() { return m_fMoveTime; } // 移動時間の取得
 
 	// 静的メンバ関数
 	static CItem* Create(const TYPE eType, const CMapSystem::GRID& pos);
@@ -92,6 +95,9 @@ private:
 
 	D3DXVECTOR3 m_CollisionPos;	//当たり判定用の座標
 	D3DXVECTOR3 m_move;			//移動量	
+
+	D3DXVECTOR3 m_posBase; // 移動の中心座標
+	float m_fMoveTime; // 移動時間
 
 	CMapSystem::GRID m_Grid;	// マップ番号
 };

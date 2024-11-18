@@ -382,6 +382,31 @@ void CPlayer::Draw(void)
 	//ワールドマトリックスの初期化
 	D3DXMatrixIdentity(&m_mtxWorld);
 
+	D3DXMATRIX mtxShadow;	// シャドウマトリックス
+	D3DLIGHT9 light;		// ライト情報
+	D3DXVECTOR4 posLight;	// ライトの位置
+	D3DXVECTOR3 pos, normal;	// 平面上の任意の点、法線ベクトル
+	D3DXPLANE plane;		// 平面情報
+
+	// ライトの位置設定
+	pDevice->GetLight(0, &light);
+	posLight = D3DXVECTOR4(0.0f, 0.0f, 0.0f, 0.05f);
+
+	// 平面情報を生成
+	pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+	D3DXPlaneFromPointNormal(&plane, &pos, &normal);
+
+	// シャドウマトリックスの初期化
+	
+	
+	// シャドウマトリックスの作成
+	D3DXMatrixShadow(&mtxShadow, &posLight, &plane);
+	D3DXMatrixMultiply(&mtxShadow, &m_mtxWorld, &mtxShadow);
+
+	// シャドウマトリックスの設定
+
+
 	//向きを反映
 	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
 
