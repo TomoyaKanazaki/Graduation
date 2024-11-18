@@ -23,8 +23,12 @@ public:
 	void Uninit(void);
 	void Update(void);
 
+	D3DXVECTOR3 GetLight() { return m_vecAve; }
+
 private:
 	D3DLIGHT9 m_aLight[MAX_LIGHT];
+
+	D3DXVECTOR3 m_vecAve;
 };
 
 #endif
