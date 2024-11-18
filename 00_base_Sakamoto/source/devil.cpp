@@ -33,6 +33,7 @@
 #include "railblock.h"
 #include "RollRock.h"
 #include "sound.h"
+#include "scrollarrow.h"
 
 //===========================================
 // 定数定義
@@ -87,6 +88,8 @@ CDevil::CDevil(int nPriority) : CObject(nPriority)
 	m_MaxGrid = CMapSystem::GRID(NUM_WIGHT - 1, NUM_HEIGHT - 1);
 	m_DevilArrow = 0;
 	m_DevilArrowOld = 0;
+	m_ScrollArrow[0] = nullptr;
+	m_ScrollArrow[1] = nullptr;
 }
 
 //====================================================================
@@ -150,6 +153,18 @@ HRESULT CDevil::Init(void)
 
 	case CScene::MODE_RESULT:
 		break;
+	}
+
+	if (m_ScrollArrow[0] == nullptr)
+	{
+		m_ScrollArrow[0] = CScrollArrow::Create();
+		m_ScrollArrow[0]->SetPos((D3DXVECTOR3(80.0f, 120.0f, 0.0f)));
+	}
+
+	if (m_ScrollArrow[1] == nullptr)
+	{
+		m_ScrollArrow[1] = CScrollArrow::Create();
+		m_ScrollArrow[1]->SetPos((D3DXVECTOR3(1200.0f, 120.0f, 0.0f)));
 	}
 
 	// スローの生成
@@ -887,6 +902,31 @@ void CDevil::StateManager(void)
 
 				// スクロール方向指定
 				m_DevilArrow = rand() % 4;
+			}
+
+			for (int nCnt = 0; nCnt < 2; nCnt++)
+			{
+				if (m_ScrollArrow[nCnt] != nullptr)
+				{
+					switch (m_DevilArrow)
+					{
+					case 0:
+						m_ScrollArrow[nCnt]->SetState(CScrollArrow::Arrow::STATE_UP);
+						break;
+
+					case 1:
+						m_ScrollArrow[nCnt]->SetState(CScrollArrow::Arrow::STATE_DOWN);
+						break;
+
+					case 2:
+						m_ScrollArrow[nCnt]->SetState(CScrollArrow::Arrow::STATE_LEFT);
+						break;
+
+					case 3:
+						m_ScrollArrow[nCnt]->SetState(CScrollArrow::Arrow::STATE_RIGHT);
+						break;
+					}
+				}
 			}
 		}
 

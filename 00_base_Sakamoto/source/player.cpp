@@ -169,7 +169,7 @@ HRESULT CPlayer::Init(void)
 
 	if (m_pCharacter == nullptr)
 	{
-		m_pCharacter = CCharacter::Create("data\\TXT\\motion_tamagon.txt");
+		m_pCharacter = CCharacter::Create("data\\TXT\\motion_tamagon1P.txt");
 	}
 
 	m_pLifeUi = CLifeUi::Create();
@@ -360,6 +360,11 @@ void CPlayer::GameUpdate(void)
 	DebugProc::Print(DebugProc::POINT_LEFT, "[自分]位置 %f : %f : %f\n", m_pos.x, m_pos.y, m_pos.z);
 	DebugProc::Print(DebugProc::POINT_LEFT, "[自分]向き %f : %f : %f\n", m_rot.x, m_rot.y, m_rot.z);
 	DebugProc::Print(DebugProc::POINT_LEFT, "[自分]横 %d : 縦 %d\n", m_Grid.x, m_Grid.z);
+	DebugProc::Print(DebugProc::POINT_LEFT, "[自分]状態 : ");
+	auto str = magic_enum::enum_name(m_State);
+	DebugProc::Print(DebugProc::POINT_LEFT, str.data());
+	DebugProc::Print(DebugProc::POINT_LEFT, "\n");
+
 }
 
 //====================================================================
@@ -462,13 +467,6 @@ void CPlayer::Draw(void)
 //====================================================================
 void CPlayer::Move(void)
 {
-	//キーボードの取得
-	CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
-	CInputJoypad* pInputJoypad = CManager::GetInstance()->GetInputJoyPad();
-	D3DXVECTOR3 CameraRot = CManager::GetInstance()->GetCamera()->GetRot();
-
-	D3DXVECTOR3 NormarizeMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-
 	if (m_pCharacter == nullptr)
 	{
 		assert(("キャラクターがない", false));
@@ -477,64 +475,14 @@ void CPlayer::Move(void)
 
 	m_bInput = false;
 
-	//キーボードの移動処理
-	if ((pInputKeyboard->GetPress(DIK_W) && m_OKU && m_bGritCenter) ||
-		(pInputKeyboard->GetPress(DIK_W) && m_MoveState == MOVE_STATE_DOWN))
-	{
-		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
+	D3DXVECTOR3 CameraRot = CManager::GetInstance()->GetCamera()->GetRot();
+	D3DXVECTOR3 NormarizeMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
-		NormarizeMove.z += 1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
-		NormarizeMove.x += 1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
+	NormarizeMove = MoveInputKey(NormarizeMove);
 
-		m_bInput = true;
-		m_MoveState = MOVE_STATE_UP;
-	}
-	else if ((pInputKeyboard->GetPress(DIK_S) && m_OKD && m_bGritCenter) ||
-		(pInputKeyboard->GetPress(DIK_S) && m_MoveState == MOVE_STATE_UP))
-	{
-		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
+	NormarizeMove = MoveInputPadStick(NormarizeMove);
 
-		NormarizeMove.z += -1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
-		NormarizeMove.x += -1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
-
-		m_bInput = true;
-		m_MoveState = MOVE_STATE_DOWN;
-	}
-	else if ((pInputKeyboard->GetPress(DIK_A) && m_OKL && m_bGritCenter) ||
-		(pInputKeyboard->GetPress(DIK_A) && m_MoveState == MOVE_STATE_RIGHT))
-	{
-		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
-
-		NormarizeMove.x += -1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
-		NormarizeMove.z -= -1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
-
-		m_bInput = true;
-		m_MoveState = MOVE_STATE_LEFT;
-	}
-	else if ((pInputKeyboard->GetPress(DIK_D) && m_OKR && m_bGritCenter) ||
-		(pInputKeyboard->GetPress(DIK_D) && m_MoveState == MOVE_STATE_LEFT))
-	{
-		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
-
-		NormarizeMove.x += 1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
-		NormarizeMove.z -= 1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
-
-		m_bInput = true;
-		m_MoveState = MOVE_STATE_RIGHT;
-	}
-
-	if (pInputKeyboard->GetPress(DIK_W) == false && pInputKeyboard->GetPress(DIK_A) == false && pInputKeyboard->GetPress(DIK_S) == false && pInputKeyboard->GetPress(DIK_D) == false)
-	{
-		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
-
-		//左スティックによる前後移動	
-		m_move.z += pInputJoypad->Get_Stick_Left(0).y * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
-		m_move.x += pInputJoypad->Get_Stick_Left(0).y * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
-
-		//左スティックによる左右移動
-		m_move.x += pInputJoypad->Get_Stick_Left(0).x * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
-		m_move.z -= pInputJoypad->Get_Stick_Left(0).x * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
-	}
+	NormarizeMove = MoveInputPadKey(NormarizeMove);
 
 	if (m_bInput && m_State != STATE_ATTACK)
 	{
@@ -596,6 +544,179 @@ void CPlayer::Move(void)
 }
 
 //====================================================================
+//移動入力キーボード
+//====================================================================
+D3DXVECTOR3 CPlayer::MoveInputKey(D3DXVECTOR3 Move)
+{
+	//キーボードの取得
+	CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
+
+	//キーボードの移動処理
+	if ((pInputKeyboard->GetPress(DIK_W) && m_OKU && m_bGritCenter) ||
+		(pInputKeyboard->GetPress(DIK_W) && m_MoveState == MOVE_STATE_DOWN))
+	{
+		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
+
+		Move.z += 1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
+		Move.x += 1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
+
+		m_bInput = true;
+		m_MoveState = MOVE_STATE_UP;
+	}
+	else if ((pInputKeyboard->GetPress(DIK_S) && m_OKD && m_bGritCenter) ||
+		(pInputKeyboard->GetPress(DIK_S) && m_MoveState == MOVE_STATE_UP))
+	{
+		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
+
+		Move.z += -1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
+		Move.x += -1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
+
+		m_bInput = true;
+		m_MoveState = MOVE_STATE_DOWN;
+	}
+	else if ((pInputKeyboard->GetPress(DIK_A) && m_OKL && m_bGritCenter) ||
+		(pInputKeyboard->GetPress(DIK_A) && m_MoveState == MOVE_STATE_RIGHT))
+	{
+		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
+
+		Move.x += -1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
+		Move.z -= -1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
+
+		m_bInput = true;
+		m_MoveState = MOVE_STATE_LEFT;
+	}
+	else if ((pInputKeyboard->GetPress(DIK_D) && m_OKR && m_bGritCenter) ||
+		(pInputKeyboard->GetPress(DIK_D) && m_MoveState == MOVE_STATE_LEFT))
+	{
+		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
+
+		Move.x += 1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
+		Move.z -= 1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
+
+		m_bInput = true;
+		m_MoveState = MOVE_STATE_RIGHT;
+	}
+
+	return Move;
+}
+
+//====================================================================
+//移動入力パッドスティック
+//====================================================================
+D3DXVECTOR3 CPlayer::MoveInputPadStick(D3DXVECTOR3 Move)
+{
+	//キーボードの取得
+	CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
+	CInputJoypad* pInputJoypad = CManager::GetInstance()->GetInputJoyPad();
+
+	//キーボードの移動処理
+	if ((pInputJoypad->Get_Stick_Left(0).y > 0.0f && m_OKU && m_bGritCenter) ||
+		(pInputJoypad->Get_Stick_Left(0).y > 0.0f && m_MoveState == MOVE_STATE_DOWN))
+	{
+		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
+
+		Move.z += 1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
+		Move.x += 1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
+
+		m_bInput = true;
+		m_MoveState = MOVE_STATE_UP;
+	}
+	else if ((pInputJoypad->Get_Stick_Left(0).y < 0.0f && m_OKD && m_bGritCenter) ||
+		(pInputJoypad->Get_Stick_Left(0).y < 0.0f && m_MoveState == MOVE_STATE_UP))
+	{
+		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
+
+		Move.z += -1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
+		Move.x += -1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
+
+		m_bInput = true;
+		m_MoveState = MOVE_STATE_DOWN;
+	}
+	else if ((pInputJoypad->Get_Stick_Left(0).x < 0.0f && m_OKL && m_bGritCenter) ||
+		(pInputJoypad->Get_Stick_Left(0).x < 0.0f && m_MoveState == MOVE_STATE_RIGHT))
+	{
+		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
+
+		Move.x += -1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
+		Move.z -= -1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
+
+		m_bInput = true;
+		m_MoveState = MOVE_STATE_LEFT;
+	}
+	else if ((pInputJoypad->Get_Stick_Left(0).x > 0.0f && m_OKR && m_bGritCenter) ||
+		(pInputJoypad->Get_Stick_Left(0).x > 0.0f && m_MoveState == MOVE_STATE_LEFT))
+	{
+		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
+
+		Move.x += 1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
+		Move.z -= 1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
+
+		m_bInput = true;
+		m_MoveState = MOVE_STATE_RIGHT;
+	}
+
+	return Move;
+}
+
+//====================================================================
+//移動入力パッドキー
+//====================================================================
+D3DXVECTOR3 CPlayer::MoveInputPadKey(D3DXVECTOR3 Move)
+{
+	//キーボードの取得
+	CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
+	CInputJoypad* pInputJoypad = CManager::GetInstance()->GetInputJoyPad();
+
+	//キーボードの移動処理
+	if ((pInputJoypad->GetPress(CInputJoypad::BUTTON_UP, 0) && m_OKU && m_bGritCenter) ||
+		(pInputJoypad->GetPress(CInputJoypad::BUTTON_UP, 0) && m_MoveState == MOVE_STATE_DOWN))
+	{
+		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
+
+		Move.z += 1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
+		Move.x += 1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
+
+		m_bInput = true;
+		m_MoveState = MOVE_STATE_UP;
+	}
+	else if ((pInputJoypad->GetPress(CInputJoypad::BUTTON_DOWN, 0) && m_OKD && m_bGritCenter) ||
+		(pInputJoypad->GetPress(CInputJoypad::BUTTON_DOWN, 0) && m_MoveState == MOVE_STATE_UP))
+	{
+		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
+
+		Move.z += -1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
+		Move.x += -1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
+
+		m_bInput = true;
+		m_MoveState = MOVE_STATE_DOWN;
+	}
+	else if ((pInputJoypad->GetPress(CInputJoypad::BUTTON_LEFT, 0) && m_OKL && m_bGritCenter) ||
+		(pInputJoypad->GetPress(CInputJoypad::BUTTON_LEFT, 0) && m_MoveState == MOVE_STATE_RIGHT))
+	{
+		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
+
+		Move.x += -1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
+		Move.z -= -1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
+
+		m_bInput = true;
+		m_MoveState = MOVE_STATE_LEFT;
+	}
+	else if ((pInputJoypad->GetPress(CInputJoypad::BUTTON_RIGHT, 0) && m_OKR && m_bGritCenter) ||
+		(pInputJoypad->GetPress(CInputJoypad::BUTTON_RIGHT, 0) && m_MoveState == MOVE_STATE_LEFT))
+	{
+		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
+
+		Move.x += 1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
+		Move.z -= 1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
+
+		m_bInput = true;
+		m_MoveState = MOVE_STATE_RIGHT;
+	}
+
+	return Move;
+}
+
+//====================================================================
 //移動方向処理
 //====================================================================
 void CPlayer::Rot(void)
@@ -611,7 +732,7 @@ void CPlayer::Rot(void)
 	fRotMove = m_rot.y;
 	fRotDest = CManager::GetInstance()->GetCamera()->GetRot().y;
 
-	if (pInputKeyboard->GetPress(DIK_W) == true || pInputKeyboard->GetPress(DIK_A) == true || pInputKeyboard->GetPress(DIK_S) == true || pInputKeyboard->GetPress(DIK_D) == true)
+	if (m_State == STATE_WALK)
 	{
 		m_rot.y = atan2f(-m_move.x, -m_move.z);
 	}
@@ -628,8 +749,20 @@ void CPlayer::Attack(void)
 	{
 		//キーボードの取得
 		CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
+		CInputJoypad* pInputJoypad = CManager::GetInstance()->GetInputJoyPad();
 
 		if (pInputKeyboard->GetTrigger(DIK_SPACE) == true)
+		{
+			// 火炎放射
+			CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_FIRE);
+
+			MyEffekseer::EffectCreate(CMyEffekseer::TYPE_HIT, false, useful::CalcMatrix(m_pos, m_rot, m_UseMultiMatrix), m_rot);
+
+			CFire::Create("data\\model\\fireball.x", m_pos, m_rot);
+			m_State = STATE_ATTACK;
+			m_nStateCount = FIRE_STOPTIME;
+		}
+		else if (pInputJoypad->GetTrigger(CInputJoypad::BUTTON_B, 0))
 		{
 			// 火炎放射
 			CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_FIRE);
@@ -789,14 +922,14 @@ void CPlayer::StateManager(void)
 
 		if (m_pUpEgg == nullptr)
 		{
-			m_pUpEgg = CObjectX::Create("data\\MODEL\\00_tamagon\\upper_egg.x");
+			m_pUpEgg = CObjectX::Create("data\\MODEL\\00_Player\\1P\\upper_egg.x");
 			m_pUpEgg->SetMatColor(D3DXCOLOR(0.263529f, 0.570980f, 0.238431f, 1.0f));
 			m_pUpEgg->SetMultiMatrix(true);
 		}
 
 		if (m_pDownEgg == nullptr)
 		{
-			m_pDownEgg = CObjectX::Create("data\\MODEL\\00_tamagon\\downer_egg.x");
+			m_pDownEgg = CObjectX::Create("data\\MODEL\\00_Player\\1P\\downer_egg.x");
 			m_pDownEgg->SetMatColor(D3DXCOLOR(0.263529f, 0.570980f, 0.238431f, 1.0f));
 			m_pDownEgg->SetMultiMatrix(true);
 		}

@@ -91,11 +91,6 @@
     <ClCompile Include="source\renderer.cpp" />
     <ClCompile Include="source\result.cpp" />
     <ClCompile Include="source\RollRock.cpp" />
-    <ClCompile Include="source\SampleLevelModel.cpp" />
-    <ClCompile Include="source\SampleObj2D.cpp" />
-    <ClCompile Include="source\SampleObj3D.cpp" />
-    <ClCompile Include="source\SampleObjBillboard.cpp" />
-    <ClCompile Include="source\SampleObjX.cpp" />
     <ClCompile Include="source\score.cpp" />
     <ClCompile Include="source\scrollarrow.cpp" />
     <ClCompile Include="source\shrinkingBillboard.cpp" />
@@ -139,6 +134,7 @@
     <ClInclude Include="source\input.h" />
     <ClInclude Include="source\item.h" />
     <ClInclude Include="source\LevelModelEffect.h" />
+    <ClInclude Include="source\lib\magic_enum.hpp" />
     <ClInclude Include="source\LifeUi.h" />
     <ClInclude Include="source\light.h" />
     <ClInclude Include="source\listManager.h" />
@@ -182,11 +178,6 @@
     <ClInclude Include="source\renderer.h" />
     <ClInclude Include="source\result.h" />
     <ClInclude Include="source\RollRock.h" />
-    <ClInclude Include="source\SampleLevelModel.h" />
-    <ClInclude Include="source\SampleObj2D.h" />
-    <ClInclude Include="source\SampleObj3D.h" />
-    <ClInclude Include="source\SampleObjBillboard.h" />
-    <ClInclude Include="source\SampleObjX.h" />
     <ClInclude Include="source\score.h" />
     <ClInclude Include="source\scrollarrow.h" />
     <ClInclude Include="source\shrinkingBillboard.h" />
@@ -278,7 +269,7 @@
       <SDLCheck>true</SDLCheck>
       <PrecompiledHeaderFile>precompile.h</PrecompiledHeaderFile>
       <ForcedIncludeFiles>precompile.h</ForcedIncludeFiles>
-      <AdditionalIncludeDirectories>source\lib\Effekseer\Include\EffekseerRendererGL;source\lib\Effekseer\Include\EffekseerRendererDX9;source\lib\Effekseer\Include\Effekseer;..\hidapi;source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>source\lib;source\lib\Effekseer\Include\EffekseerRendererGL;source\lib\Effekseer\Include\EffekseerRendererDX9;source\lib\Effekseer\Include\Effekseer;..\hidapi;source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -318,7 +309,7 @@
       <SDLCheck>true</SDLCheck>
       <PrecompiledHeaderFile>precompile.h</PrecompiledHeaderFile>
       <ForcedIncludeFiles>precompile.h</ForcedIncludeFiles>
-      <AdditionalIncludeDirectories>source\lib\Effekseer\Include\EffekseerRendererGL;source\lib\Effekseer\Include\EffekseerRendererDX9;source\lib\Effekseer\Include\Effekseer;..\hidapi;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>source\lib;source\lib\Effekseer\Include\EffekseerRendererGL;source\lib\Effekseer\Include\EffekseerRendererDX9;source\lib\Effekseer\Include\Effekseer;..\hidapi;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <SupportJustMyCode>true</SupportJustMyCode>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <LanguageStandard>stdcpp17</LanguageStandard>

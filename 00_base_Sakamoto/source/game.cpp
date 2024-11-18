@@ -16,7 +16,6 @@
 #include "DevilHole.h"
 #include "renderer.h"
 #include "slowManager.h"
-#include "scrollarrow.h"
 #include "enemyYoungDevil.h"
 #include "RailBlock.h"
 #include "RollRock.h"
@@ -158,8 +157,8 @@ HRESULT CGame::Init(void)
 	m_pPlayer[0] = CPlayer::Create();
 	m_pPlayer[0]->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(11,9)));
 
-	m_pPlayer[1] = CPlayer::Create();
-	m_pPlayer[1]->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(11, 4)));
+	//m_pPlayer[1] = CPlayer::Create();
+	//m_pPlayer[1]->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(11, 4)));
 
 	m_pScore = CScore::Create();
 	m_pScore->SetScore(CManager::GetInstance()->GetEndScore());
@@ -230,13 +229,6 @@ HRESULT CGame::Init(void)
 	CRollRock *pRock = CRollRock::Create("data\\MODEL\\BlockTest.x");
 	D3DXVECTOR3 RockPos = CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(16, 2));
 	pRock->SetPos(D3DXVECTOR3(RockPos.x, 50.0f, RockPos.z));
-
-	CScrollArrow* pScrollAllow = nullptr;
-	pScrollAllow = CScrollArrow::Create();
-	pScrollAllow->SetPos((D3DXVECTOR3(80.0f, 120.0f, 0.0f)));
-
-	pScrollAllow = CScrollArrow::Create();
-	pScrollAllow->SetPos((D3DXVECTOR3(1200.0f, 120.0f, 0.0f)));
 
 	// “G‚Ì¶¬
 	CEnemy::Create(CEnemy::ENEMY_MEDAMAN, CMapSystem::GRID(9, 7));
@@ -388,6 +380,20 @@ void CGame::Update(void)
 				CManager::GetInstance()->SetEndScore(m_pScore->GetScore());
 			}
 		}
+
+#ifdef _DEBUG
+
+		if (pInputKeyboard->GetTrigger(DIK_F3))
+		{
+			StageClear(0);
+		}
+
+		if (pInputKeyboard->GetTrigger(DIK_F4))
+		{
+			StageClear(1);
+		}
+
+#endif // _DEBUG
 	}
 }
 

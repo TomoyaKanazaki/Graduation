@@ -21,7 +21,7 @@
 #include "MyEffekseer.h"
 
 #ifdef _DEBUG
-#define SET_MODE (CScene::MODE_GAME)
+#define SET_MODE (CScene::MODE_TITLE)
 #else
 #define SET_MODE (CScene::MODE_GAME)
 #endif // _DEBUG
@@ -358,7 +358,7 @@ void CManager::Update(void)
 {
 	//デバッグ表示
 	DebugProc::Print(DebugProc::POINT_LEFT, "-----デバッグ表示-----\n");
-	DebugProc::Print(DebugProc::POINT_LEFT, "FPS : %d\n", GetFps());
+	DebugProc::Print(DebugProc::POINT_CENTER, "FPS : %d\n", GetFps());
 
 	//カメラの更新処理
 	m_pCamera->Update();

@@ -5,9 +5,6 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="ソース ファイル\99_Sample">
-      <UniqueIdentifier>{5048c720-4673-4878-aba5-13bf66c9e1c2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\00_System">
       <UniqueIdentifier>{e5cf948b-ffa7-4026-82c9-c36bc4e1b053}</UniqueIdentifier>
     </Filter>
@@ -46,21 +43,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\SampleLevelModel.cpp">
-      <Filter>ソース ファイル\99_Sample</Filter>
-    </ClCompile>
-    <ClCompile Include="source\SampleObj2D.cpp">
-      <Filter>ソース ファイル\99_Sample</Filter>
-    </ClCompile>
-    <ClCompile Include="source\SampleObj3D.cpp">
-      <Filter>ソース ファイル\99_Sample</Filter>
-    </ClCompile>
-    <ClCompile Include="source\SampleObjBillboard.cpp">
-      <Filter>ソース ファイル\99_Sample</Filter>
-    </ClCompile>
-    <ClCompile Include="source\SampleObjX.cpp">
-      <Filter>ソース ファイル\99_Sample</Filter>
-    </ClCompile>
     <ClCompile Include="source\object.cpp">
       <Filter>ソース ファイル\02_Object</Filter>
     </ClCompile>
@@ -309,21 +291,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\SampleLevelModel.h">
-      <Filter>ソース ファイル\99_Sample</Filter>
-    </ClInclude>
-    <ClInclude Include="source\SampleObj2D.h">
-      <Filter>ソース ファイル\99_Sample</Filter>
-    </ClInclude>
-    <ClInclude Include="source\SampleObj3D.h">
-      <Filter>ソース ファイル\99_Sample</Filter>
-    </ClInclude>
-    <ClInclude Include="source\SampleObjBillboard.h">
-      <Filter>ソース ファイル\99_Sample</Filter>
-    </ClInclude>
-    <ClInclude Include="source\SampleObjX.h">
-      <Filter>ソース ファイル\99_Sample</Filter>
-    </ClInclude>
     <ClInclude Include="source\2DUI_edit.h">
       <Filter>ソース ファイル\00_System</Filter>
     </ClInclude>
@@ -568,6 +535,9 @@
       <Filter>ソース ファイル\00_System</Filter>
     </ClInclude>
     <ClInclude Include="source\MyEffekseer.h">
+      <Filter>ソース ファイル\11_library</Filter>
+    </ClInclude>
+    <ClInclude Include="source\lib\magic_enum.hpp">
       <Filter>ソース ファイル\11_library</Filter>
     </ClInclude>
   </ItemGroup>
