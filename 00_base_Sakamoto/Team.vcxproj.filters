@@ -289,6 +289,9 @@
     <ClCompile Include="source\mask.cpp">
       <Filter>ソース ファイル\00_System</Filter>
     </ClCompile>
+    <ClCompile Include="source\shadow.cpp">
+      <Filter>ソース ファイル\03_Direction</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\2DUI_edit.h">
@@ -539,6 +542,9 @@
     </ClInclude>
     <ClInclude Include="source\lib\magic_enum.hpp">
       <Filter>ソース ファイル\11_library</Filter>
+    </ClInclude>
+    <ClInclude Include="source\shadow.h">
+      <Filter>ソース ファイル\03_Direction</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
