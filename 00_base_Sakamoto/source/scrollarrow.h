@@ -19,7 +19,7 @@ public:
 	~CScrollArrow();
 
 	//プレイヤーの状態
-	enum STATE
+	enum Arrow
 	{
 		STATE_UP = 0,	//↑
 		STATE_DOWN,		//↓
@@ -36,11 +36,10 @@ public:
 	void Draw(void);
 
 	//取得処理・設定処理
-	int GetSample(void) { return m_nSample; }
-	void SetSample(int Sample) { m_nSample = Sample; }
+	Arrow GetState(void) { return m_State; }
+	void SetState(Arrow Sample) { m_State = Sample; }
 
 private:
-	int m_nSample;							//サンプル変数
-	STATE m_State;				//状態
+	Arrow m_State;				//状態
 };
 #endif
