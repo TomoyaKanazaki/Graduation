@@ -372,7 +372,7 @@ void CCamera::FollowCamera(void)
 	CInputMouse* pInputMouse = CManager::GetInstance()->GetInputMouse();
 
 	//プレイヤーの取得
-	CPlayer* pPlayer = CGame::GetPlayer();
+	CPlayer* pPlayer = CGame::GetPlayer(0);
 	//ボスの取得
 	CBoss* pBoss = CGame::GetBoss();
 
@@ -538,7 +538,7 @@ void CCamera::FixedNow(void)
 void CCamera::BetWeen(void)
 {
 	//プレイヤーの取得
-	D3DXVECTOR3 PlayerPos = CGame::GetPlayer()->GetPos();
+	D3DXVECTOR3 PlayerPos = CGame::GetPlayer(0)->GetPos();
 	//ボスの取得
 	D3DXVECTOR3 BossPos = INITVECTOR3;
 
@@ -672,7 +672,7 @@ void CCamera::FPSCamera(void)
 	{
 	case CScene::MODE_GAME:
 
-		pPlayer = CGame::GetPlayer();
+		pPlayer = CGame::GetPlayer(0);
 
 		break;
 
@@ -707,7 +707,7 @@ void CCamera::FPSComplementCamera(void)
 	{
 	case CScene::MODE_GAME:
 
-		pPlayer = CGame::GetPlayer();
+		pPlayer = CGame::GetPlayer(0);
 
 		break;
 
@@ -761,7 +761,7 @@ void CCamera::UltimateCamera(void)
 	{
 	case CScene::MODE_GAME:
 
-		pPlayer = CGame::GetPlayer();
+		pPlayer = CGame::GetPlayer(0);
 
 		break;
 

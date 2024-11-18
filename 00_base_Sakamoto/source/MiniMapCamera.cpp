@@ -255,7 +255,7 @@ void CMiniMapCamera::DownviewCamera(void)
 	{
 	case CScene::MODE_GAME:
 
-		pPlayer = CGame::GetPlayer();
+		pPlayer = CGame::GetPlayer(0);
 
 		break;
 

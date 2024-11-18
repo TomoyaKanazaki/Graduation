@@ -9,6 +9,8 @@
 
 #include "manager.h"
 
+#define NUM_PLAYER (2)
+
 //前方宣言
 class CTutorialUI;
 class CPlayer;
@@ -47,7 +49,7 @@ public:
 	virtual void Update(void);
 	virtual void Draw(void);
 
-	static CPlayer* GetPlayer(void) { return m_pPlayer; }
+	static CPlayer* GetPlayer(int Num) { return m_pPlayer[Num]; }
 	static CDevil* GetDevil(void) { return m_pDevil; }
 	static CBoss* GetBoss(void) { return m_pBoss; }
 	static CPause* GetPause(void) { return m_pPause; }
@@ -87,7 +89,7 @@ private:
 	void Sample(void);								//サンプル系が入ってるヨ
 
 	//インゲーム用変数
-	static CPlayer* m_pPlayer;						//プレイヤーのポインタ
+	static CPlayer* m_pPlayer[NUM_PLAYER];			//プレイヤーのポインタ
 	static CDevil* m_pDevil;						//デビルのポインタ
 
 	static int m_nNumBowabowa;						//ボワボワの数
