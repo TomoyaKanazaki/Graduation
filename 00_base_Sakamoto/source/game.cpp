@@ -16,7 +16,6 @@
 #include "DevilHole.h"
 #include "renderer.h"
 #include "slowManager.h"
-#include "scrollarrow.h"
 #include "enemyYoungDevil.h"
 #include "RailBlock.h"
 #include "RollRock.h"
@@ -230,13 +229,6 @@ HRESULT CGame::Init(void)
 	CRollRock *pRock = CRollRock::Create("data\\MODEL\\BlockTest.x");
 	D3DXVECTOR3 RockPos = CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(16, 2));
 	pRock->SetPos(D3DXVECTOR3(RockPos.x, 50.0f, RockPos.z));
-
-	CScrollArrow* pScrollAllow = nullptr;
-	pScrollAllow = CScrollArrow::Create();
-	pScrollAllow->SetPos((D3DXVECTOR3(80.0f, 120.0f, 0.0f)));
-
-	pScrollAllow = CScrollArrow::Create();
-	pScrollAllow->SetPos((D3DXVECTOR3(1200.0f, 120.0f, 0.0f)));
 
 	// ìGÇÃê∂ê¨
 	CEnemy::Create(CEnemy::ENEMY_MEDAMAN, CMapSystem::GRID(9, 7));

@@ -25,7 +25,6 @@ CScrollArrow::CScrollArrow(int nPriority) : CObject2D(nPriority)
 {
 	SetWidth(SAMPLE_WIGHT);
 	SetHeight(SAMPLE_HEIGHT);
-	m_nSample = 0;
 }
 
 //====================================================================

@@ -24,8 +24,7 @@ class CUltimate;
 class CSlowManager;
 class CObjectBillboard;
 class CNumber;
-class CMoveHelpUI;
-class CParameterUI;
+class CScrollArrow;
 
 class CEnemy;
 class CBoss;
@@ -144,6 +143,7 @@ private:
 	D3DXVECTOR3 m_DevilRot;			// デビルパワーによって傾く値
 	int m_DevilArrow;				// デビルパワーの方向
 	int m_DevilArrowOld;			// 過去のデビルパワーの方向
+	CScrollArrow* m_ScrollArrow[2];	// スクロール方向のUI 
 
 	CCharacter* m_pCharacter;		// キャラクターのクラス
 
