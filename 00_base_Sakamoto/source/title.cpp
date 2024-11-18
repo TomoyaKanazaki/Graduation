@@ -80,12 +80,12 @@ HRESULT CTitle::Init(void)
 	m_pMeshDome = CObjmeshDome::Create();
 	if (m_pMeshDome)
 	{
-		m_pMeshDome->SetTexture("data\\TEXTURE\\sky.jpg");
+		//m_pMeshDome->SetTexture("data\\TEXTURE\\sky.jpg");
 	}
 
 	CObjmeshField* pMeshField = CObjmeshField::Create(21, 21);
 	pMeshField->SetPos(INITVECTOR3);
-	pMeshField->SetTexture("data\\TEXTURE\\field00.jpg");
+	//pMeshField->SetTexture("data\\TEXTURE\\field00.jpg");
 
 	// タイトル文字
 	m_pLogo = CObject2D::Create();
@@ -94,7 +94,7 @@ HRESULT CTitle::Init(void)
 	m_pLogo->SetHeight(400.0f);
 	if (pTexture)
 	{
-		m_pLogo->SetIdx(pTexture->Regist("data\\TEXTURE\\title\\logo001.png"));
+		//m_pLogo->SetIdx(pTexture->Regist("data\\TEXTURE\\title\\logo001.png"));
 	}
 
 	// ボタン
@@ -105,7 +105,7 @@ HRESULT CTitle::Init(void)
 	//m_pTitleButton->SetColorA(0.2f);
 	if (pTexture)
 	{
-		m_pTitleButton->SetIdx(pTexture->Regist("data\\TEXTURE\\title\\titleButton.png"));
+		//m_pTitleButton->SetIdx(pTexture->Regist("data\\TEXTURE\\title\\titleButton.png"));
 	}
 
 	// カーソルの生成
