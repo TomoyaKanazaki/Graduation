@@ -10,6 +10,8 @@
 #include "texture.h"
 #include "XModel.h"
 #include "enemy.h"
+#include "game.h"
+#include "objmeshField.h"
 
 //==========================================
 // 定数定義
@@ -90,13 +92,14 @@ HRESULT CFire::Init(char* pModelName)
 	CObjectX::Init(pModelName);
 
 	//マップとのマトリックスの掛け合わせをオンにする
-	SetMultiMatrix(true);
+	SetUseMultiMatrix(&CGame::GetMapField()->GetMatrix());
+	//SetMultiMatrix(true);
 
 	// 炎の体力
 	m_nLife = FIRE_LIFE;
 
 	// エフェクトを生成する
-	m_pEffect = MyEffekseer::EffectCreate(CMyEffekseer::TYPE_FIRE, false, useful::CalcMatrix(m_pos, m_rot, GetUseMultiMatrix()), m_rot);
+	m_pEffect = MyEffekseer::EffectCreate(CMyEffekseer::TYPE_FIRE, false, useful::CalcMatrix(m_pos, m_rot, *GetUseMultiMatrix()), m_rot);
 
 	// 炎の速度
 	D3DXVECTOR3 move = -D3DXVECTOR3(FIRE_SPEED * sinf(m_rot.y), 0.0f, FIRE_SPEED * cosf(m_rot.y));
@@ -158,8 +161,8 @@ void CFire::Update(void)
 	// エフェクトを動かす
 	if (m_pEffect != nullptr)
 	{
-		D3DXMATRIX mat = GetUseMultiMatrix();
-		D3DXVECTOR3 ef = useful::CalcMatrix(m_pos, m_rot, GetUseMultiMatrix());
+		D3DXMATRIX mat = *GetUseMultiMatrix();
+		D3DXVECTOR3 ef = useful::CalcMatrix(m_pos, m_rot, *GetUseMultiMatrix());
 		m_pEffect->SetPosition(ef);
 	}
 

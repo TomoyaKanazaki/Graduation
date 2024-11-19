@@ -11,6 +11,8 @@
 #include "XModel.h"
 #include "objectX.h"
 #include "MapSystem.h"
+#include "game.h"
+#include "objmeshField.h"
 
 //==========================================
 //  定数定義
@@ -211,7 +213,8 @@ void CRail::PrevSet(RAIL_POS Set)
 	{
 		m_pRailModel[0] = CObjectX::Create("data\\MODEL\\TestRail.x");
 		m_pRailModel[0]->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(m_nMapWidth, m_nMapHeight)));
-		m_pRailModel[0]->SetMultiMatrix(true);
+		m_pRailModel[0]->SetUseMultiMatrix(&CGame::GetMapField()->GetMatrix());
+		//m_pRailModel[0]->SetMultiMatrix(true);
 
 		switch (Set)
 		{
@@ -247,7 +250,8 @@ void CRail::NextSet(RAIL_POS Set)
 	{
 		m_pRailModel[1] = CObjectX::Create("data\\MODEL\\TestRail.x");
 		m_pRailModel[1]->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(m_nMapWidth, m_nMapHeight)));
-		m_pRailModel[1]->SetMultiMatrix(true);
+		m_pRailModel[1]->SetUseMultiMatrix(&CGame::GetMapField()->GetMatrix());
+		//m_pRailModel[1]->SetMultiMatrix(true);
 
 		//伸ばす前のレールの位置を取得する
 		int nMapWight = GetWightNumber();

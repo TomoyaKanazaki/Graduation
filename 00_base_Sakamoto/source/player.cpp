@@ -111,7 +111,8 @@ m_pUpEgg(nullptr),
 m_pDownEgg(nullptr),
 m_EggMove(INITVECTOR3),
 m_bInvincible(true),
-m_nInvincibleCount(0)
+m_nInvincibleCount(0),
+m_UseMultiMatrix(nullptr)
 {
 
 }
@@ -171,7 +172,7 @@ HRESULT CPlayer::Init(void)
 	m_MoveState = MOVE_STATE_WAIT;
 
 	//マップとのマトリックスの掛け合わせをオンにする
-	SetMultiMatrix(true);
+	SetUseMultiMatrix(&CGame::GetMapField()->GetMatrix());
 
 	if (m_pCharacter == nullptr)
 	{
@@ -448,14 +449,14 @@ void CPlayer::Draw(void)
 
 	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
 
-	if (m_bMultiMatrix)
+	if (m_UseMultiMatrix != nullptr)
 	{
-		SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
+		SetUseMultiMatrix(&CGame::GetMapField()->GetMatrix());
 
 		//算出したマトリクスをかけ合わせる
 		D3DXMatrixMultiply(&m_mtxWorld,
 			&m_mtxWorld,
-			&m_UseMultiMatrix);
+			m_UseMultiMatrix);
 	}
 
 	//ワールドマトリックスの設定
@@ -954,14 +955,16 @@ void CPlayer::StateManager(void)
 		{
 			m_pUpEgg = CObjectX::Create("data\\MODEL\\00_Player\\1P\\upper_egg.x");
 			m_pUpEgg->SetMatColor(D3DXCOLOR(0.263529f, 0.570980f, 0.238431f, 1.0f));
-			m_pUpEgg->SetMultiMatrix(true);
+			m_pUpEgg->SetUseMultiMatrix(&CGame::GetMapField()->GetMatrix());
+			//m_pUpEgg->SetMultiMatrix(true);
 		}
 
 		if (m_pDownEgg == nullptr)
 		{
 			m_pDownEgg = CObjectX::Create("data\\MODEL\\00_Player\\1P\\downer_egg.x");
 			m_pDownEgg->SetMatColor(D3DXCOLOR(0.263529f, 0.570980f, 0.238431f, 1.0f));
-			m_pDownEgg->SetMultiMatrix(true);
+			m_pDownEgg->SetUseMultiMatrix(&CGame::GetMapField()->GetMatrix());
+			//m_pDownEgg->SetMultiMatrix(true);
 		}
 		break;
 	}

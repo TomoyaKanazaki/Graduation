@@ -171,6 +171,13 @@ HRESULT CGame::Init(void)
 		m_pPlayer[1]->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(11, 4)));
 		m_pPlayer[1]->SetPlayNumber(1);
 	}
+	else
+	{
+		//ƒvƒŒƒCƒ„[‚Ì¶¬
+		m_pPlayer[0] = CPlayer::Create();
+		m_pPlayer[0]->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(11, 9)));
+		m_pPlayer[0]->SetPlayNumber(0);
+	}
 
 	m_pScore = CScore::Create();
 	m_pScore->SetScore(CManager::GetInstance()->GetEndScore());

@@ -9,6 +9,7 @@
 #include "renderer.h"
 #include "manager.h"
 #include "game.h"
+#include "objmeshField.h"
 #include "texture.h"
 
 //==========================================
@@ -45,6 +46,7 @@ CObjmeshCube::CObjmeshCube(int nPriority) :CObject(nPriority)
 	UninitPos = INITVECTOR3;
 	m_nLife = -1;
 	m_fDel = 0.00000000000f;
+	m_UseMultiMatrix = nullptr;
 }
 
 //====================================================================
@@ -344,6 +346,11 @@ void CObjmeshCube::Update(void)
 
 }
 
+void CObjmeshCube::SetUseMultiMatrix(D3DXMATRIX* Set)
+{
+	m_UseMultiMatrix = Set; 
+}
+
 //====================================================================
 //描画処理
 //====================================================================
@@ -370,12 +377,12 @@ void CObjmeshCube::Draw(void)
 
 	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
 
-	if (m_bMultiMatrix)
+	if (m_UseMultiMatrix != nullptr)
 	{
 		//算出したマトリクスをかけ合わせる
 		D3DXMatrixMultiply(&m_mtxWorld,
 			&m_mtxWorld,
-			&m_UseMultiMatrix);
+			m_UseMultiMatrix);
 	}
 
 	//ワールドマトリックスの設定

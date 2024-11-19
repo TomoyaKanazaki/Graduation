@@ -81,10 +81,8 @@ public:
 	void SetEnemyType(ENEMY_TYPE Type) { m_EnemyType = Type; }
 	ENEMY_TYPE GetEnemyType(void) { return m_EnemyType; }
 
-	void SetMultiMatrix(bool Set) { m_bMultiMatrix = Set; }
-	bool GetMultiMatrix(void) { return m_bMultiMatrix; }
-	void SetUseMultiMatrix(D3DXMATRIX Set) { m_UseMultiMatrix = Set; }
-	D3DXMATRIX GetUseMultiMatrix(void) { return m_UseMultiMatrix; }
+	void SetUseMultiMatrix(D3DXMATRIX *Set) { m_UseMultiMatrix = Set; }
+	D3DXMATRIX *GetUseMultiMatrix(void) { return m_UseMultiMatrix; }
 
 	// マップ番号の設定
 	virtual void SetGrid(const CMapSystem::GRID& pos) { m_Grid = pos; }
@@ -145,8 +143,7 @@ private:
 	CCharacter* m_pCharacter;
 
 	//マップとのマトリックス情報
-	bool m_bMultiMatrix;					//マトリックスの掛け合わせをするかどうか
-	D3DXMATRIX m_UseMultiMatrix;			//掛け合わせるマトリックス
+	D3DXMATRIX *m_UseMultiMatrix;			//掛け合わせるマトリックス
 
 	// 静的メンバ変数
 	static CListManager<CEnemy>* m_pList; // オブジェクトリスト
