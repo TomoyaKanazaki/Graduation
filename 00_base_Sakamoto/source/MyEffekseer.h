@@ -31,6 +31,7 @@ public:
 		TYPE_SMOKE,		// スモーク
 		TYPE_HIT,		// ヒット
 		TYPE_GETITEM,	// 聖書、十字架取得
+		TYPE_EAT,		// 捕食
 		TYPE_MAX,
 		TYPE_NONE  // なんもない
 	};
