@@ -31,6 +31,7 @@ public:
 		TYPE_FIRE = 0,	// ファイアボール
 		TYPE_CHARGE,	// 火炎放射チャージ
 		TYPE_SMOKE,		// スモーク
+		TYPE_HIT,		// ヒット
 		TYPE_MAX,
 		TYPE_NONE  // なんもない
 	};
