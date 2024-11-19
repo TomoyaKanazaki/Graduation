@@ -96,7 +96,7 @@ HRESULT CFire::Init(char* pModelName)
 	m_nLife = FIRE_LIFE;
 
 	// エフェクトを生成する
-	m_pEffect = MyEffekseer::EffectCreate(CMyEffekseer::TYPE_CHARGE, false, useful::CalcMatrix(m_pos, m_rot, GetUseMultiMatrix()), m_rot);
+	m_pEffect = MyEffekseer::EffectCreate(CMyEffekseer::TYPE_FIRE, false, useful::CalcMatrix(m_pos, m_rot, GetUseMultiMatrix()), m_rot);
 
 	// 炎の速度
 	D3DXVECTOR3 move = -D3DXVECTOR3(FIRE_SPEED * sinf(m_rot.y), 0.0f, FIRE_SPEED * cosf(m_rot.y));
@@ -133,7 +133,7 @@ void CFire::Uninit(void)
 	// エフェクトを消去
 	if (m_pEffect != nullptr)
 	{
-		m_pEffect->Uninit();
+		//m_pEffect->Uninit();
 	}
 
 	CObjectX::Uninit();
