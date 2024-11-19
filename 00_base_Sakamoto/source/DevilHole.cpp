@@ -11,6 +11,7 @@
 #include "XModel.h"
 #include "player.h"
 #include "effect.h"
+#include "objmeshField.h"
 #include "game.h"
 
 //==========================================
@@ -109,8 +110,8 @@ HRESULT CDevilHole::Init(char* pModelName)
 		break;
 	}
 
-	//マップとのマトリックスの掛け合わせをオンにする
-	SetMultiMatrix(true);
+	////マップとのマトリックスの掛け合わせをオンにする
+	//SetUseMultiMatrix(&CGame::GetMapField()->GetMatrix());
 
 	if (m_pList == nullptr)
 	{// リストマネージャー生成
