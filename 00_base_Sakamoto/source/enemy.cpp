@@ -246,14 +246,14 @@ void CEnemy::Update(void)
 	// 位置更新処理
 	//UpdatePos();
 
-	// 自分の番号を設定
-	m_Grid = CMapSystem::GetInstance()->CMapSystem::CalcGrid(m_pos);
-
 	// プレイヤーへの最短経路探索
 	Coordinate();
 
 	// 最短系露をたどる
 	Route();
+
+	// 自分の番号を設定
+	m_Grid = CMapSystem::GetInstance()->CMapSystem::CalcGrid(m_pos);
 
 	//床の判定
 	if (m_pos.y <= 0.0f)
