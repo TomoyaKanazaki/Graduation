@@ -130,8 +130,6 @@ CEffekseer* CMyEffekseer::CreateEffect(const TYPE eType, ::Effekseer::Vector3D p
 	// 初期化処理
 	pEffect->Init(pos, rot, scale, bLoop);
 
-	m_EffectList.push_back(pEffect);
-
 	// 位置、向き、大きさ設定
 	m_EfkManager->SetLocation(Handle, pos);
 	m_EfkManager->SetRotation(Handle, { 0.0f, 1.0f, 0.0f }, rot.Y);
@@ -145,9 +143,6 @@ CEffekseer* CMyEffekseer::CreateEffect(const TYPE eType, ::Effekseer::Vector3D p
 //===========================================================
 void CMyEffekseer::Init(void)
 {
-	// 全要素削除
-	m_EffectList.clear();
-
 	// エフェクトのマネージャーの作成
 	m_EfkManager = ::Effekseer::Manager::Create(8000);
 
@@ -172,8 +167,15 @@ void CMyEffekseer::Init(void)
 //===========================================================
 void CMyEffekseer::Uninit(void)
 {
-	// すべての要素を削除する
-	ReleaseAll();
+	// エフェクトリストを取得
+	if (CEffekseer::GetList() == nullptr) { return; }
+	std::list<CEffekseer*> list = CEffekseer::GetList()->GetList();    // リストを取得
+	
+	// リストの中身を削除する
+	for (CEffekseer* effect : list)
+	{
+		effect->Uninit();
+	}
 }
 
 //===========================================================
@@ -184,39 +186,47 @@ void CMyEffekseer::Update(void)
 	// タイム加算
 	m_nTime++;
 
-	for(CEffekseer* it : m_EffectList)
+	// エフェクトリストを取得
+	if (CEffekseer::GetList() == nullptr) { return; }
+	std::list<CEffekseer*> list = CEffekseer::GetList()->GetList();    // リストを取得
+
+	for(CEffekseer* effect : list)
 	{
-		// ハンドル、位置、向き、大きさを取得
-		Effekseer::Handle Handle = it->GetHandle();
-		Effekseer::Vector3D pos = it->GetPosition();
-		Effekseer::Vector3D rot = it->GetRotation();
-		Effekseer::Vector3D scale = it->GetScale();
+		// ハンドルを取得
+		Effekseer::Handle Handle = effect->GetHandle();
 
 		DebugProc::Print(DebugProc::POINT_CENTER, "エフェクトの種類 : ");
-		auto str = magic_enum::enum_name(it->GetEfkType());
+		auto str = magic_enum::enum_name(effect->GetEfkType());
 		DebugProc::Print(DebugProc::POINT_CENTER, str.data());
 		DebugProc::Print(DebugProc::POINT_CENTER, "\n");
 
-		// エフェクトの再生が終了した
+		// エフェクトの再生が終了していない場合次に進む
 		if (m_EfkManager->Exists(Handle)) { continue; }
 		
 		// 再生の停止
 		m_EfkManager->StopEffect(Handle);
 
-		// ループするフラグが立っている
-		if (!it->IsLoop())
+		// ループエフェクトでない場合終了して次に進む
+		if (!effect->IsLoop())
 		{
-			// 指定された要素を削除する
-			it->Uninit();
+			// 終了処理 
+			effect->Uninit();
+			continue;
 		}
 
-		Effekseer::EffectRef effect = it->GetEffect();
+		// エフェクト本体の情報を取得する
+		Effekseer::EffectRef reference = effect->GetEffect();
+		Effekseer::Vector3D pos = effect->GetPosition();
+		Effekseer::Vector3D rot = effect->GetRotation();
+		Effekseer::Vector3D scale = effect->GetScale();
+
+		DebugProc::Print(DebugProc::POINT_CENTER, "エフェクトの座標 : %f, %f, %f\n", pos.X, pos.Y, pos.Z);
 
 		// エフェクトの再生
-		Handle = m_EfkManager->Play(effect, pos);
+		Handle = m_EfkManager->Play(reference, pos);
 
 		// ハンドルの設定
-		it->SetEfkHandle(Handle);
+		effect->SetEfkHandle(Handle);
 
 		// 位置や向き、大きさをもう一度設定
 		m_EfkManager->SetLocation(Handle, pos);
@@ -312,39 +322,15 @@ void CMyEffekseer::SetupEffekseerModules(::Effekseer::ManagerRef efkManager)
 	efkManager->SetCurveLoader(Effekseer::MakeRefPtr<Effekseer::CurveLoader>());
 }
 
-//===========================================================
-// 指定した要素を削除
-//===========================================================
-void CMyEffekseer::Release(CEffekseer* pEffect)
-{
-	// 使用されていない場合処理を抜ける
-	if (pEffect == nullptr)
-		return;
-
-	// 終了処理
-	pEffect->Uninit();
-
-	// 指定した要素を削除する
-	m_EffectList.remove(pEffect);
-}
-
-//===========================================================
-// すべての要素を削除
-//===========================================================
-void CMyEffekseer::ReleaseAll(void)
-{
-	// すべての要素を削除
-	m_EffectList.clear();
-}
-
-void CMyEffekseer::ListIn(CEffekseer* pEffect)
-{
-
-}
-
 //===========================================================================
 // エフェクトクラス
 //===========================================================================
+
+//==========================================
+//  静的メンバ変数宣言
+//==========================================
+CListManager<CEffekseer>* CEffekseer::m_pList = nullptr; // オブジェクトリスト]
+
 //===========================================================
 // コンストラクタ
 //===========================================================
@@ -368,6 +354,16 @@ CEffekseer::~CEffekseer()
 void CEffekseer::Init(Effekseer::Vector3D pos, Effekseer::Vector3D rot, Effekseer::Vector3D scale, bool bLoop)
 {
 	m_bLoop = bLoop;
+
+	// リストマネージャーの生成
+	if (m_pList == nullptr)
+	{
+		m_pList = CListManager<CEffekseer>::Create();
+		if (m_pList == nullptr) { assert(false); }
+	}
+
+	// リストに自身のオブジェクトを追加・イテレーターを取得
+	m_iterator = m_pList->AddList(this);
 }
 
 //===========================================================
@@ -375,5 +371,24 @@ void CEffekseer::Init(Effekseer::Vector3D pos, Effekseer::Vector3D rot, Effeksee
 //===========================================================
 void CEffekseer::Uninit(void)
 {
-	
+	// リストから自身のオブジェクトを削除
+	m_pList->DelList(m_iterator);
+
+	if (m_pList->GetNumAll() == 0)
+	{ // オブジェクトが一つもない場合
+
+		// リストマネージャーの破棄
+		m_pList->Release(m_pList);
+	}
+
+	// 自身を削除する
+	delete this;
+}
+
+//====================================================================
+//リスト取得
+//====================================================================
+CListManager<CEffekseer>* CEffekseer::GetList(void)
+{
+	return m_pList;
 }

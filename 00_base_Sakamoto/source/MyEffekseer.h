@@ -52,14 +52,7 @@ public:
 
 	CEffekseer* CreateEffect(const TYPE eType, ::Effekseer::Vector3D pos, ::Effekseer::Vector3D rot, ::Effekseer::Vector3D scale, bool bLoop);
 
-	void ListIn(CEffekseer* pEffect);  // リストに挿入
-
-	void Release(CEffekseer* pEffect);  // 指定した要素を削除
-	void ReleaseAll(void);              // すべての要素を削除
-
 private:
-
-	std::list<CEffekseer*> m_EffectList;  // エフェクトのリスト
 
 	static CMyEffekseer* m_pInstance;  // 自分自身のポインタ
 	EffekseerRendererDX9::RendererRef m_EfkRenderer;
@@ -102,6 +95,9 @@ public:
 	CMyEffekseer::TYPE GetEfkType() { return m_eType; }					// エフェクトの種類
 	bool IsLoop(void) { return m_bLoop; }								// ループするフラグ
 
+	// 静的メンバ関数
+	static CListManager<CEffekseer>* GetList(); // リスト取得
+
 private:
 
 	// メンバ変数
@@ -113,7 +109,10 @@ private:
 	const char* m_EfkName; // 名前
 	CMyEffekseer::TYPE m_eType; // 種類
 	bool m_bLoop; // ループするフラグ
-	
+	CListManager<CEffekseer>::AIterator m_iterator; // イテレーター
+
+	// 静的メンバ変数
+	static CListManager<CEffekseer>* m_pList; // オブジェクトリスト
 };
 
 namespace MyEffekseer
