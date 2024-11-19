@@ -124,6 +124,11 @@ bool CCross::Hit(CPlayer* pPlayer)
 	// プレイヤーのアイテムを設定
 	pPlayer->SetItemType(CPlayer::TYPE_CROSS);
 
+	// エフェクトを生成する
+	D3DXVECTOR3 pos = GetPos();
+	D3DXVECTOR3 rot = GetRot();
+	MyEffekseer::EffectCreate(CMyEffekseer::TYPE_GETITEM, false, useful::CalcMatrix(pos, rot, GetUseMultiMatrix()), rot);
+
 	CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_GET_CROSS);
 	return true;
 }
