@@ -137,6 +137,8 @@ private:
 
 	CSlowManager* m_pSlow;		// スロー情報
 
+	CEffekseer* m_pEffect; // エフェクト
+
 	// キャラクターのポインタ
 	CCharacter* m_pCharacter;
 
