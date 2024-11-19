@@ -114,6 +114,8 @@ m_nNumCoordinate(0)
 	m_Grid.z = 0;
 
 	m_nBugCounter = 0;
+
+	m_UseMultiMatrix = nullptr;
 }
 
 //====================================================================
@@ -180,7 +182,7 @@ HRESULT CEnemy::Init(void)
 	SetType(CObject::TYPE_ENEMY3D);
 
 	//マップとのマトリックスの掛け合わせをオンにする
-	SetMultiMatrix(true);
+	SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
 
 	// スローの生成(配属、タグの設定)
 	m_pSlow = CSlowManager::Create(m_pSlow->CAMP_ENEMY, m_pSlow->TAG_ENEMY);
@@ -246,14 +248,14 @@ void CEnemy::Update(void)
 	// 位置更新処理
 	//UpdatePos();
 
-	// 自分の番号を設定
-	m_Grid = CMapSystem::GetInstance()->CMapSystem::CalcGrid(m_pos);
-
 	// プレイヤーへの最短経路探索
 	Coordinate();
 
 	// 最短系露をたどる
 	Route();
+
+	// 自分の番号を設定
+	m_Grid = CMapSystem::GetInstance()->CMapSystem::CalcGrid(m_pos);
 
 	//床の判定
 	if (m_pos.y <= 0.0f)
@@ -295,14 +297,14 @@ void CEnemy::Draw(void)
 
 	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
 
-	if (m_bMultiMatrix)
+	if (m_UseMultiMatrix != nullptr)
 	{
 		SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
 
 		//算出したマトリクスをかけ合わせる
 		D3DXMatrixMultiply(&m_mtxWorld,
 			&m_mtxWorld,
-			&m_UseMultiMatrix);
+			m_UseMultiMatrix);
 	}
 
 	//ワールドマトリックスの設定
@@ -879,7 +881,7 @@ void CEnemy::Effect()
 	D3DXVECTOR3 rot = GetRot();
 
 	// エフェクトを生成
-	MyEffekseer::EffectCreate(EFFECT_TYPE[m_EnemyType], false, useful::CalcMatrix(pos, rot, GetUseMultiMatrix()), rot);
+	MyEffekseer::EffectCreate(EFFECT_TYPE[m_EnemyType], false, useful::CalcMatrix(pos, rot, *GetUseMultiMatrix()), rot);
 }
 
 //====================================================================

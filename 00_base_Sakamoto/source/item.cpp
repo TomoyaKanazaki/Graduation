@@ -16,6 +16,8 @@
 #include "score.h"
 #include "softcream.h"
 #include "renderer.h"
+#include "game.h"
+#include "objmeshField.h"
 
 //==========================================
 //  定数定義
@@ -129,11 +131,14 @@ HRESULT CItem::Init(const char* pModelName)
 	CObjectX::Init(pModelName);
 
 	//マップとのマトリックスの掛け合わせをオンにする
-	SetMultiMatrix(true);
+	SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
+	//SetMultiMatrix(true);
 
 	D3DXVECTOR3 pos = GetPos();
 	pos.y = BASE_Y;
 	SetPos(pos);
+
+	this;
 
 	return S_OK;
 }

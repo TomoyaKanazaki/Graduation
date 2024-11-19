@@ -28,12 +28,12 @@
 #include "effect.h"
 #include "bowabowa.h"
 #include "Cross.h"
-#include "debugproc.h"
 #include "objmeshField.h"
 #include "railblock.h"
 #include "RollRock.h"
 #include "sound.h"
 #include "scrollarrow.h"
+#include "fire.h"
 
 //===========================================
 // 定数定義
@@ -1165,6 +1165,9 @@ void CDevil::ObjectScroll(D3DXVECTOR3 Move)
 
 	// プレイヤーのスクロール
 	PlayerScroll(Move, m_GritSize);
+
+	// ファイアボールのスクロール
+	FireScroll(Move, m_GritSize);
 }
 
 //====================================================================
@@ -1324,6 +1327,24 @@ void CDevil::RollRockScroll(D3DXVECTOR3 Move, float GritSize)
 		D3DXVECTOR3 pos = pRailBlock->GetPos();
 		pos += Move;
 		pRailBlock->SetPos(pos);
+	}
+}
+
+//==========================================
+//  ファイアボールのスクロール
+//==========================================
+void CDevil::FireScroll(D3DXVECTOR3 Move, float GritSize)
+{
+	// ファイアボールのリストが無ければ抜ける
+	if (CFire::GetList() == nullptr) { return; }
+	std::list<CFire*> list = CFire::GetList()->GetList();    // リストを取得
+
+	// ファイアボールのリストの中身を確認する
+	for (CFire* fire : list)
+	{
+		D3DXVECTOR3 pos = fire->GetPos();
+		pos += Move;
+		fire->SetPos(pos);
 	}
 }
 

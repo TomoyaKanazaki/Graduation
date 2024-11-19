@@ -75,7 +75,8 @@ HRESULT CCubeBlock::Init(void)
 {	
 	CObjmeshCube::Init();
 
-	SetMultiMatrix(true);
+	SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
+	//SetMultiMatrix(true);
 
 	SetTexture("data\\TEXTURE\\Field\\00_wall.jpg");
 

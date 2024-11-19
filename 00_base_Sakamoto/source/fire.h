@@ -9,9 +9,7 @@
 
 #include "main.h"
 #include "objectX.h"
-
-//前方宣言
-class CObjGauge2D;
+#include "MapSystem.h"
 
 //オブジェクトファイアクラス
 class CFire : public CObjectX
@@ -34,14 +32,11 @@ public:
 	HRESULT Init(char* pModelName);
 	void Uninit(void);
 	void Update(void);
-	void GameUpdate(void);
 	void Draw(void);
 	void CollisionEnemy();
 
 	int GetIdx(void) { return m_nIdxTexture; }
 	int GetIdxXModel(void) { return -1; }
-	void SetPos(D3DXVECTOR3 pos) { m_pos = pos; }
-	D3DXVECTOR3 GetPos(void) { return m_pos; }
 
 	void SetMove(D3DXVECTOR3 move) { m_move = move; }
 	D3DXVECTOR3 GetMove(void) { return m_move; }
@@ -64,11 +59,9 @@ private:
 
 	bool m_bCollision;				// 当たり判定用の座標
 
-	D3DXVECTOR3 m_CollisionPos;		// 当たり判定用の座標
-	D3DXVECTOR3 m_pos;				// 位置	
-	D3DXVECTOR3 m_posOld;			// 過去の位置	
 	D3DXVECTOR3 m_move;				// 移動量	
-	D3DXVECTOR3 m_rot;				// 向き	
+
+	CMapSystem::GRID m_Grid;	// マップ番号
 
 	CEffekseer* m_pEffect; // エフェクト
 

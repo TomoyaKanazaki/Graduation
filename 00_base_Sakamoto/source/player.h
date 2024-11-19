@@ -120,10 +120,8 @@ public:
 	void SetModelDisp(bool Sst);
 	void SetPartsDisp(int nParts, bool Set);
 	void SetModelColor(CModel::COLORTYPE Type, D3DXCOLOR Col);
-	void SetMultiMatrix(bool Set) { m_bMultiMatrix = Set; }
-	bool GetMultiMatrix(void) { return m_bMultiMatrix; }
-	void SetUseMultiMatrix(D3DXMATRIX Set) { m_UseMultiMatrix = Set; }
-	D3DXMATRIX GetUseMultiMatrix(void) { return m_UseMultiMatrix; }
+	void SetUseMultiMatrix(D3DXMATRIX *Set) { m_UseMultiMatrix = Set; }
+	D3DXMATRIX *GetUseMultiMatrix(void) { return m_UseMultiMatrix; }
 	void SetPressObj(bool Set) { m_bPressObj = Set; }
 	bool GetPressObj(void) { return m_bPressObj; }
 
@@ -229,8 +227,7 @@ private:
 	CLifeUi* m_pLifeUi;
 
 	//マップとのマトリックス情報
-	bool m_bMultiMatrix;					//マトリックスの掛け合わせをするかどうか
-	D3DXMATRIX m_UseMultiMatrix;			//掛け合わせるマトリックス
+	D3DXMATRIX *m_UseMultiMatrix;			//掛け合わせるマトリックス
 
 	// 静的メンバ変数
 	static CListManager<CPlayer>* m_pList; // オブジェクトリスト

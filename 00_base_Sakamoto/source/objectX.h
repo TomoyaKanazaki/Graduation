@@ -57,10 +57,8 @@ public:
 	int GetTextureIdx(int nCnt) { return m_IdxTextureNumber[nCnt]; }
 	void SetMtxWorld(D3DMATRIX mtx) { m_SetMtx = mtx; m_bUseMtx = true; }
 
-	void SetMultiMatrix(bool Set) { m_bMultiMatrix = Set; }
-	bool GetMultiMatrix(void) { return m_bMultiMatrix; }
-	void SetUseMultiMatrix(D3DXMATRIX Set) { m_UseMultiMatrix = Set; }
-	D3DXMATRIX GetUseMultiMatrix(void) { return m_UseMultiMatrix; }
+	void SetUseMultiMatrix(D3DXMATRIX* Set);
+	D3DXMATRIX* GetUseMultiMatrix(void) { return m_UseMultiMatrix; }
 
 	// 静的メンバ関数
 	static CListManager<CObjectX>* GetList(void); // リスト取得
@@ -87,8 +85,7 @@ private:
 	bool m_bUseColor;						//色を変更しているかどうか
 
 	//マップとのマトリックス情報
-	bool m_bMultiMatrix;					//マトリックスの掛け合わせをするかどうか
-	D3DXMATRIX m_UseMultiMatrix;			//掛け合わせるマトリックス
+	D3DXMATRIX* m_UseMultiMatrix;			//掛け合わせるマトリックス
 
 	// 静的メンバ変数
 	static CListManager<CObjectX>* m_pList; // オブジェクトリスト

@@ -13,6 +13,7 @@
 #include "Devil.h"
 #include "MapSystem.h"
 #include "CubeBlock.h"
+#include "objmeshField.h"
 
 //==========================================
 //  ’è”’è‹`
@@ -91,7 +92,8 @@ HRESULT CRollRock::Init(char* pModelName)
 
 	CObjectX::Init(pModelName);
 
-	SetMultiMatrix(true);
+	SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
+	//SetMultiMatrix(true);
 
 	SetSize(SAMPLE_SIZE);
 

@@ -10,6 +10,7 @@
 #include "texture.h"
 #include "Rail.h"
 #include "game.h"
+#include "objmeshField.h"
 #include "Devil.h"
 #include "debugproc.h"
 #include "player.h"
@@ -82,7 +83,7 @@ HRESULT CRailBlock::Init(int nMapWight, int nMapHeight, bool Edit, int Max, int*
 	m_StartGrid.x = nMapWight;
 	m_StartGrid.z = nMapHeight;
 
-	SetMultiMatrix(true);
+	SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
 
 	CObjmeshCube::Init();
 

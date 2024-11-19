@@ -40,7 +40,7 @@ public:
 	void SetRot(D3DXVECTOR3 rot) { m_rot = rot; }
 	D3DXVECTOR3 GetRot(void) { return m_rot; }
 	LPDIRECT3DVERTEXBUFFER9 GetVtxBuff(void) { return m_pVtxBuff; }
-	D3DXMATRIX GetMatrix(){return m_mtxWorld;}
+	D3DXMATRIX* GetMatrix(){return &m_mtxWorld;}
 
 	virtual int GetIdx(void) { return m_nIdxTexture; }
 

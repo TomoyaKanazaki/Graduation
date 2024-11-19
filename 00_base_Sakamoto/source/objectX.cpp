@@ -44,7 +44,8 @@ CObjectX::CObjectX(int nPriority) :CObject(nPriority)
 	m_MatColor = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 	m_bUseColor = false;
 	m_bUseMtx = false;
-	m_bMultiMatrix = false;
+	m_UseMultiMatrix = nullptr;
+	//m_bMultiMatrix = false;
 }
 
 //====================================================================
@@ -202,14 +203,14 @@ void CObjectX::Draw(void)
 		D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
 	}
 
-	if (m_bMultiMatrix && CManager::GetInstance()->GetScene()->GetMode() == CScene::MODE_GAME)
+	if (m_UseMultiMatrix != nullptr && CManager::GetInstance()->GetScene()->GetMode() == CScene::MODE_GAME)
 	{
 		SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
 
 		//算出したマトリクスをかけ合わせる
 		D3DXMatrixMultiply(&m_mtxWorld,
 			&m_mtxWorld,
-			&m_UseMultiMatrix);
+			m_UseMultiMatrix);
 	}
 	
 	//ワールドマトリックスの設定
@@ -256,6 +257,11 @@ void CObjectX::Draw(void)
 	}
 	//保存していたマテリアルを戻す
 	m_pDevice->SetMaterial(&matDef);
+}
+
+void CObjectX::SetUseMultiMatrix(D3DXMATRIX* Set)
+{
+	m_UseMultiMatrix = Set;
 }
 
 //====================================================================
