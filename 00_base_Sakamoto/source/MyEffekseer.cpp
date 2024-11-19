@@ -40,7 +40,9 @@ namespace MyEffekseer
 		"data\\EFFEKSEER\\Effect\\fireball.efkefc",       // ファイアボール
 		"data\\EFFEKSEER\\Effect\\charge.efkefc",         // チャージ
 		"data\\EFFEKSEER\\Effect\\smoke.efkefc",          // スモーク
-		"data\\EFFEKSEER\\Effect\\hit.efkefc",          // ヒット
+		"data\\EFFEKSEER\\Effect\\hit.efkefc",			  // ヒット
+		"data\\EFFEKSEER\\Effect\\get_items.efkefc",      // アイテム取得
+		"data\\EFFEKSEER\\Effect\\eat.efkefc",      // 捕食
 	};
 
 	//============================================

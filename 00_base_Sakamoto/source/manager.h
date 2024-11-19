@@ -70,6 +70,13 @@ public:
 		TYPE_MAX
 	};
 
+	enum GAME_MODE
+	{
+		MODE_SINGLE = 0,
+		MODE_MULTI,
+		MODE_MAX
+	};
+
 public:
 	CManager();
 	~CManager();
@@ -130,6 +137,8 @@ public:
 	D3DXMATRIX GetGamemtxProjection(void) { return m_GamemtxProjection; }
 	void SetTypeInput(TYPE_INPUT type) { m_typeInput = type; }
 	TYPE_INPUT GetTypeInput(void) { return m_typeInput; }
+	void SetGameMode(GAME_MODE type) { m_GameMode = type; }
+	GAME_MODE GetGameMode(void) { return m_GameMode; }
 	bool Getstart() { return m_bState; }
 	int GetStage(void) { return m_nStage; }
 	void SetStage(int Stage) { m_nStage = Stage; }
@@ -171,6 +180,7 @@ private:
 	CRanking* m_pRanking;
 	CBlockManager* m_pBlockManager;
 	TYPE_INPUT m_typeInput;				//インプット種類
+	GAME_MODE m_GameMode;				//ゲームのプレイモード
 };												
 
 #endif
