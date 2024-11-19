@@ -112,7 +112,7 @@ HRESULT CFire::Init(char* pModelName)
 	m_nLife = FIRE_LIFE;
 
 	// エフェクトを生成する
-	m_pEffect = MyEffekseer::EffectCreate(CMyEffekseer::TYPE_FIRE, false, useful::CalcMatrix(m_pos, m_rot, *GetUseMultiMatrix()), m_rot);
+	m_pEffect = MyEffekseer::EffectCreate(CMyEffekseer::TYPE_FIRE, false, useful::CalcMatrix(pos, rot, *GetUseMultiMatrix()), rot);
 
 	// 炎の速度
 	D3DXVECTOR3 move = -D3DXVECTOR3(FIRE_SPEED * sinf(rot.y), 0.0f, FIRE_SPEED * cosf(rot.y));
@@ -190,7 +190,7 @@ void CFire::Update(void)
 	{
 
 		D3DXMATRIX mat = *GetUseMultiMatrix();
-		D3DXVECTOR3 ef = useful::CalcMatrix(m_pos, m_rot, *GetUseMultiMatrix());
+		D3DXVECTOR3 ef = useful::CalcMatrix(pos, rot, *GetUseMultiMatrix());
 		m_pEffect->SetPosition(ef);
 	}
 
@@ -235,7 +235,7 @@ void CFire::CollisionEnemy()
 			// エフェクトを生成
 			D3DXVECTOR3 pos = pEnemy->GetPos();
 			D3DXVECTOR3 rot = pEnemy->GetRot();
-			MyEffekseer::EffectCreate(CMyEffekseer::TYPE_HIT, false, useful::CalcMatrix(pos, rot, GetUseMultiMatrix()), rot, D3DXVECTOR3(25.0f, 25.0f, 25.0f));
+			MyEffekseer::EffectCreate(CMyEffekseer::TYPE_HIT, false, useful::CalcMatrix(pos, rot, *GetUseMultiMatrix()), rot, D3DXVECTOR3(25.0f, 25.0f, 25.0f));
 
 			// 削除
 			Uninit();

@@ -797,10 +797,10 @@ void CPlayer::Attack(void)
 		{
 			// ‰Î‰Š•úŽË
 			CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_FIRE);
-			D3DXMATRIX mat = GetUseMultiMatrix();
-			D3DXVECTOR3 ef = useful::CalcMatrix(m_pos, m_rot, GetUseMultiMatrix());
+			D3DXMATRIX mat = *GetUseMultiMatrix();
+			D3DXVECTOR3 ef = useful::CalcMatrix(m_pos, m_rot, *GetUseMultiMatrix());
 
-			MyEffekseer::EffectCreate(CMyEffekseer::TYPE_SMOKE, false, useful::CalcMatrix(m_pos, m_rot, m_UseMultiMatrix), m_rot);
+			MyEffekseer::EffectCreate(CMyEffekseer::TYPE_SMOKE, false, useful::CalcMatrix(m_pos, m_rot, *m_UseMultiMatrix), m_rot);
 
 			CFire::Create("data\\model\\fireball.x", m_pos, m_rot);
 			m_State = STATE_ATTACK;
