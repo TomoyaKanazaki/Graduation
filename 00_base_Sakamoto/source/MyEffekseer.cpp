@@ -37,7 +37,9 @@ namespace MyEffekseer
 		"data\\EFFEKSEER\\Effect\\smoke.efkefc",          // スモーク
 		"data\\EFFEKSEER\\Effect\\hit.efkefc",			  // ヒット
 		"data\\EFFEKSEER\\Effect\\get_items.efkefc",      // アイテム取得
-		"data\\EFFEKSEER\\Effect\\eat.efkefc",      // 捕食
+		"data\\EFFEKSEER\\Effect\\eat.efkefc",			  // 捕食
+		"data\\EFFEKSEER\\Effect\\medaman_respawn.efkefc",			  // メダマンのリスポーン
+		"data\\EFFEKSEER\\Effect\\bonbon_respawn.efkefc",			  // ボンボンのリスポーン
 	};
 
 	//============================================

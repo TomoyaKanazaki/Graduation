@@ -32,6 +32,8 @@ public:
 		TYPE_HIT,		// ヒット
 		TYPE_GETITEM,	// 聖書、十字架取得
 		TYPE_EAT,		// 捕食
+		TYPE_RESPAWN_MEDAMAN,	// メダマンのリスポーン
+		TYPE_RESPAWN_BONBON,	// ボンボンのリスポーン
 		TYPE_MAX,
 		TYPE_NONE  // なんもない
 	};
