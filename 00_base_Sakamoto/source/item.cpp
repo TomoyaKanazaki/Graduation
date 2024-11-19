@@ -31,6 +31,8 @@ namespace
 		400, // ソフトクリーム
 		200 // 目玉焼き
 	};
+
+	const float BASE_Y = 50.0f; // 高さ
 }
 
 //==========================================
@@ -130,7 +132,7 @@ HRESULT CItem::Init(const char* pModelName)
 	SetMultiMatrix(true);
 
 	D3DXVECTOR3 pos = GetPos();
-	pos.y = 50.0f;
+	pos.y = BASE_Y;
 	SetPos(pos);
 
 	return S_OK;
@@ -221,7 +223,9 @@ void CItem::SetGrid(const CMapSystem::GRID& pos)
 	m_Grid = pos;
 
 	// グリッド情報から自身の座標を算出する
-	m_posBase = CMapSystem::GetInstance()->GetGritPos(pos);
+	D3DXVECTOR3 calc = CMapSystem::GetInstance()->GetGritPos(pos);
+	calc.y = BASE_Y;
+	m_posBase = calc;
 
 	// 位置を設定
 	CItem::SetPos(m_posBase);
@@ -243,6 +247,10 @@ bool CItem::CollisionPlayer()
 	// プレイヤーリストの中身を確認する
 	for (CPlayer* player : list)
 	{
+		// 死んでる場合は取得できない
+		if(player->GetState() == CPlayer::STATE_EGG || player->GetState() == CPlayer::STATE_DEATH)
+		{ continue; }
+
 		// プレイヤーの座標(グリッド単位)を取得
 		CMapSystem::GRID gridPlayer = player->GetGrid();
 

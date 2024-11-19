@@ -9,6 +9,7 @@
 
 #include "object.h"
 #include "useful.h"
+#include "Model.h"
 #include "MapSystem.h"
 
 //前方宣言
@@ -115,6 +116,7 @@ public:
 	ACTION_TYPE GetAction(void) { return m_Action; }
 	void SetModelDisp(bool Sst);
 	void SetPartsDisp(int nParts, bool Set);
+	void SetModelColor(CModel::COLORTYPE Type, D3DXCOLOR Col);
 	void SetMultiMatrix(bool Set) { m_bMultiMatrix = Set; }
 	bool GetMultiMatrix(void) { return m_bMultiMatrix; }
 	void SetUseMultiMatrix(D3DXMATRIX Set) { m_UseMultiMatrix = Set; }
@@ -206,6 +208,8 @@ private:
 	bool m_OKD;					//下への進行が許されるかどうか
 	bool m_bInput;				//入力を行ったかどうか
 	bool m_bPressObj;			//オブジェクトに押されているかどうか
+	bool m_bInvincible;			//無敵かどうか
+	int m_nInvincibleCount;		//無敵時間
 
 	bool m_UseItem;				//アイテムが使用可能かどうか
 

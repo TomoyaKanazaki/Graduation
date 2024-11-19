@@ -93,6 +93,7 @@
     <ClCompile Include="source\RollRock.cpp" />
     <ClCompile Include="source\score.cpp" />
     <ClCompile Include="source\scrollarrow.cpp" />
+    <ClCompile Include="source\shadow.cpp" />
     <ClCompile Include="source\shrinkingBillboard.cpp" />
     <ClCompile Include="source\SlopeDevice.cpp" />
     <ClCompile Include="source\slowManager.cpp" />
@@ -180,6 +181,7 @@
     <ClInclude Include="source\RollRock.h" />
     <ClInclude Include="source\score.h" />
     <ClInclude Include="source\scrollarrow.h" />
+    <ClInclude Include="source\shadow.h" />
     <ClInclude Include="source\shrinkingBillboard.h" />
     <ClInclude Include="source\SlopeDevice.h" />
     <ClInclude Include="source\slowManager.h" />

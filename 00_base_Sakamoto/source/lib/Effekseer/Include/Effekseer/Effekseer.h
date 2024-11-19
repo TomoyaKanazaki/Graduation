@@ -1501,6 +1501,7 @@ public:
 		@brief	コンストラクタ
 	*/
 	Vector3D(float x, float y, float z);
+	Vector3D(D3DXVECTOR3 vec) : X(vec.x), Y(vec.y), Z(vec.z) {};
 
 	Vector3D operator-();
 

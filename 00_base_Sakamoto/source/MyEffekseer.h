@@ -28,9 +28,7 @@ public:
 	// 種類
 	enum TYPE
 	{
-		TYPE_IMPACT = 0,    // 衝撃波
-		TYPE_HIT,       // ヒット
-		TYPE_ATTACK,    // 攻撃の予兆
+		TYPE_FIRE = 0, // ファイアボール
 		TYPE_MAX,
 		TYPE_NONE  // なんもない
 	};
@@ -118,7 +116,7 @@ namespace MyEffekseer
 		                     bool bLoop = false,
 		                     D3DXVECTOR3 pos = { 0.0f, 0.0f, 0.0f }, 
 		                     D3DXVECTOR3 rot = { 0.0f, 0.0f, 0.0f },
-		                     D3DXVECTOR3 scale = { 125.0f, 125.0f, 125.0f } );
+		                     D3DXVECTOR3 scale = { 500.0f, 500.0f, 500.0f } );
 }
 
 #endif

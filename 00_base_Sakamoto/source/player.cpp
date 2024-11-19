@@ -49,6 +49,7 @@ namespace
 	const int FIRE_STOPTIME = 30;	//攻撃時の移動停止時間
 	const D3DXVECTOR3 RESPAWN_POS = D3DXVECTOR3(-100.0f, 2000.0f, 100.0f); // 復活位置
 	const float RESPAWN_GRAVITY = 0.3f;			//卵の重力
+	const int INVINCIBLE_TIME = 120;			//無敵時間
 
 	const float GRIT_OK = 45.0f;			//移動可能なグリットの範囲内
 	const float PLAYER_SPEED = 5.0f;		//プレイヤーの移動速度
@@ -105,7 +106,9 @@ m_bPressObj(false),
 m_fCrossTimer(0.0f),
 m_pUpEgg(nullptr),
 m_pDownEgg(nullptr),
-m_EggMove(INITVECTOR3)
+m_EggMove(INITVECTOR3),
+m_bInvincible(true),
+m_nInvincibleCount(0)
 {
 
 }
@@ -341,6 +344,24 @@ void CPlayer::GameUpdate(void)
 	//状態の管理
 	StateManager();
 
+	if (m_nInvincibleCount > 0)
+	{
+		m_nInvincibleCount--;
+	}
+	else
+	{
+		m_bInvincible = false;
+	}
+
+	if (m_bInvincible)
+	{
+		SetModelColor(CModel::COLORTYPE_TRUE_ALL, D3DXCOLOR(0.5f, 0.5f, 0.5f, 0.5f));
+	}
+	else
+	{
+		SetModelColor(CModel::COLORTYPE_FALSE, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+	}
+
 	//卵の動き
 	EggMove();
 
@@ -534,6 +555,9 @@ void CPlayer::Move(void)
 				m_EggMove.z = EGG_MOVE.z;
 				break;
 			}
+
+			m_bInvincible = true;
+			m_nInvincibleCount = INVINCIBLE_TIME;
 		}
 
 		SetItemType(m_eItemType);
@@ -751,23 +775,12 @@ void CPlayer::Attack(void)
 		CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
 		CInputJoypad* pInputJoypad = CManager::GetInstance()->GetInputJoyPad();
 
-		if (pInputKeyboard->GetTrigger(DIK_SPACE) == true)
+		if (pInputKeyboard->GetTrigger(DIK_SPACE) || pInputJoypad->GetTrigger(CInputJoypad::BUTTON_B, 0))
 		{
 			// 火炎放射
 			CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_FIRE);
 
-			MyEffekseer::EffectCreate(CMyEffekseer::TYPE_HIT, false, useful::CalcMatrix(m_pos, m_rot, m_UseMultiMatrix), m_rot);
-
-			CFire::Create("data\\model\\fireball.x", m_pos, m_rot);
-			m_State = STATE_ATTACK;
-			m_nStateCount = FIRE_STOPTIME;
-		}
-		else if (pInputJoypad->GetTrigger(CInputJoypad::BUTTON_B, 0))
-		{
-			// 火炎放射
-			CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_FIRE);
-
-			MyEffekseer::EffectCreate(CMyEffekseer::TYPE_HIT, false, useful::CalcMatrix(m_pos, m_rot, m_UseMultiMatrix), m_rot);
+			//MyEffekseer::EffectCreate(CMyEffekseer::TYPE_HIT, false, useful::CalcMatrix(m_pos, m_rot, m_UseMultiMatrix), m_rot);
 
 			CFire::Create("data\\model\\fireball.x", m_pos, m_rot);
 			m_State = STATE_ATTACK;
@@ -1281,7 +1294,10 @@ void CPlayer::CollisionEnemy(void)
 		// 円の当たり判定
 		if (useful::CollisionCircle(m_pos, pos, 30.0f) == true)
 		{
-			Death();
+			if (!m_bInvincible)
+			{
+				Death();
+			}
 		}
 	}
 }
@@ -1854,6 +1870,32 @@ void CPlayer::SetPartsDisp(int nParts, bool Set)
 	if (pModel != nullptr)
 	{
 		pModel->SetDisp(Set);
+	}
+}
+
+//====================================================================
+// プレイヤーの指定モデル消去
+//====================================================================
+void CPlayer::SetModelColor(CModel::COLORTYPE Type, D3DXCOLOR Col)
+{
+	// モデル数の取得
+	if (m_pCharacter == nullptr)
+	{
+		assert(("キャラクターがない", false));
+		return;
+	}
+
+	CModel* pModel = nullptr;
+
+	for (int nCnt = 0; nCnt < m_pCharacter->GetNumModel(); nCnt++)
+	{
+		pModel = m_pCharacter->GetModel(nCnt);
+
+		if (pModel != nullptr)
+		{
+			pModel->SetColorType(Type);
+			pModel->SetColor(Col);
+		}
 	}
 }
 

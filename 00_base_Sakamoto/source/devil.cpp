@@ -49,7 +49,7 @@ namespace
 	float SCROOL_SPEED02 = (CMapSystem::GetInstance()->GetGritSize() * SCROOL_MOVEGRID) / SCROOL_COUNT;				// スクロールの移動速度
 
 	int SLOPE_TIME = 300;						// 傾き操作時間
-	int SLOPE_RAND = 50;						// 傾き発生確率
+	int SLOPE_RAND = 25;						// 傾き発生確率
 	float STAGE_ROT_LIMIT = D3DX_PI * 0.15f;	// 傾きの角度制限
 
 	float SLOPE_SPEED01 = 0.00075f;				// 傾きの移動速度
@@ -87,7 +87,8 @@ CDevil::CDevil(int nPriority) : CObject(nPriority)
 	m_MinGrid = CMapSystem::GRID(0, 0);
 	m_MaxGrid = CMapSystem::GRID(NUM_WIGHT - 1, NUM_HEIGHT - 1);
 	m_DevilArrow = 0;
-	m_DevilArrowOld = 0;
+	m_ScrollArrowOld = 0;
+	m_SlopwArrowOld = 0;
 	m_ScrollArrow[0] = nullptr;
 	m_ScrollArrow[1] = nullptr;
 }
@@ -865,7 +866,7 @@ void CDevil::StateManager(void)
 					//傾き方向指定処理
 					m_DevilArrow = rand() % 2;
 
-					if (m_DevilArrowOld == 0 || m_DevilArrowOld == 1)
+					if (m_SlopwArrowOld == 0 || m_SlopwArrowOld == 1)
 					{// 前回の傾き方向が左右だった場合
 
 						// 今回の傾き方向は上下にする
@@ -880,7 +881,7 @@ void CDevil::StateManager(void)
 					}
 
 					// 今回の傾き方向を記録する
-					m_DevilArrowOld = m_DevilArrow;
+					m_SlopwArrowOld = m_DevilArrow;
 
 					m_nStateCount = SLOPE_TIME;
 				}
@@ -901,7 +902,22 @@ void CDevil::StateManager(void)
 				m_nStateCount = SCROOL_TIME;
 
 				// スクロール方向指定
-				m_DevilArrow = rand() % 4;
+				m_DevilArrow = rand() % 2;
+
+				if (m_ScrollArrowOld == 0 || m_ScrollArrowOld == 1)
+				{// 前回の傾き方向が左右だった場合
+
+					// 今回の傾き方向は上下にする
+					if (m_DevilArrow == 0)
+					{
+						m_DevilArrow = 2;
+					}
+					else if (m_DevilArrow == 1)
+					{
+						m_DevilArrow = 3;
+					}
+				}
+				m_ScrollArrowOld = m_DevilArrow;
 			}
 
 			for (int nCnt = 0; nCnt < 2; nCnt++)

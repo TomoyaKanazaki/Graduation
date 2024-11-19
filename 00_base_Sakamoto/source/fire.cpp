@@ -29,7 +29,8 @@ CListManager<CFire>* CFire::m_pList = nullptr; // オブジェクトリスト
 //====================================================================
 //コンストラクタ
 //====================================================================
-CFire::CFire(int nPriority) : CObjectX(nPriority)
+CFire::CFire(int nPriority) : CObjectX(nPriority),
+m_pEffect(nullptr)
 {
 	SetSize(SAMPLE_SIZE);
 	SetPos(INITVECTOR3);
@@ -94,6 +95,9 @@ HRESULT CFire::Init(char* pModelName)
 	// 炎の体力
 	m_nLife = FIRE_LIFE;
 
+	// エフェクトを生成する
+	m_pEffect = MyEffekseer::EffectCreate(CMyEffekseer::TYPE_FIRE, true, useful::CalcMatrix(m_pos, m_rot, GetUseMultiMatrix()), m_rot);
+
 	// 炎の速度
 	D3DXVECTOR3 move = -D3DXVECTOR3(FIRE_SPEED * sinf(m_rot.y), 0.0f, FIRE_SPEED * cosf(m_rot.y));
 	SetMove(move);
@@ -126,6 +130,9 @@ void CFire::Uninit(void)
 		m_pList->Release(m_pList);
 	}
 
+	// エフェクトを消去
+	m_pEffect->Uninit();
+
 	CObjectX::Uninit();
 }
 
@@ -145,6 +152,11 @@ void CFire::Update(void)
 	// 位置・移動量設定
 	SetPos(pos);
 	
+	// エフェクトを動かす
+	D3DXMATRIX mat = GetUseMultiMatrix();
+	D3DXVECTOR3 ef = useful::CalcMatrix(m_pos, m_rot, GetUseMultiMatrix());
+	m_pEffect->SetPosition(ef);
+
 	// 敵との判定
 	CollisionEnemy();
 

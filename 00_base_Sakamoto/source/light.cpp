@@ -12,7 +12,8 @@
 //====================================================================
 //コンストラクタ
 //====================================================================
-CLight::CLight()
+CLight::CLight() :
+	m_vecAve(INITVECTOR3)
 {
 
 }
@@ -94,7 +95,11 @@ HRESULT CLight::Init(void)
 
 		//ライトを有効にする
 		m_pDevice->LightEnable(nCntlight, TRUE);
+
+		m_vecAve += vecDir[nCntlight];
 	}
+
+	m_vecAve /= 3;
 
 	return S_OK;
 }

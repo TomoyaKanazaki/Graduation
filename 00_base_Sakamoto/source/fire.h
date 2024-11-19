@@ -70,6 +70,8 @@ private:
 	D3DXVECTOR3 m_move;				// 移動量	
 	D3DXVECTOR3 m_rot;				// 向き	
 
+	CEffekseer* m_pEffect; // エフェクト
+
 	// 静的メンバ変数
 	static CListManager<CFire>* m_pList; // オブジェクトリスト
 
