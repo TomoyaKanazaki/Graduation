@@ -94,6 +94,9 @@ public:
 	void TutorialUpdate(void);
 	void Draw(void);
 
+	void SetPlayNumber(int Number) { m_nPlayNumber = Number; }
+	int GetPlayNumber(void) { return m_nPlayNumber; }
+
 	void SetPos(D3DXVECTOR3 pos) { m_pos = pos; }
 	D3DXVECTOR3 GetPos(void) { return m_pos; }
 	void SetMove(D3DXVECTOR3 move) { m_move = move; }
@@ -177,6 +180,7 @@ private:
 
 	void LoadLevelData(const char* pFilename);
 
+	int m_nPlayNumber;			//プレイ用番号
 	ACTION_TYPE m_Action;
 	ACTION_TYPE m_AtkAction;	//攻撃状態記録用変数
 	D3DXVECTOR3 m_pos;			//位置

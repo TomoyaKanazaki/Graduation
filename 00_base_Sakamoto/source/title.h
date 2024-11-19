@@ -36,24 +36,6 @@ private:
 		CObject2D* pObj2d;	// 2Dオブジェクト
 	};
 
-	// 情報
-	struct SInfoSlash
-	{
-		D3DXVECTOR3 pos;		// 位置情報
-		D3DXCOLOR color;		// 色情報
-
-		D3DXVECTOR3 angle;		// 方向
-
-		D3DXVECTOR2 sizeDef;	// デフォルトサイズ
-
-		int nCnt;				// カウント
-		bool AllAppear;			// 全表示の有無
-
-		SInfo2D aInfo2D[SLASH_2D_NUM];	// 2Dの情報
-
-		bool bStart;
-	};
-
 public:
 	CTitle();
 	~CTitle();
@@ -69,12 +51,12 @@ private:
 
 	float m_fCountFade;
 
-	static CObject2D* m_pLogo;				//タイトルロゴのポリゴン
-	static CObject2D* m_pTitleButton;		//ボタン入力UIのポリゴン
-	static CObjmeshDome* m_pMeshDome;		// メッシュドーム
-
-	SInfoSlash m_pInfoSlash;
+	CObject2D* m_pLogo;						//タイトルロゴのポリゴン
+	CObject2D* m_pModeSelect[MAX_SELECT];	//モードセレクト
+	CObject2D* m_pTitleButton;				//ボタン入力UIのポリゴン
+	CObjmeshDome* m_pMeshDome;				// メッシュドーム
 	
+	int m_nSelect;
 	bool m_bStart;
 	bool m_bSlash;
 	bool m_bTurn;

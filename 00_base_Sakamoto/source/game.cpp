@@ -153,12 +153,24 @@ HRESULT CGame::Init(void)
 	m_pDevil = CDevil::Create();
 	m_pDevil->SetPos(D3DXVECTOR3(0.0f, 100.0f, 500.0f));
 
-	//プレイヤーの生成
-	m_pPlayer[0] = CPlayer::Create();
-	m_pPlayer[0]->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(11,9)));
+	if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_SINGLE)
+	{
+		//プレイヤーの生成
+		m_pPlayer[0] = CPlayer::Create();
+		m_pPlayer[0]->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(11, 9)));
+		m_pPlayer[0]->SetPlayNumber(0);
+	}
+	else if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
+	{
+		//プレイヤーの生成
+		m_pPlayer[0] = CPlayer::Create();
+		m_pPlayer[0]->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(11, 9)));
+		m_pPlayer[0]->SetPlayNumber(0);
 
-	//m_pPlayer[1] = CPlayer::Create();
-	//m_pPlayer[1]->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(11, 4)));
+		m_pPlayer[1] = CPlayer::Create();
+		m_pPlayer[1]->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(11, 4)));
+		m_pPlayer[1]->SetPlayNumber(1);
+	}
 
 	m_pScore = CScore::Create();
 	m_pScore->SetScore(CManager::GetInstance()->GetEndScore());
