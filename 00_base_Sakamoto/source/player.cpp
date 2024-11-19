@@ -775,23 +775,12 @@ void CPlayer::Attack(void)
 		CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
 		CInputJoypad* pInputJoypad = CManager::GetInstance()->GetInputJoyPad();
 
-		if (pInputKeyboard->GetTrigger(DIK_SPACE) == true)
+		if (pInputKeyboard->GetTrigger(DIK_SPACE) || pInputJoypad->GetTrigger(CInputJoypad::BUTTON_B, 0))
 		{
 			// ‰Î‰Š•úŽË
 			CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_FIRE);
 
-			MyEffekseer::EffectCreate(CMyEffekseer::TYPE_HIT, false, useful::CalcMatrix(m_pos, m_rot, m_UseMultiMatrix), m_rot);
-
-			CFire::Create("data\\model\\fireball.x", m_pos, m_rot);
-			m_State = STATE_ATTACK;
-			m_nStateCount = FIRE_STOPTIME;
-		}
-		else if (pInputJoypad->GetTrigger(CInputJoypad::BUTTON_B, 0))
-		{
-			// ‰Î‰Š•úŽË
-			CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_FIRE);
-
-			MyEffekseer::EffectCreate(CMyEffekseer::TYPE_HIT, false, useful::CalcMatrix(m_pos, m_rot, m_UseMultiMatrix), m_rot);
+			//MyEffekseer::EffectCreate(CMyEffekseer::TYPE_HIT, false, useful::CalcMatrix(m_pos, m_rot, m_UseMultiMatrix), m_rot);
 
 			CFire::Create("data\\model\\fireball.x", m_pos, m_rot);
 			m_State = STATE_ATTACK;

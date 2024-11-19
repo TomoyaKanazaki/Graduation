@@ -62,6 +62,8 @@
 #endif
 #include <EffekseerRendererDX9.h>
 
+#include "MyEffekseer.h"
+
 #if 1
 #ifdef _DEBUG
 #define new  ::new(_NORMAL_BLOCK, __FILE__, __LINE__)

@@ -32,9 +32,7 @@ namespace MyEffekseer
 	// エフェクトの名前
 	const char* EFFECT_PATH[] =
 	{
-		"data\\EFFEKSEER\\Effect\\impact.efkefc",          // 衝撃波
-		"data\\EFFEKSEER\\Effect\\hit.efkefc",             // ヒット
-		"data\\EFFEKSEER\\Effect\\attack_impact.efkefc",   // 攻撃の予兆
+		"data\\EFFEKSEER\\Effect\\fireball.efkefc",          // ファイアボール
 	};
 
 	//============================================

@@ -178,8 +178,6 @@ void CItem::Update()
 	SetRot(rot);
 	m_Grid = CMapSystem::GetInstance()->CalcGrid(pos);
 
-	DebugProc::Print(DebugProc::POINT_CENTER, "y座標 : %f\n", pos.y);
-
 	// 親クラスの更新処理
 	CObjectX::Update();
 }
