@@ -34,14 +34,16 @@ public:
 	void SetColorA(float A) { m_Color.a = A; SetColor(m_Color); }							//頂点不透明度の設定
 	void SetTexture(const char *name);
 
+	void SetpVtx(float Width, float Height);
+
 	void SetPos(D3DXVECTOR3 pos) { m_pos = pos; }
 	D3DXVECTOR3 GetPos(void) { return m_pos; }
 	void SetPosOld(D3DXVECTOR3 pos) { m_posOld = pos; }
 	D3DXVECTOR3 GetPosOld(void) { return m_posOld; }
 	void SetRot(D3DXVECTOR3 rot) { m_rot = rot; }
 	D3DXVECTOR3 GetRot(void) { return m_rot; }
-	void SetWidth(float Width) { m_Width = Width; }
-	float GetWidth(void) { return m_Width; }
+	void SetWidth(float Width) { m_fWidth = Width; }
+	float GetWidth(void) { return m_fWidth; }
 	void SetHeight(float Height) { m_Height = Height; }
 	float GetHeight(void) { return m_Height; }
 	void SetAddDorw(bool Set) { m_AddDarw = Set; }
@@ -64,7 +66,7 @@ protected:
 
 private:
 	int m_nIdxTexture;
-	float m_Width;							//幅
+	float m_fWidth;							//幅
 	float m_Height;							//高さ
 	bool m_AddDarw;							//加算合成
 	bool m_Lighting;						//ライティング
