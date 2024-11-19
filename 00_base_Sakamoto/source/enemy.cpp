@@ -879,7 +879,7 @@ void CEnemy::Effect()
 	D3DXVECTOR3 rot = GetRot();
 
 	// エフェクトを生成
-	MyEffekseer::EffectCreate(EFFECT_TYPE[m_EnemyType], false, useful::CalcMatrix(pos, rot, GetUseMultiMatrix()), rot, D3DXVECTOR3(100.0f, 100.0f, 100.0f));
+	MyEffekseer::EffectCreate(EFFECT_TYPE[m_EnemyType], false, useful::CalcMatrix(pos, rot, GetUseMultiMatrix()), rot);
 }
 
 //====================================================================
