@@ -232,6 +232,10 @@ void CFire::CollisionEnemy()
 		{// 弾が当たった
 			pEnemy->Hit(1);
 
+			// エフェクトを生成
+			D3DXVECTOR3 rot = pEnemy->GetRot();
+			MyEffekseer::EffectCreate(CMyEffekseer::TYPE_HIT, false, useful::CalcMatrix(pos, rot, GetUseMultiMatrix()), rot, D3DXVECTOR3(25.0f, 25.0f, 25.0f));
+
 			// 削除
 			Uninit();
 
