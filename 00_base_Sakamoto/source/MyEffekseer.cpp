@@ -27,6 +27,11 @@ namespace
 	const float DELTA_TIME = 60.0f;
 }
 
+//==========================================
+//  静的メンバ変数宣言
+//==========================================
+CMyEffekseer* CMyEffekseer::m_pInstance = nullptr; // 自身のポインタ
+
 namespace MyEffekseer
 {
 	// エフェクトの名前
@@ -57,7 +62,7 @@ namespace MyEffekseer
 	CEffekseer* EffectCreate(CMyEffekseer::TYPE type, bool bLoop, D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 scale)
 	{
 		// エフェクシア取得
-		CMyEffekseer* pMyEffekseer = CManager::GetInstance()->GetEffecseer();
+		CMyEffekseer* pMyEffekseer = CMyEffekseer::GetInstance();
 
 		// 使用されていない場合処理を抜ける
 		if (pMyEffekseer == nullptr) { assert(false); return nullptr; }
@@ -180,6 +185,9 @@ void CMyEffekseer::Uninit(void)
 	{
 		effect->Uninit();
 	}
+
+	// 自身を終了する
+	delete m_pInstance;
 }
 
 //===========================================================
@@ -196,8 +204,16 @@ void CMyEffekseer::Update(void)
 
 	for(CEffekseer* effect : list)
 	{
-		// ハンドルを取得
+		// エフェクト情報を取得
 		Effekseer::Handle Handle = effect->GetHandle();
+		Effekseer::Vector3D pos = effect->GetPosition();
+		Effekseer::Vector3D rot = effect->GetRotation();
+		Effekseer::Vector3D scale = effect->GetScale();
+
+		// 位置や向き、大きさを再設定
+		m_EfkManager->SetLocation(Handle, pos);
+		m_EfkManager->SetRotation(Handle, { 0.0f, 1.0f, 0.0f }, rot.Y);
+		m_EfkManager->SetScale(Handle, scale.X, scale.Y, scale.Z);
 
 		DebugProc::Print(DebugProc::POINT_CENTER, "エフェクトの種類 : ");
 		auto str = magic_enum::enum_name(effect->GetEfkType());
@@ -205,13 +221,13 @@ void CMyEffekseer::Update(void)
 		DebugProc::Print(DebugProc::POINT_CENTER, "\n");
 
 		// エフェクトの再生が終了していない場合次に進む
-		if (m_EfkManager->Exists(Handle)) { continue; }
+		if (m_EfkManager->Exists(Handle) && !effect->IsDeath()) { continue; }
 		
 		// 再生の停止
 		m_EfkManager->StopEffect(Handle);
 
 		// ループエフェクトでない場合終了して次に進む
-		if (!effect->IsLoop())
+		if (!effect->IsLoop() || effect->IsDeath())
 		{
 			// 終了処理 
 			effect->Uninit();
@@ -220,22 +236,12 @@ void CMyEffekseer::Update(void)
 
 		// エフェクト本体の情報を取得する
 		Effekseer::EffectRef reference = effect->GetEffect();
-		Effekseer::Vector3D pos = effect->GetPosition();
-		Effekseer::Vector3D rot = effect->GetRotation();
-		Effekseer::Vector3D scale = effect->GetScale();
-
-		DebugProc::Print(DebugProc::POINT_CENTER, "エフェクトの座標 : %f, %f, %f\n", pos.X, pos.Y, pos.Z);
 
 		// エフェクトの再生
 		Handle = m_EfkManager->Play(reference, pos);
 
 		// ハンドルの設定
 		effect->SetEfkHandle(Handle);
-
-		// 位置や向き、大きさをもう一度設定
-		m_EfkManager->SetLocation(Handle, pos);
-		m_EfkManager->SetRotation(Handle, { 0.0f, 1.0f, 0.0f }, rot.Y);
-		m_EfkManager->SetScale(Handle, scale.X, scale.Y, scale.Z);
 	}
 
 	// レイヤーパラメータの設定
@@ -299,6 +305,21 @@ void CMyEffekseer::Draw(void)
 	m_EfkRenderer->EndRendering();
 }
 
+//==========================================
+//  自身の取得
+//==========================================
+CMyEffekseer* CMyEffekseer::GetInstance(void)
+{
+	// 自身が存在していない場合生成する
+	if (m_pInstance == nullptr)
+	{
+		m_pInstance = new CMyEffekseer;
+		m_pInstance->Init();
+	}
+
+	return m_pInstance;
+}
+
 //===========================================================
 // モジュール設定
 //===========================================================
@@ -339,7 +360,8 @@ CListManager<CEffekseer>* CEffekseer::m_pList = nullptr; // オブジェクトリスト]
 // コンストラクタ
 //===========================================================
 CEffekseer::CEffekseer() :
-	m_eType(CMyEffekseer::TYPE_NONE)
+	m_eType(CMyEffekseer::TYPE_NONE),
+	m_bDeath(false)
 {
 
 }
@@ -385,8 +407,20 @@ void CEffekseer::Uninit(void)
 		m_pList->Release(m_pList);
 	}
 
-	// 自身を削除する
+	// 自身の終了
 	delete this;
+}
+
+//==========================================
+//  死亡設定
+//==========================================
+void CEffekseer::SetDeath()
+{
+	// 再生の停止
+	CMyEffekseer::GetInstance()->GetEfkManager()->StopEffect(m_efkHandle);
+
+	// フラグの設定
+	m_bDeath = true;
 }
 
 //====================================================================
