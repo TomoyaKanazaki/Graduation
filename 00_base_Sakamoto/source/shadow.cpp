@@ -32,7 +32,7 @@ CShadow::~CShadow()
 //===========================================
 // 生成
 //===========================================
-CShadow* CShadow::Create(const D3DXVECTOR3& pos, const D3DXVECTOR3& rot)
+CShadow* CShadow::Create(const D3DXVECTOR3& pos, float fWidth, float fHeight)
 {
 	// インスタンス生成
 	CShadow* pShadow = new CShadow;
@@ -42,6 +42,9 @@ CShadow* CShadow::Create(const D3DXVECTOR3& pos, const D3DXVECTOR3& rot)
 
 	// 位置設定
 	pShadow->SetPos(pos);
+
+	// 大きさ
+	pShadow->SetpVtx(fWidth, fHeight);
 
 	return pShadow;
 }
