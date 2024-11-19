@@ -33,6 +33,7 @@ namespace MyEffekseer
 	const char* EFFECT_PATH[] =
 	{
 		"data\\EFFEKSEER\\Effect\\fireball.efkefc",          // ファイアボール
+
 	};
 
 	//============================================
@@ -53,11 +54,10 @@ namespace MyEffekseer
 		CMyEffekseer* pMyEffekseer = CManager::GetInstance()->GetEffecseer();
 
 		// 使用されていない場合処理を抜ける
-		if (pMyEffekseer == nullptr)
-			return nullptr;
+		if (pMyEffekseer == nullptr) { assert(false); return nullptr; }
 
 		// エフェクトを生成
-		CEffekseer* pEffekseer = pMyEffekseer->CreateEffect(EFFECT_PATH[type],
+		CEffekseer* pEffekseer = pMyEffekseer->CreateEffect(type,
 			Effekseer::Vector3D(pos.x, pos.y, pos.z),
 			Effekseer::Vector3D(rot.x, rot.y, rot.z),
 			Effekseer::Vector3D(scale.x, scale.y, scale.z),
@@ -89,7 +89,7 @@ CMyEffekseer::~CMyEffekseer()
 //===========================================================
 // 生成処理
 //===========================================================
-CEffekseer* CMyEffekseer::CreateEffect(const char* FileName, ::Effekseer::Vector3D pos, ::Effekseer::Vector3D rot, ::Effekseer::Vector3D scale, bool bLoop)
+CEffekseer* CMyEffekseer::CreateEffect(const TYPE eType, ::Effekseer::Vector3D pos, ::Effekseer::Vector3D rot, ::Effekseer::Vector3D scale, bool bLoop)
 {
 	CEffekseer* pEffect = new CEffekseer;
 
@@ -97,7 +97,7 @@ CEffekseer* CMyEffekseer::CreateEffect(const char* FileName, ::Effekseer::Vector
 		return nullptr;
 
 	// char16_tに変換
-	std::string file = FileName;
+	std::string file = MyEffekseer::EFFECT_PATH[eType];
 	int len = MultiByteToWideChar(CP_UTF8, 0, file.c_str(), -1, nullptr, 0);
 	std::u16string string16t(len, 0);
 	MultiByteToWideChar(CP_UTF8, 0, file.c_str(), -1, reinterpret_cast<LPWSTR>(&string16t[0]), len);
@@ -110,8 +110,11 @@ CEffekseer* CMyEffekseer::CreateEffect(const char* FileName, ::Effekseer::Vector
 	Effekseer::Handle Handle = m_EfkManager->Play(effect, 0, 0, 0);
 	pEffect->SetEfkHandle(Handle);
 
+	// 種類設定
+	pEffect->SetEfkType(eType);
+
 	// エフェクトネーム設定
-	pEffect->SetEfkName(FileName);
+	pEffect->SetEfkName(MyEffekseer::EFFECT_PATH[eType]);
 
 	// 位置設定
 	pEffect->SetPosition(pos);
@@ -179,50 +182,44 @@ void CMyEffekseer::Update(void)
 	// タイム加算
 	m_nTime++;
 
-	for(auto it = m_EffectList.begin(); it != m_EffectList.end();)
+	for(CEffekseer* it : m_EffectList)
 	{
 		// ハンドル、位置、向き、大きさを取得
-		Effekseer::Handle Handle = (*it)->GetHandle();
-		Effekseer::Vector3D pos = (*it)->GetPosition();
-		Effekseer::Vector3D rot = (*it)->GetRotation();
-		Effekseer::Vector3D scale = (*it)->GetScale();
+		Effekseer::Handle Handle = it->GetHandle();
+		Effekseer::Vector3D pos = it->GetPosition();
+		Effekseer::Vector3D rot = it->GetRotation();
+		Effekseer::Vector3D scale = it->GetScale();
+
+		DebugProc::Print(DebugProc::POINT_CENTER, "エフェクトの種類 : ");
+		auto str = magic_enum::enum_name(it->GetEfkType());
+		DebugProc::Print(DebugProc::POINT_CENTER, str.data());
+		DebugProc::Print(DebugProc::POINT_CENTER, "\n");
 
 		// エフェクトの再生が終了した
-		if (!m_EfkManager->Exists(Handle))
+		if (m_EfkManager->Exists(Handle)) { continue; }
+		
+		// 再生の停止
+		m_EfkManager->StopEffect(Handle);
+
+		// ループするフラグが立っている
+		if (!it->IsLoop())
 		{
-			// 再生の停止
-			m_EfkManager->StopEffect(Handle);
-
-			// ループするフラグが立っている
-			if ((*it)->IsLoop())
-			{
-				Effekseer::EffectRef effect = (*it)->GetEffect();
-
-				// エフェクトの再生
-				Handle = m_EfkManager->Play(effect, pos);
-
-				// ハンドルの設定
-				(*it)->SetEfkHandle(Handle);
-
-				// 位置や向き、大きさをもう一度設定
-				m_EfkManager->SetLocation(Handle, pos);
-				m_EfkManager->SetRotation(Handle, { 0.0f, 1.0f, 0.0f }, rot.Y);
-				m_EfkManager->SetScale(Handle, scale.X, scale.Y, scale.Z);
-
-				// 次の要素
-				it++;
-			}
-			else
-			{
-				// 指定された要素を削除する
-				it = m_EffectList.erase(it);
-			}
+			// 指定された要素を削除する
+			it->Uninit();
 		}
-		else
-		{
-			// 次の要素
-			it++;
-		}
+
+		Effekseer::EffectRef effect = it->GetEffect();
+
+		// エフェクトの再生
+		Handle = m_EfkManager->Play(effect, pos);
+
+		// ハンドルの設定
+		it->SetEfkHandle(Handle);
+
+		// 位置や向き、大きさをもう一度設定
+		m_EfkManager->SetLocation(Handle, pos);
+		m_EfkManager->SetRotation(Handle, { 0.0f, 1.0f, 0.0f }, rot.Y);
+		m_EfkManager->SetScale(Handle, scale.X, scale.Y, scale.Z);
 	}
 
 	// レイヤーパラメータの設定
@@ -349,7 +346,8 @@ void CMyEffekseer::ListIn(CEffekseer* pEffect)
 //===========================================================
 // コンストラクタ
 //===========================================================
-CEffekseer::CEffekseer()
+CEffekseer::CEffekseer() :
+	m_eType(CMyEffekseer::TYPE_NONE)
 {
 
 }
@@ -375,5 +373,5 @@ void CEffekseer::Init(Effekseer::Vector3D pos, Effekseer::Vector3D rot, Effeksee
 //===========================================================
 void CEffekseer::Uninit(void)
 {
-
+	
 }

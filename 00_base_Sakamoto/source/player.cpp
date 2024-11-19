@@ -385,7 +385,6 @@ void CPlayer::GameUpdate(void)
 	auto str = magic_enum::enum_name(m_State);
 	DebugProc::Print(DebugProc::POINT_LEFT, str.data());
 	DebugProc::Print(DebugProc::POINT_LEFT, "\n");
-
 }
 
 //====================================================================
