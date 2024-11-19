@@ -43,7 +43,7 @@ public:
 	::EffekseerRendererDX9::RendererRef GetEffekseerRenderer(void) { return m_EfkRenderer; }  // エフェクトレンダラー
 	::Effekseer::ManagerRef GetEfkManager(void) { return m_EfkManager; }                      // エフェクトマネージャ
 
-	static CMyEffekseer* GetInstance(void) { return m_pInstance; }  // 自分自身
+	static CMyEffekseer* GetInstance(void);  // 自分自身
 
 	// モジュール
 	void SetupEffekseerModules(::Effekseer::ManagerRef efkManager);
@@ -82,6 +82,7 @@ public:
 	void SetEfkHandle(Effekseer::Handle handle) { m_efkHandle = handle; } // ハンドル
 	void SetEfkName(const char* pName) { m_EfkName = pName; } // エフェクトの名前
 	void SetEfkType(const CMyEffekseer::TYPE eType) { m_eType = eType; } // エフェクトの種類
+	void SetDeath(); // 終了設定
 
 	// 取得
 	Effekseer::Vector3D GetPosition(void) { return m_pos; }				// 位置
@@ -92,6 +93,7 @@ public:
 	const char* GetEfkName(void) { return m_EfkName; }					// エフェクトの名前
 	CMyEffekseer::TYPE GetEfkType() { return m_eType; }					// エフェクトの種類
 	bool IsLoop(void) { return m_bLoop; }								// ループするフラグ
+	bool IsDeath(void) { return m_bDeath; }								// ループするフラグ
 
 	// 静的メンバ関数
 	static CListManager<CEffekseer>* GetList(); // リスト取得
@@ -107,6 +109,7 @@ private:
 	const char* m_EfkName; // 名前
 	CMyEffekseer::TYPE m_eType; // 種類
 	bool m_bLoop; // ループするフラグ
+	bool m_bDeath; // 死亡フラグ
 	CListManager<CEffekseer>::AIterator m_iterator; // イテレーター
 
 	// 静的メンバ変数
@@ -119,7 +122,7 @@ namespace MyEffekseer
 		                     bool bLoop = false,
 		                     D3DXVECTOR3 pos = { 0.0f, 0.0f, 0.0f }, 
 		                     D3DXVECTOR3 rot = { 0.0f, 0.0f, 0.0f },
-		                     D3DXVECTOR3 scale = { 500.0f, 500.0f, 500.0f } );
+		                     D3DXVECTOR3 scale = { 25.0f, 25.0f, 25.0f } );
 }
 
 #endif

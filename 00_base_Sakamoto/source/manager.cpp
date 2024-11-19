@@ -33,8 +33,7 @@ CScene::MODE CScene::m_mode = SET_MODE;
 //====================================================================
 //コンストラクタ
 //====================================================================
-CManager::CManager() : 
-	m_pEffecseer(nullptr)
+CManager::CManager()
 {
 	//静的メンバ変数宣言
 	m_bEdit = false;
@@ -216,13 +215,6 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 		}
 	}
 
-	// エフェクシアの初期化
-	if (m_pEffecseer == nullptr)
-	{
-		m_pEffecseer = new CMyEffekseer();
-		m_pEffecseer->Init();
-	}
-
 	m_PauseOK = true;
 
 	return S_OK;
@@ -344,11 +336,7 @@ void CManager::Uninit(void)
 	}
 
 	// エフェクシアの終了
-	if (m_pEffecseer != nullptr)
-	{
-		m_pEffecseer->Uninit();
-		delete m_pEffecseer;
-	}
+	CMyEffekseer::GetInstance()->Uninit();
 }
 
 //====================================================================
@@ -417,10 +405,7 @@ void CManager::Update(void)
 	m_Fade->Update();
 
 	// エフェクシアの更新
-	if (m_pEffecseer != nullptr)
-	{
-		m_pEffecseer->Update();
-	}
+	CMyEffekseer::GetInstance()->Update();
 }
 
 //====================================================================
