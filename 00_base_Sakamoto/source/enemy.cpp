@@ -182,7 +182,7 @@ HRESULT CEnemy::Init(void)
 	SetType(CObject::TYPE_ENEMY3D);
 
 	//マップとのマトリックスの掛け合わせをオンにする
-	SetUseMultiMatrix(&CGame::GetMapField()->GetMatrix());
+	SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
 
 	// スローの生成(配属、タグの設定)
 	m_pSlow = CSlowManager::Create(m_pSlow->CAMP_ENEMY, m_pSlow->TAG_ENEMY);
@@ -299,7 +299,7 @@ void CEnemy::Draw(void)
 
 	if (m_UseMultiMatrix != nullptr)
 	{
-		SetUseMultiMatrix(&CGame::GetMapField()->GetMatrix());
+		SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
 
 		//算出したマトリクスをかけ合わせる
 		D3DXMatrixMultiply(&m_mtxWorld,

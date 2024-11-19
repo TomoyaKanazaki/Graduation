@@ -205,7 +205,7 @@ void CObjectX::Draw(void)
 
 	if (m_UseMultiMatrix != nullptr && CManager::GetInstance()->GetScene()->GetMode() == CScene::MODE_GAME)
 	{
-		SetUseMultiMatrix(&CGame::GetMapField()->GetMatrix());
+		SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
 
 		//算出したマトリクスをかけ合わせる
 		D3DXMatrixMultiply(&m_mtxWorld,

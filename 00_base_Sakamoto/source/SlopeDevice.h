@@ -63,7 +63,7 @@ public:
 
 	void SetMultiMatrix(bool Set) { m_bMultiMatrix = Set; }
 	bool GetMultiMatrix(void) { return m_bMultiMatrix; }
-	void SetUseMultiMatrix(D3DXMATRIX Set) { m_UseMultiMatrix = Set; }
+	void SetUseMultiMatrix(D3DXMATRIX* Set) { m_UseMultiMatrix = Set; }
 
 	// 静的メンバ関数
 	static CListManager<CSlopeDevice>* GetList(void); // リスト取得
@@ -88,7 +88,7 @@ private:
 
 	//マップとのマトリックス情報
 	bool m_bMultiMatrix;					// マトリックスの掛け合わせをするかどうか
-	D3DXMATRIX m_UseMultiMatrix;			// 掛け合わせるマトリックス
+	D3DXMATRIX* m_UseMultiMatrix;			// 掛け合わせるマトリックス
 
 	// 静的メンバ変数
 	static CListManager<CSlopeDevice>* m_pList; // オブジェクトリスト

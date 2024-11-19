@@ -83,7 +83,7 @@ HRESULT CRailBlock::Init(int nMapWight, int nMapHeight, bool Edit, int Max, int*
 	m_StartGrid.x = nMapWight;
 	m_StartGrid.z = nMapHeight;
 
-	SetUseMultiMatrix(&CGame::GetMapField()->GetMatrix());
+	SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
 
 	CObjmeshCube::Init();
 

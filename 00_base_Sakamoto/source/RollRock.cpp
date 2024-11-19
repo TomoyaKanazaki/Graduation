@@ -92,7 +92,7 @@ HRESULT CRollRock::Init(char* pModelName)
 
 	CObjectX::Init(pModelName);
 
-	SetUseMultiMatrix(&CGame::GetMapField()->GetMatrix());
+	SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
 	//SetMultiMatrix(true);
 
 	SetSize(SAMPLE_SIZE);

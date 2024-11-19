@@ -220,7 +220,7 @@ void CSlopeDevice::Draw(void)
 		//算出したマトリクスをかけ合わせる
 		D3DXMatrixMultiply(&m_mtxWorld,
 			&m_mtxWorld,
-			&m_UseMultiMatrix);
+			m_UseMultiMatrix);
 	}
 
 	//ワールドマトリックスの設定

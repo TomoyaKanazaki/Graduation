@@ -75,7 +75,7 @@ HRESULT CCubeBlock::Init(void)
 {	
 	CObjmeshCube::Init();
 
-	SetUseMultiMatrix(&CGame::GetMapField()->GetMatrix());
+	SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
 	//SetMultiMatrix(true);
 
 	SetTexture("data\\TEXTURE\\Field\\00_wall.jpg");
@@ -132,7 +132,7 @@ void CCubeBlock::Draw(void)
 	//デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
 
-	SetUseMultiMatrix(&CGame::GetMapField()->GetMatrix());
+	SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
 	CObjmeshCube::Draw();
 
 	//ステンシルバッファ有効

@@ -105,7 +105,7 @@ HRESULT CFire::Init(char* pModelName)
 	CObjectX::Init(pModelName);
 
 	//マップとのマトリックスの掛け合わせをオンにする
-	SetUseMultiMatrix(&CGame::GetMapField()->GetMatrix());
+	SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
 	//SetMultiMatrix(true);
 
 	// 炎の体力
