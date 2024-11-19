@@ -37,6 +37,7 @@
 #include "objmeshField.h"
 #include "CubeBlock.h"
 #include "RollRock.h"
+#include "shadow.h"
 
 #include "MyEffekseer.h"
 
@@ -65,6 +66,8 @@ namespace
 	const float EGG_ROT = D3DX_PI * 0.006f;		//回転速度
 	const float EGG_MOVE_DEL = 0.9f;			//移動量の減衰速度
 	const float EGG_COLOR_DEL_A = 0.01f;		//不透明度の減衰速度
+
+	const float SHADOW_SIZE = 100.0f;			// 丸影の大きさ
 }
 
 //===========================================
@@ -189,6 +192,9 @@ HRESULT CPlayer::Init(void)
 
 	// スローの生成
 	m_pSlow = CSlowManager::Create(CSlowManager::CAMP_PLAYER, CSlowManager::TAG_PLAYER);
+
+	// 影生成
+	CShadow::Create(m_pos, SHADOW_SIZE, SHADOW_SIZE);
 
 	// リストマネージャーの生成
 	if (m_pList == nullptr)
