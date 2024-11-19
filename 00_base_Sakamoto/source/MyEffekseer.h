@@ -28,8 +28,10 @@ public:
 	// 種類
 	enum TYPE
 	{
-		TYPE_FIRE = 0, // ファイアボール
-
+		TYPE_FIRE = 0,	// ファイアボール
+		TYPE_CHARGE,	// 火炎放射チャージ
+		TYPE_SMOKE,		// スモーク
+		TYPE_HIT,		// ヒット
 		TYPE_MAX,
 		TYPE_NONE  // なんもない
 	};
