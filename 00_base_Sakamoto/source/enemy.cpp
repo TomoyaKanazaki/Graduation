@@ -56,12 +56,20 @@ namespace
 	};
 	const float TARGET_DIFF = 5.0f; // 許容範囲
 	const float MOVE_ASTAR = 150.0f; // 追跡時の移動速度
+
+	const CMyEffekseer::TYPE EFFECT_TYPE[] = // 経路探索を行う間隔
+	{
+		CMyEffekseer::TYPE_RESPAWN_MEDAMAN,
+		CMyEffekseer::TYPE_RESPAWN_BONBON,
+		CMyEffekseer::TYPE_RESPAWN_BONBON // TODO : 子デビル
+	};
 }
 
 //==========================================
 //  静的警告処理
 //==========================================
 static_assert(NUM_ARRAY(COORDDINATE_RATE) == CEnemy::ENEMY_MAX, "ERROR : Type Count Missmatch");
+static_assert(NUM_ARRAY(EFFECT_TYPE) == CEnemy::ENEMY_MAX, "ERROR : Type Count Missmatch");
 
 //===========================================
 // 静的メンバ変数宣言
@@ -159,6 +167,9 @@ CEnemy* CEnemy::Create(const ENEMY_TYPE eType, const CMapSystem::GRID& grid)
 	// 敵のタイプを設定
 	pEnemy->m_EnemyType = eType;
 
+	// エフェクトを生成
+	pEnemy->Effect();
+
 	return pEnemy;
 }
 
@@ -237,14 +248,14 @@ void CEnemy::Update(void)
 	// 位置更新処理
 	//UpdatePos();
 
-	// 自分の番号を設定
-	m_Grid = CMapSystem::GetInstance()->CMapSystem::CalcGrid(m_pos);
-
 	// プレイヤーへの最短経路探索
 	Coordinate();
 
 	// 最短系露をたどる
 	Route();
+
+	// 自分の番号を設定
+	m_Grid = CMapSystem::GetInstance()->CMapSystem::CalcGrid(m_pos);
 
 	//床の判定
 	if (m_pos.y <= 0.0f)
@@ -858,6 +869,19 @@ void CEnemy::Route()
 	SetPos(pos);
 	SetMove(move);
 	SetRot(rot);
+}
+
+//==========================================
+//  エフェクトの生成
+//==========================================
+void CEnemy::Effect()
+{
+	// 情報を取得
+	D3DXVECTOR3 pos = GetPos();
+	D3DXVECTOR3 rot = GetRot();
+
+	// エフェクトを生成
+	MyEffekseer::EffectCreate(EFFECT_TYPE[m_EnemyType], false, useful::CalcMatrix(pos, rot, GetUseMultiMatrix()), rot);
 }
 
 //====================================================================

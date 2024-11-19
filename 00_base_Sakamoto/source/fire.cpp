@@ -18,8 +18,9 @@
 //==========================================
 namespace
 {
-	const int FIRE_LIFE = 60;			// 炎の体力
+	const int FIRE_LIFE = 120;			// 炎の体力
 	const float FIRE_SPEED = 10.0f;		// 炎の速度
+	const float FIRE_HEIGHT = 50.0f;	// 炎の高さ
 	const D3DXVECTOR3 SAMPLE_SIZE = D3DXVECTOR3(20.0f, 20.0f, 20.0f);		//当たり判定
 }
 
@@ -32,12 +33,12 @@ CListManager<CFire>* CFire::m_pList = nullptr; // オブジェクトリスト
 //コンストラクタ
 //====================================================================
 CFire::CFire(int nPriority) : CObjectX(nPriority),
+m_Grid(CMapSystem::GRID(0, 0)),
 m_pEffect(nullptr)
 {
 	SetSize(SAMPLE_SIZE);
 	SetPos(INITVECTOR3);
 	m_nIdxXModel = 0;			//マテリアルの数
-	m_CollisionPos = INITVECTOR3;
 	m_bCollision = false;
 	m_State = STATE_NORMAL;
 	m_nStateCount = 0;
@@ -68,7 +69,6 @@ CFire* CFire::Create(char* pModelName, const D3DXVECTOR3& pos, const D3DXVECTOR3
 
 		pFire->SetPos(pos);
 		pFire->SetRot(rot);
-		pFire->m_rot = rot;
 	}
 
 	//オブジェクトの初期化処理
@@ -88,6 +88,19 @@ HRESULT CFire::Init(char* pModelName)
 	// オブジェクトの種類設定
 	SetType(CObject::TYPE_FIRE);
 
+	// 自身の情報を取得する
+	D3DXVECTOR3 pos = GetPos();
+	D3DXVECTOR3 rot = GetRot();
+
+	// 高さを調整
+	pos.y = FIRE_HEIGHT;
+
+	// グリッド座標を設定
+	m_Grid = CMapSystem::GetInstance()->CalcGrid(pos);
+
+	// 座標を設定
+	SetPos(pos);
+
 	// 継承クラスの初期化
 	CObjectX::Init(pModelName);
 
@@ -102,7 +115,7 @@ HRESULT CFire::Init(char* pModelName)
 	m_pEffect = MyEffekseer::EffectCreate(CMyEffekseer::TYPE_FIRE, false, useful::CalcMatrix(m_pos, m_rot, *GetUseMultiMatrix()), m_rot);
 
 	// 炎の速度
-	D3DXVECTOR3 move = -D3DXVECTOR3(FIRE_SPEED * sinf(m_rot.y), 0.0f, FIRE_SPEED * cosf(m_rot.y));
+	D3DXVECTOR3 move = -D3DXVECTOR3(FIRE_SPEED * sinf(rot.y), 0.0f, FIRE_SPEED * cosf(rot.y));
 	SetMove(move);
 
 	// リストマネージャーの生成
@@ -136,7 +149,7 @@ void CFire::Uninit(void)
 	// エフェクトを消去
 	if (m_pEffect != nullptr)
 	{
-		//m_pEffect->Uninit();
+		m_pEffect->SetDeath();
 	}
 
 	CObjectX::Uninit();
@@ -149,18 +162,33 @@ void CFire::Update(void)
 {
 	D3DXVECTOR3 pos = GetPos();
 	D3DXVECTOR3 move = GetMove();
+	D3DXVECTOR3 rot = GetRot();
 
-	GameUpdate();
+	//更新前の位置を過去の位置とする
+	SetPosOld(pos);
+
+	//大きさの設定
+	SetScaling(D3DXVECTOR3(m_Scaling, m_Scaling, m_Scaling));
+
+	//状態管理
+	StateManager();
+
+	//頂点情報の更新
+	CObjectX::Update();
 
 	//位置更新
 	pos += m_move;
 
 	// 位置・移動量設定
 	SetPos(pos);
+
+	// グリッド座標を設定
+	m_Grid = CMapSystem::GetInstance()->CalcGrid(pos);
 	
 	// エフェクトを動かす
 	if (m_pEffect != nullptr)
 	{
+
 		D3DXMATRIX mat = *GetUseMultiMatrix();
 		D3DXVECTOR3 ef = useful::CalcMatrix(m_pos, m_rot, *GetUseMultiMatrix());
 		m_pEffect->SetPosition(ef);
@@ -177,34 +205,6 @@ void CFire::Update(void)
 		//破棄する
 		Uninit();
 	}
-}
-
-//====================================================================
-//ゲームでの更新処理
-//====================================================================
-void CFire::GameUpdate(void)
-{
-	//更新前の位置を過去の位置とする
-	m_posOld = m_pos;
-
-	//位置更新
-	CObjectX::SetPos(m_pos);
-	CObjectX::SetRot(m_rot);
-
-	//画面外判定
-	if (m_pos.y < 0.0f)
-	{
-		Uninit();
-	}
-
-	//大きさの設定
-	SetScaling(D3DXVECTOR3(m_Scaling, m_Scaling, m_Scaling));
-
-	//状態管理
-	StateManager();
-
-	//頂点情報の更新
-	CObjectX::Update();
 }
 
 //====================================================================
@@ -227,13 +227,15 @@ void CFire::CollisionEnemy()
 	// キューブブロックリストの中身を確認する
 	for (CEnemy* pEnemy : list)
 	{
-		D3DXVECTOR3 pos = pEnemy->GetPos();
-		D3DXVECTOR3 Size = pEnemy->GetSize();
-
 		// 円の当たり判定
-		if (useful::CollisionCircle(m_pos, pos, Size.x) == true)
+		if (m_Grid == pEnemy->GetGrid())
 		{// 弾が当たった
 			pEnemy->Hit(1);
+
+			// エフェクトを生成
+			D3DXVECTOR3 pos = pEnemy->GetPos();
+			D3DXVECTOR3 rot = pEnemy->GetRot();
+			MyEffekseer::EffectCreate(CMyEffekseer::TYPE_HIT, false, useful::CalcMatrix(pos, rot, GetUseMultiMatrix()), rot, D3DXVECTOR3(25.0f, 25.0f, 25.0f));
 
 			// 削除
 			Uninit();

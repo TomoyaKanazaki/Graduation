@@ -109,6 +109,7 @@ private:
 	void SearchWall(void);								// 壁のサーチ判定
 	void Coordinate(); // 最短経路探索
 	void Route();	// 最短経路をたどる
+	void Effect(); // エフェクトを生成
 
 	CMapSystem::GRID m_Grid;	//グリット番号
 

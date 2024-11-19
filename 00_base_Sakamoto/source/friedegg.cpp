@@ -135,6 +135,11 @@ bool CFriedEgg::Hit(CPlayer* pPlayer)
 
 	CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_EAT);
 
+	// エフェクトを生成する
+	D3DXVECTOR3 pos = GetPos();
+	D3DXVECTOR3 rot = GetRot();
+	MyEffekseer::EffectCreate(CMyEffekseer::TYPE_EAT, false, useful::CalcMatrix(pos, rot, GetUseMultiMatrix()), rot);
+
 	return true;
 }
 
