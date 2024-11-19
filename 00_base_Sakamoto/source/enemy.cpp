@@ -878,10 +878,12 @@ void CEnemy::Effect()
 {
 	// 情報を取得
 	D3DXVECTOR3 pos = GetPos();
+	pos.y += 0.5f;
 	D3DXVECTOR3 rot = GetRot();
+	pos = useful::CalcMatrix(pos, rot, *GetUseMultiMatrix());
 
 	// エフェクトを生成
-	MyEffekseer::EffectCreate(EFFECT_TYPE[m_EnemyType], false, useful::CalcMatrix(pos, rot, *GetUseMultiMatrix()), rot);
+	MyEffekseer::EffectCreate(EFFECT_TYPE[m_EnemyType], false, pos, rot, D3DXVECTOR3(5.0f, 5.0f, 5.0f));
 }
 
 //====================================================================

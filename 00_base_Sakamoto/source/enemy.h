@@ -18,9 +18,6 @@ class CObject3D;
 class CLevelModelEffect;
 class CSlowManager;
 
-#define SCREEN_POS_NUM	(8)		// スクリーン座標の数
-#define SEARCH_POS_NUM	(32)	// 探索位置の数
-
 //オブジェクトエネミークラス
 class CEnemy : public CObject
 {
