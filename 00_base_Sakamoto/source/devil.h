@@ -58,27 +58,17 @@ public:
 		STATE_MAX,			//最大
 	};
 
-	D3DMATRIX GetMtxWorld(void) { return m_mtxWorld; }
 	static CDevil* Create();
 	HRESULT Init(void);
 	void Uninit(void);
 	void Update(void);
-	void TitleUpdate(void);
-	void GameUpdate(void);
-	void TutorialUpdate(void);
 	void Draw(void);
 
 	float MoveSlopeX(float Move);		//傾き中の移動量変動
 	float MoveSlopeZ(float Move);		//傾き中の移動量変動
 
-	void SetPos(D3DXVECTOR3 pos) { m_pos = pos; }
-	D3DXVECTOR3 GetPos(void) { return m_pos; }
 	void SetMove(D3DXVECTOR3 move) { m_move = move; }
 	D3DXVECTOR3 GetMove(void) { return m_move; }
-	void SetRot(D3DXVECTOR3 rot) { m_rot = rot; }
-	D3DXVECTOR3 GetRot(void) { return m_rot; }
-	void SetSize(D3DXVECTOR3 size) { m_size = size; }
-	D3DXVECTOR3 GetSize(void) { return m_size; }
 	STATE GetState(void) { return m_State; }
 	void SetAction(ACTION_TYPE Action, float BlendTime);
 	ACTION_TYPE GetAction(void) { return m_Action; }
@@ -117,18 +107,13 @@ private:
 
 	ACTION_TYPE m_Action;
 	ACTION_TYPE m_AtkAction;		//攻撃状態記録用変数
-	D3DXVECTOR3 m_pos;				//位置
-	D3DXVECTOR3 m_posOld;			//過去の位置
 	D3DXVECTOR3 m_move;				//移動量
 	D3DXVECTOR3 m_Objmove;			//オブジェクトから影響される移動量
-	D3DXVECTOR3 m_rot;				//向き
 	D3DXVECTOR3 m_rotDest;			//向きの目的地
 	D3DXVECTOR3 m_AutoMoveRot;		//自動移動の移動方向
-	D3DXVECTOR3 m_size;				//大きさ
 	D3DXVECTOR3 m_DevilPos;			//デビルパワーがマップのブロックにデビルスクロールする位置、テスト用
 	D3DXVECTOR3 m_MapDifference;	//マップを動かした時の差分
-	D3DXMATRIX m_mtxWorld;			//ワールドマトリックス
-	float m_fActionCount;				//行動のカウント
+	float m_fActionCount;			//行動のカウント
 	STATE m_State;					//状態
 	int m_nStateCount;				//状態管理用カウント
 	bool m_bSlope;					//傾き状態かどうか
