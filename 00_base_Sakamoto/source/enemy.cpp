@@ -812,7 +812,9 @@ void CEnemy::Effect()
 	D3DXVECTOR3 pos = GetPos();
 	pos.y += 0.5f;
 	D3DXVECTOR3 rot = GetRot();
-	pos = useful::CalcMatrix(pos, rot, *GetUseMultiMatrix());
+	D3DXMATRIX mtx = *GetUseMultiMatrix();
+	pos = useful::CalcMatrix(pos, rot, mtx);
+	rot = useful::CalcMatrixToRot(mtx);
 
 	// エフェクトを生成
 	m_pEffect = MyEffekseer::EffectCreate(EFFECT_TYPE[m_EnemyType], false, pos, rot, D3DXVECTOR3(10.0f, 10.0f, 10.0f));
