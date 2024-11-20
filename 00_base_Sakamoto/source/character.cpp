@@ -146,16 +146,16 @@ void CCharacter::Draw(void)
 
 	D3DXMATRIX mtxRot, mtxTrans;	//計算用マトリックス
 
-		//ワールドマトリックスの初期化
+	//ワールドマトリックスの初期化
 	D3DXMatrixIdentity(&m_mtxWorld);
 
 	if (m_bUseShadowMtx == true)
 	{
-		D3DXMATRIX mtxShadow;		// シャドウマトリックス
-		D3DLIGHT9 light;			// ライト情報
-		D3DXVECTOR4 posLight;		// ライトの位置
+		D3DXMATRIX mtxShadow;	// シャドウマトリックス
+		D3DLIGHT9 light;		// ライト情報
+		D3DXVECTOR4 posLight;	// ライトの位置
 		D3DXVECTOR3 pos, normal;	// 平面上の任意の点、法線ベクトル
-		D3DXPLANE plane;			// 平面情報
+		D3DXPLANE plane;		// 平面情報
 
 		// ライトの位置設定
 		pDevice->GetLight(0, &light);
@@ -197,9 +197,6 @@ void CCharacter::Draw(void)
 
 	if (m_bUseStencil == true)
 	{
-		//ワールドマトリックスの設定
-		pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
-
 		//ステンシルバッファ有効
 		pDevice->SetRenderState(D3DRS_STENCILENABLE, TRUE);
 
