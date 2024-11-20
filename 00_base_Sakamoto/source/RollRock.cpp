@@ -276,7 +276,7 @@ void CRollRock::Move(void)
 	m_move.z = SlopeRot.x * 10.0f;
 
 	//自分の立っているグリットの中心位置を求める
-	D3DXVECTOR3 MyGritPos = CMapSystem::GetInstance()->GetGritPos(m_Grid);
+	D3DXVECTOR3 MyGritPos = m_Grid.ToWorld();
 	float MapGritSize = CMapSystem::GetInstance()->GetGritSize();
 
 	if (m_pos.x <= MyGritPos.x + ((MapGritSize * 0.5f) - (GRIT_OK * m_OKR)) &&	//左

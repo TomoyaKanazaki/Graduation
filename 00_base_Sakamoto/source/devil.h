@@ -7,15 +7,13 @@
 #ifndef _DEVIL_H_
 #define _DEVIL_H_
 
-#include "object.h"
+#include "character.h"
 #include "useful.h"
 #include "MapSystem.h"
 
 #define SCROLL_ID 1
 
 //前方宣言
-
-class CCharacter;
 
 class CObject2D;
 class CObject3D;
@@ -31,7 +29,7 @@ class CBoss;
 class CPlayer;
 
 //オブジェクトプレイヤークラス
-class CDevil : public CObject
+class CDevil : public CCharacter
 {
 private:
 	static const int ENCOUNT_MAX = 128;
@@ -146,8 +144,6 @@ private:
 	int m_ScrollArrowOld;			// 過去のスクロールの方向
 	int m_SlopwArrowOld;			// 過去の傾きの方向
 	CScrollArrow* m_ScrollArrow[2];	// スクロール方向のUI 
-
-	CCharacter* m_pCharacter;		// キャラクターのクラス
 
 	// 静的メンバ変数
 	static CListManager<CDevil>* m_pList; // オブジェクトリスト

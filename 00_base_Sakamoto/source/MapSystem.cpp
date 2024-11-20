@@ -292,27 +292,32 @@ void CMapSystem::Load(const char* pFilename)
 				fscanf(pFile, "%s", &aSetMessage[0]);
 				if (strcmp(&aSetMessage[0], "STARTSETBLOCK") == 0)
 				{
-					int WightNumber, HeightNumber;
+					fscanf(pFile, "%s", &aString[0]);
+					fscanf(pFile, "%d", &pMapSystem->m_gridCenter.x);
 
 					fscanf(pFile, "%s", &aString[0]);
-					fscanf(pFile, "%d", &WightNumber);
-
-					fscanf(pFile, "%s", &aString[0]);
-					fscanf(pFile, "%d", &HeightNumber);
+					fscanf(pFile, "%d", &pMapSystem->m_gridCenter.z);
 
 					fscanf(pFile, "%s", &aString[0]);
 					fscanf(pFile, "%s", &aString[0]);
 
-					pMapSystem->SetGritBool(WightNumber, HeightNumber, true);
-					CCubeBlock* pBlock = CCubeBlock::Create();
-					pBlock->SetWightNumber(WightNumber);
-					pBlock->SetHeightNumber(HeightNumber);
-					pBlock->SetPos(D3DXVECTOR3(MapSystemPos.x + WightNumber * 100.0f, 50.0f, MapSystemPos.z - HeightNumber * 100.0f));
-					pBlock->SetSize(D3DXVECTOR3(MapSystemGritSize, MapSystemGritSize, MapSystemGritSize));
-					pBlock->SetTexture(&aString[0]);
+					pMapSystem->SetGritBool(pMapSystem->m_gridCenter.x, pMapSystem->m_gridCenter.z, true);
+
+					// キューブブロックの生成
+					CCubeBlock* pBlock = CCubeBlock::Create(pMapSystem->m_gridCenter, MapSystemGritSize); // GRIDとグリッドサイズを引数にする
+
+					// 削除
+					{
+						//pBlock->SetWightNumber(WightNumber); // GRIDで設定(不要)
+						//pBlock->SetHeightNumber(HeightNumber); // GRIDで設定(不要)
+						//pBlock->SetPos(D3DXVECTOR3(MapSystemPos.x + pMapSystem->m_gridCenter.x * 100.0f, 50.0f, MapSystemPos.z - pMapSystem->m_gridCenter.z * 100.0f)); // GRIDをもとに内部で計算
+						//pBlock->SetSize(D3DXVECTOR3(MapSystemGritSize, MapSystemGritSize, MapSystemGritSize)); // xzはグリッドサイズが必要、ｙは内部で定数化
+						//pBlock->SetTexture(&aString[0]); // 内部で定数化
+					}
+					// 削除
 
 					// 経路探索用情報の設定
-					generator->addCollision({ WightNumber, HeightNumber }); // 通過不可地点を追加
+					generator->addCollision({ pMapSystem->m_gridCenter.x, pMapSystem->m_gridCenter.z }); // 通過不可地点を追加
 
 					fscanf(pFile, "%s", &aEndMessage[0]);
 				}
@@ -410,6 +415,44 @@ int CMapSystem::CalcGridZ(const float posZ)
 
 	// グリット外なら-1を返す
 	return -1;
+}
+
+//==========================================
+//  グリッド座標を世界の座標に変換する
+//==========================================
+D3DXVECTOR3 CMapSystem::GRID::ToWorld()
+{
+	D3DXVECTOR3 pos;
+	D3DXVECTOR3 DevilPos = CGame::GetDevil()->GetDevilPos();
+	CMapSystem* map = GetInstance();
+
+	// グリット番号が最大値以上や最小値以下の時、範囲内に納める処理
+	CMapSystem::GRID temp = GRID(x, z);
+	temp.x = useful::RangeNumber(map->m_WightMax, 0, x);
+	temp.z = useful::RangeNumber(map->m_HeightMax, 0, z);
+
+	// グリットの横番号の位置を設定する
+	pos.x = map->m_MapPos.x + (temp.x * map->m_fGritSize);
+
+	//境界線の外側にグリットがある場合反対側に移動させる
+	if (pos.x > DevilPos.x + (map->m_MapSize.x))
+	{
+		pos.x = pos.x - (DevilPos.x + (map->m_MapSize.x * 2.0f)) - map->m_fGritSize;
+	}
+
+	// 高さの位置を設定する
+	pos.y = 0.0f;
+
+	// グリットの縦番号の位置を設定する
+	pos.z = map->m_MapPos.z - (temp.z * map->m_fGritSize);
+
+	//境界線の外側にグリットがある場合反対側に移動させる
+	if (pos.z < DevilPos.z - (map->m_MapSize.z))
+	{
+		pos.z = pos.z + (DevilPos.z + (map->m_MapSize.z * 2.0f)) + map->m_fGritSize;
+	}
+
+	return pos;
 }
 
 //==========================================

@@ -435,7 +435,7 @@ void CRenderer::Draw(void)
 			CObject::DrawAll(0);
 
 			// エフェクシアの更新
-			CMyEffekseer::GetInstance()->Draw();
+			CManager::GetInstance()->GetEffect()->Draw();
 
 			//ビューポートの設定
 			m_pD3DDevice->SetViewport(&viewportDef);
@@ -450,7 +450,7 @@ void CRenderer::Draw(void)
 			m_pD3DDevice->EndScene();
 		}
 		//バックバッファとフロントバッファの入れ替え
-		m_pD3DDevice->Present(nullptr, nullptr, nullptr, nullptr);
+  		m_pD3DDevice->Present(nullptr, nullptr, nullptr, nullptr);
 	//}
 }
 

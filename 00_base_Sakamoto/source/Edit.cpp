@@ -9,6 +9,7 @@
 #include "MapModel.h"
 #include "XModel.h"
 #include "CubeEffect.h"
+#include "MapSystem.h"
 
 //ƒ}ƒNƒ’è‹`
 namespace
@@ -379,16 +380,17 @@ void CEdit::UpdateBlock(void)
 		m_pEditBlock->SetTexture(BLOCK_TEXTURE_TYPE[m_nBlockTextureIdx]);
 	}
 
-	if (pInputKeyboard->GetTrigger(DIK_RETURN) == true)
+	/*if (pInputKeyboard->GetTrigger(DIK_RETURN) == true)
 	{
-		CCubeBlock* pBlock = CCubeBlock::Create();
+		CMapSystem* pMapSystem = CMapSystem::GetInstance();
+		CCubeBlock* pBlock = CCubeBlock::Create(pMapSystem->m_gridCenter);
 		pBlock->SetPos(m_pEditBlock->GetPos());
 		pBlock->SetSize(m_pEditBlock->GetSize());
 		pBlock->SetWightNumber(m_MapGritWight);
 		pBlock->SetHeightNumber(m_MapGritHeight);
 		pBlock->SetTexture(BLOCK_TEXTURE_TYPE[m_nBlockTextureIdx]);
 		AppearCollision();
-	}
+	}*/
 
 	if (pInputKeyboard->GetTrigger(DIK_BACKSPACE) == true)
 	{
@@ -425,7 +427,7 @@ void CEdit::UpdateRailBlock(void)
 
 		CMapSystem::GetInstance()->SetGritBool(m_MapGritWight, m_MapGritHeight, true);
 		CRailBlock* pBlock = CRailBlock::Create(m_MapGritWight, m_MapGritHeight, false, m_nRailMax, &m_nRailMove[0]);
-		pBlock->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(m_MapGritWight, m_MapGritHeight)));
+		pBlock->SetPos(CMapSystem::GRID(m_MapGritWight, m_MapGritHeight).ToWorld());
 		pBlock->SetSize(D3DXVECTOR3(50.0f, 50.0f, 50.0f));
 		m_nRailMax = 0;
 		m_EditRailBlock->RailDelete();

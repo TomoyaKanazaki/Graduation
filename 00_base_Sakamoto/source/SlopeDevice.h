@@ -7,14 +7,10 @@
 #ifndef _SLOPE_DEVICE_H_
 #define _SLOPE_DEVICE_H_
 
-#include "object.h"
-
-#define MODEL_NUM		(64)	// モデルの数
-
-class CCharacter;
+#include "character.h"
 
 //オブジェクトプレイヤークラス
-class CSlopeDevice : public CObject
+class CSlopeDevice : public CCharacter
 {
 public:
 
@@ -83,8 +79,6 @@ private:
 
 	STATE m_State;					//状態
 	int m_nStateCount;				//状態管理用変数
-
-	CCharacter* m_pCharacter;			// キャラクターのクラス
 
 	//マップとのマトリックス情報
 	bool m_bMultiMatrix;					// マトリックスの掛け合わせをするかどうか

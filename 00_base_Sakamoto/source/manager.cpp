@@ -33,7 +33,8 @@ CScene::MODE CScene::m_mode = SET_MODE;
 //====================================================================
 //コンストラクタ
 //====================================================================
-CManager::CManager()
+CManager::CManager() :
+	m_pEffect(nullptr)
 {
 	//静的メンバ変数宣言
 	m_bEdit = false;
@@ -174,6 +175,13 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 		return E_FAIL;
 	}
 
+	// エフェクトの生成
+	if (m_pEffect == nullptr)
+	{
+		m_pEffect = new CMyEffekseer;
+		m_pEffect->Init();
+	}
+
 	CMapSystem::GetInstance()->Init();
 
 	if (m_pTexture == nullptr)
@@ -214,7 +222,7 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 			m_Fade->Init(SET_MODE);
 		}
 	}
-
+	
 	m_PauseOK = true;
 
 	return S_OK;
@@ -336,7 +344,14 @@ void CManager::Uninit(void)
 	}
 
 	// エフェクシアの終了
-	CMyEffekseer::GetInstance()->Uninit();
+	if (m_pEffect != nullptr)
+	{
+		//サウンドの終了処理
+		m_pEffect->Uninit();
+
+		delete m_pEffect;
+		m_pEffect = nullptr;
+	}
 }
 
 //====================================================================
@@ -405,7 +420,7 @@ void CManager::Update(void)
 	m_Fade->Update();
 
 	// エフェクシアの更新
-	CMyEffekseer::GetInstance()->Update();
+	m_pEffect->Update();
 }
 
 //====================================================================

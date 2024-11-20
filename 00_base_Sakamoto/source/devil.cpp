@@ -65,7 +65,7 @@ CListManager<CDevil>* CDevil::m_pList = nullptr; // オブジェクトリスト
 //====================================================================
 //コンストラクタ
 //====================================================================
-CDevil::CDevil(int nPriority) : CObject(nPriority)
+CDevil::CDevil(int nPriority) : CCharacter(nPriority)
 {
 	SetSize(D3DXVECTOR3(750.0f, 0.0f, 550.0f));
 	m_pos = INITVECTOR3;
@@ -79,7 +79,6 @@ CDevil::CDevil(int nPriority) : CObject(nPriority)
 	m_State = STATE_WAIT;
 	m_nStateCount = 0;
 	m_CollisionRot = 0.0f;
-	m_pCharacter = nullptr;
 	m_DevilPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_MapDifference = INITVECTOR3;
 	m_DevilRot = INITVECTOR3;
@@ -131,17 +130,9 @@ HRESULT CDevil::Init(void)
 	//種類設定
 	SetType(CObject::TYPE_DEVIL);
 
-	// キャラクタークラスの生成処理
-	if (m_pCharacter == nullptr)
-	{
-		m_pCharacter = CCharacter::Create("data\\TXT\\MOTION\\01_enemy\\motion_devil.txt");
-
-		if(m_pCharacter == nullptr)
-		{
-			return E_FAIL;
-		}
-	}
-
+	// キャラクターテキストの設定処理
+	CCharacter::SetTxtCharacter("data\\TXT\\MOTION\\01_enemy\\motion_devil.txt");
+	
 	switch (CScene::GetMode())
 	{
 	case CScene::MODE_TITLE:
@@ -199,16 +190,8 @@ void CDevil::Uninit(void)
 		m_pList->Release(m_pList);
 	}
 
-	//モーションの終了処理
-	if (m_pCharacter != nullptr)
-	{
-		//モーションの破棄
-		m_pCharacter->Uninit();
-		delete m_pCharacter;
-		m_pCharacter = nullptr;
-	}
-
-	SetDeathFlag(true);
+	// キャラクタークラスの終了（継承）
+	CCharacter::Uninit();
 }
 
 //====================================================================
@@ -240,11 +223,8 @@ void CDevil::Update(void)
 //====================================================================
 void CDevil::TitleUpdate(void)
 {
-	// キャラクターの更新
-	if (m_pCharacter != nullptr)
-	{
-		m_pCharacter->Update();
-	}
+	// キャラクタークラスの更新（継承）
+	CCharacter::Update();
 }
 
 //====================================================================
@@ -267,11 +247,8 @@ void CDevil::GameUpdate(void)
 	//ステージ外にいるオブジェクトの処理
 	CollisionOut();
 
-	// キャラクターの更新
-	if (m_pCharacter != nullptr)
-	{
-		m_pCharacter->Update();
-	}
+	// キャラクタークラスの更新（継承）
+	CCharacter::Update();
 
 	D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
 	CEffect* pTestEffect = nullptr;
@@ -379,31 +356,12 @@ void CDevil::TutorialUpdate(void)
 //====================================================================
 void CDevil::Draw(void)
 {
-	//デバイスの取得
-	LPDIRECT3DDEVICE9 m_pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
-	D3DXMATRIX mtxRot, mtxTrans;	//計算用マトリックス
+	// 無理やり一時的位置情報交換（pos・rotの置き換え完了次第削除）
+	CCharacter::SetPos(GetPos());
+	CCharacter::SetRot(GetRot());
 
-	//ワールドマトリックスの初期化
-	D3DXMatrixIdentity(&m_mtxWorld);
-
-	//向きを反映
-	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
-
-	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
-
-	//位置を反映
-	D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);
-
-	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
-
-	//ワールドマトリックスの設定
-	m_pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
-
-	// キャラクターの描画
-	if (m_pCharacter != nullptr)
-	{
-		m_pCharacter->Draw();
-	}
+	// キャラクタークラスの描画（継承）
+	CCharacter::Draw();
 }
 
 //====================================================================
@@ -832,12 +790,12 @@ void CDevil::CollisionOut()
 			if (EnemyPos.x > 0.0f)
 			{
 				m_MinGrid.x = CMapSystem::GetInstance()->CalcGridX(m_DevilPos.x - MapSize.x - GritSize);	//左
-				EnemyPos = CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(m_MinGrid.x,pEnemy->GetGrid().z));
+				EnemyPos = CMapSystem::GRID(m_MinGrid.x, pEnemy->GetGrid().z).ToWorld();
 			}
 			else
 			{
 				m_MaxGrid.x = CMapSystem::GetInstance()->CalcGridX(m_DevilPos.x + MapSize.x - GritSize);	//右
-				EnemyPos = CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(m_MaxGrid.x, pEnemy->GetGrid().z));
+				EnemyPos = CMapSystem::GRID(m_MaxGrid.x, pEnemy->GetGrid().z).ToWorld();
 			}
 		}
 		else if (EnemyGrid.z == -1)
@@ -845,12 +803,12 @@ void CDevil::CollisionOut()
 			if (EnemyPos.z < 0.0f)
 			{
 				m_MinGrid.z = CMapSystem::GetInstance()->CalcGridZ(m_DevilPos.z + MapSize.z + GritSize);	//上
-				EnemyPos = CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(pEnemy->GetGrid().x, m_MinGrid.z));
+				EnemyPos = CMapSystem::GRID(pEnemy->GetGrid().x, m_MinGrid.z).ToWorld();
 			}
 			else
 			{
 				m_MaxGrid.z = CMapSystem::GetInstance()->CalcGridZ(m_DevilPos.z - MapSize.z + GritSize);	//下
-				EnemyPos = CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(pEnemy->GetGrid().x, m_MaxGrid.z));
+				EnemyPos = CMapSystem::GRID(pEnemy->GetGrid().x, m_MaxGrid.z).ToWorld();
 			}
 		}
 
@@ -1133,15 +1091,8 @@ void CDevil::DebugKey(void)
 //====================================================================
 void CDevil::SetAction(ACTION_TYPE Action, float BlendTime)
 {
-	if (m_pCharacter == nullptr)
-	{
-		// アサート
-		assert(("キャラクタークラスがないよ", false));
-		return;
-	}
-
 	// モーションの取得処理
-	CMotion* pMotion = m_pCharacter->GetMotion();
+	CMotion* pMotion = GetMotion();
 
 	if (pMotion == nullptr)
 	{
@@ -1160,21 +1111,13 @@ void CDevil::SetAction(ACTION_TYPE Action, float BlendTime)
 //====================================================================
 void CDevil::SetModelDisp(bool Sst)
 {
-	if (m_pCharacter == nullptr)
-	{
-		// アサート
-		assert(("キャラクタークラスがないよ", false));
-
-		return;
-	}
-
 	// モデル数を取得
-	int nNumModel = m_pCharacter->GetNumModel();
+	int nNumModel = GetNumModel();
 
 	for (int nCnt = 0; nCnt < nNumModel; nCnt++)
 	{
-		// モーションの取得処理
-		CModel* pModel = m_pCharacter->GetModel(nCnt);
+		// モデルの取得処理
+		CModel* pModel = GetModel(nCnt);
 
 		if (pModel != nullptr)
 		{
@@ -1478,7 +1421,7 @@ void CDevil::PlayerScroll(D3DXVECTOR3 Move, float GritSize)
 			{
 				D3DXVECTOR3 PlayerPos = pPlayer->GetPos();
 				D3DXVECTOR3 AnswerPos = INITVECTOR3;
-				AnswerPos = CMapSystem::GetInstance()->GetGritPos(Grit);
+				AnswerPos = Grit.ToWorld();
 
 				if (pPlayer->GetGritCenter())
 				{
@@ -1546,7 +1489,7 @@ void CDevil::GritScroll(D3DXVECTOR3 Move)
 		);
 
 		//グリット番号を位置に変換
-		pos = CMapSystem::GetInstance()->GetGritPos(grid);
+		pos = grid.ToWorld();
 		pos.y = 50.0f;
 
 		pCubeBlock->SetPos(pos);
@@ -1559,15 +1502,11 @@ void CDevil::GritScroll(D3DXVECTOR3 Move)
 	//{
 	//	for (int nCntH = 0; nCntH < MapHeightMax; nCntH++)
 	//	{
-	//		//グリット番号を位置に変換
-	//		D3DXVECTOR3 CountPos = CMapSystem::GetInstance()->GetGritPos(nCntW, nCntH);
-	//		CountPos.y = 50.0f;
-
 	//		if (CMapSystem::GetInstance()->GetGritBool(nCntW, nCntH))
 	//		{// ブロックが存在するグリットのみエフェクトを表示
 
 	//			CEffect* pEffect = CEffect::Create();
-	//			pEffect->SetPos(CountPos);
+	//			pEffect->SetPos(pos);
 	//			pEffect->SetRadius(20.0f);
 	//			pEffect->SetLife(10);
 	//		}

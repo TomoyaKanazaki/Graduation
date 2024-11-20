@@ -7,23 +7,24 @@
 #ifndef _CHARACTER_H_
 #define _CHARACTER_H_
 
-class CObject;
+#include "object.h"
+
 class CModel;
 class CMotion;
 
 #define MODEL_NUM		(64)	// モデルの数
 #define FILE_NAME_SIZE	(128)	// ファイル名の最大文字数
 
-//オブジェクトプレイヤークラス
-class CCharacter
+// キャラクタークラス
+class CCharacter : public CObject
 {
 public:
-	CCharacter();
+	CCharacter(int nPriority = 3);
 	~CCharacter();
 
 	static CCharacter* Create(const char* pModelName);
-	HRESULT Init(const char* pModelName);
 	virtual HRESULT Init(void) { return S_OK; };
+	HRESULT Init(const char* pModelName);
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);
@@ -31,6 +32,18 @@ public:
 	CModel* GetModel(int nCnt);
 	CMotion* GetMotion(void);
 	int GetNumModel(void) { return m_nNumModel; }
+
+	void SetUseMultiMatrix(D3DXMATRIX* Set) { m_UseMultiMatrix = Set; }
+	D3DXMATRIX* GetUseMultiMatrix(void) { return m_UseMultiMatrix; }
+	void SetUseStencil(bool bUse) { m_bUseStencil = bUse; }
+	void SetUseShadowMtx(bool bUse) { m_bUseShadowMtx = bUse; }
+	void SetPos(D3DXVECTOR3 pos) { m_pos = pos; }
+	D3DXVECTOR3 GetPos(void) { return m_pos; }
+
+	void SetRot(D3DXVECTOR3 rot) { m_rot = rot; }
+	D3DXVECTOR3 GetRot(void) { return m_rot; }
+
+	void SetTxtCharacter(const char* pFilename);
 
 private:
 
@@ -40,6 +53,18 @@ private:
 	CMotion* m_pMotion;
 	char m_aModelName[FILE_NAME_SIZE];
 	int m_nNumModel;
+
+	D3DXVECTOR3 m_pos;				//位置
+	D3DXVECTOR3 m_posOld;			//過去の位置
+	D3DXVECTOR3 m_rot;				//向き
+	D3DXVECTOR3 m_size;				//大きさ
+
+	// マトリックス情報
+	D3DXMATRIX m_mtxWorld;			// ワールドマトリックス
+	D3DXMATRIX* m_UseMultiMatrix;	// 掛け合わせるマトリックス
+
+	bool m_bUseStencil;				// ステンシルバッファの使用の有無
+	bool m_bUseShadowMtx;			// シャドウマトリックスの使用の有無
 };
 
 #endif

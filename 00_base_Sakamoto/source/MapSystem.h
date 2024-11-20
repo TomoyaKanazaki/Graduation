@@ -32,6 +32,9 @@ public:
 		// デストラクタ
 		~GRID() {};
 
+		// 計算関数
+		D3DXVECTOR3 ToWorld();
+
 		int x;
 		int z;
 
