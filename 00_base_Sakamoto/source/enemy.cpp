@@ -255,7 +255,7 @@ void CEnemy::Update(void)
 	//UpdatePos();
 
 	// ƒvƒŒƒCƒ„[‚Ö‚ÌÅ’ZŒo˜H’Tõ
-	Coordinate();
+	//Coordinate();
 
 	// Å’ZŒn˜I‚ğ‚½‚Ç‚é
 	Route();
