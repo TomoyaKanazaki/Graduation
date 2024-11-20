@@ -7,7 +7,7 @@
 #ifndef _GAME_H_
 #define _GAME_H_
 
-#include "manager.h"
+#include "Scene.h"
 
 #define NUM_PLAYER (2)
 

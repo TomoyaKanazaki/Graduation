@@ -169,7 +169,7 @@ HRESULT CPlayer::Init(void)
 	// 状態の設定
 	m_MoveState = MOVE_STATE_WAIT;
 
-	switch (CManager::GetInstance()->GetScene()->GetMode())
+	switch (CScene::GetInstance()->GetMode())
 	{
 	case CScene::MODE_GAME:
 		//マップとのマトリックスの掛け合わせをオンにする
@@ -977,7 +977,7 @@ void CPlayer::StateManager(void)
 			m_pUpEgg = CObjectX::Create("data\\MODEL\\00_Player\\1P\\upper_egg.x");
 			m_pUpEgg->SetMatColor(D3DXCOLOR(0.263529f, 0.570980f, 0.238431f, 1.0f));
 
-			switch (CManager::GetInstance()->GetScene()->GetMode())
+			switch (CScene::GetInstance()->GetMode())
 			{
 			case CScene::MODE_GAME:
 				m_pUpEgg->SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
@@ -993,7 +993,7 @@ void CPlayer::StateManager(void)
 			m_pDownEgg = CObjectX::Create("data\\MODEL\\00_Player\\1P\\downer_egg.x");
 			m_pDownEgg->SetMatColor(D3DXCOLOR(0.263529f, 0.570980f, 0.238431f, 1.0f));
 
-			switch (CManager::GetInstance()->GetScene()->GetMode())
+			switch (CScene::GetInstance()->GetMode())
 			{
 			case CScene::MODE_GAME:
 				m_pDownEgg->SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
@@ -1120,7 +1120,7 @@ void CPlayer::CollisionMoveRailBlock(useful::COLLISION XYZ)
 	for (CRailBlock* pRailBlock : list)
 	{
 		D3DXVECTOR3 D_pos;
-		switch (CManager::GetInstance()->GetScene()->GetMode())
+		switch (CScene::GetInstance()->GetMode())
 		{
 		case CScene::MODE_GAME:
 			D_pos = CGame::GetDevil()->GetDevilPos();
@@ -1223,7 +1223,7 @@ void CPlayer::CollisionMoveRock(useful::COLLISION XYZ)
 	for (CRollRock* pRock : list)
 	{
 		D3DXVECTOR3 D_pos;
-		switch (CManager::GetInstance()->GetScene()->GetMode())
+		switch (CScene::GetInstance()->GetMode())
 		{
 		case CScene::MODE_GAME:
 			D_pos = CGame::GetDevil()->GetDevilPos();
@@ -1385,7 +1385,7 @@ void CPlayer::CollisionEnemy(void)
 void CPlayer::CollisionStageOut(void)
 {
 	D3DXVECTOR3 D_pos;
-	switch (CManager::GetInstance()->GetScene()->GetMode())
+	switch (CScene::GetInstance()->GetMode())
 	{
 	case CScene::MODE_GAME:
 		D_pos = CGame::GetDevil()->GetDevilPos();
@@ -1430,7 +1430,7 @@ void CPlayer::CollisionStageOut(void)
 bool CPlayer::CollisionStageIn(void)
 {
 	D3DXVECTOR3 D_pos;
-	switch (CManager::GetInstance()->GetScene()->GetMode())
+	switch (CScene::GetInstance()->GetMode())
 	{
 	case CScene::MODE_GAME:
 		D_pos = CGame::GetDevil()->GetDevilPos();
@@ -1461,7 +1461,7 @@ void CPlayer::CollisionPressStageOut(void)
 	if (m_bPressObj == true)
 	{
 		D3DXVECTOR3 D_pos;
-		switch (CManager::GetInstance()->GetScene()->GetMode())
+		switch (CScene::GetInstance()->GetMode())
 		{
 		case CScene::MODE_GAME:
 			D_pos = CGame::GetDevil()->GetDevilPos();
@@ -1550,7 +1550,7 @@ void CPlayer::PosUpdate(void)
 	}
 
 	CDevil* pDevil = nullptr;
-	switch (CManager::GetInstance()->GetScene()->GetMode())
+	switch (CScene::GetInstance()->GetMode())
 	{
 	case CScene::MODE_GAME:
 		pDevil = CGame::GetDevil();
@@ -1702,7 +1702,7 @@ void CPlayer::EggMove(void)
 			m_EggMove.x = m_EggMove.x * EGG_MOVE_DEL;
 			m_EggMove.z = m_EggMove.z * EGG_MOVE_DEL;
 
-			switch (CManager::GetInstance()->GetScene()->GetMode())
+			switch (CScene::GetInstance()->GetMode())
 			{
 			case CScene::MODE_GAME:
 				if (pos.y < CGame::GetMapField()->GetPos().y + 30.0f)
@@ -1775,7 +1775,7 @@ void CPlayer::Death(void)
 			CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_DEATH);
 
 			CDevil* pDevil = nullptr;
-			switch (CManager::GetInstance()->GetScene()->GetMode())
+			switch (CScene::GetInstance()->GetMode())
 			{
 			case CScene::MODE_GAME:
 				CGame::SetGameEnd(true);

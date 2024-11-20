@@ -154,7 +154,7 @@ D3DXVECTOR3 CMapSystem::GetGritPos(const GRID& grid)
 	D3DXVECTOR3 Pos;
 	D3DXVECTOR3 DevilPos;
 
-	switch (CManager::GetInstance()->GetScene()->GetMode())
+	switch (CScene::GetInstance()->GetMode())
 	{
 	case CScene::MODE_GAME:
 		DevilPos = CGame::GetDevil()->GetDevilPos();
@@ -203,7 +203,7 @@ CMapSystem::GRID CMapSystem::CalcGrid(const D3DXVECTOR3& pos)
 
 	CDevil* pDevil = nullptr;
 
-	switch (CManager::GetInstance()->GetScene()->GetMode())
+	switch (CScene::GetInstance()->GetMode())
 	{
 	case CScene::MODE_GAME:
 		pDevil = CGame::GetDevil();
@@ -344,7 +344,7 @@ int CMapSystem::CalcGridX(const float posX)
 	// 算出に使用する変数
 	CDevil* pDevil = nullptr;
 
-	switch (CManager::GetInstance()->GetScene()->GetMode())
+	switch (CScene::GetInstance()->GetMode())
 	{
 	case CScene::MODE_GAME:
 		pDevil = CGame::GetDevil();
@@ -385,7 +385,7 @@ int CMapSystem::CalcGridZ(const float posZ)
 	// 算出に使用する変数
 	CDevil* pDevil = nullptr;
 
-	switch (CManager::GetInstance()->GetScene()->GetMode())
+	switch (CScene::GetInstance()->GetMode())
 	{
 	case CScene::MODE_GAME:
 		pDevil = CGame::GetDevil();

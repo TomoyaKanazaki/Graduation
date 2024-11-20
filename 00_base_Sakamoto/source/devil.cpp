@@ -34,6 +34,7 @@
 #include "sound.h"
 #include "scrollarrow.h"
 #include "fire.h"
+#include "Scene.h"
 
 //===========================================
 // 定数定義
@@ -305,7 +306,7 @@ void CDevil::TutorialUpdate(void)
 	m_posOld = m_pos;
 
 	// マップの傾き
-	switch (CManager::GetInstance()->GetScene()->GetMode())
+	switch (CScene::GetInstance()->GetMode())
 	{
 	case CScene::MODE_GAME:
 		m_DevilRot = CGame::GetMapField()->GetRot();
@@ -1544,7 +1545,7 @@ float CDevil::MoveSlopeX(float Move)
 	float fSlopeMove = 1.0f;
 
 	D3DXVECTOR3 DevilRot = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
-	if (CManager::GetInstance()->GetScene()->GetMode() == CScene::MODE_GAME)
+	if (CScene::GetInstance()->GetMode() == CScene::MODE_GAME)
 	{
 		DevilRot = m_DevilRot;
 	}
@@ -1569,7 +1570,7 @@ float CDevil::MoveSlopeZ(float Move)
 	float fSlopeMove = 1.0f;
 
 	D3DXVECTOR3 DevilRot = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
-	if (CManager::GetInstance()->GetScene()->GetMode() == CScene::MODE_GAME)
+	if (CScene::GetInstance()->GetMode() == CScene::MODE_GAME)
 	{
 		DevilRot = CGame::GetDevil()->GetDevilRot();
 	}

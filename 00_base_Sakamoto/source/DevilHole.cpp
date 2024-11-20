@@ -111,7 +111,7 @@ HRESULT CDevilHole::Init(char* pModelName)
 		break;
 	}
 
-	switch (CManager::GetInstance()->GetScene()->GetMode())
+	switch (CScene::GetInstance()->GetMode())
 	{
 	case CScene::MODE_GAME:
 		//マップとのマトリックスの掛け合わせをオンにする

@@ -6,6 +6,7 @@
 //========================================================================================
 #include "fade.h"
 #include "renderer.h"
+#include "Scene.h"
 
 //Ã“Iƒƒ“ƒo•Ï”éŒ¾
 CFade::FADE CFade::m_fade = FADE_NONE;

@@ -84,7 +84,7 @@ HRESULT CRailBlock::Init(int nMapWight, int nMapHeight, bool Edit, int Max, int*
 	m_StartGrid.x = nMapWight;
 	m_StartGrid.z = nMapHeight;
 
-	switch (CManager::GetInstance()->GetScene()->GetMode())
+	switch (CScene::GetInstance()->GetMode())
 	{
 	case CScene::MODE_GAME:
 		//マップとのマトリックスの掛け合わせをオンにする
@@ -212,7 +212,7 @@ void CRailBlock::Move(D3DXVECTOR3* Pos)
 
 	D3DXVECTOR3 SlopeMove = INITVECTOR3;
 	D3DXVECTOR3 SlopeRot = INITVECTOR3;
-	switch (CManager::GetInstance()->GetScene()->GetMode())
+	switch (CScene::GetInstance()->GetMode())
 	{
 	case CScene::MODE_GAME:
 		SlopeRot = CGame::GetDevil()->GetDevilRot();
