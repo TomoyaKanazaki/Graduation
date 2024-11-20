@@ -768,12 +768,12 @@ void CDevil::CollisionOut()
 			if (EnemyPos.x > 0.0f)
 			{
 				m_MinGrid.x = CMapSystem::GetInstance()->CalcGridX(m_DevilPos.x - MapSize.x - GritSize);	//左
-				EnemyPos = CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(m_MinGrid.x,pEnemy->GetGrid().z));
+				EnemyPos = CMapSystem::GRID(m_MinGrid.x, pEnemy->GetGrid().z).ToWorld();
 			}
 			else
 			{
 				m_MaxGrid.x = CMapSystem::GetInstance()->CalcGridX(m_DevilPos.x + MapSize.x - GritSize);	//右
-				EnemyPos = CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(m_MaxGrid.x, pEnemy->GetGrid().z));
+				EnemyPos = CMapSystem::GRID(m_MaxGrid.x, pEnemy->GetGrid().z).ToWorld();
 			}
 		}
 		else if (EnemyGrid.z == -1)
@@ -781,12 +781,12 @@ void CDevil::CollisionOut()
 			if (EnemyPos.z < 0.0f)
 			{
 				m_MinGrid.z = CMapSystem::GetInstance()->CalcGridZ(m_DevilPos.z + MapSize.z + GritSize);	//上
-				EnemyPos = CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(pEnemy->GetGrid().x, m_MinGrid.z));
+				EnemyPos = CMapSystem::GRID(pEnemy->GetGrid().x, m_MinGrid.z).ToWorld();
 			}
 			else
 			{
 				m_MaxGrid.z = CMapSystem::GetInstance()->CalcGridZ(m_DevilPos.z - MapSize.z + GritSize);	//下
-				EnemyPos = CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(pEnemy->GetGrid().x, m_MaxGrid.z));
+				EnemyPos = CMapSystem::GRID(pEnemy->GetGrid().x, m_MaxGrid.z).ToWorld();
 			}
 		}
 
@@ -1414,7 +1414,7 @@ void CDevil::PlayerScroll(D3DXVECTOR3 Move, float GritSize)
 			{
 				D3DXVECTOR3 PlayerPos = pPlayer->GetPos();
 				D3DXVECTOR3 AnswerPos = INITVECTOR3;
-				AnswerPos = CMapSystem::GetInstance()->GetGritPos(Grit);
+				AnswerPos = Grit.ToWorld();
 
 				if (pPlayer->GetGritCenter())
 				{
@@ -1482,7 +1482,7 @@ void CDevil::GritScroll(D3DXVECTOR3 Move)
 		);
 
 		//グリット番号を位置に変換
-		pos = CMapSystem::GetInstance()->GetGritPos(grid);
+		pos = grid.ToWorld();
 		pos.y = 50.0f;
 
 		pCubeBlock->SetPos(pos);
@@ -1495,15 +1495,11 @@ void CDevil::GritScroll(D3DXVECTOR3 Move)
 	//{
 	//	for (int nCntH = 0; nCntH < MapHeightMax; nCntH++)
 	//	{
-	//		//グリット番号を位置に変換
-	//		D3DXVECTOR3 CountPos = CMapSystem::GetInstance()->GetGritPos(nCntW, nCntH);
-	//		CountPos.y = 50.0f;
-
 	//		if (CMapSystem::GetInstance()->GetGritBool(nCntW, nCntH))
 	//		{// ブロックが存在するグリットのみエフェクトを表示
 
 	//			CEffect* pEffect = CEffect::Create();
-	//			pEffect->SetPos(CountPos);
+	//			pEffect->SetPos(pos);
 	//			pEffect->SetRadius(20.0f);
 	//			pEffect->SetLife(10);
 	//		}
