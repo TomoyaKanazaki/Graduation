@@ -37,11 +37,18 @@ public:
 	D3DXMATRIX* GetUseMultiMatrix(void) { return m_UseMultiMatrix; }
 	void SetUseStencil(bool bUse) { m_bUseStencil = bUse; }
 	void SetUseShadowMtx(bool bUse) { m_bUseShadowMtx = bUse; }
+
 	void SetPos(D3DXVECTOR3 pos) { m_pos = pos; }
 	D3DXVECTOR3 GetPos(void) { return m_pos; }
 
 	void SetRot(D3DXVECTOR3 rot) { m_rot = rot; }
 	D3DXVECTOR3 GetRot(void) { return m_rot; }
+
+	void SetPosOld(D3DXVECTOR3 posOld) { m_posOld = posOld; }
+	D3DXVECTOR3 GetPosOld(void) { return m_posOld; }
+
+	void SetSize(D3DXVECTOR3 size) { m_size = size; }
+	D3DXVECTOR3 GetSize(void) { return m_size; }
 
 	void SetTxtCharacter(const char* pFilename);
 
@@ -55,8 +62,8 @@ private:
 	int m_nNumModel;
 
 	D3DXVECTOR3 m_pos;				//位置
-	D3DXVECTOR3 m_posOld;			//過去の位置
 	D3DXVECTOR3 m_rot;				//向き
+	D3DXVECTOR3 m_posOld;			//過去の位置
 	D3DXVECTOR3 m_size;				//大きさ
 
 	// マトリックス情報
