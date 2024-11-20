@@ -39,7 +39,7 @@ CListManager<CLevelModelEffect>* CLevelModelEffect::m_pList = nullptr; // オブジ
 //====================================================================
 //コンストラクタ
 //====================================================================
-CLevelModelEffect::CLevelModelEffect(int nPriority) :CObject(nPriority)
+CLevelModelEffect::CLevelModelEffect(int nPriority) :CCharacter(nPriority)
 {
 	m_pos = INITVECTOR3;
 	m_rot = D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f);
@@ -85,16 +85,8 @@ HRESULT CLevelModelEffect::Init(void)
 {
 	SetType(CObject::TYPE_PLAYEREFFECT);
 
-	// キャラクタークラスの生成
-	if (m_pCharacter == nullptr)
-	{
-		m_pCharacter = CCharacter::Create("data\\TXT\\motion_foot_light_spear.txt");
-
-		if (m_pCharacter == nullptr)
-		{
-			return E_FAIL;
-		}
-	}
+	// キャラクターテキスト設定処理 
+	CCharacter::SetTxtCharacter("data\\TXT\\motion_foot_light_spear.txt");
 
 	if (m_pList == nullptr)
 	{// リストマネージャー生成
@@ -123,16 +115,8 @@ void CLevelModelEffect::Uninit(void)
 		m_pList->Release(m_pList);
 	}
 
-	// 継承クラス破棄に変更予定
-	// キャラクターの終了処理
-	if (m_pCharacter != nullptr)
-	{
-		// キャラクターの破棄
-		m_pCharacter->Uninit();
-		m_pCharacter = nullptr;
-	}
-
-	SetDeathFlag(true);
+	// 継承クラスの終了処理
+	CCharacter::Uninit();
 }
 
 //====================================================================
@@ -142,19 +126,13 @@ void CLevelModelEffect::Update(void)
 {
 	m_Color.a -= m_fDel;
 
-	if (m_pCharacter == nullptr)
-	{
-		assert(("キャラクタークラスがないよ", false));
-		return;
-	}
-
 	// モデル数を取得
-	int nNumModel = m_pCharacter->GetNumModel();
+	int nNumModel = GetNumModel();
 
 	for (int nCnt = 0; nCnt < nNumModel; nCnt++)
 	{
 		// モデルの取得処理
-		CModel* pModel = m_pCharacter->GetModel(nCnt);
+		CModel* pModel = GetModel(nCnt);
 
 		if (pModel != nullptr)
 		{
@@ -178,15 +156,8 @@ void CLevelModelEffect::Update(void)
 //====================================================================
 void CLevelModelEffect::SetAllPose(int nType, int nKey, float nCounter)
 {
-	if (m_pCharacter == nullptr)
-	{
-		// アサート
-		assert(("キャラクタークラスがないよ", false));
-		return;
-	}
-
 	// モーションの取得処理
-	CMotion* pMotion = m_pCharacter->GetMotion();
+	CMotion* pMotion = GetMotion();
 
 	if (pMotion == nullptr)
 	{
@@ -201,15 +172,8 @@ void CLevelModelEffect::SetAllPose(int nType, int nKey, float nCounter)
 //====================================================================
 void CLevelModelEffect::SetPose(int nType, int nKey, float nCounter, int nModelNumber)
 {
-	if (m_pCharacter == nullptr)
-	{
-		// アサート
-		assert(("キャラクタークラスがないよ", false));
-		return;
-	}
-
 	// モーションの取得処理
-	CMotion* pMotion = m_pCharacter->GetMotion();
+	CMotion* pMotion = GetMotion();
 
 	if (pMotion == nullptr)
 	{
@@ -217,12 +181,12 @@ void CLevelModelEffect::SetPose(int nType, int nKey, float nCounter, int nModelN
 	}
 
 	// モデル数を取得
-	int nNumModel = m_pCharacter->GetNumModel();
+	int nNumModel = GetNumModel();
 
 	for (int nCnt = 0; nCnt < nNumModel; nCnt++)
 	{
 		// モーションの取得処理
-		CModel* pModel = m_pCharacter->GetModel(nCnt);
+		CModel* pModel = GetModel(nCnt);
 
 		if (pModel != nullptr)
 		{
@@ -239,14 +203,9 @@ void CLevelModelEffect::SetPose(int nType, int nKey, float nCounter, int nModelN
 //====================================================================
 void CLevelModelEffect::Draw(void)
 {
-	m_pCharacter->SetPos(GetPos());
-	m_pCharacter->SetRot(GetRot());
-
-	//// キャラクターの描画
-	//if (m_pCharacter != nullptr)
-	//{
-	//	m_pCharacter->Draw();
-	//}
+	CCharacter::SetPos(GetPos());
+	CCharacter::SetRot(GetRot());
+	CCharacter::Draw();
 }
 
 //====================================================================
