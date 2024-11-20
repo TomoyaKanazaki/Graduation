@@ -282,12 +282,17 @@ void CMapSystem::Load(const char* pFilename)
 					fscanf(pFile, "%s", &aString[0]);
 
 					pMapSystem->SetGritBool(WightNumber, HeightNumber, true);
-					CCubeBlock* pBlock = CCubeBlock::Create();
-					pBlock->SetWightNumber(WightNumber);
-					pBlock->SetHeightNumber(HeightNumber);
-					pBlock->SetPos(D3DXVECTOR3(MapSystemPos.x + WightNumber * 100.0f, 50.0f, MapSystemPos.z - HeightNumber * 100.0f));
-					pBlock->SetSize(D3DXVECTOR3(MapSystemGritSize, MapSystemGritSize, MapSystemGritSize));
-					pBlock->SetTexture(&aString[0]);
+					CCubeBlock* pBlock = CCubeBlock::Create(); // GRIDとグリッドサイズを引数にする
+
+					// 削除
+					{
+						pBlock->SetWightNumber(WightNumber); // GRIDで設定(不要)
+						pBlock->SetHeightNumber(HeightNumber); // GRIDで設定(不要)
+						pBlock->SetPos(D3DXVECTOR3(MapSystemPos.x + WightNumber * 100.0f, 50.0f, MapSystemPos.z - HeightNumber * 100.0f)); // GRIDをもとに内部で計算
+						pBlock->SetSize(D3DXVECTOR3(MapSystemGritSize, MapSystemGritSize, MapSystemGritSize)); // xzはグリッドサイズが必要、ｙは内部で定数化
+						pBlock->SetTexture(&aString[0]); // 内部で定数化
+					}
+					// 削除
 
 					// 経路探索用情報の設定
 					generator->addCollision({ WightNumber, HeightNumber }); // 通過不可地点を追加
