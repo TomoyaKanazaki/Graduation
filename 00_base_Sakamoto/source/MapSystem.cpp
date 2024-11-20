@@ -7,6 +7,7 @@
 #include "MapSystem.h"
 #include "renderer.h"
 #include "game.h"
+#include "tutorial.h"
 #include "Devil.h"
 
 #include "AStar.h"
@@ -151,8 +152,17 @@ D3DXVECTOR3 CMapSystem::GetStartGritPos(float Wight, float Height)
 D3DXVECTOR3 CMapSystem::GetGritPos(const GRID& grid)
 {
 	D3DXVECTOR3 Pos;
+	D3DXVECTOR3 DevilPos;
 
-	D3DXVECTOR3 DevilPos = CGame::GetDevil()->GetDevilPos();
+	switch (CManager::GetInstance()->GetScene()->GetMode())
+	{
+	case CScene::MODE_GAME:
+		DevilPos = CGame::GetDevil()->GetDevilPos();
+		break;
+	case CScene::MODE_TUTORIAL:
+		DevilPos = CTutorial::GetDevil()->GetDevilPos();
+		break;
+	}
 
 	// グリット番号が最大値以上や最小値以下の時、範囲内に納める処理
 	CMapSystem::GRID temp = grid;
@@ -190,7 +200,19 @@ CMapSystem::GRID CMapSystem::CalcGrid(const D3DXVECTOR3& pos)
 {
 	// 演算用変数
 	GRID grid = GRID(-1, -1);
-	CDevil* pDevil = CGame::GetDevil();
+
+	CDevil* pDevil = nullptr;
+
+	switch (CManager::GetInstance()->GetScene()->GetMode())
+	{
+	case CScene::MODE_GAME:
+		pDevil = CGame::GetDevil();
+		break;
+	case CScene::MODE_TUTORIAL:
+		pDevil = CTutorial::GetDevil();
+		break;
+	}
+
 	D3DXVECTOR3 DevilPos = pDevil->GetDevilPos();
 
 	// x座標の算出
@@ -270,32 +292,32 @@ void CMapSystem::Load(const char* pFilename)
 				fscanf(pFile, "%s", &aSetMessage[0]);
 				if (strcmp(&aSetMessage[0], "STARTSETBLOCK") == 0)
 				{
-					int WightNumber, HeightNumber;
+					fscanf(pFile, "%s", &aString[0]);
+					fscanf(pFile, "%d", &pMapSystem->m_gridCenter.x);
 
 					fscanf(pFile, "%s", &aString[0]);
-					fscanf(pFile, "%d", &WightNumber);
-
-					fscanf(pFile, "%s", &aString[0]);
-					fscanf(pFile, "%d", &HeightNumber);
+					fscanf(pFile, "%d", &pMapSystem->m_gridCenter.z);
 
 					fscanf(pFile, "%s", &aString[0]);
 					fscanf(pFile, "%s", &aString[0]);
 
-					pMapSystem->SetGritBool(WightNumber, HeightNumber, true);
-					CCubeBlock* pBlock = CCubeBlock::Create(); // GRIDとグリッドサイズを引数にする
+					pMapSystem->SetGritBool(pMapSystem->m_gridCenter.x, pMapSystem->m_gridCenter.z, true);
+
+					// キューブブロックの生成
+					CCubeBlock* pBlock = CCubeBlock::Create(pMapSystem->m_gridCenter, MapSystemGritSize); // GRIDとグリッドサイズを引数にする
 
 					// 削除
 					{
-						pBlock->SetWightNumber(WightNumber); // GRIDで設定(不要)
-						pBlock->SetHeightNumber(HeightNumber); // GRIDで設定(不要)
-						pBlock->SetPos(D3DXVECTOR3(MapSystemPos.x + WightNumber * 100.0f, 50.0f, MapSystemPos.z - HeightNumber * 100.0f)); // GRIDをもとに内部で計算
-						pBlock->SetSize(D3DXVECTOR3(MapSystemGritSize, MapSystemGritSize, MapSystemGritSize)); // xzはグリッドサイズが必要、ｙは内部で定数化
-						pBlock->SetTexture(&aString[0]); // 内部で定数化
+						//pBlock->SetWightNumber(WightNumber); // GRIDで設定(不要)
+						//pBlock->SetHeightNumber(HeightNumber); // GRIDで設定(不要)
+						//pBlock->SetPos(D3DXVECTOR3(MapSystemPos.x + pMapSystem->m_gridCenter.x * 100.0f, 50.0f, MapSystemPos.z - pMapSystem->m_gridCenter.z * 100.0f)); // GRIDをもとに内部で計算
+						//pBlock->SetSize(D3DXVECTOR3(MapSystemGritSize, MapSystemGritSize, MapSystemGritSize)); // xzはグリッドサイズが必要、ｙは内部で定数化
+						//pBlock->SetTexture(&aString[0]); // 内部で定数化
 					}
 					// 削除
 
 					// 経路探索用情報の設定
-					generator->addCollision({ WightNumber, HeightNumber }); // 通過不可地点を追加
+					generator->addCollision({ pMapSystem->m_gridCenter.x, pMapSystem->m_gridCenter.z }); // 通過不可地点を追加
 
 					fscanf(pFile, "%s", &aEndMessage[0]);
 				}
@@ -320,7 +342,18 @@ void CMapSystem::Load(const char* pFilename)
 int CMapSystem::CalcGridX(const float posX)
 {
 	// 算出に使用する変数
-	CDevil* pDevil = CGame::GetDevil();
+	CDevil* pDevil = nullptr;
+
+	switch (CManager::GetInstance()->GetScene()->GetMode())
+	{
+	case CScene::MODE_GAME:
+		pDevil = CGame::GetDevil();
+		break;
+	case CScene::MODE_TUTORIAL:
+		pDevil = CTutorial::GetDevil();
+		break;
+	}
+
 	D3DXVECTOR3 DevilPos = pDevil->GetDevilPos();
 
 	// x座標の算出
@@ -350,7 +383,18 @@ int CMapSystem::CalcGridX(const float posX)
 int CMapSystem::CalcGridZ(const float posZ)
 {
 	// 算出に使用する変数
-	CDevil* pDevil = CGame::GetDevil();
+	CDevil* pDevil = nullptr;
+
+	switch (CManager::GetInstance()->GetScene()->GetMode())
+	{
+	case CScene::MODE_GAME:
+		pDevil = CGame::GetDevil();
+		break;
+	case CScene::MODE_TUTORIAL:
+		pDevil = CTutorial::GetDevil();
+		break;
+	}
+
 	D3DXVECTOR3 DevilPos = pDevil->GetDevilPos();
 
 	for (int i = 0; i < m_HeightMax; i++)

@@ -21,7 +21,7 @@
 #include "MyEffekseer.h"
 
 #ifdef _DEBUG
-#define SET_MODE (CScene::MODE_GAME)
+#define SET_MODE (CScene::MODE_TITLE)
 #else
 #define SET_MODE (CScene::MODE_GAME)
 #endif // _DEBUG

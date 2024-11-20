@@ -10,6 +10,7 @@
 #include "texture.h"
 #include "Rail.h"
 #include "game.h"
+#include "tutorial.h"
 #include "objmeshField.h"
 #include "Devil.h"
 #include "debugproc.h"
@@ -83,7 +84,17 @@ HRESULT CRailBlock::Init(int nMapWight, int nMapHeight, bool Edit, int Max, int*
 	m_StartGrid.x = nMapWight;
 	m_StartGrid.z = nMapHeight;
 
-	SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
+	switch (CManager::GetInstance()->GetScene()->GetMode())
+	{
+	case CScene::MODE_GAME:
+		//マップとのマトリックスの掛け合わせをオンにする
+		SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
+		break;
+	case CScene::MODE_TUTORIAL:
+		//マップとのマトリックスの掛け合わせをオンにする
+		SetUseMultiMatrix(CTutorial::GetMapField()->GetMatrix());
+		break;
+	}
 
 	CObjmeshCube::Init();
 
@@ -200,7 +211,16 @@ void CRailBlock::Move(D3DXVECTOR3* Pos)
 	D3DXVECTOR3 TestPos = INITVECTOR3;
 
 	D3DXVECTOR3 SlopeMove = INITVECTOR3;
-	D3DXVECTOR3 SlopeRot = CGame::GetDevil()->GetDevilRot();
+	D3DXVECTOR3 SlopeRot = INITVECTOR3;
+	switch (CManager::GetInstance()->GetScene()->GetMode())
+	{
+	case CScene::MODE_GAME:
+		SlopeRot = CGame::GetDevil()->GetDevilRot();
+		break;
+	case CScene::MODE_TUTORIAL:
+		SlopeRot = CTutorial::GetDevil()->GetDevilRot();
+		break;
+	}
 	D3DXVECTOR3 GritPos = CMapSystem::GRID(GetWightNumber(), GetHeightNumber()).ToWorld();
 	D3DXVECTOR3 GritDistance = *Pos - GritPos;	//グリットの中心とした時の相対位置、差分
 

@@ -65,7 +65,7 @@ CListManager<CDevil>* CDevil::m_pList = nullptr; // オブジェクトリスト
 //====================================================================
 //コンストラクタ
 //====================================================================
-CDevil::CDevil(int nPriority) : CObject(nPriority)
+CDevil::CDevil(int nPriority) : CCharacter(nPriority)
 {
 	SetSize(D3DXVECTOR3(750.0f, 0.0f, 550.0f));
 	m_pos = INITVECTOR3;
@@ -79,7 +79,6 @@ CDevil::CDevil(int nPriority) : CObject(nPriority)
 	m_State = STATE_WAIT;
 	m_nStateCount = 0;
 	m_CollisionRot = 0.0f;
-	m_pCharacter = nullptr;
 	m_DevilPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_MapDifference = INITVECTOR3;
 	m_DevilRot = INITVECTOR3;
@@ -131,17 +130,9 @@ HRESULT CDevil::Init(void)
 	//種類設定
 	SetType(CObject::TYPE_DEVIL);
 
-	// キャラクタークラスの生成処理
-	if (m_pCharacter == nullptr)
-	{
-		m_pCharacter = CCharacter::Create("data\\TXT\\MOTION\\01_enemy\\motion_devil.txt");
-
-		if(m_pCharacter == nullptr)
-		{
-			return E_FAIL;
-		}
-	}
-
+	// キャラクターテキストの設定処理
+	CCharacter::SetTxtCharacter("data\\TXT\\MOTION\\01_enemy\\motion_devil.txt");
+	
 	switch (CScene::GetMode())
 	{
 	case CScene::MODE_TITLE:
@@ -199,16 +190,8 @@ void CDevil::Uninit(void)
 		m_pList->Release(m_pList);
 	}
 
-	// 継承クラス破棄に変更予定
-	// キャラクターの終了処理
-	if (m_pCharacter != nullptr)
-	{
-		// キャラクターの破棄
-		m_pCharacter->Uninit();
-		m_pCharacter = nullptr;
-	}
-
-	SetDeathFlag(true);
+	// キャラクタークラスの終了（継承）
+	CCharacter::Uninit();
 }
 
 //====================================================================
@@ -240,11 +223,8 @@ void CDevil::Update(void)
 //====================================================================
 void CDevil::TitleUpdate(void)
 {
-	// キャラクターの更新
-	if (m_pCharacter != nullptr)
-	{
-		m_pCharacter->Update();
-	}
+	// キャラクタークラスの更新（継承）
+	CCharacter::Update();
 }
 
 //====================================================================
@@ -267,11 +247,8 @@ void CDevil::GameUpdate(void)
 	//ステージ外にいるオブジェクトの処理
 	CollisionOut();
 
-	// キャラクターの更新
-	if (m_pCharacter != nullptr)
-	{
-		m_pCharacter->Update();
-	}
+	// キャラクタークラスの更新（継承）
+	CCharacter::Update();
 
 	D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
 	CEffect* pTestEffect = nullptr;
@@ -324,7 +301,51 @@ void CDevil::GameUpdate(void)
 //====================================================================
 void CDevil::TutorialUpdate(void)
 {
+	// 過去の位置に代入
+	m_posOld = m_pos;
 
+	// マップの傾き
+	switch (CManager::GetInstance()->GetScene()->GetMode())
+	{
+	case CScene::MODE_GAME:
+		m_DevilRot = CGame::GetMapField()->GetRot();
+		break;
+	case CScene::MODE_TUTORIAL:
+		m_DevilRot = CTutorial::GetMapField()->GetRot();
+		break;
+	}
+
+	//状態の管理
+	StateManager();
+
+	//デバッグキーの処理と設定
+	DebugKey();
+
+	//ステージ外にいるオブジェクトの処理
+	CollisionOut();
+
+	// キャラクタークラスの更新（継承）
+	CCharacter::Update();
+
+	D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
+	CEffect* pTestEffect = nullptr;
+
+	//モーションの管理
+	ActionState();
+
+	D3DXVECTOR3 InitPos = CMapSystem::GetInstance()->GetInitPos();
+	D3DXVECTOR3 MapPos = CMapSystem::GetInstance()->GetMapPos();
+
+	//デバッグ表示
+	DebugProc::Print(DebugProc::POINT_LEFT, "[マップ]　　　位置 %f : %f\n", MapPos.x, MapPos.z);
+	DebugProc::Print(DebugProc::POINT_LEFT, "[マップの差分]位置 %f : %f\n", m_MapDifference.x, m_MapDifference.z);
+	DebugProc::Print(DebugProc::POINT_LEFT, "[マップのスクロール]：矢印キー\n");
+	DebugProc::Print(DebugProc::POINT_LEFT, "[マップの傾きX]：[ X+ : 6 ] [ X- : 7 ]\n");
+	DebugProc::Print(DebugProc::POINT_LEFT, "[マップの傾きZ]：[ Z+ : 8 ] [ Z- : 9 ]\n");
+	DebugProc::Print(DebugProc::POINT_LEFT, "[マップの傾きリセット]：[ 5 ]\n");
+
+	DebugProc::Print(DebugProc::POINT_RIGHT, "[最小番号]左 %d : 上 %d\n", m_MinGrid.x, m_MinGrid.z);
+	DebugProc::Print(DebugProc::POINT_RIGHT, "[最大番号]右 %d : 下 %d\n", m_MaxGrid.x, m_MaxGrid.z);
 }
 
 //====================================================================
@@ -332,14 +353,12 @@ void CDevil::TutorialUpdate(void)
 //====================================================================
 void CDevil::Draw(void)
 {
-	m_pCharacter->SetPos(GetPos());
-	m_pCharacter->SetRot(GetRot());
+	// 無理やり一時的位置情報交換（pos・rotの置き換え完了次第削除）
+	CCharacter::SetPos(GetPos());
+	CCharacter::SetRot(GetRot());
 
-	//// キャラクターの描画
-	//if (m_pCharacter != nullptr)
-	//{
-	//	m_pCharacter->Draw();
-	//}
+	// キャラクタークラスの描画（継承）
+	CCharacter::Draw();
 }
 
 //====================================================================
@@ -1069,15 +1088,8 @@ void CDevil::DebugKey(void)
 //====================================================================
 void CDevil::SetAction(ACTION_TYPE Action, float BlendTime)
 {
-	if (m_pCharacter == nullptr)
-	{
-		// アサート
-		assert(("キャラクタークラスがないよ", false));
-		return;
-	}
-
 	// モーションの取得処理
-	CMotion* pMotion = m_pCharacter->GetMotion();
+	CMotion* pMotion = GetMotion();
 
 	if (pMotion == nullptr)
 	{
@@ -1096,21 +1108,13 @@ void CDevil::SetAction(ACTION_TYPE Action, float BlendTime)
 //====================================================================
 void CDevil::SetModelDisp(bool Sst)
 {
-	if (m_pCharacter == nullptr)
-	{
-		// アサート
-		assert(("キャラクタークラスがないよ", false));
-
-		return;
-	}
-
 	// モデル数を取得
-	int nNumModel = m_pCharacter->GetNumModel();
+	int nNumModel = GetNumModel();
 
 	for (int nCnt = 0; nCnt < nNumModel; nCnt++)
 	{
-		// モーションの取得処理
-		CModel* pModel = m_pCharacter->GetModel(nCnt);
+		// モデルの取得処理
+		CModel* pModel = GetModel(nCnt);
 
 		if (pModel != nullptr)
 		{

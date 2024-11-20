@@ -261,7 +261,7 @@ void CMiniMapCamera::DownviewCamera(void)
 
 	case CScene::MODE_TUTORIAL:
 
-		pPlayer = CTutorial::GetPlayer();
+		pPlayer = CTutorial::GetPlayer(0);
 
 		break;
 	}

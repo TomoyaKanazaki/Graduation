@@ -13,6 +13,7 @@
 #include "effect.h"
 #include "objmeshField.h"
 #include "game.h"
+#include "tutorial.h"
 
 //==========================================
 //  定数定義
@@ -110,8 +111,17 @@ HRESULT CDevilHole::Init(char* pModelName)
 		break;
 	}
 
-	//マップとのマトリックスの掛け合わせをオンにする
-	SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
+	switch (CManager::GetInstance()->GetScene()->GetMode())
+	{
+	case CScene::MODE_GAME:
+		//マップとのマトリックスの掛け合わせをオンにする
+		SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
+		break;
+	case CScene::MODE_TUTORIAL:
+		//マップとのマトリックスの掛け合わせをオンにする
+		SetUseMultiMatrix(CTutorial::GetMapField()->GetMatrix());
+		break;
+	}
 
 	if (m_pList == nullptr)
 	{// リストマネージャー生成

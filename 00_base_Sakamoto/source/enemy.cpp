@@ -78,7 +78,7 @@ CListManager<CEnemy>* CEnemy::m_pList = nullptr; // オブジェクトリスト
 //====================================================================
 //コンストラクタ
 //====================================================================
-CEnemy::CEnemy(int nPriority) :CObject(nPriority),
+CEnemy::CEnemy(int nPriority) :CCharacter(nPriority),
 m_pPath(nullptr),
 m_fCoordinateTimer(0.0f),
 m_nTargetIndex(0),
@@ -96,8 +96,6 @@ m_pEffect(nullptr)
 	m_nStateCount = 0;
 
 	m_ColorA = 1.0f;
-
-	m_pCharacter = nullptr;
 
 	m_size = COLLISION_SIZE;
 	m_EnemyType = ENEMY_MEDAMAN;
@@ -181,8 +179,17 @@ HRESULT CEnemy::Init(void)
 	//種類設定
 	SetType(CObject::TYPE_ENEMY3D);
 
-	//マップとのマトリックスの掛け合わせをオンにする
-	SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
+	switch (CManager::GetInstance()->GetScene()->GetMode())
+	{
+	case CScene::MODE_GAME:
+		//マップとのマトリックスの掛け合わせをオンにする
+		SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
+		break;
+	case CScene::MODE_TUTORIAL:
+		//マップとのマトリックスの掛け合わせをオンにする
+		SetUseMultiMatrix(CTutorial::GetMapField()->GetMatrix());
+		break;
+	}
 
 	// スローの生成(配属、タグの設定)
 	m_pSlow = CSlowManager::Create(m_pSlow->CAMP_ENEMY, m_pSlow->TAG_ENEMY);
@@ -218,22 +225,14 @@ void CEnemy::Uninit(void)
 		m_pList->Release(m_pList);
 	}
 
-	// 継承クラス破棄に変更予定
-	// キャラクターの終了処理
-	if (m_pCharacter != nullptr)
-	{
-		// キャラクターの破棄
-		m_pCharacter->Uninit();
-		m_pCharacter = nullptr;
-	}
-
 	// エフェクトを消去
 	if (m_pEffect != nullptr)
 	{
 		//m_pEffect->SetDeath();
 	}
 
-	SetDeathFlag(true);
+	// キャラクタークラスの終了（継承）
+	CCharacter::Uninit();
 }
 
 //====================================================================
@@ -282,11 +281,8 @@ void CEnemy::Update(void)
 		m_pEffect->SetPosition(ef);
 	}
 
-	// キャラクターの更新
-	if (m_pCharacter != nullptr)
-	{
-		m_pCharacter->Update();
-	}
+	// キャラクタークラスの更新（継承）
+	CCharacter::Update();
 
 	// デバッグ表示
 	DebugProc::Print(DebugProc::POINT_LEFT, "[敵]横 %d : 縦 %d\n", m_Grid.x, m_Grid.z);
@@ -297,14 +293,12 @@ void CEnemy::Update(void)
 //====================================================================
 void CEnemy::Draw(void)
 {
-	m_pCharacter->SetPos(GetPos());
-	m_pCharacter->SetRot(GetRot());
+	// 無理やり一時的位置情報交換（pos・rotの置き換え完了次第削除）
+	CCharacter::SetPos(GetPos());
+	CCharacter::SetRot(GetRot());
 
-	//// キャラクターの描画
-	//if (m_pCharacter != nullptr)
-	//{
-	//	m_pCharacter->Draw();
-	//}
+	// キャラクタークラスの描画（継承）
+	CCharacter::Draw();
 }
 
 //====================================================================
@@ -326,37 +320,16 @@ bool CEnemy::Hit(int nLife)
 }
 
 //====================================================================
-// キャラクターの取得処理
-//====================================================================
-CCharacter* CEnemy::GetCharacter(void)
-{
-	if (m_pCharacter != nullptr)
-	{
-		return m_pCharacter;
-	}
-
-	assert(("キャラクターの取得失敗", false));
-	return nullptr;
-}
-
-//====================================================================
 // モデル関連の初期化処理
 //====================================================================
 HRESULT CEnemy::InitModel(const char* pFilename)
 {
-	// キャラクターの更新
-	if (m_pCharacter == nullptr)
-	{
-		m_pCharacter = CCharacter::Create(pFilename);
+	// キャラクターテキスト読み込み処理
+	CCharacter::SetTxtCharacter(pFilename);
 
-		if (m_pCharacter == nullptr)
-		{
-			return E_FAIL;
-		}
-
-		m_pCharacter->SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
-		m_pCharacter->SetUseStencil(true);
-	}
+	// マトリックス設定
+	CCharacter::SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
+	CCharacter::SetUseStencil(true);
 
 	return S_OK;
 }
@@ -366,13 +339,8 @@ HRESULT CEnemy::InitModel(const char* pFilename)
 //====================================================================
 void CEnemy::UpdatePos(void)
 {
-	if (m_pCharacter == nullptr)
-	{
-		return;
-	}
-
-	// モデルの取得
-	CMotion* pMotion = m_pCharacter->GetMotion();
+	// モーションの取得
+	CMotion* pMotion = GetMotion();
 
 	if (pMotion == nullptr)
 	{
@@ -541,13 +509,8 @@ void CEnemy::CollisionOut()
 //====================================================================
 void CEnemy::Death(void)
 {
-	if (m_pCharacter == nullptr)
-	{
-		return;
-	}
-
-	// モデルの取得
-	CMotion* pMotion = m_pCharacter->GetMotion();
+	// モーションの取得
+	CMotion* pMotion = GetMotion();
 
 	if (pMotion == nullptr)
 	{

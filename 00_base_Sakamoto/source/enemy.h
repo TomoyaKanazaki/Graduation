@@ -7,19 +7,18 @@
 #ifndef _ENEMY_H_
 #define _ENEMY_H_
 
-#include "object.h"
+#include "character.h"
 #include "useful.h"
 #include "MapSystem.h"
 #include "AStar.h"
 
 //前方宣言
-class CCharacter;
 class CObject3D;
 class CLevelModelEffect;
 class CSlowManager;
 
 //オブジェクトエネミークラス
-class CEnemy : public CObject
+class CEnemy : public CCharacter
 {
 public:
 	CEnemy(int nPriority = 2);
@@ -72,8 +71,6 @@ public:
 	D3DXVECTOR3 GetRot(void) { return m_rot; }
 	void SetSize(D3DXVECTOR3 size) { m_size = size; }
 	D3DXVECTOR3 GetSize(void) { return m_size; }
-
-	CCharacter* GetCharacter(void);
 
 	void SetEnemyType(ENEMY_TYPE Type) { m_EnemyType = Type; }
 	ENEMY_TYPE GetEnemyType(void) { return m_EnemyType; }
@@ -138,9 +135,6 @@ private:
 	CSlowManager* m_pSlow;		// スロー情報
 
 	CEffekseer* m_pEffect; // エフェクト
-
-	// キャラクターのポインタ
-	CCharacter* m_pCharacter;
 
 	//マップとのマトリックス情報
 	D3DXMATRIX *m_UseMultiMatrix;			//掛け合わせるマトリックス

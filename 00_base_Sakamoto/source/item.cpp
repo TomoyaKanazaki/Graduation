@@ -17,6 +17,7 @@
 #include "softcream.h"
 #include "renderer.h"
 #include "game.h"
+#include "tutorial.h"
 #include "objmeshField.h"
 
 //==========================================
@@ -130,9 +131,17 @@ HRESULT CItem::Init(const char* pModelName)
 	// 継承クラスの初期化
 	CObjectX::Init(pModelName);
 
-	//マップとのマトリックスの掛け合わせをオンにする
-	SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
-	//SetMultiMatrix(true);
+	switch (CManager::GetInstance()->GetScene()->GetMode())
+	{
+	case CScene::MODE_GAME:
+		//マップとのマトリックスの掛け合わせをオンにする
+		SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
+		break;
+	case CScene::MODE_TUTORIAL:
+		//マップとのマトリックスの掛け合わせをオンにする
+		SetUseMultiMatrix(CTutorial::GetMapField()->GetMatrix());
+		break;
+	}
 
 	D3DXVECTOR3 pos = GetPos();
 	pos.y = BASE_Y;

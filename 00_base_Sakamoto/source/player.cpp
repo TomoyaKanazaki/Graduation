@@ -169,8 +169,17 @@ HRESULT CPlayer::Init(void)
 	// 状態の設定
 	m_MoveState = MOVE_STATE_WAIT;
 
-	//マップとのマトリックスの掛け合わせをオンにする
-	SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
+	switch (CManager::GetInstance()->GetScene()->GetMode())
+	{
+	case CScene::MODE_GAME:
+		//マップとのマトリックスの掛け合わせをオンにする
+		SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
+		break;
+	case CScene::MODE_TUTORIAL:
+		//マップとのマトリックスの掛け合わせをオンにする
+		SetUseMultiMatrix(CTutorial::GetMapField()->GetMatrix());
+		break;
+	}
 
 	// キャラクターテキスト読み込み処理
 	CCharacter::SetTxtCharacter("data\\TXT\\motion_tamagon1P.txt");
@@ -386,7 +395,114 @@ void CPlayer::GameUpdate(void)
 //====================================================================
 void CPlayer::TutorialUpdate(void)
 {
+	// 過去の位置に代入
+	m_posOld = m_pos;
 
+	if (m_State != STATE_DEATH)
+	{
+		//壁があるか判断
+		SearchWall();
+
+		if (
+			(m_State != STATE_EGG && CollisionStageIn() == true &&
+				CMapSystem::GetInstance()->GetGritBool(m_Grid.x, m_Grid.z) == false) ||
+			(m_State == STATE_EGG && CollisionStageIn() == true &&
+				CMapSystem::GetInstance()->GetGritBool(m_Grid.x, m_Grid.z) == false &&
+				m_bGritCenter == true && m_pos.y <= 0.0f)
+			)
+		{// ステージ内にいる かつ ブロックの無いグリッド上の時
+			// 移動処理
+			Move();
+		}
+
+		// 向き移動処理
+		Rot();
+
+		if (m_eItemType != TYPE_NONE)
+		{
+			Attack();
+		}
+
+		// 十字架を持っている場合
+		if (m_eItemType == TYPE_CROSS)
+		{
+			// タイマーを加算
+			m_fCrossTimer += DeltaTime::Get();
+
+			// 十字架の所持可能時間を超過した場合
+			if (m_fCrossTimer >= CROSS_TIME)
+			{
+				// 所持時間タイマーをリセット
+				m_fCrossTimer = 0.0f;
+
+				// アイテムを所持していない状態にする
+				SetItemType(TYPE_NONE);
+			}
+		}
+
+		if (m_State == STATE_WALK)
+		{
+			// 位置更新処理
+			PosUpdate();
+		}
+
+		ObjPosUpdate();
+
+		if (m_State != STATE_EGG)
+		{
+			//画面外判定
+			CollisionStageOut();
+		}
+
+		// 敵の判定
+		CollisionEnemy();
+	}
+
+	// プレイヤーがマップのどのマスに存在しているか設定する
+	m_Grid.x = CMapSystem::GetInstance()->CMapSystem::CalcGridX(m_pos.x);
+	m_Grid.z = CMapSystem::GetInstance()->CMapSystem::CalcGridZ(m_pos.z);
+
+	//状態の管理
+	StateManager();
+
+	if (m_nInvincibleCount > 0)
+	{
+		m_nInvincibleCount--;
+	}
+	else
+	{
+		m_bInvincible = false;
+	}
+
+	if (m_bInvincible)
+	{
+		SetModelColor(CModel::COLORTYPE_TRUE_ALL, D3DXCOLOR(0.5f, 0.5f, 0.5f, 0.5f));
+	}
+	else
+	{
+		SetModelColor(CModel::COLORTYPE_FALSE, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+	}
+
+	//卵の動き
+	EggMove();
+
+	// キャラクタークラスの更新（継承）
+	CCharacter::Update();
+
+	//モーションの管理
+	ActionState();
+
+	//デバッグキーの処理と設定
+	DebugKey();
+
+	//デバッグ表示
+	DebugProc::Print(DebugProc::POINT_LEFT, "[自分]位置 %f : %f : %f\n", m_pos.x, m_pos.y, m_pos.z);
+	DebugProc::Print(DebugProc::POINT_LEFT, "[自分]向き %f : %f : %f\n", m_rot.x, m_rot.y, m_rot.z);
+	DebugProc::Print(DebugProc::POINT_LEFT, "[自分]横 %d : 縦 %d\n", m_Grid.x, m_Grid.z);
+	DebugProc::Print(DebugProc::POINT_LEFT, "[自分]状態 : ");
+	auto str = magic_enum::enum_name(m_State);
+	DebugProc::Print(DebugProc::POINT_LEFT, str.data());
+	DebugProc::Print(DebugProc::POINT_LEFT, "\n");
 }
 
 //====================================================================
@@ -860,16 +976,32 @@ void CPlayer::StateManager(void)
 		{
 			m_pUpEgg = CObjectX::Create("data\\MODEL\\00_Player\\1P\\upper_egg.x");
 			m_pUpEgg->SetMatColor(D3DXCOLOR(0.263529f, 0.570980f, 0.238431f, 1.0f));
-			m_pUpEgg->SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
-			//m_pUpEgg->SetMultiMatrix(true);
+
+			switch (CManager::GetInstance()->GetScene()->GetMode())
+			{
+			case CScene::MODE_GAME:
+				m_pUpEgg->SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
+				break;
+			case CScene::MODE_TUTORIAL:
+				m_pUpEgg->SetUseMultiMatrix(CTutorial::GetMapField()->GetMatrix());
+				break;
+			}
 		}
 
 		if (m_pDownEgg == nullptr)
 		{
 			m_pDownEgg = CObjectX::Create("data\\MODEL\\00_Player\\1P\\downer_egg.x");
 			m_pDownEgg->SetMatColor(D3DXCOLOR(0.263529f, 0.570980f, 0.238431f, 1.0f));
-			m_pDownEgg->SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
-			//m_pDownEgg->SetMultiMatrix(true);
+
+			switch (CManager::GetInstance()->GetScene()->GetMode())
+			{
+			case CScene::MODE_GAME:
+				m_pDownEgg->SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
+				break;
+			case CScene::MODE_TUTORIAL:
+				m_pDownEgg->SetUseMultiMatrix(CTutorial::GetMapField()->GetMatrix());
+				break;
+			}
 		}
 		break;
 	}
@@ -987,7 +1119,17 @@ void CPlayer::CollisionMoveRailBlock(useful::COLLISION XYZ)
 	// レールブロックリストの中身を確認する
 	for (CRailBlock* pRailBlock : list)
 	{
-		D3DXVECTOR3 D_pos = CGame::GetDevil()->GetDevilPos();
+		D3DXVECTOR3 D_pos;
+		switch (CManager::GetInstance()->GetScene()->GetMode())
+		{
+		case CScene::MODE_GAME:
+			D_pos = CGame::GetDevil()->GetDevilPos();
+			break;
+		case CScene::MODE_TUTORIAL:
+			D_pos = CTutorial::GetDevil()->GetDevilPos();
+			break;
+		}
+
 		D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
 		float G_Size = CMapSystem::GetInstance()->GetGritSize();
 
@@ -1080,7 +1222,17 @@ void CPlayer::CollisionMoveRock(useful::COLLISION XYZ)
 	// レールブロックリストの中身を確認する
 	for (CRollRock* pRock : list)
 	{
-		D3DXVECTOR3 D_pos = CGame::GetDevil()->GetDevilPos();
+		D3DXVECTOR3 D_pos;
+		switch (CManager::GetInstance()->GetScene()->GetMode())
+		{
+		case CScene::MODE_GAME:
+			D_pos = CGame::GetDevil()->GetDevilPos();
+			break;
+		case CScene::MODE_TUTORIAL:
+			D_pos = CTutorial::GetDevil()->GetDevilPos();
+			break;
+		}
+
 		D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
 		float G_Size = CMapSystem::GetInstance()->GetGritSize();
 
@@ -1232,7 +1384,17 @@ void CPlayer::CollisionEnemy(void)
 //====================================================================
 void CPlayer::CollisionStageOut(void)
 {
-	D3DXVECTOR3 D_pos = CGame::GetDevil()->GetDevilPos();
+	D3DXVECTOR3 D_pos;
+	switch (CManager::GetInstance()->GetScene()->GetMode())
+	{
+	case CScene::MODE_GAME:
+		D_pos = CGame::GetDevil()->GetDevilPos();
+		break;
+	case CScene::MODE_TUTORIAL:
+		D_pos = CTutorial::GetDevil()->GetDevilPos();
+		break;
+	}
+
 	D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
 	float G_Size = CMapSystem::GetInstance()->GetGritSize();
 
@@ -1267,7 +1429,16 @@ void CPlayer::CollisionStageOut(void)
 //====================================================================
 bool CPlayer::CollisionStageIn(void)
 {
-	D3DXVECTOR3 D_pos = CGame::GetDevil()->GetDevilPos();
+	D3DXVECTOR3 D_pos;
+	switch (CManager::GetInstance()->GetScene()->GetMode())
+	{
+	case CScene::MODE_GAME:
+		D_pos = CGame::GetDevil()->GetDevilPos();
+		break;
+	case CScene::MODE_TUTORIAL:
+		D_pos = CTutorial::GetDevil()->GetDevilPos();
+		break;
+	}
 	D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
 	float G_Size = CMapSystem::GetInstance()->GetGritSize();
 
@@ -1289,7 +1460,17 @@ void CPlayer::CollisionPressStageOut(void)
 {
 	if (m_bPressObj == true)
 	{
-		D3DXVECTOR3 D_pos = CGame::GetDevil()->GetDevilPos();
+		D3DXVECTOR3 D_pos;
+		switch (CManager::GetInstance()->GetScene()->GetMode())
+		{
+		case CScene::MODE_GAME:
+			D_pos = CGame::GetDevil()->GetDevilPos();
+			break;
+		case CScene::MODE_TUTORIAL:
+			D_pos = CTutorial::GetDevil()->GetDevilPos();
+			break;
+		}
+
 		D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
 		float G_Size = CMapSystem::GetInstance()->GetGritSize() * 0.5f;
 
@@ -1368,7 +1549,16 @@ void CPlayer::PosUpdate(void)
 		fSpeed = m_pSlow->GetValue();
 	}
 
-	CDevil* pDevil = CGame::GetDevil();
+	CDevil* pDevil = nullptr;
+	switch (CManager::GetInstance()->GetScene()->GetMode())
+	{
+	case CScene::MODE_GAME:
+		pDevil = CGame::GetDevil();
+		break;
+	case CScene::MODE_TUTORIAL:
+		pDevil = CTutorial::GetDevil();
+		break;
+	}
 
 	//Y軸の位置更新
 	m_pos.y += m_move.y * CManager::GetInstance()->GetGameSpeed() * fSpeed;
@@ -1422,8 +1612,6 @@ void CPlayer::ObjPosUpdate(void)
 	{
 		fSpeed = m_pSlow->GetValue();
 	}
-
-	CDevil* pDevil = CGame::GetDevil();
 
 	//Y軸の位置更新
 	m_pos.y += m_Objmove.y * CManager::GetInstance()->GetGameSpeed() * fSpeed;
@@ -1514,13 +1702,28 @@ void CPlayer::EggMove(void)
 			m_EggMove.x = m_EggMove.x * EGG_MOVE_DEL;
 			m_EggMove.z = m_EggMove.z * EGG_MOVE_DEL;
 
-			if (pos.y < CGame::GetMapField()->GetPos().y + 30.0f)
+			switch (CManager::GetInstance()->GetScene()->GetMode())
 			{
-				pos.y = CGame::GetMapField()->GetPos().y + 30.0f;
-			}
-			else
-			{
-				m_pUpEgg->SetRot(rot);
+			case CScene::MODE_GAME:
+				if (pos.y < CGame::GetMapField()->GetPos().y + 30.0f)
+				{
+					pos.y = CGame::GetMapField()->GetPos().y + 30.0f;
+				}
+				else
+				{
+					m_pUpEgg->SetRot(rot);
+				}
+				break;
+			case CScene::MODE_TUTORIAL:
+				if (pos.y < CTutorial::GetMapField()->GetPos().y + 30.0f)
+				{
+					pos.y = CTutorial::GetMapField()->GetPos().y + 30.0f;
+				}
+				else
+				{
+					m_pUpEgg->SetRot(rot);
+				}
+				break;
 			}
 
 			m_pUpEgg->SetPos(pos);
@@ -1571,9 +1774,15 @@ void CPlayer::Death(void)
 			// 死亡音
 			CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_DEATH);
 
-			CGame::SetGameEnd(true);
-			CGame::SetGameClear(false);
-			CManager::GetInstance()->SetStage(0);
+			CDevil* pDevil = nullptr;
+			switch (CManager::GetInstance()->GetScene()->GetMode())
+			{
+			case CScene::MODE_GAME:
+				CGame::SetGameEnd(true);
+				CGame::SetGameClear(false);
+				CManager::GetInstance()->SetStage(0);
+				break;
+			}
 		}
 		else
 		{
