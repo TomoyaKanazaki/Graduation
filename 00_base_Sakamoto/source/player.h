@@ -150,10 +150,10 @@ private:
 	void CollisionMoveRock(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR3& sizeMy, useful::COLLISION XYZ);		//動いている岩との当たり判定
 	void SearchWall(D3DXVECTOR3& posMy);				//壁のサーチ判定
 	void CollisionDevilHole(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR3& sizeMy, useful::COLLISION XYZ);		//デビルホールとの当たり判定
-	void CollisionEnemy(D3DXVECTOR3& posMy);			// 敵との当たり判定
+	void CollisionEnemy(D3DXVECTOR3& posMy);						// 敵との当たり判定
 	void CollisionStageOut(D3DXVECTOR3& posMy);						// ステージ外の当たり判定
 	bool CollisionStageIn(D3DXVECTOR3& posMy);						// ステージ内にいるかどうか
-	void CollisionPressStageOut(D3DXVECTOR3& posMy);					// ステージ外の圧死判定
+	void CollisionPressStageOut(D3DXVECTOR3& posMy);				// ステージ外の圧死判定
 
 	void CameraPosUpdate(D3DXVECTOR3& posMy);	//カメラ位置更新処理
 	void PosUpdate(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR3& sizeMy);		//位置更新処理
