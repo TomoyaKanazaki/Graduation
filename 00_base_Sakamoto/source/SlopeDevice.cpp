@@ -35,7 +35,7 @@ CListManager<CSlopeDevice>* CSlopeDevice::m_pList = nullptr; // オブジェクトリス
 //====================================================================
 //コンストラクタ
 //====================================================================
-CSlopeDevice::CSlopeDevice(int nPriority) : CObject(nPriority)
+CSlopeDevice::CSlopeDevice(int nPriority) : CCharacter(nPriority)
 {
 	m_pos = INITVECTOR3;
 	m_posOld = INITVECTOR3;
@@ -45,7 +45,6 @@ CSlopeDevice::CSlopeDevice(int nPriority) : CObject(nPriority)
 	m_State = STATE(0);
 	m_nStateCount = 0;
 
-	m_pCharacter = nullptr;
 	m_bMultiMatrix = false;
 }
 
@@ -129,16 +128,8 @@ void CSlopeDevice::Uninit(void)
 		m_pList->Release(m_pList);
 	}
 
-	// 継承クラス破棄に変更予定
-	// キャラクターの終了処理
-	if (m_pCharacter != nullptr)
-	{
-		// キャラクターの破棄
-		m_pCharacter->Uninit();
-		m_pCharacter = nullptr;
-	}
-
-	SetDeathFlag(true);
+	// キャラクタークラスの終了（継承）
+	CCharacter::Uninit();
 }
 
 //====================================================================
@@ -168,11 +159,8 @@ void CSlopeDevice::Update(void)
 //====================================================================
 void CSlopeDevice::TitleUpdate(void)
 {
-	if (m_pCharacter != nullptr)
-	{
-		// キャラクターの更新
-		m_pCharacter->Update();
-	}
+	// キャラクタークラスの更新（継承）
+	CCharacter::Update();
 }
 
 //====================================================================
@@ -183,11 +171,8 @@ void CSlopeDevice::GameUpdate(void)
 	//状態管理
 	StateManager();
 
-	if (m_pCharacter != nullptr)
-	{
-		// キャラクターの更新
-		m_pCharacter->Update();
-	}
+	// キャラクタークラスの更新（継承）
+	CCharacter::Update();
 }
 
 //====================================================================
@@ -195,14 +180,12 @@ void CSlopeDevice::GameUpdate(void)
 //====================================================================
 void CSlopeDevice::Draw(void)
 {
-	m_pCharacter->SetPos(GetPos());
-	m_pCharacter->SetRot(GetRot());
+	// 無理やり一時的位置情報交換（pos・rotの置き換え完了次第削除）
+	CCharacter::SetPos(GetPos());
+	CCharacter::SetRot(GetRot());
 
-	////モデルの描画(全パーツ)
-	//if (m_pCharacter != nullptr)
-	//{
-	//	m_pCharacter->Draw();
-	//}
+	// キャラクタークラスの描画（継承）
+	CCharacter::Draw();
 }
 
 //====================================================================
@@ -210,15 +193,7 @@ void CSlopeDevice::Draw(void)
 //====================================================================
 HRESULT CSlopeDevice::InitModel(const char* pModelNameSlopeDevice, const char* pModelNameEnemy)
 {
-	if (m_pCharacter == nullptr)
-	{
-		m_pCharacter = CCharacter::Create(pModelNameSlopeDevice);
-
-		if (m_pCharacter == nullptr)
-		{
-			return E_FAIL;
-		}
-	}
+	CCharacter::SetTxtCharacter(pModelNameSlopeDevice);
 
 	return S_OK;
 }
@@ -251,15 +226,8 @@ void CSlopeDevice::StateManager(void)
 //====================================================================
 void CSlopeDevice::Rotate(int nNldxModel,D3DXVECTOR3 rotate)
 {
-	if (m_pCharacter == nullptr)
-	{
-		// アサート
-		assert(("キャラクタークラスがないよ", false));
-		return;
-	}
-
 	// モデルの取得
-	CModel* pModel = m_pCharacter->GetModel(nNldxModel);
+	CModel* pModel = GetModel(nNldxModel);
 
 	if (pModel == nullptr)
 	{

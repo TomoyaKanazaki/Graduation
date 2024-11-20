@@ -115,7 +115,7 @@ void CLevelModelEffect::Uninit(void)
 		m_pList->Release(m_pList);
 	}
 
-	// 継承クラスの終了処理
+	// キャラクタークラスの終了（継承）
 	CCharacter::Uninit();
 }
 
@@ -147,8 +147,8 @@ void CLevelModelEffect::Update(void)
 		Uninit();
 	}
 
-	////モーションの更新
-	//m_pMotion->Update();
+	// キャラクタークラスの更新（継承）
+	CCharacter::Update();
 }
 
 //====================================================================
@@ -203,8 +203,11 @@ void CLevelModelEffect::SetPose(int nType, int nKey, float nCounter, int nModelN
 //====================================================================
 void CLevelModelEffect::Draw(void)
 {
+	// 無理やり一時的位置情報交換（pos・rotの置き換え完了次第削除）
 	CCharacter::SetPos(GetPos());
 	CCharacter::SetRot(GetRot());
+
+	// キャラクタークラスの描画（継承）
 	CCharacter::Draw();
 }
 
