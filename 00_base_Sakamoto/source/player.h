@@ -7,13 +7,12 @@
 #ifndef _PLAYER_H_
 #define _PLAYER_H_
 
-#include "object.h"
+#include "character.h"
 #include "useful.h"
 #include "Model.h"
 #include "MapSystem.h"
 
 //前方宣言
-class CCharacter;
 class CObject2D;
 class CObject3D;
 class CObjGauge2D;
@@ -31,7 +30,7 @@ class CFire;
 class CObjectX;
 
 //オブジェクトプレイヤークラス
-class CPlayer : public CObject
+class CPlayer : public CCharacter
 {
 private:
 	static const int ENCOUNT_MAX = 128;
@@ -176,8 +175,6 @@ private:
 
 	void DebugKey(void);		//デバッグキー
 
-	void LoadLevelData(const char* pFilename);
-
 	int m_nPlayNumber;			//プレイ用番号
 	ACTION_TYPE m_Action;
 	ACTION_TYPE m_AtkAction;	//攻撃状態記録用変数
@@ -223,7 +220,6 @@ private:
 	CObjectX* m_pDownEgg;		//卵モデルの下
 	D3DXVECTOR3 m_EggMove;		//卵の動き
 
-	CCharacter* m_pCharacter;		// キャラクターのクラス
 	CLifeUi* m_pLifeUi;
 
 	//マップとのマトリックス情報

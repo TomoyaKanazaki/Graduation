@@ -374,6 +374,44 @@ int CMapSystem::CalcGridZ(const float posZ)
 }
 
 //==========================================
+//  グリッド座標を世界の座標に変換する
+//==========================================
+D3DXVECTOR3 CMapSystem::GRID::ToWorld()
+{
+	D3DXVECTOR3 pos;
+	D3DXVECTOR3 DevilPos = CGame::GetDevil()->GetDevilPos();
+	CMapSystem* map = GetInstance();
+
+	// グリット番号が最大値以上や最小値以下の時、範囲内に納める処理
+	CMapSystem::GRID temp = GRID(x, z);
+	temp.x = useful::RangeNumber(map->m_WightMax, 0, x);
+	temp.z = useful::RangeNumber(map->m_HeightMax, 0, z);
+
+	// グリットの横番号の位置を設定する
+	pos.x = map->m_MapPos.x + (temp.x * map->m_fGritSize);
+
+	//境界線の外側にグリットがある場合反対側に移動させる
+	if (pos.x > DevilPos.x + (map->m_MapSize.x))
+	{
+		pos.x = pos.x - (DevilPos.x + (map->m_MapSize.x * 2.0f)) - map->m_fGritSize;
+	}
+
+	// 高さの位置を設定する
+	pos.y = 0.0f;
+
+	// グリットの縦番号の位置を設定する
+	pos.z = map->m_MapPos.z - (temp.z * map->m_fGritSize);
+
+	//境界線の外側にグリットがある場合反対側に移動させる
+	if (pos.z < DevilPos.z - (map->m_MapSize.z))
+	{
+		pos.z = pos.z + (DevilPos.z + (map->m_MapSize.z * 2.0f)) + map->m_fGritSize;
+	}
+
+	return pos;
+}
+
+//==========================================
 //  代入演算子のオペレータ
 //==========================================
 CMapSystem::GRID& CMapSystem::GRID::operator=(const AStar::Vec2i& vec)

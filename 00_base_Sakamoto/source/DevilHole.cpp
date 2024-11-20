@@ -195,7 +195,7 @@ void CDevilHole::GameUpdate(void)
 	//ƒNƒŠƒA”»’èˆ—
 	ClearJudge();
 
-	m_pos = CMapSystem::GetInstance()->GetGritPos(m_Grid);
+	m_pos = m_Grid.ToWorld();
 
 	for (int nCnt = 0; nCnt < DIRECTION; nCnt++)
 	{

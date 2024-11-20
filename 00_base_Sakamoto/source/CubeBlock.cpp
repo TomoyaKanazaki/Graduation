@@ -100,7 +100,7 @@ HRESULT CCubeBlock::Init(void)
 	SetSize(D3DXVECTOR3(m_fGritSize, 15.0f, m_fGritSize));
 
 	// テクスチャの設定
-	SetTexture("data\\TEXTURE\\Field\\00_wall.jpg");
+	SetTexture("data\\TEXTURE\\Field\\00_ground.jpg");
 
 	//SetColor(D3DXCOLOR(0.5f, 0.5f, 0.0f, 0.5f));
 
