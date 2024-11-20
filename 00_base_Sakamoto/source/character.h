@@ -11,6 +11,7 @@
 
 class CModel;
 class CMotion;
+class CShadow;
 
 #define MODEL_NUM		(64)	// モデルの数
 #define FILE_NAME_SIZE	(128)	// ファイル名の最大文字数
@@ -53,6 +54,8 @@ private:
 	CMotion* m_pMotion;
 	char m_aModelName[FILE_NAME_SIZE];
 	int m_nNumModel;
+
+	CShadow* m_pShadow;
 
 	D3DXVECTOR3 m_pos;				//位置
 	D3DXVECTOR3 m_posOld;			//過去の位置
