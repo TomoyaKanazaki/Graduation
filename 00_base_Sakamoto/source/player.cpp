@@ -8,7 +8,6 @@
 #include "object.h"
 #include "manager.h"
 #include "renderer.h"
-#include "character.h"
 #include "model.h"
 #include "motion.h"
 #include "game.h"
@@ -78,7 +77,7 @@ CListManager<CPlayer>* CPlayer::m_pList = nullptr; // オブジェクトリスト
 //====================================================================
 //コンストラクタ
 //====================================================================
-CPlayer::CPlayer(int nPriority) : CObject(nPriority),
+CPlayer::CPlayer(int nPriority) : CCharacter(nPriority),
 m_size(INITVECTOR3),
 m_pos(INITVECTOR3),
 m_move(INITVECTOR3),
@@ -93,7 +92,6 @@ m_State(STATE_EGG),
 m_nStateCount(0),
 m_AtkPos(INITVECTOR3),
 m_CollisionRot(0.0f),
-m_pCharacter(nullptr),
 m_OKL(true),
 m_OKR(true),
 m_OKU(true),
@@ -174,14 +172,13 @@ HRESULT CPlayer::Init(void)
 	//マップとのマトリックスの掛け合わせをオンにする
 	SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
 
-	if (m_pCharacter == nullptr)
-	{
-		m_pCharacter = CCharacter::Create("data\\TXT\\motion_tamagon1P.txt");
+	// キャラクターテキスト読み込み処理
+	CCharacter::SetTxtCharacter("data\\TXT\\motion_tamagon1P.txt");
 
-		m_pCharacter->SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
-		m_pCharacter->SetUseStencil(true);
-		m_pCharacter->SetUseShadowMtx(true);
-	}
+	// キャラクターのマトリックス設定
+	CCharacter::SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
+	CCharacter::SetUseStencil(true);
+	CCharacter::SetUseShadowMtx(true);
 
 	m_pLifeUi = CLifeUi::Create();
 
@@ -229,16 +226,8 @@ void CPlayer::Uninit(void)
 		m_pList->Release(m_pList);
 	}
 
-	// 継承クラス破棄に変更予定
-	// キャラクターの終了処理
-	if (m_pCharacter != nullptr)
-	{
-		// キャラクターの破棄
-		m_pCharacter->Uninit();
-		m_pCharacter = nullptr;
-	}
-
-	SetDeathFlag(true);
+	// 継承クラスの終了処理
+	CCharacter::Uninit();
 }
 
 //====================================================================
@@ -271,10 +260,7 @@ void CPlayer::Update(void)
 void CPlayer::TitleUpdate(void)
 {
 	// キャラクター更新処理
-	if (m_pCharacter != nullptr)
-	{
-		m_pCharacter->Update();
-	}
+	CCharacter::Update();
 }
 
 //====================================================================
@@ -377,10 +363,7 @@ void CPlayer::GameUpdate(void)
 	EggMove();
 
 	// キャラクター更新処理
-	if (m_pCharacter != nullptr)
-	{
-		m_pCharacter->Update();
-	}
+	CCharacter::Update();
 
 	//モーションの管理
 	ActionState();
@@ -411,14 +394,9 @@ void CPlayer::TutorialUpdate(void)
 //====================================================================
 void CPlayer::Draw(void)
 {
-	m_pCharacter->SetPos(GetPos());
-	m_pCharacter->SetRot(GetRot());
-
-	//// キャラクター描画処理
-	//if (m_pCharacter != nullptr)
-	//{
-	//	m_pCharacter->Draw();
-	//}
+	CCharacter::SetPos(GetPos());
+	CCharacter::SetRot(GetRot());
+	CCharacter::Draw();
 }
 
 //====================================================================
@@ -426,12 +404,6 @@ void CPlayer::Draw(void)
 //====================================================================
 void CPlayer::Move(void)
 {
-	if (m_pCharacter == nullptr)
-	{
-		assert(("キャラクターがない", false));
-		return;
-	}
-
 	m_bInput = false;
 
 	D3DXVECTOR3 CameraRot = CManager::GetInstance()->GetCamera()->GetRot();
@@ -460,11 +432,12 @@ void CPlayer::Move(void)
 		if (m_State == STATE_EGG)
 		{
 			// モデル数の取得
-			int nNumModel = m_pCharacter->GetNumModel();
+			int nNumModel = GetNumModel();
 
 			for (int nCnt = 0; nCnt < nNumModel; nCnt++)
 			{
-				CModel* pModel = m_pCharacter->GetModel(nCnt);
+				// モデルの取得
+				CModel* pModel = GetModel(nCnt);
 				
 				if (pModel != nullptr)
 				{
@@ -746,14 +719,8 @@ void CPlayer::Attack(void)
 //====================================================================
 void CPlayer::ActionState(void)
 {
-	// モデル数の取得
-	if (m_pCharacter == nullptr)
-	{
-		assert(("キャラクターがない", false));
-		return;
-	}
-
-	CMotion* pMotion = m_pCharacter->GetMotion();
+	// モーションの取得
+	CMotion* pMotion = GetMotion();
 
 	if (pMotion == nullptr)
 	{
@@ -873,11 +840,12 @@ void CPlayer::StateManager(void)
 	case STATE_EGG:
 
 		// モデル数の取得
-		int nNumModel = m_pCharacter->GetNumModel();
+		int nNumModel = GetNumModel();
 
 		for (int nCnt = 0; nCnt < nNumModel; nCnt++)
 		{
-			CModel* pModel = m_pCharacter->GetModel(nCnt);
+			// モデルの取得
+			CModel* pModel = GetModel(nCnt);
 
 			if (pModel != nullptr)
 			{
@@ -1660,14 +1628,8 @@ void CPlayer::DebugKey(void)
 //====================================================================
 void CPlayer::SetAction(ACTION_TYPE Action, float BlendTime)
 {
-	// モデル数の取得
-	if (m_pCharacter == nullptr)
-	{
-		assert(("キャラクターがない", false));
-		return;
-	}
-
-	CMotion* pMotion = m_pCharacter->GetMotion();
+	// モーションの取得
+	CMotion* pMotion = GetMotion();
 
 	if (pMotion == nullptr)
 	{
@@ -1687,17 +1649,12 @@ void CPlayer::SetAction(ACTION_TYPE Action, float BlendTime)
 void CPlayer::SetModelDisp(bool Sst)
 {
 	// モデル数の取得
-	if (m_pCharacter == nullptr)
-	{
-		assert(("キャラクターがない",false));
-		return;
-	}
-
-	int nNumModel = m_pCharacter->GetNumModel();
+	int nNumModel = GetNumModel();
 
 	for (int nCnt = 0; nCnt < nNumModel; nCnt++)
 	{
-		CModel* pModel = m_pCharacter->GetModel(nCnt);
+		// モデルの取得
+		CModel* pModel = GetModel(nCnt);
 
 		if (pModel != nullptr)
 		{
@@ -1812,14 +1769,8 @@ void CPlayer::SetItemType(ITEM_TYPE eType)
 //====================================================================
 void CPlayer::SetPartsDisp(int nParts, bool Set)
 {
-	// モデル数の取得
-	if (m_pCharacter == nullptr)
-	{
-		assert(("キャラクターがない", false));
-		return;
-	}
-
-	CModel* pModel = m_pCharacter->GetModel(nParts);
+	// 特定番号のモデル取得
+	CModel* pModel = GetModel(nParts);
 
 	if (pModel != nullptr)
 	{
@@ -1833,17 +1784,12 @@ void CPlayer::SetPartsDisp(int nParts, bool Set)
 void CPlayer::SetModelColor(CModel::COLORTYPE Type, D3DXCOLOR Col)
 {
 	// モデル数の取得
-	if (m_pCharacter == nullptr)
-	{
-		assert(("キャラクターがない", false));
-		return;
-	}
+	int nNumModel = GetNumModel();
 
-	CModel* pModel = nullptr;
-
-	for (int nCnt = 0; nCnt < m_pCharacter->GetNumModel(); nCnt++)
+	for (int nCnt = 0; nCnt < nNumModel; nCnt++)
 	{
-		pModel = m_pCharacter->GetModel(nCnt);
+		// モデルの取得
+		CModel* pModel = GetModel(nCnt);
 
 		if (pModel != nullptr)
 		{
