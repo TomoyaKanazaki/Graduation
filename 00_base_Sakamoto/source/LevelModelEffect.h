@@ -8,13 +8,10 @@
 #ifndef _LEVEL_MODEL_EFFECT_H_
 #define _LEVEL_MODEL_EFFECT_H_
 
-#include "object.h"
-
-//前方宣言
-class CCharacter;
+#include "character.h"
 
 // プレイヤーのレベルエフェクト処理クラス
-class CLevelModelEffect : public CObject
+class CLevelModelEffect : public CCharacter
 {
 public:
 	CLevelModelEffect(int nPriority = 5);
@@ -56,8 +53,6 @@ private:
 	D3DXMATRIX m_mtxWorld;		//ワールドマトリックス
 	D3DCOLORVALUE m_Color;		//色
 	float m_fDel;				//色の減衰
-
-	CCharacter* m_pCharacter;	// キャラクタークラスのポインタ
 
 	// 静的メンバ変数
 	static CListManager<CLevelModelEffect>* m_pList; // オブジェクトリスト
