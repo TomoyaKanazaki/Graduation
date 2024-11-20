@@ -17,10 +17,21 @@
 
 #include "objmeshField.h"
 
+#include "shadow.h"
+
+//====================================================================
+// 定数定義
+//====================================================================
+namespace
+{
+	const float SHADOW_SIZE = 50.0f;			// 丸影の大きさ
+}
+
 //====================================================================
 //コンストラクタ
 //====================================================================
-CCharacter::CCharacter(int nPriority) : CObject(nPriority)
+CCharacter::CCharacter(int nPriority) : CObject(nPriority),
+m_pShadow(nullptr)
 {
 	for (int nCnt = 0; nCnt < MODEL_NUM; nCnt++)
 	{
@@ -95,6 +106,11 @@ HRESULT CCharacter::Init(const char* pModelName)
 		m_pMotion->LoadData(pModelName);
 	}
 
+	if (m_pShadow == nullptr)
+	{// 影生成
+		m_pShadow = CShadow::Create(D3DXVECTOR3(m_pos.x, m_pos.y + 1.0f, m_pos.z), SHADOW_SIZE, SHADOW_SIZE);
+	}
+
 	return S_OK;
 }
 
@@ -121,6 +137,12 @@ void CCharacter::Uninit(void)
 		m_pMotion = nullptr;
 	}
 
+	if (m_pShadow != nullptr)
+	{// シャドウの破棄
+		m_pShadow->Uninit();
+		m_pShadow = nullptr;
+	}
+
 	SetDeathFlag(true);
 }
 
@@ -133,6 +155,11 @@ void CCharacter::Update(void)
 	{
 		//モーションの更新
 		m_pMotion->Update();
+	}
+
+	if (m_pShadow != nullptr)
+	{// シャドウの更新
+		m_pShadow->SetPos(D3DXVECTOR3(m_pos.x, m_pos.y + 1.0f, m_pos.z));
 	}
 }
 
@@ -222,6 +249,11 @@ void CCharacter::Draw(void)
 		{
 			m_apModel[nCntModel]->Draw();
 		}
+	}
+
+	if (m_pShadow != nullptr)
+	{// シャドウの描画
+		m_pShadow->Draw();
 	}
 
 	//ステンシルバッファ無効
