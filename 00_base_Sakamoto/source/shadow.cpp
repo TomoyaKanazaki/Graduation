@@ -9,11 +9,9 @@
 #include "texture.h"
 #include "manager.h"
 #include "renderer.h"
-
-//===========================================
-// 静的メンバ変数宣言
-//===========================================
-CListManager<CShadow>* CShadow::m_pList = nullptr; // オブジェクトリスト
+#include "texture.h"
+#include "game.h"
+#include "objmeshField.h"
 
 //===========================================
 // コンストラクタ
@@ -57,12 +55,11 @@ HRESULT CShadow::Init()
 	// テクスチャ設定
 	SetTexture("data\\TEXTURE\\player\\shadow000.jpg");
 
-	// オブジェクト3Dの初期化
-	if (FAILED(CObject3D::Init()))
-	{ // 初期化に失敗した場合
-		
-		return E_FAIL;
-	}
+	// マップとのマトリックスの掛け合わせをオンにする
+	SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
+
+	// 継承クラスの初期化
+	CObject3D::Init();
 
 	return S_OK;
 }
@@ -81,8 +78,6 @@ void CShadow::Uninit(void)
 //===========================================
 void CShadow::Update(void)
 {
-	// 継承クラスの更新
-	CObject3D::Update();
 }
 
 //===========================================
@@ -105,12 +100,4 @@ void CShadow::Draw(void)
 	pDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
 	pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 	pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-}
-
-//===========================================
-// リスト取得
-//===========================================
-CListManager<CShadow>* CShadow::GetList(void)
-{
-	return m_pList;
 }
