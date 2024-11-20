@@ -121,9 +121,6 @@ HRESULT CObject3D::Init(void)
 	//頂点バッファをアンロックする
 	m_pVtxBuff->Unlock();
 
-	//マップとのマトリックスの掛け合わせをオンにする
-	SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
-
 	if (m_pList == nullptr)
 	{// リストマネージャー生成
 		m_pList = CListManager<CObject3D>::Create();
