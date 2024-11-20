@@ -87,7 +87,7 @@ HRESULT CObjmeshField::Init(void)
 	//デバイスの取得
 	LPDIRECT3DDEVICE9 m_pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
 
-	SetTexture("data\\TEXTURE\\Field\\00_ground.jpg");
+	SetTexture("data\\TEXTURE\\Field\\black.jpg");
 
 	SetType(CObject::TYPE_OBJMESHFIELD);
 

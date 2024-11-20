@@ -78,7 +78,7 @@ HRESULT CCubeBlock::Init(void)
 	SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
 	//SetMultiMatrix(true);
 
-	SetTexture("data\\TEXTURE\\Field\\00_wall.jpg");
+	SetTexture("data\\TEXTURE\\Field\\00_ground.jpg");
 
 	//SetColor(D3DXCOLOR(0.5f, 0.5f, 0.0f, 0.5f));
 

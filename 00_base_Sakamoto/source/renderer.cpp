@@ -450,7 +450,7 @@ void CRenderer::Draw(void)
 			m_pD3DDevice->EndScene();
 		}
 		//バックバッファとフロントバッファの入れ替え
-		m_pD3DDevice->Present(nullptr, nullptr, nullptr, nullptr);
+  		m_pD3DDevice->Present(nullptr, nullptr, nullptr, nullptr);
 	//}
 }
 
