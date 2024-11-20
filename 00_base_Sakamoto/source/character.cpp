@@ -151,6 +151,8 @@ void CCharacter::Uninit(void)
 //====================================================================
 void CCharacter::Update(void)
 {
+	D3DXVECTOR3 pos = GetPos();
+
 	if (m_pMotion != nullptr)
 	{
 		//モーションの更新

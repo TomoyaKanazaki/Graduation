@@ -83,15 +83,21 @@ public:
 		TYPE_MAX
 	};
 
+	D3DMATRIX GetMtxWorld(void) { return m_mtxWorld; }
 	static CPlayer* Create();
 	HRESULT Init(void);
 	void Uninit(void);
 	void Update(void);
+	void TitleUpdate(void);
+	void GameUpdate(void);
+	void TutorialUpdate(void);
 	void Draw(void);
 
 	void SetPlayNumber(int Number) { m_nPlayNumber = Number; }
 	int GetPlayNumber(void) { return m_nPlayNumber; }
 
+	void SetPos(D3DXVECTOR3 pos) { m_pos = pos; }
+	D3DXVECTOR3 GetPos(void) { return m_pos; }
 	void SetMove(D3DXVECTOR3 move) { m_move = move; }
 	void SetMoveX(float moveX) { m_move.x = moveX; }
 	void SetMoveZ(float moveZ) { m_move.z = moveZ; }
@@ -99,6 +105,10 @@ public:
 	void SetObjMoveX(float move) { m_Objmove.x = move; }
 	void SetObjMoveZ(float move) { m_Objmove.z = move; }
 	D3DXVECTOR3 GetObjMove(void) { return m_Objmove; }
+	void SetRot(D3DXVECTOR3 rot) { m_rot = rot; }
+	D3DXVECTOR3 GetRot(void) { return m_rot; }
+	void SetSize(D3DXVECTOR3 size) { m_size = size; }
+	D3DXVECTOR3 GetSize(void) { return m_size; }
 	void SetState(STATE State) { m_State = State; }
 	STATE GetState(void) { return m_State; }
 	bool GetJump(void) { return m_bJump; }
@@ -109,6 +119,8 @@ public:
 	void SetModelDisp(bool Sst);
 	void SetPartsDisp(int nParts, bool Set);
 	void SetModelColor(CModel::COLORTYPE Type, D3DXCOLOR Col);
+	void SetUseMultiMatrix(D3DXMATRIX *Set) { m_UseMultiMatrix = Set; }
+	D3DXMATRIX *GetUseMultiMatrix(void) { return m_UseMultiMatrix; }
 	void SetPressObj(bool Set) { m_bPressObj = Set; }
 	bool GetPressObj(void) { return m_bPressObj; }
 
@@ -122,7 +134,7 @@ public:
 	CMapSystem::GRID GetGrid(void) { return m_Grid; }
 
 	void Death(void);
-	bool SortObject(D3DXVECTOR3& posMy,D3DXVECTOR3 pos);	// オブジェクトとのソート処理
+	bool SortObject(D3DXVECTOR3 pos);					// オブジェクトとのソート処理
 
 	void SetItemType(ITEM_TYPE eType);
 	ITEM_TYPE GetItemType() { return m_eItemType; }		// アイテムの種類取得
@@ -134,44 +146,49 @@ public:
 
 private:
 
-	void ActionState(void);								//モーションと状態の管理
-	void StateManager(D3DXVECTOR3& posMy);				//状態管理
-	void Move(void);									//移動処理
-	D3DXVECTOR3 MoveInputKey(D3DXVECTOR3 Move);			//移動入力キーボード
-	D3DXVECTOR3 MoveInputPadStick(D3DXVECTOR3 Move);	//移動入力パッドスティック
-	D3DXVECTOR3 MoveInputPadKey(D3DXVECTOR3 Move);		//移動入力パッドキー
-	void Rot(D3DXVECTOR3& rotMy);						//移動方向処理
-	void Attack(D3DXVECTOR3& posMy, D3DXVECTOR3& rotMy);//攻撃処理								
-	void CollisionWall(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR3& sizeMy, useful::COLLISION XYZ);			//壁との当たり判定
-	void CollisionPressWall(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR3& sizeMy, useful::COLLISION XYZ);		//壁との圧死判定
-	void CollisionWaitRailBlock(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR3& sizeMy, useful::COLLISION XYZ);	//止まっているレールブロックとの当たり判定
-	void CollisionMoveRailBlock(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR3& sizeMy, useful::COLLISION XYZ);	//動いているレールブロックとの当たり判定
-	void CollisionWaitRock(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR3& sizeMy, useful::COLLISION XYZ);		//止まっている岩との当たり判定
-	void CollisionMoveRock(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR3& sizeMy, useful::COLLISION XYZ);		//動いている岩との当たり判定
-	void SearchWall(D3DXVECTOR3& posMy);				//壁のサーチ判定
-	void CollisionDevilHole(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR3& sizeMy, useful::COLLISION XYZ);		//デビルホールとの当たり判定
-	void CollisionEnemy(D3DXVECTOR3& posMy);						// 敵との当たり判定
-	void CollisionStageOut(D3DXVECTOR3& posMy);						// ステージ外の当たり判定
-	bool CollisionStageIn(D3DXVECTOR3& posMy);						// ステージ内にいるかどうか
-	void CollisionPressStageOut(D3DXVECTOR3& posMy);				// ステージ外の圧死判定
+	void ActionState(void);							//モーションと状態の管理
+	void StateManager(void);						//状態管理
+	void Move(void);								//移動処理
+	D3DXVECTOR3 MoveInputKey(D3DXVECTOR3 Move);		//移動入力キーボード
+	D3DXVECTOR3 MoveInputPadStick(D3DXVECTOR3 Move);//移動入力パッドスティック
+	D3DXVECTOR3 MoveInputPadKey(D3DXVECTOR3 Move);	//移動入力パッドキー
+	void Rot(void);									//移動方向処理
+	void Attack(void);								//攻撃処理
+	void CollisionWall(useful::COLLISION XYZ);		//壁との当たり判定
+	void CollisionPressWall(useful::COLLISION XYZ);	//壁との圧死判定
+	void CollisionWaitRailBlock(useful::COLLISION XYZ);	//止まっているレールブロックとの当たり判定
+	void CollisionMoveRailBlock(useful::COLLISION XYZ);	//動いているレールブロックとの当たり判定
+	void CollisionWaitRock(useful::COLLISION XYZ);	//止まっている岩との当たり判定
+	void CollisionMoveRock(useful::COLLISION XYZ);	//動いている岩との当たり判定
+	void SearchWall(void);							//壁のサーチ判定
+	void CollisionDevilHole(useful::COLLISION XYZ);	//デビルホールとの当たり判定
+	void CollisionEnemy(void);						// 敵との当たり判定
+	void CollisionStageOut(void);					// ステージ外の当たり判定
+	bool CollisionStageIn(void);					// ステージ内にいるかどうか
+	void CollisionPressStageOut(void);				// ステージ外の圧死判定
 
-	void CameraPosUpdate(D3DXVECTOR3& posMy);	//カメラ位置更新処理
-	void PosUpdate(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR3& sizeMy);		//位置更新処理
-	void ObjPosUpdate(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR3& sizeMy);	//オブジェクトによる位置更新処理
-	void RotUpdate(D3DXVECTOR3& rotMy);		//向き更新処理
-	void EggMove(D3DXVECTOR3& posMy);		//卵の動き
+	void CameraPosUpdate(void);	//カメラ位置更新処理
+	void PosUpdate(void);		//位置更新処理
+	void ObjPosUpdate(void);	//オブジェクトによる位置更新処理
+	void RotUpdate(void);		//向き更新処理
+	void EggMove(void);			//卵の動き
 
 	void DebugKey(void);		//デバッグキー
 
 	int m_nPlayNumber;			//プレイ用番号
 	ACTION_TYPE m_Action;
 	ACTION_TYPE m_AtkAction;	//攻撃状態記録用変数
-
+	D3DXVECTOR3 m_pos;			//位置
+	D3DXVECTOR3 m_posOld;		//過去の位置
 	D3DXVECTOR3 m_move;			//移動量
 	D3DXVECTOR3 m_Objmove;		//オブジェクトから影響される移動量
+	D3DXVECTOR3 m_rot;			//向き
 	D3DXVECTOR3 m_rotDest;		//向きの目的地
 	D3DXVECTOR3 m_AutoMoveRot;	//自動移動の移動方向
+	D3DXVECTOR3 m_size;			//大きさ
+	D3DXVECTOR3 m_AtkPos;		//攻撃位置
 	D3DXVECTOR3 m_CameraPos;	//カメラ位置位置
+	D3DXMATRIX m_mtxWorld;		//ワールドマトリックス
 	bool m_bJump;				//ジャンプをしたかどうか
 	int m_nActionCount;			//行動のカウント
 	STATE m_State;				//状態
@@ -204,6 +221,11 @@ private:
 	D3DXVECTOR3 m_EggMove;		//卵の動き
 
 	CLifeUi* m_pLifeUi;
+
+	CShadow* m_pShadow;
+
+	//マップとのマトリックス情報
+	D3DXMATRIX *m_UseMultiMatrix;			//掛け合わせるマトリックス
 
 	// 静的メンバ変数
 	static CListManager<CPlayer>* m_pList; // オブジェクトリスト

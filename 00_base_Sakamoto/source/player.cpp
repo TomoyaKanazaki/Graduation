@@ -66,7 +66,7 @@ namespace
 	const float EGG_MOVE_DEL = 0.9f;			//移動量の減衰速度
 	const float EGG_COLOR_DEL_A = 0.01f;		//不透明度の減衰速度
 
-	const float SHADOW_SIZE = 100.0f;			// 丸影の大きさ
+	const float SHADOW_SIZE = 50.0f;			// 丸影の大きさ
 }
 
 //===========================================
@@ -78,8 +78,11 @@ CListManager<CPlayer>* CPlayer::m_pList = nullptr; // オブジェクトリスト
 //コンストラクタ
 //====================================================================
 CPlayer::CPlayer(int nPriority) : CCharacter(nPriority),
+m_size(INITVECTOR3),
+m_pos(INITVECTOR3),
 m_move(INITVECTOR3),
 m_Objmove(INITVECTOR3),
+m_rot(INITVECTOR3),
 m_AutoMoveRot(INITVECTOR3),
 m_bJump(false),
 m_nActionCount(0),
@@ -87,6 +90,7 @@ m_Action(ACTION_NONE),
 m_AtkAction(ACTION_NONE),
 m_State(STATE_EGG),
 m_nStateCount(0),
+m_AtkPos(INITVECTOR3),
 m_CollisionRot(0.0f),
 m_OKL(true),
 m_OKR(true),
@@ -105,7 +109,9 @@ m_pUpEgg(nullptr),
 m_pDownEgg(nullptr),
 m_EggMove(INITVECTOR3),
 m_bInvincible(true),
-m_nInvincibleCount(0)
+m_nInvincibleCount(0),
+m_UseMultiMatrix(nullptr),
+m_pShadow(nullptr)
 {
 
 }
@@ -144,17 +150,11 @@ CPlayer* CPlayer::Create()
 //====================================================================
 HRESULT CPlayer::Init(void)
 {
-	// 値を取得
-	D3DXVECTOR3 posMy = GetPos();			// 位置
-	D3DXVECTOR3 posOldMy = GetPosOld();		// 前回の位置
-	D3DXVECTOR3 rotMy = GetRot();			// 向き
-	D3DXVECTOR3 sizeMy = GetSize();			// 大きさ
-
 	// サイズの設定
-	sizeMy = COLLISION_SIZE;
+	m_size = COLLISION_SIZE;
 
 	// 向きの設定
-	rotMy = D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f);
+	m_rot = D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f);
 	m_AutoMoveRot = D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f);
 
 	// アクションの設定
@@ -170,17 +170,8 @@ HRESULT CPlayer::Init(void)
 	// 状態の設定
 	m_MoveState = MOVE_STATE_WAIT;
 
-	switch (CManager::GetInstance()->GetScene()->GetMode())
-	{
-	case CScene::MODE_GAME:
-		//マップとのマトリックスの掛け合わせをオンにする
-		SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
-		break;
-	case CScene::MODE_TUTORIAL:
-		//マップとのマトリックスの掛け合わせをオンにする
-		SetUseMultiMatrix(CTutorial::GetMapField()->GetMatrix());
-		break;
-	}
+	//マップとのマトリックスの掛け合わせをオンにする
+	SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
 
 	// キャラクターテキスト読み込み処理
 	CCharacter::SetTxtCharacter("data\\TXT\\motion_tamagon1P.txt");
@@ -205,14 +196,10 @@ HRESULT CPlayer::Init(void)
 	// スローの生成
 	m_pSlow = CSlowManager::Create(CSlowManager::CAMP_PLAYER, CSlowManager::TAG_PLAYER);
 
-	// 影生成
-	CShadow::Create(posMy, SHADOW_SIZE, SHADOW_SIZE);
-
-	// 値更新
-	SetPos(posMy);			// 位置
-	SetPosOld(posOldMy);	// 前回の位置
-	SetRot(rotMy);			// 向き
-	SetSize(sizeMy);		// 大きさ
+	if (m_pShadow == nullptr)
+	{// 影生成
+		m_pShadow = CShadow::Create(m_pos, SHADOW_SIZE, SHADOW_SIZE);
+	}
 
 	// リストマネージャーの生成
 	if (m_pList == nullptr)
@@ -251,26 +238,58 @@ void CPlayer::Uninit(void)
 //====================================================================
 void CPlayer::Update(void)
 {
-	// 値を取得
-	D3DXVECTOR3 posMy = GetPos();			// 位置
-	D3DXVECTOR3 posOldMy = GetPosOld();		// 前回の位置
-	D3DXVECTOR3 rotMy = GetRot();			// 向き
-	D3DXVECTOR3 sizeMy = GetSize();			// 大きさ
+	switch (CScene::GetMode())
+	{
+	case CScene::MODE_TITLE:
+		TitleUpdate();
+		break;
 
-	// 前回の位置を代入
-	posOldMy = posMy;
+	case CScene::MODE_GAME:
+		GameUpdate();
+		break;
+
+	case CScene::MODE_TUTORIAL:
+		TutorialUpdate();
+		break;
+
+	case CScene::MODE_RESULT:
+		break;
+	}
+}
+
+//====================================================================
+//タイトルでの更新処理
+//====================================================================
+void CPlayer::TitleUpdate(void)
+{
+	if (m_pShadow != nullptr)
+	{// 影生成
+		m_pShadow->Update();
+	}
+
+	// キャラクタークラスの更新（継承）
+	CCharacter::Update();
+}
+
+//====================================================================
+//ゲームでの更新処理
+//====================================================================
+void CPlayer::GameUpdate(void)
+{
+	// 過去の位置に代入
+	m_posOld = m_pos;
 
 	if (m_State != STATE_DEATH)
 	{
 		//壁があるか判断
-		SearchWall(posMy);
+		SearchWall();
 
 		if (
-			(m_State != STATE_EGG && CollisionStageIn(posMy) == true &&
-				CMapSystem::GetInstance()->GetGritBool(m_Grid.x, m_Grid.z) == false) ||
-			(m_State == STATE_EGG && CollisionStageIn(posMy) == true &&
-				CMapSystem::GetInstance()->GetGritBool(m_Grid.x, m_Grid.z) == false &&
-				m_bGritCenter == true && posMy.y <= 0.0f)
+			(m_State != STATE_EGG && CollisionStageIn() == true && 
+			CMapSystem::GetInstance()->GetGritBool(m_Grid.x,m_Grid.z) == false)||
+			(m_State == STATE_EGG && CollisionStageIn() == true &&
+			CMapSystem::GetInstance()->GetGritBool(m_Grid.x, m_Grid.z) == false &&
+			m_bGritCenter == true && m_pos.y <= 0.0f)
 			)
 		{// ステージ内にいる かつ ブロックの無いグリッド上の時
 			// 移動処理
@@ -278,11 +297,11 @@ void CPlayer::Update(void)
 		}
 
 		// 向き移動処理
-		Rot(rotMy);
+		Rot();
 
 		if (m_eItemType != TYPE_NONE)
 		{
-			Attack(posMy,rotMy);
+			Attack();
 		}
 
 		// 十字架を持っている場合
@@ -303,32 +322,32 @@ void CPlayer::Update(void)
 		}
 
 		// カメラ更新処理
-		CameraPosUpdate(posMy);
+		CameraPosUpdate();
 
 		if (m_State == STATE_WALK)
 		{
 			// 位置更新処理
-			PosUpdate(posMy,posOldMy,sizeMy);
+			PosUpdate();
 		}
 
-		ObjPosUpdate(posMy,posOldMy,sizeMy);
+		ObjPosUpdate();
 
 		if (m_State != STATE_EGG)
 		{
 			//画面外判定
-			CollisionStageOut(posMy);
+			CollisionStageOut();
 		}
 
 		// 敵の判定
-		CollisionEnemy(posMy);
+		CollisionEnemy();
 	}
 
 	// プレイヤーがマップのどのマスに存在しているか設定する
-	m_Grid.x = CMapSystem::GetInstance()->CMapSystem::CalcGridX(posMy.x);
-	m_Grid.z = CMapSystem::GetInstance()->CMapSystem::CalcGridZ(posMy.z);
+	m_Grid.x = CMapSystem::GetInstance()->CMapSystem::CalcGridX(m_pos.x);
+	m_Grid.z = CMapSystem::GetInstance()->CMapSystem::CalcGridZ(m_pos.z);
 
 	//状態の管理
-	StateManager(posMy);
+	StateManager();
 
 	if (m_nInvincibleCount > 0)
 	{
@@ -349,7 +368,12 @@ void CPlayer::Update(void)
 	}
 
 	//卵の動き
-	EggMove(posMy);
+	EggMove();
+
+	if (m_pShadow != nullptr)
+	{// 影生成
+		m_pShadow->SetPos(D3DXVECTOR3(m_pos.x, m_pos.y +1.0f, m_pos.z));
+	}
 
 	// キャラクタークラスの更新（継承）
 	CCharacter::Update();
@@ -361,19 +385,21 @@ void CPlayer::Update(void)
 	DebugKey();
 
 	//デバッグ表示
-	DebugProc::Print(DebugProc::POINT_LEFT, "[自分]位置 %f : %f : %f\n", posMy.x, posMy.y, posMy.z);
-	DebugProc::Print(DebugProc::POINT_LEFT, "[自分]向き %f : %f : %f\n", rotMy.x, rotMy.y, rotMy.z);
+	DebugProc::Print(DebugProc::POINT_LEFT, "[自分]位置 %f : %f : %f\n", m_pos.x, m_pos.y, m_pos.z);
+	DebugProc::Print(DebugProc::POINT_LEFT, "[自分]向き %f : %f : %f\n", m_rot.x, m_rot.y, m_rot.z);
 	DebugProc::Print(DebugProc::POINT_LEFT, "[自分]横 %d : 縦 %d\n", m_Grid.x, m_Grid.z);
 	DebugProc::Print(DebugProc::POINT_LEFT, "[自分]状態 : ");
 	auto str = magic_enum::enum_name(m_State);
 	DebugProc::Print(DebugProc::POINT_LEFT, str.data());
 	DebugProc::Print(DebugProc::POINT_LEFT, "\n");
+}
 
-	// 値更新
-	SetPos(posMy);			// 位置
-	SetPosOld(posOldMy);	// 前回の位置
-	SetRot(rotMy);			// 向き
-	SetSize(sizeMy);		// 大きさ
+//====================================================================
+//チュートリアルでの更新処理
+//====================================================================
+void CPlayer::TutorialUpdate(void)
+{
+
 }
 
 //====================================================================
@@ -381,6 +407,10 @@ void CPlayer::Update(void)
 //====================================================================
 void CPlayer::Draw(void)
 {
+	// 無理やり一時的位置情報交換（pos・rotの置き換え完了次第削除）
+	CCharacter::SetPos(GetPos());
+	CCharacter::SetRot(GetRot());
+
 	// キャラクタークラスの描画（継承）
 	CCharacter::Draw();
 }
@@ -652,7 +682,7 @@ D3DXVECTOR3 CPlayer::MoveInputPadKey(D3DXVECTOR3 Move)
 //====================================================================
 //移動方向処理
 //====================================================================
-void CPlayer::Rot(D3DXVECTOR3& rotMy)
+void CPlayer::Rot(void)
 {
 	//キーボードの取得
 	CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
@@ -662,21 +692,21 @@ void CPlayer::Rot(D3DXVECTOR3& rotMy)
 
 	//移動方向に向きを合わせる処理
 	float fRotMove, fRotDest;
-	fRotMove = rotMy.y;
+	fRotMove = m_rot.y;
 	fRotDest = CManager::GetInstance()->GetCamera()->GetRot().y;
 
 	if (m_State == STATE_WALK)
 	{
-		rotMy.y = atan2f(-m_move.x, -m_move.z);
+		m_rot.y = atan2f(-m_move.x, -m_move.z);
 	}
 
-	useful::NormalizeAngle(&rotMy);
+	useful::NormalizeAngle(&m_rot);
 }
 
 //====================================================================
 //攻撃処理
 //====================================================================
-void CPlayer::Attack(D3DXVECTOR3& posMy,D3DXVECTOR3& rotMy)
+void CPlayer::Attack(void)
 {
 	if (m_State == STATE_WALK)
 	{
@@ -689,11 +719,11 @@ void CPlayer::Attack(D3DXVECTOR3& posMy,D3DXVECTOR3& rotMy)
 			// 火炎放射
 			CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_FIRE);
 			D3DXMATRIX mat = *GetUseMultiMatrix();
-			D3DXVECTOR3 ef = useful::CalcMatrix(posMy, rotMy, mat);
+			D3DXVECTOR3 ef = useful::CalcMatrix(m_pos, m_rot, mat);
 
-			MyEffekseer::EffectCreate(CMyEffekseer::TYPE_SMOKE, false, ef, rotMy);
+			MyEffekseer::EffectCreate(CMyEffekseer::TYPE_SMOKE, false, ef, m_rot);
 
-			CFire::Create("data\\model\\fireball.x", posMy, rotMy);
+			CFire::Create("data\\model\\fireball.x", m_pos, m_rot);
 			m_State = STATE_ATTACK;
 			m_nStateCount = FIRE_STOPTIME;
 		}
@@ -763,7 +793,7 @@ void CPlayer::ActionState(void)
 //====================================================================
 //状態管理
 //====================================================================
-void CPlayer::StateManager(D3DXVECTOR3& posMy)
+void CPlayer::StateManager(void)
 {
 	switch (m_State)
 	{
@@ -811,8 +841,8 @@ void CPlayer::StateManager(D3DXVECTOR3& posMy)
 					if (CMapSystem::GetInstance()->GetGritBool(nSetW, nSetH) == false)
 					{
 						SetGrid(CMapSystem::GRID(nSetW, nSetH));
-						posMy = CMapSystem::GRID(nSetW, nSetH).ToWorld();
-						posMy.y = RESPAWN_POS.y;
+						m_pos = CMapSystem::GRID(nSetW, nSetH).ToWorld();
+						m_pos.y = RESPAWN_POS.y;
 						m_State = STATE_EGG;
 						return;
 					}
@@ -843,32 +873,16 @@ void CPlayer::StateManager(D3DXVECTOR3& posMy)
 		{
 			m_pUpEgg = CObjectX::Create("data\\MODEL\\00_Player\\1P\\upper_egg.x");
 			m_pUpEgg->SetMatColor(D3DXCOLOR(0.263529f, 0.570980f, 0.238431f, 1.0f));
-
-			switch (CManager::GetInstance()->GetScene()->GetMode())
-			{
-			case CScene::MODE_GAME:
-				m_pUpEgg->SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
-				break;
-			case CScene::MODE_TUTORIAL:
-				m_pUpEgg->SetUseMultiMatrix(CTutorial::GetMapField()->GetMatrix());
-				break;
-			}
+			m_pUpEgg->SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
+			//m_pUpEgg->SetMultiMatrix(true);
 		}
 
 		if (m_pDownEgg == nullptr)
 		{
 			m_pDownEgg = CObjectX::Create("data\\MODEL\\00_Player\\1P\\downer_egg.x");
 			m_pDownEgg->SetMatColor(D3DXCOLOR(0.263529f, 0.570980f, 0.238431f, 1.0f));
-
-			switch (CManager::GetInstance()->GetScene()->GetMode())
-			{
-			case CScene::MODE_GAME:
-				m_pDownEgg->SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
-				break;
-			case CScene::MODE_TUTORIAL:
-				m_pDownEgg->SetUseMultiMatrix(CTutorial::GetMapField()->GetMatrix());
-				break;
-			}
+			m_pDownEgg->SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
+			//m_pDownEgg->SetMultiMatrix(true);
 		}
 		break;
 	}
@@ -882,7 +896,7 @@ void CPlayer::StateManager(D3DXVECTOR3& posMy)
 //====================================================================
 // 壁との当たり判定
 //====================================================================
-void CPlayer::CollisionWall(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR3& sizeMy, useful::COLLISION XYZ)
+void CPlayer::CollisionWall(useful::COLLISION XYZ)
 {
 	// キューブブロックのリスト構造が無ければ抜ける
 	if (CCubeBlock::GetList() == nullptr) { return; }
@@ -897,12 +911,12 @@ void CPlayer::CollisionWall(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTO
 		D3DXVECTOR3 Size = pCubeBlock->GetSize();
 
 		// 矩形の当たり判定
-		if (useful::CollisionBlock(pos, pos, Move, Size, &posMy, posOldMy, &m_move, &m_Objmove, sizeMy, &m_bJump, XYZ) == true)
+		if (useful::CollisionBlock(pos, pos, Move, Size, &m_pos, m_posOld, &m_move, &m_Objmove, m_size, &m_bJump, XYZ) == true)
 		{
 			//待機状態にする
 			m_State = STATE_WAIT;
 			m_MoveState = MOVE_STATE_WAIT;
-			posMy = m_Grid.ToWorld();
+			m_pos = m_Grid.ToWorld();
 		}
 	}
 }
@@ -910,7 +924,7 @@ void CPlayer::CollisionWall(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTO
 //====================================================================
 // 壁との圧死判定
 //====================================================================
-void CPlayer::CollisionPressWall(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR3& sizeMy, useful::COLLISION XYZ)
+void CPlayer::CollisionPressWall(useful::COLLISION XYZ)
 {
 	// キューブブロックのリスト構造が無ければ抜ける
 	if (CCubeBlock::GetList() == nullptr) { return; }
@@ -925,7 +939,7 @@ void CPlayer::CollisionPressWall(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DX
 		D3DXVECTOR3 Size = pCubeBlock->GetSize();
 
 		// 矩形の当たり判定
-		if (useful::CollisionRectangle2D(posMy, pos, sizeMy, Size, XYZ) == true)
+		if (useful::CollisionRectangle2D(m_pos, pos, m_size, Size, XYZ) == true)
 		{
 			Death();
 		}
@@ -935,7 +949,7 @@ void CPlayer::CollisionPressWall(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DX
 //====================================================================
 // 止まっているレールブロックとの当たり判定
 //====================================================================
-void CPlayer::CollisionWaitRailBlock(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR3& sizeMy, useful::COLLISION XYZ)
+void CPlayer::CollisionWaitRailBlock(useful::COLLISION XYZ)
 {
 	if (m_bPressObj == true)
 	{
@@ -964,12 +978,12 @@ void CPlayer::CollisionWaitRailBlock(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, 
 		}
 
 		// 矩形の当たり判定
-		if (useful::CollisionBlock(pos, pos, Move, Size, &posMy, posOldMy, &m_move, &m_Objmove, sizeMy, &m_bJump, XYZ) == true)
+		if (useful::CollisionBlock(pos, pos, Move, Size, &m_pos, m_posOld, &m_move, &m_Objmove, m_size, &m_bJump, XYZ) == true)
 		{
 			//待機状態にする
 			m_State = STATE_WAIT;
 			m_MoveState = MOVE_STATE_WAIT;
-			posMy = m_Grid.ToWorld();
+			m_pos = m_Grid.ToWorld();
 		}
 	}
 }
@@ -977,7 +991,7 @@ void CPlayer::CollisionWaitRailBlock(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, 
 //====================================================================
 // 動いているレールブロックとの当たり判定
 //====================================================================
-void CPlayer::CollisionMoveRailBlock(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR3& sizeMy, useful::COLLISION XYZ)
+void CPlayer::CollisionMoveRailBlock(useful::COLLISION XYZ)
 {
 	// レールブロックのリスト構造が無ければ抜ける
 	if (CRailBlock::GetList() == nullptr) { return; }
@@ -986,17 +1000,7 @@ void CPlayer::CollisionMoveRailBlock(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, 
 	// レールブロックリストの中身を確認する
 	for (CRailBlock* pRailBlock : list)
 	{
-		D3DXVECTOR3 D_pos;
-		switch (CManager::GetInstance()->GetScene()->GetMode())
-		{
-		case CScene::MODE_GAME:
-			D_pos = CGame::GetDevil()->GetDevilPos();
-			break;
-		case CScene::MODE_TUTORIAL:
-			D_pos = CTutorial::GetDevil()->GetDevilPos();
-			break;
-		}
-
+		D3DXVECTOR3 D_pos = CGame::GetDevil()->GetDevilPos();
 		D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
 		float G_Size = CMapSystem::GetInstance()->GetGritSize();
 
@@ -1011,10 +1015,14 @@ void CPlayer::CollisionMoveRailBlock(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, 
 			D3DXVECTOR3 MyMove = (Mypos - MyposOld);
 			float MySize = CMapSystem::GetInstance()->GetGritSize() * 0.5f;
 
+			D3DXVECTOR3 pos = m_pos;
+			D3DXVECTOR3 posOld = m_posOld;
+			D3DXVECTOR3 Size = m_size;
+			D3DXVECTOR3 Move = m_move;
 			bool a = false;
 
 			// 矩形の当たり判定
-			if (useful::CollisionBlock(Mypos, MyposOld, MyMove, D3DXVECTOR3(MySize, MySize, MySize), &posMy, posOldMy, &m_move, &m_Objmove, sizeMy, &a, XYZ) == true)
+			if (useful::CollisionBlock(Mypos, MyposOld, MyMove, D3DXVECTOR3(MySize, MySize, MySize), &m_pos, m_posOld, &m_move, &m_Objmove, m_size, &a, XYZ) == true)
 			{
 				m_bPressObj = true;
 				return;
@@ -1026,7 +1034,7 @@ void CPlayer::CollisionMoveRailBlock(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, 
 //====================================================================
 // 止まっている岩との当たり判定
 //====================================================================
-void CPlayer::CollisionWaitRock(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR3& sizeMy, useful::COLLISION XYZ)
+void CPlayer::CollisionWaitRock(useful::COLLISION XYZ)
 {
 	if (m_bPressObj == true)
 	{
@@ -1063,12 +1071,12 @@ void CPlayer::CollisionWaitRock(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXV
 		}
 
 		// 矩形の当たり判定
-		if (useful::CollisionBlock(pos, pos, Move, Size, &posMy, posOldMy, &m_move, &m_Objmove, sizeMy, &m_bJump, XYZ) == true)
+		if (useful::CollisionBlock(pos, pos, Move, Size, &m_pos, m_posOld, &m_move, &m_Objmove, m_size, &m_bJump, XYZ) == true)
 		{
 			//待機状態にする
 			m_State = STATE_WAIT;
 			m_MoveState = MOVE_STATE_WAIT;
-			posMy = m_Grid.ToWorld();
+			m_pos = m_Grid.ToWorld();
 		}
 	}
 }
@@ -1076,7 +1084,7 @@ void CPlayer::CollisionWaitRock(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXV
 //====================================================================
 // 動いている岩との当たり判定
 //====================================================================
-void CPlayer::CollisionMoveRock(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR3& sizeMy, useful::COLLISION XYZ)
+void CPlayer::CollisionMoveRock(useful::COLLISION XYZ)
 {
 	// レールブロックのリスト構造が無ければ抜ける
 	if (CRollRock::GetList() == nullptr) { return; }
@@ -1085,17 +1093,7 @@ void CPlayer::CollisionMoveRock(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXV
 	// レールブロックリストの中身を確認する
 	for (CRollRock* pRock : list)
 	{
-		D3DXVECTOR3 D_pos;
-		switch (CManager::GetInstance()->GetScene()->GetMode())
-		{
-		case CScene::MODE_GAME:
-			D_pos = CGame::GetDevil()->GetDevilPos();
-			break;
-		case CScene::MODE_TUTORIAL:
-			D_pos = CTutorial::GetDevil()->GetDevilPos();
-			break;
-		}
-
+		D3DXVECTOR3 D_pos = CGame::GetDevil()->GetDevilPos();
 		D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
 		float G_Size = CMapSystem::GetInstance()->GetGritSize();
 
@@ -1110,10 +1108,14 @@ void CPlayer::CollisionMoveRock(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXV
 			D3DXVECTOR3 MyMove = pRock->GetMove();
 			float MySize = CMapSystem::GetInstance()->GetGritSize() * 0.5f;
 
+			D3DXVECTOR3 pos = m_pos;
+			D3DXVECTOR3 posOld = m_posOld;
+			D3DXVECTOR3 Size = m_size;
+			D3DXVECTOR3 Move = m_move;
 			bool a = false;
 
 			// 矩形の当たり判定
-			if (useful::CollisionBlock(Mypos, MyposOld, MyMove, D3DXVECTOR3(MySize, MySize, MySize), &posMy, posOldMy, &m_move, &m_Objmove, sizeMy, &a, XYZ) == true)
+			if (useful::CollisionBlock(Mypos, MyposOld, MyMove, D3DXVECTOR3(MySize, MySize, MySize), &m_pos, m_posOld, &m_move, &m_Objmove, m_size, &a, XYZ) == true)
 			{
 				//m_Objmove.x = MyMove.x;
 				//m_move.x = 0.0f;
@@ -1127,7 +1129,7 @@ void CPlayer::CollisionMoveRock(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXV
 //====================================================================
 // 上下左右に壁が存在するかの判定
 //====================================================================
-void CPlayer::SearchWall(D3DXVECTOR3& posMy)
+void CPlayer::SearchWall(void)
 {
 	bool OKR = true;	//右
 	bool OKL = true;	//左
@@ -1160,10 +1162,10 @@ void CPlayer::SearchWall(D3DXVECTOR3& posMy)
 
 	DebugProc::Print(DebugProc::POINT_LEFT, "自分がいるグリットの中心位置 %f %f %f\n", MyGritPos.x, MyGritPos.y, MyGritPos.z);
 
-	if ((posMy.x <= MyGritPos.x + ((MapGritSize * 0.5f) - GRIT_OK) &&
-		posMy.x >= MyGritPos.x - ((MapGritSize * 0.5f) - GRIT_OK) &&
-		posMy.z <= MyGritPos.z + ((MapGritSize * 0.5f) - GRIT_OK) &&
-		posMy.z >= MyGritPos.z - ((MapGritSize * 0.5f) - GRIT_OK)) ||
+	if ((m_pos.x <= MyGritPos.x + ((MapGritSize * 0.5f) - GRIT_OK) &&
+		m_pos.x >= MyGritPos.x - ((MapGritSize * 0.5f) - GRIT_OK) &&
+		m_pos.z <= MyGritPos.z + ((MapGritSize * 0.5f) - GRIT_OK) &&
+		m_pos.z >= MyGritPos.z - ((MapGritSize * 0.5f) - GRIT_OK)) ||
 		m_State == STATE_WAIT)
 	{// グリットの中心位置に立っているなら操作を受け付ける
 		m_OKR = OKR;	//右
@@ -1187,7 +1189,7 @@ void CPlayer::SearchWall(D3DXVECTOR3& posMy)
 //====================================================================
 // デビルホールとの当たり判定
 //====================================================================
-void CPlayer::CollisionDevilHole(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR3& sizeMy, useful::COLLISION XYZ)
+void CPlayer::CollisionDevilHole(useful::COLLISION XYZ)
 {
 	// デビルホールのリスト構造が無ければ抜ける
 	if (CDevilHole::GetList() == nullptr) { return; }
@@ -1201,12 +1203,12 @@ void CPlayer::CollisionDevilHole(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DX
 		D3DXVECTOR3 Size = pDevilHole->GetSize();
 
 		// 矩形の当たり判定
-		if (useful::CollisionBlock(pos, pos, INITVECTOR3, Size, &posMy, posOldMy, &m_move, &m_Objmove, sizeMy, &m_bJump, XYZ) == true)
+		if (useful::CollisionBlock(pos, pos, INITVECTOR3, Size, &m_pos, m_posOld, &m_move, &m_Objmove, m_size, &m_bJump, XYZ) == true)
 		{
 			//待機状態にする
 			m_State = STATE_WAIT;
 			m_MoveState = MOVE_STATE_WAIT;
-			posMy = m_Grid.ToWorld();
+			m_pos = m_Grid.ToWorld();
 		}
 	}
 }
@@ -1214,7 +1216,7 @@ void CPlayer::CollisionDevilHole(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DX
 //====================================================================
 // 敵の当たり判定
 //====================================================================
-void CPlayer::CollisionEnemy(D3DXVECTOR3& posMy)
+void CPlayer::CollisionEnemy(void)
 {
 	// 敵のリスト構造が無ければ抜ける
 	if (CEnemy::GetList() == nullptr) { return; }
@@ -1224,9 +1226,11 @@ void CPlayer::CollisionEnemy(D3DXVECTOR3& posMy)
 	for (CEnemy* pEnemy : list)
 	{
 		D3DXVECTOR3 pos = pEnemy->GetPos();
+		D3DXVECTOR3 posOld = pEnemy->GetPosOld();
+		D3DXVECTOR3 Size = pEnemy->GetSize();
 
 		// 円の当たり判定
-		if (useful::CollisionCircle(posMy, pos, 30.0f) == true)
+		if (useful::CollisionCircle(m_pos, pos, 30.0f) == true)
 		{
 			if (!m_bInvincible)
 			{
@@ -1239,43 +1243,33 @@ void CPlayer::CollisionEnemy(D3DXVECTOR3& posMy)
 //====================================================================
 // ステージ外の当たり判定
 //====================================================================
-void CPlayer::CollisionStageOut(D3DXVECTOR3& posMy)
+void CPlayer::CollisionStageOut(void)
 {
-	D3DXVECTOR3 D_pos;
-	switch (CManager::GetInstance()->GetScene()->GetMode())
-	{
-	case CScene::MODE_GAME:
-		D_pos = CGame::GetDevil()->GetDevilPos();
-		break;
-	case CScene::MODE_TUTORIAL:
-		D_pos = CTutorial::GetDevil()->GetDevilPos();
-		break;
-	}
-
+	D3DXVECTOR3 D_pos = CGame::GetDevil()->GetDevilPos();
 	D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
 	float G_Size = CMapSystem::GetInstance()->GetGritSize();
 
-	if (posMy.x + G_Size > D_pos.x + MapSize.x)	// 右
+	if (m_pos.x + G_Size > D_pos.x + MapSize.x)	// 右
 	{
-		posMy.x = D_pos.x + MapSize.x - G_Size;
+		m_pos.x = D_pos.x + MapSize.x - G_Size;
 		m_State = STATE_WAIT;
 		m_move.x = 0.0f;
 	}
-	if (posMy.x - G_Size < D_pos.x - MapSize.x)	// 左
+	if (m_pos.x - G_Size < D_pos.x - MapSize.x)	// 左
 	{
-		posMy.x = D_pos.x - MapSize.x + G_Size;
+		m_pos.x = D_pos.x - MapSize.x + G_Size;
 		m_State = STATE_WAIT;
 		m_move.x = 0.0f;
 	}
-	if (posMy.z + G_Size > D_pos.z + MapSize.z)	// 上
+	if (m_pos.z + G_Size > D_pos.z + MapSize.z)	// 上
 	{
-		posMy.z = D_pos.z + MapSize.z - G_Size;
+		m_pos.z = D_pos.z + MapSize.z - G_Size;
 		m_State = STATE_WAIT;
 		m_move.z = 0.0f;
 	}
-	if (posMy.z - G_Size < D_pos.z - MapSize.z)	// 下
+	if (m_pos.z - G_Size < D_pos.z - MapSize.z)	// 下
 	{
-		posMy.z = D_pos.z - MapSize.z + G_Size;
+		m_pos.z = D_pos.z - MapSize.z + G_Size;
 		m_State = STATE_WAIT;
 		m_move.z = 0.0f;
 	}
@@ -1284,25 +1278,16 @@ void CPlayer::CollisionStageOut(D3DXVECTOR3& posMy)
 //====================================================================
 // ステージ内にいるかどうか
 //====================================================================
-bool CPlayer::CollisionStageIn(D3DXVECTOR3& posMy)
+bool CPlayer::CollisionStageIn(void)
 {
-	D3DXVECTOR3 D_pos;
-	switch (CManager::GetInstance()->GetScene()->GetMode())
-	{
-	case CScene::MODE_GAME:
-		D_pos = CGame::GetDevil()->GetDevilPos();
-		break;
-	case CScene::MODE_TUTORIAL:
-		D_pos = CTutorial::GetDevil()->GetDevilPos();
-		break;
-	}
+	D3DXVECTOR3 D_pos = CGame::GetDevil()->GetDevilPos();
 	D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
 	float G_Size = CMapSystem::GetInstance()->GetGritSize();
 
-	if (posMy.x + G_Size <= D_pos.x + MapSize.x &&
-		posMy.x - G_Size >= D_pos.x - MapSize.x &&
-		posMy.z + G_Size <= D_pos.z + MapSize.z &&
-		posMy.z - G_Size >= D_pos.z - MapSize.z)
+	if (m_pos.x + G_Size <= D_pos.x + MapSize.x &&
+		m_pos.x - G_Size >= D_pos.x - MapSize.x &&
+		m_pos.z + G_Size <= D_pos.z + MapSize.z &&
+		m_pos.z - G_Size >= D_pos.z - MapSize.z)
 	{
 		return true;
 	}
@@ -1313,37 +1298,27 @@ bool CPlayer::CollisionStageIn(D3DXVECTOR3& posMy)
 //====================================================================
 // 画面外との圧死判定
 //====================================================================
-void CPlayer::CollisionPressStageOut(D3DXVECTOR3& posMy)
+void CPlayer::CollisionPressStageOut(void)
 {
 	if (m_bPressObj == true)
 	{
-		D3DXVECTOR3 D_pos;
-		switch (CManager::GetInstance()->GetScene()->GetMode())
-		{
-		case CScene::MODE_GAME:
-			D_pos = CGame::GetDevil()->GetDevilPos();
-			break;
-		case CScene::MODE_TUTORIAL:
-			D_pos = CTutorial::GetDevil()->GetDevilPos();
-			break;
-		}
-
+		D3DXVECTOR3 D_pos = CGame::GetDevil()->GetDevilPos();
 		D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
 		float G_Size = CMapSystem::GetInstance()->GetGritSize() * 0.5f;
 
-		if (posMy.x + G_Size > D_pos.x + MapSize.x)
+		if (m_pos.x + G_Size > D_pos.x + MapSize.x)
 		{
 			Death();
 		}
-		if (posMy.x - G_Size < D_pos.x - MapSize.x)
+		if (m_pos.x - G_Size < D_pos.x - MapSize.x)
 		{
 			Death();
 		}
-		if (posMy.z + G_Size > D_pos.z + MapSize.z)
+		if (m_pos.z + G_Size > D_pos.z + MapSize.z)
 		{
 			Death();
 		}
-		if (posMy.z - G_Size < D_pos.z - MapSize.z)
+		if (m_pos.z - G_Size < D_pos.z - MapSize.z)
 		{
 			Death();
 		}
@@ -1353,22 +1328,22 @@ void CPlayer::CollisionPressStageOut(D3DXVECTOR3& posMy)
 //====================================================================
 //カメラ位置更新処理
 //====================================================================
-void CPlayer::CameraPosUpdate(D3DXVECTOR3& posMy)
+void CPlayer::CameraPosUpdate(void)
 {
 	//カメラ位置の更新
-	m_CameraPos.x = posMy.x;
-	m_CameraPos.z = posMy.z;
+	m_CameraPos.x = m_pos.x;
+	m_CameraPos.z = m_pos.z;
 
 	if (m_bJump == false)
 	{
-		m_CameraPos.y = posMy.y;
+		m_CameraPos.y = m_pos.y;
 	}
 }
 
 //====================================================================
 //位置更新処理
 //====================================================================
-void CPlayer::PosUpdate(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR3& sizeMy)
+void CPlayer::PosUpdate(void)
 {
 	//減衰係数
 	//m_move.x = m_move.x * 0.5f;
@@ -1406,47 +1381,38 @@ void CPlayer::PosUpdate(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR3& 
 		fSpeed = m_pSlow->GetValue();
 	}
 
-	CDevil* pDevil = nullptr;
-	switch (CManager::GetInstance()->GetScene()->GetMode())
-	{
-	case CScene::MODE_GAME:
-		pDevil = CGame::GetDevil();
-		break;
-	case CScene::MODE_TUTORIAL:
-		pDevil = CTutorial::GetDevil();
-		break;
-	}
+	CDevil* pDevil = CGame::GetDevil();
 
 	//Y軸の位置更新
-	posMy.y += m_move.y * CManager::GetInstance()->GetGameSpeed() * fSpeed;
+	m_pos.y += m_move.y * CManager::GetInstance()->GetGameSpeed() * fSpeed;
 
 	// 壁との当たり判定
-	CollisionWall(posMy,posOldMy,sizeMy,useful::COLLISION_Y);
-	CollisionDevilHole(posMy, posOldMy, sizeMy, useful::COLLISION_Y);
+	CollisionWall(useful::COLLISION_Y);
+	CollisionDevilHole(useful::COLLISION_Y);
 
 	//X軸の位置更新
-	posMy.x += m_move.x * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeX(m_move.x);
+	m_pos.x += m_move.x * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeX(m_move.x);
 
 	// 壁との当たり判定
-	CollisionWall(posMy, posOldMy, sizeMy, useful::COLLISION_X);
-	CollisionDevilHole(posMy, posOldMy, sizeMy, useful::COLLISION_X);
-	CollisionWaitRailBlock(posMy, posOldMy, sizeMy, useful::COLLISION_X);
-	CollisionWaitRock(posMy, posOldMy, sizeMy, useful::COLLISION_X);
+	CollisionWall(useful::COLLISION_X);
+	CollisionDevilHole(useful::COLLISION_X);
+	CollisionWaitRailBlock(useful::COLLISION_X);
+	CollisionWaitRock(useful::COLLISION_X);
 
 	//Z軸の位置更新
-	posMy.z += m_move.z * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeZ(m_move.z);
+	m_pos.z += m_move.z * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeZ(m_move.z);
 
 	// 壁との当たり判定
-	CollisionWall(posMy, posOldMy, sizeMy, useful::COLLISION_Z);
-	CollisionDevilHole(posMy, posOldMy, sizeMy, useful::COLLISION_Z);
-	CollisionWaitRailBlock(posMy, posOldMy, sizeMy, useful::COLLISION_Z);
-	CollisionWaitRock(posMy, posOldMy, sizeMy, useful::COLLISION_Z);
+	CollisionWall(useful::COLLISION_Z);
+	CollisionDevilHole(useful::COLLISION_Z);
+	CollisionWaitRailBlock(useful::COLLISION_Z);
+	CollisionWaitRock(useful::COLLISION_Z);
 }
 
 //====================================================================
 //オブジェクトによる位置更新処理
 //====================================================================
-void CPlayer::ObjPosUpdate(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR3& sizeMy)
+void CPlayer::ObjPosUpdate(void)
 {
 	if (m_bJump == true)
 	{
@@ -1470,72 +1436,74 @@ void CPlayer::ObjPosUpdate(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR
 		fSpeed = m_pSlow->GetValue();
 	}
 
+	CDevil* pDevil = CGame::GetDevil();
+
 	//Y軸の位置更新
-	posMy.y += m_Objmove.y * CManager::GetInstance()->GetGameSpeed() * fSpeed;
+	m_pos.y += m_Objmove.y * CManager::GetInstance()->GetGameSpeed() * fSpeed;
 
 	//X軸の位置更新
-	posMy.x += m_Objmove.x * CManager::GetInstance()->GetGameSpeed() * fSpeed;
+	m_pos.x += m_Objmove.x * CManager::GetInstance()->GetGameSpeed() * fSpeed;
 
 	// レールブロックとの当たり判定
-	CollisionMoveRailBlock(posMy, posOldMy, sizeMy, useful::COLLISION_X);
-	CollisionMoveRock(posMy, posOldMy, sizeMy, useful::COLLISION_X);
+	CollisionMoveRailBlock(useful::COLLISION_X);
+	CollisionMoveRock(useful::COLLISION_X);
 
 	//Z軸の位置更新
-	posMy.z += m_Objmove.z * CManager::GetInstance()->GetGameSpeed() * fSpeed;
+	m_pos.z += m_Objmove.z * CManager::GetInstance()->GetGameSpeed() * fSpeed;
 
-	CollisionMoveRailBlock(posMy, posOldMy, sizeMy, useful::COLLISION_Z);
-	CollisionMoveRock(posMy, posOldMy, sizeMy, useful::COLLISION_Z);
+	CollisionMoveRailBlock(useful::COLLISION_Z);
+	CollisionMoveRock(useful::COLLISION_Z);
 
 	//// 壁との当たり判定
-	CollisionPressWall(posMy, posOldMy, sizeMy, useful::COLLISION_ZX);
+	CollisionPressWall(useful::COLLISION_ZX);
 }
 
 //====================================================================
 //向き更新処理
 //====================================================================
-void CPlayer::RotUpdate(D3DXVECTOR3& rotMy)
+void CPlayer::RotUpdate(void)
 {
 	// 角度の差分を算出
-	D3DXVECTOR3 rotDiff = m_rotDest - rotMy;
+	D3DXVECTOR3 rotDiff = m_rotDest - m_rot;
 
 	// 正規化
 	useful::NormalizeAngle(&rotDiff);
 
 	// 向きの更新処理
-	rotMy += (rotDiff * 0.5);
+	m_rot += (rotDiff * 0.5);
 }
 
 //====================================================================
 //卵の動き
 //====================================================================
-void CPlayer::EggMove(D3DXVECTOR3& posMy)
+void CPlayer::EggMove(void)
 {
 	if (m_State == STATE_EGG)
 	{
-		if (posMy.y > 0.0f)
+		if (m_pos.y > 0.0f)
 		{
 			//重力
 			m_move.y -= RESPAWN_GRAVITY;
 		}
 
 		//Y軸の位置更新
-		posMy.y += m_move.y * CManager::GetInstance()->GetGameSpeed();
+		m_pos.y += m_move.y * CManager::GetInstance()->GetGameSpeed();
 
 		//卵の落下判定
-		if (posMy.y < 0.0f)
+		if (m_pos.y < 0.0f)
 		{
 			//落下時に移動量と位置を０にする
-			posMy.y = 0.0f;
+			m_pos.y = 0.0f;
 			m_move.y = 0.0f;
 		}
 
 		if (m_pUpEgg != nullptr)
 		{
-			m_pUpEgg->SetPos(D3DXVECTOR3(posMy.x, posMy.y + 65.0f, posMy.z));
+			m_pUpEgg->SetPos(D3DXVECTOR3(m_pos.x, m_pos.y + 65.0f, m_pos.z));
 		}
 		if (m_pDownEgg != nullptr)
 		{
-			m_pDownEgg->SetPos(D3DXVECTOR3(posMy.x, posMy.y + 65.0f, posMy.z));
+			m_pDownEgg->SetPos(D3DXVECTOR3(m_pos.x, m_pos.y + 65.0f, m_pos.z));
 		}
 		m_EggMove = INITVECTOR3;
 	}
@@ -1559,28 +1527,13 @@ void CPlayer::EggMove(D3DXVECTOR3& posMy)
 			m_EggMove.x = m_EggMove.x * EGG_MOVE_DEL;
 			m_EggMove.z = m_EggMove.z * EGG_MOVE_DEL;
 
-			switch (CManager::GetInstance()->GetScene()->GetMode())
+			if (pos.y < CGame::GetMapField()->GetPos().y + 30.0f)
 			{
-			case CScene::MODE_GAME:
-				if (pos.y < CGame::GetMapField()->GetPos().y + 30.0f)
-				{
-					pos.y = CGame::GetMapField()->GetPos().y + 30.0f;
-				}
-				else
-				{
-					m_pUpEgg->SetRot(rot);
-				}
-				break;
-			case CScene::MODE_TUTORIAL:
-				if (pos.y < CTutorial::GetMapField()->GetPos().y + 30.0f)
-				{
-					pos.y = CTutorial::GetMapField()->GetPos().y + 30.0f;
-				}
-				else
-				{
-					m_pUpEgg->SetRot(rot);
-				}
-				break;
+				pos.y = CGame::GetMapField()->GetPos().y + 30.0f;
+			}
+			else
+			{
+				m_pUpEgg->SetRot(rot);
 			}
 
 			m_pUpEgg->SetPos(pos);
@@ -1631,15 +1584,9 @@ void CPlayer::Death(void)
 			// 死亡音
 			CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_DEATH);
 
-			CDevil* pDevil = nullptr;
-			switch (CManager::GetInstance()->GetScene()->GetMode())
-			{
-			case CScene::MODE_GAME:
-				CGame::SetGameEnd(true);
-				CGame::SetGameClear(false);
-				CManager::GetInstance()->SetStage(0);
-				break;
-			}
+			CGame::SetGameEnd(true);
+			CGame::SetGameClear(false);
+			CManager::GetInstance()->SetStage(0);
 		}
 		else
 		{
@@ -1735,9 +1682,9 @@ void CPlayer::SetModelDisp(bool Sst)
 //====================================================================
 //マップオブジェクトと壁とのソート処理
 //====================================================================
-bool CPlayer::SortObject(D3DXVECTOR3& posMy,D3DXVECTOR3 pos)
+bool CPlayer::SortObject(D3DXVECTOR3 pos)
 {
-	float fDistance = sqrtf((posMy.x - pos.x) * (posMy.x - pos.x) + (posMy.z - pos.z) * (posMy.z - pos.z));
+	float fDistance = sqrtf((m_pos.x - pos.x) * (m_pos.x - pos.x) + (m_pos.z - pos.z) * (m_pos.z - pos.z));
 
 	// 敵のリスト構造が無ければ抜ける
 	if (CCubeBlock::GetList() == nullptr) { return false; }
@@ -1748,7 +1695,7 @@ bool CPlayer::SortObject(D3DXVECTOR3& posMy,D3DXVECTOR3 pos)
 	{
 		if (pCubeBlock->GetPos().y <= 200.0f)
 		{
-			if (useful::CollisionCircle(posMy, pCubeBlock->GetPos(), 250.0f) == true)
+			if (useful::CollisionCircle(m_pos, pCubeBlock->GetPos(), 250.0f) == true)
 			{
 				D3DXVECTOR3 CrossPos = INITVECTOR3;
 				float ObjDistance = OBJDISTANCE;
@@ -1759,35 +1706,35 @@ bool CPlayer::SortObject(D3DXVECTOR3& posMy,D3DXVECTOR3 pos)
 					switch (nCnt)
 					{
 					case 0:
-						CrossPos = useful::CrossIntersection(posMy, pos,
+						CrossPos = useful::CrossIntersection(m_pos, pos,
 							D3DXVECTOR3(pCubeBlock->GetPos().x + pCubeBlock->GetSize().x, pCubeBlock->GetPos().y, pCubeBlock->GetPos().z + pCubeBlock->GetSize().z),
 							D3DXVECTOR3(pCubeBlock->GetPos().x - pCubeBlock->GetSize().x, pCubeBlock->GetPos().y, pCubeBlock->GetPos().z + pCubeBlock->GetSize().z),
 							250.0f);
 						break;
 
 					case 1:
-						CrossPos = useful::CrossIntersection(posMy, pos,
+						CrossPos = useful::CrossIntersection(m_pos, pos,
 							D3DXVECTOR3(pCubeBlock->GetPos().x - pCubeBlock->GetSize().x, pCubeBlock->GetPos().y, pCubeBlock->GetPos().z + pCubeBlock->GetSize().z),
 							D3DXVECTOR3(pCubeBlock->GetPos().x - pCubeBlock->GetSize().x, pCubeBlock->GetPos().y, pCubeBlock->GetPos().z - pCubeBlock->GetSize().z),
 							250.0f);
 						break;
 
 					case 2:
-						CrossPos = useful::CrossIntersection(posMy, pos,
+						CrossPos = useful::CrossIntersection(m_pos, pos,
 							D3DXVECTOR3(pCubeBlock->GetPos().x - pCubeBlock->GetSize().x, pCubeBlock->GetPos().y, pCubeBlock->GetPos().z - pCubeBlock->GetSize().z),
 							D3DXVECTOR3(pCubeBlock->GetPos().x + pCubeBlock->GetSize().x, pCubeBlock->GetPos().y, pCubeBlock->GetPos().z - pCubeBlock->GetSize().z),
 							250.0f);
 						break;
 
 					case 3:
-						CrossPos = useful::CrossIntersection(posMy, pos,
+						CrossPos = useful::CrossIntersection(m_pos, pos,
 							D3DXVECTOR3(pCubeBlock->GetPos().x + pCubeBlock->GetSize().x, pCubeBlock->GetPos().y, pCubeBlock->GetPos().z - pCubeBlock->GetSize().z),
 							D3DXVECTOR3(pCubeBlock->GetPos().x + pCubeBlock->GetSize().x, pCubeBlock->GetPos().y, pCubeBlock->GetPos().z + pCubeBlock->GetSize().z),
 							250.0f);
 						break;
 					}
 
-					ObjDistance = sqrtf((posMy.x - CrossPos.x) * (posMy.x - CrossPos.x) + (posMy.z - CrossPos.z) * (posMy.z - CrossPos.z));
+					ObjDistance = sqrtf((m_pos.x - CrossPos.x) * (m_pos.x - CrossPos.x) + (m_pos.z - CrossPos.z) * (m_pos.z - CrossPos.z));
 
 					if (ObjDistance < fDistance)
 					{

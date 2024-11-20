@@ -15,7 +15,7 @@ class CShadow : public CObject3D
 {
 public:
 
-	CShadow(int nPriority = 3);
+	CShadow(int nPriority = 6);
 	~CShadow();
 
 	static CShadow* Create(const D3DXVECTOR3& pos, float fWidth, float fHeight);
