@@ -278,10 +278,6 @@ void CDevil::Update(void)
 //====================================================================
 void CDevil::Draw(void)
 {
-	// 無理やり一時的位置情報交換（pos・rotの置き換え完了次第削除）
-	CCharacter::SetPos(GetPos());
-	CCharacter::SetRot(GetRot());
-
 	// キャラクタークラスの描画（継承）
 	CCharacter::Draw();
 }
