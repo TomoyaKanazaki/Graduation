@@ -451,8 +451,6 @@ void CPlayer::Draw(void)
 
 	if (m_UseMultiMatrix != nullptr)
 	{
-		SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
-
 		//算出したマトリクスをかけ合わせる
 		D3DXMatrixMultiply(&m_mtxWorld,
 			&m_mtxWorld,

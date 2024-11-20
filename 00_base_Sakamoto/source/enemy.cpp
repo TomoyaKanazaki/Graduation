@@ -252,10 +252,10 @@ void CEnemy::Update(void)
 	Rot();
 
 	// 位置更新処理
-	//UpdatePos();
+	UpdatePos();
 
-	// プレイヤーへの最短経路探索
-	Coordinate();
+	//// プレイヤーへの最短経路探索
+	//Coordinate();
 
 	// 最短系露をたどる
 	Route();
@@ -315,8 +315,6 @@ void CEnemy::Draw(void)
 
 	if (m_UseMultiMatrix != nullptr)
 	{
-		SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
-
 		//算出したマトリクスをかけ合わせる
 		D3DXMatrixMultiply(&m_mtxWorld,
 			&m_mtxWorld,
