@@ -103,6 +103,7 @@ public:
 	CRanking* GetRanking(void) { return m_pRanking; }
 	CLight* GetLight(void) { return m_pLight; }
 	CBlockManager* GetBlockManager(void) { return m_pBlockManager; }
+	CMyEffekseer* GetEffect(void) { return m_pEffect; }
 	void SetScene(CScene *Scene) { m_pScene = Scene; }
 	void SetLevelUP(CLevelUP *LevelUP) { m_LevelUP = LevelUP; }
 	void SetEdit(bool bEdit) { m_bEdit = bEdit; }
@@ -179,6 +180,7 @@ private:
 	CSound *m_pSound;					//サウンドのポインタ
 	CRanking* m_pRanking;
 	CBlockManager* m_pBlockManager;
+	CMyEffekseer* m_pEffect;
 	TYPE_INPUT m_typeInput;				//インプット種類
 	GAME_MODE m_GameMode;				//ゲームのプレイモード
 };												

@@ -62,7 +62,7 @@ namespace MyEffekseer
 	CEffekseer* EffectCreate(CMyEffekseer::TYPE type, bool bLoop, D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 scale)
 	{
 		// エフェクシア取得
-		CMyEffekseer* pMyEffekseer = CMyEffekseer::GetInstance();
+		CMyEffekseer* pMyEffekseer = CManager::GetInstance()->GetEffect();
 
 		// 使用されていない場合処理を抜ける
 		if (pMyEffekseer == nullptr) { assert(false); return nullptr; }
@@ -313,8 +313,8 @@ CMyEffekseer* CMyEffekseer::GetInstance(void)
 	// 自身が存在していない場合生成する
 	if (m_pInstance == nullptr)
 	{
-		m_pInstance = new CMyEffekseer;
-		m_pInstance->Init();
+		assert(false);
+		return nullptr;
 	}
 
 	return m_pInstance;
@@ -417,7 +417,7 @@ void CEffekseer::Uninit(void)
 void CEffekseer::SetDeath()
 {
 	// 再生の停止
-	CMyEffekseer::GetInstance()->GetEfkManager()->StopEffect(m_efkHandle);
+	CManager::GetInstance()->GetEffect()->GetEfkManager()->StopEffect(m_efkHandle);
 
 	// フラグの設定
 	m_bDeath = true;
