@@ -22,7 +22,6 @@
 #include "CubeBlock.h"
 #include "LevelModelEffect.h"
 #include "slowManager.h"
-#include "2DEffect.h"
 #include "score.h"
 #include "modelEffect.h"
 #include "Effect.h"
@@ -83,7 +82,8 @@ CEnemy::CEnemy(int nPriority) :CObject(nPriority),
 m_pPath(nullptr),
 m_fCoordinateTimer(0.0f),
 m_nTargetIndex(0),
-m_nNumCoordinate(0)
+m_nNumCoordinate(0),
+m_pEffect(nullptr)
 {
 	m_pos = INITVECTOR3;
 	m_posOld = INITVECTOR3;
@@ -227,6 +227,12 @@ void CEnemy::Uninit(void)
 		m_pCharacter = nullptr;
 	}
 
+	// エフェクトを消去
+	if (m_pEffect != nullptr)
+	{
+		m_pEffect->SetDeath();
+	}
+
 	SetDeathFlag(true);
 }
 
@@ -248,10 +254,10 @@ void CEnemy::Update(void)
 	Rot();
 
 	// 位置更新処理
-	//UpdatePos();
+	UpdatePos();
 
-	// プレイヤーへの最短経路探索
-	Coordinate();
+	//// プレイヤーへの最短経路探索
+	//Coordinate();
 
 	// 最短系露をたどる
 	Route();
@@ -264,6 +270,16 @@ void CEnemy::Update(void)
 	{
 		m_pos.y = 0.0f;
 		m_move.y = 0.0f;
+	}
+
+	// エフェクトを動かす
+	if (m_pEffect != nullptr)
+	{
+		D3DXMATRIX mat = *GetUseMultiMatrix();
+		D3DXVECTOR3 pos = m_pos;
+		pos.y += 0.5f;
+		D3DXVECTOR3 ef = useful::CalcMatrix(pos, m_rot, *GetUseMultiMatrix());
+		m_pEffect->SetPosition(ef);
 	}
 
 	// キャラクターの更新
@@ -284,6 +300,57 @@ void CEnemy::Draw(void)
 	m_pCharacter->SetPos(GetPos());
 	m_pCharacter->SetRot(GetRot());
 
+	D3DXMATRIX mtxRot, mtxTrans;	//計算用マトリックス
+
+	//ワールドマトリックスの初期化
+	D3DXMatrixIdentity(&m_mtxWorld);
+
+	//向きを反映
+	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
+
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
+
+	//位置を反映
+	D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);
+
+	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
+
+	if (m_UseMultiMatrix != nullptr)
+	{
+		//算出したマトリクスをかけ合わせる
+		D3DXMatrixMultiply(&m_mtxWorld,
+			&m_mtxWorld,
+			m_UseMultiMatrix);
+	}
+
+	//ワールドマトリックスの設定
+	pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
+
+	//ステンシルバッファ有効
+	pDevice->SetRenderState(D3DRS_STENCILENABLE, TRUE);
+
+	//ステンシルバッファと比較する参照値の設定 => ref
+	pDevice->SetRenderState(D3DRS_STENCILREF, 1);
+
+	//ステンシルバッファの値に対してのマスク設定 => 0xff(全て真)
+	pDevice->SetRenderState(D3DRS_STENCILMASK, 255);
+
+	//ステンシルバッファの比較方法 => (参照値 => ステンシルバッファの参照値)なら合格
+	pDevice->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_GREATEREQUAL);
+
+	//ステンシルテスト結果に対しての反映設定
+	pDevice->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_REPLACE);	// Zテスト・ステンシルテスト成功
+	pDevice->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP);		// Zテスト・ステンシルテスト失敗
+	pDevice->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_KEEP);		// Zテスト失敗・ステンシルテスト成功
+
+	// キャラクターの描画
+	if (m_pCharacter != nullptr)
+	{
+		m_pCharacter->Draw();
+	}
+
+	//ステンシルバッファ無効
+	pDevice->SetRenderState(D3DRS_STENCILENABLE, FALSE);
 	//// キャラクターの描画
 	//if (m_pCharacter != nullptr)
 	//{
@@ -554,8 +621,6 @@ void CEnemy::Death(void)
 //====================================================================
 void CEnemy::StateManager()
 {
-	int nRand = 0;
-
 	//状態の管理
 	switch (m_State)
 	{
@@ -837,7 +902,7 @@ void CEnemy::Effect()
 	pos = useful::CalcMatrix(pos, rot, *GetUseMultiMatrix());
 
 	// エフェクトを生成
-	MyEffekseer::EffectCreate(EFFECT_TYPE[m_EnemyType], false, pos, rot, D3DXVECTOR3(5.0f, 5.0f, 5.0f));
+	m_pEffect = MyEffekseer::EffectCreate(EFFECT_TYPE[m_EnemyType], false, pos, rot, D3DXVECTOR3(10.0f, 10.0f, 10.0f));
 }
 
 //====================================================================

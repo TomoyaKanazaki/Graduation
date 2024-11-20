@@ -111,7 +111,6 @@ HRESULT CDevilHole::Init(char* pModelName)
 	}
 
 	//マップとのマトリックスの掛け合わせをオンにする
-	//SetMultiMatrix(true);
 	SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
 
 	if (m_pList == nullptr)

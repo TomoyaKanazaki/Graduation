@@ -188,7 +188,6 @@ void CFire::Update(void)
 	// エフェクトを動かす
 	if (m_pEffect != nullptr)
 	{
-
 		D3DXMATRIX mat = *GetUseMultiMatrix();
 		D3DXVECTOR3 ef = useful::CalcMatrix(pos, rot, *GetUseMultiMatrix());
 		m_pEffect->SetPosition(ef);
@@ -212,7 +211,7 @@ void CFire::Update(void)
 //====================================================================
 void CFire::Draw(void)
 {
-	CObjectX::Draw();
+	//CObjectX::Draw();
 }
 
 //====================================================================
