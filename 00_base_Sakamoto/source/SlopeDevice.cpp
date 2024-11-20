@@ -129,12 +129,12 @@ void CSlopeDevice::Uninit(void)
 		m_pList->Release(m_pList);
 	}
 
+	// 継承クラス破棄に変更予定
 	// キャラクターの終了処理
 	if (m_pCharacter != nullptr)
 	{
 		// キャラクターの破棄
 		m_pCharacter->Uninit();
-		delete m_pCharacter;
 		m_pCharacter = nullptr;
 	}
 
@@ -195,42 +195,14 @@ void CSlopeDevice::GameUpdate(void)
 //====================================================================
 void CSlopeDevice::Draw(void)
 {
-	//デバイスの取得
-	LPDIRECT3DDEVICE9 m_pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
+	m_pCharacter->SetPos(GetPos());
+	m_pCharacter->SetRot(GetRot());
 
-	D3DXMATRIX mtxRot, mtxTrans;	//計算用マトリックス
-
-	//ワールドマトリックスの初期化
-	D3DXMatrixIdentity(&m_mtxWorld);
-
-	//向きを反映
-	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
-
-	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
-
-	//位置を反映
-	D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);
-
-	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
-
-	if (m_bMultiMatrix)
-	{
-		SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
-
-		//算出したマトリクスをかけ合わせる
-		D3DXMatrixMultiply(&m_mtxWorld,
-			&m_mtxWorld,
-			m_UseMultiMatrix);
-	}
-
-	//ワールドマトリックスの設定
-	m_pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
-
-	//モデルの描画(全パーツ)
-	if (m_pCharacter != nullptr)
-	{
-		m_pCharacter->Draw();
-	}
+	////モデルの描画(全パーツ)
+	//if (m_pCharacter != nullptr)
+	//{
+	//	m_pCharacter->Draw();
+	//}
 }
 
 //====================================================================
