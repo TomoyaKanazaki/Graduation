@@ -177,6 +177,10 @@ HRESULT CPlayer::Init(void)
 	if (m_pCharacter == nullptr)
 	{
 		m_pCharacter = CCharacter::Create("data\\TXT\\motion_tamagon1P.txt");
+
+		m_pCharacter->SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
+		m_pCharacter->SetUseStencil(true);
+		m_pCharacter->SetUseShadowMtx(true);
 	}
 
 	m_pLifeUi = CLifeUi::Create();
@@ -225,12 +229,12 @@ void CPlayer::Uninit(void)
 		m_pList->Release(m_pList);
 	}
 
+	// 継承クラス破棄に変更予定
 	// キャラクターの終了処理
 	if (m_pCharacter != nullptr)
 	{
 		// キャラクターの破棄
 		m_pCharacter->Uninit();
-		delete m_pCharacter;
 		m_pCharacter = nullptr;
 	}
 
@@ -407,86 +411,14 @@ void CPlayer::TutorialUpdate(void)
 //====================================================================
 void CPlayer::Draw(void)
 {
-	//デバイスの取得
-	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
-	D3DXMATRIX mtxRot, mtxTrans;	//計算用マトリックス
+	m_pCharacter->SetPos(GetPos());
+	m_pCharacter->SetRot(GetRot());
 
-	//ワールドマトリックスの初期化
-	D3DXMatrixIdentity(&m_mtxWorld);
-
-	D3DXMATRIX mtxShadow;	// シャドウマトリックス
-	D3DLIGHT9 light;		// ライト情報
-	D3DXVECTOR4 posLight;	// ライトの位置
-	D3DXVECTOR3 pos, normal;	// 平面上の任意の点、法線ベクトル
-	D3DXPLANE plane;		// 平面情報
-
-	// ライトの位置設定
-	pDevice->GetLight(0, &light);
-	posLight = D3DXVECTOR4(0.0f, 0.0f, 0.0f, 0.05f);
-
-	// 平面情報を生成
-	pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-	D3DXPlaneFromPointNormal(&plane, &pos, &normal);
-
-	// シャドウマトリックスの初期化
-	
-	
-	// シャドウマトリックスの作成
-	D3DXMatrixShadow(&mtxShadow, &posLight, &plane);
-	D3DXMatrixMultiply(&mtxShadow, &m_mtxWorld, &mtxShadow);
-
-	// シャドウマトリックスの設定
-
-
-	//向きを反映
-	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
-
-	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
-
-	//位置を反映
-	D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);
-
-	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
-
-	if (m_UseMultiMatrix != nullptr)
-	{
-		SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
-
-		//算出したマトリクスをかけ合わせる
-		D3DXMatrixMultiply(&m_mtxWorld,
-			&m_mtxWorld,
-			m_UseMultiMatrix);
-	}
-
-	//ワールドマトリックスの設定
-	pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
-
-	//ステンシルバッファ有効
-	pDevice->SetRenderState(D3DRS_STENCILENABLE, TRUE);
-
-	//ステンシルバッファと比較する参照値の設定 => ref
-	pDevice->SetRenderState(D3DRS_STENCILREF, 1);
-
-	//ステンシルバッファの値に対してのマスク設定 => 0xff(全て真)
-	pDevice->SetRenderState(D3DRS_STENCILMASK, 255);
-
-	//ステンシルバッファの比較方法 => (参照値 => ステンシルバッファの参照値)なら合格
-	pDevice->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_GREATEREQUAL);
-
-	//ステンシルテスト結果に対しての反映設定
-	pDevice->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_REPLACE);	// Zテスト・ステンシルテスト成功
-	pDevice->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP);		// Zテスト・ステンシルテスト失敗
-	pDevice->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_KEEP);		// Zテスト失敗・ステンシルテスト成功
-
-	// キャラクター描画処理
-	if (m_pCharacter != nullptr)
-	{
-		m_pCharacter->Draw();
-	}
-
-	//ステンシルバッファ無効
-	pDevice->SetRenderState(D3DRS_STENCILENABLE, FALSE);
+	//// キャラクター描画処理
+	//if (m_pCharacter != nullptr)
+	//{
+	//	m_pCharacter->Draw();
+	//}
 }
 
 //====================================================================
