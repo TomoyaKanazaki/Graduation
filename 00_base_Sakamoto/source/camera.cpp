@@ -29,7 +29,7 @@ namespace
 	const float CAMERA_PAD_VR_SPEED = 0.015f;						//カメラのパッドの視点スピード
 	const float CAMERA_HOMING = 0.2f;								//カメラの追従スピード
 	const float POS_HOMING = 0.9f;									//位置への追従スピード
-	const D3DXVECTOR3 DOWNVIEW_POSV = D3DXVECTOR3(0.0f, 2000.0f, -200.0f);	//見下ろしの視点
+	const D3DXVECTOR3 DOWNVIEW_POSV = D3DXVECTOR3(0.0f, 1700.0f, -1200.0f);	//見下ろしの視点
 	const D3DXVECTOR3 DOWNVIEW_POSR = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		//見下ろしの注視点
 	const D3DXVECTOR3 SIDEVIEW_POSV = D3DXVECTOR3(0.0f, 350.0f, -1000.0f);	//2Dの視点
 	const D3DXVECTOR3 SIDEVIEW_POSR = D3DXVECTOR3(0.0f, 300.0f, 0.0f);		//2Dの注視点
