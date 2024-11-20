@@ -435,7 +435,7 @@ void CRenderer::Draw(void)
 			CObject::DrawAll(0);
 
 			// エフェクシアの更新
-			CMyEffekseer::GetInstance()->Draw();
+			CManager::GetInstance()->GetEffect()->Draw();
 
 			//ビューポートの設定
 			m_pD3DDevice->SetViewport(&viewportDef);

@@ -88,7 +88,7 @@ HRESULT CLevelModelEffect::Init(void)
 	// キャラクタークラスの生成
 	if (m_pCharacter == nullptr)
 	{
-		m_pCharacter->Create("data\\TXT\\motion_foot_light_spear.txt");
+		m_pCharacter = CCharacter::Create("data\\TXT\\motion_foot_light_spear.txt");
 
 		if (m_pCharacter == nullptr)
 		{
@@ -123,12 +123,12 @@ void CLevelModelEffect::Uninit(void)
 		m_pList->Release(m_pList);
 	}
 
+	// 継承クラス破棄に変更予定
 	// キャラクターの終了処理
 	if (m_pCharacter != nullptr)
 	{
 		// キャラクターの破棄
 		m_pCharacter->Uninit();
-		delete m_pCharacter;
 		m_pCharacter = nullptr;
 	}
 
@@ -239,31 +239,14 @@ void CLevelModelEffect::SetPose(int nType, int nKey, float nCounter, int nModelN
 //====================================================================
 void CLevelModelEffect::Draw(void)
 {
-	//デバイスの取得
-	LPDIRECT3DDEVICE9 m_pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
-	D3DXMATRIX mtxRot, mtxTrans;	//計算用マトリックス
+	m_pCharacter->SetPos(GetPos());
+	m_pCharacter->SetRot(GetRot());
 
-	//ワールドマトリックスの初期化
-	D3DXMatrixIdentity(&m_mtxWorld);
-
-	//向きを反映
-	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
-
-	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
-
-	//位置を反映
-	D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);
-
-	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
-
-	//ワールドマトリックスの設定
-	m_pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
-
-	// キャラクターの描画
-	if (m_pCharacter != nullptr)
-	{
-		m_pCharacter->Draw();
-	}
+	//// キャラクターの描画
+	//if (m_pCharacter != nullptr)
+	//{
+	//	m_pCharacter->Draw();
+	//}
 }
 
 //====================================================================

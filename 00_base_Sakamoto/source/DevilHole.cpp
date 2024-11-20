@@ -111,7 +111,6 @@ HRESULT CDevilHole::Init(char* pModelName)
 	}
 
 	//マップとのマトリックスの掛け合わせをオンにする
-	//SetMultiMatrix(true);
 	SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
 
 	if (m_pList == nullptr)
@@ -196,7 +195,7 @@ void CDevilHole::GameUpdate(void)
 	//クリア判定処理
 	ClearJudge();
 
-	m_pos = CMapSystem::GetInstance()->GetGritPos(m_Grid);
+	m_pos = m_Grid.ToWorld();
 
 	for (int nCnt = 0; nCnt < DIRECTION; nCnt++)
 	{

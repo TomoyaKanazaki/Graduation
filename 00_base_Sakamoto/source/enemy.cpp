@@ -218,17 +218,19 @@ void CEnemy::Uninit(void)
 		m_pList->Release(m_pList);
 	}
 
+	// 継承クラス破棄に変更予定
+	// キャラクターの終了処理
 	if (m_pCharacter != nullptr)
 	{
+		// キャラクターの破棄
 		m_pCharacter->Uninit();
-		delete m_pCharacter;
 		m_pCharacter = nullptr;
 	}
 
 	// エフェクトを消去
 	if (m_pEffect != nullptr)
 	{
-		m_pEffect->SetDeath();
+		//m_pEffect->SetDeath();
 	}
 
 	SetDeathFlag(true);
@@ -252,9 +254,9 @@ void CEnemy::Update(void)
 	Rot();
 
 	// 位置更新処理
-	//UpdatePos();
+	UpdatePos();
 
-	// プレイヤーへの最短経路探索
+	//// プレイヤーへの最短経路探索
 	//Coordinate();
 
 	// 最短系露をたどる
@@ -295,62 +297,14 @@ void CEnemy::Update(void)
 //====================================================================
 void CEnemy::Draw(void)
 {
-	//デバイスの取得
-	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
+	m_pCharacter->SetPos(GetPos());
+	m_pCharacter->SetRot(GetRot());
 
-	D3DXMATRIX mtxRot, mtxTrans;	//計算用マトリックス
-
-	//ワールドマトリックスの初期化
-	D3DXMatrixIdentity(&m_mtxWorld);
-
-	//向きを反映
-	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
-
-	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
-
-	//位置を反映
-	D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);
-
-	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
-
-	if (m_UseMultiMatrix != nullptr)
-	{
-		SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
-
-		//算出したマトリクスをかけ合わせる
-		D3DXMatrixMultiply(&m_mtxWorld,
-			&m_mtxWorld,
-			m_UseMultiMatrix);
-	}
-
-	//ワールドマトリックスの設定
-	pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
-
-	//ステンシルバッファ有効
-	pDevice->SetRenderState(D3DRS_STENCILENABLE, TRUE);
-
-	//ステンシルバッファと比較する参照値の設定 => ref
-	pDevice->SetRenderState(D3DRS_STENCILREF, 1);
-
-	//ステンシルバッファの値に対してのマスク設定 => 0xff(全て真)
-	pDevice->SetRenderState(D3DRS_STENCILMASK, 255);
-
-	//ステンシルバッファの比較方法 => (参照値 => ステンシルバッファの参照値)なら合格
-	pDevice->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_GREATEREQUAL);
-
-	//ステンシルテスト結果に対しての反映設定
-	pDevice->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_REPLACE);	// Zテスト・ステンシルテスト成功
-	pDevice->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP);		// Zテスト・ステンシルテスト失敗
-	pDevice->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_KEEP);		// Zテスト失敗・ステンシルテスト成功
-
-	// キャラクターの描画
-	if (m_pCharacter != nullptr)
-	{
-		m_pCharacter->Draw();
-	}
-
-	//ステンシルバッファ無効
-	pDevice->SetRenderState(D3DRS_STENCILENABLE, FALSE);
+	//// キャラクターの描画
+	//if (m_pCharacter != nullptr)
+	//{
+	//	m_pCharacter->Draw();
+	//}
 }
 
 //====================================================================
@@ -393,15 +347,15 @@ HRESULT CEnemy::InitModel(const char* pFilename)
 	// キャラクターの更新
 	if (m_pCharacter == nullptr)
 	{
+		m_pCharacter = CCharacter::Create(pFilename);
+
 		if (m_pCharacter == nullptr)
 		{
-			m_pCharacter = CCharacter::Create(pFilename);
-
-			if (m_pCharacter == nullptr)
-			{
-				return E_FAIL;
-			}
+			return E_FAIL;
 		}
+
+		m_pCharacter->SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
+		m_pCharacter->SetUseStencil(true);
 	}
 
 	return S_OK;
@@ -515,7 +469,7 @@ void CEnemy::CollisionWall(useful::COLLISION XYZ)
 			//待機状態にする
 			m_State = E_STATE_WAIT;
 
-			m_pos = CMapSystem::GetInstance()->GetGritPos(m_Grid);
+			m_pos = m_Grid.ToWorld();
 		}
 	}
 }
@@ -641,7 +595,7 @@ void CEnemy::StateManager()
 
 			if (m_nBugCounter > 180)
 			{
-				m_pos = CMapSystem::GetInstance()->GetGritPos(m_Grid);
+				m_pos = m_Grid.ToWorld();
 				m_nBugCounter = 0;
 			}
 		}
@@ -754,7 +708,7 @@ void CEnemy::SearchWall(void)
 	OKD = !pMapSystem->GetGritBool(m_Grid.x, nDNumber);
 
 	//自分の立っているグリットの中心位置を求める
-	D3DXVECTOR3 MyGritPos = CMapSystem::GetInstance()->GetGritPos(m_Grid);;
+	D3DXVECTOR3 MyGritPos = m_Grid.ToWorld();
 	float MapGritSize = pMapSystem->GetGritSize();
 
 	DebugProc::Print(DebugProc::POINT_LEFT, "敵の位置 %f %f %f\n", MyGritPos.x, MyGritPos.y, MyGritPos.z);
@@ -847,7 +801,7 @@ void CEnemy::Route()
 	}
 
 	// 目標地点の座標を求める
-	D3DXVECTOR3 path = CMapSystem::GetInstance()->GetGritPos(m_pPath[m_nTargetIndex]);
+	D3DXVECTOR3 path = m_pPath[m_nTargetIndex].ToWorld();
 
 	// 次に向かうグリッドに重なったらその次の目標を設定
 	if (fabsf(path.x - pos.x) <= TARGET_DIFF &&
@@ -855,7 +809,7 @@ void CEnemy::Route()
 	{
 		// インデックス番号を加算
 		m_nTargetIndex++;
-		path = CMapSystem::GetInstance()->GetGritPos(m_pPath[m_nTargetIndex]);
+		path = m_pPath[m_nTargetIndex].ToWorld();
 	}
 
 	// 次の目標が存在しなかったら関数を抜ける
