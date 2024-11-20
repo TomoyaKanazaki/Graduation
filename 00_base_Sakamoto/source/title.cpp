@@ -230,6 +230,11 @@ void CTitle::Button(void)
 			CFade::SetFade(CScene::MODE_GAME);
 			CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_MULTI);
 			break;
+		case 2:
+			// ƒQ[ƒ€‘JˆÚ
+			CFade::SetFade(CScene::MODE_TUTORIAL);
+			CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_SINGLE);
+			break;
 		}
 	}
 	else if (CManager::GetInstance()->GetInputJoyPad()->GetTrigger(CInputJoypad::BUTTON_A, 0) == true)
@@ -248,6 +253,11 @@ void CTitle::Button(void)
 			// ƒQ[ƒ€‘JˆÚ
 			CFade::SetFade(CScene::MODE_GAME);
 			CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_MULTI);
+			break;
+		case 2:
+			// ƒQ[ƒ€‘JˆÚ
+			CFade::SetFade(CScene::MODE_TUTORIAL);
+			CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_SINGLE);
 			break;
 		}
 	}

@@ -324,7 +324,54 @@ void CDevil::GameUpdate(void)
 //====================================================================
 void CDevil::TutorialUpdate(void)
 {
+	// 過去の位置に代入
+	m_posOld = m_pos;
 
+	// マップの傾き
+	switch (CManager::GetInstance()->GetScene()->GetMode())
+	{
+	case CScene::MODE_GAME:
+		m_DevilRot = CGame::GetMapField()->GetRot();
+		break;
+	case CScene::MODE_TUTORIAL:
+		m_DevilRot = CTutorial::GetMapField()->GetRot();
+		break;
+	}
+
+	//状態の管理
+	StateManager();
+
+	//デバッグキーの処理と設定
+	DebugKey();
+
+	//ステージ外にいるオブジェクトの処理
+	CollisionOut();
+
+	// キャラクターの更新
+	if (m_pCharacter != nullptr)
+	{
+		m_pCharacter->Update();
+	}
+
+	D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
+	CEffect* pTestEffect = nullptr;
+
+	//モーションの管理
+	ActionState();
+
+	D3DXVECTOR3 InitPos = CMapSystem::GetInstance()->GetInitPos();
+	D3DXVECTOR3 MapPos = CMapSystem::GetInstance()->GetMapPos();
+
+	//デバッグ表示
+	DebugProc::Print(DebugProc::POINT_LEFT, "[マップ]　　　位置 %f : %f\n", MapPos.x, MapPos.z);
+	DebugProc::Print(DebugProc::POINT_LEFT, "[マップの差分]位置 %f : %f\n", m_MapDifference.x, m_MapDifference.z);
+	DebugProc::Print(DebugProc::POINT_LEFT, "[マップのスクロール]：矢印キー\n");
+	DebugProc::Print(DebugProc::POINT_LEFT, "[マップの傾きX]：[ X+ : 6 ] [ X- : 7 ]\n");
+	DebugProc::Print(DebugProc::POINT_LEFT, "[マップの傾きZ]：[ Z+ : 8 ] [ Z- : 9 ]\n");
+	DebugProc::Print(DebugProc::POINT_LEFT, "[マップの傾きリセット]：[ 5 ]\n");
+
+	DebugProc::Print(DebugProc::POINT_RIGHT, "[最小番号]左 %d : 上 %d\n", m_MinGrid.x, m_MinGrid.z);
+	DebugProc::Print(DebugProc::POINT_RIGHT, "[最大番号]右 %d : 下 %d\n", m_MaxGrid.x, m_MaxGrid.z);
 }
 
 //====================================================================

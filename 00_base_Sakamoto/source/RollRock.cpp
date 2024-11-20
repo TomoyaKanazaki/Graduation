@@ -10,6 +10,7 @@
 #include "texture.h"
 #include "XModel.h"
 #include "game.h"
+#include "tutorial.h"
 #include "Devil.h"
 #include "MapSystem.h"
 #include "CubeBlock.h"
@@ -92,8 +93,17 @@ HRESULT CRollRock::Init(char* pModelName)
 
 	CObjectX::Init(pModelName);
 
-	SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
-	//SetMultiMatrix(true);
+	switch (CManager::GetInstance()->GetScene()->GetMode())
+	{
+	case CScene::MODE_GAME:
+		//マップとのマトリックスの掛け合わせをオンにする
+		SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
+		break;
+	case CScene::MODE_TUTORIAL:
+		//マップとのマトリックスの掛け合わせをオンにする
+		SetUseMultiMatrix(CTutorial::GetMapField()->GetMatrix());
+		break;
+	}
 
 	SetSize(SAMPLE_SIZE);
 
@@ -246,7 +256,20 @@ void CRollRock::Draw(void)
 //====================================================================
 void CRollRock::Move(void)
 {
-	D3DXVECTOR3 SlopeRot = CGame::GetDevil()->GetDevilRot();
+	D3DXVECTOR3 SlopeRot = INITVECTOR3;
+
+	// 算出に使用する変数
+	CDevil* pDevil = nullptr;
+
+	switch (CManager::GetInstance()->GetScene()->GetMode())
+	{
+	case CScene::MODE_GAME:
+		SlopeRot = CGame::GetDevil()->GetDevilRot();
+		break;
+	case CScene::MODE_TUTORIAL:
+		SlopeRot = CTutorial::GetDevil()->GetDevilRot();
+		break;
+	}
 
 	// 傾きによる移動量設定
 	m_move.x = -SlopeRot.z * 10.0f;

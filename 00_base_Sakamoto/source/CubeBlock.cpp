@@ -9,6 +9,7 @@
 #include "renderer.h"
 #include "manager.h"
 #include "game.h"
+#include "tutorial.h"
 #include "texture.h"
 #include "objmeshField.h"
 
@@ -75,8 +76,17 @@ HRESULT CCubeBlock::Init(void)
 {	
 	CObjmeshCube::Init();
 
-	SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
-	//SetMultiMatrix(true);
+	switch (CManager::GetInstance()->GetScene()->GetMode())
+	{
+	case CScene::MODE_GAME:
+		//マップとのマトリックスの掛け合わせをオンにする
+		SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
+		break;
+	case CScene::MODE_TUTORIAL:
+		//マップとのマトリックスの掛け合わせをオンにする
+		SetUseMultiMatrix(CTutorial::GetMapField()->GetMatrix());
+		break;
+	}
 
 	SetTexture("data\\TEXTURE\\Field\\00_wall.jpg");
 
@@ -132,7 +142,6 @@ void CCubeBlock::Draw(void)
 	//デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
 
-	SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
 	CObjmeshCube::Draw();
 
 	//ステンシルバッファ有効

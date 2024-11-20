@@ -678,7 +678,7 @@ void CCamera::FPSCamera(void)
 
 	case CScene::MODE_TUTORIAL:
 
-		pPlayer = CTutorial::GetPlayer();
+		pPlayer = CTutorial::GetPlayer(0);
 
 		break;
 	}
@@ -713,7 +713,7 @@ void CCamera::FPSComplementCamera(void)
 
 	case CScene::MODE_TUTORIAL:
 
-		pPlayer = CTutorial::GetPlayer();
+		pPlayer = CTutorial::GetPlayer(0);
 
 		break;
 	}
@@ -767,7 +767,7 @@ void CCamera::UltimateCamera(void)
 
 	case CScene::MODE_TUTORIAL:
 
-		pPlayer = CTutorial::GetPlayer();
+		pPlayer = CTutorial::GetPlayer(0);
 
 		break;
 	}

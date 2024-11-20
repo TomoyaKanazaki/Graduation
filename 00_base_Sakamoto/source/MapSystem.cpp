@@ -7,6 +7,7 @@
 #include "MapSystem.h"
 #include "renderer.h"
 #include "game.h"
+#include "tutorial.h"
 #include "Devil.h"
 
 #include "AStar.h"
@@ -151,8 +152,17 @@ D3DXVECTOR3 CMapSystem::GetStartGritPos(float Wight, float Height)
 D3DXVECTOR3 CMapSystem::GetGritPos(const GRID& grid)
 {
 	D3DXVECTOR3 Pos;
+	D3DXVECTOR3 DevilPos;
 
-	D3DXVECTOR3 DevilPos = CGame::GetDevil()->GetDevilPos();
+	switch (CManager::GetInstance()->GetScene()->GetMode())
+	{
+	case CScene::MODE_GAME:
+		DevilPos = CGame::GetDevil()->GetDevilPos();
+		break;
+	case CScene::MODE_TUTORIAL:
+		DevilPos = CTutorial::GetDevil()->GetDevilPos();
+		break;
+	}
 
 	// グリット番号が最大値以上や最小値以下の時、範囲内に納める処理
 	CMapSystem::GRID temp = grid;
@@ -190,7 +200,19 @@ CMapSystem::GRID CMapSystem::CalcGrid(const D3DXVECTOR3& pos)
 {
 	// 演算用変数
 	GRID grid = GRID(-1, -1);
-	CDevil* pDevil = CGame::GetDevil();
+
+	CDevil* pDevil = nullptr;
+
+	switch (CManager::GetInstance()->GetScene()->GetMode())
+	{
+	case CScene::MODE_GAME:
+		pDevil = CGame::GetDevil();
+		break;
+	case CScene::MODE_TUTORIAL:
+		pDevil = CTutorial::GetDevil();
+		break;
+	}
+
 	D3DXVECTOR3 DevilPos = pDevil->GetDevilPos();
 
 	// x座標の算出
@@ -315,7 +337,18 @@ void CMapSystem::Load(const char* pFilename)
 int CMapSystem::CalcGridX(const float posX)
 {
 	// 算出に使用する変数
-	CDevil* pDevil = CGame::GetDevil();
+	CDevil* pDevil = nullptr;
+
+	switch (CManager::GetInstance()->GetScene()->GetMode())
+	{
+	case CScene::MODE_GAME:
+		pDevil = CGame::GetDevil();
+		break;
+	case CScene::MODE_TUTORIAL:
+		pDevil = CTutorial::GetDevil();
+		break;
+	}
+
 	D3DXVECTOR3 DevilPos = pDevil->GetDevilPos();
 
 	// x座標の算出
@@ -345,7 +378,18 @@ int CMapSystem::CalcGridX(const float posX)
 int CMapSystem::CalcGridZ(const float posZ)
 {
 	// 算出に使用する変数
-	CDevil* pDevil = CGame::GetDevil();
+	CDevil* pDevil = nullptr;
+
+	switch (CManager::GetInstance()->GetScene()->GetMode())
+	{
+	case CScene::MODE_GAME:
+		pDevil = CGame::GetDevil();
+		break;
+	case CScene::MODE_TUTORIAL:
+		pDevil = CTutorial::GetDevil();
+		break;
+	}
+
 	D3DXVECTOR3 DevilPos = pDevil->GetDevilPos();
 
 	for (int i = 0; i < m_HeightMax; i++)
