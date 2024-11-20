@@ -9,15 +9,17 @@
 
 #include "main.h"
 #include "objmeshCube.h"
+#include "MapSystem.h"
 
 //オブジェクトキューブブロッククラス
 class CCubeBlock : public CObjmeshCube
 {
 public:
 	CCubeBlock(int nPriority = 3);
+	CCubeBlock(int nPriority, CMapSystem::GRID gridCenter, float fGridSize);
 	~CCubeBlock();
 
-	static CCubeBlock* Create(void);
+	static CCubeBlock* Create(CMapSystem::GRID gridCenter, float fGridSize);
 
 	HRESULT Init(void);
 	void Uninit(void);
@@ -40,6 +42,8 @@ private:
 
 	int m_nMapWidthNumber;
 	int m_nMapHeightNumber;
+
+	float m_fGritSize;		// マップのグリッドサイズ
 
 	// 静的メンバ変数
 	static CListManager<CCubeBlock>* m_pList; // オブジェクトリスト

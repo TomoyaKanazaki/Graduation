@@ -270,32 +270,32 @@ void CMapSystem::Load(const char* pFilename)
 				fscanf(pFile, "%s", &aSetMessage[0]);
 				if (strcmp(&aSetMessage[0], "STARTSETBLOCK") == 0)
 				{
-					int WightNumber, HeightNumber;
+					fscanf(pFile, "%s", &aString[0]);
+					fscanf(pFile, "%d", &pMapSystem->m_gridCenter.x);
 
 					fscanf(pFile, "%s", &aString[0]);
-					fscanf(pFile, "%d", &WightNumber);
-
-					fscanf(pFile, "%s", &aString[0]);
-					fscanf(pFile, "%d", &HeightNumber);
+					fscanf(pFile, "%d", &pMapSystem->m_gridCenter.z);
 
 					fscanf(pFile, "%s", &aString[0]);
 					fscanf(pFile, "%s", &aString[0]);
 
-					pMapSystem->SetGritBool(WightNumber, HeightNumber, true);
-					CCubeBlock* pBlock = CCubeBlock::Create(); // GRIDとグリッドサイズを引数にする
+					pMapSystem->SetGritBool(pMapSystem->m_gridCenter.x, pMapSystem->m_gridCenter.z, true);
+
+					// キューブブロックの生成
+					CCubeBlock* pBlock = CCubeBlock::Create(pMapSystem->m_gridCenter, MapSystemGritSize); // GRIDとグリッドサイズを引数にする
 
 					// 削除
 					{
-						pBlock->SetWightNumber(WightNumber); // GRIDで設定(不要)
-						pBlock->SetHeightNumber(HeightNumber); // GRIDで設定(不要)
-						pBlock->SetPos(D3DXVECTOR3(MapSystemPos.x + WightNumber * 100.0f, 50.0f, MapSystemPos.z - HeightNumber * 100.0f)); // GRIDをもとに内部で計算
-						pBlock->SetSize(D3DXVECTOR3(MapSystemGritSize, MapSystemGritSize, MapSystemGritSize)); // xzはグリッドサイズが必要、ｙは内部で定数化
-						pBlock->SetTexture(&aString[0]); // 内部で定数化
+						//pBlock->SetWightNumber(WightNumber); // GRIDで設定(不要)
+						//pBlock->SetHeightNumber(HeightNumber); // GRIDで設定(不要)
+						//pBlock->SetPos(D3DXVECTOR3(MapSystemPos.x + pMapSystem->m_gridCenter.x * 100.0f, 50.0f, MapSystemPos.z - pMapSystem->m_gridCenter.z * 100.0f)); // GRIDをもとに内部で計算
+						//pBlock->SetSize(D3DXVECTOR3(MapSystemGritSize, MapSystemGritSize, MapSystemGritSize)); // xzはグリッドサイズが必要、ｙは内部で定数化
+						//pBlock->SetTexture(&aString[0]); // 内部で定数化
 					}
 					// 削除
 
 					// 経路探索用情報の設定
-					generator->addCollision({ WightNumber, HeightNumber }); // 通過不可地点を追加
+					generator->addCollision({ pMapSystem->m_gridCenter.x, pMapSystem->m_gridCenter.z }); // 通過不可地点を追加
 
 					fscanf(pFile, "%s", &aEndMessage[0]);
 				}

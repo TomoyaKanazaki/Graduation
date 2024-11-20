@@ -11,6 +11,7 @@
 #include "game.h"
 #include "texture.h"
 #include "objmeshField.h"
+#include "MapSystem.h"
 
 //==========================================
 //  定数定義
@@ -36,6 +37,17 @@ CCubeBlock::CCubeBlock(int nPriority) :CObjmeshCube(nPriority)
 {
 	m_nMapWidthNumber = 0;
 	m_nMapHeightNumber = 0;
+	m_fGritSize = 0.0f;		// マップのグリッドサイズ
+}
+
+//====================================================================
+//コンストラクタ(オーバーロード)
+//====================================================================
+CCubeBlock::CCubeBlock(int nPriority, CMapSystem::GRID gridCenter, float fGridSize) :CObjmeshCube(nPriority)
+{
+	m_nMapWidthNumber = gridCenter.x;
+	m_nMapHeightNumber = gridCenter.z;
+	m_fGritSize = fGridSize;		// マップのグリッドサイズ
 }
 
 //====================================================================
@@ -49,14 +61,14 @@ CCubeBlock::~CCubeBlock()
 //====================================================================
 //生成処理
 //====================================================================
-CCubeBlock* CCubeBlock::Create(void)
+CCubeBlock* CCubeBlock::Create(CMapSystem::GRID gridCenter, float fGridSize)
 {
 	CCubeBlock* pObject3D = nullptr;
 
 	if (pObject3D == nullptr)
 	{
 		//オブジェクト3Dの生成
-		pObject3D = new CCubeBlock();
+		pObject3D = new CCubeBlock(3, gridCenter, fGridSize);
 	}
 
 	//オブジェクトの初期化処理
@@ -73,11 +85,21 @@ CCubeBlock* CCubeBlock::Create(void)
 //====================================================================
 HRESULT CCubeBlock::Init(void)
 {	
+	CMapSystem* pMapSystem = CMapSystem::GetInstance();		// マップシステムの情報
+	D3DXVECTOR3 MapSystemPos = pMapSystem->GetMapPos();
+
 	CObjmeshCube::Init();
 
 	SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
 	//SetMultiMatrix(true);
 
+	// 位置設定
+	SetPos(D3DXVECTOR3(MapSystemPos.x + m_nMapWidthNumber * 100.0f, 50.0f, MapSystemPos.z - m_nMapHeightNumber * 100.0f));
+
+	// 大きさ設定(Yは内部で定数化)
+	SetSize(D3DXVECTOR3(m_fGritSize, 15.0f, m_fGritSize));
+
+	// テクスチャの設定
 	SetTexture("data\\TEXTURE\\Field\\00_ground.jpg");
 
 	//SetColor(D3DXCOLOR(0.5f, 0.5f, 0.0f, 0.5f));
