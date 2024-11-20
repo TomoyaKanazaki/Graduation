@@ -121,16 +121,8 @@ void CEnemyMedaman::Update(void)
 //====================================================================
 void CEnemyMedaman::ActionState(void)
 {
-	// キャラクター取得
-	CCharacter* pCharacter = GetCharacter();
-
-	if (pCharacter == nullptr)
-	{
-		return;
-	}
-
 	// モーション取得
-	CMotion* pMotion = pCharacter->GetMotion();
+	CMotion* pMotion = GetMotion();
 
 	if (pMotion == nullptr)
 	{
