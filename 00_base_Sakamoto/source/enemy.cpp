@@ -285,6 +285,12 @@ void CEnemy::Update(void)
 
 	// デバッグ表示
 	DebugProc::Print(DebugProc::POINT_LEFT, "[敵]横 %d : 縦 %d\n", m_Grid.x, m_Grid.z);
+
+	// 値更新
+	SetPos(posMy);			// 位置
+	SetPosOld(posOldMy);	// 前回の位置
+	SetRot(rotMy);			// 向き
+	SetSize(sizeMy);		// 大きさ
 }
 
 //====================================================================
@@ -292,10 +298,6 @@ void CEnemy::Update(void)
 //====================================================================
 void CEnemy::Draw(void)
 {
-	// 無理やり一時的位置情報交換（pos・rotの置き換え完了次第削除）
-	CCharacter::SetPos(GetPos());
-	CCharacter::SetRot(GetRot());
-
 	// キャラクタークラスの描画（継承）
 	CCharacter::Draw();
 }
