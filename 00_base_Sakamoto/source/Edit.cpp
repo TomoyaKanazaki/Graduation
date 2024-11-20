@@ -9,6 +9,7 @@
 #include "MapModel.h"
 #include "XModel.h"
 #include "CubeEffect.h"
+#include "MapSystem.h"
 
 //ƒ}ƒNƒ’è‹`
 namespace
@@ -379,16 +380,17 @@ void CEdit::UpdateBlock(void)
 		m_pEditBlock->SetTexture(BLOCK_TEXTURE_TYPE[m_nBlockTextureIdx]);
 	}
 
-	if (pInputKeyboard->GetTrigger(DIK_RETURN) == true)
+	/*if (pInputKeyboard->GetTrigger(DIK_RETURN) == true)
 	{
-		CCubeBlock* pBlock = CCubeBlock::Create();
+		CMapSystem* pMapSystem = CMapSystem::GetInstance();
+		CCubeBlock* pBlock = CCubeBlock::Create(pMapSystem->m_gridCenter);
 		pBlock->SetPos(m_pEditBlock->GetPos());
 		pBlock->SetSize(m_pEditBlock->GetSize());
 		pBlock->SetWightNumber(m_MapGritWight);
 		pBlock->SetHeightNumber(m_MapGritHeight);
 		pBlock->SetTexture(BLOCK_TEXTURE_TYPE[m_nBlockTextureIdx]);
 		AppearCollision();
-	}
+	}*/
 
 	if (pInputKeyboard->GetTrigger(DIK_BACKSPACE) == true)
 	{
