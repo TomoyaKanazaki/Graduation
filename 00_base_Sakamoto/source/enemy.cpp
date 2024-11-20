@@ -469,7 +469,7 @@ void CEnemy::CollisionWall(useful::COLLISION XYZ)
 			//待機状態にする
 			m_State = E_STATE_WAIT;
 
-			m_pos = CMapSystem::GetInstance()->GetGritPos(m_Grid);
+			m_pos = m_Grid.ToWorld();
 		}
 	}
 }
@@ -595,7 +595,7 @@ void CEnemy::StateManager()
 
 			if (m_nBugCounter > 180)
 			{
-				m_pos = CMapSystem::GetInstance()->GetGritPos(m_Grid);
+				m_pos = m_Grid.ToWorld();
 				m_nBugCounter = 0;
 			}
 		}
@@ -708,7 +708,7 @@ void CEnemy::SearchWall(void)
 	OKD = !pMapSystem->GetGritBool(m_Grid.x, nDNumber);
 
 	//自分の立っているグリットの中心位置を求める
-	D3DXVECTOR3 MyGritPos = CMapSystem::GetInstance()->GetGritPos(m_Grid);;
+	D3DXVECTOR3 MyGritPos = m_Grid.ToWorld();
 	float MapGritSize = pMapSystem->GetGritSize();
 
 	DebugProc::Print(DebugProc::POINT_LEFT, "敵の位置 %f %f %f\n", MyGritPos.x, MyGritPos.y, MyGritPos.z);
@@ -801,7 +801,7 @@ void CEnemy::Route()
 	}
 
 	// 目標地点の座標を求める
-	D3DXVECTOR3 path = CMapSystem::GetInstance()->GetGritPos(m_pPath[m_nTargetIndex]);
+	D3DXVECTOR3 path = m_pPath[m_nTargetIndex].ToWorld();
 
 	// 次に向かうグリッドに重なったらその次の目標を設定
 	if (fabsf(path.x - pos.x) <= TARGET_DIFF &&
@@ -809,7 +809,7 @@ void CEnemy::Route()
 	{
 		// インデックス番号を加算
 		m_nTargetIndex++;
-		path = CMapSystem::GetInstance()->GetGritPos(m_pPath[m_nTargetIndex]);
+		path = m_pPath[m_nTargetIndex].ToWorld();
 	}
 
 	// 次の目標が存在しなかったら関数を抜ける
