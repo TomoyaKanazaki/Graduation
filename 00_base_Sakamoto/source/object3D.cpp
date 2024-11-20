@@ -9,6 +9,7 @@
 #include "renderer.h"
 #include "manager.h"
 #include "game.h"
+#include "objmeshField.h"
 #include "texture.h"
 
 #define POLYDON_SIZE (10.0f)
@@ -34,6 +35,7 @@ CObject3D::CObject3D(int nPriority) :CObject(nPriority)
 	m_Lighting = true;
 	m_Scroll = D3DXVECTOR2(0.0f, 0.0f);
 	m_ScrollSpeed = D3DXVECTOR2(0.0f, 0.0f);
+	m_UseMultiMatrix = nullptr;
 }
 
 //====================================================================
@@ -207,6 +209,14 @@ void CObject3D::Draw(void)
 	D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);
 
 	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
+
+	if (m_UseMultiMatrix != nullptr && CManager::GetInstance()->GetScene()->GetMode() == CScene::MODE_GAME)
+	{
+		//算出したマトリクスをかけ合わせる
+		D3DXMatrixMultiply(&m_mtxWorld,
+			&m_mtxWorld,
+			m_UseMultiMatrix);
+	}
 
 	//ワールドマトリックスの設定
 	m_pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);

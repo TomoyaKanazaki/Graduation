@@ -56,6 +56,9 @@ public:
 	LPDIRECT3DVERTEXBUFFER9 GetVtxBuff(void) { return m_pVtxBuff; }
 	virtual int GetIdx(void) { return m_nIdxTexture; }
 
+	void SetUseMultiMatrix(D3DXMATRIX* Set) { m_UseMultiMatrix = Set; }
+	D3DXMATRIX* GetUseMultiMatrix(void) { return m_UseMultiMatrix; }
+
 	// 静的メンバ関数
 	static CListManager<CObject3D>* GetList(void); // リスト取得
 
@@ -76,6 +79,9 @@ private:
 	D3DXVECTOR2 m_Scroll;					//スクロールアニメーション
 	D3DXVECTOR2 m_ScrollSpeed;				//スクロールの速度
 	D3DXCOLOR m_Color;						//色
+
+	//マップとのマトリックス情報
+	D3DXMATRIX* m_UseMultiMatrix;			//掛け合わせるマトリックス
 
 	// 静的メンバ変数
 	static CListManager<CObject3D>* m_pList; // オブジェクトリスト
