@@ -324,11 +324,8 @@ void CDevil::TutorialUpdate(void)
 	//ステージ外にいるオブジェクトの処理
 	CollisionOut();
 
-	// キャラクターの更新
-	if (m_pCharacter != nullptr)
-	{
-		m_pCharacter->Update();
-	}
+	// キャラクタークラスの更新（継承）
+	CCharacter::Update();
 
 	D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
 	CEffect* pTestEffect = nullptr;

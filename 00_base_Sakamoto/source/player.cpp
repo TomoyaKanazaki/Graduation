@@ -486,11 +486,8 @@ void CPlayer::TutorialUpdate(void)
 	//卵の動き
 	EggMove();
 
-	// キャラクター更新処理
-	if (m_pCharacter != nullptr)
-	{
-		m_pCharacter->Update();
-	}
+	// キャラクタークラスの更新（継承）
+	CCharacter::Update();
 
 	//モーションの管理
 	ActionState();
