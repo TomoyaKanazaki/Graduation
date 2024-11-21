@@ -34,6 +34,16 @@ public:
 		TYPE_EAT,		// 捕食
 		TYPE_RESPAWN_MEDAMAN,	// メダマンのリスポーン
 		TYPE_RESPAWN_BONBON,	// ボンボンのリスポーン
+		TYPE_RESPAWN_SMALLDEVIL, // コデビルのリスポーン
+
+		TYPE_BOABOA_00,		// ボアボアエフェクト その１
+		TYPE_BOABOA_01,		// ボアボアエフェクト その２
+		TYPE_CROSS,			// 十字架エフェクト
+		TYPE_BIBLE,			// 聖書
+		TYPE_DUSTCLOUD,		// 歩いた時の煙
+		TYPE_FALLSMOKE,		// 落下時の土煙
+		TYPE_BORN_PLAYER_00,	// 卵が落下00
+		TYPE_BORN_PLAYER_01,	// 卵が落下01
 		TYPE_MAX,
 		TYPE_NONE  // なんもない
 	};
