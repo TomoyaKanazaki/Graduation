@@ -197,11 +197,6 @@ HRESULT CPlayer::Init(void)
 	// スローの生成
 	m_pSlow = CSlowManager::Create(CSlowManager::CAMP_PLAYER, CSlowManager::TAG_PLAYER);
 
-	//if (m_pShadow == nullptr)
-	//{// 影生成
-	//	m_pShadow = CShadow::Create(m_pos, SHADOW_SIZE, SHADOW_SIZE);
-	//}
-
 	// リストマネージャーの生成
 	if (m_pList == nullptr)
 	{

@@ -129,6 +129,13 @@ void CCharacter::Uninit(void)
 		}
 	}
 
+	// 影の終了
+	if (m_pShadow != nullptr)
+	{
+		m_pShadow->SetDeathFlag(true);
+		m_pShadow = nullptr;
+	}
+
 	//モーションの終了処理
 	if (m_pMotion != nullptr)
 	{
