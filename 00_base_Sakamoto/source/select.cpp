@@ -1,6 +1,6 @@
 //============================================
 //
-//	タイトル画面 [title.cpp]
+//	選択画面 [select.cpp]
 //	Author:sakamoto kai
 //
 //============================================
@@ -20,12 +20,14 @@ namespace
 	const char* MAP_XMODEL_PASS("data\\TXT\\STAGE\\XModel_Tutorial_000.txt");
 	const char* MAP_GIMMICK_PASS("data\\TXT\\STAGE\\Gimmick_Tutorial_000.txt");
 
-	const D3DXVECTOR3 TITLE_LOGO_POS = D3DXVECTOR3(640.0f, 241.0f, 0.0f);	// タイトルロゴの位置
-	const D3DXVECTOR2 TITLE_LOGO_SIZE = { 600.0f, 240.0f };				// タイトルロゴの大きさ
+	const D3DXVECTOR3 STAGE_POS = D3DXVECTOR3(240.0f, 250.0f, 0.0f);		// 選択項目の位置
+	const D3DXVECTOR2 STAGE_SIZE = D3DXVECTOR2(300.0f, 300.0f);				// 選択項目の大きさ
+	const D3DXVECTOR2 STAGE_DISTANCE = D3DXVECTOR2(50.0f + (STAGE_SIZE.x * 1.0f), 0.0f + (STAGE_SIZE.y * 0.0f));	// 選択項目の幅
 
-	const D3DXVECTOR3 SELECT_POS = D3DXVECTOR3(900.0f, 400.0f, 0.0f);		// 選択項目の位置
-	const D3DXVECTOR2 SELECT_SIZE = D3DXVECTOR2(300.0f, 60.0f);				// 選択項目の大きさ
-	const D3DXVECTOR2 SELECT_DISTANCE = D3DXVECTOR2(0.0f + (SELECT_SIZE.x * 0.0f), 5.0f + (SELECT_SIZE.y * 1.0f));	// 選択項目の幅
+	const D3DXVECTOR3 SCROOL_POS = D3DXVECTOR3(440.0f, 500.0f, 0.0f);		// 選択項目の位置
+	const D3DXVECTOR2 SCROOL_SIZE = D3DXVECTOR2(300.0f, 50.0f);				// 選択項目の大きさ
+	const D3DXVECTOR2 SCROOL_DISTANCE = D3DXVECTOR2(100.0f + (STAGE_SIZE.x * 1.0f), 0.0f + (STAGE_SIZE.y * 0.0f));	// 選択項目の幅
+
 	const D3DXCOLOR SELECT_COLOR_TRUE = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);	// 選択状態項目の色
 	const D3DXCOLOR SELECT_COLOR_FALSE = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.5f);	// 選択してない項目の色
 
@@ -36,18 +38,23 @@ namespace
 }
 
 //静的メンバ変数宣言
-CSelect* CSelect::m_pTitle = nullptr;
+CSelect* CSelect::m_pSelect = nullptr;
 
 //====================================================================
 //コンストラクタ
 //====================================================================
 CSelect::CSelect()
 {
-	for (int nCnt = 0; nCnt < MAX_SELECT; nCnt++)
+	for (int nCnt = 0; nCnt < NUM_STAGE; nCnt++)
 	{
-		m_pModeSelect[nCnt] = nullptr;
+		m_pStageSelect[nCnt] = nullptr;
 	}
-	m_pLogo = nullptr;
+
+	for (int nCnt = 0; nCnt < NUM_SCROLLTYPE; nCnt++)
+	{
+		m_pScrollSelect[nCnt] = nullptr;
+	}
+
 	m_pTitleButton = nullptr;
 	m_pMeshDome = nullptr;
 
@@ -56,6 +63,8 @@ CSelect::CSelect()
 	m_bTurn = false;
 	m_bSlash = false;
 	m_nSelect = 0;
+	m_nStep = 0;
+	m_nSetStage = 0;
 }
 
 //====================================================================
@@ -72,11 +81,11 @@ CSelect::~CSelect()
 //====================================================================
 CSelect* CSelect::GetInstance(void)
 {
-	if (m_pTitle == nullptr)
+	if (m_pSelect == nullptr)
 	{
-		m_pTitle = new CSelect;
+		m_pSelect = new CSelect;
 	}
-	return m_pTitle;
+	return m_pSelect;
 }
 
 //====================================================================
@@ -100,28 +109,36 @@ HRESULT CSelect::Init(void)
 	pMeshField->SetPos(INITVECTOR3);
 	//pMeshField->SetTexture("data\\TEXTURE\\field00.jpg");
 
-	// タイトル文字
-	m_pLogo = CObject2D::Create();
-	m_pLogo->SetPos(TITLE_LOGO_POS);
-	m_pLogo->SetWidth(TITLE_LOGO_SIZE.x);
-	m_pLogo->SetHeight(TITLE_LOGO_SIZE.y);
-	if (m_pLogo != nullptr)
+	for (int nCnt = 0; nCnt < NUM_STAGE; nCnt++)
 	{
-		//m_pLogo->SetIdx(pTexture->Regist("data\\TEXTURE\\title\\logo001.png"));
-	}
-
-	for (int nCnt = 0; nCnt < MAX_SELECT; nCnt++)
-	{
-		if (m_pModeSelect[nCnt] == nullptr)
+		if (m_pStageSelect[nCnt] == nullptr)
 		{
 			// ボタン
-			m_pModeSelect[nCnt] = CObject2D::Create();
-			m_pModeSelect[nCnt]->SetPos(D3DXVECTOR3(SELECT_POS.x + (SELECT_DISTANCE.x * nCnt), SELECT_POS.y + (SELECT_DISTANCE.y * nCnt), SELECT_POS.z));
-			m_pModeSelect[nCnt]->SetWidth(BUTTON_SIZE.x);
-			m_pModeSelect[nCnt]->SetHeight(BUTTON_SIZE.y);
+			m_pStageSelect[nCnt] = CObject2D::Create();
+			m_pStageSelect[nCnt]->SetPos(D3DXVECTOR3(STAGE_POS.x + (SCROOL_DISTANCE.x * nCnt), STAGE_POS.y + (SCROOL_DISTANCE.y * nCnt), STAGE_POS.z));
+			m_pStageSelect[nCnt]->SetWidth(STAGE_SIZE.x);
+			m_pStageSelect[nCnt]->SetHeight(STAGE_SIZE.y);
 		}
 
-		if (m_pModeSelect[nCnt] != nullptr)
+		if (m_pStageSelect[nCnt] != nullptr)
+		{
+			//m_pModeSelect[nCnt]->SetIdx(pTexture->Regist("data\\TEXTURE\\title\\titleButton.png"));
+		}
+	}
+
+	for (int nCnt = 0; nCnt < NUM_SCROLLTYPE; nCnt++)
+	{
+		if (m_pScrollSelect[nCnt] == nullptr)
+		{
+			// ボタン
+			m_pScrollSelect[nCnt] = CObject2D::Create();
+			m_pScrollSelect[nCnt]->SetPos(D3DXVECTOR3(SCROOL_POS.x + (STAGE_DISTANCE.x * nCnt), SCROOL_POS.y + (STAGE_DISTANCE.y * nCnt), SCROOL_POS.z));
+			m_pScrollSelect[nCnt]->SetWidth(SCROOL_SIZE.x);
+			m_pScrollSelect[nCnt]->SetHeight(SCROOL_SIZE.y);
+			m_pScrollSelect[nCnt]->SetColor(SELECT_COLOR_FALSE);
+		}
+
+		if (m_pScrollSelect[nCnt] != nullptr)
 		{
 			//m_pModeSelect[nCnt]->SetIdx(pTexture->Regist("data\\TEXTURE\\title\\titleButton.png"));
 		}
@@ -134,7 +151,7 @@ HRESULT CSelect::Init(void)
 		m_pTitleButton->SetPos(BUTTON_POS);
 		m_pTitleButton->SetWidth(BUTTON_SIZE.x);
 		m_pTitleButton->SetHeight(BUTTON_SIZE.y);
-		//m_pTitleButton->SetColorA(0.2f);
+		m_pTitleButton->SetColor(SELECT_COLOR_TRUE);
 	}
 
 	if (m_pTitleButton != nullptr)
@@ -162,11 +179,22 @@ void CSelect::Uninit(void)
 //====================================================================
 void CSelect::Update(void)
 {
-	// 選択処理
-	Select();
+	if (m_nStep == 0)
+	{
+		// 選択処理
+		StageSelect();
 
-	// 決定処理
-	Button();
+		// 決定処理
+		StageButton();
+	}
+	else
+	{
+		// 選択処理
+		ScrollSelect();
+
+		// 決定処理
+		ScrollButton();
+	}
 }
 
 //====================================================================
@@ -180,43 +208,43 @@ void CSelect::Draw(void)
 //====================================================================
 //選択処理
 //====================================================================
-void CSelect::Select(void)
+void CSelect::StageSelect(void)
 {
-	if (CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_S) == true ||
-		CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_DOWN) == true ||
-		CManager::GetInstance()->GetInputJoyPad()->GetTrigger(CInputJoypad::BUTTON_DOWN, 0))
+	if (CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_D) == true ||
+		CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_RIGHT) == true ||
+		CManager::GetInstance()->GetInputJoyPad()->GetTrigger(CInputJoypad::BUTTON_RIGHT, 0))
 	{
 		m_nSelect++;
 
-		if (m_nSelect >= MAX_SELECT)
+		if (m_nSelect >= NUM_STAGE)
 		{
 			m_nSelect = 0;
 		}
 	}
-	if (CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_W) == true ||
-		CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_UP) == true ||
-		CManager::GetInstance()->GetInputJoyPad()->GetTrigger(CInputJoypad::BUTTON_UP, 0))
+	if (CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_A) == true ||
+		CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_LEFT) == true ||
+		CManager::GetInstance()->GetInputJoyPad()->GetTrigger(CInputJoypad::BUTTON_LEFT, 0))
 	{
 		m_nSelect--;
 
 		if (m_nSelect < 0)
 		{
-			m_nSelect = MAX_SELECT - 1;
+			m_nSelect = NUM_STAGE - 1;
 		}
 	}
 
 
-	for (int nCnt = 0; nCnt < MAX_SELECT; nCnt++)
+	for (int nCnt = 0; nCnt < NUM_STAGE; nCnt++)
 	{
-		if (m_pModeSelect[nCnt] != nullptr)
+		if (m_pStageSelect[nCnt] != nullptr)
 		{
 			if (m_nSelect == nCnt)
 			{
-				m_pModeSelect[nCnt]->SetColor(SELECT_COLOR_TRUE);
+				m_pStageSelect[nCnt]->SetColor(SELECT_COLOR_TRUE);
 			}
 			else
 			{
-				m_pModeSelect[nCnt]->SetColor(SELECT_COLOR_FALSE);
+				m_pStageSelect[nCnt]->SetColor(SELECT_COLOR_FALSE);
 			}
 		}
 	}
@@ -225,9 +253,69 @@ void CSelect::Select(void)
 //====================================================================
 //決定処理
 //====================================================================
-void CSelect::Button(void)
+void CSelect::StageButton(void)
 {
-	if (CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_RETURN) == true)
+	if (CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_RETURN) == true ||
+		CManager::GetInstance()->GetInputJoyPad()->GetTrigger(CInputJoypad::BUTTON_A, 0) == true)
+	{
+		m_nSetStage = m_nSelect;
+		m_nSelect = 0;
+		m_nStep++;
+	}
+}
+
+//====================================================================
+//選択処理
+//====================================================================
+void CSelect::ScrollSelect(void)
+{
+	if (CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_D) == true ||
+		CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_RIGHT) == true ||
+		CManager::GetInstance()->GetInputJoyPad()->GetTrigger(CInputJoypad::BUTTON_RIGHT, 0))
+	{
+		m_nSelect++;
+
+		if (m_nSelect >= NUM_SCROLLTYPE)
+		{
+			m_nSelect = 0;
+		}
+	}
+	if (CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_A) == true ||
+		CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_LEFT) == true ||
+		CManager::GetInstance()->GetInputJoyPad()->GetTrigger(CInputJoypad::BUTTON_LEFT, 0))
+	{
+		m_nSelect--;
+
+		if (m_nSelect < 0)
+		{
+			m_nSelect = NUM_SCROLLTYPE - 1;
+		}
+	}
+
+
+	for (int nCnt = 0; nCnt < NUM_STAGE; nCnt++)
+	{
+		if (m_pScrollSelect[nCnt] != nullptr)
+		{
+			if (m_nSelect == nCnt)
+			{
+				m_pScrollSelect[nCnt]->SetColor(SELECT_COLOR_TRUE);
+			}
+			else
+			{
+				m_pScrollSelect[nCnt]->SetColor(SELECT_COLOR_FALSE);
+			}
+		}
+	}
+}
+
+//====================================================================
+//決定処理
+//====================================================================
+void CSelect::ScrollButton(void)
+{
+	if (CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_RETURN) == true ||
+		CManager::GetInstance()->GetInputJoyPad()->GetTrigger(CInputJoypad::BUTTON_A, 0) == true)
 	{
 		CManager::GetInstance()->SetTypeInput(CManager::GetInstance()->TYPE_MNK);	// 入力タイプ：キーマウ
 		//CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_ENTER_PUSH);
@@ -235,40 +323,28 @@ void CSelect::Button(void)
 		switch (m_nSelect)
 		{
 		case 0:
-			// ゲーム遷移
 			CFade::SetFade(CScene::MODE_GAME);
-			CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_SINGLE);
+
 			break;
 		case 1:
-			// ゲーム遷移
-			CFade::SetFade(CScene::MODE_GAME);
-			CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_MULTI);
-			break;
-		case 2:
 
+			CFade::SetFade(CScene::MODE_GAME);
 			break;
 		}
 	}
-	else if (CManager::GetInstance()->GetInputJoyPad()->GetTrigger(CInputJoypad::BUTTON_A, 0) == true)
+	else if (CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_BACKSPACE) == true ||
+		CManager::GetInstance()->GetInputJoyPad()->GetTrigger(CInputJoypad::BUTTON_B, 0) == true)
 	{
-		CManager::GetInstance()->SetTypeInput(CManager::GetInstance()->TYPE_JOYPAD);	// 入力タイプ：パッド
-		//CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_ENTER_PUSH);
-
-		switch (m_nSelect)
+		for (int nCnt = 0; nCnt < NUM_SCROLLTYPE; nCnt++)
 		{
-		case 0:
-			// ゲーム遷移
-			CFade::SetFade(CScene::MODE_GAME);
-			CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_SINGLE);
-			break;
-		case 1:
-			// ゲーム遷移
-			CFade::SetFade(CScene::MODE_GAME);
-			CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_MULTI);
-			break;
-		case 2:
-
-			break;
+			if (m_pScrollSelect[nCnt] != nullptr)
+			{
+				m_pScrollSelect[nCnt]->SetColor(SELECT_COLOR_FALSE);
+			}
 		}
+
+		m_nSelect = 0;
+		m_nStep--;
+		m_nSelect = m_nSetStage;
 	}
 }

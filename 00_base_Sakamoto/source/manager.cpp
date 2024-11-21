@@ -17,9 +17,9 @@
 #include "Scene.h"
 
 #ifdef _DEBUG
-#define SET_MODE (CScene::MODE_TITLE)
-#else
 #define SET_MODE (CScene::MODE_GAME)
+#else
+#define SET_MODE (CScene::MODE_TITLE)
 #endif // _DEBUG
 
 //Ã“Iƒƒ“ƒo•Ï”éŒ¾
