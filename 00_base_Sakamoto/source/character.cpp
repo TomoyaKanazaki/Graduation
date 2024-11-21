@@ -108,7 +108,7 @@ HRESULT CCharacter::Init(const char* pModelName)
 
 	if (m_pShadow == nullptr)
 	{// 影生成
-		m_pShadow = CShadow::Create(D3DXVECTOR3(m_pos.x, m_pos.y + 1.0f, m_pos.z), SHADOW_SIZE, SHADOW_SIZE);
+		m_pShadow = CShadow::Create(m_pos, SHADOW_SIZE, SHADOW_SIZE);
 	}
 
 	return S_OK;
@@ -127,6 +127,13 @@ void CCharacter::Uninit(void)
 			delete m_apModel[nCntModel];
 			m_apModel[nCntModel] = nullptr;
 		}
+	}
+
+	// 影の終了
+	if (m_pShadow != nullptr)
+	{
+		m_pShadow->SetDeathFlag(true);
+		m_pShadow = nullptr;
 	}
 
 	//モーションの終了処理
