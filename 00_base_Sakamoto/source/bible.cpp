@@ -142,6 +142,18 @@ void CBible::Move(D3DXVECTOR3& pos)
 	pos.z = base.z + z;
 }
 
+//==========================================
+//  エフェクトを生成
+//==========================================
+void CBible::SetEffect()
+{
+	// 自身の情報を取得する
+	D3DXVECTOR3 pos = GetPos();
+	D3DXVECTOR3 rot = GetRot();
+
+	Effect(MyEffekseer::EffectCreate(CMyEffekseer::TYPE_BIBLE, true, useful::CalcMatrix(pos, rot, *GetUseMultiMatrix()), rot, D3DXVECTOR3(10.0f, 10.0f, 10.0f)));
+}
+
 //====================================================================
 // 状態管理
 //====================================================================
