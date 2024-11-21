@@ -668,21 +668,7 @@ void CCamera::FPSCamera(void)
 {
 	CPlayer* pPlayer = nullptr;
 
-	//プレイヤーの取得
-	switch (CScene::GetMode())
-	{
-	case CScene::MODE_GAME:
-
-		pPlayer = CGame::GetInstance()->GetPlayer(0);
-
-		break;
-
-	case CScene::MODE_TUTORIAL:
-
-		pPlayer = CTutorial::GetPlayer(0);
-
-		break;
-	}
+	pPlayer = CGame::GetInstance()->GetPlayer(0);
 
 	m_posV.x = pPlayer->GetPos().x;
 	m_posV.y = pPlayer->GetPos().y + 50.0f;
@@ -702,22 +688,7 @@ void CCamera::FPSCamera(void)
 void CCamera::FPSComplementCamera(void)
 {
 	CPlayer* pPlayer = nullptr;
-
-	//プレイヤーの取得
-	switch (CScene::GetMode())
-	{
-	case CScene::MODE_GAME:
-
-		pPlayer = CGame::GetInstance()->GetPlayer(0);
-
-		break;
-
-	case CScene::MODE_TUTORIAL:
-
-		pPlayer = CTutorial::GetPlayer(0);
-
-		break;
-	}
+	pPlayer = CGame::GetInstance()->GetPlayer(0);
 
 
 	m_posVDest.x = pPlayer->GetPos().x;
@@ -757,21 +728,7 @@ void CCamera::UltimateCamera(void)
 	//プレイヤーの取得
 	CPlayer* pPlayer = nullptr;
 
-	//プレイヤーの取得
-	switch (CScene::GetMode())
-	{
-	case CScene::MODE_GAME:
-
-		pPlayer = CGame::GetInstance()->GetPlayer(0);
-
-		break;
-
-	case CScene::MODE_TUTORIAL:
-
-		pPlayer = CTutorial::GetPlayer(0);
-
-		break;
-	}
+	pPlayer = CGame::GetInstance()->GetPlayer(0);
 
 	if (pPlayer == nullptr)
 	{

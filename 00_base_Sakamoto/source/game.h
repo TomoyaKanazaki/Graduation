@@ -89,7 +89,7 @@ private:
 
 	void SetBgObjTest(void);
 
-	void Sample(void);								//サンプル系が入ってるヨ
+	void Sample(void);						//サンプル系が入ってるヨ
 
 	// シングルトン
 	static CGame* m_pGame;
@@ -99,8 +99,8 @@ private:
 	CDevil* m_pDevil;						//デビルのポインタ
 
 	int m_nNumBowabowa;						//ボワボワの数
-	bool m_bDevilHoleFinish;					//デビルホールがすべて埋まったかどうか
-	bool m_bGameEnd;							//ゲーム終了状態かどうか
+	bool m_bDevilHoleFinish;				//デビルホールがすべて埋まったかどうか
+	bool m_bGameEnd;						//ゲーム終了状態かどうか
 	bool m_bGameClear;						//ゲームクリア状態かどうか
 
 	//イベント用変数
@@ -110,34 +110,34 @@ private:
 	int m_nEventWave;						//イベント段階
 	int m_nEventNumber;						//イベント番号
 	float m_fEvectFinish;					//鍔迫り合いのカウント
-	float m_fEventAngle;						//イベント用の角度
-	float m_EventHeight;						//イベント用ポリゴンの高さ
+	float m_fEventAngle;					//イベント用の角度
+	float m_EventHeight;					//イベント用ポリゴンの高さ
 	float m_NameColorA;						//イベント用の名前表示の不透明度
 	D3DXVECTOR3 m_EventPos;					//イベント開始座標
 
-	int m_nTutorialWave;						//チュートリアルの段階
+	int m_nTutorialWave;					//チュートリアルの段階
 	float m_BGColorA;						//ゲーム背景の不透明度
-	D3DXVECTOR3 m_BGRot;						//背景の回転向き
+	D3DXVECTOR3 m_BGRot;					//背景の回転向き
 
 	CBoss* m_pBoss;							//ボス
 
 	CEdit* m_pEdit;							//エディットモードのポインタ
 	CPause* m_pPause;						//ポーズのポインタ
 	CScore* m_pScore;						//スコアのポインタ
-	CTimer* m_pTime;							//タイムのポインタ
-	CObjmeshDome* m_pMeshDomeUp;				//メッシュドーム
+	CTimer* m_pTime;						//タイムのポインタ
+	CObjmeshDome* m_pMeshDomeUp;			//メッシュドーム
 	CObjmeshField* m_pMapField;				//マップフィールド
 	CCubeBlock* m_pCubeBlock;				//キューブブロック
 	bool m_Wireframe;						//ワイヤーフレームのオンオフ
-	bool m_Slow;								//スロー演出のオンオフ
+	bool m_Slow;							//スロー演出のオンオフ
 
 	CObject2D* m_p2DSample;					//2Dポリゴンのサンプル
 	CObject3D* m_p3DSample;					//3Dポリゴンのサンプル
 	CObjectBillboard* m_pBillboardSample;	//Billboardポリゴンのサンプル
 	CObjectX* m_pXModelSample;				//Xモデルのサンプル
 	CObjmeshField* m_pMeshFieldSample;		//メッシュフィールドのサンプル
-	CObjmeshWall* m_pMeshWallSample;			//メッシュウォールのサンプル
-	CObjmeshCylinder* m_pMeshCylinderSample;	//メッシュシリンダーのサンプル
+	CObjmeshWall* m_pMeshWallSample;		//メッシュウォールのサンプル
+	CObjmeshCylinder* m_pMeshCylinderSample;//メッシュシリンダーのサンプル
 
 	CMask* m_pMask;	// 2Dマスク
 };
