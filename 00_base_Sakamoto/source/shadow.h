@@ -25,8 +25,15 @@ public:
 	void Update();
 	void Draw();
 
-private:
+	// 静的メンバ関数
+	static CListManager<CShadow>* GetList(void);	// リスト取得
 
+private:
+	// 静的メンバ変数
+	static CListManager<CShadow>* m_pList; // オブジェクトリスト
+
+	// メンバ変数
+	CListManager<CShadow>::AIterator m_iterator; // イテレーター
 };
 
 #endif
