@@ -161,7 +161,6 @@ HRESULT CItem::Init(const char* pModelName)
 	pos.y = BASE_Y;
 	SetPos(pos);
 
-
 	// リストマネージャーの生成
 	if (m_pList == nullptr)
 	{
