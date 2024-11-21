@@ -65,7 +65,7 @@ HRESULT CEnemyYoungDevil::Init(void)
 	// Œp³ƒNƒ‰ƒX‚Ì‰Šú‰»ˆ—
 	CEnemy::Init();
 
-	SetEnemyType(CEnemy::ENEMY_MEDAMAN);	//“G‚Ìí—Şİ’è
+	SetEnemyType(CEnemy::ENEMY_LITTLEDEVIL);	//“G‚Ìí—Şİ’è
 
 	// Œ©‚½–Ú‚Ìİ’è
 	InitModel(MODEL_PASS);
