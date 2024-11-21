@@ -38,7 +38,7 @@ namespace
 
 	const float BASE_Y = 50.0f; // ‚‚³
 
-	const float SHADOW_SIZE = 25.0f;	// ŠÛ‰e‚Ì‘å‚«‚³
+	const float SHADOW_SIZE = 50.0f;	// ŠÛ‰e‚Ì‘å‚«‚³
 }
 
 //==========================================

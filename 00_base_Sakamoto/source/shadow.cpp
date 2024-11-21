@@ -18,6 +18,7 @@
 //==========================================
 namespace
 {
+	const D3DXVECTOR3 DEFAULT_ROT = { D3DX_PI * 0.5f, 0.0f, 0.0f }; // 角度の補正値
 	const float LIMIT_HEIGHT = 2000.0f; // 影を描画する上限の高さ
 }
 
@@ -60,6 +61,9 @@ CShadow* CShadow::Create(const D3DXVECTOR3& pos, float fWidth, float fHeight)
 	pShadow->SetpVtx(fWidth, fHeight);
 	pShadow->m_sizeBase.x = fWidth;
 	pShadow->m_sizeBase.z = fHeight;
+
+	// 角度を設定
+	pShadow->SetRot(DEFAULT_ROT);
 
 	return pShadow;
 }
@@ -119,12 +123,15 @@ void CShadow::Uninit(void)
 void CShadow::Update(void)
 {
 	// サイズを変更する
-	float fScale = (LIMIT_HEIGHT - m_fHeight) / LIMIT_HEIGHT;
-	D3DXVECTOR3 size = m_sizeBase * fScale;
+	float fScale = m_fHeight / LIMIT_HEIGHT;
+	D3DXVECTOR3 size = m_sizeBase + m_sizeBase * fScale;
 	SetpVtx(size.x, size.z);
 
 	// 透明度を変更する
 	SetColorA(1.0f - fScale);
+
+	// 親クラスの更新処理
+	CObject3D::Update();
 }
 
 //===========================================
