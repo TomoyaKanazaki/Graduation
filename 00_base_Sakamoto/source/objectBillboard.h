@@ -50,9 +50,6 @@ public:
 
 	void SetNULL(void);
 
-	// 静的メンバ関数
-	static CListManager<CObjectBillboard>* GetList(void); // リスト取得
-
 protected:
 	LPDIRECT3DTEXTURE9 m_pTexture;			//テクスチャへのポインタ
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;		//頂点バッファへのポインタ
@@ -68,12 +65,5 @@ private:
 	D3DXCOLOR m_Color;						//色
 	int m_Digit;							//表示する数字の桁数
 	bool m_AddDarw;							//加算合成をするかどうか
-
-	// 静的メンバ変数
-	static CListManager<CObjectBillboard>* m_pList; // オブジェクトリスト
-
-	// メンバ変数
-	CListManager<CObjectBillboard>::AIterator m_iterator; // イテレーター
-
 };
 #endif

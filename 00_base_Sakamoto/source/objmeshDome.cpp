@@ -24,11 +24,6 @@ namespace
 	const float CYLINDER_RADIUS = 6000.0f;	//円の半径
 }
 
-//===========================================
-// 静的メンバ変数宣言
-//===========================================
-CListManager<CObjmeshDome>* CObjmeshDome::m_pList = nullptr; // オブジェクトリスト
-
 //====================================================================
 //コンストラクタ
 //====================================================================
@@ -186,15 +181,6 @@ HRESULT CObjmeshDome::Init(void)
 	//インデックスバッファをアンロックする
 	m_pIdxBuff->Unlock();
 
-	if (m_pList == nullptr)
-	{// リストマネージャー生成
-		m_pList = CListManager<CObjmeshDome>::Create();
-		if (m_pList == nullptr) { assert(false); return E_FAIL; }
-	}
-
-	// リストに自身のオブジェクトを追加・イテレーターを取得
-	m_iterator = m_pList->AddList(this);
-
 	return S_OK;
 }
 
@@ -203,16 +189,6 @@ HRESULT CObjmeshDome::Init(void)
 //====================================================================
 void CObjmeshDome::Uninit(void)
 {
-	// リストから自身のオブジェクトを削除
-	m_pList->DelList(m_iterator);
-
-	if (m_pList->GetNumAll() == 0)
-	{ // オブジェクトが一つもない場合
-
-		// リストマネージャーの破棄
-		m_pList->Release(m_pList);
-	}
-
 	SetDeathFlag(true);
 }
 
@@ -391,12 +367,4 @@ void CObjmeshDome::SetTexture(const char* name)
 {
 	CTexture* pTexture = CManager::GetInstance()->GetTexture();
 	m_nIdxTexture = pTexture->Regist(name);
-}
-
-//====================================================================
-// リスト取得
-//====================================================================
-CListManager<CObjmeshDome>* CObjmeshDome::GetList(void)
-{
-	return m_pList;
 }

@@ -161,7 +161,6 @@ HRESULT CItem::Init(const char* pModelName)
 	pos.y = BASE_Y;
 	SetPos(pos);
 
-
 	// リストマネージャーの生成
 	if (m_pList == nullptr)
 	{
@@ -193,7 +192,7 @@ void CItem::Uninit()
 	// 影の終了
 	if (m_pShadow != nullptr)
 	{
-		m_pShadow->SetDeathFlag(true);
+		m_pShadow->Uninit();
 		m_pShadow = nullptr;
 	}
 
@@ -228,8 +227,8 @@ void CItem::Update()
 	CollisionPlayer();
 
 	if (m_pShadow != nullptr)
-	{// シャドウの更新
-		m_pShadow->SetPos(D3DXVECTOR3(pos.x, pos.y + 1.0f, pos.z));
+	{// シャドウの位置設定
+		m_pShadow->SetPos(D3DXVECTOR3(pos.x, 1.0f, pos.z));
 	}
 
 	// 情報の更新

@@ -32,6 +32,8 @@ private:
 	// 静的メンバ変数
 	static CListManager<CShadow>* m_pList; // オブジェクトリスト
 
+	float m_pos;
+
 	// メンバ変数
 	CListManager<CShadow>::AIterator m_iterator; // イテレーター
 };

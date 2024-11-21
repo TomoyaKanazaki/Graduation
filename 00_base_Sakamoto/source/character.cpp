@@ -132,7 +132,7 @@ void CCharacter::Uninit(void)
 	// 影の終了
 	if (m_pShadow != nullptr)
 	{
-		m_pShadow->SetDeathFlag(true);
+		m_pShadow->Uninit();
 		m_pShadow = nullptr;
 	}
 
@@ -162,7 +162,7 @@ void CCharacter::Update(void)
 
 	if (m_pShadow != nullptr)
 	{// シャドウの更新
-		m_pShadow->SetPos(D3DXVECTOR3(m_pos.x, m_pos.y + 1.0f, m_pos.z));
+		m_pShadow->SetPos(D3DXVECTOR3(m_pos.x, 1.0f, m_pos.z));
 	}
 }
 
