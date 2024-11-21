@@ -241,12 +241,12 @@ void CTitle::Button(void)
 		{
 		case 0:
 			// ƒQ[ƒ€‘JˆÚ
-			CFade::SetFade(CScene::MODE_GAME);
+			CFade::SetFade(CScene::MODE_SELECT);
 			CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_SINGLE);
 			break;
 		case 1:
 			// ƒQ[ƒ€‘JˆÚ
-			CFade::SetFade(CScene::MODE_GAME);
+			CFade::SetFade(CScene::MODE_SELECT);
 			CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_MULTI);
 			break;
 		case 2:
@@ -265,12 +265,12 @@ void CTitle::Button(void)
 		{
 		case 0:
 			// ƒQ[ƒ€‘JˆÚ
-			CFade::SetFade(CScene::MODE_GAME);
+			CFade::SetFade(CScene::MODE_SELECT);
 			CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_SINGLE);
 			break;
 		case 1:
 			// ƒQ[ƒ€‘JˆÚ
-			CFade::SetFade(CScene::MODE_GAME);
+			CFade::SetFade(CScene::MODE_SELECT);
 			CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_MULTI);
 			break;
 		case 2:
