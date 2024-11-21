@@ -11,6 +11,7 @@
 #include "XModel.h"
 #include "enemy.h"
 #include "game.h"
+#include "tutorial.h"
 #include "objmeshField.h"
 
 //==========================================
@@ -104,9 +105,7 @@ HRESULT CFire::Init(char* pModelName)
 	// 継承クラスの初期化
 	CObjectX::Init(pModelName);
 
-	//マップとのマトリックスの掛け合わせをオンにする
-	SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
-	//SetMultiMatrix(true);
+	SetUseMultiMatrix(CGame::GetInstance()->GetMapField()->GetMatrix());
 
 	// 炎の体力
 	m_nLife = FIRE_LIFE;

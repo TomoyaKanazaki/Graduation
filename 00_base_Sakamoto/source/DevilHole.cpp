@@ -13,6 +13,7 @@
 #include "effect.h"
 #include "objmeshField.h"
 #include "game.h"
+#include "tutorial.h"
 
 //==========================================
 //  定数定義
@@ -111,7 +112,7 @@ HRESULT CDevilHole::Init(char* pModelName)
 	}
 
 	//マップとのマトリックスの掛け合わせをオンにする
-	SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
+	SetUseMultiMatrix(CGame::GetInstance()->GetMapField()->GetMatrix());
 
 	if (m_pList == nullptr)
 	{// リストマネージャー生成
@@ -311,7 +312,7 @@ void CDevilHole::CollisionOpen(void)
 				m_bSet[nCnt] == false)
 			{
 				m_pHoleKey[nCnt] = CObjectX::Create("data\\MODEL\\DevilKey.x");
-				m_pHoleKey[nCnt]->SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
+				m_pHoleKey[nCnt]->SetUseMultiMatrix(CGame::GetInstance()->GetMapField()->GetMatrix());
 				//m_pHoleKey[nCnt]->SetMultiMatrix(true);
 
 				switch (nCnt)
@@ -354,7 +355,7 @@ void CDevilHole::ClearJudge(void)
 		}
 	}
 
-	CGame::SetDevilHoleFinish(true);
+	CGame::GetInstance()->SetDevilHoleFinish(true);
 }
 
 //====================================================================

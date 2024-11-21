@@ -37,15 +37,8 @@ CListManager<CSlopeDevice>* CSlopeDevice::m_pList = nullptr; // オブジェクトリス
 //====================================================================
 CSlopeDevice::CSlopeDevice(int nPriority) : CCharacter(nPriority)
 {
-	m_pos = INITVECTOR3;
-	m_posOld = INITVECTOR3;
-	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	m_size = INITVECTOR3;
-
 	m_State = STATE(0);
 	m_nStateCount = 0;
-
-	m_bMultiMatrix = false;
 }
 
 //====================================================================
@@ -137,42 +130,26 @@ void CSlopeDevice::Uninit(void)
 //====================================================================
 void CSlopeDevice::Update(void)
 {
-	switch (CScene::GetMode())
-	{
-	case CScene::MODE_TITLE:
-		TitleUpdate();
-		break;
+	// 値を取得
+	D3DXVECTOR3 posMy = GetPos();			// 位置
+	D3DXVECTOR3 posOldMy = GetPosOld();		// 前回の位置
+	D3DXVECTOR3 rotMy = GetRot();			// 向き
+	D3DXVECTOR3 sizeMy = GetSize();			// 大きさ
 
-	case CScene::MODE_GAME:
-	case CScene::MODE_TUTORIAL:
+	// 過去の位置を記録
+	posOldMy = posMy;
 
-		GameUpdate();
-		break;
-
-	case CScene::MODE_RESULT:
-		break;
-	}
-}
-
-//====================================================================
-//タイトルでの更新処理
-//====================================================================
-void CSlopeDevice::TitleUpdate(void)
-{
-	// キャラクタークラスの更新（継承）
-	CCharacter::Update();
-}
-
-//====================================================================
-//ゲームでの更新処理
-//====================================================================
-void CSlopeDevice::GameUpdate(void)
-{
 	//状態管理
-	StateManager();
+	StateManager(rotMy);
 
 	// キャラクタークラスの更新（継承）
 	CCharacter::Update();
+
+	// 値更新
+	SetPos(posMy);			// 位置
+	SetPosOld(posOldMy);	// 前回の位置
+	SetRot(rotMy);			// 向き
+	SetSize(sizeMy);		// 大きさ
 }
 
 //====================================================================
@@ -180,10 +157,6 @@ void CSlopeDevice::GameUpdate(void)
 //====================================================================
 void CSlopeDevice::Draw(void)
 {
-	// 無理やり一時的位置情報交換（pos・rotの置き換え完了次第削除）
-	CCharacter::SetPos(GetPos());
-	CCharacter::SetRot(GetRot());
-
 	// キャラクタークラスの描画（継承）
 	CCharacter::Draw();
 }
@@ -201,7 +174,7 @@ HRESULT CSlopeDevice::InitModel(const char* pModelNameSlopeDevice, const char* p
 //====================================================================
 //状態管理
 //====================================================================
-void CSlopeDevice::StateManager(void)
+void CSlopeDevice::StateManager(D3DXVECTOR3& rotMy)
 {
 	switch (m_State)
 	{
@@ -210,8 +183,8 @@ void CSlopeDevice::StateManager(void)
 	case STATE_ROTATE:
 
 		// ローラーと回し車回転処理
-		Rotate(SETUP_TYPE_ROLLRE, ROTATE_ADD);
-		Rotate(SETUP_TYPE_MAWASIGURMA, ROTATE_ADD);
+		Rotate(rotMy,SETUP_TYPE_ROLLRE, ROTATE_ADD);
+		Rotate(rotMy,SETUP_TYPE_MAWASIGURMA, ROTATE_ADD);
 		break;
 	}
 
@@ -224,7 +197,7 @@ void CSlopeDevice::StateManager(void)
 //====================================================================
 // 回転処理
 //====================================================================
-void CSlopeDevice::Rotate(int nNldxModel,D3DXVECTOR3 rotate)
+void CSlopeDevice::Rotate(D3DXVECTOR3& rotMy,int nNldxModel,D3DXVECTOR3 rotate)
 {
 	// モデルの取得
 	CModel* pModel = GetModel(nNldxModel);
@@ -237,12 +210,12 @@ void CSlopeDevice::Rotate(int nNldxModel,D3DXVECTOR3 rotate)
 	// モデルの回転軸を取得
 	D3DXVECTOR3 rot = pModel->GetStartRot();
 	
-	if (m_rot.y == 0.0f)
+	if (rotMy.y == 0.0f)
 	{
 		// 回転量減算
 		rot += rotate;
 	}
-	else if (m_rot.y == D3DX_PI)
+	else if (rotMy.y == D3DX_PI)
 	{
 		// 回転量加算
 		rot -= rotate;

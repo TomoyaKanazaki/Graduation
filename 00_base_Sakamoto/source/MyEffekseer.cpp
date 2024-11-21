@@ -45,6 +45,15 @@ namespace MyEffekseer
 		"data\\EFFEKSEER\\Effect\\eat.efkefc",			  // 捕食
 		"data\\EFFEKSEER\\Effect\\medaman_respawn.efkefc",			  // メダマンのリスポーン
 		"data\\EFFEKSEER\\Effect\\bonbon_respawn.efkefc",			  // ボンボンのリスポーン
+		"data\\EFFEKSEER\\Effect\\smalldevil_respawn.efkefc",		  // コデビルのリスポーン
+		"data\\EFFEKSEER\\Effect\\boaboa_00.efkefc",		  // ボアボア
+		"data\\EFFEKSEER\\Effect\\boaboa_01.efkefc",		  // ボアボア
+		"data\\EFFEKSEER\\Effect\\cross.efkefc",		  // 十字架
+		"data\\EFFEKSEER\\Effect\\bible.efkefc",		  // 聖書
+		"data\\EFFEKSEER\\Effect\\dustcloud.efkefc",		  // 歩いた時の砂埃
+		"data\\EFFEKSEER\\Effect\\fall_smoke.efkefc",		  // 落下の土煙
+		"data\\EFFEKSEER\\Effect\\born_player00.efkefc",		  // プレイヤー１の卵落下
+		"data\\EFFEKSEER\\Effect\\born_player01.efkefc",		  // プレイヤー2の卵落下
 	};
 
 	//============================================
@@ -141,7 +150,7 @@ CEffekseer* CMyEffekseer::CreateEffect(const TYPE eType, ::Effekseer::Vector3D p
 
 	// 位置、向き、大きさ設定
 	m_EfkManager->SetLocation(Handle, pos);
-	m_EfkManager->SetRotation(Handle, { 0.0f, 1.0f, 0.0f }, rot.Y);
+	m_EfkManager->SetRotation(Handle, rot.X, rot.Y, rot.Z);
 	m_EfkManager->SetScale(Handle, scale.X, scale.Y, scale.Z);
 
 	return pEffect;
@@ -212,13 +221,13 @@ void CMyEffekseer::Update(void)
 
 		// 位置や向き、大きさを再設定
 		m_EfkManager->SetLocation(Handle, pos);
-		m_EfkManager->SetRotation(Handle, { 0.0f, 1.0f, 0.0f }, rot.Y);
+		m_EfkManager->SetRotation(Handle, rot.X, rot.Y, rot.Z);
 		m_EfkManager->SetScale(Handle, scale.X, scale.Y, scale.Z);
 
-		DebugProc::Print(DebugProc::POINT_CENTER, "エフェクトの種類 : ");
-		auto str = magic_enum::enum_name(effect->GetEfkType());
-		DebugProc::Print(DebugProc::POINT_CENTER, str.data());
-		DebugProc::Print(DebugProc::POINT_CENTER, "\n");
+		//DebugProc::Print(DebugProc::POINT_CENTER, "エフェクトの種類 : ");
+		//auto str = magic_enum::enum_name(effect->GetEfkType());
+		//DebugProc::Print(DebugProc::POINT_CENTER, str.data());
+		//DebugProc::Print(DebugProc::POINT_CENTER, "\n");
 
 		// エフェクトの再生が終了していない場合次に進む
 		if (m_EfkManager->Exists(Handle) && !effect->IsDeath()) { continue; }

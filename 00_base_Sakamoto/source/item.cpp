@@ -17,7 +17,9 @@
 #include "softcream.h"
 #include "renderer.h"
 #include "game.h"
+#include "tutorial.h"
 #include "objmeshField.h"
+#include "shadow.h"
 
 //==========================================
 //  定数定義
@@ -31,10 +33,13 @@ namespace
 		100, // 聖書
 		100, // ぼわぼわ
 		400, // ソフトクリーム
-		200 // 目玉焼き
+		200	 // 目玉焼き
 	};
 
 	const float BASE_Y = 50.0f; // 高さ
+
+	const float SHADOW_SIZE = 25.0f;	// 丸影の大きさ
+	const float SHADOW_LIMIT = 100.0f;	// 丸影の高さ上限
 }
 
 //==========================================
@@ -42,12 +47,19 @@ namespace
 //==========================================
 static_assert(NUM_ARRAY(ITEM_SCORE) == CItem::TYPE_MAX, "ERROR : Type Count Missmatch");
 
+//===========================================
+// 静的メンバ変数宣言
+//===========================================
+CListManager<CItem>* CItem::m_pList = nullptr; // オブジェクトリスト
+
 //====================================================================
 // コンストラクタ
 //====================================================================
 CItem::CItem(int nPriority) : CObjectX(nPriority),
 m_posBase(INITVECTOR3),
-m_fMoveTime(0.0f)
+m_fMoveTime(0.0f),
+m_pShadow(nullptr),
+m_pEffect(nullptr)
 {
 	m_eType = TYPE_NONE;		// 種類
 	m_nIdxXModel = 0;			// Xモデル番号
@@ -69,6 +81,14 @@ m_fMoveTime(0.0f)
 CItem::~CItem()
 {
 
+}
+
+//==========================================
+//  リストの取得
+//==========================================
+CListManager<CItem>* CItem::GetList(void)
+{
+	return m_pList;
 }
 
 //====================================================================
@@ -113,11 +133,14 @@ CItem* CItem::Create(const TYPE eType, const CMapSystem::GRID& pos)
 	// 初期化処理
 	pItem->Init();
 
+	// タイプの設定
+	pItem->SetItem(eType);
+
 	// 位置の設定
 	pItem->SetGrid(pos);
 
-	// タイプの設定
-	pItem->SetItem(eType);
+	// エフェクトを生成
+	pItem->SetEffect();
 
 	return pItem;
 }
@@ -127,18 +150,31 @@ CItem* CItem::Create(const TYPE eType, const CMapSystem::GRID& pos)
 //====================================================================
 HRESULT CItem::Init(const char* pModelName)
 {
+	D3DXVECTOR3 pos = GetPos();
+
 	// 継承クラスの初期化
 	CObjectX::Init(pModelName);
 
 	//マップとのマトリックスの掛け合わせをオンにする
-	SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
-	//SetMultiMatrix(true);
+	SetUseMultiMatrix(CGame::GetInstance()->GetMapField()->GetMatrix());
 
-	D3DXVECTOR3 pos = GetPos();
+	if (m_pShadow == nullptr)
+	{// シャドウ生成
+		m_pShadow = CShadow::Create(pos, SHADOW_SIZE, SHADOW_SIZE, SHADOW_LIMIT);
+	}
+
 	pos.y = BASE_Y;
 	SetPos(pos);
 
-	this;
+	// リストマネージャーの生成
+	if (m_pList == nullptr)
+	{
+		m_pList = CListManager<CItem>::Create();
+		if (m_pList == nullptr) { assert(false); return E_FAIL; }
+	}
+
+	// リストに自身のオブジェクトを追加・イテレーターを取得
+	m_iterator = m_pList->AddList(this);
 
 	return S_OK;
 }
@@ -148,6 +184,29 @@ HRESULT CItem::Init(const char* pModelName)
 //====================================================================
 void CItem::Uninit()
 {
+	// リストから自身のオブジェクトを削除
+	m_pList->DelList(m_iterator);
+
+	if (m_pList->GetNumAll() == 0)
+	{ // オブジェクトが一つもない場合
+
+		// リストマネージャーの破棄
+		m_pList->Release(m_pList);
+	}
+
+	// 影の終了
+	if (m_pShadow != nullptr)
+	{
+		m_pShadow->Uninit();
+		m_pShadow = nullptr;
+	}
+
+	// エフェクトを消去
+	if (m_pEffect != nullptr)
+	{
+		m_pEffect->SetDeath();
+	}
+
 	// 継承クラスの終了
 	CObjectX::Uninit();
 }
@@ -177,6 +236,20 @@ void CItem::Update()
 
 	// プレイヤーとアイテムの判定
 	CollisionPlayer();
+
+	if (m_pShadow != nullptr)
+	{// シャドウの位置設定
+		m_pShadow->SetPos(D3DXVECTOR3(pos.x, 1.0f, pos.z));
+		m_pShadow->SetBaseHeight(pos.y);
+	}
+
+	// エフェクトを動かす
+	if (m_pEffect != nullptr)
+	{
+		D3DXMATRIX mat = *GetUseMultiMatrix();
+		D3DXVECTOR3 ef = useful::CalcMatrix(pos, rot, *GetUseMultiMatrix());
+		m_pEffect->SetPosition(ef);
+	}
 
 	// 情報の更新
 	SetPos(pos);
@@ -267,7 +340,7 @@ bool CItem::CollisionPlayer()
 		if (!Hit(player)) { continue; }
 
 		// スコアを加算する
-		CGame::GetScore()->AddScore(ITEM_SCORE[m_eType]);
+		CGame::GetInstance()->GetScore()->AddScore(ITEM_SCORE[m_eType]);
 	}
 
 	return false;

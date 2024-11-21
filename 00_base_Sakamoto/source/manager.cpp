@@ -10,25 +10,20 @@
 #include "light.h"
 #include "texture.h"
 #include "XModel.h"
-#include "title.h"
-#include "game.h"
-#include "result.h"
 #include "fade.h"
 #include "sound.h"
-#include "tutorial.h"
-#include "logo.h"
 #include "MapSystem.h"
 #include "MyEffekseer.h"
+#include "Scene.h"
 
 #ifdef _DEBUG
 #define SET_MODE (CScene::MODE_GAME)
 #else
-#define SET_MODE (CScene::MODE_GAME)
+#define SET_MODE (CScene::MODE_TITLE)
 #endif // _DEBUG
 
 //静的メンバ変数宣言
 CManager* CManager::pManager = nullptr;
-CScene::MODE CScene::m_mode = SET_MODE;
 
 //====================================================================
 //コンストラクタ
@@ -254,9 +249,6 @@ void CManager::Uninit(void)
 		m_pScene = nullptr;
 	}
 
-	////アイテムマネージャの読み込み処理
-	//CItemManager::UnLoad();
-
 	//全てのオブジェクトの破棄
 	CObject::ReleaseAll();
 
@@ -430,134 +422,4 @@ void CManager::Draw(void)
 {
 	//レンダラーの描画処理
 	m_pRenderer->Draw();
-}
-
-//====================================================================
-//生成処理
-//====================================================================
-CScene *CScene::Create(MODE mode)
-{
-	CScene *pScene = nullptr;
-
-	if (pScene == nullptr)
-	{
-		//シーンの生成
-		switch (mode)
-		{
-		case MODE_LOGO:
-			pScene = new CLogo();
-			break;
-		case MODE_TITLE:
-			pScene = new CTitle();
-			break;
-		case MODE_GAME:
-			pScene = new CGame();
-			break;
-		case MODE_RESULT:
-			pScene = new CResult();
-			break;
-		case CScene::MODE_TUTORIAL:
-			pScene = new CTutorial();
-			break;
-		}
-	}
-
-	CManager::GetInstance()->GetInstance()->GetCamera()->ResetCamera();
-
-	CManager::GetInstance()->GetInstance()->SetEdit(false);
-
-	m_mode = mode;
-
-	if (m_mode == MODE_GAME)
-	{
-
-	}
-
-	//オブジェクトの初期化処理
-	if (FAILED(pScene->Init()))
-	{//初期化処理が失敗した場合
-		return nullptr;
-	}
-
-	return pScene;
-}
-
-//====================================================================
-//コンストラクタ
-//====================================================================
-CScene::CScene()
-{
-
-}
-
-//====================================================================
-//デストラクタ
-//====================================================================
-CScene::~CScene()
-{
-}
-
-//====================================================================
-//初期化処理
-//====================================================================
-HRESULT CScene::Init(void)
-{
-	CScene *m_pScene = CManager::GetInstance()->GetScene();
-
-	m_pScene->Init();
-
-	return S_OK;
-}
-
-//====================================================================
-//終了処理
-//====================================================================
-void CScene::Uninit(void)
-{
-	CScene *m_pScene = CManager::GetInstance()->GetScene();
-
-	m_pScene->Uninit();
-}
-
-//====================================================================
-//更新処理
-//====================================================================
-void CScene::Update(void)
-{
-	CScene *m_pScene = CManager::GetInstance()->GetScene();
-
-	m_pScene->Update();
-}
-
-//====================================================================
-//描画処理
-//====================================================================
-void CScene::Draw(void)
-{
-	CScene *m_pScene = CManager::GetInstance()->GetScene();
-
-	m_pScene->Draw();
-}
-
-//====================================================================
-//モード設定処理
-//====================================================================
-void CScene::SetMode(MODE mode)
-{
-	CScene *pScene = CManager::GetInstance()->GetScene();
-	CManager::GetInstance()->GetSound()->StopSound();
-
-	if (pScene != nullptr)
-	{
-		//シーンの終了処理
-		pScene->Uninit();
-
-		delete pScene;
-		pScene = nullptr;
-	}
-
-	//モードの生成
-	pScene = Create(mode);
-
-	CManager::GetInstance()->GetInstance()->SetScene(pScene);
 }

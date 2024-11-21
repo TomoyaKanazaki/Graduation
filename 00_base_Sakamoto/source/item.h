@@ -13,6 +13,7 @@
 
 // 前方宣言
 class CPlayer;
+class CShadow;
 
 //オブジェクトアイテムクラス
 class CItem : public CObjectX
@@ -71,14 +72,21 @@ public:
 
 	D3DXVECTOR3 GetBase() { return m_posBase; } // 移動の中心位置を取得
 	float GetMoveTime() { return m_fMoveTime; } // 移動時間の取得
+	void SetMoveTime(const float time) { m_fMoveTime = time; } // 移動時間の取得
+	void Effect(CEffekseer* pEffect) { if (m_pEffect == nullptr)m_pEffect = pEffect; }
 
 	// 静的メンバ関数
+	static CListManager<CItem>* GetList(void); // リスト取得
 	static CItem* Create(const TYPE eType, const CMapSystem::GRID& pos);
 
 private:
 
 	// メンバ関数
-	virtual void Move(D3DXVECTOR3& pos) {  } // 移動処理
+	virtual void Move(D3DXVECTOR3& pos) { } // 移動処理
+	virtual  void SetEffect() {};
+
+	// メンバ変数
+	CListManager<CItem>::AIterator m_iterator; // イテレーター
 
 	TYPE m_eType;		// 種類
 
@@ -100,6 +108,11 @@ private:
 	float m_fMoveTime; // 移動時間
 
 	CMapSystem::GRID m_Grid;	// マップ番号
+	CShadow* m_pShadow;		// シャドウのポインタ
+	CEffekseer* m_pEffect; // エフェクト
+
+	// 静的メンバ変数
+	static CListManager<CItem>* m_pList; // オブジェクトリスト
 };
 
 #endif

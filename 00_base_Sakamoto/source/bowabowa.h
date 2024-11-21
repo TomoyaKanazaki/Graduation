@@ -33,6 +33,10 @@ public:
 
 private:
 
+	// メンバ関数
+	void Move(D3DXVECTOR3& pos) override; // 移動処理
+	void SetEffect() override;
+
 	// 静的メンバ変数
 	static CListManager<CBowabowa>* m_pList; // オブジェクトリスト
 

@@ -24,11 +24,6 @@ namespace
 	const float FIELD_SIZE = 200.0f;		//床一枚の大きさ
 }
 
-//===========================================
-// 静的メンバ変数宣言
-//===========================================
-CListManager<CObjmeshCube>* CObjmeshCube::m_pList = nullptr; // オブジェクトリスト
-
 //====================================================================
 //コンストラクタ
 //====================================================================
@@ -288,15 +283,6 @@ HRESULT CObjmeshCube::Init(void)
 	//インデックスバッファをアンロックする
 	m_pIdxBuff->Unlock();
 
-	if (m_pList == nullptr)
-	{// リストマネージャー生成
-		m_pList = CListManager<CObjmeshCube>::Create();
-		if (m_pList == nullptr) { assert(false); return E_FAIL; }
-	}
-
-	// リストに自身のオブジェクトを追加・イテレーターを取得
-	m_iterator = m_pList->AddList(this);
-
 	return S_OK;
 }
 
@@ -305,16 +291,6 @@ HRESULT CObjmeshCube::Init(void)
 //====================================================================
 void CObjmeshCube::Uninit(void)
 {
-	// リストから自身のオブジェクトを削除
-	m_pList->DelList(m_iterator);
-
-	if (m_pList->GetNumAll() == 0)
-	{ // オブジェクトが一つもない場合
-
-		// リストマネージャーの破棄
-		m_pList->Release(m_pList);
-	}
-
 	SetDeathFlag(true);
 }
 
@@ -361,8 +337,8 @@ void CObjmeshCube::Draw(void)
 	D3DXMATRIX TestMatrix;	//テスト用マトリックス
 	D3DXMATRIX mtxRot, mtxTrans;	//計算用マトリックス
 
-	//ライティングをオフにする
-	m_pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+	////ライティングをオフにする
+	//m_pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 
 	//ワールドマトリックスの初期化
 	D3DXMatrixIdentity(&m_mtxWorld);
@@ -412,8 +388,8 @@ void CObjmeshCube::Draw(void)
 		0,
 		(28) - 2);//描画するプリミティブの数
 
-	//ライティングをオンにする
-	m_pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
+	////ライティングをオンにする
+	//m_pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
 }
 
 //====================================================================
@@ -623,12 +599,4 @@ void CObjmeshCube::SetTexture(const char* name)
 	CTexture* pTexture = CManager::GetInstance()->GetTexture();
 	m_nIdxTexture = pTexture->Regist(name);
 	strcpy(&m_acTextureName[0], name);
-}
-
-//==========================================
-// リストの取得
-//==========================================
-CListManager<CObjmeshCube>* CObjmeshCube::GetList(void)
-{
-	return m_pList;
 }

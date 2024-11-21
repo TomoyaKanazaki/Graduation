@@ -17,10 +17,21 @@
 
 #include "objmeshField.h"
 
+#include "shadow.h"
+
+//====================================================================
+// 定数定義
+//====================================================================
+namespace
+{
+	const float SHADOW_SIZE = 100.0f;			// 丸影の大きさ
+}
+
 //====================================================================
 //コンストラクタ
 //====================================================================
-CCharacter::CCharacter(int nPriority) : CObject(nPriority)
+CCharacter::CCharacter(int nPriority) : CObject(nPriority),
+m_pShadow(nullptr)
 {
 	for (int nCnt = 0; nCnt < MODEL_NUM; nCnt++)
 	{
@@ -95,6 +106,11 @@ HRESULT CCharacter::Init(const char* pModelName)
 		m_pMotion->LoadData(pModelName);
 	}
 
+	if (m_pShadow == nullptr)
+	{// 影生成
+		m_pShadow = CShadow::Create(m_pos, SHADOW_SIZE, SHADOW_SIZE);
+	}
+
 	return S_OK;
 }
 
@@ -113,6 +129,13 @@ void CCharacter::Uninit(void)
 		}
 	}
 
+	// 影の終了
+	if (m_pShadow != nullptr)
+	{
+		m_pShadow->Uninit();
+		m_pShadow = nullptr;
+	}
+
 	//モーションの終了処理
 	if (m_pMotion != nullptr)
 	{
@@ -129,10 +152,18 @@ void CCharacter::Uninit(void)
 //====================================================================
 void CCharacter::Update(void)
 {
+	D3DXVECTOR3 pos = GetPos();
+
 	if (m_pMotion != nullptr)
 	{
 		//モーションの更新
 		m_pMotion->Update();
+	}
+
+	if (m_pShadow != nullptr)
+	{// シャドウの更新
+		m_pShadow->SetPos(D3DXVECTOR3(m_pos.x, 1.0f, m_pos.z));
+		m_pShadow->SetBaseHeight(pos.y);
 	}
 }
 

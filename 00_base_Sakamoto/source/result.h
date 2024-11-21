@@ -8,6 +8,7 @@
 #define _RESULT_H_
 
 #include "manager.h"
+#include "Scene.h"
 
 //前方宣言
 class CObject2D;
@@ -22,17 +23,22 @@ public:
 	CResult();
 	~CResult();
 
+	static CResult* GetInstance();
+
 	virtual HRESULT Init(void);
 	virtual void Uninit(void);
 	virtual void Update(void);
 	virtual void Draw(void);
 
-	static void SetApprear(bool Set) { m_Appear = Set; }
-	static bool GetApprear(void) { return m_Appear; }
+	void SetApprear(bool Set) { m_Appear = Set; }
+	bool GetApprear(void) { return m_Appear; }
 
 private:
 	
-	static bool m_Appear;
+	// シングルトン
+	static CResult* m_pResult;
+
+	bool m_Appear;
 
 	CBreak_Block3D *m_pBreakBlock3D;
 	CObject2D *m_pBg;

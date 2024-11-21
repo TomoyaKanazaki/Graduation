@@ -761,3 +761,28 @@ D3DXVECTOR3 useful::CalcMatrix(const D3DXVECTOR3& pos, const D3DXVECTOR3& rot, c
 
 	return D3DXVECTOR3(mtxWorld._41, mtxWorld._42, mtxWorld._43);
 }
+
+//==========================================
+//  マトリックスから角度を産出する
+//==========================================
+D3DXVECTOR3 useful::CalcMatrixToRot(const D3DXMATRIX& mtx)
+{
+	D3DXVECTOR3 rot;
+
+	// Y軸を産出
+	rot.y = asinf(-mtx._32);
+
+	// ジンバルロックを考慮する
+	if (fabs(mtx._32) < 0.9999f)
+	{
+		rot.x = atan2f(mtx._31, mtx._33);
+		rot.z = atan2f(mtx._12, mtx._22);
+	}
+	else // ジンバルロックが発生している場合
+	{
+		rot.x = atan2f(-mtx._13, mtx._11);
+		rot.z = 0.0f;
+	}
+
+	return rot;
+}

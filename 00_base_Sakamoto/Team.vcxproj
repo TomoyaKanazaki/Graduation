@@ -47,6 +47,7 @@
     <ClCompile Include="source\input.cpp" />
     <ClCompile Include="source\item.cpp" />
     <ClCompile Include="source\LevelModelEffect.cpp" />
+    <ClCompile Include="source\lib\Scene.cpp" />
     <ClCompile Include="source\LifeUi.cpp" />
     <ClCompile Include="source\light.cpp" />
     <ClCompile Include="source\listManager.cpp" />
@@ -93,6 +94,7 @@
     <ClCompile Include="source\RollRock.cpp" />
     <ClCompile Include="source\score.cpp" />
     <ClCompile Include="source\scrollarrow.cpp" />
+    <ClCompile Include="source\select.cpp" />
     <ClCompile Include="source\shadow.cpp" />
     <ClCompile Include="source\shrinkingBillboard.cpp" />
     <ClCompile Include="source\SlopeDevice.cpp" />
@@ -136,6 +138,7 @@
     <ClInclude Include="source\item.h" />
     <ClInclude Include="source\LevelModelEffect.h" />
     <ClInclude Include="source\lib\magic_enum.hpp" />
+    <ClInclude Include="source\lib\Scene.h" />
     <ClInclude Include="source\LifeUi.h" />
     <ClInclude Include="source\light.h" />
     <ClInclude Include="source\listManager.h" />
@@ -181,6 +184,7 @@
     <ClInclude Include="source\RollRock.h" />
     <ClInclude Include="source\score.h" />
     <ClInclude Include="source\scrollarrow.h" />
+    <ClInclude Include="source\select.h" />
     <ClInclude Include="source\shadow.h" />
     <ClInclude Include="source\shrinkingBillboard.h" />
     <ClInclude Include="source\SlopeDevice.h" />

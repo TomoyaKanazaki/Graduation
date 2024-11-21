@@ -9,6 +9,7 @@
 #include "renderer.h"
 #include "manager.h"
 #include "game.h"
+#include "tutorial.h"
 #include "texture.h"
 #include "objmeshField.h"
 #include "MapSystem.h"
@@ -90,8 +91,8 @@ HRESULT CCubeBlock::Init(void)
 
 	CObjmeshCube::Init();
 
-	SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
-	//SetMultiMatrix(true);
+	//マトリックスの掛け合わせをオンにする
+	SetUseMultiMatrix(CGame::GetInstance()->GetMapField()->GetMatrix());
 
 	// 位置設定
 	SetPos(D3DXVECTOR3(MapSystemPos.x + m_nMapWidthNumber * 100.0f, 50.0f, MapSystemPos.z - m_nMapHeightNumber * 100.0f));
@@ -154,7 +155,6 @@ void CCubeBlock::Draw(void)
 	//デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
 
-	SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
 	CObjmeshCube::Draw();
 
 	//ステンシルバッファ有効

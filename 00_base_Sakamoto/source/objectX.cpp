@@ -14,11 +14,6 @@
 
 #define POLYDON_SIZE (200.0f)
 
-//===========================================
-// 静的メンバ変数宣言
-//===========================================
-CListManager<CObjectX>* CObjectX::m_pList = nullptr; // オブジェクトリスト
-
 //====================================================================
 //コンストラクタ
 //====================================================================
@@ -114,15 +109,6 @@ HRESULT CObjectX::Init(const char* pModelName)
 
 	SizeVtxSet();
 
-	if (m_pList == nullptr)
-	{// リストマネージャー生成
-		m_pList = CListManager<CObjectX>::Create();
-		if (m_pList == nullptr) { assert(false); return E_FAIL; }
-	}
-
-	// リストに自身のオブジェクトを追加・イテレーターを取得
-	m_iterator = m_pList->AddList(this);
-
 	return S_OK;
 }
 
@@ -131,16 +117,6 @@ HRESULT CObjectX::Init(const char* pModelName)
 //====================================================================
 void CObjectX::Uninit(void)
 {
-	// リストから自身のオブジェクトを削除
-	m_pList->DelList(m_iterator);
-
-	if (m_pList->GetNumAll() == 0)
-	{ // オブジェクトが一つもない場合
-
-		// リストマネージャーの破棄
-		m_pList->Release(m_pList);
-	}
-
 	SetDeathFlag(true);
 }
 
@@ -203,7 +179,7 @@ void CObjectX::Draw(void)
 		D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
 	}
 
-	if (m_UseMultiMatrix != nullptr && CManager::GetInstance()->GetScene()->GetMode() == CScene::MODE_GAME)
+	if (m_UseMultiMatrix != nullptr && CScene::GetMode() == CScene::MODE_GAME)
 	{
 		//算出したマトリクスをかけ合わせる
 		D3DXMatrixMultiply(&m_mtxWorld,
@@ -514,12 +490,4 @@ void CObjectX::SwapSize(void)
 	fSwap = m_size.x;
 	m_size.x = m_size.z;
 	m_size.z = fSwap;
-}
-
-//==========================================
-// リストの取得
-//==========================================
-CListManager<CObjectX>* CObjectX::GetList(void)
-{
-	return m_pList;
 }

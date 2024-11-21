@@ -36,6 +36,7 @@ namespace
 }
 
 //Ã“Iƒƒ“ƒo•Ï”éŒ¾
+CTitle* CTitle::m_pTitle = nullptr;
 
 //====================================================================
 //ƒRƒ“ƒXƒgƒ‰ƒNƒ^
@@ -63,6 +64,19 @@ CTitle::CTitle()
 CTitle::~CTitle()
 {
 
+}
+
+
+//====================================================================
+//ƒCƒ“ƒXƒ^ƒ“ƒXŽæ“¾
+//====================================================================
+CTitle* CTitle::GetInstance(void)
+{
+	if (m_pTitle == nullptr)
+	{
+		m_pTitle = new CTitle;
+	}
+	return m_pTitle;
 }
 
 //====================================================================
@@ -141,6 +155,11 @@ void CTitle::Uninit(void)
 {
 	//‘S‚Ä‚ÌƒIƒuƒWƒFƒNƒg‚Ì”jŠü
 	CObject::ReleaseAll();
+
+	if (m_pTitle != nullptr)
+	{
+		m_pTitle = nullptr;
+	}
 }
 
 //====================================================================
@@ -222,13 +241,18 @@ void CTitle::Button(void)
 		{
 		case 0:
 			// ƒQ[ƒ€‘JˆÚ
-			CFade::SetFade(CScene::MODE_GAME);
+			CFade::SetFade(CScene::MODE_SELECT);
 			CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_SINGLE);
 			break;
 		case 1:
 			// ƒQ[ƒ€‘JˆÚ
-			CFade::SetFade(CScene::MODE_GAME);
+			CFade::SetFade(CScene::MODE_SELECT);
 			CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_MULTI);
+			break;
+		case 2:
+			//// ƒQ[ƒ€‘JˆÚ
+			//CFade::SetFade(CScene::MODE_TUTORIAL);
+			//CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_SINGLE);
 			break;
 		}
 	}
@@ -241,13 +265,18 @@ void CTitle::Button(void)
 		{
 		case 0:
 			// ƒQ[ƒ€‘JˆÚ
-			CFade::SetFade(CScene::MODE_GAME);
+			CFade::SetFade(CScene::MODE_SELECT);
 			CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_SINGLE);
 			break;
 		case 1:
 			// ƒQ[ƒ€‘JˆÚ
-			CFade::SetFade(CScene::MODE_GAME);
+			CFade::SetFade(CScene::MODE_SELECT);
 			CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_MULTI);
+			break;
+		case 2:
+			//// ƒQ[ƒ€‘JˆÚ
+			//CFade::SetFade(CScene::MODE_TUTORIAL);
+			//CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_SINGLE);
 			break;
 		}
 	}

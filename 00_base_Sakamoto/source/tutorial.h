@@ -1,127 +1,144 @@
 //============================================
 //
 //	チュートリアル画面 [tutorial.h]
-//	Author:酒井 南勝
+//	Author:sakamoto kai
 //
 //============================================
 #ifndef _TUTORIAL_H_
 #define _TUTORIAL_H_
 
 #include "manager.h"
+#include "Scene.h"
+
+#define NUM_PLAYER (2)
 
 //前方宣言
+class CTutorialUI;
 class CPlayer;
 class CMap2D;
 class CEdit;
-class CPause;
-
-class CAim;
-
-class CCubeBlock;
-class CBoss;
-
+class CTutorialUI;
 class CObject2D;
 class CObject3D;
-class CObjGauge2D;
+class CObjectBillboard;
+class CObjectX;
+class CObjmeshField;
+class CObjmeshWall;
+class CObjmeshCylinder;
+class CObjmeshDome;
+class CCubeBlock;
+class CPause;
+class CScore;
+class CTimer;
+class CBoss;
+class CPlayer2D;
+class CTutorialPause;
+class CDevil;
+class CMask;
+
+class CAim;
 
 //シーンクラス
 class CTutorial : public CScene
 {
 public:
-
-	enum TASK
-	{
-		TASK_NONE = 0,	// なし
-		TASK_SLASH,		// 斬撃
-		TASK_MOVE_ROT,	// 移動・視点移動
-		TASK_SYURIKENN,	// 手裏剣
-		TASK_EVASION,	// 回避
-		TASK_ENEMY,		// 敵
-		TASK_ULTIMATE,	// 術
-		TASK_BRIDGE,	// 橋
-		TASK_MAX
-	};
-
 	CTutorial();
 	~CTutorial();
+
+	static CTutorial* GetInstance();
 
 	virtual HRESULT Init(void);
 	virtual void Uninit(void);
 	virtual void Update(void);
 	virtual void Draw(void);
 
-	static CPlayer* GetPlayer(void) { return m_pPlayer; }
-	static CPause* GetPause(void) { return m_pPause; }
-	static CEdit* GetEdit(void) { return m_pEdit; }
-	static void SetEvent(bool Set) { m_bEvent = Set; }
-	static bool GetEvent(void) { return m_bEvent; }
-	static bool GetEventEnd(void) { return m_bEventEnd; }
-	static D3DXVECTOR3 GetEventPos(void) { return m_EventPos; }
-	static float GetBGColorA(void) { return m_BGColorA; }
-	static void AddBGColorA(float Add) { m_BGColorA += Add; }
-	static void SetStageBlock(void);
-	static void SetGameEnd(bool Set) { m_bGameEnd = Set; }
-	static void DispUI(bool Set);
+	CPlayer* GetPlayer(int Num) { return m_pPlayer[Num]; }
+	CDevil* GetDevil(void) { return m_pDevil; }
+	CBoss* GetBoss(void) { return m_pBoss; }
+	CPause* GetPause(void) { return m_pPause; }
+	CScore* GetScore(void) { return m_pScore; }
+	CEdit* GetEdit(void) { return m_pEdit; }
+	CTimer* GetTime(void) { return m_pTime; }
+	CObjmeshField* GetMapField(void) { return m_pMapField; }
+	CObjmeshDome* GetDomeUp(void) { return m_pMeshDomeUp; }
+	void SetCubeBlock(CCubeBlock* pBlock) { m_pCubeBlock = pBlock; }
+	CCubeBlock* GetCubeBlock(void) { return m_pCubeBlock; }
+	void SetEvent(bool Set) { m_bEvent = Set; }
+	bool GetEvent(void) { return m_bEvent; }
+	bool GetEventEnd(void) { return m_bEventEnd; }
+	D3DXVECTOR3 GetEventPos(void) { return m_EventPos; }
+	float GetBGColorA(void) { return m_BGColorA; }
+	void AddBGColorA(float Add) { m_BGColorA += Add; }
+	void SetStageBlock(void);
+	void SetGameEnd(bool Set) { m_bGameEnd = Set; }
+	void SetGameClear(bool Set) { m_bGameClear = Set; }
+	int GetBowabowa(void) { return m_nNumBowabowa; }
+	void SetBowabowa(int Bowabowa) { m_nNumBowabowa = Bowabowa; }
+	void AddBowabowa(int nNum) { m_nNumBowabowa += nNum; }
+	void SetDevilHoleFinish(bool Set) { m_bDevilHoleFinish = Set; }
 
-	static CAim* GetAim(void) { return m_pAim; }
-	static bool GetSlow(void) { return m_Slow; }
+	void DeleteMap(void);
 
+	bool GetSlow(void) { return m_Slow; }
 private:
+	void StageClear(int Stage);
+	void LoadStageRailBlock(const char* pFilename);
+	void LoadStageMapModel(const char* pFilename);
 
-	struct InfoEnemy
-	{
-		TASK spwanTask;
-		D3DXVECTOR3 pos[32];
-		int nPosMax;
-		bool bLoop;
-		int nType;
-		TASK task;
-	};
+	void EventUpdate(void);
 
-	static void LoadMap(void);
+	void SetBgObjTest(void);
 
-	static void LoadPlayerAutoPos(const char* pFilename);
-	static void LoadStageBlock(const char* pFilename);
-	static void LoadStageMapModel(const char* pFilename);
-	static void LoadEnemy(const char* pFilename);
-	static void LoadStair(const char* pFilename);
-	static void LoadGimmick(const char* pFilename);
+	void Sample(void);								//サンプル系が入ってるヨ
 
-	static void SetTaskEnemyCreate(void);
+	// シングルトン
+	static CTutorial* m_pTutorial;
 
-	static void SkipUICreate(void);
+	//インゲーム用変数
+	CPlayer* m_pPlayer[NUM_PLAYER];			//プレイヤーのポインタ
+	CDevil* m_pDevil;						//デビルのポインタ
 
-	static int m_nEnemyNum;					//現在の敵の数
-	static bool m_bGameEnd;					//ゲーム終了状態かどうか
-	static bool m_bEvent;					//イベント状態かどうか
-	static bool m_bEventEnd;				//イベントが終わったかどうか
-	static int m_nEventCount;				//イベント時間
-	static int m_nTutorialWave;				//チュートリアルの段階
-	static float m_EventHeight;				//イベント用ポリゴンの高さ
-	static float m_NameColorA;				//イベント用の名前表示の不透明度
-	static float m_BGColorA;				//ゲーム背景の不透明度
-	static D3DXVECTOR3 m_EventPos;			//イベント開始座標
-	static D3DXVECTOR3 m_BGRot;				//背景の回転向き
+	int m_nNumBowabowa;						//ボワボワの数
+	bool m_bDevilHoleFinish;					//デビルホールがすべて埋まったかどうか
+	bool m_bGameEnd;							//ゲーム終了状態かどうか
+	bool m_bGameClear;						//ゲームクリア状態かどうか
 
-	static CPlayer* m_pPlayer;				//プレイヤーのポインタ
-	static CEdit* m_pEdit;					//エディットモードのポインタ
-	static CPause* m_pPause;				//ポーズのポインタ
+	//イベント用変数
+	bool m_bEvent;							//イベント状態かどうか
+	bool m_bEventEnd;						//イベントが終わったかどうか
+	int m_nEventCount;						//イベント時間
+	int m_nEventWave;						//イベント段階
+	int m_nEventNumber;						//イベント番号
+	float m_fEvectFinish;					//鍔迫り合いのカウント
+	float m_fEventAngle;						//イベント用の角度
+	float m_EventHeight;						//イベント用ポリゴンの高さ
+	float m_NameColorA;						//イベント用の名前表示の不透明度
+	D3DXVECTOR3 m_EventPos;					//イベント開始座標
 
-	static CCubeBlock* m_pCubeBlock;		// キューブブロックのポインタ
-	static CBoss* m_pBoss;					// ボスクラス
+	int m_nTutorialWave;						//チュートリアルの段階
+	float m_BGColorA;						//ゲーム背景の不透明度
+	D3DXVECTOR3 m_BGRot;						//背景の回転向き
 
-	static bool m_Wireframe;				//ワイヤーフレームのオンオフ
-	static bool m_Slow;						//スロー演出のオンオフ
+	CBoss* m_pBoss;							//ボス
 
-	static CAim* m_pAim;					// 照準
+	CEdit* m_pEdit;							//エディットモードのポインタ
+	CPause* m_pPause;						//ポーズのポインタ
+	CScore* m_pScore;						//スコアのポインタ
+	CTimer* m_pTime;							//タイムのポインタ
+	CObjmeshDome* m_pMeshDomeUp;				//メッシュドーム
+	CObjmeshField* m_pMapField;				//マップフィールド
+	CCubeBlock* m_pCubeBlock;				//キューブブロック
+	bool m_Wireframe;						//ワイヤーフレームのオンオフ
+	bool m_Slow;								//スロー演出のオンオフ
 
-	static CObject2D* m_pSkipUi;			// スキップ説明UI
-	static CObject3D* m_pRiver;				// 川UI
-	static CObjGauge2D* m_pSkipGage;		// スキップゲージ
-	static float m_fCntSkip;				// スキップカウント
+	CObject2D* m_p2DSample;					//2Dポリゴンのサンプル
+	CObject3D* m_p3DSample;					//3Dポリゴンのサンプル
+	CObjectBillboard* m_pBillboardSample;	//Billboardポリゴンのサンプル
+	CObjectX* m_pXModelSample;				//Xモデルのサンプル
+	CObjmeshField* m_pMeshFieldSample;		//メッシュフィールドのサンプル
+	CObjmeshWall* m_pMeshWallSample;			//メッシュウォールのサンプル
+	CObjmeshCylinder* m_pMeshCylinderSample;	//メッシュシリンダーのサンプル
 
-	static bool m_abIsTask[TASK_MAX];		// タスクの進捗状況
-
-	static InfoEnemy m_infoEnemy;			// 敵情報
+	CMask* m_pMask;	// 2Dマスク
 };
 #endif

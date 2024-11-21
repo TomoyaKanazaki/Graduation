@@ -34,6 +34,7 @@
 #include "sound.h"
 #include "scrollarrow.h"
 #include "fire.h"
+#include "Scene.h"
 
 //===========================================
 // 定数定義
@@ -68,10 +69,8 @@ CListManager<CDevil>* CDevil::m_pList = nullptr; // オブジェクトリスト
 CDevil::CDevil(int nPriority) : CCharacter(nPriority)
 {
 	SetSize(D3DXVECTOR3(750.0f, 0.0f, 550.0f));
-	m_pos = INITVECTOR3;
 	m_move = INITVECTOR3;
 	m_Objmove = INITVECTOR3;
-	m_rot = D3DXVECTOR3(0.0f,0.0f, 0.0f);
 	m_AutoMoveRot = D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f);
 	m_fActionCount = 0.0f;
 	m_Action = ACTION_NEUTRAL;
@@ -131,7 +130,7 @@ HRESULT CDevil::Init(void)
 	SetType(CObject::TYPE_DEVIL);
 
 	// キャラクターテキストの設定処理
-	CCharacter::SetTxtCharacter("data\\TXT\\MOTION\\01_enemy\\motion_devil.txt");
+	CCharacter::Init("data\\TXT\\MOTION\\01_enemy\\motion_devil.txt");
 	
 	switch (CScene::GetMode())
 	{
@@ -199,44 +198,16 @@ void CDevil::Uninit(void)
 //====================================================================
 void CDevil::Update(void)
 {
-	switch (CScene::GetMode())
-	{
-	case CScene::MODE_TITLE:
-		TitleUpdate();
-		break;
-
-	case CScene::MODE_GAME:
-		GameUpdate();
-		break;
-
-	case CScene::MODE_TUTORIAL:
-		TutorialUpdate();
-		break;
-
-	case CScene::MODE_RESULT:
-		break;
-	}
-}
-
-//====================================================================
-//タイトルでの更新処理
-//====================================================================
-void CDevil::TitleUpdate(void)
-{
-	// キャラクタークラスの更新（継承）
-	CCharacter::Update();
-}
-
-//====================================================================
-//ゲームでの更新処理
-//====================================================================
-void CDevil::GameUpdate(void)
-{
+	// 値を取得
+	D3DXVECTOR3 posMy = GetPos();			// 位置
+	D3DXVECTOR3 posOldMy = GetPosOld();		// 前回の位置
+	D3DXVECTOR3 rotMy = GetRot();			// 向き
+	D3DXVECTOR3 sizeMy = GetSize();			// 大きさ
 	// 過去の位置に代入
-	m_posOld = m_pos;
+	posOldMy = posMy;
 
 	// マップの傾き
-	m_DevilRot = CGame::GetMapField()->GetRot();
+	m_DevilRot = CGame::GetInstance()->GetMapField()->GetRot();
 
 	//状態の管理
 	StateManager();
@@ -297,22 +268,10 @@ void CDevil::GameUpdate(void)
 }
 
 //====================================================================
-//チュートリアルでの更新処理
-//====================================================================
-void CDevil::TutorialUpdate(void)
-{
-
-}
-
-//====================================================================
 //描画処理
 //====================================================================
 void CDevil::Draw(void)
 {
-	// 無理やり一時的位置情報交換（pos・rotの置き換え完了次第削除）
-	CCharacter::SetPos(GetPos());
-	CCharacter::SetRot(GetRot());
-
 	// キャラクタークラスの描画（継承）
 	CCharacter::Draw();
 }
@@ -420,7 +379,7 @@ void CDevil::Move(int Arroow)
 //====================================================================
 void CDevil::BackSlope(void)
 {
-	CObjmeshField* pMapField = CGame::GetMapField();
+	CObjmeshField* pMapField = CGame::GetInstance()->GetMapField();
 	D3DXVECTOR3 MapRot = pMapField->GetRot();
 	bool bBackOK = false;
 
@@ -528,7 +487,7 @@ void CDevil::BackSlope(void)
 //====================================================================
 void CDevil::Slope(int Arroow)
 {	
-	CObjmeshField *pMapField = CGame::GetMapField();
+	CObjmeshField *pMapField = CGame::GetInstance()->GetMapField();
 	D3DXVECTOR3 MapRot = pMapField->GetRot();
 
 #if SCROLL_ID == 0
@@ -1014,7 +973,7 @@ void CDevil::DebugKey(void)
 
 	if (pInputKeyboard->GetPress(DIK_5))
 	{
-		CObjmeshField* pMapField = CGame::GetMapField();
+		CObjmeshField* pMapField = CGame::GetInstance()->GetMapField();
 		D3DXVECTOR3 MapRot = pMapField->GetRot();
 		MapRot = INITVECTOR3;
 		pMapField->SetRot(MapRot);
@@ -1500,7 +1459,7 @@ float CDevil::MoveSlopeX(float Move)
 	float fSlopeMove = 1.0f;
 
 	D3DXVECTOR3 DevilRot = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
-	if (CManager::GetInstance()->GetScene()->GetMode() == CScene::MODE_GAME)
+	if (CScene::GetMode() == CScene::MODE_GAME)
 	{
 		DevilRot = m_DevilRot;
 	}
@@ -1525,9 +1484,9 @@ float CDevil::MoveSlopeZ(float Move)
 	float fSlopeMove = 1.0f;
 
 	D3DXVECTOR3 DevilRot = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
-	if (CManager::GetInstance()->GetScene()->GetMode() == CScene::MODE_GAME)
+	if (CScene::GetMode() == CScene::MODE_GAME)
 	{
-		DevilRot = CGame::GetDevil()->GetDevilRot();
+		DevilRot = CGame::GetInstance()->GetDevil()->GetDevilRot();
 	}
 
 	if (Move > 0.0f)

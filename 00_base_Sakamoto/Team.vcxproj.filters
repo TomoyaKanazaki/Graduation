@@ -106,9 +106,6 @@
     <ClCompile Include="source\game.cpp">
       <Filter>ソース ファイル\01_Mode</Filter>
     </ClCompile>
-    <ClCompile Include="source\manager.cpp">
-      <Filter>ソース ファイル\01_Mode</Filter>
-    </ClCompile>
     <ClCompile Include="source\result.cpp">
       <Filter>ソース ファイル\01_Mode</Filter>
     </ClCompile>
@@ -292,6 +289,15 @@
     <ClCompile Include="source\shadow.cpp">
       <Filter>ソース ファイル\03_Direction</Filter>
     </ClCompile>
+    <ClCompile Include="source\lib\Scene.cpp">
+      <Filter>ソース ファイル\01_Mode</Filter>
+    </ClCompile>
+    <ClCompile Include="source\manager.cpp">
+      <Filter>ソース ファイル\00_System</Filter>
+    </ClCompile>
+    <ClCompile Include="source\select.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\2DUI_edit.h">
@@ -334,9 +340,6 @@
       <Filter>ソース ファイル\01_Mode</Filter>
     </ClInclude>
     <ClInclude Include="source\logo.h">
-      <Filter>ソース ファイル\01_Mode</Filter>
-    </ClInclude>
-    <ClInclude Include="source\manager.h">
       <Filter>ソース ファイル\01_Mode</Filter>
     </ClInclude>
     <ClInclude Include="source\Pause.h">
@@ -546,5 +549,12 @@
     <ClInclude Include="source\shadow.h">
       <Filter>ソース ファイル\03_Direction</Filter>
     </ClInclude>
+    <ClInclude Include="source\lib\Scene.h">
+      <Filter>ソース ファイル\01_Mode</Filter>
+    </ClInclude>
+    <ClInclude Include="source\manager.h">
+      <Filter>ソース ファイル\00_System</Filter>
+    </ClInclude>
+    <ClInclude Include="source\select.h" />
   </ItemGroup>
 </Project>

@@ -23,6 +23,8 @@
 #include "SlopeDevice.h"
 #include "mask.h"
 
+#include "shadow.h"
+
 namespace
 {
 	const int SAMPLE_NAMESPACE = 0;
@@ -37,47 +39,7 @@ namespace
 }
 
 //静的メンバ変数宣言
-CEdit* CGame::m_pEdit = nullptr;
-CPause* CGame::m_pPause = nullptr;
-CScore* CGame::m_pScore = nullptr;
-CTimer* CGame::m_pTime = nullptr;
-CObject2D* CGame::m_p2DSample = nullptr;
-CObject3D* CGame::m_p3DSample = nullptr;
-CObjectBillboard* CGame::m_pBillboardSample = nullptr;
-CObjectX* CGame::m_pXModelSample = nullptr;
-CObjmeshField* CGame::m_pMeshFieldSample = nullptr;
-CObjmeshWall* CGame::m_pMeshWallSample = nullptr;
-CObjmeshCylinder* CGame::m_pMeshCylinderSample = nullptr;
-CObjmeshDome* CGame::m_pMeshDomeUp = nullptr;
-CObjmeshField* CGame::m_pMapField = nullptr;
-CCubeBlock* CGame::m_pCubeBlock = nullptr;
-CPlayer* CGame::m_pPlayer[NUM_PLAYER] = {};
-CDevil* CGame::m_pDevil = nullptr;
-CBoss* CGame::m_pBoss = nullptr;
-CMask* CGame::m_pMask = nullptr;
-
-bool CGame::m_bGameEnd = false;
-bool CGame::m_bGameClear = false;
-bool CGame::m_bEvent = false;
-bool CGame::m_bEventEnd = false;
-bool CGame::m_Wireframe = false;
-bool CGame::m_Slow = false;
-bool CGame::m_bDevilHoleFinish = false;
-
-int CGame::m_nTutorialWave = 0;
-int CGame::m_nEventCount = 0;
-int CGame::m_nEventWave = 0;
-int CGame::m_nEventNumber = 0;
-int CGame::m_nNumBowabowa = 0;
-
-float CGame::m_fEvectFinish = 0.0f;
-float CGame::m_fEventAngle = 0.0f;
-float CGame::m_EventHeight = 0.0f;
-float CGame::m_NameColorA = 0.0f;
-float CGame::m_BGColorA = 1.0f;
-
-D3DXVECTOR3 CGame::m_EventPos = D3DXVECTOR3(0.0f, 300.0f, 0.0f);
-D3DXVECTOR3 CGame::m_BGRot = INITVECTOR3;
+CGame* CGame::m_pGame = nullptr;
 
 //====================================================================
 //コンストラクタ
@@ -98,6 +60,48 @@ CGame::CGame()
 	m_nNumBowabowa = 0;
 	CManager::GetInstance()->GetCamera()->SetBib(false);
 	CManager::GetInstance()->GetCamera()->SetCameraMode(CCamera::CAMERAMODE_DOWNVIEW);
+
+	m_pEdit = nullptr;
+	m_pPause = nullptr;
+	m_pScore = nullptr;
+	m_pTime = nullptr;
+	m_p2DSample = nullptr;
+	m_p3DSample = nullptr;
+	m_pBillboardSample = nullptr;
+	m_pXModelSample = nullptr;
+	m_pMeshFieldSample = nullptr;
+	m_pMeshWallSample = nullptr;
+	m_pMeshCylinderSample = nullptr;
+	m_pMeshDomeUp = nullptr;
+	m_pMapField = nullptr;
+	m_pCubeBlock = nullptr;
+	m_pPlayer[NUM_PLAYER] = {};
+	m_pDevil = nullptr;
+	m_pBoss = nullptr;
+	m_pMask = nullptr;
+
+	m_bGameEnd = false;
+	m_bGameClear = false;
+	m_bEvent = false;
+	m_bEventEnd = false;
+	m_Wireframe = false;
+	m_Slow = false;
+	m_bDevilHoleFinish = false;
+
+	m_nTutorialWave = 0;
+	m_nEventCount = 0;
+	m_nEventWave = 0;
+	m_nEventNumber = 0;
+	m_nNumBowabowa = 0;
+
+	m_fEvectFinish = 0.0f;
+	m_fEventAngle = 0.0f;
+	m_EventHeight = 0.0f;
+	m_NameColorA = 0.0f;
+	m_BGColorA = 1.0f;
+
+	m_EventPos = D3DXVECTOR3(0.0f, 300.0f, 0.0f);
+	m_BGRot = INITVECTOR3;
 }
 
 //====================================================================
@@ -107,6 +111,19 @@ CGame::~CGame()
 {
 
 }
+
+//====================================================================
+//インスタンス取得
+//====================================================================
+CGame* CGame::GetInstance(void)
+{
+	if (m_pGame == nullptr)
+	{
+		m_pGame = new CGame;
+	}
+	return m_pGame;
+}
+
 
 //====================================================================
 //初期化処理
@@ -284,6 +301,13 @@ void CGame::Uninit(void)
 		m_pEdit = nullptr;
 	}
 #endif
+
+	CScene::Uninit();
+
+	if (m_pGame != nullptr)
+	{
+		m_pGame = nullptr;
+	}
 }
 
 //====================================================================
@@ -297,6 +321,9 @@ void CGame::Update(void)
 	CInputJoypad* pInputJoypad = CManager::GetInstance()->GetInputJoyPad();
 
 	DebugProc::Print(DebugProc::POINT_LEFT, "ゲームスピード : %f\n", CManager::GetInstance()->GetGameSpeed());
+
+	DebugProc::Print(DebugProc::POINT_CENTER, "アイテム数 : %d\n", CItem::GetList()->GetNumAll());
+	DebugProc::Print(DebugProc::POINT_CENTER, "シャドウ数 : %d\n", CShadow::GetList()->GetNumAll());
 
 	CMapSystem::GetInstance()->Update();
 

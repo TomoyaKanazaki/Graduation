@@ -26,36 +26,7 @@ class CTimer;
 class CRanking;
 class CBlockManager;
 class CItemManager;
-
-//シーンクラス
-class CScene
-{
-public:
-	CScene();
-	~CScene();
-
-	enum MODE
-	{
-		MODE_LOGO = 0,
-		MODE_TITLE,
-		MODE_GAME,
-		MODE_RESULT,
-		MODE_TUTORIAL,
-		MODE_MAX
-	};
-
-	static CScene *Create(MODE mode);
-	virtual HRESULT Init(void);
-	virtual void Uninit(void);
-	virtual void Update(void);
-	virtual void Draw(void);
-
-	static void SetMode(MODE mode);
-	static MODE GetMode(void) { return m_mode; }
-
-private:
-	static MODE m_mode;
-};
+class CScene;
 
 //マネージャクラス
 class CManager
@@ -89,6 +60,9 @@ public:
 	void Update(void);
 	void Draw(void);
 
+	CScene* GetScene(void) { return m_pScene; }
+	void SetScene(CScene* Scene) { m_pScene = Scene; }
+
 	CRenderer *GetRenderer(void) { return m_pRenderer; }
 	CInputKeyboard *GetInputKeyboard(void) { return m_pInputKeyboard; }
 	CInputJoypad* GetInputJoyPad(void) { return m_pInputJoyPad; }
@@ -97,14 +71,12 @@ public:
 	CMiniMapCamera* GetMiniMapCamera(void) { return m_pMiniMapCamera; }
 	CTexture *GetTexture(void) { return m_pTexture; }
 	CXModel *GetXModel(void) { return m_pXModel; }
-	CScene *GetScene(void) { return m_pScene; }
 	CFade *GetFade(void) { return m_Fade; }
 	CSound *GetSound(void) { return m_pSound; }
 	CRanking* GetRanking(void) { return m_pRanking; }
 	CLight* GetLight(void) { return m_pLight; }
 	CBlockManager* GetBlockManager(void) { return m_pBlockManager; }
 	CMyEffekseer* GetEffect(void) { return m_pEffect; }
-	void SetScene(CScene *Scene) { m_pScene = Scene; }
 	void SetLevelUP(CLevelUP *LevelUP) { m_LevelUP = LevelUP; }
 	void SetEdit(bool bEdit) { m_bEdit = bEdit; }
 	bool GetEdit(void) { return m_bEdit; }
@@ -174,7 +146,6 @@ private:
 	CLight *m_pLight;					//ライトのポインタ
 	CTexture *m_pTexture;				//テクスチャのポインタ
 	CXModel *m_pXModel;					//Xモデルのポインタ
-	CScene *m_pScene;					//シーンのポインタ
 	CLevelUP *m_LevelUP;				//レベルアップのポインタ
 	CFade *m_Fade;						//フェードのポインタ
 	CSound *m_pSound;					//サウンドのポインタ
@@ -183,6 +154,7 @@ private:
 	CMyEffekseer* m_pEffect;
 	TYPE_INPUT m_typeInput;				//インプット種類
 	GAME_MODE m_GameMode;				//ゲームのプレイモード
+	CScene* m_pScene;					//シーンのポインタ
 };												
 
 #endif

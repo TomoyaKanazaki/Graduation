@@ -24,11 +24,6 @@ namespace
 	const float CYLINDER_HEIGHT = 5.0f;		//壁一枚の高さ
 }
 
-//===========================================
-// 静的メンバ変数宣言
-//===========================================
-CListManager<CObjmeshRing>* CObjmeshRing::m_pList = nullptr; // オブジェクトリスト
-
 //====================================================================
 //コンストラクタ
 //====================================================================
@@ -181,15 +176,6 @@ HRESULT CObjmeshRing::Init(void)
 	//インデックスバッファをアンロックする
 	m_pIdxBuff->Unlock();
 
-	if (m_pList == nullptr)
-	{// リストマネージャー生成
-		m_pList = CListManager<CObjmeshRing>::Create();
-		if (m_pList == nullptr) { assert(false); return E_FAIL; }
-	}
-
-	// リストに自身のオブジェクトを追加・イテレーターを取得
-	m_iterator = m_pList->AddList(this);
-
 	return S_OK;
 }
 
@@ -198,16 +184,6 @@ HRESULT CObjmeshRing::Init(void)
 //====================================================================
 void CObjmeshRing::Uninit(void)
 {
-	// リストから自身のオブジェクトを削除
-	m_pList->DelList(m_iterator);
-
-	if (m_pList->GetNumAll() == 0)
-	{ // オブジェクトが一つもない場合
-
-		// リストマネージャーの破棄
-		m_pList->Release(m_pList);
-	}
-
 	SetDeathFlag(true);
 }
 
@@ -238,7 +214,7 @@ void CObjmeshRing::Update(void)
 {
 	m_Radius += m_RadiusMove;
 
-	CPlayer *pPlayer = CGame::GetPlayer(0);
+	CPlayer *pPlayer = CGame::GetInstance()->GetPlayer(0);
 
 	//ダメージウェーブとプレイヤーの当たり判定
 	if (CollisionRing(pPlayer->GetPos(), m_pos, m_Radius + 15.0f, m_Radius - m_Radius * 0.1f, 0.0f, pPlayer->GetHeight()) == true)
@@ -417,12 +393,4 @@ void CObjmeshRing::SetTexture(const char* name)
 {
 	CTexture* pTexture = CManager::GetInstance()->GetTexture();
 	m_nIdxTexture = pTexture->Regist(name);
-}
-
-//====================================================================
-// リスト取得
-//====================================================================
-CListManager<CObjmeshRing>* CObjmeshRing::GetList(void)
-{
-	return m_pList;
 }

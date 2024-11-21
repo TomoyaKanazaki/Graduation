@@ -121,7 +121,7 @@ void CBible::Move(D3DXVECTOR3& pos)
 	float time = GetMoveTime();
 
 	// フィールドの座標を取得
-	D3DXVECTOR3 posField = CGame::GetMapField()->GetPos();
+	D3DXVECTOR3 posField = CGame::GetInstance()->GetMapField()->GetPos();
 
 	// 自身の座標とフィールドを結ぶ時の向きを算出
 	D3DXVECTOR3 vec = pos - posField;
@@ -140,6 +140,18 @@ void CBible::Move(D3DXVECTOR3& pos)
 	// 基準位置に移動量を加算する
 	pos.x = base.x + x;
 	pos.z = base.z + z;
+}
+
+//==========================================
+//  エフェクトを生成
+//==========================================
+void CBible::SetEffect()
+{
+	// 自身の情報を取得する
+	D3DXVECTOR3 pos = GetPos();
+	D3DXVECTOR3 rot = GetRot();
+
+	Effect(MyEffekseer::EffectCreate(CMyEffekseer::TYPE_BIBLE, true, useful::CalcMatrix(pos, rot, *GetUseMultiMatrix()), rot, D3DXVECTOR3(10.0f, 10.0f, 10.0f)));
 }
 
 //====================================================================

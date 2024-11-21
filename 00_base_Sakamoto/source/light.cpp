@@ -50,6 +50,7 @@ HRESULT CLight::Init(void)
 		switch (CScene::GetMode())
 		{
 		case CScene::MODE_TITLE:
+		case CScene::MODE_SELECT:
 		case CScene::MODE_TUTORIAL:
 
 			// タイトルとチュートリアル

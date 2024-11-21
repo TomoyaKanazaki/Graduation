@@ -9,11 +9,6 @@
 #include "manager.h"
 #include "texture.h"
 
-//===========================================
-// 静的メンバ変数宣言
-//===========================================
-CListManager<CObjGauge2D>* CObjGauge2D::m_pList = nullptr; // オブジェクトリスト
-
 //====================================================================
 //コンストラクタ
 //====================================================================
@@ -127,15 +122,6 @@ HRESULT CObjGauge2D::Init(void)
 	//頂点バッファをアンロックする
 	m_pVtxBuff->Unlock();
 
-	if (m_pList == nullptr)
-	{// リストマネージャー生成
-		m_pList = CListManager<CObjGauge2D>::Create();
-		if (m_pList == nullptr) { assert(false); return E_FAIL; }
-	}
-
-	// リストに自身のオブジェクトを追加・イテレーターを取得
-	m_iterator = m_pList->AddList(this);
-
 	return S_OK;
 }
 
@@ -144,16 +130,6 @@ HRESULT CObjGauge2D::Init(void)
 //====================================================================
 void CObjGauge2D::Uninit(void)
 {
-	// リストから自身のオブジェクトを削除
-	m_pList->DelList(m_iterator);
-
-	if (m_pList->GetNumAll() == 0)
-	{ // オブジェクトが一つもない場合
-
-		// リストマネージャーの破棄
-		m_pList->Release(m_pList);
-	}
-
 	SetDeathFlag(true);
 }
 
@@ -402,12 +378,4 @@ void CObjGauge2D::SetTexture(const char* name)
 void CObjGauge2D::SetGaugeWidth(float nCMax, float nCMeter)
 {
 	m_Ratio = (float)nCMeter / nCMax;
-}
-
-//==========================================
-// リストの取得
-//==========================================
-CListManager<CObjGauge2D>* CObjGauge2D::GetList(void)
-{
-	return m_pList;
 }

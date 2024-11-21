@@ -85,7 +85,7 @@ public:
 
 	D3DMATRIX GetMtxWorld(void) { return m_mtxWorld; }
 	static CPlayer* Create();
-	HRESULT Init(void);
+	HRESULT Init(void) override;
 	void Uninit(void);
 	void Update(void);
 	void TitleUpdate(void);
@@ -221,6 +221,8 @@ private:
 	D3DXVECTOR3 m_EggMove;		//卵の動き
 
 	CLifeUi* m_pLifeUi;
+
+	CShadow* m_pShadow;
 
 	//マップとのマトリックス情報
 	D3DXMATRIX *m_UseMultiMatrix;			//掛け合わせるマトリックス

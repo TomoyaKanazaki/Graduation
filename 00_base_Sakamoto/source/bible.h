@@ -36,6 +36,7 @@ private:
 
 	// メンバ関数
 	void Move(D3DXVECTOR3& pos) override;
+	void SetEffect() override;
 
 	// メンバ変数
 	CListManager<CBible>::AIterator m_iterator; // イテレーター

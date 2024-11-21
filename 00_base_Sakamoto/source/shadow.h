@@ -15,18 +15,20 @@ class CShadow : public CObject3D
 {
 public:
 
-	CShadow(int nPriority = 3);
+	CShadow(int nPriority = 7);
 	~CShadow();
 
-	static CShadow* Create(const D3DXVECTOR3& pos, float fWidth, float fHeight);
+	static CShadow* Create(const D3DXVECTOR3& pos, const float fWidth, const float fHeight, const float fLimit = -1.0f);
 
 	HRESULT Init();
 	void Uninit();
 	void Update();
 	void Draw();
 
+	void SetBaseHeight(float fHeight) { m_fHeight = fHeight; }
+
 	// 静的メンバ関数
-	static CListManager<CShadow>* GetList(void); // リスト取得
+	static CListManager<CShadow>* GetList(void);	// リスト取得
 
 private:
 	// 静的メンバ変数
@@ -34,7 +36,9 @@ private:
 
 	// メンバ変数
 	CListManager<CShadow>::AIterator m_iterator; // イテレーター
-
+	D3DXVECTOR3 m_sizeBase;
+	float m_fHeight;
+	float m_fLimit;
 };
 
 #endif

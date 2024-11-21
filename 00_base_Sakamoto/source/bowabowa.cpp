@@ -21,6 +21,7 @@ namespace
 {
 	const D3DXVECTOR3 SAMPLE_SIZE = D3DXVECTOR3(20.0f, 20.0f, 20.0f);		//当たり判定
 	const char* MODEL_PASS = "data\\MODEL\\Testbowabowa.x"; // モデルパス
+	const float MOVE_HEIGHT = 25.0f; // 移動量
 }
 
 //===========================================
@@ -55,6 +56,10 @@ HRESULT CBowabowa::Init()
 
 	// オブジェクトの種類を設定
 	SetType(CObject::TYPE_BOWABOWA);
+
+	// 初期の時間を設定する
+	float time = (float)(rand() / 628) * 0.01f;
+	SetMoveTime(time);
 
 	// リストマネージャーの生成
 	if (m_pList == nullptr)
@@ -127,6 +132,37 @@ bool CBowabowa::Hit(CPlayer* pPlayer)
 	// 削除
 	Uninit();
 	return true;
+}
+
+//========================================== 
+//  移動処理
+//==========================================
+void CBowabowa::Move(D3DXVECTOR3& pos)
+{
+	// 移動情報を取得
+	D3DXVECTOR3 base = GetBase();
+	float time = GetMoveTime();
+
+	// 経過時間を取得
+	time += DeltaTime::Get();
+
+	// 移動幅に経過時間をかけ合わせる
+	float fScale = sinf(time) * MOVE_HEIGHT;
+
+	// 基準位置に移動量を加算する
+	pos.y = base.y + fScale;
+}
+
+//==========================================
+//  エフェクトを生成
+//==========================================
+void CBowabowa::SetEffect()
+{
+	// 自身の情報を取得する
+	D3DXVECTOR3 pos = GetPos();
+	D3DXVECTOR3 rot = GetRot();
+
+	Effect(MyEffekseer::EffectCreate(CMyEffekseer::TYPE_BOABOA_01, true, useful::CalcMatrix(pos, rot, *GetUseMultiMatrix()), rot, D3DXVECTOR3(20.0f, 20.0f, 20.0f)));
 }
 
 //==========================================

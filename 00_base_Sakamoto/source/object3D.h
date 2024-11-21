@@ -59,9 +59,6 @@ public:
 	void SetUseMultiMatrix(D3DXMATRIX* Set) { m_UseMultiMatrix = Set; }
 	D3DXMATRIX* GetUseMultiMatrix(void) { return m_UseMultiMatrix; }
 
-	// 静的メンバ関数
-	static CListManager<CObject3D>* GetList(void); // リスト取得
-
 protected:
 	LPDIRECT3DTEXTURE9 m_pTexture;			//テクスチャへのポインタ
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;		//頂点バッファへのポインタ
@@ -82,12 +79,5 @@ private:
 
 	//マップとのマトリックス情報
 	D3DXMATRIX* m_UseMultiMatrix;			//掛け合わせるマトリックス
-
-	// 静的メンバ変数
-	static CListManager<CObject3D>* m_pList; // オブジェクトリスト
-
-	// メンバ変数
-	CListManager<CObject3D>::AIterator m_iterator; // イテレーター
-
 };
 #endif
