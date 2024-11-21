@@ -192,7 +192,7 @@ void CItem::Uninit()
 	// ‰e‚ÌI—¹
 	if (m_pShadow != nullptr)
 	{
-		m_pShadow->SetDeathFlag(true);
+		m_pShadow->Uninit();
 		m_pShadow = nullptr;
 	}
 

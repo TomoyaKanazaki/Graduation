@@ -25,7 +25,6 @@ CObject *CObject::m_pTop[PRIORITY_MAX] = {};
 CObject *CObject::m_pCur[PRIORITY_MAX] = {};
 int CObject::m_nNumAll = 0;					//オブジェクト総数
 bool CObject::m_bLevelStop = false;			//オブジェクト総数
-CListManager<CObject>* CObject::m_pList = nullptr; // オブジェクトリスト
 
 //====================================================================
 //コンストラクタ
@@ -74,7 +73,7 @@ void CObject::ReleaseAll(void)
 		{
 			CObject *pObjectNext = pObject->m_pNext;	//次のオブジェクトを保存
 
-			//削除処理
+			// 削除処理
 			pObject->SetDeathFlag(true);
 
 			pObject = pObjectNext;
@@ -89,7 +88,7 @@ void CObject::ReleaseAll(void)
 		{
 			CObject *pObjectNext = pObject->m_pNext;	//次のオブジェクトを保存
 
-			//終了処理
+			// 終了処理
 			pObject->Uninit();
 
 			//削除処理

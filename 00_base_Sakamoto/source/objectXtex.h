@@ -41,9 +41,6 @@ public:
 	void SetMatChange(bool bUse) { m_bMatChange = bUse; }
 	bool GetMatChange(void) { return m_bMatChange; }
 
-	// 静的メンバ関数
-	static CListManager<CObjectXtex>* GetList(void); // リスト取得
-
 protected:
 	D3DXMATRIX m_mtxWorld;					//ワールドマトリックス
 
@@ -58,12 +55,5 @@ private:
 	D3DXCOLOR m_MatColor;					//マテリアルの色
 	bool m_bTexOne;							//テクスチャ変更を正面のみにするかどうか
 	bool m_bMatChange;						//マテリアルの色を指定の色に変更するかどうか
-
-	// 静的メンバ変数
-	static CListManager<CObjectXtex>* m_pList; // オブジェクトリスト
-
-	// メンバ変数
-	CListManager<CObjectXtex>::AIterator m_iterator; // イテレーター
-
 };
 #endif

@@ -24,11 +24,6 @@ namespace
 	const float CYLINDER_RADIUS = 50.0f;	//円の半径
 }
 
-//===========================================
-// 静的メンバ変数宣言
-//===========================================
-CListManager<CObjmeshCylinder>* CObjmeshCylinder::m_pList = nullptr; // オブジェクトリスト
-
 //====================================================================
 //コンストラクタ
 //====================================================================
@@ -182,15 +177,6 @@ HRESULT CObjmeshCylinder::Init(void)
 	//インデックスバッファをアンロックする
 	m_pIdxBuff->Unlock();
 
-	if (m_pList == nullptr)
-	{// リストマネージャー生成
-		m_pList = CListManager<CObjmeshCylinder>::Create();
-		if (m_pList == nullptr) { assert(false); return E_FAIL; }
-	}
-
-	// リストに自身のオブジェクトを追加・イテレーターを取得
-	m_iterator = m_pList->AddList(this);
-
 	return S_OK;
 }
 
@@ -199,16 +185,6 @@ HRESULT CObjmeshCylinder::Init(void)
 //====================================================================
 void CObjmeshCylinder::Uninit(void)
 {
-	// リストから自身のオブジェクトを削除
-	m_pList->DelList(m_iterator);
-
-	if (m_pList->GetNumAll() == 0)
-	{ // オブジェクトが一つもない場合
-
-		// リストマネージャーの破棄
-		m_pList->Release(m_pList);
-	}
-
 	SetDeathFlag(true);
 }
 
@@ -415,12 +391,4 @@ void CObjmeshCylinder::SetRadius(float fRadius)
 
 void CObjmeshCylinder::SetTwoSides(void)
 {
-}
-
-//==========================================
-// リストの取得
-//==========================================
-CListManager<CObjmeshCylinder>* CObjmeshCylinder::GetList(void)
-{
-	return m_pList;
 }
