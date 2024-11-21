@@ -218,7 +218,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\チーム制作\\Graduation\\00_base_Sakamoto\\data\\TEXTURE\\Field\\black.jpg";
+    "data\\TEXTURE\\Field\\black.jpg";
    }
   }
   Material {
@@ -227,7 +227,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\チーム制作\\Graduation\\00_base_Sakamoto\\data\\TEXTURE\\Field\\00_ground.jpg";
+    "data\\TEXTURE\\Field\\00_ground.jpg";
    }
   }
   Material {
@@ -236,7 +236,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\チーム制作\\Graduation\\00_base_Sakamoto\\data\\TEXTURE\\Field\\00_ground.jpg";
+    "data\\TEXTURE\\Field\\00_ground.jpg";
    }
   }
   Material {
@@ -245,7 +245,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\チーム制作\\Graduation\\00_base_Sakamoto\\data\\TEXTURE\\Field\\00_ground.jpg";
+    "data\\TEXTURE\\Field\\00_ground.jpg";
    }
   }
  }
