@@ -43,11 +43,12 @@ namespace
 {
 	int SCROOL_TIME = 300;						// スクロール時間
 
-	float SCROOL_SPEED01 = 5.5f;				// スクロールの移動速度
+	int SCROOL_MOVEGRID_01 = 3;					// スクロールの移動マス幅
+	float SCROOL_SPEED_01 = (CMapSystem::GetInstance()->GetGritSize() * SCROOL_MOVEGRID_01 / SCROOL_TIME);				// スクロールの移動速度
 
-	int SCROOL_COUNT = 12;						// スクロールの移動回数
-	int SCROOL_MOVEGRID = 3;					// スクロールの移動マス幅
-	float SCROOL_SPEED02 = (CMapSystem::GetInstance()->GetGritSize() * SCROOL_MOVEGRID) / SCROOL_COUNT;				// スクロールの移動速度
+	int SCROOL_COUNT_02 = 12;					// スクロールの移動回数
+	int SCROOL_MOVEGRID_02 = 3;					// スクロールの移動マス幅
+	float SCROOL_SPEED_02 = (CMapSystem::GetInstance()->GetGritSize() * SCROOL_MOVEGRID_02) / SCROOL_COUNT_02;				// スクロールの移動速度
 
 	int SLOPE_TIME = 300;						// 傾き操作時間
 	int SLOPE_RAND = 25;						// 傾き発生確率
@@ -89,6 +90,7 @@ CDevil::CDevil(int nPriority) : CCharacter(nPriority)
 	m_SlopwArrowOld = 0;
 	m_ScrollArrow[0] = nullptr;
 	m_ScrollArrow[1] = nullptr;
+	m_ScrollType = SCROLL_TYPE_NORMAL;
 }
 
 //====================================================================
@@ -284,94 +286,104 @@ void CDevil::Move(int Arroow)
 	D3DXVECTOR3 NormarizeMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
 
-#if SCROLL_ID == 0
-
-	switch (Arroow)
+	switch (m_ScrollType)
 	{
-	case 0:
+	case CDevil::SCROLL_TYPE_NORMAL:
 
-		ObjectScroll(D3DXVECTOR3(0.0f, 0.0f, SCROOL_SPEED01));
-		m_move.z = SCROOL_SPEED01;
+		switch (Arroow)
+		{
+		case 0:
+
+			ObjectScroll(D3DXVECTOR3(0.0f, 0.0f, SCROOL_SPEED_01));
+			m_move.z = SCROOL_SPEED_01;
+
+			break;
+		case 1:
+
+			ObjectScroll(D3DXVECTOR3(0.0f, 0.0f, -SCROOL_SPEED_01));
+			m_move.z = -SCROOL_SPEED_01;
+
+			break;
+		case 2:
+
+			ObjectScroll(D3DXVECTOR3(-SCROOL_SPEED_01, 0.0f, 0.0f));
+			m_move.x = -SCROOL_SPEED_01;
+
+			break;
+		case 3:
+
+			ObjectScroll(D3DXVECTOR3(SCROOL_SPEED_01, 0.0f, 0.0f));
+			m_move.x = SCROOL_SPEED_01;
+
+			break;
+		}
 
 		break;
-	case 1:
 
-		ObjectScroll(D3DXVECTOR3(0.0f, 0.0f, -SCROOL_SPEED01));
-		m_move.z = -SCROOL_SPEED01;
+	case CDevil::SCROLL_TYPE_RETRO:
+
+		switch (Arroow)
+		{
+		case 0:
+
+			ObjectScroll(D3DXVECTOR3(0.0f, 0.0f, SCROOL_SPEED_02));
+			m_move.z = SCROOL_SPEED_02;
+
+			break;
+		case 1:
+
+			ObjectScroll(D3DXVECTOR3(0.0f, 0.0f, -SCROOL_SPEED_02));
+			m_move.z = -SCROOL_SPEED_02;
+
+			break;
+		case 2:
+
+			ObjectScroll(D3DXVECTOR3(-SCROOL_SPEED_02, 0.0f, 0.0f));
+			m_move.x = -SCROOL_SPEED_02;
+
+			break;
+		case 3:
+
+			ObjectScroll(D3DXVECTOR3(SCROOL_SPEED_02, 0.0f, 0.0f));
+			m_move.x = SCROOL_SPEED_02;
+
+			break;
+		}
 
 		break;
-	case 2:
 
-		ObjectScroll(D3DXVECTOR3(-SCROOL_SPEED01, 0.0f, 0.0f));
-		m_move.x = -SCROOL_SPEED01;
+	default:
 
-		break;
-	case 3:
+		switch (Arroow)
+		{
+		case 0:
 
-		ObjectScroll(D3DXVECTOR3(SCROOL_SPEED01, 0.0f, 0.0f));
-		m_move.x = SCROOL_SPEED01;
+			ObjectScroll(D3DXVECTOR3(0.0f, 0.0f, SCROOL_SPEED_01));
+			m_move.z = SCROOL_SPEED_01;
+
+			break;
+		case 1:
+
+			ObjectScroll(D3DXVECTOR3(0.0f, 0.0f, -SCROOL_SPEED_01));
+			m_move.z = -SCROOL_SPEED_01;
+
+			break;
+		case 2:
+
+			ObjectScroll(D3DXVECTOR3(-SCROOL_SPEED_01, 0.0f, 0.0f));
+			m_move.x = -SCROOL_SPEED_01;
+
+			break;
+		case 3:
+
+			ObjectScroll(D3DXVECTOR3(SCROOL_SPEED_01, 0.0f, 0.0f));
+			m_move.x = SCROOL_SPEED_01;
+
+			break;
+		}
 
 		break;
 	}
-
-#elif SCROLL_ID == 1
-
-	switch (Arroow)
-	{
-	case 0:
-
-		ObjectScroll(D3DXVECTOR3(0.0f, 0.0f, SCROOL_SPEED02));
-		m_move.z = SCROOL_SPEED02;
-
-		break;
-	case 1:
-
-		ObjectScroll(D3DXVECTOR3(0.0f, 0.0f, -SCROOL_SPEED02));
-		m_move.z = -SCROOL_SPEED02;
-
-		break;
-	case 2:
-
-		ObjectScroll(D3DXVECTOR3(-SCROOL_SPEED02, 0.0f, 0.0f));
-		m_move.x = -SCROOL_SPEED02;
-
-		break;
-	case 3:
-
-		ObjectScroll(D3DXVECTOR3(SCROOL_SPEED02, 0.0f, 0.0f));
-		m_move.x = SCROOL_SPEED02;
-
-		break;
-	}
-#else
-	switch (Arroow)
-	{
-	case 0:
-
-		ObjectScroll(D3DXVECTOR3(0.0f, 0.0f, SCROOL_SPEED01));
-		m_move.z = SCROOL_SPEED01;
-
-		break;
-	case 1:
-
-		ObjectScroll(D3DXVECTOR3(0.0f, 0.0f, -SCROOL_SPEED01));
-		m_move.z = -SCROOL_SPEED01;
-
-		break;
-	case 2:
-
-		ObjectScroll(D3DXVECTOR3(-SCROOL_SPEED01, 0.0f, 0.0f));
-		m_move.x = -SCROOL_SPEED01;
-
-		break;
-	case 3:
-
-		ObjectScroll(D3DXVECTOR3(SCROOL_SPEED01, 0.0f, 0.0f));
-		m_move.x = SCROOL_SPEED01;
-
-		break;
-	}
-#endif // SCROLL_ID
 }
 
 //====================================================================
@@ -383,93 +395,100 @@ void CDevil::BackSlope(void)
 	D3DXVECTOR3 MapRot = pMapField->GetRot();
 	bool bBackOK = false;
 
-#if SCROLL_ID == 0
-
-	if (MapRot.x > 0.0f)
+	switch (m_ScrollType)
 	{
-		MapRot.x -= D3DX_PI * SLOPE_SPEED01;
-	}
+	case CDevil::SCROLL_TYPE_NORMAL:
 
-	if (MapRot.x < 0.0f)
-	{
-		MapRot.x += D3DX_PI * SLOPE_SPEED01;
-	}
-
-	if (MapRot.z > 0.0f)
-	{
-		MapRot.z -= D3DX_PI * SLOPE_SPEED01;
-	}
-
-	if (MapRot.z < 0.0f)
-	{
-		MapRot.z += D3DX_PI * SLOPE_SPEED01;
-	}
-
-#elif SCROLL_ID == 1
-
-	if (MapRot.x > 0.0f)
-	{
-		MapRot.x -= D3DX_PI * SLOPE_SPEED02;
-
-		if (MapRot.x <= 0.0f)
+		if (MapRot.x > 0.0f)
 		{
-			bBackOK = true;
+			MapRot.x -= D3DX_PI * SLOPE_SPEED01;
 		}
-	}
 
-	if (MapRot.x < 0.0f)
-	{
-		MapRot.x += D3DX_PI * SLOPE_SPEED02;
-
-		if (MapRot.x >= 0.0f)
+		if (MapRot.x < 0.0f)
 		{
-			bBackOK = true;
+			MapRot.x += D3DX_PI * SLOPE_SPEED01;
 		}
-	}
 
-	if (MapRot.z > 0.0f)
-	{
-		MapRot.z -= D3DX_PI * SLOPE_SPEED02;
-
-		if (MapRot.z <= 0.0f)
+		if (MapRot.z > 0.0f)
 		{
-			bBackOK = true;
+			MapRot.z -= D3DX_PI * SLOPE_SPEED01;
 		}
-	}
 
-	if (MapRot.z < 0.0f)
-	{
-		MapRot.z += D3DX_PI * SLOPE_SPEED02;
-
-		if (MapRot.z >= 0.0f)
+		if (MapRot.z < 0.0f)
 		{
-			bBackOK = true;
+			MapRot.z += D3DX_PI * SLOPE_SPEED01;
 		}
+
+		break;
+
+	case CDevil::SCROLL_TYPE_RETRO:
+
+		if (MapRot.x > 0.0f)
+		{
+			MapRot.x -= D3DX_PI * SLOPE_SPEED02;
+
+			if (MapRot.x <= 0.0f)
+			{
+				bBackOK = true;
+			}
+		}
+
+		if (MapRot.x < 0.0f)
+		{
+			MapRot.x += D3DX_PI * SLOPE_SPEED02;
+
+			if (MapRot.x >= 0.0f)
+			{
+				bBackOK = true;
+			}
+		}
+
+		if (MapRot.z > 0.0f)
+		{
+			MapRot.z -= D3DX_PI * SLOPE_SPEED02;
+
+			if (MapRot.z <= 0.0f)
+			{
+				bBackOK = true;
+			}
+		}
+
+		if (MapRot.z < 0.0f)
+		{
+			MapRot.z += D3DX_PI * SLOPE_SPEED02;
+
+			if (MapRot.z >= 0.0f)
+			{
+				bBackOK = true;
+			}
+		}
+
+		break;
+
+	default:
+
+		if (MapRot.x > 0.0f)
+		{
+			MapRot.x -= D3DX_PI * SLOPE_SPEED01;
+		}
+
+		if (MapRot.x < 0.0f)
+		{
+			MapRot.x += D3DX_PI * SLOPE_SPEED01;
+		}
+
+		if (MapRot.z > 0.0f)
+		{
+			MapRot.z -= D3DX_PI * SLOPE_SPEED01;
+		}
+
+		if (MapRot.z < 0.0f)
+		{
+			MapRot.z += D3DX_PI * SLOPE_SPEED01;
+		}
+
+		break;
 	}
-
-#else
-
-	if (MapRot.x > 0.0f)
-	{
-		MapRot.x -= D3DX_PI * SLOPE_SPEED01;
-	}
-
-	if (MapRot.x < 0.0f)
-	{
-		MapRot.x += D3DX_PI * SLOPE_SPEED01;
-	}
-
-	if (MapRot.z > 0.0f)
-	{
-		MapRot.z -= D3DX_PI * SLOPE_SPEED01;
-	}
-
-	if (MapRot.z < 0.0f)
-	{
-		MapRot.z += D3DX_PI * SLOPE_SPEED01;
-	}
-
-#endif // SCROLL_ID
 
 	if (bBackOK)
 	{
@@ -490,145 +509,152 @@ void CDevil::Slope(int Arroow)
 	CObjmeshField *pMapField = CGame::GetInstance()->GetMapField();
 	D3DXVECTOR3 MapRot = pMapField->GetRot();
 
-#if SCROLL_ID == 0
-
-	switch (Arroow)
+	switch (m_ScrollType)
 	{
-	case 0:
+	case CDevil::SCROLL_TYPE_NORMAL:
 
-		MapRot.x += D3DX_PI * SLOPE_SPEED01;
-
-		if (MapRot.x > STAGE_ROT_LIMIT)
+		switch (Arroow)
 		{
-			MapRot.x = STAGE_ROT_LIMIT;
-}
+		case 0:
 
-		break;
-	case 1:
+			MapRot.x += D3DX_PI * SLOPE_SPEED01;
 
-		MapRot.x -= D3DX_PI * SLOPE_SPEED01;
+			if (MapRot.x > STAGE_ROT_LIMIT)
+			{
+				MapRot.x = STAGE_ROT_LIMIT;
+			}
 
-		if (MapRot.x < -STAGE_ROT_LIMIT)
-		{
-			MapRot.x = -STAGE_ROT_LIMIT;
+			break;
+		case 1:
+
+			MapRot.x -= D3DX_PI * SLOPE_SPEED01;
+
+			if (MapRot.x < -STAGE_ROT_LIMIT)
+			{
+				MapRot.x = -STAGE_ROT_LIMIT;
+			}
+
+			break;
+		case 2:
+
+			MapRot.z += D3DX_PI * SLOPE_SPEED01;
+
+			if (MapRot.z > STAGE_ROT_LIMIT)
+			{
+				MapRot.z = STAGE_ROT_LIMIT;
+			}
+
+			break;
+		case 3:
+
+			MapRot.z -= D3DX_PI * SLOPE_SPEED01;
+
+			if (MapRot.z < -STAGE_ROT_LIMIT)
+			{
+				MapRot.z = -STAGE_ROT_LIMIT;
+			}
+
+			break;
 		}
 
 		break;
-	case 2:
 
-		MapRot.z += D3DX_PI * SLOPE_SPEED01;
+	case CDevil::SCROLL_TYPE_RETRO:
 
-		if (MapRot.z > STAGE_ROT_LIMIT)
+		switch (Arroow)
 		{
-			MapRot.z = STAGE_ROT_LIMIT;
+		case 0:
+
+			MapRot.x += D3DX_PI * SLOPE_SPEED02;
+
+			if (MapRot.x > STAGE_ROT_LIMIT)
+			{
+				MapRot.x = STAGE_ROT_LIMIT;
+			}
+
+			break;
+		case 1:
+
+			MapRot.x -= D3DX_PI * SLOPE_SPEED02;
+
+			if (MapRot.x < -STAGE_ROT_LIMIT)
+			{
+				MapRot.x = -STAGE_ROT_LIMIT;
+			}
+
+			break;
+		case 2:
+
+			MapRot.z += D3DX_PI * SLOPE_SPEED02;
+
+			if (MapRot.z > STAGE_ROT_LIMIT)
+			{
+				MapRot.z = STAGE_ROT_LIMIT;
+			}
+
+			break;
+		case 3:
+
+			MapRot.z -= D3DX_PI * SLOPE_SPEED02;
+
+			if (MapRot.z < -STAGE_ROT_LIMIT)
+			{
+				MapRot.z = -STAGE_ROT_LIMIT;
+			}
+
+			break;
 		}
 
 		break;
-	case 3:
 
-		MapRot.z -= D3DX_PI * SLOPE_SPEED01;
+	default:
 
-		if (MapRot.z < -STAGE_ROT_LIMIT)
+		switch (Arroow)
 		{
-			MapRot.z = -STAGE_ROT_LIMIT;
+		case 0:
+
+			MapRot.x += D3DX_PI * SLOPE_SPEED01;
+
+			if (MapRot.x > STAGE_ROT_LIMIT)
+			{
+				MapRot.x = STAGE_ROT_LIMIT;
+			}
+
+			break;
+		case 1:
+
+			MapRot.x -= D3DX_PI * SLOPE_SPEED01;
+
+			if (MapRot.x < -STAGE_ROT_LIMIT)
+			{
+				MapRot.x = -STAGE_ROT_LIMIT;
+			}
+
+			break;
+		case 2:
+
+			MapRot.z += D3DX_PI * SLOPE_SPEED01;
+
+			if (MapRot.z > STAGE_ROT_LIMIT)
+			{
+				MapRot.z = STAGE_ROT_LIMIT;
+			}
+
+			break;
+		case 3:
+
+			MapRot.z -= D3DX_PI * SLOPE_SPEED01;
+
+			if (MapRot.z < -STAGE_ROT_LIMIT)
+			{
+				MapRot.z = -STAGE_ROT_LIMIT;
+			}
+
+			break;
 		}
 
 		break;
 	}
-
-#elif SCROLL_ID == 1
-
-	switch (Arroow)
-	{
-	case 0:
-
-		MapRot.x += D3DX_PI * SLOPE_SPEED02;
-
-		if (MapRot.x > STAGE_ROT_LIMIT)
-		{
-			MapRot.x = STAGE_ROT_LIMIT;
-		}
-
-		break;
-	case 1:
-
-		MapRot.x -= D3DX_PI * SLOPE_SPEED02;
-
-		if (MapRot.x < -STAGE_ROT_LIMIT)
-		{
-			MapRot.x = -STAGE_ROT_LIMIT;
-		}
-
-		break;
-	case 2:
-
-		MapRot.z += D3DX_PI * SLOPE_SPEED02;
-
-		if (MapRot.z > STAGE_ROT_LIMIT)
-		{
-			MapRot.z = STAGE_ROT_LIMIT;
-		}
-
-		break;
-	case 3:
-
-		MapRot.z -= D3DX_PI * SLOPE_SPEED02;
-
-		if (MapRot.z < -STAGE_ROT_LIMIT)
-		{
-			MapRot.z = -STAGE_ROT_LIMIT;
-		}
-
-		break;
-	}
-
-#else
-
-	switch (Arroow)
-	{
-	case 0:
-
-		MapRot.x += D3DX_PI * SLOPE_SPEED01;
-
-		if (MapRot.x > STAGE_ROT_LIMIT)
-		{
-			MapRot.x = STAGE_ROT_LIMIT;
-		}
-
-		break;
-	case 1:
-
-		MapRot.x -= D3DX_PI * SLOPE_SPEED01;
-
-		if (MapRot.x < -STAGE_ROT_LIMIT)
-		{
-			MapRot.x = -STAGE_ROT_LIMIT;
-		}
-
-		break;
-	case 2:
-
-		MapRot.z += D3DX_PI * SLOPE_SPEED01;
-
-		if (MapRot.z > STAGE_ROT_LIMIT)
-		{
-			MapRot.z = STAGE_ROT_LIMIT;
-		}
-
-		break;
-	case 3:
-
-		MapRot.z -= D3DX_PI * SLOPE_SPEED01;
-
-		if (MapRot.z < -STAGE_ROT_LIMIT)
-		{
-			MapRot.z = -STAGE_ROT_LIMIT;
-		}
-
-		break;
-	}
-
-#endif // SCROLL_ID
 
 	pMapField->SetRot(MapRot);
 }
@@ -867,17 +893,24 @@ void CDevil::StateManager(void)
 
 	case STATE_SCROLL:
 
-#if SCROLL_ID == 0
-		Move(m_DevilArrow);
-#elif SCROLL_ID == 1
-
-		if (m_nStateCount % (SCROOL_TIME / SCROOL_COUNT) == 0)
+		switch (m_ScrollType)
 		{
+		case CDevil::SCROLL_TYPE_NORMAL:
 			Move(m_DevilArrow);
-		}
-#else
+			break;
 
-#endif // SCROLL_ID
+		case CDevil::SCROLL_TYPE_RETRO:
+
+			break;
+
+			if (m_nStateCount % (SCROOL_TIME / SCROOL_COUNT_02) == 0)
+			{
+				Move(m_DevilArrow);
+			}
+		default:
+
+			break;
+		}
 
 		if (m_nStateCount <= 0)
 		{
@@ -889,20 +922,10 @@ void CDevil::StateManager(void)
 
 	case STATE_SLOPE:
 
-#if SCROLL_ID == 0
+		switch (m_ScrollType)
+		{
+		case CDevil::SCROLL_TYPE_NORMAL:
 
-		if (m_bSlope)
-		{
-			Slope(m_DevilArrow);
-		}
-		else
-		{
-			BackSlope();
-		}
-#elif SCROLL_ID == 1
-
-		if (m_nStateCount % 25 == 0)
-		{
 			if (m_bSlope)
 			{
 				Slope(m_DevilArrow);
@@ -911,11 +934,27 @@ void CDevil::StateManager(void)
 			{
 				BackSlope();
 			}
+			break;
+
+		case CDevil::SCROLL_TYPE_RETRO:
+
+			if (m_nStateCount % 25 == 0)
+			{
+				if (m_bSlope)
+				{
+					Slope(m_DevilArrow);
+				}
+				else
+				{
+					BackSlope();
+				}
+			}
+			break;
+
+		default:
+
+			break;
 		}
-
-#else
-
-#endif // SCROLL_ID
 
 		if (m_nStateCount <= 0)
 		{

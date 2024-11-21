@@ -37,6 +37,7 @@
 #include "CubeBlock.h"
 #include "RollRock.h"
 #include "shadow.h"
+#include "mask.h"
 
 #include "MyEffekseer.h"
 
@@ -322,7 +323,7 @@ void CPlayer::GameUpdate(void)
 
 		ObjPosUpdate();
 
-		if (m_State != STATE_EGG)
+		if (m_State != STATE_EGG && m_State != STATE_DEATH)
 		{
 			//‰æ–ÊŠO”»’è
 			CollisionStageOut();

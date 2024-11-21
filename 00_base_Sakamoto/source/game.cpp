@@ -169,6 +169,7 @@ HRESULT CGame::Init(void)
 	//ƒfƒrƒ‹‚Ì¶¬
 	m_pDevil = CDevil::Create();
 	m_pDevil->SetPos(D3DXVECTOR3(0.0f, 100.0f, 500.0f));
+	m_pDevil->SetScrollType((CDevil::SCROLL_TYPE)(CManager::GetInstance()->GetScrollType()));
 
 	if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_SINGLE)
 	{

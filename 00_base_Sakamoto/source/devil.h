@@ -11,7 +11,7 @@
 #include "useful.h"
 #include "MapSystem.h"
 
-#define SCROLL_ID 1
+#define SCROLL_ID 0
 
 //前方宣言
 
@@ -49,6 +49,14 @@ public:
 		ACTION_MAX,					// 最大
 	};
 
+	// モーション
+	enum SCROLL_TYPE
+	{
+		SCROLL_TYPE_NORMAL = 0,	// スムーズにスクロールする
+		SCROLL_TYPE_RETRO,		// カクカクとスクロールする
+		SCROLL_TYPE_MAX,		// 最大
+	};
+
 	//デビルの状態
 	enum STATE
 	{
@@ -78,6 +86,10 @@ public:
 	D3DXVECTOR3 GetDifference(void) { return m_MapDifference; }
 	void SetDevilRot(D3DXVECTOR3 Rot) { m_DevilRot = Rot; }
 	D3DXVECTOR3 GetDevilRot(void) { return m_DevilRot; }
+
+	void SetScrollType(SCROLL_TYPE Rot) { m_ScrollType = Rot; }
+	SCROLL_TYPE GetScrollType(void) { return m_ScrollType; }
+
 	void SetModelDisp(bool Sst);
 
 	// 静的メンバ関数
@@ -129,6 +141,7 @@ private:
 	int m_ScrollArrowOld;			// 過去のスクロールの方向
 	int m_SlopwArrowOld;			// 過去の傾きの方向
 	CScrollArrow* m_ScrollArrow[2];	// スクロール方向のUI 
+	SCROLL_TYPE m_ScrollType;		// スクロールの種類
 
 	// 静的メンバ変数
 	static CListManager<CDevil>* m_pList; // オブジェクトリスト

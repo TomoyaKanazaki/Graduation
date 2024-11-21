@@ -110,6 +110,10 @@ public:
 	D3DXMATRIX GetGamemtxProjection(void) { return m_GamemtxProjection; }
 	void SetTypeInput(TYPE_INPUT type) { m_typeInput = type; }
 	TYPE_INPUT GetTypeInput(void) { return m_typeInput; }
+
+	void SetScrollType(int type) { m_ScrollType = type; }
+	int GetScrollType(void) { return m_ScrollType; }
+
 	void SetGameMode(GAME_MODE type) { m_GameMode = type; }
 	GAME_MODE GetGameMode(void) { return m_GameMode; }
 	bool Getstart() { return m_bState; }
@@ -155,6 +159,7 @@ private:
 	TYPE_INPUT m_typeInput;				//インプット種類
 	GAME_MODE m_GameMode;				//ゲームのプレイモード
 	CScene* m_pScene;					//シーンのポインタ
+	int m_ScrollType;	//スクロールの種類
 };												
 
 #endif
