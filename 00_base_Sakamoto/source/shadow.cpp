@@ -32,7 +32,8 @@ CListManager<CShadow>* CShadow::m_pList = nullptr; // オブジェクトリスト
 //===========================================
 CShadow::CShadow(int nPriority) : CObject3D(nPriority),
 m_fHeight(0.0f),
-m_sizeBase(INITVECTOR3)
+m_sizeBase(INITVECTOR3),
+m_fLimit(0.0f)
 {
 }
 
@@ -46,7 +47,7 @@ CShadow::~CShadow()
 //===========================================
 // 生成
 //===========================================
-CShadow* CShadow::Create(const D3DXVECTOR3& pos, float fWidth, float fHeight)
+CShadow* CShadow::Create(const D3DXVECTOR3& pos, float fWidth, float fHeight, const float fLimit)
 {
 	// インスタンス生成
 	CShadow* pShadow = new CShadow;
@@ -64,6 +65,16 @@ CShadow* CShadow::Create(const D3DXVECTOR3& pos, float fWidth, float fHeight)
 
 	// 角度を設定
 	pShadow->SetRot(DEFAULT_ROT);
+
+	// 高さ上限を設定
+	if (fLimit == -1.0f)
+	{
+		pShadow->m_fLimit = LIMIT_HEIGHT;
+	}
+	else
+	{
+		pShadow->m_fLimit = fLimit;
+	}
 
 	return pShadow;
 }
@@ -123,8 +134,8 @@ void CShadow::Uninit(void)
 void CShadow::Update(void)
 {
 	// サイズを変更する
-	float fScale = m_fHeight / LIMIT_HEIGHT;
-	D3DXVECTOR3 size = m_sizeBase + m_sizeBase * fScale;
+	float fScale = m_fHeight / m_fLimit;
+	D3DXVECTOR3 size = m_sizeBase + m_sizeBase * 2.0f * fScale;
 	SetpVtx(size.x, size.z);
 
 	// 透明度を変更する

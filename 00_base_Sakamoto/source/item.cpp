@@ -38,7 +38,8 @@ namespace
 
 	const float BASE_Y = 50.0f; // çÇÇ≥
 
-	const float SHADOW_SIZE = 50.0f;	// ä€âeÇÃëÂÇ´Ç≥
+	const float SHADOW_SIZE = 25.0f;	// ä€âeÇÃëÂÇ´Ç≥
+	const float SHADOW_LIMIT = 100.0f;	// ä€âeÇÃçÇÇ≥è„å¿
 }
 
 //==========================================
@@ -155,7 +156,7 @@ HRESULT CItem::Init(const char* pModelName)
 
 	if (m_pShadow == nullptr)
 	{// ÉVÉÉÉhÉEê∂ê¨
-		m_pShadow = CShadow::Create(pos, SHADOW_SIZE, SHADOW_SIZE);
+		m_pShadow = CShadow::Create(pos, SHADOW_SIZE, SHADOW_SIZE, SHADOW_LIMIT);
 	}
 
 	pos.y = BASE_Y;
