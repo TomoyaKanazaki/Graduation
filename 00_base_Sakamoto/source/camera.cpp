@@ -352,8 +352,8 @@ void CCamera::ControlCamera(void)
 		m_posV.z -= CAMERA_SPEED * sinf(m_rot.y);
 	}
 
-	if (CScene::GetInstance()->GetMode() == CScene::MODE_GAME ||
-		CScene::GetInstance()->GetMode() == CScene::MODE_TUTORIAL)
+	if (CGame::GetInstance()->GetMode() == CScene::MODE_GAME ||
+		CGame::GetInstance()->GetMode() == CScene::MODE_TUTORIAL)
 	{
 		//視点の情報を出力する
 		m_posV.x = m_posR.x + sinf(m_rot.y) * -cosf(m_rot.x) * m_CameraDistance;
@@ -368,46 +368,46 @@ void CCamera::ControlCamera(void)
 void CCamera::FollowCamera(void)
 {
 	//デバイスの取得
-	CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
-	CInputJoypad* pInputJoypad = CManager::GetInstance()->GetInputJoyPad();
-	CInputMouse* pInputMouse = CManager::GetInstance()->GetInputMouse();
+	//CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
+	//CInputJoypad* pInputJoypad = CManager::GetInstance()->GetInputJoyPad();
+	//CInputMouse* pInputMouse = CManager::GetInstance()->GetInputMouse();
 
 	//プレイヤーの取得
-	CPlayer* pPlayer = CGame::GetPlayer(0);
+	//CPlayer* pPlayer = CGame::GetPlayer(0);
 	//ボスの取得
-	CBoss* pBoss = CGame::GetBoss();
+	//CBoss* pBoss = CGame::GetBoss();
 
-	m_fRotMove = m_fRotMove * 0.5f;
+	//m_fRotMove = m_fRotMove * 0.5f;
 
-	if (pPlayer->GetJump() == false)
-	{
-		if (m_rot.x <= D3DX_PI * 0.5f && m_rot.x >= -(D3DX_PI * 0.5f))
-		{//入力
-			m_rotOld.x = m_rot.x;
+	//if (pPlayer->GetJump() == false)
+	//{
+	//	if (m_rot.x <= D3DX_PI * 0.5f && m_rot.x >= -(D3DX_PI * 0.5f))
+	//	{//入力
+	//		m_rotOld.x = m_rot.x;
 
-			////キーボード
-			//if (pInputKeyboard->GetPress(DIK_I) == true)
-			//{
-			//	m_fRotMove.x += CAMERA_VR_SPEED;
-			//}
-			//if (pInputKeyboard->GetPress(DIK_K) == true)
-			//{
-			//	m_fRotMove.x -= CAMERA_VR_SPEED;
-			//}
+	//		//キーボード
+	//		if (pInputKeyboard->GetPress(DIK_I) == true)
+	//		{
+	//			m_fRotMove.x += CAMERA_VR_SPEED;
+	//		}
+	//		if (pInputKeyboard->GetPress(DIK_K) == true)
+	//		{
+	//			m_fRotMove.x -= CAMERA_VR_SPEED;
+	//		}
 
-			////右スティックの上下視点移動入力
-			//m_fRotMove.x += pInputJoypad->Get_Stick_Right(0).y * CAMERA_PAD_VR_SPEED;
+	//		//右スティックの上下視点移動入力
+	//		m_fRotMove.x += pInputJoypad->Get_Stick_Right(0).y * CAMERA_PAD_VR_SPEED;
 
-			//m_fRotMove.x -= pInputMouse->GetMouseMove().y * CAMERA_VR_SPEED;
+	//		m_fRotMove.x -= pInputMouse->GetMouseMove().y * CAMERA_VR_SPEED;
 
-			m_rot.x += m_fRotMove.x;
-		}
-	}
+	//		m_rot.x += m_fRotMove.x;
+	//	}
+	//}
 
-	if (m_rot.x > D3DX_PI * 0.05f || m_rot.x < -(D3DX_PI * 0.45f))
-	{//上限に達した時１フレーム前のrotにもどる
-		m_rot.x = m_rotOld.x;
-	}
+	//if (m_rot.x > D3DX_PI * 0.05f || m_rot.x < -(D3DX_PI * 0.45f))
+	//{//上限に達した時１フレーム前のrotにもどる
+	//	m_rot.x = m_rotOld.x;
+	//}
 
 	////キーボード
 	//if (pInputKeyboard->GetPress(DIK_J) == true)
@@ -425,70 +425,70 @@ void CCamera::FollowCamera(void)
 
 	//m_fRotMove.y += pInputMouse->GetMouseMove().x * CAMERA_VR_SPEED;
 
-	m_rot.y += m_fRotMove.y;
+	//m_rot.y += m_fRotMove.y;
 
 	//一周した時の向きの補正
-	if (m_rot.y > D3DX_PI * 1.0f)
-	{
-		m_rot.y -= D3DX_PI * 2.0f;
-	}
-	else if (m_rot.y < -D3DX_PI * 1.0f)
-	{
-		m_rot.y += D3DX_PI * 2.0f;
-	}
+	//if (m_rot.y > D3DX_PI * 1.0f)
+	//{
+	//	m_rot.y -= D3DX_PI * 2.0f;
+	//}
+	//else if (m_rot.y < -D3DX_PI * 1.0f)
+	//{
+	//	m_rot.y += D3DX_PI * 2.0f;
+	//}
 
-	m_posRDest.x = m_posV.x + sinf(m_rot.y) * cosf(m_rot.x) * CAMERA_DISTANCE;
-	m_posRDest.z = m_posV.z + cosf(m_rot.y) * cosf(m_rot.x) * CAMERA_DISTANCE;
-	m_posRDest.y = m_posV.y + sinf(m_rot.x) * CAMERA_DISTANCE;
+	//m_posRDest.x = m_posV.x + sinf(m_rot.y) * cosf(m_rot.x) * CAMERA_DISTANCE;
+	//m_posRDest.z = m_posV.z + cosf(m_rot.y) * cosf(m_rot.x) * CAMERA_DISTANCE;
+	//m_posRDest.y = m_posV.y + sinf(m_rot.x) * CAMERA_DISTANCE;
 
-	m_posVDest.x = pPlayer->GetCameraPos().x + sinf(-pPlayer->GetRot().y) * MODEL_DISTANCE + sinf(m_rot.y) * -cosf(m_rot.x) * CAMERA_DISTANCE;
-	m_posVDest.z = pPlayer->GetCameraPos().z + cosf(-pPlayer->GetRot().y) * MODEL_DISTANCE + cosf(m_rot.y) * -cosf(m_rot.x) * CAMERA_DISTANCE;
-	m_posVDest.y = pPlayer->GetCameraPos().y + 50.0f + sinf(-m_rot.x) * CAMERA_DISTANCE;
+	//m_posVDest.x = pPlayer->GetCameraPos().x + sinf(-pPlayer->GetRot().y) * MODEL_DISTANCE + sinf(m_rot.y) * -cosf(m_rot.x) * CAMERA_DISTANCE;
+	//m_posVDest.z = pPlayer->GetCameraPos().z + cosf(-pPlayer->GetRot().y) * MODEL_DISTANCE + cosf(m_rot.y) * -cosf(m_rot.x) * CAMERA_DISTANCE;
+	//m_posVDest.y = pPlayer->GetCameraPos().y + 50.0f + sinf(-m_rot.x) * CAMERA_DISTANCE;
 
-	if (m_bBib == true)
-	{
-		m_fBibPowor += 0.4f;
+	//if (m_bBib == true)
+	//{
+	//	m_fBibPowor += 0.4f;
 
-		m_posR.x += (m_posRDest.x - m_posR.x) * m_fHomingSpeed;
-		m_posR.z += (m_posRDest.z - m_posR.z) * m_fHomingSpeed;
-		m_posV.x += (m_posVDest.x - m_posV.x) * m_fHomingSpeed * 5.0f + (int)(sin(D3DX_PI * m_fBibPowor) * 5.0f);
-		m_posV.z += (m_posVDest.z - m_posV.z) * m_fHomingSpeed * 5.0f + (int)(sin(D3DX_PI * m_fBibPowor) * 5.0f);
+	//	m_posR.x += (m_posRDest.x - m_posR.x) * m_fHomingSpeed;
+	//	m_posR.z += (m_posRDest.z - m_posR.z) * m_fHomingSpeed;
+	//	m_posV.x += (m_posVDest.x - m_posV.x) * m_fHomingSpeed * 5.0f + (int)(sin(D3DX_PI * m_fBibPowor) * 5.0f);
+	//	m_posV.z += (m_posVDest.z - m_posV.z) * m_fHomingSpeed * 5.0f + (int)(sin(D3DX_PI * m_fBibPowor) * 5.0f);
 
-		if (pPlayer->GetJump() == false)
-		{
-			m_posR.y += (m_posRDest.y - m_posR.y) * m_fHomingSpeed;
-			m_posV.y += (m_posVDest.y - m_posV.y) * m_fHomingSpeed;
-		}
-	}
-	else
-	{
-		m_posR.x += (m_posRDest.x - m_posR.x) * m_fHomingSpeed * 0.05f;
-		m_posR.z += (m_posRDest.z - m_posR.z) * m_fHomingSpeed * 0.05f;
-		m_posV.x += (m_posVDest.x - m_posV.x) * m_fHomingSpeed * 1.0f;
-		m_posV.z += (m_posVDest.z - m_posV.z) * m_fHomingSpeed * 1.0f;
+	//	if (pPlayer->GetJump() == false)
+	//	{
+	//		m_posR.y += (m_posRDest.y - m_posR.y) * m_fHomingSpeed;
+	//		m_posV.y += (m_posVDest.y - m_posV.y) * m_fHomingSpeed;
+	//	}
+	//}
+	//else
+	//{
+	//	m_posR.x += (m_posRDest.x - m_posR.x) * m_fHomingSpeed * 0.05f;
+	//	m_posR.z += (m_posRDest.z - m_posR.z) * m_fHomingSpeed * 0.05f;
+	//	m_posV.x += (m_posVDest.x - m_posV.x) * m_fHomingSpeed * 1.0f;
+	//	m_posV.z += (m_posVDest.z - m_posV.z) * m_fHomingSpeed * 1.0f;
 
-		if (pPlayer->GetJump() == false)
-		{
-			m_posR.y += (m_posRDest.y - m_posR.y) * m_fHomingSpeed;
-			m_posV.y += (m_posVDest.y - m_posV.y) * m_fHomingSpeed;
-		}
-	}
+	//	if (pPlayer->GetJump() == false)
+	//	{
+	//		m_posR.y += (m_posRDest.y - m_posR.y) * m_fHomingSpeed;
+	//		m_posV.y += (m_posVDest.y - m_posV.y) * m_fHomingSpeed;
+	//	}
+	//}
 
 
 	//注目の切り替え
-	if (pInputKeyboard->GetTrigger(DIK_LSHIFT) == true ||
-		pInputJoypad->GetTrigger(CInputJoypad::BUTTON_L, 0) == true)
-	{
-		//ゲームのSEを再生する
-		//CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_ATTENTION);
+	//if (pInputKeyboard->GetTrigger(DIK_LSHIFT) == true ||
+	//	pInputJoypad->GetTrigger(CInputJoypad::BUTTON_L, 0) == true)
+	//{
+	//	ゲームのSEを再生する
+	//	CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_ATTENTION);
 
-		m_bAttention = m_bAttention ? false : true;
-	}
+	//	m_bAttention = m_bAttention ? false : true;
+	//}
 
-	if (m_bAttention == true)
-	{
-		m_FollowTime = 180;
-	}
+	//if (m_bAttention == true)
+	//{
+	//	m_FollowTime = 180;
+	//}
 
 	////モデルが止まった時に正面を向く処理
 	//float fRotMove, fRotDest, fRotDiff;
@@ -539,7 +539,7 @@ void CCamera::FixedNow(void)
 void CCamera::BetWeen(void)
 {
 	//プレイヤーの取得
-	D3DXVECTOR3 PlayerPos = CGame::GetPlayer(0)->GetPos();
+	D3DXVECTOR3 PlayerPos = CGame::GetInstance()->GetPlayer(0)->GetPos();
 	//ボスの取得
 	D3DXVECTOR3 BossPos = INITVECTOR3;
 
@@ -619,46 +619,46 @@ void CCamera::SideviewCamera(void)
 //====================================================================
 void CCamera::EventBossCamera(void)
 {
-	//ボスの取得
-	CBoss* pBoss = CGame::GetBoss();
+	////ボスの取得
+	//CBoss* pBoss = CGame::GetBoss();
 
-	m_posVDest.x = CGame::GetEventPos().x + sinf(m_rot.y) * MODEL_DISTANCE + sinf(m_rot.y) * -cosf(m_rot.x) * CAMERA_DISTANCE_EVENT;
-	m_posVDest.z = CGame::GetEventPos().z + cosf(m_rot.y) * MODEL_DISTANCE + cosf(m_rot.y) * -cosf(m_rot.x) * CAMERA_DISTANCE_EVENT;
-	m_posVDest.y = CGame::GetEventPos().y + sinf(-m_rot.x) * CAMERA_DISTANCE_EVENT + 50.0f;
+	//m_posVDest.x = CGame::GetEventPos().x + sinf(m_rot.y) * MODEL_DISTANCE + sinf(m_rot.y) * -cosf(m_rot.x) * CAMERA_DISTANCE_EVENT;
+	//m_posVDest.z = CGame::GetEventPos().z + cosf(m_rot.y) * MODEL_DISTANCE + cosf(m_rot.y) * -cosf(m_rot.x) * CAMERA_DISTANCE_EVENT;
+	//m_posVDest.y = CGame::GetEventPos().y + sinf(-m_rot.x) * CAMERA_DISTANCE_EVENT + 50.0f;
 
-	m_posRDest.x = m_posVDest.x + sinf(m_rot.y) * cosf(m_rot.x) * CAMERA_DISTANCE_EVENT;
-	m_posRDest.z = m_posVDest.z + cosf(m_rot.y) * cosf(m_rot.x) * CAMERA_DISTANCE_EVENT;
-	m_posRDest.y = m_posVDest.y + sinf(m_rot.x) * CAMERA_DISTANCE_EVENT + 10.0f;
+	//m_posRDest.x = m_posVDest.x + sinf(m_rot.y) * cosf(m_rot.x) * CAMERA_DISTANCE_EVENT;
+	//m_posRDest.z = m_posVDest.z + cosf(m_rot.y) * cosf(m_rot.x) * CAMERA_DISTANCE_EVENT;
+	//m_posRDest.y = m_posVDest.y + sinf(m_rot.x) * CAMERA_DISTANCE_EVENT + 10.0f;
 
-	if (m_bBib == true)
-	{
-		m_fBibPowor += 0.8f;
+	//if (m_bBib == true)
+	//{
+	//	m_fBibPowor += 0.8f;
 
-		//m_posR.y += (int)(sin(D3DX_PI * m_fBibPowor) * 10.0f);
+	//	//m_posR.y += (int)(sin(D3DX_PI * m_fBibPowor) * 10.0f);
 
-		////視点の情報を出力する
-		//m_posV.x = m_posR.x + sinf(m_rot.y) * -cosf(m_rot.x) * m_CameraDistance;
-		//m_posV.y = m_posR.y + sinf(-m_rot.x) * m_CameraDistance + (int)(sin(D3DX_PI * m_fBibPowor) * 10.0f);
-		//m_posV.z = m_posR.z + cosf(m_rot.y) * -cosf(m_rot.x) * m_CameraDistance;
+	//	////視点の情報を出力する
+	//	//m_posV.x = m_posR.x + sinf(m_rot.y) * -cosf(m_rot.x) * m_CameraDistance;
+	//	//m_posV.y = m_posR.y + sinf(-m_rot.x) * m_CameraDistance + (int)(sin(D3DX_PI * m_fBibPowor) * 10.0f);
+	//	//m_posV.z = m_posR.z + cosf(m_rot.y) * -cosf(m_rot.x) * m_CameraDistance;
 
-		m_posR.x += (m_posRDest.x - m_posR.x) * m_fHomingSpeed;
-		m_posR.y += (m_posRDest.y - m_posR.y) * m_fHomingSpeed * 5.0f;
-		m_posR.z += (m_posRDest.z - m_posR.z) * m_fHomingSpeed;
+	//	m_posR.x += (m_posRDest.x - m_posR.x) * m_fHomingSpeed;
+	//	m_posR.y += (m_posRDest.y - m_posR.y) * m_fHomingSpeed * 5.0f;
+	//	m_posR.z += (m_posRDest.z - m_posR.z) * m_fHomingSpeed;
 
-		m_posV.x += (m_posVDest.x - m_posV.x) * m_fHomingSpeed * 5.0f + (int)(sin(D3DX_PI * m_fBibPowor) * 10.0f);
-		m_posV.y += (m_posVDest.y - m_posV.y) * m_fHomingSpeed * 5.0f + (int)(sin(D3DX_PI * m_fBibPowor) * 10.0f);
-		m_posV.z += (m_posVDest.z - m_posV.z) * m_fHomingSpeed * 5.0f + (int)(sin(D3DX_PI * m_fBibPowor) * 10.0f);
-	}
-	else
-	{
-		m_posR.x += (m_posRDest.x - m_posR.x) * m_fHomingSpeed;
-		m_posR.y += (m_posRDest.y - m_posR.y) * m_fHomingSpeed;
-		m_posR.z += (m_posRDest.z - m_posR.z) * m_fHomingSpeed;
+	//	m_posV.x += (m_posVDest.x - m_posV.x) * m_fHomingSpeed * 5.0f + (int)(sin(D3DX_PI * m_fBibPowor) * 10.0f);
+	//	m_posV.y += (m_posVDest.y - m_posV.y) * m_fHomingSpeed * 5.0f + (int)(sin(D3DX_PI * m_fBibPowor) * 10.0f);
+	//	m_posV.z += (m_posVDest.z - m_posV.z) * m_fHomingSpeed * 5.0f + (int)(sin(D3DX_PI * m_fBibPowor) * 10.0f);
+	//}
+	//else
+	//{
+	//	m_posR.x += (m_posRDest.x - m_posR.x) * m_fHomingSpeed;
+	//	m_posR.y += (m_posRDest.y - m_posR.y) * m_fHomingSpeed;
+	//	m_posR.z += (m_posRDest.z - m_posR.z) * m_fHomingSpeed;
 
-		m_posV.x += (m_posVDest.x - m_posV.x) * m_fHomingSpeed;
-		m_posV.y += (m_posVDest.y - m_posV.y) * m_fHomingSpeed;
-		m_posV.z += (m_posVDest.z - m_posV.z) * m_fHomingSpeed;
-	}
+	//	m_posV.x += (m_posVDest.x - m_posV.x) * m_fHomingSpeed;
+	//	m_posV.y += (m_posVDest.y - m_posV.y) * m_fHomingSpeed;
+	//	m_posV.z += (m_posVDest.z - m_posV.z) * m_fHomingSpeed;
+	//}
 }
 
 //====================================================================
@@ -668,21 +668,7 @@ void CCamera::FPSCamera(void)
 {
 	CPlayer* pPlayer = nullptr;
 
-	//プレイヤーの取得
-	switch (CScene::GetMode())
-	{
-	case CScene::MODE_GAME:
-
-		pPlayer = CGame::GetPlayer(0);
-
-		break;
-
-	case CScene::MODE_TUTORIAL:
-
-		pPlayer = CTutorial::GetPlayer(0);
-
-		break;
-	}
+	pPlayer = CGame::GetInstance()->GetPlayer(0);
 
 	m_posV.x = pPlayer->GetPos().x;
 	m_posV.y = pPlayer->GetPos().y + 50.0f;
@@ -702,22 +688,7 @@ void CCamera::FPSCamera(void)
 void CCamera::FPSComplementCamera(void)
 {
 	CPlayer* pPlayer = nullptr;
-
-	//プレイヤーの取得
-	switch (CScene::GetMode())
-	{
-	case CScene::MODE_GAME:
-
-		pPlayer = CGame::GetPlayer(0);
-
-		break;
-
-	case CScene::MODE_TUTORIAL:
-
-		pPlayer = CTutorial::GetPlayer(0);
-
-		break;
-	}
+	pPlayer = CGame::GetInstance()->GetPlayer(0);
 
 
 	m_posVDest.x = pPlayer->GetPos().x;
@@ -757,21 +728,7 @@ void CCamera::UltimateCamera(void)
 	//プレイヤーの取得
 	CPlayer* pPlayer = nullptr;
 
-	//プレイヤーの取得
-	switch (CScene::GetMode())
-	{
-	case CScene::MODE_GAME:
-
-		pPlayer = CGame::GetPlayer(0);
-
-		break;
-
-	case CScene::MODE_TUTORIAL:
-
-		pPlayer = CTutorial::GetPlayer(0);
-
-		break;
-	}
+	pPlayer = CGame::GetInstance()->GetPlayer(0);
 
 	if (pPlayer == nullptr)
 	{

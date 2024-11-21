@@ -203,7 +203,7 @@ void CObjectX::Draw(void)
 		D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
 	}
 
-	if (m_UseMultiMatrix != nullptr && CScene::GetInstance()->GetMode() == CScene::MODE_GAME)
+	if (m_UseMultiMatrix != nullptr && CScene::GetMode() == CScene::MODE_GAME)
 	{
 		//算出したマトリクスをかけ合わせる
 		D3DXMatrixMultiply(&m_mtxWorld,

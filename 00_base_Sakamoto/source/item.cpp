@@ -46,6 +46,11 @@ namespace
 //==========================================
 static_assert(NUM_ARRAY(ITEM_SCORE) == CItem::TYPE_MAX, "ERROR : Type Count Missmatch");
 
+//===========================================
+// 静的メンバ変数宣言
+//===========================================
+CListManager<CItem>* CItem::m_pList = nullptr; // オブジェクトリスト
+
 //====================================================================
 // コンストラクタ
 //====================================================================
@@ -74,6 +79,14 @@ m_pShadow(nullptr)
 CItem::~CItem()
 {
 
+}
+
+//==========================================
+//  リストの取得
+//==========================================
+CListManager<CItem>* CItem::GetList(void)
+{
+	return m_pList;
 }
 
 //====================================================================
@@ -137,17 +150,8 @@ HRESULT CItem::Init(const char* pModelName)
 	// 継承クラスの初期化
 	CObjectX::Init(pModelName);
 
-	switch (CScene::GetInstance()->GetMode())
-	{
-	case CScene::MODE_GAME:
-		//マップとのマトリックスの掛け合わせをオンにする
-		SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
-		break;
-	case CScene::MODE_TUTORIAL:
-		//マップとのマトリックスの掛け合わせをオンにする
-		SetUseMultiMatrix(CTutorial::GetMapField()->GetMatrix());
-		break;
-	}
+	//マップとのマトリックスの掛け合わせをオンにする
+	SetUseMultiMatrix(CGame::GetInstance()->GetMapField()->GetMatrix());
 
 	if (m_pShadow == nullptr)
 	{// シャドウ生成
@@ -157,6 +161,17 @@ HRESULT CItem::Init(const char* pModelName)
 	pos.y = BASE_Y;
 	SetPos(pos);
 
+
+	// リストマネージャーの生成
+	if (m_pList == nullptr)
+	{
+		m_pList = CListManager<CItem>::Create();
+		if (m_pList == nullptr) { assert(false); return E_FAIL; }
+	}
+
+	// リストに自身のオブジェクトを追加・イテレーターを取得
+	m_iterator = m_pList->AddList(this);
+
 	return S_OK;
 }
 
@@ -165,8 +180,25 @@ HRESULT CItem::Init(const char* pModelName)
 //====================================================================
 void CItem::Uninit()
 {
+	// リストから自身のオブジェクトを削除
+	m_pList->DelList(m_iterator);
+
+	if (m_pList->GetNumAll() == 0)
+	{ // オブジェクトが一つもない場合
+
+		// リストマネージャーの破棄
+		m_pList->Release(m_pList);
+	}
+
+	// 影の終了
+	if (m_pShadow != nullptr)
+	{
+		m_pShadow->SetDeathFlag(true);
+		m_pShadow = nullptr;
+	}
+
 	// 継承クラスの終了
-	//CObjectX::Uninit();
+	CObjectX::Uninit();
 }
 
 //====================================================================
@@ -289,7 +321,7 @@ bool CItem::CollisionPlayer()
 		if (!Hit(player)) { continue; }
 
 		// スコアを加算する
-		CGame::GetScore()->AddScore(ITEM_SCORE[m_eType]);
+		CGame::GetInstance()->GetScore()->AddScore(ITEM_SCORE[m_eType]);
 	}
 
 	return false;

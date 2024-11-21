@@ -171,13 +171,13 @@ HRESULT CPlayer::Init(void)
 	m_MoveState = MOVE_STATE_WAIT;
 
 	//マップとのマトリックスの掛け合わせをオンにする
-	SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
+	SetUseMultiMatrix(CGame::GetInstance()->GetMapField()->GetMatrix());
 
 	// キャラクターテキスト読み込み処理
 	CCharacter::Init("data\\TXT\\motion_tamagon1P.txt");
 
 	// キャラクターのマトリックス設定
-	CCharacter::SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
+	CCharacter::SetUseMultiMatrix(CGame::GetInstance()->GetMapField()->GetMatrix());
 	CCharacter::SetUseStencil(true);
 	CCharacter::SetUseShadowMtx(true);
 
@@ -858,14 +858,14 @@ void CPlayer::StateManager(void)
 		{
 			m_pUpEgg = CObjectX::Create("data\\MODEL\\00_Player\\1P\\upper_egg.x");
 			m_pUpEgg->SetMatColor(D3DXCOLOR(0.263529f, 0.570980f, 0.238431f, 1.0f));
-			m_pUpEgg->SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
+			m_pUpEgg->SetUseMultiMatrix(CGame::GetInstance()->GetMapField()->GetMatrix());
 		}
 
 		if (m_pDownEgg == nullptr)
 		{
 			m_pDownEgg = CObjectX::Create("data\\MODEL\\00_Player\\1P\\downer_egg.x");
 			m_pDownEgg->SetMatColor(D3DXCOLOR(0.263529f, 0.570980f, 0.238431f, 1.0f));
-			m_pDownEgg->SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
+			m_pDownEgg->SetUseMultiMatrix(CGame::GetInstance()->GetMapField()->GetMatrix());
 		}
 		break;
 	}
@@ -983,7 +983,7 @@ void CPlayer::CollisionMoveRailBlock(useful::COLLISION XYZ)
 	// レールブロックリストの中身を確認する
 	for (CRailBlock* pRailBlock : list)
 	{
-		D3DXVECTOR3 D_pos = CGame::GetDevil()->GetDevilPos();
+		D3DXVECTOR3 D_pos = CGame::GetInstance()->GetDevil()->GetDevilPos();
 		D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
 		float G_Size = CMapSystem::GetInstance()->GetGritSize();
 
@@ -1076,7 +1076,7 @@ void CPlayer::CollisionMoveRock(useful::COLLISION XYZ)
 	// レールブロックリストの中身を確認する
 	for (CRollRock* pRock : list)
 	{
-		D3DXVECTOR3 D_pos = CGame::GetDevil()->GetDevilPos();
+		D3DXVECTOR3 D_pos = CGame::GetInstance()->GetDevil()->GetDevilPos();
 		D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
 		float G_Size = CMapSystem::GetInstance()->GetGritSize();
 
@@ -1228,7 +1228,7 @@ void CPlayer::CollisionEnemy(void)
 //====================================================================
 void CPlayer::CollisionStageOut(void)
 {
-	D3DXVECTOR3 D_pos = CGame::GetDevil()->GetDevilPos();
+	D3DXVECTOR3 D_pos = CGame::GetInstance()->GetDevil()->GetDevilPos();
 	D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
 	float G_Size = CMapSystem::GetInstance()->GetGritSize();
 
@@ -1263,7 +1263,7 @@ void CPlayer::CollisionStageOut(void)
 //====================================================================
 bool CPlayer::CollisionStageIn(void)
 {
-	D3DXVECTOR3 D_pos = CGame::GetDevil()->GetDevilPos();
+	D3DXVECTOR3 D_pos = CGame::GetInstance()->GetDevil()->GetDevilPos();
 	D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
 	float G_Size = CMapSystem::GetInstance()->GetGritSize();
 
@@ -1285,7 +1285,7 @@ void CPlayer::CollisionPressStageOut(void)
 {
 	if (m_bPressObj == true)
 	{
-		D3DXVECTOR3 D_pos = CGame::GetDevil()->GetDevilPos();
+		D3DXVECTOR3 D_pos = CGame::GetInstance()->GetDevil()->GetDevilPos();
 		D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
 		float G_Size = CMapSystem::GetInstance()->GetGritSize() * 0.5f;
 
@@ -1364,7 +1364,7 @@ void CPlayer::PosUpdate(void)
 		fSpeed = m_pSlow->GetValue();
 	}
 
-	CDevil* pDevil = CGame::GetDevil();
+	CDevil* pDevil = CGame::GetInstance()->GetDevil();
 
 	//Y軸の位置更新
 	m_pos.y += m_move.y * CManager::GetInstance()->GetGameSpeed() * fSpeed;
@@ -1419,7 +1419,7 @@ void CPlayer::ObjPosUpdate(void)
 		fSpeed = m_pSlow->GetValue();
 	}
 
-	CDevil* pDevil = CGame::GetDevil();
+	CDevil* pDevil = CGame::GetInstance()->GetDevil();
 
 	//Y軸の位置更新
 	m_pos.y += m_Objmove.y * CManager::GetInstance()->GetGameSpeed() * fSpeed;
@@ -1510,9 +1510,9 @@ void CPlayer::EggMove(void)
 			m_EggMove.x = m_EggMove.x * EGG_MOVE_DEL;
 			m_EggMove.z = m_EggMove.z * EGG_MOVE_DEL;
 
-			if (pos.y < CGame::GetMapField()->GetPos().y + 30.0f)
+			if (pos.y < CGame::GetInstance()->GetMapField()->GetPos().y + 30.0f)
 			{
-				pos.y = CGame::GetMapField()->GetPos().y + 30.0f;
+				pos.y = CGame::GetInstance()->GetMapField()->GetPos().y + 30.0f;
 			}
 			else
 			{
@@ -1567,8 +1567,8 @@ void CPlayer::Death(void)
 			// 死亡音
 			CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_DEATH);
 
-			CGame::SetGameEnd(true);
-			CGame::SetGameClear(false);
+			CGame::GetInstance()->SetGameEnd(true);
+			CGame::GetInstance()->SetGameClear(false);
 			CManager::GetInstance()->SetStage(0);
 		}
 		else

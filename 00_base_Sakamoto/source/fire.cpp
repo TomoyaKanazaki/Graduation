@@ -105,17 +105,7 @@ HRESULT CFire::Init(char* pModelName)
 	// 継承クラスの初期化
 	CObjectX::Init(pModelName);
 
-	switch (CScene::GetInstance()->GetMode())
-	{
-	case CScene::MODE_GAME:
-		//マップとのマトリックスの掛け合わせをオンにする
-		SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
-		break;
-	case CScene::MODE_TUTORIAL:
-		//マップとのマトリックスの掛け合わせをオンにする
-		SetUseMultiMatrix(CTutorial::GetMapField()->GetMatrix());
-		break;
-	}
+	SetUseMultiMatrix(CGame::GetInstance()->GetMapField()->GetMatrix());
 
 	// 炎の体力
 	m_nLife = FIRE_LIFE;
