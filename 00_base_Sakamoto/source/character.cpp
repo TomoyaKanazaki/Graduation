@@ -108,7 +108,7 @@ HRESULT CCharacter::Init(const char* pModelName)
 
 	if (m_pShadow == nullptr)
 	{// 影生成
-		m_pShadow = CShadow::Create(D3DXVECTOR3(m_pos.x, m_pos.y + 1.0f, m_pos.z), SHADOW_SIZE, SHADOW_SIZE);
+		m_pShadow = CShadow::Create(m_pos, SHADOW_SIZE, SHADOW_SIZE);
 	}
 
 	return S_OK;
@@ -129,18 +129,19 @@ void CCharacter::Uninit(void)
 		}
 	}
 
+	// 影の終了
+	if (m_pShadow != nullptr)
+	{
+		m_pShadow->SetDeathFlag(true);
+		m_pShadow = nullptr;
+	}
+
 	//モーションの終了処理
 	if (m_pMotion != nullptr)
 	{
 		//モーションの破棄
 		delete m_pMotion;
 		m_pMotion = nullptr;
-	}
-
-	if (m_pShadow != nullptr)
-	{// シャドウの破棄
-		m_pShadow->Uninit();
-		m_pShadow = nullptr;
 	}
 
 	SetDeathFlag(true);
@@ -251,11 +252,6 @@ void CCharacter::Draw(void)
 		{
 			m_apModel[nCntModel]->Draw();
 		}
-	}
-
-	if (m_pShadow != nullptr)
-	{// シャドウの描画
-		m_pShadow->Draw();
 	}
 
 	//ステンシルバッファ無効

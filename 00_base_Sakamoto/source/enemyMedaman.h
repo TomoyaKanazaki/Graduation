@@ -27,7 +27,7 @@ public:
 		ACTION_MAX,			// Н≈Се
 	};
 
-	HRESULT Init(void);
+	HRESULT Init(void) override;
 	void Uninit(void);
 	void Update(void);
 	void TitleUpdate(void);

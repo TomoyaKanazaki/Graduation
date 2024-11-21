@@ -59,7 +59,7 @@ public:
 	};
 
 	static CDevil* Create();
-	HRESULT Init(void);
+	HRESULT Init(void) override;
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);

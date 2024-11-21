@@ -85,7 +85,7 @@ public:
 
 	D3DMATRIX GetMtxWorld(void) { return m_mtxWorld; }
 	static CPlayer* Create();
-	HRESULT Init(void);
+	HRESULT Init(void) override;
 	void Uninit(void);
 	void Update(void);
 	void TitleUpdate(void);

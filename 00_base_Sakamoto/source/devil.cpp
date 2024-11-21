@@ -130,7 +130,7 @@ HRESULT CDevil::Init(void)
 	SetType(CObject::TYPE_DEVIL);
 
 	// キャラクターテキストの設定処理
-	CCharacter::SetTxtCharacter("data\\TXT\\MOTION\\01_enemy\\motion_devil.txt");
+	CCharacter::Init("data\\TXT\\MOTION\\01_enemy\\motion_devil.txt");
 	
 	switch (CScene::GetMode())
 	{

@@ -9,7 +9,6 @@
 #include "texture.h"
 #include "manager.h"
 #include "renderer.h"
-#include "texture.h"
 #include "game.h"
 #include "objmeshField.h"
 
