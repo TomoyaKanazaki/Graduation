@@ -45,6 +45,15 @@ namespace MyEffekseer
 		"data\\EFFEKSEER\\Effect\\eat.efkefc",			  // 捕食
 		"data\\EFFEKSEER\\Effect\\medaman_respawn.efkefc",			  // メダマンのリスポーン
 		"data\\EFFEKSEER\\Effect\\bonbon_respawn.efkefc",			  // ボンボンのリスポーン
+		"data\\EFFEKSEER\\Effect\\smalldevil_respawn.efkefc",		  // コデビルのリスポーン
+		"data\\EFFEKSEER\\Effect\\boaboa_00.efkefc",		  // ボアボア
+		"data\\EFFEKSEER\\Effect\\boaboa_01.efkefc",		  // ボアボア
+		"data\\EFFEKSEER\\Effect\\cross.efkefc",		  // 十字架
+		"data\\EFFEKSEER\\Effect\\bible.efkefc",		  // 聖書
+		"data\\EFFEKSEER\\Effect\\dustcloud.efkefc",		  // 歩いた時の砂埃
+		"data\\EFFEKSEER\\Effect\\fall_smoke.efkefc",		  // 落下の土煙
+		"data\\EFFEKSEER\\Effect\\born_player00.efkefc",		  // プレイヤー１の卵落下
+		"data\\EFFEKSEER\\Effect\\born_player01.efkefc",		  // プレイヤー2の卵落下
 	};
 
 	//============================================

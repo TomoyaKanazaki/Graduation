@@ -13,6 +13,15 @@
 #include "objmeshField.h"
 #include "Scene.h"
 
+//==========================================
+//  定数定義
+//==========================================
+namespace
+{
+	const D3DXVECTOR3 DEFAULT_ROT = { D3DX_PI * 0.5f, 0.0f, 0.0f }; // 角度の補正値
+	const float LIMIT_HEIGHT = 2000.0f; // 影を描画する上限の高さ
+}
+
 //===========================================
 // 静的メンバ変数宣言
 //===========================================
@@ -21,7 +30,10 @@ CListManager<CShadow>* CShadow::m_pList = nullptr; // オブジェクトリスト
 //===========================================
 // コンストラクタ
 //===========================================
-CShadow::CShadow(int nPriority) : CObject3D(nPriority)
+CShadow::CShadow(int nPriority) : CObject3D(nPriority),
+m_fHeight(0.0f),
+m_sizeBase(INITVECTOR3),
+m_fLimit(0.0f)
 {
 }
 
@@ -35,7 +47,7 @@ CShadow::~CShadow()
 //===========================================
 // 生成
 //===========================================
-CShadow* CShadow::Create(const D3DXVECTOR3& pos, float fWidth, float fHeight)
+CShadow* CShadow::Create(const D3DXVECTOR3& pos, float fWidth, float fHeight, const float fLimit)
 {
 	// インスタンス生成
 	CShadow* pShadow = new CShadow;
@@ -48,6 +60,21 @@ CShadow* CShadow::Create(const D3DXVECTOR3& pos, float fWidth, float fHeight)
 
 	// 大きさ
 	pShadow->SetpVtx(fWidth, fHeight);
+	pShadow->m_sizeBase.x = fWidth;
+	pShadow->m_sizeBase.z = fHeight;
+
+	// 角度を設定
+	pShadow->SetRot(DEFAULT_ROT);
+
+	// 高さ上限を設定
+	if (fLimit == -1.0f)
+	{
+		pShadow->m_fLimit = LIMIT_HEIGHT;
+	}
+	else
+	{
+		pShadow->m_fLimit = fLimit;
+	}
 
 	return pShadow;
 }
@@ -84,14 +111,17 @@ HRESULT CShadow::Init()
 //===========================================
 void CShadow::Uninit(void)
 {
-	// リストから自身のオブジェクトを削除
-	m_pList->DelList(m_iterator);
+	if (m_pList != nullptr)
+	{
+		// リストから自身のオブジェクトを削除
+		m_pList->DelList(m_iterator);
 
-	if (m_pList->GetNumAll() == 0)
-	{ // オブジェクトが一つもない場合
+		if (m_pList->GetNumAll() == 0)
+		{ // オブジェクトが一つもない場合
 
-		// リストマネージャーの破棄
-		m_pList->Release(m_pList);
+			// リストマネージャーの破棄
+			m_pList->Release(m_pList);
+		}
 	}
 
 	// 継承クラスの終了
@@ -103,6 +133,16 @@ void CShadow::Uninit(void)
 //===========================================
 void CShadow::Update(void)
 {
+	// サイズを変更する
+	float fScale = m_fHeight / m_fLimit;
+	D3DXVECTOR3 size = m_sizeBase + m_sizeBase * 2.0f * fScale;
+	SetpVtx(size.x, size.z);
+
+	// 透明度を変更する
+	SetColorA(1.0f - fScale);
+
+	// 親クラスの更新処理
+	CObject3D::Update();
 }
 
 //===========================================

@@ -39,6 +39,7 @@ namespace
 	const float BASE_Y = 50.0f; // 高さ
 
 	const float SHADOW_SIZE = 25.0f;	// 丸影の大きさ
+	const float SHADOW_LIMIT = 100.0f;	// 丸影の高さ上限
 }
 
 //==========================================
@@ -155,12 +156,11 @@ HRESULT CItem::Init(const char* pModelName)
 
 	if (m_pShadow == nullptr)
 	{// シャドウ生成
-		m_pShadow = CShadow::Create(pos, SHADOW_SIZE, SHADOW_SIZE);
+		m_pShadow = CShadow::Create(pos, SHADOW_SIZE, SHADOW_SIZE, SHADOW_LIMIT);
 	}
 
 	pos.y = BASE_Y;
 	SetPos(pos);
-
 
 	// リストマネージャーの生成
 	if (m_pList == nullptr)
@@ -193,7 +193,7 @@ void CItem::Uninit()
 	// 影の終了
 	if (m_pShadow != nullptr)
 	{
-		m_pShadow->SetDeathFlag(true);
+		m_pShadow->Uninit();
 		m_pShadow = nullptr;
 	}
 
@@ -228,8 +228,9 @@ void CItem::Update()
 	CollisionPlayer();
 
 	if (m_pShadow != nullptr)
-	{// シャドウの更新
-		m_pShadow->SetPos(D3DXVECTOR3(pos.x, pos.y + 1.0f, pos.z));
+	{// シャドウの位置設定
+		m_pShadow->SetPos(D3DXVECTOR3(pos.x, 1.0f, pos.z));
+		m_pShadow->SetBaseHeight(pos.y);
 	}
 
 	// 情報の更新

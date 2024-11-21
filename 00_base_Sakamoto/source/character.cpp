@@ -24,7 +24,7 @@
 //====================================================================
 namespace
 {
-	const float SHADOW_SIZE = 50.0f;			// ŠÛ‰e‚Ì‘å‚«‚³
+	const float SHADOW_SIZE = 100.0f;			// ŠÛ‰e‚Ì‘å‚«‚³
 }
 
 //====================================================================
@@ -132,7 +132,7 @@ void CCharacter::Uninit(void)
 	// ‰e‚ÌI—¹
 	if (m_pShadow != nullptr)
 	{
-		m_pShadow->SetDeathFlag(true);
+		m_pShadow->Uninit();
 		m_pShadow = nullptr;
 	}
 
@@ -162,7 +162,8 @@ void CCharacter::Update(void)
 
 	if (m_pShadow != nullptr)
 	{// ƒVƒƒƒhƒE‚ÌXV
-		m_pShadow->SetPos(D3DXVECTOR3(m_pos.x, m_pos.y + 1.0f, m_pos.z));
+		m_pShadow->SetPos(D3DXVECTOR3(m_pos.x, 1.0f, m_pos.z));
+		m_pShadow->SetBaseHeight(pos.y);
 	}
 }
 

@@ -60,9 +60,6 @@ public:
 	void SetDel(float Del) { m_fDel = Del; }
 	char* GetTextureName(void) { return &m_acTextureName[0]; }
 
-	// 静的メンバ関数
-	static CListManager<CObjmeshCube>* GetList(void); // リスト取得
-
 protected:
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;		//頂点バッファへのポインタ
 	LPDIRECT3DINDEXBUFFER9 m_pIdxBuff;		//インデックスバッファへのポインタ
@@ -84,12 +81,5 @@ private:
 	char m_acTextureName[64];				//モデルの名前
 	bool m_bMultiMatrix;					//マトリックスの掛け合わせをするかどうか
 	D3DXMATRIX *m_UseMultiMatrix;			//掛け合わせるマトリックス
-
-	// 静的メンバ変数
-	static CListManager<CObjmeshCube>* m_pList; // オブジェクトリスト
-
-	// メンバ変数
-	CListManager<CObjmeshCube>::AIterator m_iterator; // イテレーター
-
 };
 #endif

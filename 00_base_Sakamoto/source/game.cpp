@@ -23,6 +23,8 @@
 #include "SlopeDevice.h"
 #include "mask.h"
 
+#include "shadow.h"
+
 namespace
 {
 	const int SAMPLE_NAMESPACE = 0;
@@ -319,6 +321,9 @@ void CGame::Update(void)
 	CInputJoypad* pInputJoypad = CManager::GetInstance()->GetInputJoyPad();
 
 	DebugProc::Print(DebugProc::POINT_LEFT, "ゲームスピード : %f\n", CManager::GetInstance()->GetGameSpeed());
+
+	DebugProc::Print(DebugProc::POINT_CENTER, "アイテム数 : %d\n", CItem::GetList()->GetNumAll());
+	DebugProc::Print(DebugProc::POINT_CENTER, "シャドウ数 : %d\n", CShadow::GetList()->GetNumAll());
 
 	CMapSystem::GetInstance()->Update();
 

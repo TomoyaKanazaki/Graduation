@@ -39,9 +39,6 @@ public:
 	void SetReverse(bool b) { m_bReverse = b; }
 	bool GetReverse() { return m_bReverse; }
 
-	// 静的メンバ関数
-	static CListManager<CObjectAnim2D>* GetList(void); // リスト取得
-
 private:
 	int m_nU;//横方向の枚数
 	int m_nV;//縦方向の枚数
@@ -51,12 +48,5 @@ private:
 	float m_fCurrentFrame;
 	bool m_bLoop;//ループの有無
 	bool m_bReverse; //逆再生の有無
-
-	// 静的メンバ変数
-	static CListManager<CObjectAnim2D>* m_pList; // オブジェクトリスト
-
-	// メンバ変数
-	CListManager<CObjectAnim2D>::AIterator m_iterator; // イテレーター
-
 };
 #endif
