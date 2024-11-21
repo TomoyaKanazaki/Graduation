@@ -37,6 +37,7 @@
 #include "CubeBlock.h"
 #include "RollRock.h"
 #include "shadow.h"
+#include "mask.h"
 
 #include "MyEffekseer.h"
 

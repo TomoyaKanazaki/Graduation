@@ -1,7 +1,7 @@
 //=======================================
 //
-//ステンシルバッファに必要な2Dマスク[mask.h]
-//Author : MORIKAWA SHUNYA
+// ステンシルバッファに必要な2Dマスク[mask.h]
+// Author : MORIKAWA SHUNYA
 //
 //=======================================
 
@@ -25,6 +25,8 @@ public:
 	void Uninit();
 	void Update();
 	void Draw();
+
+	void SetColor(CObject::TYPE type, D3DXCOLOR col);	// 個別の色設定
 
 private:
 	//メンバ変数
