@@ -154,6 +154,18 @@ void CBowabowa::Move(D3DXVECTOR3& pos)
 }
 
 //==========================================
+//  エフェクトを生成
+//==========================================
+void CBowabowa::SetEffect()
+{
+	// 自身の情報を取得する
+	D3DXVECTOR3 pos = GetPos();
+	D3DXVECTOR3 rot = GetRot();
+
+	Effect(MyEffekseer::EffectCreate(CMyEffekseer::TYPE_BOABOA, true, useful::CalcMatrix(pos, rot, *GetUseMultiMatrix()), rot, D3DXVECTOR3(20.0f, 20.0f, 20.0f)));
+}
+
+//==========================================
 //  リストの取得
 //==========================================
 CListManager<CBowabowa>* CBowabowa::GetList(void)

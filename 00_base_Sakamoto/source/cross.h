@@ -36,6 +36,7 @@ private:
 
 	// メンバ関数
 	void Rotation();
+	void SetEffect() override;
 
 	// 静的メンバ変数
 	static CListManager<CCross>* m_pList; // オブジェクトリスト

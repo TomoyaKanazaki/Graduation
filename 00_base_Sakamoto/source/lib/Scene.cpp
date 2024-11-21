@@ -8,20 +8,15 @@
 #include "Scene.h"
 #include "sound.h"
 #include "title.h"
+#include "select.h"
 #include "game.h"
 #include "result.h"
 #include "tutorial.h"
 #include "logo.h"
 #include "camera.h"
 
-#ifdef _DEBUG
-#define SET_MODE (CScene::MODE_TITLE)
-#else
-#define SET_MODE (CScene::MODE_GAME)
-#endif // _DEBUG
-
 //静的メンバ変数宣言
-CScene::MODE CScene::m_mode = SET_MODE;
+CScene::MODE CScene::m_mode = MODE_LOGO;
 
 //====================================================================
 //コンストラクタ
@@ -56,6 +51,9 @@ CScene* CScene::Create(MODE mode)
 			break;
 		case MODE_TITLE:
 			pScene = CTitle::GetInstance();
+			break;
+		case MODE_SELECT:
+			pScene = CSelect::GetInstance();
 			break;
 		case MODE_GAME:
 			pScene = CGame::GetInstance();

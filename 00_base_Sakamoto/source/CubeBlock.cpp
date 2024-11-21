@@ -38,17 +38,17 @@ CCubeBlock::CCubeBlock(int nPriority) :CObjmeshCube(nPriority)
 {
 	m_nMapWidthNumber = 0;
 	m_nMapHeightNumber = 0;
-	m_fGritSize = 0.0f;		// マップのグリッドサイズ
+	m_GritSize = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		// マップのグリッドサイズ
 }
 
 //====================================================================
 //コンストラクタ(オーバーロード)
 //====================================================================
-CCubeBlock::CCubeBlock(int nPriority, CMapSystem::GRID gridCenter, float fGridSize) :CObjmeshCube(nPriority)
+CCubeBlock::CCubeBlock(int nPriority, CMapSystem::GRID gridCenter, D3DXVECTOR3 GridSize) :CObjmeshCube(nPriority)
 {
 	m_nMapWidthNumber = gridCenter.x;
 	m_nMapHeightNumber = gridCenter.z;
-	m_fGritSize = fGridSize;		// マップのグリッドサイズ
+	m_GritSize = GridSize;		// マップのグリッドサイズ
 }
 
 //====================================================================
@@ -62,14 +62,14 @@ CCubeBlock::~CCubeBlock()
 //====================================================================
 //生成処理
 //====================================================================
-CCubeBlock* CCubeBlock::Create(CMapSystem::GRID gridCenter, float fGridSize)
+CCubeBlock* CCubeBlock::Create(CMapSystem::GRID gridCenter, D3DXVECTOR3 GridSize)
 {
 	CCubeBlock* pObject3D = nullptr;
 
 	if (pObject3D == nullptr)
 	{
 		//オブジェクト3Dの生成
-		pObject3D = new CCubeBlock(3, gridCenter, fGridSize);
+		pObject3D = new CCubeBlock(3, gridCenter, GridSize);
 	}
 
 	//オブジェクトの初期化処理
@@ -98,7 +98,7 @@ HRESULT CCubeBlock::Init(void)
 	SetPos(D3DXVECTOR3(MapSystemPos.x + m_nMapWidthNumber * 100.0f, 50.0f, MapSystemPos.z - m_nMapHeightNumber * 100.0f));
 
 	// 大きさ設定(Yは内部で定数化)
-	SetSize(D3DXVECTOR3(m_fGritSize, 15.0f, m_fGritSize));
+	SetSize(m_GritSize);
 
 	// テクスチャの設定
 	SetTexture("data\\TEXTURE\\Field\\00_ground.jpg");

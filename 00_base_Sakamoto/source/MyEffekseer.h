@@ -35,9 +35,7 @@ public:
 		TYPE_RESPAWN_MEDAMAN,	// メダマンのリスポーン
 		TYPE_RESPAWN_BONBON,	// ボンボンのリスポーン
 		TYPE_RESPAWN_SMALLDEVIL, // コデビルのリスポーン
-
-		TYPE_BOABOA_00,		// ボアボアエフェクト その１
-		TYPE_BOABOA_01,		// ボアボアエフェクト その２
+		TYPE_BOABOA,		// ボアボアエフェクト
 		TYPE_CROSS,			// 十字架エフェクト
 		TYPE_BIBLE,			// 聖書
 		TYPE_DUSTCLOUD,		// 歩いた時の煙

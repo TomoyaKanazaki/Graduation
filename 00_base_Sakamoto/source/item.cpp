@@ -58,7 +58,8 @@ CListManager<CItem>* CItem::m_pList = nullptr; // オブジェクトリスト
 CItem::CItem(int nPriority) : CObjectX(nPriority),
 m_posBase(INITVECTOR3),
 m_fMoveTime(0.0f),
-m_pShadow(nullptr)
+m_pShadow(nullptr),
+m_pEffect(nullptr)
 {
 	m_eType = TYPE_NONE;		// 種類
 	m_nIdxXModel = 0;			// Xモデル番号
@@ -132,11 +133,14 @@ CItem* CItem::Create(const TYPE eType, const CMapSystem::GRID& pos)
 	// 初期化処理
 	pItem->Init();
 
+	// タイプの設定
+	pItem->SetItem(eType);
+
 	// 位置の設定
 	pItem->SetGrid(pos);
 
-	// タイプの設定
-	pItem->SetItem(eType);
+	// エフェクトを生成
+	pItem->SetEffect();
 
 	return pItem;
 }
@@ -197,6 +201,12 @@ void CItem::Uninit()
 		m_pShadow = nullptr;
 	}
 
+	// エフェクトを消去
+	if (m_pEffect != nullptr)
+	{
+		m_pEffect->SetDeath();
+	}
+
 	// 継承クラスの終了
 	CObjectX::Uninit();
 }
@@ -231,6 +241,14 @@ void CItem::Update()
 	{// シャドウの位置設定
 		m_pShadow->SetPos(D3DXVECTOR3(pos.x, 1.0f, pos.z));
 		m_pShadow->SetBaseHeight(pos.y);
+	}
+
+	// エフェクトを動かす
+	if (m_pEffect != nullptr)
+	{
+		D3DXMATRIX mat = *GetUseMultiMatrix();
+		D3DXVECTOR3 ef = useful::CalcMatrix(pos, rot, *GetUseMultiMatrix());
+		m_pEffect->SetPosition(ef);
 	}
 
 	// 情報の更新

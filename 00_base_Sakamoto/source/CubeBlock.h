@@ -16,10 +16,10 @@ class CCubeBlock : public CObjmeshCube
 {
 public:
 	CCubeBlock(int nPriority = 3);
-	CCubeBlock(int nPriority, CMapSystem::GRID gridCenter, float fGridSize);
+	CCubeBlock(int nPriority, CMapSystem::GRID gridCenter, D3DXVECTOR3 GridSize);
 	~CCubeBlock();
 
-	static CCubeBlock* Create(CMapSystem::GRID gridCenter, float fGridSize);
+	static CCubeBlock* Create(CMapSystem::GRID gridCenter, D3DXVECTOR3 GridSize);
 
 	HRESULT Init(void);
 	void Uninit(void);
@@ -43,7 +43,7 @@ private:
 	int m_nMapWidthNumber;
 	int m_nMapHeightNumber;
 
-	float m_fGritSize;		// マップのグリッドサイズ
+	D3DXVECTOR3 m_GritSize;		// マップのグリッドサイズ
 
 	// 静的メンバ変数
 	static CListManager<CCubeBlock>* m_pList; // オブジェクトリスト
