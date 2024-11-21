@@ -37,47 +37,7 @@ namespace
 }
 
 //静的メンバ変数宣言
-CEdit* CTutorial::m_pEdit = nullptr;
-CPause* CTutorial::m_pPause = nullptr;
-CScore* CTutorial::m_pScore = nullptr;
-CTimer* CTutorial::m_pTime = nullptr;
-CObject2D* CTutorial::m_p2DSample = nullptr;
-CObject3D* CTutorial::m_p3DSample = nullptr;
-CObjectBillboard* CTutorial::m_pBillboardSample = nullptr;
-CObjectX* CTutorial::m_pXModelSample = nullptr;
-CObjmeshField* CTutorial::m_pMeshFieldSample = nullptr;
-CObjmeshWall* CTutorial::m_pMeshWallSample = nullptr;
-CObjmeshCylinder* CTutorial::m_pMeshCylinderSample = nullptr;
-CObjmeshDome* CTutorial::m_pMeshDomeUp = nullptr;
-CObjmeshField* CTutorial::m_pMapField = nullptr;
-CCubeBlock* CTutorial::m_pCubeBlock = nullptr;
-CPlayer* CTutorial::m_pPlayer[NUM_PLAYER] = {};
-CDevil* CTutorial::m_pDevil = nullptr;
-CBoss* CTutorial::m_pBoss = nullptr;
-CMask* CTutorial::m_pMask = nullptr;
-
-bool CTutorial::m_bGameEnd = false;
-bool CTutorial::m_bGameClear = false;
-bool CTutorial::m_bEvent = false;
-bool CTutorial::m_bEventEnd = false;
-bool CTutorial::m_Wireframe = false;
-bool CTutorial::m_Slow = false;
-bool CTutorial::m_bDevilHoleFinish = false;
-
-int CTutorial::m_nTutorialWave = 0;
-int CTutorial::m_nEventCount = 0;
-int CTutorial::m_nEventWave = 0;
-int CTutorial::m_nEventNumber = 0;
-int CTutorial::m_nNumBowabowa = 0;
-
-float CTutorial::m_fEvectFinish = 0.0f;
-float CTutorial::m_fEventAngle = 0.0f;
-float CTutorial::m_EventHeight = 0.0f;
-float CTutorial::m_NameColorA = 0.0f;
-float CTutorial::m_BGColorA = 1.0f;
-
-D3DXVECTOR3 CTutorial::m_EventPos = D3DXVECTOR3(0.0f, 300.0f, 0.0f);
-D3DXVECTOR3 CTutorial::m_BGRot = INITVECTOR3;
+CTutorial* CTutorial::m_pTutorial = nullptr;
 
 //====================================================================
 //コンストラクタ
@@ -106,6 +66,18 @@ CTutorial::CTutorial()
 CTutorial::~CTutorial()
 {
 
+}
+
+//====================================================================
+//インスタンス取得
+//====================================================================
+CTutorial* CTutorial::GetInstance(void)
+{
+	if (m_pTutorial == nullptr)
+	{
+		m_pTutorial = new CTutorial;
+	}
+	return m_pTutorial;
 }
 
 //====================================================================
@@ -284,6 +256,11 @@ void CTutorial::Uninit(void)
 		m_pEdit = nullptr;
 	}
 #endif
+
+	if (m_pTutorial != nullptr)
+	{
+		m_pTutorial = nullptr;
+	}
 }
 
 //====================================================================

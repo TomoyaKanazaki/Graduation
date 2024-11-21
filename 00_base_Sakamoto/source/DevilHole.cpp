@@ -111,17 +111,8 @@ HRESULT CDevilHole::Init(char* pModelName)
 		break;
 	}
 
-	switch (CScene::GetMode())
-	{
-	case CScene::MODE_GAME:
-		//マップとのマトリックスの掛け合わせをオンにする
-		SetUseMultiMatrix(CGame::GetInstance()->GetMapField()->GetMatrix());
-		break;
-	case CScene::MODE_TUTORIAL:
-		//マップとのマトリックスの掛け合わせをオンにする
-		SetUseMultiMatrix(CTutorial::GetMapField()->GetMatrix());
-		break;
-	}
+	//マップとのマトリックスの掛け合わせをオンにする
+	SetUseMultiMatrix(CGame::GetInstance()->GetMapField()->GetMatrix());
 
 	if (m_pList == nullptr)
 	{// リストマネージャー生成

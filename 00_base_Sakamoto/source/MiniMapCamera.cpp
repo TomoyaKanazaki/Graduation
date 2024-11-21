@@ -251,20 +251,7 @@ void CMiniMapCamera::DownviewCamera(void)
 {
 	CPlayer* pPlayer = nullptr;
 
-	switch (CScene::GetMode())
-	{
-	case CScene::MODE_GAME:
-
-		pPlayer = CGame::GetInstance()->GetPlayer(0);
-
-		break;
-
-	case CScene::MODE_TUTORIAL:
-
-		pPlayer = CTutorial::GetPlayer(0);
-
-		break;
-	}
+	pPlayer = CGame::GetInstance()->GetPlayer(0);
 
 	if (pPlayer == nullptr)
 	{

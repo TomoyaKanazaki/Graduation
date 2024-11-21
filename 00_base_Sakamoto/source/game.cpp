@@ -303,6 +303,11 @@ void CGame::Uninit(void)
 #endif
 
 	CScene::Uninit();
+
+	if (m_pGame != nullptr)
+	{
+		m_pGame = nullptr;
+	}
 }
 
 //====================================================================

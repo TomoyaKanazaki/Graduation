@@ -1,11 +1,11 @@
 //============================================
 //
-//	タイトル画面 [title.h]
+//	選択画面 [select.h]
 //	Author:sakamoto kai
 //
 //============================================
-#ifndef _TITLE_H_
-#define _TITLE_H_
+#ifndef _SELECT_H_
+#define _SELECT_H_
 
 #include "Scene.h"
 
@@ -21,7 +21,7 @@ class CCubeBlock;
 class CCursorUI;
 
 // タイトルクラス
-class CTitle : public CScene
+class CSelect : public CScene
 {
 private:
 	static const int SLASH_2D_NUM = 4;
@@ -37,10 +37,10 @@ private:
 	};
 
 public:
-	CTitle();
-	~CTitle();
+	CSelect();
+	~CSelect();
 
-	static CTitle* GetInstance();
+	static CSelect* GetInstance();
 
 	virtual HRESULT Init(void);
 	virtual void Uninit(void);
@@ -52,7 +52,7 @@ private:
 	void Button(void);				// ボタン
 
 	// シングルトン
-	static CTitle* m_pTitle;
+	static CSelect* m_pTitle;
 
 	float m_fCountFade;
 
@@ -60,7 +60,7 @@ private:
 	CObject2D* m_pModeSelect[MAX_SELECT];	//モードセレクト
 	CObject2D* m_pTitleButton;				//ボタン入力UIのポリゴン
 	CObjmeshDome* m_pMeshDome;				// メッシュドーム
-	
+
 	int m_nSelect;
 	bool m_bStart;
 	bool m_bSlash;
