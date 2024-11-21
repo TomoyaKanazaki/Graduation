@@ -84,17 +84,7 @@ HRESULT CRailBlock::Init(int nMapWight, int nMapHeight, bool Edit, int Max, int*
 	m_StartGrid.x = nMapWight;
 	m_StartGrid.z = nMapHeight;
 
-	switch (CScene::GetInstance()->GetMode())
-	{
-	case CScene::MODE_GAME:
-		//マップとのマトリックスの掛け合わせをオンにする
-		SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
-		break;
-	case CScene::MODE_TUTORIAL:
-		//マップとのマトリックスの掛け合わせをオンにする
-		SetUseMultiMatrix(CTutorial::GetMapField()->GetMatrix());
-		break;
-	}
+	SetUseMultiMatrix(CGame::GetInstance()->GetMapField()->GetMatrix());
 
 	CObjmeshCube::Init();
 
@@ -212,15 +202,7 @@ void CRailBlock::Move(D3DXVECTOR3* Pos)
 
 	D3DXVECTOR3 SlopeMove = INITVECTOR3;
 	D3DXVECTOR3 SlopeRot = INITVECTOR3;
-	switch (CScene::GetInstance()->GetMode())
-	{
-	case CScene::MODE_GAME:
-		SlopeRot = CGame::GetDevil()->GetDevilRot();
-		break;
-	case CScene::MODE_TUTORIAL:
-		SlopeRot = CTutorial::GetDevil()->GetDevilRot();
-		break;
-	}
+	SlopeRot = CGame::GetInstance()->GetDevil()->GetDevilRot();
 	D3DXVECTOR3 GritPos = CMapSystem::GRID(GetWightNumber(), GetHeightNumber()).ToWorld();
 	D3DXVECTOR3 GritDistance = *Pos - GritPos;	//グリットの中心とした時の相対位置、差分
 

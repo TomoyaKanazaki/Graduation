@@ -213,7 +213,7 @@ void CRail::PrevSet(RAIL_POS Set)
 	{
 		m_pRailModel[0] = CObjectX::Create("data\\MODEL\\TestRail.x");
 		m_pRailModel[0]->SetPos(CMapSystem::GRID(m_nMapWidth, m_nMapHeight).ToWorld());
-		m_pRailModel[0]->SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
+		m_pRailModel[0]->SetUseMultiMatrix(CGame::GetInstance()->GetMapField()->GetMatrix());
 		//m_pRailModel[0]->SetMultiMatrix(true);
 
 		switch (Set)
@@ -250,7 +250,7 @@ void CRail::NextSet(RAIL_POS Set)
 	{
 		m_pRailModel[1] = CObjectX::Create("data\\MODEL\\TestRail.x");
 		m_pRailModel[1]->SetPos(CMapSystem::GRID(m_nMapWidth, m_nMapHeight).ToWorld());
-		m_pRailModel[1]->SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
+		m_pRailModel[1]->SetUseMultiMatrix(CGame::GetInstance()->GetMapField()->GetMatrix());
 		//m_pRailModel[1]->SetMultiMatrix(true);
 
 		//L‚Î‚·‘O‚ÌƒŒ[ƒ‹‚ÌˆÊ’u‚ğæ“¾‚·‚é

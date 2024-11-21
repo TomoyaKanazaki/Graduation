@@ -235,7 +235,7 @@ void CMiniMapCamera::ControlCamera(void)
 		m_posV.z -= CAMERA_SPEED * sinf(m_rot.y);
 	}
 
-	if (CScene::GetInstance()->GetMode() == CScene::MODE_GAME)
+	if (CGame::GetInstance()->GetMode() == CScene::MODE_GAME)
 	{
 		//Ž‹“_‚Ìî•ñ‚ðo—Í‚·‚é
 		m_posV.x = m_posR.x + sinf(m_rot.y) * -cosf(m_rot.x) * m_CameraDistance;
@@ -255,7 +255,7 @@ void CMiniMapCamera::DownviewCamera(void)
 	{
 	case CScene::MODE_GAME:
 
-		pPlayer = CGame::GetPlayer(0);
+		pPlayer = CGame::GetInstance()->GetPlayer(0);
 
 		break;
 

@@ -150,17 +150,8 @@ HRESULT CItem::Init(const char* pModelName)
 	// 継承クラスの初期化
 	CObjectX::Init(pModelName);
 
-	switch (CScene::GetInstance()->GetMode())
-	{
-	case CScene::MODE_GAME:
-		//マップとのマトリックスの掛け合わせをオンにする
-		SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
-		break;
-	case CScene::MODE_TUTORIAL:
-		//マップとのマトリックスの掛け合わせをオンにする
-		SetUseMultiMatrix(CTutorial::GetMapField()->GetMatrix());
-		break;
-	}
+	//マップとのマトリックスの掛け合わせをオンにする
+	SetUseMultiMatrix(CGame::GetInstance()->GetMapField()->GetMatrix());
 
 	if (m_pShadow == nullptr)
 	{// シャドウ生成
@@ -330,7 +321,7 @@ bool CItem::CollisionPlayer()
 		if (!Hit(player)) { continue; }
 
 		// スコアを加算する
-		CGame::GetScore()->AddScore(ITEM_SCORE[m_eType]);
+		CGame::GetInstance()->GetScore()->AddScore(ITEM_SCORE[m_eType]);
 	}
 
 	return false;

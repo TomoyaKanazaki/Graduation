@@ -172,17 +172,8 @@ HRESULT CEnemy::Init(void)
 	//種類設定
 	SetType(CObject::TYPE_ENEMY3D);
 
-	switch (CScene::GetInstance()->GetMode())
-	{
-	case CScene::MODE_GAME:
-		//マップとのマトリックスの掛け合わせをオンにする
-		SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
-		break;
-	case CScene::MODE_TUTORIAL:
-		//マップとのマトリックスの掛け合わせをオンにする
-		SetUseMultiMatrix(CTutorial::GetMapField()->GetMatrix());
-		break;
-	}
+	//マップとのマトリックスの掛け合わせをオンにする
+	SetUseMultiMatrix(CGame::GetInstance()->GetMapField()->GetMatrix());
 
 	// スローの生成(配属、タグの設定)
 	m_pSlow = CSlowManager::Create(m_pSlow->CAMP_ENEMY, m_pSlow->TAG_ENEMY);
@@ -329,7 +320,7 @@ HRESULT CEnemy::InitModel(const char* pFilename)
 	CCharacter::Init(pFilename);
 
 	// マトリックス設定
-	CCharacter::SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
+	CCharacter::SetUseMultiMatrix(CGame::GetInstance()->GetMapField()->GetMatrix());
 	CCharacter::SetUseStencil(true);
 
 	return S_OK;
@@ -363,7 +354,7 @@ void CEnemy::UpdatePos(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR3& s
 		}
 	}
 
-	CDevil* pDevil = CGame::GetDevil();
+	CDevil* pDevil = CGame::GetInstance()->GetDevil();
 
 	//Y軸の位置更新
 	posMy.y += m_move.y * CManager::GetInstance()->GetGameSpeed() * fSpeed;

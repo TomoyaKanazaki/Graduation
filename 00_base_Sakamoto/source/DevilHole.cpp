@@ -111,11 +111,11 @@ HRESULT CDevilHole::Init(char* pModelName)
 		break;
 	}
 
-	switch (CScene::GetInstance()->GetMode())
+	switch (CScene::GetMode())
 	{
 	case CScene::MODE_GAME:
 		//マップとのマトリックスの掛け合わせをオンにする
-		SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
+		SetUseMultiMatrix(CGame::GetInstance()->GetMapField()->GetMatrix());
 		break;
 	case CScene::MODE_TUTORIAL:
 		//マップとのマトリックスの掛け合わせをオンにする
@@ -321,7 +321,7 @@ void CDevilHole::CollisionOpen(void)
 				m_bSet[nCnt] == false)
 			{
 				m_pHoleKey[nCnt] = CObjectX::Create("data\\MODEL\\DevilKey.x");
-				m_pHoleKey[nCnt]->SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
+				m_pHoleKey[nCnt]->SetUseMultiMatrix(CGame::GetInstance()->GetMapField()->GetMatrix());
 				//m_pHoleKey[nCnt]->SetMultiMatrix(true);
 
 				switch (nCnt)
@@ -364,7 +364,7 @@ void CDevilHole::ClearJudge(void)
 		}
 	}
 
-	CGame::SetDevilHoleFinish(true);
+	CGame::GetInstance()->SetDevilHoleFinish(true);
 }
 
 //====================================================================
