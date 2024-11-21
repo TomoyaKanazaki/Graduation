@@ -55,16 +55,16 @@ CScene* CScene::Create(MODE mode)
 			pScene = new CLogo();
 			break;
 		case MODE_TITLE:
-			pScene = new CTitle();
+			pScene = CTitle::GetInstance();
 			break;
 		case MODE_GAME:
 			pScene = CGame::GetInstance();
 			break;
 		case MODE_RESULT:
-			pScene = new CResult();
+			pScene = CResult::GetInstance();
 			break;
 		case CScene::MODE_TUTORIAL:
-			pScene = new CTutorial();
+			pScene = CTutorial::GetInstance();
 			break;
 		}
 	}

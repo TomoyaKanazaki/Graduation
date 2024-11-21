@@ -40,6 +40,8 @@ public:
 	CTitle();
 	~CTitle();
 
+	static CTitle* GetInstance();
+
 	virtual HRESULT Init(void);
 	virtual void Uninit(void);
 	virtual void Update(void);
@@ -48,6 +50,9 @@ public:
 private:
 	void Select(void);				// 選択
 	void Button(void);				// ボタン
+
+	// シングルトン
+	static CTitle* m_pTitle;
 
 	float m_fCountFade;
 
