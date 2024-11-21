@@ -46,8 +46,7 @@ namespace MyEffekseer
 		"data\\EFFEKSEER\\Effect\\medaman_respawn.efkefc",			  // メダマンのリスポーン
 		"data\\EFFEKSEER\\Effect\\bonbon_respawn.efkefc",			  // ボンボンのリスポーン
 		"data\\EFFEKSEER\\Effect\\smalldevil_respawn.efkefc",		  // コデビルのリスポーン
-		"data\\EFFEKSEER\\Effect\\boaboa_00.efkefc",		  // ボアボア
-		"data\\EFFEKSEER\\Effect\\boaboa_01.efkefc",		  // ボアボア
+		"data\\EFFEKSEER\\Effect\\boaboa.efkefc",		  // ボアボア
 		"data\\EFFEKSEER\\Effect\\cross.efkefc",		  // 十字架
 		"data\\EFFEKSEER\\Effect\\bible.efkefc",		  // 聖書
 		"data\\EFFEKSEER\\Effect\\dustcloud.efkefc",		  // 歩いた時の砂埃
@@ -223,11 +222,6 @@ void CMyEffekseer::Update(void)
 		m_EfkManager->SetLocation(Handle, pos);
 		m_EfkManager->SetRotation(Handle, rot.X, rot.Y, rot.Z);
 		m_EfkManager->SetScale(Handle, scale.X, scale.Y, scale.Z);
-
-		//DebugProc::Print(DebugProc::POINT_CENTER, "エフェクトの種類 : ");
-		//auto str = magic_enum::enum_name(effect->GetEfkType());
-		//DebugProc::Print(DebugProc::POINT_CENTER, str.data());
-		//DebugProc::Print(DebugProc::POINT_CENTER, "\n");
 
 		// エフェクトの再生が終了していない場合次に進む
 		if (m_EfkManager->Exists(Handle) && !effect->IsDeath()) { continue; }
