@@ -13,6 +13,14 @@
 #include "objmeshField.h"
 #include "Scene.h"
 
+//==========================================
+//  定数定義
+//==========================================
+namespace
+{
+	const float LIMIT_HEIGHT = 2000.0f; // 影を描画する上限の高さ
+}
+
 //===========================================
 // 静的メンバ変数宣言
 //===========================================
@@ -21,7 +29,9 @@ CListManager<CShadow>* CShadow::m_pList = nullptr; // オブジェクトリスト
 //===========================================
 // コンストラクタ
 //===========================================
-CShadow::CShadow(int nPriority) : CObject3D(nPriority)
+CShadow::CShadow(int nPriority) : CObject3D(nPriority),
+m_fHeight(0.0f),
+m_sizeBase(INITVECTOR3)
 {
 }
 
@@ -48,6 +58,8 @@ CShadow* CShadow::Create(const D3DXVECTOR3& pos, float fWidth, float fHeight)
 
 	// 大きさ
 	pShadow->SetpVtx(fWidth, fHeight);
+	pShadow->m_sizeBase.x = fWidth;
+	pShadow->m_sizeBase.z = fHeight;
 
 	return pShadow;
 }
@@ -103,6 +115,13 @@ void CShadow::Uninit(void)
 //===========================================
 void CShadow::Update(void)
 {
+	// サイズを変更する
+	float fScale = (LIMIT_HEIGHT - m_fHeight) / LIMIT_HEIGHT;
+	D3DXVECTOR3 size = m_sizeBase * fScale;
+	SetpVtx(size.x, size.z);
+
+	// 透明度を変更する
+	SetColorA(1.0f - fScale);
 }
 
 //===========================================

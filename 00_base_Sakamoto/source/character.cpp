@@ -163,6 +163,7 @@ void CCharacter::Update(void)
 	if (m_pShadow != nullptr)
 	{// シャドウの更新
 		m_pShadow->SetPos(D3DXVECTOR3(m_pos.x, m_pos.y + 1.0f, m_pos.z));
+		m_pShadow->SetBaseHeight(pos.y);
 	}
 }
 
