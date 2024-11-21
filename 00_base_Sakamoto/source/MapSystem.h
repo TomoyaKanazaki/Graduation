@@ -80,6 +80,7 @@ public:
 public:
 
 	static CMapSystem* pMapSystem;
+	static std::vector<std::tuple<>> m_nData;	// 複数の値を保持
 
 	static bool m_nMapGrit[NUM_WIGHT][NUM_HEIGHT];	//グリットにブロックが存在していたらtrue
 	GRID m_gridCenter;
@@ -89,6 +90,7 @@ public:
 	int m_HeightMax;
 	float m_fGritSize;
 	D3DXVECTOR3 m_MapSize;		//マップの境界線の大きさ
+
 };
 
 #endif

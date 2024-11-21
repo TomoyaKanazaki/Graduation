@@ -10,7 +10,8 @@
 #include "Scene.h"
 
 //マクロ定義
-#define MAX_SELECT (3)
+#define NUM_SCROLLTYPE (2)
+#define NUM_STAGE (3)
 #define MAX_TITLEUI (3)
 
 // 前方宣言
@@ -48,20 +49,24 @@ public:
 	virtual void Draw(void);
 
 private:
-	void Select(void);				// 選択
-	void Button(void);				// ボタン
+	void StageSelect(void);				// 選択
+	void StageButton(void);				// ボタン
+	void ScrollSelect(void);			// 選択
+	void ScrollButton(void);			// ボタン
 
 	// シングルトン
-	static CSelect* m_pTitle;
+	static CSelect* m_pSelect;
 
 	float m_fCountFade;
 
-	CObject2D* m_pLogo;						//タイトルロゴのポリゴン
-	CObject2D* m_pModeSelect[MAX_SELECT];	//モードセレクト
-	CObject2D* m_pTitleButton;				//ボタン入力UIのポリゴン
-	CObjmeshDome* m_pMeshDome;				// メッシュドーム
+	CObject2D* m_pStageSelect[NUM_STAGE];		//ステージセレクト
+	CObject2D* m_pScrollSelect[NUM_SCROLLTYPE];	//スクロールセレクト
+	CObject2D* m_pTitleButton;					//ボタン入力UIのポリゴン
+	CObjmeshDome* m_pMeshDome;					// メッシュドーム
 
 	int m_nSelect;
+	int m_nStep;
+	int m_nSetStage;
 	bool m_bStart;
 	bool m_bSlash;
 	bool m_bTurn;

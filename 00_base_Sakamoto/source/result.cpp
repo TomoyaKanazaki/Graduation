@@ -165,13 +165,13 @@ void CResult::Update(void)
 {
 	if (CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_RETURN) == true)
 	{
-		CFade::SetFade(CScene::MODE_GAME);
+		CFade::SetFade(CScene::MODE_TITLE);
 		//CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_ENTER_PUSH);
 		m_pLifeRanking->SaveRanking();
 	}
 	if (CManager::GetInstance()->GetInputJoyPad()->GetTrigger(CInputJoypad::BUTTON_A, 0) == true)
 	{
-		CFade::SetFade(CScene::MODE_GAME);
+		CFade::SetFade(CScene::MODE_TITLE);
 		//CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_ENTER_PUSH);
 		m_pLifeRanking->SaveRanking();
 	}
