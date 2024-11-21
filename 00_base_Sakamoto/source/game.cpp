@@ -284,6 +284,8 @@ void CGame::Uninit(void)
 		m_pEdit = nullptr;
 	}
 #endif
+
+	CScene::Uninit();
 }
 
 //====================================================================

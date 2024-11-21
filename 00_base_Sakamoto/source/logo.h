@@ -8,6 +8,7 @@
 #define _logo_H_
 
 #include "manager.h"
+#include "Scene.h"
 
 //ƒ}ƒNƒ’è‹`
 #define MAX_SELECT (3)

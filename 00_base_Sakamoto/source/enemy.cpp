@@ -172,7 +172,7 @@ HRESULT CEnemy::Init(void)
 	//種類設定
 	SetType(CObject::TYPE_ENEMY3D);
 
-	switch (CManager::GetInstance()->GetScene()->GetMode())
+	switch (CScene::GetInstance()->GetMode())
 	{
 	case CScene::MODE_GAME:
 		//マップとのマトリックスの掛け合わせをオンにする
@@ -326,7 +326,7 @@ bool CEnemy::Hit(int nLife)
 HRESULT CEnemy::InitModel(const char* pFilename)
 {
 	// キャラクターテキスト読み込み処理
-	CCharacter::SetTxtCharacter(pFilename);
+	CCharacter::Init(pFilename);
 
 	// マトリックス設定
 	CCharacter::SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());

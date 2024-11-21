@@ -361,8 +361,8 @@ void CObjmeshCube::Draw(void)
 	D3DXMATRIX TestMatrix;	//テスト用マトリックス
 	D3DXMATRIX mtxRot, mtxTrans;	//計算用マトリックス
 
-	//ライティングをオフにする
-	m_pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+	////ライティングをオフにする
+	//m_pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 
 	//ワールドマトリックスの初期化
 	D3DXMatrixIdentity(&m_mtxWorld);
@@ -412,8 +412,8 @@ void CObjmeshCube::Draw(void)
 		0,
 		(28) - 2);//描画するプリミティブの数
 
-	//ライティングをオンにする
-	m_pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
+	////ライティングをオンにする
+	//m_pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
 }
 
 //====================================================================

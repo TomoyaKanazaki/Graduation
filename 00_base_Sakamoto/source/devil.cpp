@@ -34,6 +34,7 @@
 #include "sound.h"
 #include "scrollarrow.h"
 #include "fire.h"
+#include "Scene.h"
 
 //===========================================
 // 定数定義
@@ -129,7 +130,7 @@ HRESULT CDevil::Init(void)
 	SetType(CObject::TYPE_DEVIL);
 
 	// キャラクターテキストの設定処理
-	CCharacter::SetTxtCharacter("data\\TXT\\MOTION\\01_enemy\\motion_devil.txt");
+	CCharacter::Init("data\\TXT\\MOTION\\01_enemy\\motion_devil.txt");
 	
 	switch (CScene::GetMode())
 	{
@@ -202,7 +203,6 @@ void CDevil::Update(void)
 	D3DXVECTOR3 posOldMy = GetPosOld();		// 前回の位置
 	D3DXVECTOR3 rotMy = GetRot();			// 向き
 	D3DXVECTOR3 sizeMy = GetSize();			// 大きさ
-
 	// 過去の位置に代入
 	posOldMy = posMy;
 
@@ -265,12 +265,6 @@ void CDevil::Update(void)
 
 	DebugProc::Print(DebugProc::POINT_RIGHT, "[最小番号]左 %d : 上 %d\n", m_MinGrid.x, m_MinGrid.z);
 	DebugProc::Print(DebugProc::POINT_RIGHT, "[最大番号]右 %d : 下 %d\n", m_MaxGrid.x, m_MaxGrid.z);
-
-	// 値更新
-	SetPos(posMy);			// 位置
-	SetPosOld(posOldMy);	// 前回の位置
-	SetRot(rotMy);			// 向き
-	SetSize(sizeMy);		// 大きさ
 }
 
 //====================================================================
@@ -1465,7 +1459,7 @@ float CDevil::MoveSlopeX(float Move)
 	float fSlopeMove = 1.0f;
 
 	D3DXVECTOR3 DevilRot = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
-	if (CManager::GetInstance()->GetScene()->GetMode() == CScene::MODE_GAME)
+	if (CScene::GetInstance()->GetMode() == CScene::MODE_GAME)
 	{
 		DevilRot = m_DevilRot;
 	}
@@ -1490,7 +1484,7 @@ float CDevil::MoveSlopeZ(float Move)
 	float fSlopeMove = 1.0f;
 
 	D3DXVECTOR3 DevilRot = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
-	if (CManager::GetInstance()->GetScene()->GetMode() == CScene::MODE_GAME)
+	if (CScene::GetInstance()->GetMode() == CScene::MODE_GAME)
 	{
 		DevilRot = CGame::GetDevil()->GetDevilRot();
 	}
