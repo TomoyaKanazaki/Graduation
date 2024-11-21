@@ -326,7 +326,7 @@ bool CEnemy::Hit(int nLife)
 HRESULT CEnemy::InitModel(const char* pFilename)
 {
 	// キャラクターテキスト読み込み処理
-	CCharacter::SetTxtCharacter(pFilename);
+	CCharacter::Init(pFilename);
 
 	// マトリックス設定
 	CCharacter::SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());

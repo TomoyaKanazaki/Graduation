@@ -137,12 +137,6 @@ void CCharacter::Uninit(void)
 		m_pMotion = nullptr;
 	}
 
-	if (m_pShadow != nullptr)
-	{// シャドウの破棄
-		m_pShadow->Uninit();
-		m_pShadow = nullptr;
-	}
-
 	SetDeathFlag(true);
 }
 
@@ -251,11 +245,6 @@ void CCharacter::Draw(void)
 		{
 			m_apModel[nCntModel]->Draw();
 		}
-	}
-
-	if (m_pShadow != nullptr)
-	{// シャドウの描画
-		m_pShadow->Draw();
 	}
 
 	//ステンシルバッファ無効

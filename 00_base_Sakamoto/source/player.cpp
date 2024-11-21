@@ -174,7 +174,7 @@ HRESULT CPlayer::Init(void)
 	SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
 
 	// キャラクターテキスト読み込み処理
-	CCharacter::SetTxtCharacter("data\\TXT\\motion_tamagon1P.txt");
+	CCharacter::Init("data\\TXT\\motion_tamagon1P.txt");
 
 	// キャラクターのマトリックス設定
 	CCharacter::SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
@@ -196,10 +196,10 @@ HRESULT CPlayer::Init(void)
 	// スローの生成
 	m_pSlow = CSlowManager::Create(CSlowManager::CAMP_PLAYER, CSlowManager::TAG_PLAYER);
 
-	if (m_pShadow == nullptr)
-	{// 影生成
-		m_pShadow = CShadow::Create(m_pos, SHADOW_SIZE, SHADOW_SIZE);
-	}
+	//if (m_pShadow == nullptr)
+	//{// 影生成
+	//	m_pShadow = CShadow::Create(m_pos, SHADOW_SIZE, SHADOW_SIZE);
+	//}
 
 	// リストマネージャーの生成
 	if (m_pList == nullptr)
@@ -262,10 +262,10 @@ void CPlayer::Update(void)
 //====================================================================
 void CPlayer::TitleUpdate(void)
 {
-	if (m_pShadow != nullptr)
-	{// 影生成
-		m_pShadow->Update();
-	}
+	//if (m_pShadow != nullptr)
+	//{// 影生成
+	//	m_pShadow->Update();
+	//}
 
 	// キャラクタークラスの更新（継承）
 	CCharacter::Update();
@@ -370,10 +370,10 @@ void CPlayer::GameUpdate(void)
 	//卵の動き
 	EggMove();
 
-	if (m_pShadow != nullptr)
-	{// 影生成
-		m_pShadow->SetPos(D3DXVECTOR3(m_pos.x, m_pos.y +1.0f, m_pos.z));
-	}
+	//if (m_pShadow != nullptr)
+	//{// 影生成
+	//	m_pShadow->SetPos(D3DXVECTOR3(m_pos.x, m_pos.y +1.0f, m_pos.z));
+	//}
 
 	// キャラクタークラスの更新（継承）
 	CCharacter::Update();
