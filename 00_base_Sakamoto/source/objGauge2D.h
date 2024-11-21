@@ -61,9 +61,6 @@ public:
 	void SetAppear(bool bAppear) { m_bAppear = bAppear; }
 	bool GetAppear(void) { return m_bAppear; }
 
-	// 静的メンバ関数
-	static CListManager<CObjGauge2D>* GetList(void); // リスト取得
-
 protected:
 	void SetVtxBuff(LPDIRECT3DVERTEXBUFFER9 Height) { m_pVtxBuff = Height; }
 	LPDIRECT3DVERTEXBUFFER9 GetVtxBuff(void) { return m_pVtxBuff; }
@@ -80,12 +77,6 @@ private:
 	LPDIRECT3DTEXTURE9 m_pTexture;			//テクスチャへのポインタ
 	TYPE_VERTEX m_type;
 	bool m_bAppear;							//描画するかどうか
-
-	// 静的メンバ変数
-	static CListManager<CObjGauge2D>* m_pList; // オブジェクトリスト
-
-	// メンバ変数
-	CListManager<CObjGauge2D>::AIterator m_iterator; // イテレーター
 
 };
 #endif

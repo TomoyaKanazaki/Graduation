@@ -60,9 +60,6 @@ public:
 	void SetUseMultiMatrix(D3DXMATRIX* Set);
 	D3DXMATRIX* GetUseMultiMatrix(void) { return m_UseMultiMatrix; }
 
-	// 静的メンバ関数
-	static CListManager<CObjectX>* GetList(void); // リスト取得
-
 protected:
 	D3DXMATRIX m_mtxWorld;					//ワールドマトリックス
 
@@ -86,12 +83,6 @@ private:
 
 	//マップとのマトリックス情報
 	D3DXMATRIX* m_UseMultiMatrix;			//掛け合わせるマトリックス
-
-	// 静的メンバ変数
-	static CListManager<CObjectX>* m_pList; // オブジェクトリスト
-
-	// メンバ変数
-	CListManager<CObjectX>::AIterator m_iterator; // イテレーター
 
 };
 #endif

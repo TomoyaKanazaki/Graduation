@@ -6,11 +6,6 @@
 //============================================
 #include "objectAnim2d.h"
 
-//===========================================
-// 静的メンバ変数宣言
-//===========================================
-CListManager<CObjectAnim2D>* CObjectAnim2D::m_pList = nullptr; // オブジェクトリスト
-
 //====================================================================
 //コンストラクタ
 //====================================================================
@@ -63,15 +58,6 @@ HRESULT CObjectAnim2D::Init(void)
 {	
 	CObject2D::Init();
 
-	if (m_pList == nullptr)
-	{// リストマネージャー生成
-		m_pList = CListManager<CObjectAnim2D>::Create();
-		if (m_pList == nullptr) { assert(false); return E_FAIL; }
-	}
-
-	// リストに自身のオブジェクトを追加・イテレーターを取得
-	m_iterator = m_pList->AddList(this);
-
 	return S_OK;
 }
 
@@ -80,16 +66,6 @@ HRESULT CObjectAnim2D::Init(void)
 //====================================================================
 void CObjectAnim2D::Uninit(void)
 {
-	// リストから自身のオブジェクトを削除
-	m_pList->DelList(m_iterator);
-
-	if (m_pList->GetNumAll() == 0)
-	{ // オブジェクトが一つもない場合
-
-		// リストマネージャーの破棄
-		m_pList->Release(m_pList);
-	}
-
 	CObject2D::Uninit();
 }
 
@@ -123,12 +99,4 @@ void CObjectAnim2D::Draw(void)
 {
 
 	CObject2D::Draw();
-}
-
-//==========================================
-// リストの取得
-//==========================================
-CListManager<CObjectAnim2D>* CObjectAnim2D::GetList(void)
-{
-	return m_pList;
 }

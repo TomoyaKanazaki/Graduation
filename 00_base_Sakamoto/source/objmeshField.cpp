@@ -21,11 +21,6 @@ namespace
 	const float FIELD_SIZE = 100.0f;		//床一枚の大きさ
 }
 
-//===========================================
-// 静的メンバ変数宣言
-//===========================================
-CListManager<CObjmeshField>* CObjmeshField::m_pList = nullptr; // オブジェクトリスト
-
 //====================================================================
 //コンストラクタ
 //====================================================================
@@ -181,15 +176,6 @@ HRESULT CObjmeshField::Init(void)
 	//インデックスバッファをアンロックする
 	m_pIdxBuff->Unlock();
 
-	if (m_pList == nullptr)
-	{// リストマネージャー生成
-		m_pList = CListManager<CObjmeshField>::Create();
-		if (m_pList == nullptr) { assert(false); return E_FAIL; }
-	}
-
-	// リストに自身のオブジェクトを追加・イテレーターを取得
-	m_iterator = m_pList->AddList(this);
-
 	D3DXMATRIX mtxRot, mtxTrans;	//計算用マトリックス
 	//ワールドマトリックスの初期化
 	D3DXMatrixIdentity(&m_mtxWorld);
@@ -207,8 +193,6 @@ HRESULT CObjmeshField::Init(void)
 	//ワールドマトリックスの設定
 	m_pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
 
-
-
 	return S_OK;
 }
 
@@ -217,16 +201,6 @@ HRESULT CObjmeshField::Init(void)
 //====================================================================
 void CObjmeshField::Uninit(void)
 {
-	// リストから自身のオブジェクトを削除
-	m_pList->DelList(m_iterator);
-
-	if (m_pList->GetNumAll() == 0)
-	{ // オブジェクトが一つもない場合
-
-		// リストマネージャーの破棄
-		m_pList->Release(m_pList);
-	}
-
 	//頂点バッファの破棄
 	if (m_pVtxBuff != nullptr)
 	{
@@ -408,12 +382,4 @@ void CObjmeshField::SetVtxSize(int vtxWidth, int vtxHeight)
 {
 	m_vtxWidth = vtxWidth;
 	m_vtxHeight = vtxHeight;
-}
-
-//====================================================================
-// リスト取得
-//====================================================================
-CListManager<CObjmeshField>* CObjmeshField::GetList(void)
-{
-	return m_pList;
 }
