@@ -167,6 +167,14 @@ void CItem::Uninit()
 {
 	// Œp³ƒNƒ‰ƒX‚ÌI—¹
 	//CObjectX::Uninit();
+
+		// ‰e‚ÌI—¹
+	if (m_pShadow != nullptr)
+	{
+		m_pShadow->SetDeathFlag(true);
+		m_pShadow = nullptr;
+	}
+
 }
 
 //====================================================================
