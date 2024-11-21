@@ -11,6 +11,7 @@
 #include "objmeshDome.h"
 #include "objmeshField.h"
 #include "light.h"
+#include "Devil.h"
 #include "sound.h"
 
 // 定数定義
@@ -172,6 +173,11 @@ void CSelect::Uninit(void)
 {
 	//全てのオブジェクトの破棄
 	CObject::ReleaseAll();
+
+	if (m_pSelect != nullptr)
+	{
+		m_pSelect = nullptr;
+	}
 }
 
 //====================================================================
@@ -323,11 +329,11 @@ void CSelect::ScrollButton(void)
 		switch (m_nSelect)
 		{
 		case 0:
+			CManager::GetInstance()->SetScrollType(CDevil::SCROLL_TYPE_NORMAL);
 			CFade::SetFade(CScene::MODE_GAME);
-
 			break;
 		case 1:
-
+			CManager::GetInstance()->SetScrollType(CDevil::SCROLL_TYPE_RETRO);
 			CFade::SetFade(CScene::MODE_GAME);
 			break;
 		}

@@ -322,7 +322,7 @@ void CPlayer::GameUpdate(void)
 
 		ObjPosUpdate();
 
-		if (m_State != STATE_EGG)
+		if (m_State != STATE_EGG && m_State != STATE_DEATH)
 		{
 			//‰æ–ÊŠO”»’è
 			CollisionStageOut();
