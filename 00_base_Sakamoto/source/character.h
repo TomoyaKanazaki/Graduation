@@ -23,7 +23,6 @@ public:
 	CCharacter(int nPriority = 3);
 	~CCharacter();
 
-	static CCharacter* Create(const char* pModelName);
 	virtual HRESULT Init(void) { return S_OK; };
 	HRESULT Init(const char* pModelName);
 	void Uninit(void);

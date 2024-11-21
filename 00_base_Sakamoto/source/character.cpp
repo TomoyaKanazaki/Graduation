@@ -18,6 +18,8 @@
 #include "objmeshField.h"
 
 #include "shadow.h"
+#include "mask.h"
+
 
 //====================================================================
 // 定数定義
@@ -60,26 +62,6 @@ m_pShadow(nullptr)
 CCharacter::~CCharacter()
 {
 
-}
-
-//====================================================================
-//生成処理
-//====================================================================
-CCharacter* CCharacter::Create(const char* pModelName)
-{
-	CCharacter* pInstance = new CCharacter();
-
-	//オブジェクトの初期化処理
-	if (FAILED(pInstance->Init(pModelName)))
-	{//初期化処理が失敗した場合
-
-		// アサート
-		assert(("キャラクタークラスの生成失敗", false));
-
-		return nullptr;
-	}
-
-	return pInstance;
 }
 
 //====================================================================
