@@ -24,7 +24,7 @@ namespace
 }
 
 //静的メンバ変数宣言
-bool CResult::m_Appear = false;
+CResult* CResult::m_pResult = nullptr;
 
 //====================================================================
 //コンストラクタ
@@ -35,6 +35,7 @@ CResult::CResult()
 	m_pLifeRanking = nullptr;
 	m_ClearText = nullptr;
 	m_pScoreTex = nullptr;
+	m_Appear = false;
 
 	for (int nCnt = 0; nCnt < 6; nCnt++)
 	{
@@ -53,6 +54,18 @@ CResult::CResult()
 CResult::~CResult()
 {
 
+}
+
+//====================================================================
+//インスタンス取得
+//====================================================================
+CResult* CResult::GetInstance(void)
+{
+	if (m_pResult == nullptr)
+	{
+		m_pResult = new CResult;
+	}
+	return m_pResult;
 }
 
 //====================================================================
@@ -138,6 +151,11 @@ void CResult::Uninit(void)
 {
 	//全てのオブジェクトの破棄
 	CObject::ReleaseAll();
+
+	if (m_pResult != nullptr)
+	{
+		m_pResult = nullptr;
+	}
 }
 
 //====================================================================

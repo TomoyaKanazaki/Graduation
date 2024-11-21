@@ -4,7 +4,7 @@
 //	Author:sakamoto kai
 //
 //============================================
-#include "title.h"
+#include "select.h"
 #include "fade.h"
 #include "object2D.h"
 #include "texture.h"
@@ -36,12 +36,12 @@ namespace
 }
 
 //静的メンバ変数宣言
-CTitle* CTitle::m_pTitle = nullptr;
+CSelect* CSelect::m_pTitle = nullptr;
 
 //====================================================================
 //コンストラクタ
 //====================================================================
-CTitle::CTitle()
+CSelect::CSelect()
 {
 	for (int nCnt = 0; nCnt < MAX_SELECT; nCnt++)
 	{
@@ -61,7 +61,7 @@ CTitle::CTitle()
 //====================================================================
 //デストラクタ
 //====================================================================
-CTitle::~CTitle()
+CSelect::~CSelect()
 {
 
 }
@@ -70,11 +70,11 @@ CTitle::~CTitle()
 //====================================================================
 //インスタンス取得
 //====================================================================
-CTitle* CTitle::GetInstance(void)
+CSelect* CSelect::GetInstance(void)
 {
 	if (m_pTitle == nullptr)
 	{
-		m_pTitle = new CTitle;
+		m_pTitle = new CSelect;
 	}
 	return m_pTitle;
 }
@@ -82,11 +82,11 @@ CTitle* CTitle::GetInstance(void)
 //====================================================================
 //初期化処理
 //====================================================================
-HRESULT CTitle::Init(void)
+HRESULT CSelect::Init(void)
 {
 	//CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_BGM_TITLE);
 
-	CTexture *pTexture = CManager::GetInstance()->GetTexture();
+	CTexture* pTexture = CManager::GetInstance()->GetTexture();
 
 	// スカイドーム
 	m_pMeshDome = CObjmeshDome::Create();
@@ -141,7 +141,7 @@ HRESULT CTitle::Init(void)
 	{
 		//m_pTitleButton->SetIdx(pTexture->Regist("data\\TEXTURE\\title\\titleButton.png"));
 	}
-	
+
 	// ライトの初期化
 	CManager::GetInstance()->GetLight()->Init();
 
@@ -151,22 +151,17 @@ HRESULT CTitle::Init(void)
 //====================================================================
 //終了処理
 //====================================================================
-void CTitle::Uninit(void)
+void CSelect::Uninit(void)
 {
 	//全てのオブジェクトの破棄
 	CObject::ReleaseAll();
-
-	if (m_pTitle != nullptr)
-	{
-		m_pTitle = nullptr;
-	}
 }
 
 //====================================================================
 //更新処理
 //====================================================================
-void CTitle::Update(void)
-{	
+void CSelect::Update(void)
+{
 	// 選択処理
 	Select();
 
@@ -177,7 +172,7 @@ void CTitle::Update(void)
 //====================================================================
 //描画処理
 //====================================================================
-void CTitle::Draw(void)
+void CSelect::Draw(void)
 {
 
 }
@@ -185,7 +180,7 @@ void CTitle::Draw(void)
 //====================================================================
 //選択処理
 //====================================================================
-void CTitle::Select(void)
+void CSelect::Select(void)
 {
 	if (CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_S) == true ||
 		CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_DOWN) == true ||
@@ -230,7 +225,7 @@ void CTitle::Select(void)
 //====================================================================
 //決定処理
 //====================================================================
-void CTitle::Button(void)
+void CSelect::Button(void)
 {
 	if (CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_RETURN) == true)
 	{
@@ -250,9 +245,7 @@ void CTitle::Button(void)
 			CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_MULTI);
 			break;
 		case 2:
-			//// ゲーム遷移
-			//CFade::SetFade(CScene::MODE_TUTORIAL);
-			//CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_SINGLE);
+
 			break;
 		}
 	}
@@ -274,9 +267,7 @@ void CTitle::Button(void)
 			CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_MULTI);
 			break;
 		case 2:
-			//// ゲーム遷移
-			//CFade::SetFade(CScene::MODE_TUTORIAL);
-			//CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_SINGLE);
+
 			break;
 		}
 	}

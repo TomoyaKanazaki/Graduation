@@ -295,6 +295,9 @@
     <ClCompile Include="source\manager.cpp">
       <Filter>ソース ファイル\00_System</Filter>
     </ClCompile>
+    <ClCompile Include="source\select.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\2DUI_edit.h">
@@ -552,5 +555,6 @@
     <ClInclude Include="source\manager.h">
       <Filter>ソース ファイル\00_System</Filter>
     </ClInclude>
+    <ClInclude Include="source\select.h" />
   </ItemGroup>
 </Project>
