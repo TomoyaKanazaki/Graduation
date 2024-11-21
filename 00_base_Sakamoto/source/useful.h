@@ -94,6 +94,7 @@ namespace useful
 	float DegreesToRadians(float degrees);			//“x‚©‚çƒ‰ƒWƒAƒ“•ÏŠ·
 
 	D3DXVECTOR3 CalcMatrix(const D3DXVECTOR3& pos, const D3DXVECTOR3& rot, const D3DXMATRIX& mtx);
+	D3DXVECTOR3 CalcMatrixToRot(const D3DXMATRIX& mtx);
 }
 
 #endif

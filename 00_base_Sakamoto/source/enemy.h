@@ -54,7 +54,6 @@ public:
 		SELECT_MOVE_MAX,		//最大
 	};
 
-	D3DMATRIX GetMtxWorld(void) { return m_mtxWorld; }
 	static CEnemy* Create(const ENEMY_TYPE eType, const CMapSystem::GRID& grid);
 	HRESULT Init(void);
 	virtual void Uninit(void);
@@ -63,20 +62,11 @@ public:
 
 	virtual bool Hit(int nLife);
 
-	void SetPos(D3DXVECTOR3 pos) { m_pos = pos; }
-	D3DXVECTOR3 GetPos(void) { return m_pos; }
 	void SetMove(D3DXVECTOR3 move) { m_move = move; }
 	D3DXVECTOR3 GetMove(void) { return m_move; }
-	void SetRot(D3DXVECTOR3 rot) { m_rot = rot; }
-	D3DXVECTOR3 GetRot(void) { return m_rot; }
-	void SetSize(D3DXVECTOR3 size) { m_size = size; }
-	D3DXVECTOR3 GetSize(void) { return m_size; }
 
 	void SetEnemyType(ENEMY_TYPE Type) { m_EnemyType = Type; }
 	ENEMY_TYPE GetEnemyType(void) { return m_EnemyType; }
-
-	void SetUseMultiMatrix(D3DXMATRIX *Set) { m_UseMultiMatrix = Set; }
-	D3DXMATRIX *GetUseMultiMatrix(void) { return m_UseMultiMatrix; }
 
 	// マップ番号の設定
 	virtual void SetGrid(const CMapSystem::GRID& pos) { m_Grid = pos; }
@@ -91,16 +81,16 @@ protected:
 
 private:
 
-	void StateManager();								//状態更新
-	void CollisionWall(useful::COLLISION XYZ);			//壁との当たり判定
+	void StateManager(D3DXVECTOR3& posMy);				//状態更新
+	void CollisionWall(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR3& size,useful::COLLISION XYZ);			//壁との当たり判定
 	void CollisionDevilHole(useful::COLLISION XYZ);		//デビルホールとの当たり判定
-	void CollisionOut();								//ステージ外との当たり判定
+	void CollisionOut(D3DXVECTOR3& posMy);				//ステージ外との当たり判定
 
-	void UpdatePos(void);								// 位置更新処理
-	void Rot(void);										//移動方向処理
+	void UpdatePos(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR3& sizeMy);	// 位置更新処理
+	void Rot(D3DXVECTOR3& rotMy);						//移動方向処理
 	virtual void Death(void);							// 死亡処理
 	void MoveSelect(void);								// 移動方向の選択
-	void SearchWall(void);								// 壁のサーチ判定
+	void SearchWall(D3DXVECTOR3& posMy);				// 壁のサーチ判定
 	void Coordinate(); // 最短経路探索
 	void Route();	// 最短経路をたどる
 	void Effect(); // エフェクトを生成
@@ -109,14 +99,9 @@ private:
 
 	int m_nLife;				// 体力
 
-	D3DXVECTOR3 m_pos;			//位置
-	D3DXVECTOR3 m_posOld;		//過去の位置
 	D3DXVECTOR3 m_move;			//移動量
 	D3DXVECTOR3 m_Objmove;		//オブジェクトから影響される移動量
-	D3DXVECTOR3 m_rot;			//向き
-	D3DXMATRIX m_mtxWorld;		//ワールドマトリックス
 	int m_nActionCount;			//行動のカウント
-	D3DXVECTOR3 m_size;			//大きさ
 	ENEMY_TYPE m_EnemyType;		//敵の種類
 
 	float m_ColorA;				//不透明度
@@ -135,9 +120,6 @@ private:
 	CSlowManager* m_pSlow;		// スロー情報
 
 	CEffekseer* m_pEffect; // エフェクト
-
-	//マップとのマトリックス情報
-	D3DXMATRIX *m_UseMultiMatrix;			//掛け合わせるマトリックス
 
 	// 静的メンバ変数
 	static CListManager<CEnemy>* m_pList; // オブジェクトリスト

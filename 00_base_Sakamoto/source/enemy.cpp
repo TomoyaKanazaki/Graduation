@@ -85,19 +85,14 @@ m_nTargetIndex(0),
 m_nNumCoordinate(0),
 m_pEffect(nullptr)
 {
-	m_pos = INITVECTOR3;
-	m_posOld = INITVECTOR3;
-
 	m_move = INITVECTOR3;
 	m_Objmove = INITVECTOR3;
-	m_rot = D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f);
 	m_nActionCount = 0;
 	SetSize(COLLISION_SIZE);
 	m_nStateCount = 0;
 
 	m_ColorA = 1.0f;
 
-	m_size = COLLISION_SIZE;
 	m_EnemyType = ENEMY_MEDAMAN;
 	m_State = E_STATE_WAIT;
 	m_pSlow = nullptr;
@@ -112,8 +107,6 @@ m_pEffect(nullptr)
 	m_Grid.z = 0;
 
 	m_nBugCounter = 0;
-
-	m_UseMultiMatrix = nullptr;
 }
 
 //====================================================================
@@ -240,20 +233,26 @@ void CEnemy::Uninit(void)
 //====================================================================
 void CEnemy::Update(void)
 {
+	// 値を取得
+	D3DXVECTOR3 posMy = GetPos();			// 位置
+	D3DXVECTOR3 posOldMy = GetPosOld();		// 前回の位置
+	D3DXVECTOR3 rotMy = GetRot();			// 向き
+	D3DXVECTOR3 sizeMy = GetSize();			// 大きさ
+
 	// 過去の位置を記録
-	m_posOld = m_pos;
+	posOldMy = posMy;
 
 	//壁の索敵判定
-	SearchWall();
+	SearchWall(posMy);
 
 	// 状態の更新
-	//StateManager();
+	//StateManager(posMy);
 
 	// 移動方向処理
-	Rot();
+	Rot(rotMy);
 
 	// 位置更新処理
-	UpdatePos();
+	UpdatePos(posMy,posOldMy,sizeMy);
 
 	//// プレイヤーへの最短経路探索
 	//Coordinate();
@@ -262,12 +261,12 @@ void CEnemy::Update(void)
 	Route();
 
 	// 自分の番号を設定
-	m_Grid = CMapSystem::GetInstance()->CMapSystem::CalcGrid(m_pos);
+	m_Grid = CMapSystem::GetInstance()->CMapSystem::CalcGrid(posMy);
 
 	//床の判定
-	if (m_pos.y <= 0.0f)
+	if (posMy.y <= 0.0f)
 	{
-		m_pos.y = 0.0f;
+		posMy.y = 0.0f;
 		m_move.y = 0.0f;
 	}
 
@@ -275,9 +274,9 @@ void CEnemy::Update(void)
 	if (m_pEffect != nullptr)
 	{
 		D3DXMATRIX mat = *GetUseMultiMatrix();
-		D3DXVECTOR3 pos = m_pos;
+		D3DXVECTOR3 pos = posMy;
 		pos.y += 0.5f;
-		D3DXVECTOR3 ef = useful::CalcMatrix(pos, m_rot, *GetUseMultiMatrix());
+		D3DXVECTOR3 ef = useful::CalcMatrix(pos, rotMy, *GetUseMultiMatrix());
 		m_pEffect->SetPosition(ef);
 	}
 
@@ -286,6 +285,12 @@ void CEnemy::Update(void)
 
 	// デバッグ表示
 	DebugProc::Print(DebugProc::POINT_LEFT, "[敵]横 %d : 縦 %d\n", m_Grid.x, m_Grid.z);
+
+	// 値更新
+	SetPos(posMy);			// 位置
+	SetPosOld(posOldMy);	// 前回の位置
+	SetRot(rotMy);			// 向き
+	SetSize(sizeMy);		// 大きさ
 }
 
 //====================================================================
@@ -293,10 +298,6 @@ void CEnemy::Update(void)
 //====================================================================
 void CEnemy::Draw(void)
 {
-	// 無理やり一時的位置情報交換（pos・rotの置き換え完了次第削除）
-	CCharacter::SetPos(GetPos());
-	CCharacter::SetRot(GetRot());
-
 	// キャラクタークラスの描画（継承）
 	CCharacter::Draw();
 }
@@ -337,7 +338,7 @@ HRESULT CEnemy::InitModel(const char* pFilename)
 //====================================================================
 // 位置更新処理
 //====================================================================
-void CEnemy::UpdatePos(void)
+void CEnemy::UpdatePos(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR3& sizeMy)
 {
 	// モーションの取得
 	CMotion* pMotion = GetMotion();
@@ -365,37 +366,37 @@ void CEnemy::UpdatePos(void)
 	CDevil* pDevil = CGame::GetDevil();
 
 	//Y軸の位置更新
-	m_pos.y += m_move.y * CManager::GetInstance()->GetGameSpeed() * fSpeed;
-	m_pos.y += m_Objmove.y * CManager::GetInstance()->GetGameSpeed() * fSpeed;
+	posMy.y += m_move.y * CManager::GetInstance()->GetGameSpeed() * fSpeed;
+	posMy.y += m_Objmove.y * CManager::GetInstance()->GetGameSpeed() * fSpeed;
 
 	// 壁との当たり判定
-	CollisionWall(useful::COLLISION_Y);
+	CollisionWall(posMy,posOldMy,sizeMy,useful::COLLISION_Y);
 	CollisionDevilHole(useful::COLLISION_Y);
 
 	//X軸の位置更新
-	m_pos.x += m_move.x * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeX(m_move.x);
-	m_pos.x += m_Objmove.x * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeX(m_move.x);
+	posMy.x += m_move.x * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeX(m_move.x);
+	posMy.x += m_Objmove.x * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeX(m_move.x);
 
 	// 壁との当たり判定
-	CollisionWall(useful::COLLISION_X);
+	CollisionWall(posMy, posOldMy, sizeMy, useful::COLLISION_X);
 	CollisionDevilHole(useful::COLLISION_X);
 
 	//Z軸の位置更新
-	m_pos.z += m_move.z * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeZ(m_move.z);
-	m_pos.z += m_Objmove.z * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeZ(m_move.z);
+	posMy.z += m_move.z * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeZ(m_move.z);
+	posMy.z += m_Objmove.z * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeZ(m_move.z);
 
 	// 壁との当たり判定
-	CollisionWall(useful::COLLISION_Z);
+	CollisionWall(posMy, posOldMy, sizeMy, useful::COLLISION_Z);
 	CollisionDevilHole(useful::COLLISION_Z);
 
 	//ステージ外との当たり判定
-	CollisionOut();
+	CollisionOut(posMy);
 }
 
 //====================================================================
 //移動方向処理
 //====================================================================
-void CEnemy::Rot(void)
+void CEnemy::Rot(D3DXVECTOR3& rotMy)
 {
 	//キーボードの取得
 	CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
@@ -405,18 +406,18 @@ void CEnemy::Rot(void)
 
 	//移動方向に向きを合わせる処理
 	float fRotMove, fRotDest;
-	fRotMove = m_rot.y;
+	fRotMove = rotMy.y;
 	fRotDest = CManager::GetInstance()->GetCamera()->GetRot().y;
 
-	m_rot.y = atan2f(-m_move.x, -m_move.z);
+	rotMy.y = atan2f(-m_move.x, -m_move.z);
 
-	useful::NormalizeAngle(&m_rot);
+	useful::NormalizeAngle(&rotMy);
 }
 
 //====================================================================
 // 壁との当たり判定
 //====================================================================
-void CEnemy::CollisionWall(useful::COLLISION XYZ)
+void CEnemy::CollisionWall(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR3& size,useful::COLLISION XYZ)
 {
 	// キューブブロックのリスト構造が無ければ抜ける
 	if (CCubeBlock::GetList() == nullptr) { return; }
@@ -432,12 +433,12 @@ void CEnemy::CollisionWall(useful::COLLISION XYZ)
 		bool bNullJump;
 
 		// 矩形の当たり判定
-		if (useful::CollisionBlock(pos, posOld, Move, Size, &m_pos, m_posOld, &m_move, &m_Objmove, m_size, &bNullJump, XYZ) == true)
+		if (useful::CollisionBlock(pos, posOld, Move, Size, &posMy, posOldMy, &m_move, &m_Objmove, size, &bNullJump, XYZ) == true)
 		{
 			//待機状態にする
 			m_State = E_STATE_WAIT;
 
-			m_pos = m_Grid.ToWorld();
+			posMy = m_Grid.ToWorld();
 		}
 	}
 }
@@ -471,7 +472,7 @@ void CEnemy::CollisionDevilHole(useful::COLLISION XYZ)
 //====================================================================
 // ステージ外との当たり判定
 //====================================================================
-void CEnemy::CollisionOut()
+void CEnemy::CollisionOut(D3DXVECTOR3& posMy)
 {
 	// キューブブロックのリスト構造が無ければ抜ける
 	if (CDevil::GetList() == nullptr) { return; }
@@ -485,21 +486,21 @@ void CEnemy::CollisionOut()
 		float GritSize = CMapSystem::GetInstance()->GetGritSize();
 
 		// ステージ外の当たり判定
-		if (Pos.x + MapSize.x < m_pos.x) // 右
+		if (Pos.x + MapSize.x < posMy.x) // 右
 		{
-			m_pos.x = Pos.x -MapSize.x - GritSize;
+			posMy.x = Pos.x -MapSize.x - GritSize;
 		}
-		if (Pos.x - MapSize.x - GritSize > m_pos.x) // 左
+		if (Pos.x - MapSize.x - GritSize > posMy.x) // 左
 		{
-			m_pos.x = Pos.x + MapSize.x;
+			posMy.x = Pos.x + MapSize.x;
 		}
-		if (Pos.z + MapSize.z + GritSize < m_pos.z) // 上
+		if (Pos.z + MapSize.z + GritSize < posMy.z) // 上
 		{
-			m_pos.z = Pos.z - MapSize.z;
+			posMy.z = Pos.z - MapSize.z;
 		}
-		if (Pos.z - MapSize.z > m_pos.z) // 下
+		if (Pos.z - MapSize.z > posMy.z) // 下
 		{
-			m_pos.z = Pos.z + MapSize.z + GritSize;
+			posMy.z = Pos.z + MapSize.z + GritSize;
 		}
 	}
 }
@@ -531,7 +532,7 @@ void CEnemy::Death(void)
 //====================================================================
 // 状態更新
 //====================================================================
-void CEnemy::StateManager()
+void CEnemy::StateManager(D3DXVECTOR3& posMy)
 {
 	//状態の管理
 	switch (m_State)
@@ -558,7 +559,7 @@ void CEnemy::StateManager()
 
 			if (m_nBugCounter > 180)
 			{
-				m_pos = m_Grid.ToWorld();
+				posMy = m_Grid.ToWorld();
 				m_nBugCounter = 0;
 			}
 		}
@@ -643,7 +644,7 @@ void CEnemy::MoveSelect()
 //====================================================================
 // 壁との当たり判定
 //====================================================================
-void CEnemy::SearchWall(void)
+void CEnemy::SearchWall(D3DXVECTOR3& posMy)
 {
 	bool OKR = true;	//右
 	bool OKL = true;	//左
@@ -676,10 +677,10 @@ void CEnemy::SearchWall(void)
 
 	DebugProc::Print(DebugProc::POINT_LEFT, "敵の位置 %f %f %f\n", MyGritPos.x, MyGritPos.y, MyGritPos.z);
 
-	if (m_pos.x <= MyGritPos.x + ((MapGritSize * 0.5f) - GRIT_OK) &&
-		m_pos.x >= MyGritPos.x - ((MapGritSize * 0.5f) - GRIT_OK) &&
-		m_pos.z <= MyGritPos.z + ((MapGritSize * 0.5f) - GRIT_OK) &&
-		m_pos.z >= MyGritPos.z - ((MapGritSize * 0.5f) - GRIT_OK))
+	if (posMy.x <= MyGritPos.x + ((MapGritSize * 0.5f) - GRIT_OK) &&
+		posMy.x >= MyGritPos.x - ((MapGritSize * 0.5f) - GRIT_OK) &&
+		posMy.z <= MyGritPos.z + ((MapGritSize * 0.5f) - GRIT_OK) &&
+		posMy.z >= MyGritPos.z - ((MapGritSize * 0.5f) - GRIT_OK))
 	{// グリットの中心位置に立っているなら操作を受け付ける
 
 		if (!m_OKR && OKR)
@@ -811,7 +812,9 @@ void CEnemy::Effect()
 	D3DXVECTOR3 pos = GetPos();
 	pos.y += 0.5f;
 	D3DXVECTOR3 rot = GetRot();
-	pos = useful::CalcMatrix(pos, rot, *GetUseMultiMatrix());
+	D3DXMATRIX mtx = *GetUseMultiMatrix();
+	pos = useful::CalcMatrix(pos, rot, mtx);
+	rot = useful::CalcMatrixToRot(mtx);
 
 	// エフェクトを生成
 	m_pEffect = MyEffekseer::EffectCreate(EFFECT_TYPE[m_EnemyType], false, pos, rot, D3DXVECTOR3(10.0f, 10.0f, 10.0f));

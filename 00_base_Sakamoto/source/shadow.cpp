@@ -16,7 +16,7 @@
 //===========================================
 // コンストラクタ
 //===========================================
-CShadow::CShadow(int nPriority)
+CShadow::CShadow(int nPriority) : CObject3D(nPriority)
 {
 }
 
@@ -52,14 +52,14 @@ CShadow* CShadow::Create(const D3DXVECTOR3& pos, float fWidth, float fHeight)
 //===========================================
 HRESULT CShadow::Init()
 {
-	// テクスチャ設定
-	SetTexture("data\\TEXTURE\\player\\shadow000.jpg");
+	// 継承クラスの初期化
+	CObject3D::Init();
 
 	// マップとのマトリックスの掛け合わせをオンにする
 	SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
 
-	// 継承クラスの初期化
-	CObject3D::Init();
+	// テクスチャ設定
+	SetTexture("data\\TEXTURE\\player\\shadow000.jpg");
 
 	return S_OK;
 }

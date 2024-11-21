@@ -76,8 +76,6 @@ HRESULT CObject3D::Init(void)
 	//デバイスの取得
 	LPDIRECT3DDEVICE9 m_pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
 
-	SetTexture("data\\TEXTURE\\Test.jpg");
-
 	//頂点バッファの生成
 	if (FAILED(m_pDevice->CreateVertexBuffer(sizeof(VERTEX_3D) * 4,
 		D3DUSAGE_WRITEONLY,

@@ -141,7 +141,7 @@ CEffekseer* CMyEffekseer::CreateEffect(const TYPE eType, ::Effekseer::Vector3D p
 
 	// 位置、向き、大きさ設定
 	m_EfkManager->SetLocation(Handle, pos);
-	m_EfkManager->SetRotation(Handle, { 0.0f, 1.0f, 0.0f }, rot.Y);
+	m_EfkManager->SetRotation(Handle, rot.X, rot.Y, rot.Z);
 	m_EfkManager->SetScale(Handle, scale.X, scale.Y, scale.Z);
 
 	return pEffect;
@@ -212,7 +212,7 @@ void CMyEffekseer::Update(void)
 
 		// 位置や向き、大きさを再設定
 		m_EfkManager->SetLocation(Handle, pos);
-		m_EfkManager->SetRotation(Handle, { 0.0f, 1.0f, 0.0f }, rot.Y);
+		m_EfkManager->SetRotation(Handle, rot.X, rot.Y, rot.Z);
 		m_EfkManager->SetScale(Handle, scale.X, scale.Y, scale.Z);
 
 		DebugProc::Print(DebugProc::POINT_CENTER, "エフェクトの種類 : ");

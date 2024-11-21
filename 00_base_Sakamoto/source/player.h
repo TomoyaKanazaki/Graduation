@@ -222,6 +222,8 @@ private:
 
 	CLifeUi* m_pLifeUi;
 
+	CShadow* m_pShadow;
+
 	//マップとのマトリックス情報
 	D3DXMATRIX *m_UseMultiMatrix;			//掛け合わせるマトリックス
 

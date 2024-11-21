@@ -47,19 +47,7 @@ public:
 	HRESULT Init(void);
 	void Uninit(void);
 	void Update(void);
-	void TitleUpdate(void);
-	void GameUpdate(void);
 	void Draw(void);
-
-	void SetPos(D3DXVECTOR3 pos) { m_pos = pos; }
-	D3DXVECTOR3 GetPos(void) { return m_pos; }
-
-	void SetRot(D3DXVECTOR3 rot) { m_rot = rot; }
-	D3DXVECTOR3 GetRot(void) { return m_rot; }
-
-	void SetMultiMatrix(bool Set) { m_bMultiMatrix = Set; }
-	bool GetMultiMatrix(void) { return m_bMultiMatrix; }
-	void SetUseMultiMatrix(D3DXMATRIX* Set) { m_UseMultiMatrix = Set; }
 
 	// 静的メンバ関数
 	static CListManager<CSlopeDevice>* GetList(void); // リスト取得
@@ -67,22 +55,11 @@ public:
 private:
 	HRESULT InitModel(const char* pModelNameSlopeDevice, const char* pModelNameEnemy);
 
-	void StateManager(void);
-	void Rotate(int nNldxModel, D3DXVECTOR3 rotate);
-
-	D3DXVECTOR3 m_pos;			//位置
-	D3DXVECTOR3 m_posOld;		//過去の位置
-	D3DXVECTOR3 m_rot;			//向き
-	D3DXVECTOR3 m_size;			//大きさ
-
-	D3DXMATRIX m_mtxWorld;		//ワールドマトリックス
+	void StateManager(D3DXVECTOR3& rotMy);
+	void Rotate(D3DXVECTOR3& rotMy,int nNldxModel, D3DXVECTOR3 rotate);
 
 	STATE m_State;					//状態
 	int m_nStateCount;				//状態管理用変数
-
-	//マップとのマトリックス情報
-	bool m_bMultiMatrix;					// マトリックスの掛け合わせをするかどうか
-	D3DXMATRIX* m_UseMultiMatrix;			// 掛け合わせるマトリックス
 
 	// 静的メンバ変数
 	static CListManager<CSlopeDevice>* m_pList; // オブジェクトリスト

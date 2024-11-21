@@ -41,8 +41,6 @@ CListManager<CLevelModelEffect>* CLevelModelEffect::m_pList = nullptr; // オブジ
 //====================================================================
 CLevelModelEffect::CLevelModelEffect(int nPriority) :CCharacter(nPriority)
 {
-	m_pos = INITVECTOR3;
-	m_rot = D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f);
 	m_Action = ACTION_WAIT;
 	m_Color = D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f);
 	m_fDel = 0.05f;
@@ -203,10 +201,6 @@ void CLevelModelEffect::SetPose(int nType, int nKey, float nCounter, int nModelN
 //====================================================================
 void CLevelModelEffect::Draw(void)
 {
-	// 無理やり一時的位置情報交換（pos・rotの置き換え完了次第削除）
-	CCharacter::SetPos(GetPos());
-	CCharacter::SetRot(GetRot());
-
 	// キャラクタークラスの描画（継承）
 	CCharacter::Draw();
 }
