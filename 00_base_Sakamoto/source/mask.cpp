@@ -1,7 +1,7 @@
 //=======================================
 //
-//ステンシルバッファに必要な2Dマスク[mask.h]
-//Author : MORIKAWA SHUNYA
+// ステンシルバッファに必要な2Dマスク[mask.h]
+// Author : MORIKAWA SHUNYA
 //
 //=======================================
 
@@ -105,4 +105,16 @@ void CMask::Draw()
 
 	//ステンシルバッファ無効
 	pDevice->SetRenderState(D3DRS_STENCILENABLE, FALSE);
+}
+
+//========================================
+// 個別の色設定
+//========================================
+void CMask::SetColor(CObject::TYPE Type, D3DXCOLOR col)
+{
+	// オブジェクトの種類設定
+	SetType(Type);
+
+	// 色設定
+	CObject2D::SetColor(col);
 }

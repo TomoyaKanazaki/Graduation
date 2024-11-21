@@ -23,6 +23,7 @@ namespace
 //静的メンバ変数宣言
 CMapSystem* CMapSystem::pMapSystem = nullptr;
 bool CMapSystem::m_nMapGrit[NUM_WIGHT][NUM_HEIGHT] = {false};
+std::vector<std::tuple<>> CMapSystem::m_nData;	// 複数の値を保持
 
 //====================================================================
 //コンストラクタ
@@ -270,6 +271,7 @@ void CMapSystem::Load(const char* pFilename)
 			CMapSystem* pMapSystem = CMapSystem::GetInstance();
 			D3DXVECTOR3 MapSystemPos = pMapSystem->GetMapPos();
 			float MapSystemGritSize = pMapSystem->GetGritSize() * 0.5f;
+			D3DXVECTOR3 size = D3DXVECTOR3(MapSystemGritSize, 15.0f, MapSystemGritSize);
 
 			while (1)
 			{
@@ -288,7 +290,7 @@ void CMapSystem::Load(const char* pFilename)
 					pMapSystem->SetGritBool(pMapSystem->m_gridCenter.x, pMapSystem->m_gridCenter.z, true);
 
 					// キューブブロックの生成
-					CCubeBlock* pBlock = CCubeBlock::Create(pMapSystem->m_gridCenter, MapSystemGritSize); // GRIDとグリッドサイズを引数にする
+					CCubeBlock* pBlock = CCubeBlock::Create(pMapSystem->m_gridCenter, size); // GRIDとグリッドサイズを引数にする
 
 					// 削除
 					{
@@ -319,6 +321,141 @@ void CMapSystem::Load(const char* pFilename)
 	}
 
 }
+
+#if 0
+
+void CMapSystem::Load(const char* pFilename)
+{
+	// TODO : csv対応したい
+
+	// 経路探索用の情報を取得
+	auto generator = AStar::Generator::GetInstance();
+	if (generator == nullptr)
+	{
+		assert(false);
+		generator = AStar::Generator::Create();
+	}
+
+	// マップシステムの情報
+	CMapSystem* pMapSystem = CMapSystem::GetInstance();
+	float fMapSystemGritSize = pMapSystem->GetGritSize() * 0.5f;
+
+	// 読み込み用
+	D3DXVECTOR3 posOffset = D3DXVECTOR3(0.0f,0.0f,0.0f);	// グリッド生成位置
+	D3DXVECTOR3 posStart = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// グリッド開始位置
+	D3DXVECTOR2 charOffset = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// グリッドのオフセット
+	D3DXVECTOR3 size = D3DXVECTOR3(fMapSystemGritSize, 0.0f, fMapSystemGritSize);		// グリッドサイズ
+	float fSpaceOffset = 0.0f;		// 空白のオフセット
+
+	int nMaxWidth = 0, nMaxHeight = 0;		// グリッドの最大行列数
+
+	// ファイルを開く
+	std::ifstream file(pFilename);	// ファイルストリーム
+	if (file.fail())
+	{ // ファイルが開けなかった場合
+
+		// エラーメッセージボックス
+		MessageBox(nullptr, "ブロックセットアップの読み込みに失敗！", "警告！", MB_ICONWARNING);
+		return;
+	}
+
+	// ファイルを読込
+	std::string str;	// 読込文字列
+	while (std::getline(file, str))
+	{ // ファイルの終端ではない場合ループ
+
+		// カンマ区切りごとにデータを読込
+		std::istringstream iss(str);	// 文字列ストリーム
+		while (std::getline(iss, str, ','))
+		{
+			if (str == "START_POS")
+			{
+				// 開始位置を読込
+				iss >> posStart.x >> posStart.y >> posStart.z;
+
+				// 開始位置を生成位置に設定
+				posOffset = posStart;
+			}
+			else if (str == "GRID_SIZE_Y")
+			{
+				// グリッドサイズYを読み込み
+				iss >> size.y;
+			}
+			else if (str == "NUM_GRID")
+			{
+				// グリッドの行列数を読み込み
+				iss >> nMaxWidth >> nMaxHeight;
+			}
+			//else if (str == "CHAR_OFFSET")
+			//{
+			//	// 文字のオフセットを読込
+			//	iss >> charOffset.x >> charOffset.y;
+			//}
+
+			else if (str == "STARTSETSTAGE")
+			{
+				while (std::getline(file, str))
+				{ // ファイルの終端ではない場合ループ
+
+					// 終端の場合ステージ生成を抜ける
+					if (str == "ENDSETSTAGE") { break; }
+
+					for (int nCntHeight = 0; nCntHeight < nMaxHeight; nCntHeight++)
+					{ // 列カウント
+
+						// 横一行分の配列を拡張
+						m_nData.emplace_back();
+
+						// カンマ区切りごとにデータを読込
+						std::istringstream issChar(str);	// 文字列ストリーム
+
+						for (int nCntWidth = 0; nCntWidth < nMaxWidth; nCntWidth++)
+						{ // 行カウント
+							if (str == "") { continue; }	// 空白は無視する
+							else
+							{ // 特殊操作ではない場合
+
+								// 行列数設定
+								pMapSystem->m_gridCenter.x = nCntWidth;
+								pMapSystem->m_gridCenter.z = nCntHeight;
+
+								pMapSystem->SetGritBool(pMapSystem->m_gridCenter.x, pMapSystem->m_gridCenter.z, true);
+
+								// キューブブロックの生成
+								CCubeBlock* pBlock = CCubeBlock::Create(pMapSystem->m_gridCenter, size); // GRIDとグリッドサイズを引数にする
+
+								// 優先順位を設定
+								//pChar->SetPriority(PRIORITY);
+
+								// 現在の行列の最後尾に生成した文字を追加
+								//m_vecSelect.back().push_back(pChar);
+
+								// 経路探索用情報の設定
+								generator->addCollision({ pMapSystem->m_gridCenter.x, pMapSystem->m_gridCenter.z }); // 通過不可地点を追加
+
+								// 横位置にグリッド分のオフセットを与える
+								//posOffset.x += charOffset.x;
+							}
+
+						}
+
+						// 横位置を先頭に戻す
+						//posOffset.x = posStart.x;
+
+						// 縦位置にグリッド分のオフセットを与える
+						//posOffset.y += charOffset.y;
+					}
+
+				}
+			}
+		}
+	}
+
+	// ファイルを閉じる
+	file.close();
+}
+
+#endif // 0
 
 //==========================================
 //  グリッドを算出

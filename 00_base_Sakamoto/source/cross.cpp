@@ -155,3 +155,15 @@ void CCross::Rotation()
 	// 向きを適用
 	SetRot(rot);
 }
+
+//==========================================
+//  エフェクトを生成
+//==========================================
+void CCross::SetEffect()
+{
+	// 自身の情報を取得する
+	D3DXVECTOR3 pos = GetPos();
+	D3DXVECTOR3 rot = GetRot();
+
+	Effect(MyEffekseer::EffectCreate(CMyEffekseer::TYPE_CROSS, true, useful::CalcMatrix(pos, rot, *GetUseMultiMatrix()), rot, D3DXVECTOR3(5.0f, 10.0f, 5.0f)));
+}

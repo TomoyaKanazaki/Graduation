@@ -212,7 +212,7 @@ void CEnemy::Uninit(void)
 	// エフェクトを消去
 	if (m_pEffect != nullptr)
 	{
-		//m_pEffect->SetDeath();
+		m_pEffect->SetDeath();
 	}
 
 	// キャラクタークラスの終了（継承）

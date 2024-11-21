@@ -323,9 +323,6 @@ void CGame::Update(void)
 
 	DebugProc::Print(DebugProc::POINT_LEFT, "ゲームスピード : %f\n", CManager::GetInstance()->GetGameSpeed());
 
-	DebugProc::Print(DebugProc::POINT_CENTER, "アイテム数 : %d\n", CItem::GetList()->GetNumAll());
-	DebugProc::Print(DebugProc::POINT_CENTER, "シャドウ数 : %d\n", CShadow::GetList()->GetNumAll());
-
 	CMapSystem::GetInstance()->Update();
 
 #if _DEBUG

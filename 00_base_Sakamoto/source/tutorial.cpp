@@ -429,6 +429,7 @@ void CTutorial::StageClear(int Stage)
 //====================================================================
 void CTutorial::EventUpdate(void)
 {
+	
 	CCamera* pCamera = CManager::GetInstance()->GetCamera();
 
 	CInputMouse* pMouse = CManager::GetInstance()->GetInputMouse();
