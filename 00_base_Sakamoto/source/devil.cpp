@@ -207,7 +207,7 @@ void CDevil::Update(void)
 	posOldMy = posMy;
 
 	// ƒ}ƒbƒv‚ÌŒX‚«
-	m_DevilRot = CGame::GetMapField()->GetRot();
+	m_DevilRot = CGame::GetInstance()->GetMapField()->GetRot();
 
 	//ó‘Ô‚ÌŠÇ—
 	StateManager();
@@ -379,7 +379,7 @@ void CDevil::Move(int Arroow)
 //====================================================================
 void CDevil::BackSlope(void)
 {
-	CObjmeshField* pMapField = CGame::GetMapField();
+	CObjmeshField* pMapField = CGame::GetInstance()->GetMapField();
 	D3DXVECTOR3 MapRot = pMapField->GetRot();
 	bool bBackOK = false;
 
@@ -487,7 +487,7 @@ void CDevil::BackSlope(void)
 //====================================================================
 void CDevil::Slope(int Arroow)
 {	
-	CObjmeshField *pMapField = CGame::GetMapField();
+	CObjmeshField *pMapField = CGame::GetInstance()->GetMapField();
 	D3DXVECTOR3 MapRot = pMapField->GetRot();
 
 #if SCROLL_ID == 0
@@ -973,7 +973,7 @@ void CDevil::DebugKey(void)
 
 	if (pInputKeyboard->GetPress(DIK_5))
 	{
-		CObjmeshField* pMapField = CGame::GetMapField();
+		CObjmeshField* pMapField = CGame::GetInstance()->GetMapField();
 		D3DXVECTOR3 MapRot = pMapField->GetRot();
 		MapRot = INITVECTOR3;
 		pMapField->SetRot(MapRot);
@@ -1459,7 +1459,7 @@ float CDevil::MoveSlopeX(float Move)
 	float fSlopeMove = 1.0f;
 
 	D3DXVECTOR3 DevilRot = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
-	if (CScene::GetInstance()->GetMode() == CScene::MODE_GAME)
+	if (CScene::GetMode() == CScene::MODE_GAME)
 	{
 		DevilRot = m_DevilRot;
 	}
@@ -1484,9 +1484,9 @@ float CDevil::MoveSlopeZ(float Move)
 	float fSlopeMove = 1.0f;
 
 	D3DXVECTOR3 DevilRot = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
-	if (CScene::GetInstance()->GetMode() == CScene::MODE_GAME)
+	if (CScene::GetMode() == CScene::MODE_GAME)
 	{
-		DevilRot = CGame::GetDevil()->GetDevilRot();
+		DevilRot = CGame::GetInstance()->GetDevil()->GetDevilRot();
 	}
 
 	if (Move > 0.0f)

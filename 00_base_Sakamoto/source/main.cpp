@@ -117,7 +117,7 @@ int	WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hinstancePrev, LPSTR lpCmdLine
 	CTimer* pTime = nullptr;
 	if (CScene::GetMode() == CScene::MODE_GAME)
 	{
-		pTime = CGame::GetTime();
+		pTime = CGame::GetInstance()->GetTime();
 	}
 
 	// ƒVƒXƒeƒ€ŠÔ‚Ì‰Šú‰»

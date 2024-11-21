@@ -11,21 +11,11 @@
 
 //前方宣言
 class CRenderer;
-class CInputKeyboard;
-class CInputJoypad;
-class CInputMouse;
-class CCamera;
-class CMiniMapCamera;
-class CLight;
-class CTexture;
-class CXModel;
-class CLevelUP;
 class CFade;
-class CSound;
-class CTimer;
-class CRanking;
-class CBlockManager;
+class CObjmeshField;
 class CItemManager;
+class CPlayer;
+class CDevil;
 
 //シーンクラス
 class CScene
@@ -33,8 +23,6 @@ class CScene
 public:
 	CScene();
 	~CScene();
-
-	static CScene* GetInstance();
 
 	enum MODE
 	{
@@ -55,8 +43,11 @@ public:
 	static void SetMode(MODE mode);
 	static MODE GetMode(void) { return m_mode; }
 
+	virtual CPlayer* GetPlayer(int Num) { return nullptr; }
+	virtual CDevil* GetDevil(void) { return nullptr; }
+	virtual CObjmeshField* GetMapField(void) { return nullptr; }
+
 private:
-	static CScene* pScene;
 	static MODE m_mode;
 };
 

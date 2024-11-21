@@ -93,17 +93,8 @@ HRESULT CRollRock::Init(char* pModelName)
 
 	CObjectX::Init(pModelName);
 
-	switch (CScene::GetInstance()->GetMode())
-	{
-	case CScene::MODE_GAME:
-		//マップとのマトリックスの掛け合わせをオンにする
-		SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
-		break;
-	case CScene::MODE_TUTORIAL:
-		//マップとのマトリックスの掛け合わせをオンにする
-		SetUseMultiMatrix(CTutorial::GetMapField()->GetMatrix());
-		break;
-	}
+	//マップとのマトリックスの掛け合わせをオンにする
+	SetUseMultiMatrix(CGame::GetInstance()->GetMapField()->GetMatrix());
 
 	SetSize(SAMPLE_SIZE);
 
@@ -261,15 +252,7 @@ void CRollRock::Move(void)
 	// 算出に使用する変数
 	CDevil* pDevil = nullptr;
 
-	switch (CScene::GetInstance()->GetMode())
-	{
-	case CScene::MODE_GAME:
-		SlopeRot = CGame::GetDevil()->GetDevilRot();
-		break;
-	case CScene::MODE_TUTORIAL:
-		SlopeRot = CTutorial::GetDevil()->GetDevilRot();
-		break;
-	}
+	SlopeRot = CGame::GetInstance()->GetDevil()->GetDevilRot();
 
 	// 傾きによる移動量設定
 	m_move.x = -SlopeRot.z * 10.0f;

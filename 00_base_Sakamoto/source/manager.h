@@ -60,6 +60,9 @@ public:
 	void Update(void);
 	void Draw(void);
 
+	CScene* GetScene(void) { return m_pScene; }
+	void SetScene(CScene* Scene) { m_pScene = Scene; }
+
 	CRenderer *GetRenderer(void) { return m_pRenderer; }
 	CInputKeyboard *GetInputKeyboard(void) { return m_pInputKeyboard; }
 	CInputJoypad* GetInputJoyPad(void) { return m_pInputJoyPad; }
@@ -151,6 +154,7 @@ private:
 	CMyEffekseer* m_pEffect;
 	TYPE_INPUT m_typeInput;				//インプット種類
 	GAME_MODE m_GameMode;				//ゲームのプレイモード
+	CScene* m_pScene;					//シーンのポインタ
 };												
 
 #endif

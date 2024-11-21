@@ -52,6 +52,7 @@ CManager::CManager() :
 	m_pLight = nullptr;
 	m_pTexture = nullptr;
 	m_pXModel = nullptr;
+	m_pScene = nullptr;
 	m_LevelUP = nullptr;
 	m_Fade = nullptr;
 	m_pSound = nullptr;
@@ -239,6 +240,15 @@ void CManager::Uninit(void)
 		m_Fade = nullptr;
 	}
 
+	if (m_pScene != nullptr)
+	{
+		//シーンの終了処理
+		m_pScene->Uninit();
+
+		delete m_pScene;
+		m_pScene = nullptr;
+	}
+
 	////アイテムマネージャの読み込み処理
 	//CItemManager::UnLoad();
 
@@ -337,9 +347,6 @@ void CManager::Uninit(void)
 		delete m_pEffect;
 		m_pEffect = nullptr;
 	}
-
-	//シーンの終了処理
-	CScene::GetInstance()->Uninit();
 }
 
 //====================================================================
@@ -399,7 +406,7 @@ void CManager::Update(void)
 	}
 
 	//シーンの更新処理
-	CScene::GetInstance()->Update();
+	m_pScene->Update();
 
 	//レンダラーの更新処理
 	m_pRenderer->Update();

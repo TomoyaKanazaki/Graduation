@@ -121,7 +121,7 @@ void CBible::Move(D3DXVECTOR3& pos)
 	float time = GetMoveTime();
 
 	// フィールドの座標を取得
-	D3DXVECTOR3 posField = CGame::GetMapField()->GetPos();
+	D3DXVECTOR3 posField = CGame::GetInstance()->GetMapField()->GetPos();
 
 	// 自身の座標とフィールドを結ぶ時の向きを算出
 	D3DXVECTOR3 vec = pos - posField;

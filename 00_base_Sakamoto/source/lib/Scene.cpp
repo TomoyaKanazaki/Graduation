@@ -21,7 +21,6 @@
 #endif // _DEBUG
 
 //静的メンバ変数宣言
-CScene* CScene::pScene = nullptr;
 CScene::MODE CScene::m_mode = SET_MODE;
 
 //====================================================================
@@ -38,18 +37,6 @@ CScene::CScene()
 CScene::~CScene()
 {
 
-}
-
-//====================================================================
-//インスタンス取得
-//====================================================================
-CScene* CScene::GetInstance(void)
-{
-	if (pScene == nullptr)
-	{
-		pScene = new CScene;
-	}
-	return pScene;
 }
 
 //====================================================================
@@ -71,7 +58,7 @@ CScene* CScene::Create(MODE mode)
 			pScene = new CTitle();
 			break;
 		case MODE_GAME:
-			pScene = new CGame();
+			pScene = CGame::GetInstance();
 			break;
 		case MODE_RESULT:
 			pScene = new CResult();
@@ -115,8 +102,7 @@ HRESULT CScene::Init(void)
 //====================================================================
 void CScene::Uninit(void)
 {
-	delete pScene;
-	pScene = nullptr;
+
 }
 
 //====================================================================
@@ -140,6 +126,7 @@ void CScene::Draw(void)
 //====================================================================
 void CScene::SetMode(MODE mode)
 {
+	CScene* pScene = CManager::GetInstance()->GetScene();
 	CManager::GetInstance()->GetSound()->StopSound();
 
 	if (pScene != nullptr)
@@ -153,4 +140,6 @@ void CScene::SetMode(MODE mode)
 
 	//モードの生成
 	pScene = Create(mode);
+
+	CManager::GetInstance()->GetInstance()->SetScene(pScene);
 }

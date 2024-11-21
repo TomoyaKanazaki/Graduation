@@ -91,17 +91,8 @@ HRESULT CCubeBlock::Init(void)
 
 	CObjmeshCube::Init();
 
-	switch (CScene::GetInstance()->GetMode())
-	{
-	case CScene::MODE_GAME:
-		//マップとのマトリックスの掛け合わせをオンにする
-		SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
-		break;
-	case CScene::MODE_TUTORIAL:
-		//マップとのマトリックスの掛け合わせをオンにする
-		SetUseMultiMatrix(CTutorial::GetMapField()->GetMatrix());
-		break;
-	}
+	//マトリックスの掛け合わせをオンにする
+	SetUseMultiMatrix(CGame::GetInstance()->GetMapField()->GetMatrix());
 
 	// 位置設定
 	SetPos(D3DXVECTOR3(MapSystemPos.x + m_nMapWidthNumber * 100.0f, 50.0f, MapSystemPos.z - m_nMapHeightNumber * 100.0f));
