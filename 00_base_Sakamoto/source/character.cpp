@@ -24,7 +24,7 @@
 //====================================================================
 namespace
 {
-	const float SHADOW_SIZE = 50.0f;			// 丸影の大きさ
+	const float SHADOW_SIZE = 100.0f;			// 丸影の大きさ
 }
 
 //====================================================================
@@ -163,6 +163,7 @@ void CCharacter::Update(void)
 	if (m_pShadow != nullptr)
 	{// シャドウの更新
 		m_pShadow->SetPos(D3DXVECTOR3(m_pos.x, 1.0f, m_pos.z));
+		m_pShadow->SetBaseHeight(pos.y);
 	}
 }
 

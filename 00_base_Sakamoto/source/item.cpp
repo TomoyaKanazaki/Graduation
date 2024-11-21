@@ -38,7 +38,7 @@ namespace
 
 	const float BASE_Y = 50.0f; // 高さ
 
-	const float SHADOW_SIZE = 25.0f;	// 丸影の大きさ
+	const float SHADOW_SIZE = 50.0f;	// 丸影の大きさ
 }
 
 //==========================================
@@ -229,6 +229,7 @@ void CItem::Update()
 	if (m_pShadow != nullptr)
 	{// シャドウの位置設定
 		m_pShadow->SetPos(D3DXVECTOR3(pos.x, 1.0f, pos.z));
+		m_pShadow->SetBaseHeight(pos.y);
 	}
 
 	// 情報の更新
