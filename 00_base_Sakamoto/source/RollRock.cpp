@@ -93,7 +93,7 @@ HRESULT CRollRock::Init(char* pModelName)
 
 	CObjectX::Init(pModelName);
 
-	switch (CManager::GetInstance()->GetScene()->GetMode())
+	switch (CScene::GetInstance()->GetMode())
 	{
 	case CScene::MODE_GAME:
 		//マップとのマトリックスの掛け合わせをオンにする
@@ -261,7 +261,7 @@ void CRollRock::Move(void)
 	// 算出に使用する変数
 	CDevil* pDevil = nullptr;
 
-	switch (CManager::GetInstance()->GetScene()->GetMode())
+	switch (CScene::GetInstance()->GetMode())
 	{
 	case CScene::MODE_GAME:
 		SlopeRot = CGame::GetDevil()->GetDevilRot();

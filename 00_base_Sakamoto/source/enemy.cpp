@@ -172,7 +172,7 @@ HRESULT CEnemy::Init(void)
 	//種類設定
 	SetType(CObject::TYPE_ENEMY3D);
 
-	switch (CManager::GetInstance()->GetScene()->GetMode())
+	switch (CScene::GetInstance()->GetMode())
 	{
 	case CScene::MODE_GAME:
 		//マップとのマトリックスの掛け合わせをオンにする

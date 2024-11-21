@@ -14,6 +14,7 @@
 #include "debugproc.h"
 #include "player.h"
 #include "model.h"
+#include "Scene.h"
 #include "sound.h"
 
 //==========================================
@@ -351,8 +352,8 @@ void CCamera::ControlCamera(void)
 		m_posV.z -= CAMERA_SPEED * sinf(m_rot.y);
 	}
 
-	if (CManager::GetInstance()->GetScene()->GetMode() == CScene::MODE_GAME ||
-		CManager::GetInstance()->GetScene()->GetMode() == CScene::MODE_TUTORIAL)
+	if (CScene::GetInstance()->GetMode() == CScene::MODE_GAME ||
+		CScene::GetInstance()->GetMode() == CScene::MODE_TUTORIAL)
 	{
 		//‹“_‚Ìî•ñ‚ğo—Í‚·‚é
 		m_posV.x = m_posR.x + sinf(m_rot.y) * -cosf(m_rot.x) * m_CameraDistance;

@@ -105,7 +105,7 @@ HRESULT CFire::Init(char* pModelName)
 	// 継承クラスの初期化
 	CObjectX::Init(pModelName);
 
-	switch (CManager::GetInstance()->GetScene()->GetMode())
+	switch (CScene::GetInstance()->GetMode())
 	{
 	case CScene::MODE_GAME:
 		//マップとのマトリックスの掛け合わせをオンにする

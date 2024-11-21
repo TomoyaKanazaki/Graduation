@@ -170,6 +170,7 @@ HRESULT CPlayer::Init(void)
 	// 状態の設定
 	m_MoveState = MOVE_STATE_WAIT;
 
+
 	//マップとのマトリックスの掛け合わせをオンにする
 	SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
 
@@ -874,7 +875,6 @@ void CPlayer::StateManager(void)
 			m_pUpEgg = CObjectX::Create("data\\MODEL\\00_Player\\1P\\upper_egg.x");
 			m_pUpEgg->SetMatColor(D3DXCOLOR(0.263529f, 0.570980f, 0.238431f, 1.0f));
 			m_pUpEgg->SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
-			//m_pUpEgg->SetMultiMatrix(true);
 		}
 
 		if (m_pDownEgg == nullptr)
@@ -882,7 +882,6 @@ void CPlayer::StateManager(void)
 			m_pDownEgg = CObjectX::Create("data\\MODEL\\00_Player\\1P\\downer_egg.x");
 			m_pDownEgg->SetMatColor(D3DXCOLOR(0.263529f, 0.570980f, 0.238431f, 1.0f));
 			m_pDownEgg->SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
-			//m_pDownEgg->SetMultiMatrix(true);
 		}
 		break;
 	}

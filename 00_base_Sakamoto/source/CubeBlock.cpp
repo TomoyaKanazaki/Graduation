@@ -91,7 +91,7 @@ HRESULT CCubeBlock::Init(void)
 
 	CObjmeshCube::Init();
 
-	switch (CManager::GetInstance()->GetScene()->GetMode())
+	switch (CScene::GetInstance()->GetMode())
 	{
 	case CScene::MODE_GAME:
 		//マップとのマトリックスの掛け合わせをオンにする

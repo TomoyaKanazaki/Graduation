@@ -9,6 +9,7 @@
 
 #include "main.h"
 #include "manager.h"
+#include "Scene.h"
 
 class CObject2D;
 

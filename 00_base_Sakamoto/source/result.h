@@ -8,6 +8,7 @@
 #define _RESULT_H_
 
 #include "manager.h"
+#include "Scene.h"
 
 //‘O•ûéŒ¾
 class CObject2D;
