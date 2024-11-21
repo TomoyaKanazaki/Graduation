@@ -75,12 +75,16 @@ public:
 	void SetMoveTime(const float time) { m_fMoveTime = time; } // 移動時間の取得
 
 	// 静的メンバ関数
+	static CListManager<CItem>* GetList(void); // リスト取得
 	static CItem* Create(const TYPE eType, const CMapSystem::GRID& pos);
 
 private:
 
 	// メンバ関数
 	virtual void Move(D3DXVECTOR3& pos) { } // 移動処理
+
+	// メンバ変数
+	CListManager<CItem>::AIterator m_iterator; // イテレーター
 
 	TYPE m_eType;		// 種類
 
@@ -103,6 +107,9 @@ private:
 
 	CMapSystem::GRID m_Grid;	// マップ番号
 	CShadow* m_pShadow;		// シャドウのポインタ
+
+	// 静的メンバ変数
+	static CListManager<CItem>* m_pList; // オブジェクトリスト
 };
 
 #endif

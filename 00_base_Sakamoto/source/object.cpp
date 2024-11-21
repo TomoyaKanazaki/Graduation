@@ -74,9 +74,6 @@ void CObject::ReleaseAll(void)
 		{
 			CObject *pObjectNext = pObject->m_pNext;	//次のオブジェクトを保存
 
-			//終了処理
-			pObject->Uninit();
-
 			//削除処理
 			pObject->SetDeathFlag(true);
 
@@ -91,6 +88,9 @@ void CObject::ReleaseAll(void)
 		while (pObject != nullptr)
 		{
 			CObject *pObjectNext = pObject->m_pNext;	//次のオブジェクトを保存
+
+			//終了処理
+			pObject->Uninit();
 
 			//削除処理
 			pObject->Release();

@@ -249,9 +249,6 @@ void CManager::Uninit(void)
 		m_pScene = nullptr;
 	}
 
-	////アイテムマネージャの読み込み処理
-	//CItemManager::UnLoad();
-
 	//全てのオブジェクトの破棄
 	CObject::ReleaseAll();
 

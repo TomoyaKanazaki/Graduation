@@ -11,6 +11,12 @@
 #include "renderer.h"
 #include "game.h"
 #include "objmeshField.h"
+#include "Scene.h"
+
+//===========================================
+// 静的メンバ変数宣言
+//===========================================
+CListManager<CShadow>* CShadow::m_pList = nullptr; // オブジェクトリスト
 
 //===========================================
 // コンストラクタ
@@ -60,6 +66,16 @@ HRESULT CShadow::Init()
 	// テクスチャ設定
 	SetTexture("data\\TEXTURE\\player\\shadow000.jpg");
 
+	// リストマネージャーの生成
+	if (m_pList == nullptr)
+	{
+		m_pList = CListManager<CShadow>::Create();
+		if (m_pList == nullptr) { assert(false); return E_FAIL; }
+	}
+
+	// リストに自身のオブジェクトを追加・イテレーターを取得
+	m_iterator = m_pList->AddList(this);
+
 	return S_OK;
 }
 
@@ -68,6 +84,16 @@ HRESULT CShadow::Init()
 //===========================================
 void CShadow::Uninit(void)
 {
+	// リストから自身のオブジェクトを削除
+	m_pList->DelList(m_iterator);
+
+	if (m_pList->GetNumAll() == 0)
+	{ // オブジェクトが一つもない場合
+
+		// リストマネージャーの破棄
+		m_pList->Release(m_pList);
+	}
+
 	// 継承クラスの終了
 	CObject3D::Uninit();
 }
@@ -99,4 +125,12 @@ void CShadow::Draw(void)
 	pDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
 	pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 	pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+}
+
+//==========================================
+//  リストの取得
+//==========================================
+CListManager<CShadow>* CShadow::GetList(void)
+{
+	return m_pList;
 }
