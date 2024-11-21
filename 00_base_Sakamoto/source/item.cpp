@@ -228,7 +228,7 @@ void CItem::Update()
 
 	if (m_pShadow != nullptr)
 	{// シャドウの位置設定
-		m_pShadow->SetPos(D3DXVECTOR3(pos.x, (pos.y - pos.y) + 1.0f, pos.z));
+		m_pShadow->SetPos(D3DXVECTOR3(pos.x, 1.0f, pos.z));
 	}
 
 	// 情報の更新
