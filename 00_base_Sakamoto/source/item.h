@@ -13,6 +13,7 @@
 
 // 前方宣言
 class CPlayer;
+class CShadow;
 
 //オブジェクトアイテムクラス
 class CItem : public CObjectX
@@ -100,6 +101,7 @@ private:
 	float m_fMoveTime; // 移動時間
 
 	CMapSystem::GRID m_Grid;	// マップ番号
+	CShadow* m_pShadow;		// シャドウのポインタ
 };
 
 #endif
