@@ -256,6 +256,11 @@ void CTutorial::Uninit(void)
 		m_pEdit = nullptr;
 	}
 #endif
+
+	if (m_pTutorial != nullptr)
+	{
+		m_pTutorial = nullptr;
+	}
 }
 
 //====================================================================

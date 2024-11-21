@@ -155,6 +155,11 @@ void CTitle::Uninit(void)
 {
 	//‘S‚Ä‚ÌƒIƒuƒWƒFƒNƒg‚Ì”jŠü
 	CObject::ReleaseAll();
+
+	if (m_pTitle != nullptr)
+	{
+		m_pTitle = nullptr;
+	}
 }
 
 //====================================================================
@@ -245,9 +250,9 @@ void CTitle::Button(void)
 			CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_MULTI);
 			break;
 		case 2:
-			// ƒQ[ƒ€‘JˆÚ
-			CFade::SetFade(CScene::MODE_TUTORIAL);
-			CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_SINGLE);
+			//// ƒQ[ƒ€‘JˆÚ
+			//CFade::SetFade(CScene::MODE_TUTORIAL);
+			//CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_SINGLE);
 			break;
 		}
 	}
@@ -269,9 +274,9 @@ void CTitle::Button(void)
 			CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_MULTI);
 			break;
 		case 2:
-			// ƒQ[ƒ€‘JˆÚ
-			CFade::SetFade(CScene::MODE_TUTORIAL);
-			CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_SINGLE);
+			//// ƒQ[ƒ€‘JˆÚ
+			//CFade::SetFade(CScene::MODE_TUTORIAL);
+			//CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_SINGLE);
 			break;
 		}
 	}

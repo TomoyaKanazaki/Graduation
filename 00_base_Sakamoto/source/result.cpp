@@ -151,6 +151,11 @@ void CResult::Uninit(void)
 {
 	//全てのオブジェクトの破棄
 	CObject::ReleaseAll();
+
+	if (m_pResult != nullptr)
+	{
+		m_pResult = nullptr;
+	}
 }
 
 //====================================================================
