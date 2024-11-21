@@ -429,6 +429,7 @@ void CTutorial::StageClear(int Stage)
 //====================================================================
 void CTutorial::EventUpdate(void)
 {
+	
 	CCamera* pCamera = CManager::GetInstance()->GetCamera();
 
 	CInputMouse* pMouse = CManager::GetInstance()->GetInputMouse();
@@ -456,6 +457,13 @@ void CTutorial::EventUpdate(void)
 	{
 		m_nEventCount--;
 	}
+}
+	CMapSystem* pMapSystem = CMapSystem::GetInstance();
+	m_pCubeBlock = CCubeBlock::Create(pMapSystem->m_gridCenter, 
+		D3DXVECTOR3(pMapSystem->GetGritSize() * 0.5f, pMapSystem->GetGritSize() * 0.5f, pMapSystem->GetGritSize() * 0.5f));
+	m_pCubeBlock->SetPos(D3DXVECTOR3(0.0f, 100.0f, 0.0f));
+	m_pCubeBlock->SetSize(D3DXVECTOR3(500.0f, 10.0f, 500.0f));
+	m_pCubeBlock->SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 }
 
 //====================================================================
