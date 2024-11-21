@@ -19,6 +19,7 @@
 #include "game.h"
 #include "tutorial.h"
 #include "objmeshField.h"
+#include "shadow.h"
 
 //==========================================
 //  定数定義
@@ -32,10 +33,12 @@ namespace
 		100, // 聖書
 		100, // ぼわぼわ
 		400, // ソフトクリーム
-		200 // 目玉焼き
+		200	 // 目玉焼き
 	};
 
 	const float BASE_Y = 50.0f; // 高さ
+
+	const float SHADOW_SIZE = 25.0f;	// 丸影の大きさ
 }
 
 //==========================================
@@ -48,7 +51,8 @@ static_assert(NUM_ARRAY(ITEM_SCORE) == CItem::TYPE_MAX, "ERROR : Type Count Miss
 //====================================================================
 CItem::CItem(int nPriority) : CObjectX(nPriority),
 m_posBase(INITVECTOR3),
-m_fMoveTime(0.0f)
+m_fMoveTime(0.0f),
+m_pShadow(nullptr)
 {
 	m_eType = TYPE_NONE;		// 種類
 	m_nIdxXModel = 0;			// Xモデル番号
@@ -128,6 +132,8 @@ CItem* CItem::Create(const TYPE eType, const CMapSystem::GRID& pos)
 //====================================================================
 HRESULT CItem::Init(const char* pModelName)
 {
+	D3DXVECTOR3 pos = GetPos();
+
 	// 継承クラスの初期化
 	CObjectX::Init(pModelName);
 
@@ -143,11 +149,13 @@ HRESULT CItem::Init(const char* pModelName)
 		break;
 	}
 
-	D3DXVECTOR3 pos = GetPos();
+	if (m_pShadow == nullptr)
+	{// シャドウ生成
+		m_pShadow = CShadow::Create(pos, SHADOW_SIZE, SHADOW_SIZE);
+	}
+
 	pos.y = BASE_Y;
 	SetPos(pos);
-
-	this;
 
 	return S_OK;
 }
@@ -158,7 +166,7 @@ HRESULT CItem::Init(const char* pModelName)
 void CItem::Uninit()
 {
 	// 継承クラスの終了
-	CObjectX::Uninit();
+	//CObjectX::Uninit();
 }
 
 //====================================================================
@@ -186,6 +194,11 @@ void CItem::Update()
 
 	// プレイヤーとアイテムの判定
 	CollisionPlayer();
+
+	if (m_pShadow != nullptr)
+	{// シャドウの更新
+		m_pShadow->SetPos(D3DXVECTOR3(pos.x, pos.y + 1.0f, pos.z));
+	}
 
 	// 情報の更新
 	SetPos(pos);

@@ -170,7 +170,6 @@ HRESULT CPlayer::Init(void)
 	// 状態の設定
 	m_MoveState = MOVE_STATE_WAIT;
 
-
 	//マップとのマトリックスの掛け合わせをオンにする
 	SetUseMultiMatrix(CGame::GetMapField()->GetMatrix());
 
@@ -258,11 +257,6 @@ void CPlayer::Update(void)
 //====================================================================
 void CPlayer::TitleUpdate(void)
 {
-	//if (m_pShadow != nullptr)
-	//{// 影生成
-	//	m_pShadow->Update();
-	//}
-
 	// キャラクタークラスの更新（継承）
 	CCharacter::Update();
 }
@@ -365,11 +359,6 @@ void CPlayer::GameUpdate(void)
 
 	//卵の動き
 	EggMove();
-
-	//if (m_pShadow != nullptr)
-	//{// 影生成
-	//	m_pShadow->SetPos(D3DXVECTOR3(m_pos.x, m_pos.y +1.0f, m_pos.z));
-	//}
 
 	// キャラクタークラスの更新（継承）
 	CCharacter::Update();
