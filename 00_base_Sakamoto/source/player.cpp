@@ -34,7 +34,6 @@
 #include "bible.h"
 #include "RailBlock.h"
 #include "objmeshField.h"
-#include "CubeBlock.h"
 #include "RollRock.h"
 #include "shadow.h"
 #include "mask.h"

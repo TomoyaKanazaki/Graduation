@@ -242,8 +242,6 @@ CMapSystem::GRID CMapSystem::CalcGrid(const D3DXVECTOR3& pos)
 //==========================================
 void CMapSystem::Load(const char* pFilename)
 {
-	// TODO : csv‘Î‰‚µ‚½‚¢
-
 	// Œo˜H’Tõ—p‚Ìî•ñ‚ğæ“¾
 	auto generator = AStar::Generator::GetInstance();
 	if (generator == nullptr)
@@ -326,8 +324,6 @@ void CMapSystem::Load(const char* pFilename)
 
 void CMapSystem::Load(const char* pFilename)
 {
-	// TODO : csv‘Î‰‚µ‚½‚¢
-
 	// Œo˜H’Tõ—p‚Ìî•ñ‚ğæ“¾
 	auto generator = AStar::Generator::GetInstance();
 	if (generator == nullptr)
