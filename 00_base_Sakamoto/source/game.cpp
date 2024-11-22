@@ -133,8 +133,10 @@ HRESULT CGame::Init(void)
 	////BGMの再生
 	//CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_BGM_TUTORIAL);
 
-	// 2Dマスクの生成
-	m_pMask = CMask::Create();
+	if (m_pMask == nullptr)
+	{// 2Dマスクの生成
+		m_pMask = CMask::Create();
+	}
 
 	//クリアフラグのデフォルトをオンにしておく
 	m_bGameClear = true;
@@ -177,6 +179,7 @@ HRESULT CGame::Init(void)
 		m_pPlayer[0] = CPlayer::Create();
 		m_pPlayer[0]->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(11, 9)));
 		m_pPlayer[0]->SetPlayNumber(0);
+		//m_pMask->SetColor();
 	}
 	else if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
 	{

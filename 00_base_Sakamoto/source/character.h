@@ -61,8 +61,6 @@ private:
 	char m_aModelName[FILE_NAME_SIZE];
 	int m_nNumModel;
 
-	CShadow* m_pShadow;
-
 	D3DXVECTOR3 m_pos;				//位置
 	D3DXVECTOR3 m_rot;				//向き
 	D3DXVECTOR3 m_posOld;			//過去の位置
@@ -72,6 +70,7 @@ private:
 	D3DXMATRIX m_mtxWorld;			// ワールドマトリックス
 	D3DXMATRIX* m_UseMultiMatrix;	// 掛け合わせるマトリックス
 
+	CShadow* m_pShadow;
 	bool m_bUseStencil;				// ステンシルバッファの使用の有無
 	bool m_bUseShadowMtx;			// シャドウマトリックスの使用の有無
 };
