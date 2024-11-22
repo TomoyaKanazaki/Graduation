@@ -210,6 +210,8 @@ void CMyEffekseer::Update(void)
 	if (CEffekseer::GetList() == nullptr) { return; }
 	std::list<CEffekseer*> list = CEffekseer::GetList()->GetList();    // リストを取得
 
+	DebugProc::Print(DebugProc::POINT_CENTER, "エフェクト数 : %d\n", list.size());
+
 	for(CEffekseer* effect : list)
 	{
 		// エフェクト情報を取得
@@ -223,11 +225,13 @@ void CMyEffekseer::Update(void)
 		m_EfkManager->SetRotation(Handle, rot.X, rot.Y, rot.Z);
 		m_EfkManager->SetScale(Handle, scale.X, scale.Y, scale.Z);
 
+#if 0 // 金崎のデバッグ用
 		DebugProc::Print(DebugProc::POINT_CENTER, "エフェクトの種類 : ");
 		auto str = magic_enum::enum_name(effect->GetEfkType());
 		DebugProc::Print(DebugProc::POINT_CENTER, str.data());
+		DebugProc::Print(DebugProc::POINT_CENTER, ": %f, %f", pos.X, pos.Z);
 		DebugProc::Print(DebugProc::POINT_CENTER, "\n");
-
+#endif
 		// エフェクトの再生が終了していない場合次に進む
 		if (m_EfkManager->Exists(Handle) && !effect->IsDeath()) { continue; }
 		

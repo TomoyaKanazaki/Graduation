@@ -151,7 +151,7 @@ void CBible::SetEffect()
 	D3DXVECTOR3 pos = GetPos();
 	D3DXVECTOR3 rot = GetRot();
 
-	Effect(MyEffekseer::EffectCreate(CMyEffekseer::TYPE_BIBLE, true, useful::CalcMatrix(pos, rot, *GetUseMultiMatrix()), rot, D3DXVECTOR3(30.0f, 30.0f, 30.0f)));
+	//Effect(MyEffekseer::EffectCreate(CMyEffekseer::TYPE_BIBLE, true, useful::CalcMatrix(pos, rot, *GetUseMultiMatrix()), rot, D3DXVECTOR3(30.0f, 30.0f, 30.0f)));
 }
 
 //====================================================================
@@ -171,7 +171,7 @@ bool CBible::Hit(CPlayer* pPlayer)
 	// エフェクトを生成する
 	D3DXVECTOR3 pos = GetPos();
 	D3DXVECTOR3 rot = GetRot();
-	//MyEffekseer::EffectCreate(CMyEffekseer::TYPE_GETITEM, false, useful::CalcMatrix(pos, rot, *GetUseMultiMatrix()), rot);
+	MyEffekseer::EffectCreate(CMyEffekseer::TYPE_GETITEM, false, useful::CalcMatrix(pos, rot, *GetUseMultiMatrix()), rot);
 
 	// 自身の削除
 	Uninit();
