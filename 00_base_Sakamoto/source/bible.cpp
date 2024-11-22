@@ -151,7 +151,7 @@ void CBible::SetEffect()
 	D3DXVECTOR3 pos = GetPos();
 	D3DXVECTOR3 rot = GetRot();
 
-	//Effect(MyEffekseer::EffectCreate(CMyEffekseer::TYPE_BIBLE, true, useful::CalcMatrix(pos, rot, *GetUseMultiMatrix()), rot, D3DXVECTOR3(30.0f, 30.0f, 30.0f)));
+	Effect(MyEffekseer::EffectCreate(CMyEffekseer::TYPE_BIBLE, true, useful::CalcMatrix(pos, rot, *GetUseMultiMatrix()), rot, D3DXVECTOR3(30.0f, 30.0f, 30.0f)));
 }
 
 //====================================================================
