@@ -15,7 +15,7 @@
 CMotion::CMotion()
 {
 	m_ppModel = nullptr;
-	m_nType = 0;					//モーションの種類の設定
+	m_nType = 0;						//モーションの種類の設定
 	m_bLoop = m_aInfo[m_nType].bLoop;	//ループするかどうかの設定
 	m_nKey = 0;							//現在のキーNoを0にする
 	m_nNextKey = m_nKey + 1;			//次のキーNoを1にする

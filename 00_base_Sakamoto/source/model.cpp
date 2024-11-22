@@ -111,7 +111,6 @@ HRESULT CModel::Init(const char *pModelName)
 
 	//Œü‚«‚Ìİ’è
 
-
 	return S_OK;
 }
 

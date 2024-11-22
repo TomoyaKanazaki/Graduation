@@ -57,7 +57,7 @@ private:
 	LPD3DXMESH m_pMesh;				//メッシュ(頂点情報)へのポインタ
 	LPD3DXBUFFER m_pBuffMat;		//マテリアルへのポインタ
 	DWORD m_dwNumMat;				//マテリアルの数
-	char m_acModelName[64];			//モデルの名前
+	char m_acModelName[128];		//モデルの名前
 
 	D3DXVECTOR3 m_Startpos;			//オフセットの位置
 	D3DXVECTOR3 m_Startrot;			//オフセットの位置
