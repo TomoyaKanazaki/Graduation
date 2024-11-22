@@ -171,7 +171,7 @@ bool CBible::Hit(CPlayer* pPlayer)
 	// エフェクトを生成する
 	D3DXVECTOR3 pos = GetPos();
 	D3DXVECTOR3 rot = GetRot();
-	MyEffekseer::EffectCreate(CMyEffekseer::TYPE_GETITEM, false, useful::CalcMatrix(pos, rot, *GetUseMultiMatrix()), rot);
+	//MyEffekseer::EffectCreate(CMyEffekseer::TYPE_GETITEM, false, useful::CalcMatrix(pos, rot, *GetUseMultiMatrix()), rot);
 
 	// 自身の削除
 	Uninit();
