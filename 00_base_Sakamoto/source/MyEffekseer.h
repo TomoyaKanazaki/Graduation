@@ -48,6 +48,8 @@ public:
 		TYPE_HITTHEWALL,		// 壁に火があたる
 		TYPE_HIT_SMALLDEVIL,	// 小デビル当たる
 		TYPE_STEAM,				// 卵から出る湯気
+		TYPE_BORNGUID1,			// 復活ガイド　プレイヤー1
+		TYPE_BORNGUID2,			// 復活ガイド　プレイヤー2
 		TYPE_MAX,
 		TYPE_NONE  // なんもない
 	};

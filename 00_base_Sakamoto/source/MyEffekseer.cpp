@@ -59,6 +59,8 @@ namespace MyEffekseer
 		"data\\EFFEKSEER\\Effect\\wall_hit_thewall.efkefc",		  // 壁に火が当たる
 		"data\\EFFEKSEER\\Effect\\suprise.efkefc",		  // 小デビルが当たる
 		"data\\EFFEKSEER\\Effect\\steam.efkefc",		  // 卵から出る湯気
+		"data\\EFFEKSEER\\Effect\\bornguid00.efkefc",		  // 卵から出る湯気
+		"data\\EFFEKSEER\\Effect\\bornguid01.efkefc",		  // 卵から出る湯気
 	};
 
 	//============================================
