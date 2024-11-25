@@ -1657,6 +1657,11 @@ void CPlayer::Death(void)
 
 		// ƒAƒCƒeƒ€‚ğŠ‚µ‚Ä‚¢‚È‚¢ó‘Ô‚É‚·‚é
 		SetItemType(TYPE_NONE);
+
+		D3DXMATRIX mat = *GetUseMultiMatrix();
+		D3DXVECTOR3 ef = useful::CalcMatrix(m_pos, m_rot, mat);
+		MyEffekseer::EffectCreate(CMyEffekseer::TYPE_ACENTION, false, ef, m_rot, D3DXVECTOR3(50.0f, 50.0f, 50.0f));
+
 	}
 }
 
