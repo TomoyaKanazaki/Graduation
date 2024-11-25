@@ -53,6 +53,9 @@ namespace MyEffekseer
 		"data\\EFFEKSEER\\Effect\\fall_smoke.efkefc",		  // 落下の土煙
 		"data\\EFFEKSEER\\Effect\\born_player00.efkefc",		  // プレイヤー１の卵落下
 		"data\\EFFEKSEER\\Effect\\born_player01.efkefc",		  // プレイヤー2の卵落下
+		"data\\EFFEKSEER\\Effect\\drop.efkefc",				// タマゴンの汗
+		"data\\EFFEKSEER\\Effect\\speedup.efkefc",		  // 加速
+		"data\\EFFEKSEER\\Effect\\roll.efkefc",		  // 石が転がる
 	};
 
 	//============================================
