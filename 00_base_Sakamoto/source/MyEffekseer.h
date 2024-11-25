@@ -50,6 +50,7 @@ public:
 		TYPE_STEAM,				// 卵から出る湯気
 		TYPE_BORNGUID1,			// 復活ガイド　プレイヤー1
 		TYPE_BORNGUID2,			// 復活ガイド　プレイヤー2
+		TYPE_GOT_THEITEM,		// アイテム持っているとき
 		TYPE_MAX,
 		TYPE_NONE  // なんもない
 	};
