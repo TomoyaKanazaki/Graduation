@@ -45,6 +45,9 @@ public:
 		TYPE_DROP,				// タマゴンの汗
 		TYPE_ACCELE,			// タマゴンの加速
 		TYPE_ROLL,				// 石が転がる
+		TYPE_HITTHEWALL,		// 壁に火があたる
+		TYPE_HIT_SMALLDEVIL,	// 小デビル当たる
+		TYPE_STEAM,				// 卵から出る湯気
 		TYPE_MAX,
 		TYPE_NONE  // なんもない
 	};
