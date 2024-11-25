@@ -60,6 +60,7 @@ CManager::CManager() :
 	m_pBlockManager = nullptr;
 	m_typeInput = TYPE_INPUT::TYPE_NONE;
 	m_nStage = 0;
+	m_ScrollType = 0;
 }
 
 //====================================================================

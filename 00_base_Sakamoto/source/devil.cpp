@@ -901,12 +901,13 @@ void CDevil::StateManager(void)
 
 		case CDevil::SCROLL_TYPE_RETRO:
 
-			break;
-
 			if (m_nStateCount % (SCROOL_TIME / SCROOL_COUNT_02) == 0)
 			{
 				Move(m_DevilArrow);
 			}
+
+			break;
+
 		default:
 
 			break;
@@ -1306,59 +1307,41 @@ void CDevil::PlayerScroll(D3DXVECTOR3 Move, float GritSize)
 			D3DXVECTOR3 pos = pPlayer->GetPos();
 			D3DXVECTOR3 Size = pPlayer->GetSize();
 			D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
+			float G_Size = CMapSystem::GetInstance()->GetGritSize();
+			float AAA = 1.0f;
 
 			pos += Move;
 
 			if (Move.x > 0.0f)
 			{
-				if (pos.x + (GritSize * 0.5f) > m_DevilPos.x + MapSize.x)
+				if (pos.x + G_Size > m_DevilPos.x + MapSize.x)	// ‰E
 				{
-					pos.x = m_DevilPos.x + MapSize.x - (GritSize * 0.5f) + Move.x;
+					pos.x = m_DevilPos.x + MapSize.x - G_Size;
 					CollisionPressPlayer(pPlayer, pos, Size);
-
-					CEffect* pEffect = CEffect::Create();
-					pEffect->SetPos(pos);
-					pEffect->SetColor(D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
-					pEffect->SetRadius(100.0f);
 				}
 			}
 			if (Move.x < 0.0f)
 			{
-				if (pos.x - (GritSize * 0.5f) < m_DevilPos.x - MapSize.x)
+				if (pos.x - G_Size < m_DevilPos.x - MapSize.x)	// ¶
 				{
-					pos.x = m_DevilPos.x - MapSize.x + (GritSize * 0.5f) + Move.x;
+					pos.x = m_DevilPos.x - MapSize.x + G_Size;
 					CollisionPressPlayer(pPlayer, pos, Size);
-
-					CEffect* pEffect = CEffect::Create();
-					pEffect->SetPos(pos);
-					pEffect->SetColor(D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
-					pEffect->SetRadius(100.0f);
 				}
 			}
 			if (Move.z > 0.0f)
 			{
-				if (pos.z + (GritSize * 0.5f) > m_DevilPos.z + MapSize.z)
+				if (pos.z + G_Size > m_DevilPos.z + MapSize.z)	// ã
 				{
-					pos.z = m_DevilPos.z + MapSize.z - (GritSize * 0.5f) + Move.x;
+					pos.z = m_DevilPos.z + MapSize.z - G_Size;
 					CollisionPressPlayer(pPlayer, pos, Size);
-
-					CEffect* pEffect = CEffect::Create();
-					pEffect->SetPos(pos);
-					pEffect->SetColor(D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
-					pEffect->SetRadius(100.0f);
 				}
 			}
 			if (Move.z < 0.0f)
 			{
-				if (pos.z - (GritSize * 0.5f) < m_DevilPos.z - MapSize.z)
+				if (pos.z - G_Size < m_DevilPos.z - MapSize.z)	// ‰º
 				{
-					pos.z = m_DevilPos.z - MapSize.z + (GritSize * 0.5f) + Move.z;
+					pos.z = m_DevilPos.z - MapSize.z + G_Size;
 					CollisionPressPlayer(pPlayer, pos, Size);
-
-					CEffect* pEffect = CEffect::Create();
-					pEffect->SetPos(pos);
-					pEffect->SetColor(D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
-					pEffect->SetRadius(100.0f);
 				}
 			}
 
