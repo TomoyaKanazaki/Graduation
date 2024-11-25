@@ -1542,6 +1542,10 @@ void CPlayer::EggMove(void)
 			//—Ž‰ºŽž‚ÉˆÚ“®—Ê‚ÆˆÊ’u‚ð‚O‚É‚·‚é
 			m_pos.y = 0.0f;
 			m_move.y = 0.0f;
+
+			D3DXMATRIX mat = *GetUseMultiMatrix();
+			D3DXVECTOR3 ef = useful::CalcMatrix(m_pos, m_rot, mat);
+			MyEffekseer::EffectCreate(CMyEffekseer::TYPE_FALLSMOKE, false, ef, m_rot, D3DXVECTOR3(50.0f, 50.0f, 50.0f));
 		}
 
 		if (m_pUpEgg != nullptr)
