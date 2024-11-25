@@ -274,6 +274,9 @@ void CPlayer::GameUpdate(void)
 		//壁があるか判断
 		SearchWall();
 
+		//キーボードの取得
+		CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
+
 		if (
 			(m_State != STATE_EGG && CollisionStageIn() == true && 
 			CMapSystem::GetInstance()->GetGritBool(m_Grid.x,m_Grid.z) == false)||
