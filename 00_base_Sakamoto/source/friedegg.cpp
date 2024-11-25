@@ -168,6 +168,9 @@ CFriedEgg* CFriedEgg::Create(const CEnemy::ENEMY_TYPE eType, const CMapSystem::G
 	// タイプの設定
 	pItem->SetEnemy(eType);
 
+	// エフェクトを生成
+	pItem->SetEffect();
+
 	return pItem;
 }
 
@@ -180,4 +183,16 @@ void CFriedEgg::Move(D3DXVECTOR3& pos)
 	if (!m_bMove) { return; }
 
 	// TODO : ランダム歩行でも何でも仕様を用意する
+}
+
+//==========================================
+//  エフェクトを生成
+//==========================================
+void CFriedEgg::SetEffect()
+{
+	// 自身の情報を取得する
+	D3DXVECTOR3 pos = GetPos();
+	D3DXVECTOR3 rot = GetRot();
+
+	Effect(MyEffekseer::EffectCreate(CMyEffekseer::TYPE_STEAM, true, useful::CalcMatrix(pos, rot, *GetUseMultiMatrix()), rot, D3DXVECTOR3(30.0f, 30.0f, 30.0f)));
 }

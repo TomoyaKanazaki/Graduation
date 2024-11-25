@@ -36,6 +36,7 @@ private:
 
 	// メンバ関数
 	void Move(D3DXVECTOR3& pos) override;
+	void SetEffect() override;
 
 	// 静的メンバ変数
 	static CListManager<CFriedEgg>* m_pList; // オブジェクトリスト
