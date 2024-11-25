@@ -410,6 +410,7 @@ void CPlayer::Move(void)
 	D3DXVECTOR3 CameraRot = CManager::GetInstance()->GetCamera()->GetRot();
 	D3DXVECTOR3 NormarizeMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
+	//“ü—Íˆ—
 	NormarizeMove = MoveInputKey(NormarizeMove);
 
 	NormarizeMove = MoveInputPadStick(NormarizeMove);
@@ -418,6 +419,7 @@ void CPlayer::Move(void)
 
 	if (m_bInput && m_State != STATE_ATTACK)
 	{
+		//ƒvƒŒƒCƒ„[‚ÉˆÚ“®—Ê‚ð”½‰f‚³‚¹‚é
 		float JunpPawer = NormarizeMove.y;
 		NormarizeMove.y = 0.0f;
 
@@ -468,6 +470,7 @@ void CPlayer::Move(void)
 				break;
 			}
 
+			//–³“Gó‘Ô‚ÌÝ’è
 			m_bInvincible = true;
 			m_nInvincibleCount = INVINCIBLE_TIME;
 		}
@@ -499,8 +502,9 @@ D3DXVECTOR3 CPlayer::MoveInputKey(D3DXVECTOR3 Move)
 		m_bInput = true;
 		m_MoveState = MOVE_STATE_UP;
 	}
-	else if ((pInputKeyboard->GetPress(DIK_S) && m_OKD && m_bGritCenter) ||
-		(pInputKeyboard->GetPress(DIK_S) && m_MoveState == MOVE_STATE_UP))
+	else if (((pInputKeyboard->GetPress(DIK_S) && m_OKD && m_bGritCenter) ||
+		(pInputKeyboard->GetPress(DIK_S) && m_MoveState == MOVE_STATE_UP)) &&
+		pInputKeyboard->GetPress(DIK_W) == false)
 	{
 		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
 
@@ -521,8 +525,9 @@ D3DXVECTOR3 CPlayer::MoveInputKey(D3DXVECTOR3 Move)
 		m_bInput = true;
 		m_MoveState = MOVE_STATE_LEFT;
 	}
-	else if ((pInputKeyboard->GetPress(DIK_D) && m_OKR && m_bGritCenter) ||
-		(pInputKeyboard->GetPress(DIK_D) && m_MoveState == MOVE_STATE_LEFT))
+	else if (((pInputKeyboard->GetPress(DIK_D) && m_OKR && m_bGritCenter) ||
+		(pInputKeyboard->GetPress(DIK_D) && m_MoveState == MOVE_STATE_LEFT)) &&
+		pInputKeyboard->GetPress(DIK_A) == false)
 	{
 		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
 
@@ -625,8 +630,9 @@ D3DXVECTOR3 CPlayer::MoveInputPadKey(D3DXVECTOR3 Move)
 				m_bInput = true;
 				m_MoveState = MOVE_STATE_UP;
 			}
-			else if ((pInputJoypad->GetPress(CInputJoypad::BUTTON_DOWN, nCnt) && m_OKD && m_bGritCenter) ||
-				(pInputJoypad->GetPress(CInputJoypad::BUTTON_DOWN, nCnt) && m_MoveState == MOVE_STATE_UP))
+			else if (((pInputJoypad->GetPress(CInputJoypad::BUTTON_DOWN, nCnt) && m_OKD && m_bGritCenter) ||
+				(pInputJoypad->GetPress(CInputJoypad::BUTTON_DOWN, nCnt) && m_MoveState == MOVE_STATE_UP)) &&
+				pInputJoypad->GetPress(CInputJoypad::BUTTON_UP, nCnt) == false)
 			{
 				CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
 
@@ -647,8 +653,9 @@ D3DXVECTOR3 CPlayer::MoveInputPadKey(D3DXVECTOR3 Move)
 				m_bInput = true;
 				m_MoveState = MOVE_STATE_LEFT;
 			}
-			else if ((pInputJoypad->GetPress(CInputJoypad::BUTTON_RIGHT, nCnt) && m_OKR && m_bGritCenter) ||
-				(pInputJoypad->GetPress(CInputJoypad::BUTTON_RIGHT, nCnt) && m_MoveState == MOVE_STATE_LEFT))
+			else if (((pInputJoypad->GetPress(CInputJoypad::BUTTON_RIGHT, nCnt) && m_OKR && m_bGritCenter) ||
+				(pInputJoypad->GetPress(CInputJoypad::BUTTON_RIGHT, nCnt) && m_MoveState == MOVE_STATE_LEFT)) &&
+				pInputJoypad->GetPress(CInputJoypad::BUTTON_LEFT, nCnt) == false)
 			{
 				CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
 
