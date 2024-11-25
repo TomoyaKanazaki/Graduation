@@ -516,6 +516,9 @@ D3DXVECTOR3 CPlayer::MoveInputKey(D3DXVECTOR3 Move)
 		(pInputKeyboard->GetPress(DIK_W) && m_MoveState == MOVE_STATE_DOWN))
 	{
 		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
+		D3DXMATRIX mat = *GetUseMultiMatrix();
+		D3DXVECTOR3 ef = useful::CalcMatrix(m_pos, m_rot, mat);
+		MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, m_rot);
 
 		Move.z += 1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 		Move.x += 1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
@@ -528,6 +531,9 @@ D3DXVECTOR3 CPlayer::MoveInputKey(D3DXVECTOR3 Move)
 		pInputKeyboard->GetPress(DIK_W) == false)
 	{
 		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
+		D3DXMATRIX mat = *GetUseMultiMatrix();
+		D3DXVECTOR3 ef = useful::CalcMatrix(m_pos, m_rot, mat);
+		MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, m_rot);
 
 		Move.z += -1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 		Move.x += -1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
@@ -539,6 +545,9 @@ D3DXVECTOR3 CPlayer::MoveInputKey(D3DXVECTOR3 Move)
 		(pInputKeyboard->GetPress(DIK_A) && m_MoveState == MOVE_STATE_RIGHT))
 	{
 		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
+		D3DXMATRIX mat = *GetUseMultiMatrix();
+		D3DXVECTOR3 ef = useful::CalcMatrix(m_pos, m_rot, mat);
+		MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, m_rot);
 
 		Move.x += -1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 		Move.z -= -1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
@@ -551,6 +560,9 @@ D3DXVECTOR3 CPlayer::MoveInputKey(D3DXVECTOR3 Move)
 		pInputKeyboard->GetPress(DIK_A) == false)
 	{
 		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
+		D3DXMATRIX mat = *GetUseMultiMatrix();
+		D3DXVECTOR3 ef = useful::CalcMatrix(m_pos, m_rot, mat);
+		MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, m_rot);
 
 		Move.x += 1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 		Move.z -= 1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
@@ -580,6 +592,9 @@ D3DXVECTOR3 CPlayer::MoveInputPadStick(D3DXVECTOR3 Move)
 				(pInputJoypad->Get_Stick_Left(nCnt).y > 0.0f && m_MoveState == MOVE_STATE_DOWN))
 			{
 				CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
+				D3DXMATRIX mat = *GetUseMultiMatrix();
+				D3DXVECTOR3 ef = useful::CalcMatrix(m_pos, m_rot, mat);
+				MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, m_rot);
 
 				Move.z += 1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 				Move.x += 1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
@@ -591,6 +606,9 @@ D3DXVECTOR3 CPlayer::MoveInputPadStick(D3DXVECTOR3 Move)
 				(pInputJoypad->Get_Stick_Left(nCnt).y < 0.0f && m_MoveState == MOVE_STATE_UP))
 			{
 				CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
+				D3DXMATRIX mat = *GetUseMultiMatrix();
+				D3DXVECTOR3 ef = useful::CalcMatrix(m_pos, m_rot, mat);
+				MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, m_rot);
 
 				Move.z += -1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 				Move.x += -1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
@@ -602,6 +620,9 @@ D3DXVECTOR3 CPlayer::MoveInputPadStick(D3DXVECTOR3 Move)
 				(pInputJoypad->Get_Stick_Left(nCnt).x < 0.0f && m_MoveState == MOVE_STATE_RIGHT))
 			{
 				CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
+				D3DXMATRIX mat = *GetUseMultiMatrix();
+				D3DXVECTOR3 ef = useful::CalcMatrix(m_pos, m_rot, mat);
+				MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, m_rot);
 
 				Move.x += -1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 				Move.z -= -1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
@@ -613,6 +634,9 @@ D3DXVECTOR3 CPlayer::MoveInputPadStick(D3DXVECTOR3 Move)
 				(pInputJoypad->Get_Stick_Left(nCnt).x > 0.0f && m_MoveState == MOVE_STATE_LEFT))
 			{
 				CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
+				D3DXMATRIX mat = *GetUseMultiMatrix();
+				D3DXVECTOR3 ef = useful::CalcMatrix(m_pos, m_rot, mat);
+				MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, m_rot);
 
 				Move.x += 1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 				Move.z -= 1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
@@ -644,6 +668,9 @@ D3DXVECTOR3 CPlayer::MoveInputPadKey(D3DXVECTOR3 Move)
 				(pInputJoypad->GetPress(CInputJoypad::BUTTON_UP, nCnt) && m_MoveState == MOVE_STATE_DOWN))
 			{
 				CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
+				D3DXMATRIX mat = *GetUseMultiMatrix();
+				D3DXVECTOR3 ef = useful::CalcMatrix(m_pos, m_rot, mat);
+				MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, m_rot);
 
 				Move.z += 1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 				Move.x += 1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
@@ -656,6 +683,9 @@ D3DXVECTOR3 CPlayer::MoveInputPadKey(D3DXVECTOR3 Move)
 				pInputJoypad->GetPress(CInputJoypad::BUTTON_UP, nCnt) == false)
 			{
 				CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
+				D3DXMATRIX mat = *GetUseMultiMatrix();
+				D3DXVECTOR3 ef = useful::CalcMatrix(m_pos, m_rot, mat);
+				MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, m_rot);
 
 				Move.z += -1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 				Move.x += -1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
@@ -667,6 +697,9 @@ D3DXVECTOR3 CPlayer::MoveInputPadKey(D3DXVECTOR3 Move)
 				(pInputJoypad->GetPress(CInputJoypad::BUTTON_LEFT, nCnt) && m_MoveState == MOVE_STATE_RIGHT))
 			{
 				CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
+				D3DXMATRIX mat = *GetUseMultiMatrix();
+				D3DXVECTOR3 ef = useful::CalcMatrix(m_pos, m_rot, mat);
+				MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, m_rot);
 
 				Move.x += -1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 				Move.z -= -1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
@@ -679,6 +712,9 @@ D3DXVECTOR3 CPlayer::MoveInputPadKey(D3DXVECTOR3 Move)
 				pInputJoypad->GetPress(CInputJoypad::BUTTON_LEFT, nCnt) == false)
 			{
 				CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
+				D3DXMATRIX mat = *GetUseMultiMatrix();
+				D3DXVECTOR3 ef = useful::CalcMatrix(m_pos, m_rot, mat);
+				MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, m_rot);
 
 				Move.x += 1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 				Move.z -= 1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
