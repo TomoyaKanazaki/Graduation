@@ -44,6 +44,7 @@ public:
 		TYPE_BORN_PLAYER_01,	// 卵が落下01
 		TYPE_DROP,				// タマゴンの汗
 		TYPE_ACCELE,			// タマゴンの加速
+		TYPE_ROLL,				// 石が転がる
 		TYPE_MAX,
 		TYPE_NONE  // なんもない
 	};
