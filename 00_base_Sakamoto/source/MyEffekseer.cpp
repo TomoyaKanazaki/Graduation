@@ -57,7 +57,7 @@ namespace MyEffekseer
 		"data\\EFFEKSEER\\Effect\\speedup.efkefc",		  // ‰Á‘¬
 		"data\\EFFEKSEER\\Effect\\roll.efkefc",		  // Î‚ª“]‚ª‚é
 		"data\\EFFEKSEER\\Effect\\wall_hit_thewall.efkefc",		  // •Ç‚É‰Î‚ª“–‚½‚é
-
+		"data\\EFFEKSEER\\Effect\\suprise.efkefc",		  // ¬ƒfƒrƒ‹‚ª“–‚½‚é
 	};
 
 	//============================================
