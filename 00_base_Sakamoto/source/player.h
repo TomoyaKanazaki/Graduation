@@ -84,8 +84,8 @@ public:
 	};
 
 	D3DMATRIX GetMtxWorld(void) { return m_mtxWorld; }
-	static CPlayer* Create();
-	HRESULT Init(void) override;
+	static CPlayer* Create(int PlayNumber);
+	HRESULT Init(int PlayNumber) override;
 	void Uninit(void);
 	void Update(void);
 	void TitleUpdate(void);
