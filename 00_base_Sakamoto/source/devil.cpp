@@ -759,24 +759,15 @@ void CDevil::CollisionOut()
 //====================================================================
 void CDevil::ActionState(void)
 {
-	// 移動モーション
-	//if (m_move.x > 0.1f || m_move.x < -0.1f || m_move.z > 0.1f || m_move.z < -0.1f)
-	//{
-	//	if (m_Action != ACTION_SIGNAL_UP)
-	//	{
-	//		m_Action = ACTION_SIGNAL_UP;
-	//		m_pMotion->Set(ACTION_SIGNAL_UP, 5);
-	//	}
-	//}
-	//// ニュートラルモーション
-	//else
-	//{
-	//	if (m_Action != ACTION_NEUTRAL)
-	//	{
-	//		m_Action = ACTION_NEUTRAL;
-	//		m_pMotion->Set(ACTION_NEUTRAL, 5);
-	//	}
-	//}
+	// ニュートラルモーション
+	if(true)
+	{
+		if (m_Action != ACTION_KING)
+		{
+			m_Action = ACTION_KING;
+			GetMotion()->Set(ACTION_KING, 5);
+		}
+	}
 }
 
 //====================================================================
