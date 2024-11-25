@@ -107,7 +107,7 @@ HRESULT CTitle::Init(void)
 	m_pLogo->SetHeight(TITLE_LOGO_SIZE.y);
 	if (m_pLogo != nullptr)
 	{
-		//m_pLogo->SetIdx(pTexture->Regist("data\\TEXTURE\\title\\logo001.png"));
+		m_pLogo->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\devilins.png"));
 	}
 
 	for (int nCnt = 0; nCnt < MAX_SELECT; nCnt++)
@@ -123,7 +123,18 @@ HRESULT CTitle::Init(void)
 
 		if (m_pModeSelect[nCnt] != nullptr)
 		{
-			//m_pModeSelect[nCnt]->SetIdx(pTexture->Regist("data\\TEXTURE\\title\\titleButton.png"));
+			switch (nCnt)
+			{
+			case 0:
+				m_pModeSelect[nCnt]->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\TitleSelect00.png"));
+				break;
+			case 1:
+				m_pModeSelect[nCnt]->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\TitleSelect01.png"));
+				break;
+			case 2:
+				m_pModeSelect[nCnt]->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\TitleSelect02.png"));
+				break;
+			}
 		}
 	}
 
@@ -139,7 +150,7 @@ HRESULT CTitle::Init(void)
 
 	if (m_pTitleButton != nullptr)
 	{
-		//m_pTitleButton->SetIdx(pTexture->Regist("data\\TEXTURE\\title\\titleButton.png"));
+		m_pTitleButton->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\TitleBotton1.png"));
 	}
 	
 	// ƒ‰ƒCƒg‚Ì‰Šú‰»

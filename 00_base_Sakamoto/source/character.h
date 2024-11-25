@@ -24,7 +24,9 @@ public:
 	~CCharacter();
 
 	virtual HRESULT Init(void) { return S_OK; };
+	virtual HRESULT Init(int PlayNumber) { return S_OK; };
 	HRESULT Init(const char* pModelName);
+
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);

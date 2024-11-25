@@ -128,27 +128,23 @@ HRESULT CTutorial::Init(void)
 	if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_SINGLE)
 	{
 		//プレイヤーの生成
-		m_pPlayer[0] = CPlayer::Create();
+		m_pPlayer[0] = CPlayer::Create(0);
 		m_pPlayer[0]->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(11, 9)));
-		m_pPlayer[0]->SetPlayNumber(0);
 	}
 	else if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
 	{
 		//プレイヤーの生成
-		m_pPlayer[0] = CPlayer::Create();
+		m_pPlayer[0] = CPlayer::Create(0);
 		m_pPlayer[0]->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(11, 9)));
-		m_pPlayer[0]->SetPlayNumber(0);
 
-		m_pPlayer[1] = CPlayer::Create();
+		m_pPlayer[1] = CPlayer::Create(1);
 		m_pPlayer[1]->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(11, 4)));
-		m_pPlayer[1]->SetPlayNumber(1);
 	}
 	else
 	{
 		//プレイヤーの生成
-		m_pPlayer[0] = CPlayer::Create();
+		m_pPlayer[0] = CPlayer::Create(0);
 		m_pPlayer[0]->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(11, 9)));
-		m_pPlayer[0]->SetPlayNumber(0);
 	}
 
 	m_pScore = CScore::Create();

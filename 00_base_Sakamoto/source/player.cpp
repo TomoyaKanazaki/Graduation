@@ -56,7 +56,9 @@ namespace
 	const float OBJDISTANCE = 10000.0f;		// オブジェクトの距離
 
 	const D3DXVECTOR3 COLLISION_SIZE = D3DXVECTOR3(35.0f, 40.0f, 35.0f);		//横の当たり判定
-	const D3DXVECTOR3 LIFE_POS = D3DXVECTOR3(50.0f, 650.0f, 0.0f);
+
+	const D3DXVECTOR3 LIFE_POS00 = D3DXVECTOR3(50.0f, 650.0f, 0.0f);
+	const D3DXVECTOR3 LIFE_POS01 = D3DXVECTOR3(900.0f, 650.0f, 0.0f);
 
 	const float CROSS_TIME = 10.0f; // 十字架を所持していられる時間
 
@@ -127,7 +129,7 @@ CPlayer::~CPlayer()
 //====================================================================
 //生成処理
 //====================================================================
-CPlayer* CPlayer::Create()
+CPlayer* CPlayer::Create(int PlayNumber)
 {
 	CPlayer* pPlayer = new CPlayer();
 
@@ -135,7 +137,7 @@ CPlayer* CPlayer::Create()
 	if (pPlayer == nullptr) { assert(false); return nullptr; }
 
 	// 初期化処理に失敗した場合nullを返す
-	if (FAILED(pPlayer->Init()))
+	if (FAILED(pPlayer->Init(PlayNumber)))
 	{
 		assert(false);
 		delete pPlayer;
@@ -148,8 +150,10 @@ CPlayer* CPlayer::Create()
 //====================================================================
 //初期化処理
 //====================================================================
-HRESULT CPlayer::Init(void)
+HRESULT CPlayer::Init(int PlayNumber)
 {
+	m_nPlayNumber = PlayNumber;
+
 	// サイズの設定
 	m_size = COLLISION_SIZE;
 
@@ -183,15 +187,29 @@ HRESULT CPlayer::Init(void)
 
 	m_pLifeUi = CLifeUi::Create();
 
-	// 数値
-	m_pLifeUi->GetNumber()->SetPos(D3DXVECTOR3(LIFE_POS.x + 200.0f, LIFE_POS.y, LIFE_POS.z));
+	switch (m_nPlayNumber)
+	{
+	case 0:
+		// 数字の位置
+		m_pLifeUi->GetNumber()->SetPos(D3DXVECTOR3(LIFE_POS00.x + 200.0f, LIFE_POS00.y, LIFE_POS00.z));
+
+		// 体力
+		m_pLifeUi->SetPos(LIFE_POS00);
+		m_pLifeUi->GetNumber()->SetNumber(m_nLife);
+		break;
+
+	case 1:
+		// 数字の位置
+		m_pLifeUi->GetNumber()->SetPos(D3DXVECTOR3(LIFE_POS01.x + 200.0f, LIFE_POS01.y, LIFE_POS01.z));
+
+		// 体力
+		m_pLifeUi->SetPos(LIFE_POS01);
+		m_pLifeUi->GetNumber()->SetNumber(m_nLife);
+		break;
+	}
 
 	// アイテム状態を設定
 	SetItemType(CPlayer::TYPE_NONE);
-
-	// 体力
-	m_pLifeUi->SetPos(LIFE_POS);
-	m_pLifeUi->GetNumber()->SetNumber(m_nLife);
 
 	// スローの生成
 	m_pSlow = CSlowManager::Create(CSlowManager::CAMP_PLAYER, CSlowManager::TAG_PLAYER);

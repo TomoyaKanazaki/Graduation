@@ -123,7 +123,18 @@ HRESULT CSelect::Init(void)
 
 		if (m_pStageSelect[nCnt] != nullptr)
 		{
-			//m_pModeSelect[nCnt]->SetIdx(pTexture->Regist("data\\TEXTURE\\title\\titleButton.png"));
+			switch (nCnt)
+			{
+			case 0:
+				m_pStageSelect[nCnt]->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\StageSelect01.png"));
+				break;
+			case 1:
+				m_pStageSelect[nCnt]->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\StageSelect02.png"));
+				break;
+			case 2:
+				m_pStageSelect[nCnt]->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\StageSelect03.png"));
+				break;
+			}
 		}
 	}
 
@@ -141,7 +152,15 @@ HRESULT CSelect::Init(void)
 
 		if (m_pScrollSelect[nCnt] != nullptr)
 		{
-			//m_pModeSelect[nCnt]->SetIdx(pTexture->Regist("data\\TEXTURE\\title\\titleButton.png"));
+			switch (nCnt)
+			{
+			case 0:
+				m_pScrollSelect[nCnt]->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\ScrollSelect00.png"));
+				break;
+			case 1:
+				m_pScrollSelect[nCnt]->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\ScrollSelect01.png"));
+				break;
+			}
 		}
 	}
 
@@ -152,12 +171,12 @@ HRESULT CSelect::Init(void)
 		m_pTitleButton->SetPos(BUTTON_POS);
 		m_pTitleButton->SetWidth(BUTTON_SIZE.x);
 		m_pTitleButton->SetHeight(BUTTON_SIZE.y);
-		m_pTitleButton->SetColor(SELECT_COLOR_TRUE);
+		//m_pTitleButton->SetColor(SELECT_COLOR_TRUE);
 	}
 
 	if (m_pTitleButton != nullptr)
 	{
-		//m_pTitleButton->SetIdx(pTexture->Regist("data\\TEXTURE\\title\\titleButton.png"));
+		m_pTitleButton->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\TitleBotton1.png"));
 	}
 
 	// ƒ‰ƒCƒg‚Ì‰Šú‰»
@@ -299,7 +318,7 @@ void CSelect::ScrollSelect(void)
 	}
 
 
-	for (int nCnt = 0; nCnt < NUM_STAGE; nCnt++)
+	for (int nCnt = 0; nCnt < NUM_SCROLLTYPE; nCnt++)
 	{
 		if (m_pScrollSelect[nCnt] != nullptr)
 		{
