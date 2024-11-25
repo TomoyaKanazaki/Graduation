@@ -42,6 +42,8 @@ public:
 		TYPE_FALLSMOKE,		// —Ž‰ºŽž‚Ì“y‰Œ
 		TYPE_BORN_PLAYER_00,	// —‘‚ª—Ž‰º00
 		TYPE_BORN_PLAYER_01,	// —‘‚ª—Ž‰º01
+		TYPE_DROP,				// ƒ^ƒ}ƒSƒ“‚ÌŠ¾
+		TYPE_ACCELE,			// ƒ^ƒ}ƒSƒ“‚Ì‰Á‘¬
 		TYPE_MAX,
 		TYPE_NONE  // ‚È‚ñ‚à‚È‚¢
 	};
