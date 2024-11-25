@@ -62,6 +62,7 @@ namespace MyEffekseer
 		"data\\EFFEKSEER\\Effect\\bornguid00.efkefc",		  // 生成ガイド player1
 		"data\\EFFEKSEER\\Effect\\bornguid01.efkefc",		  // 生成ガイド player2
 		"data\\EFFEKSEER\\Effect\\got_theitem.efkefc",		  // アイテムを持っているとき
+		"data\\EFFEKSEER\\Effect\\acention.efkefc",		  // アイテムを持っているとき
 	};
 
 	//============================================
