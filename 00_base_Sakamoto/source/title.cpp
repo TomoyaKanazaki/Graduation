@@ -24,13 +24,13 @@ namespace
 	const D3DXVECTOR2 TITLE_LOGO_SIZE = { 600.0f, 240.0f };				// タイトルロゴの大きさ
 
 	const D3DXVECTOR3 SELECT_POS = D3DXVECTOR3(900.0f, 400.0f, 0.0f);		// 選択項目の位置
-	const D3DXVECTOR2 SELECT_SIZE = D3DXVECTOR2(300.0f, 60.0f);				// 選択項目の大きさ
+	const D3DXVECTOR2 SELECT_SIZE = D3DXVECTOR2(300.0f, 80.0f);				// 選択項目の大きさ
 	const D3DXVECTOR2 SELECT_DISTANCE = D3DXVECTOR2(0.0f + (SELECT_SIZE.x * 0.0f), 5.0f + (SELECT_SIZE.y * 1.0f));	// 選択項目の幅
 	const D3DXCOLOR SELECT_COLOR_TRUE = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);	// 選択状態項目の色
 	const D3DXCOLOR SELECT_COLOR_FALSE = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.5f);	// 選択してない項目の色
 
 	const D3DXVECTOR3 BUTTON_POS = D3DXVECTOR3(640.0f, 670.0f, 0.0f);		// ボタンの位置
-	const D3DXVECTOR2 BUTTON_SIZE = { 300.0f, 60.0f };						// ボタンの大きさ
+	const D3DXVECTOR2 BUTTON_SIZE = { 300.0f, 160.0f };						// ボタンの大きさ
 
 	const float DOME_ROT_SPEED = 0.001f;	// メッシュドームの回転速度
 }
@@ -141,12 +141,12 @@ HRESULT CTitle::Init(void)
 	{
 		m_pTitleButton = CObject2D::Create();
 		m_pTitleButton->SetPos(BUTTON_POS);
-		m_pTitleButton->SetSize(D3DXVECTOR3(BUTTON_SIZE.x, BUTTON_SIZE.y, 0.0f));
+		m_pTitleButton->SetSize(D3DXVECTOR3(600.0f, BUTTON_SIZE.y, 0.0f));
 	}
 
 	if (m_pTitleButton != nullptr)
 	{
-		m_pTitleButton->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\TitleBotton1.png"));
+		m_pTitleButton->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\pressbotton.png"));
 	}
 	
 	// ライトの初期化

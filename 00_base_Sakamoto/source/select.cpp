@@ -117,7 +117,7 @@ HRESULT CSelect::Init(void)
 			// ボタン
 			m_pStageSelect[nCnt] = CObject2D::Create();
 			m_pStageSelect[nCnt]->SetPos(D3DXVECTOR3(STAGE_POS.x + (SCROOL_DISTANCE.x * nCnt), STAGE_POS.y + (SCROOL_DISTANCE.y * nCnt), STAGE_POS.z));
-			m_pStageSelect[nCnt]->SetSize(D3DXVECTOR3(STAGE_SIZE.x, STAGE_SIZE.y, 0.0f));
+			m_pStageSelect[nCnt]->SetSize(D3DXVECTOR3(500.0f, STAGE_SIZE.y, 0.0f));
 		}
 
 		if (m_pStageSelect[nCnt] != nullptr)
@@ -125,16 +125,25 @@ HRESULT CSelect::Init(void)
 			switch (nCnt)
 			{
 			case 0:
-				m_pStageSelect[nCnt]->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\StageSelect01.png"));
+				m_pStageSelect[nCnt]->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\stage00.png"));
 				break;
 			case 1:
-				m_pStageSelect[nCnt]->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\StageSelect02.png"));
+				m_pStageSelect[nCnt]->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\stage01.png"));
 				break;
 			case 2:
-				m_pStageSelect[nCnt]->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\StageSelect03.png"));
+				m_pStageSelect[nCnt]->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\stage02.png"));
 				break;
 			}
 		}
+	}
+
+	for (int nCnt = 0; nCnt < NUM_SCROLLTYPE; nCnt++)
+	{
+
+		// スクロール
+		m_pTexScroll[nCnt] = CObject2D::Create();
+		m_pTexScroll[nCnt]->SetPos(D3DXVECTOR3(SCROOL_POS.x + (STAGE_DISTANCE.x * nCnt), SCROOL_POS.y + (STAGE_DISTANCE.y * nCnt), SCROOL_POS.z));
+		m_pTexScroll[nCnt]->SetSize(D3DXVECTOR3(100.0f, 100.0f, 0.0f));
 	}
 
 	for (int nCnt = 0; nCnt < NUM_SCROLLTYPE; nCnt++)
@@ -144,7 +153,7 @@ HRESULT CSelect::Init(void)
 			// ボタン
 			m_pScrollSelect[nCnt] = CObject2D::Create();
 			m_pScrollSelect[nCnt]->SetPos(D3DXVECTOR3(SCROOL_POS.x + (STAGE_DISTANCE.x * nCnt), SCROOL_POS.y + (STAGE_DISTANCE.y * nCnt), SCROOL_POS.z));
-			m_pScrollSelect[nCnt]->SetSize(D3DXVECTOR3(SCROOL_SIZE.x, SCROOL_SIZE.y, 0.0f));
+			m_pScrollSelect[nCnt]->SetSize(D3DXVECTOR3(400.0f, 200.0f, 0.0f));
 			m_pScrollSelect[nCnt]->SetColor(SELECT_COLOR_FALSE);
 		}
 
@@ -160,6 +169,21 @@ HRESULT CSelect::Init(void)
 				break;
 			}
 		}
+
+		// スクロール
+		if (m_pTexScroll[nCnt] != nullptr)
+		{
+			switch (nCnt)
+			{
+			case 0:
+				m_pTexScroll[nCnt]->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\scroll.png"));
+				break;
+			case 1:
+				m_pTexScroll[nCnt]->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\scroll.png"));
+				break;
+			}
+		}
+
 	}
 
 	// ボタン
@@ -167,13 +191,13 @@ HRESULT CSelect::Init(void)
 	{
 		m_pTitleButton = CObject2D::Create();
 		m_pTitleButton->SetPos(BUTTON_POS);
-		m_pTitleButton->SetSize(D3DXVECTOR3(BUTTON_SIZE.x, BUTTON_SIZE.y, 0.0f));
+		m_pTitleButton->SetSize(D3DXVECTOR3(600.0f, 200.0f, 0.0f));
 		//m_pTitleButton->SetColor(SELECT_COLOR_TRUE);
 	}
 
 	if (m_pTitleButton != nullptr)
 	{
-		m_pTitleButton->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\TitleBotton1.png"));
+		m_pTitleButton->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\pressbotton.png"));
 	}
 
 	// ライトの初期化
