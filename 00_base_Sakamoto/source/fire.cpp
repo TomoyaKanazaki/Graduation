@@ -37,12 +37,6 @@ CFire::CFire(int nPriority) : CObjectX(nPriority),
 m_Grid(CMapSystem::GRID(0, 0)),
 m_pEffect(nullptr)
 {
-	SetSize(SAMPLE_SIZE);
-	SetPos(INITVECTOR3);
-	m_nIdxXModel = 0;			//マテリアルの数
-	m_bCollision = false;
-	m_State = STATE_NORMAL;
-	m_nStateCount = 0;
 	m_Scaling = 1.0f;
 	m_fColorA = 0.0f;
 	m_nLife = 0;
@@ -75,6 +69,7 @@ CFire* CFire::Create(char* pModelName, const D3DXVECTOR3& pos, const D3DXVECTOR3
 	//オブジェクトの初期化処理
 	if (FAILED(pFire->Init(pModelName)))
 	{//初期化処理が失敗した場合
+		assert(false);
 		return nullptr;
 	}
 
@@ -111,7 +106,7 @@ HRESULT CFire::Init(char* pModelName)
 	m_nLife = FIRE_LIFE;
 
 	// エフェクトを生成する
-	m_pEffect = MyEffekseer::EffectCreate(CMyEffekseer::TYPE_FIRE, false, useful::CalcMatrix(pos, rot, *GetUseMultiMatrix()), rot);
+	m_pEffect = MyEffekseer::EffectCreate(CMyEffekseer::TYPE_FIRE, true, useful::CalcMatrix(pos, rot, *GetUseMultiMatrix()), rot);
 
 	// 炎の速度
 	D3DXVECTOR3 move = -D3DXVECTOR3(FIRE_SPEED * sinf(rot.y), 0.0f, FIRE_SPEED * cosf(rot.y));
@@ -165,12 +160,6 @@ void CFire::Update(void)
 
 	//更新前の位置を過去の位置とする
 	SetPosOld(pos);
-
-	//大きさの設定
-	SetScaling(D3DXVECTOR3(m_Scaling, m_Scaling, m_Scaling));
-
-	//状態管理
-	StateManager();
 
 	//頂点情報の更新
 	CObjectX::Update();
@@ -240,25 +229,6 @@ void CFire::CollisionEnemy()
 
 			return;
 		}
-	}
-}
-
-//====================================================================
-//状態管理
-//====================================================================
-void CFire::StateManager(void)
-{
-	switch (m_State)
-	{
-	case STATE_NORMAL:
-		break;
-	case STATE_ACTION:
-		break;
-	}
-
-	if (m_nStateCount > 0)
-	{
-		m_nStateCount--;
 	}
 }
 
