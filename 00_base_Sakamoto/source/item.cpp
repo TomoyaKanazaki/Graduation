@@ -342,7 +342,7 @@ bool CItem::CollisionPlayer()
 		if (!Hit(player)) { continue; }
 
 		// ƒXƒRƒA‚ð‰ÁŽZ‚·‚é
-		CGame::GetInstance()->GetScore()->AddScore(ITEM_SCORE[m_eType]);
+		player->GetScore()->AddScore(ITEM_SCORE[m_eType]);
 	}
 
 	return false;

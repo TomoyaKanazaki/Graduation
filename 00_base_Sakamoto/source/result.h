@@ -34,18 +34,18 @@ public:
 	bool GetApprear(void) { return m_Appear; }
 
 private:
-	
+
 	// ƒVƒ“ƒOƒ‹ƒgƒ“
 	static CResult* m_pResult;
 
 	bool m_Appear;
 
-	CBreak_Block3D *m_pBreakBlock3D;
-	CObject2D *m_pBg;
-	CRanking* m_pLifeRanking;
-	CObject2D *m_ClearText;
-	CObject2D *m_pScoreTex;
-	CNumber* m_apLife[6];
+	CObject2D* m_pBg;			// ”wŒi
+	CObject2D* m_pScoreTex;		// 
+
+	CRanking* m_pLifeRanking;	// 
+	CNumber* m_apLife[6];		// 
+
 	int m_AddScoreCount;
 	int m_LifeData;
 	int m_RankData;

@@ -64,7 +64,6 @@ CGame::CGame()
 
 	m_pEdit = nullptr;
 	m_pPause = nullptr;
-	m_pScore = nullptr;
 	m_pTime = nullptr;
 	m_p2DSample = nullptr;
 	m_p3DSample = nullptr;
@@ -199,9 +198,6 @@ HRESULT CGame::Init(void)
 		m_pPlayer[0] = CPlayer::Create(0);
 		m_pPlayer[0]->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(11, 9)));
 	}
-
-	m_pScore = CScore::Create();
-	m_pScore->SetScore(CManager::GetInstance()->GetEndScore());
 
 	//レールブロックの生成
 	LoadStageRailBlock("data\\TXT\\STAGE\\RailBlock.txt");
@@ -425,7 +421,18 @@ void CGame::Update(void)
 			{
 				CFade::SetFade(CScene::MODE_RESULT);
 				m_pTime->SetStopTime(true);
-				CManager::GetInstance()->SetEndScore(m_pScore->GetScore());
+
+				int EndScore = 0;
+
+				for (int nCnt = 0; nCnt < NUM_PLAYER; nCnt++)
+				{
+					if (m_pPlayer[nCnt] != nullptr)
+					{
+						EndScore += m_pPlayer[nCnt]->GetScore()->GetScore();
+					}
+				}
+
+				CManager::GetInstance()->SetEndScore(EndScore);
 			}
 		}
 
@@ -464,7 +471,18 @@ void CGame::StageClear(int Stage)
 
 		CFade::SetFade(CScene::MODE_RESULT);
 		m_pTime->SetStopTime(true);
-		CManager::GetInstance()->SetEndScore(m_pScore->GetScore());
+
+		int EndScore = 0;
+
+		for (int nCnt = 0; nCnt < NUM_PLAYER; nCnt++)
+		{
+			if (m_pPlayer[nCnt] != nullptr)
+			{
+				EndScore += m_pPlayer[nCnt]->GetScore()->GetScore();
+			}
+		}
+
+		CManager::GetInstance()->SetEndScore(EndScore);
 	}
 	else
 	{
@@ -472,7 +490,18 @@ void CGame::StageClear(int Stage)
 
 		CFade::SetFade(CScene::MODE_GAME);
 		m_pTime->SetStopTime(true);
-		CManager::GetInstance()->SetEndScore(m_pScore->GetScore());
+
+		int EndScore = 0;
+
+		for (int nCnt = 0; nCnt < NUM_PLAYER; nCnt++)
+		{
+			if (m_pPlayer[nCnt] != nullptr)
+			{
+				EndScore += m_pPlayer[nCnt]->GetScore()->GetScore();
+			}
+		}
+
+		CManager::GetInstance()->SetEndScore(EndScore);
 	}
 }
 
