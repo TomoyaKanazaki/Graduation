@@ -19,24 +19,15 @@ public:
 	CFire(int nPriority = 3);
 	~CFire();
 
-	//サンプルの状態
-	enum STATE
-	{
-		STATE_NORMAL = 0,	//通常
-		STATE_ACTION,		//行動
-		STATE_MAX,
-	};
-
 	static CFire* Create(char* pModelName, const D3DXVECTOR3& pos, const D3DXVECTOR3& rot);
 
 	HRESULT Init(char* pModelName);
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);
-	void CollisionEnemy();
 
-	int GetIdx(void) { return m_nIdxTexture; }
-	int GetIdxXModel(void) { return -1; }
+	void CollisionEnemy();
+	void CollisionWall();
 
 	void SetMove(D3DXVECTOR3 move) { m_move = move; }
 	D3DXVECTOR3 GetMove(void) { return m_move; }
@@ -45,31 +36,18 @@ public:
 	static CListManager<CFire>* GetList(void); // リスト取得
 
 private:
-	void StateManager(void);		// 状態管理
-
-	STATE m_State;					// 状態
-
-	int m_nIdxXModel;				// Xモデルの番号
-	int m_nIdxTexture;				// テクスチャの番号
-	int m_nStateCount;				// 状態管理用変数
-	int m_nLife;					// 体力
-
-	float m_Scaling;				// 大きさ
-	float m_fColorA;				// 不透明度
-
-	bool m_bCollision;				// 当たり判定用の座標
-
-	D3DXVECTOR3 m_move;				// 移動量	
-
-	CMapSystem::GRID m_Grid;	// マップ番号
-
-	CEffekseer* m_pEffect; // エフェクト
 
 	// 静的メンバ変数
 	static CListManager<CFire>* m_pList; // オブジェクトリスト
 
 	// メンバ変数
 	CListManager<CFire>::AIterator m_iterator; // イテレーター
+	int m_nLife;					// 体力
+	float m_Scaling;				// 大きさ
+	float m_fColorA;				// 不透明度
+	D3DXVECTOR3 m_move;				// 移動量	
+	CMapSystem::GRID m_Grid;		// マップ番号
+	CEffekseer* m_pEffect;			// エフェクト
 
 };
 #endif

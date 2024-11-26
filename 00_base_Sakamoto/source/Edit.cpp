@@ -425,7 +425,7 @@ void CEdit::UpdateRailBlock(void)
 	if (pInputKeyboard->GetTrigger(DIK_RETURN) == true)
 	{
 
-		CMapSystem::GetInstance()->SetGritBool(m_MapGritWight, m_MapGritHeight, true);
+		CMapSystem::GetInstance()->SetGritBool(CMapSystem::GRID(m_MapGritWight, m_MapGritHeight), true);
 		CRailBlock* pBlock = CRailBlock::Create(m_MapGritWight, m_MapGritHeight, false, m_nRailMax, &m_nRailMove[0]);
 		pBlock->SetPos(CMapSystem::GRID(m_MapGritWight, m_MapGritHeight).ToWorld());
 		pBlock->SetSize(D3DXVECTOR3(50.0f, 50.0f, 50.0f));
