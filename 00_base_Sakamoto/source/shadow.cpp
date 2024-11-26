@@ -47,7 +47,7 @@ CShadow::~CShadow()
 //===========================================
 // 生成
 //===========================================
-CShadow* CShadow::Create(const D3DXVECTOR3& pos, float fWidth, float fHeight, const float fLimit)
+CShadow* CShadow::Create(const D3DXVECTOR3& pos, const D3DXVECTOR3& size, const float fLimit)
 {
 	// インスタンス生成
 	CShadow* pShadow = new CShadow;
@@ -59,9 +59,8 @@ CShadow* CShadow::Create(const D3DXVECTOR3& pos, float fWidth, float fHeight, co
 	pShadow->SetPos(pos);
 
 	// 大きさ
-	pShadow->SetpVtx(fWidth, fHeight);
-	pShadow->m_sizeBase.x = fWidth;
-	pShadow->m_sizeBase.z = fHeight;
+	pShadow->SetVtx(size);
+	pShadow->m_sizeBase = size;
 
 	// 角度を設定
 	pShadow->SetRot(DEFAULT_ROT);
@@ -136,10 +135,10 @@ void CShadow::Update(void)
 	// サイズを変更する
 	float fScale = m_fHeight / m_fLimit;
 	D3DXVECTOR3 size = m_sizeBase + m_sizeBase * 2.0f * fScale;
-	SetpVtx(size.x, size.z);
+	SetVtx(size);
 
 	// 透明度を変更する
-	SetColorA(1.0f - fScale);
+	SetAlpha(1.0f - fScale);
 
 	// 親クラスの更新処理
 	CObject3D::Update();

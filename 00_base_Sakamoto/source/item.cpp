@@ -159,7 +159,7 @@ HRESULT CItem::Init(const char* pModelName)
 
 	if (m_pShadow == nullptr)
 	{// ÉVÉÉÉhÉEê∂ê¨
-		m_pShadow = CShadow::Create(pos, SHADOW_SIZE, SHADOW_SIZE, SHADOW_LIMIT);
+		m_pShadow = CShadow::Create(pos, D3DXVECTOR3(SHADOW_SIZE, 0.0f, SHADOW_SIZE), SHADOW_LIMIT);
 	}
 
 	pos.y = BASE_Y;
