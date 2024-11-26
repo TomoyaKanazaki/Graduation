@@ -237,6 +237,8 @@ CMapSystem::GRID CMapSystem::CalcGrid(const D3DXVECTOR3& pos)
 	return grid;
 }
 
+#if 0
+
 //==========================================
 //  マップ情報の読み込み
 //==========================================
@@ -320,7 +322,9 @@ void CMapSystem::Load(const char* pFilename)
 
 }
 
-#if 0
+#endif
+
+#if 1
 
 void CMapSystem::Load(const char* pFilename)
 {
@@ -382,11 +386,6 @@ void CMapSystem::Load(const char* pFilename)
 				// グリッドの行列数を読み込み
 				iss >> nMaxWidth >> nMaxHeight;
 			}
-			//else if (str == "CHAR_OFFSET")
-			//{
-			//	// 文字のオフセットを読込
-			//	iss >> charOffset.x >> charOffset.y;
-			//}
 
 			else if (str == "STARTSETSTAGE")
 			{
@@ -407,8 +406,11 @@ void CMapSystem::Load(const char* pFilename)
 
 						for (int nCntWidth = 0; nCntWidth < nMaxWidth; nCntWidth++)
 						{ // 行カウント
-							if (str == "") { continue; }	// 空白は無視する
-							else
+
+							std::getline(issChar, str, ',');
+
+							if (str == "0") { continue; }	// 空白は無視する
+							else if(str == "1")
 							{ // 特殊操作ではない場合
 
 								// 行列数設定
@@ -434,6 +436,8 @@ void CMapSystem::Load(const char* pFilename)
 							}
 
 						}
+
+						std::getline(file, str);
 
 						// 横位置を先頭に戻す
 						//posOffset.x = posStart.x;
