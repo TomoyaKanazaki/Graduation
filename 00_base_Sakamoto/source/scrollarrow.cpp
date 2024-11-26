@@ -23,8 +23,6 @@ namespace
 //====================================================================
 CScrollArrow::CScrollArrow(int nPriority) : CObject2D(nPriority)
 {
-	SetWidth(SAMPLE_WIGHT);
-	SetHeight(SAMPLE_HEIGHT);
 }
 
 //====================================================================
@@ -69,6 +67,8 @@ HRESULT CScrollArrow::Init(void)
 
 	//V‚µ‚­cpp‚ğì¬‚µ‚½‚ÍV‚µ‚¢TYPE‚ğ—ñ‹“‚É’Ç‰Á‚µ‚Äw’è‚·‚é‚±‚Æ
 	SetType(CObject::TYPE_SCROLLALLOW);
+
+	SetSize(D3DXVECTOR3(SAMPLE_WIGHT, SAMPLE_HEIGHT, 0.0f));
 
 	return S_OK;
 }

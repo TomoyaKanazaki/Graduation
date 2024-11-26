@@ -219,7 +219,7 @@ void CObjmeshRing::Update(void)
 	//ダメージウェーブとプレイヤーの当たり判定
 	if (CollisionRing(pPlayer->GetPos(), m_pos, m_Radius + 15.0f, m_Radius - m_Radius * 0.1f, 0.0f, pPlayer->GetHeight()) == true)
 	{
-		pPlayer->HitDamage(50.0f);
+		//pPlayer->HitDamage(50.0f);
 	}
 
 	VERTEX_3D* pVtx;	//頂点ポインタを所得

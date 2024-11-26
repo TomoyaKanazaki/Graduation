@@ -49,7 +49,6 @@
     <ClCompile Include="source\LifeUi.cpp" />
     <ClCompile Include="source\light.cpp" />
     <ClCompile Include="source\listManager.cpp" />
-    <ClCompile Include="source\logo.cpp" />
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\manager.cpp" />
     <ClCompile Include="source\MapModel.cpp" />
@@ -136,7 +135,6 @@
     <ClInclude Include="source\LifeUi.h" />
     <ClInclude Include="source\light.h" />
     <ClInclude Include="source\listManager.h" />
-    <ClInclude Include="source\logo.h" />
     <ClInclude Include="source\main.h" />
     <ClInclude Include="source\manager.h" />
     <ClInclude Include="source\MapModel.h" />

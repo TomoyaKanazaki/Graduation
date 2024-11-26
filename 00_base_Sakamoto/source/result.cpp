@@ -80,8 +80,7 @@ HRESULT CResult::Init(void)
 	//背景
 	m_pBg = CObject2D::Create();
 	m_pBg->SetPos(D3DXVECTOR3(640.0f, 360.0f, 0.0f));
-	m_pBg->SetWidth(1280.0f);
-	m_pBg->SetHeight(720.0f);
+	m_pBg->SetSize(D3DXVECTOR3(1280.0f, 720.0f, 0.0f));
 	m_pBg->SetColor(D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
 
 	//今回のスコア
@@ -90,8 +89,7 @@ HRESULT CResult::Init(void)
 		//数字の生成
 		m_apLife[nCntObject] = CNumber::Create();
 		m_apLife[nCntObject]->SetPos(D3DXVECTOR3(SCORE_VALUE_POS.x + (nCntObject * 45.0f), SCORE_VALUE_POS.y, SCORE_VALUE_POS.z));
-		m_apLife[nCntObject]->SetWidth(60.0f);
-		m_apLife[nCntObject]->SetHeight(72.0f);
+		m_apLife[nCntObject]->SetSize(D3DXVECTOR3(60.0f, 72.0f, 0.0f));
 		m_apLife[nCntObject]->SetColor(D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
 	}
 
@@ -105,15 +103,13 @@ HRESULT CResult::Init(void)
 	//"評価点"っていうテクスチャポリゴン
 	m_pScoreTex = CObject2D::Create();
 	m_pScoreTex->SetPos(SCORE_TEX_POS);
-	m_pScoreTex->SetWidth(200.0f);
-	m_pScoreTex->SetHeight(80.0f);
+	m_pScoreTex->SetSize(D3DXVECTOR3(200.0f, 80.0f, 0.0f));
 	m_pScoreTex->SetTexture("data\\TEXTURE\\result_score.png");
 
 	//全体ランキング(「ランキング」)
 	CObject2D *pRank = CObject2D::Create();
 	pRank->SetPos(D3DXVECTOR3(SCREEN_WIDTH * 0.80f, SCREEN_HEIGHT * 0.185f, 0.0f));
-	pRank->SetWidth(340.0f);
-	pRank->SetHeight(180.0f);
+	pRank->SetSize(D3DXVECTOR3(340.0f, 180.0f, 0.0f));
 	pRank->SetTexture("data\\TEXTURE\\ranking.png");
 
 	//全体ランキング(スコア)
@@ -126,13 +122,12 @@ HRESULT CResult::Init(void)
 	{
 		CNumber *pNumRank = m_pLifeRanking->GetNumRankScore( 0, nCntObject);
 		D3DXVECTOR3 RankPos = pNumRank->GetPos();
-		RankPos.y += pNumRank->GetHeight() * 0.5f;
+		RankPos.y += pNumRank->GetSize().y * 0.5f;
 
 		//数字の生成
 		pRank = CObject2D::Create();
 		pRank->SetPos(D3DXVECTOR3(RankPos.x - 150.0f, RankPos.y + 17.0f, RankPos.z));
-		pRank->SetWidth(256.0f);
-		pRank->SetHeight(102.4f);
+		pRank->SetSize(D3DXVECTOR3(256.0f, 102.4f, 0.0f));
 		pRank->SetTexture("data\\TEXTURE\\RANKING_TEXT.png");
 		pRank->SetAnim(D3DXVECTOR2(0.0f, nCntObject * 0.2f),
 						 D3DXVECTOR2(1.0f, nCntObject * 0.2f + 0.2f));

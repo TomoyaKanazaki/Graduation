@@ -48,8 +48,7 @@ HRESULT CMask::Init()
 	CObject2D::Init();
 
 	// ïùÅAçÇÇ≥ÇÃê›íË
-	SetWidth(SCREEN_WIDTH_F);
-	SetHeight(SCREEN_HEIGHT_F);
+	SetSize(SCREEN_SIZE);
 
 	// à íuê›íË
 	SetPos(SCREEN_CENTER_F);

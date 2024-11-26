@@ -26,8 +26,7 @@ public:
 
 	enum MODE
 	{
-		MODE_LOGO = 0,
-		MODE_TITLE,
+		MODE_TITLE = 0,
 		MODE_SELECT,
 		MODE_GAME,
 		MODE_RESULT,

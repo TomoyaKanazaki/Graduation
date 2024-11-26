@@ -182,7 +182,7 @@ void CEnemyBonbon::HitDamage(float fDamage)
 {
 	CEnemy::HitDamage(fDamage);
 
-	if (GetLife() > 0 && m_Action != ACTION_TEST)
+	if (m_Action != ACTION_TEST)
 	{
 		m_nStateCount = 1000;
 	}

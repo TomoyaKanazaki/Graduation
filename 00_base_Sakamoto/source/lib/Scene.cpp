@@ -12,11 +12,10 @@
 #include "game.h"
 #include "result.h"
 #include "tutorial.h"
-#include "logo.h"
 #include "camera.h"
 
 //静的メンバ変数宣言
-CScene::MODE CScene::m_mode = MODE_LOGO;
+CScene::MODE CScene::m_mode = MODE_TITLE;
 
 //====================================================================
 //コンストラクタ
@@ -46,9 +45,6 @@ CScene* CScene::Create(MODE mode)
 		//シーンの生成
 		switch (mode)
 		{
-		case MODE_LOGO:
-			pScene = new CLogo();
-			break;
 		case MODE_TITLE:
 			pScene = CTitle::GetInstance();
 			break;

@@ -75,26 +75,8 @@ public:
 
 	void SetType(OBJECT_TYPE type) { m_type = type; }
 	OBJECT_TYPE GetType(void) { return m_type; }
-	virtual D3DXVECTOR3 GetPos(void) { return D3DXVECTOR3(0.0f, 0.0f, 0.0f); }
-	virtual D3DXVECTOR3 GetPosOld(void) { return D3DXVECTOR3(0.0f, 0.0f, 0.0f); }
-	virtual void HitDamage(float Damage) {}
-	virtual void Hit(D3DXVECTOR3 pos, int Damage) {}
-	virtual float GetLife(void) { return 0; }
-	virtual float GetWidth(void) { return 0.0f; }
-	virtual float GetHeight(void) { return 0.0f; }
-	virtual D3DXVECTOR3 GetSize(void) { return INITVECTOR3; }
-	static void SetLevelStop(bool Set) { m_bLevelStop = Set; }
-	virtual void SetLevelUI(bool Set) { m_bLevelUI = Set; }
 	void SetAppear(bool Set) { m_Appear = Set; }
 	bool GetAppear(void) { return m_Appear; }
-	virtual bool CollisionPlayer(D3DXVECTOR3* pPos, D3DXVECTOR3 pPosOld, D3DXVECTOR3* pMove, float fHeight, float fWidth, bool* bJumpMove, bool* bHit, bool b_Jamp) { return false; }
-	virtual bool CollisionBlock(D3DXVECTOR3* pPos, D3DXVECTOR3 pPosOld, D3DXVECTOR3* pMove, D3DXVECTOR3* pObjMove, D3DXVECTOR3 Size, bool* bJump, COLLISION XYZ) { return false; }
-	virtual bool CollisionBlockUp(D3DXVECTOR3* pPos, D3DXVECTOR3 pPosOld, D3DXVECTOR3* pMove, D3DXVECTOR3* pObjMove, D3DXVECTOR3 Size, bool* bJump, COLLISION XYZ) { return false; }
-	virtual bool Collision(D3DXVECTOR3 *pPos, D3DXVECTOR3 pPosOld, D3DXVECTOR3 *pMove, float fHeight, float fWidth, bool *bJumpMove, bool *bHit, bool b_Jamp) { return false; }
-	virtual bool CollisionDamageBlock(D3DXVECTOR3 pPos, D3DXVECTOR3 Size, float* Damage) { return false; }
-	virtual void SetNULL(void) {}
-	virtual D3DXVECTOR3* GetScreenPos(void) { return nullptr; }
-	static void DebugKey();
 
 protected:
 	void Release(void);
