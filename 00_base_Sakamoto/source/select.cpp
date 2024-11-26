@@ -105,21 +105,9 @@ CSelect* CSelect::GetInstance(void)
 //====================================================================
 HRESULT CSelect::Init(void)
 {
-	//CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_BGM_TITLE);
+	CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_BGM_TITLE);
 
 	CTexture* pTexture = CManager::GetInstance()->GetTexture();
-
-	// スカイドーム
-	m_pMeshDome = CObjmeshDome::Create();
-	if (m_pMeshDome)
-	{
-		//m_pMeshDome->SetTexture("data\\TEXTURE\\sky.jpg");
-	}
-
-	// メッシュフィールド
-	CObjmeshField* pMeshField = CObjmeshField::Create(21, 21);
-	pMeshField->SetPos(INITVECTOR3);
-	//pMeshField->SetTexture("data\\TEXTURE\\field00.jpg");
 
 	for (int nCnt = 0; nCnt < NUM_STAGE; nCnt++)
 	{
@@ -221,6 +209,8 @@ HRESULT CSelect::Init(void)
 //====================================================================
 void CSelect::Uninit(void)
 {
+	CManager::GetInstance()->GetSound()->StopSound(CSound::SOUND_LABEL_BGM_TITLE);
+
 	//全てのオブジェクトの破棄
 	CObject::ReleaseAll();
 
