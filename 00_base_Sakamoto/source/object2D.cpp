@@ -345,9 +345,11 @@ void CObject2D::SetScroll(D3DXVECTOR2 Tex)
 //====================================================================
 void CObject2D::SetColor(D3DXCOLOR col)
 {
+	if (m_pVtxBuff == nullptr) { return; }
+
 	m_Color = col;
 
-	VERTEX_2D*pVtx;	//頂点ポインタを所得
+	VERTEX_2D *pVtx;	//頂点ポインタを所得
 
 	//頂点バッファをロックし、両店情報へのポインタを所得
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);

@@ -50,7 +50,7 @@ public:
 	void SetNULL(void);
 
 protected:
-	void SetVtxBuff(LPDIRECT3DVERTEXBUFFER9 Height) { m_pVtxBuff = Height; }
+	void SetVtxBuff(LPDIRECT3DVERTEXBUFFER9 vtx) { m_pVtxBuff = vtx; }
 	LPDIRECT3DVERTEXBUFFER9 GetVtxBuff(void) { return m_pVtxBuff; }
 
 private:
