@@ -211,7 +211,7 @@ HRESULT CGame::Init(void)
 	switch (CManager::GetInstance()->GetStage())
 	{
 	case 0:
-		CMapSystem::Load("data\\TXT\\STAGE\\Block.txt");
+		CMapSystem::Load("data\\TXT\\STAGE\\Block.csv");
 
 		pDevilHole = CDevilHole::Create("data\\MODEL\\DevilHole.x");
 		pDevilHole->SetGrid(CMapSystem::GRID(11, 7));
