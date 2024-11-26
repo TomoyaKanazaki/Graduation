@@ -30,7 +30,6 @@ CWall::CWall(int nPriority) : CObjectX(nPriority)
 {
 	SetSize(INITVECTOR3);
 	SetPos(INITVECTOR3);
-	//m_nIdxXModel = 0;			//マテリアルの数
 	m_Grid.x = 0;
 	m_Grid.z = 0;
 }
@@ -42,7 +41,6 @@ CWall::CWall(int nPriority, CMapSystem::GRID gridCenter) : CObjectX(nPriority)
 {
 	SetSize(INITVECTOR3);
 	SetPos(INITVECTOR3);
-	//m_nIdxXModel = 0;			//マテリアルの数
 	m_Grid.x = gridCenter.x;	// グリッドの位置X
 	m_Grid.z = gridCenter.z;	// グリッドの位置Z
 }
@@ -95,7 +93,7 @@ HRESULT CWall::Init(char* pModelName)
 	D3DXVECTOR3 size = GetSize() * 2.0f;		// モデルのサイズ取得
 
 	// 位置設定
-	CObjectX::SetPos(D3DXVECTOR3(MapSystemPos.x + m_Grid.x * size.x, 20.0f, MapSystemPos.z - m_Grid.z * size.z));
+	CObjectX::SetPos(D3DXVECTOR3(MapSystemPos.x + m_Grid.x * size.x, 0.0f, MapSystemPos.z - m_Grid.z * size.z));
 
 	if (m_pList == nullptr)
 	{// リストマネージャー生成

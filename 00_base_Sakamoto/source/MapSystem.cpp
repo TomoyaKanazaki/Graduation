@@ -240,7 +240,7 @@ CMapSystem::GRID CMapSystem::CalcGrid(const D3DXVECTOR3& pos)
 	return grid;
 }
 
-#if 1
+#if 0
 
 //==========================================
 //  マップ情報の読み込み
@@ -417,7 +417,7 @@ void CMapSystem::Load(const char* pFilename)
 								pMapSystem->m_gridCenter.x = nCntWidth;
 								pMapSystem->m_gridCenter.z = nCntHeight;
 
-								pMapSystem->SetGritBool(pMapSystem->m_gridCenter.x, pMapSystem->m_gridCenter.z, true);
+								pMapSystem->SetGritBool(pMapSystem->m_gridCenter.x, pMapSystem->m_gridCenter.z, false);
 
 								// 床モデルの生成
 								CTile::Create(pMapSystem->m_gridCenter);

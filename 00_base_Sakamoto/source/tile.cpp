@@ -7,20 +7,15 @@
 #include "tile.h"
 #include "renderer.h"
 #include "manager.h"
-#include "texture.h"
-#include "XModel.h"
-#include "player.h"
 #include "objmeshField.h"
 #include "game.h"
-#include "tutorial.h"
 
 //==========================================
 //  定数定義
 //==========================================
 namespace
 {
-	//const D3DXVECTOR3 SAMPLE_SIZE = D3DXVECTOR3(50.0f, 0.0f, 50.0f);		//当たり判定
-	//const int DIRECTION = 4;	// デビルホールの最大方向
+	
 }
 
 //====================================================================
@@ -35,7 +30,6 @@ CTile::CTile(int nPriority) : CObjectX(nPriority)
 {
 	SetSize(INITVECTOR3);
 	SetPos(INITVECTOR3);
-	//m_nIdxXModel = 0;			//マテリアルの数
 	m_Grid.x = 0;
 	m_Grid.z = 0;
 }
@@ -47,7 +41,6 @@ CTile::CTile(int nPriority, CMapSystem::GRID gridCenter) : CObjectX(nPriority)
 {
 	SetSize(INITVECTOR3);
 	SetPos(INITVECTOR3);
-	//m_nIdxXModel = 0;			//マテリアルの数
 	m_Grid.x = gridCenter.x;	// グリッドの位置X
 	m_Grid.z = gridCenter.z;	// グリッドの位置Z
 }
@@ -100,7 +93,7 @@ HRESULT CTile::Init(char* pModelName)
 	D3DXVECTOR3 size = GetSize() * 2.0f;		// モデルのサイズ取得
 
 	// 位置設定
-	CObjectX::SetPos(D3DXVECTOR3(MapSystemPos.x + m_Grid.x * size.x, 20.0f, MapSystemPos.z - m_Grid.z * size.z));
+	CObjectX::SetPos(D3DXVECTOR3(MapSystemPos.x + m_Grid.x * size.x, 0.0f, MapSystemPos.z - m_Grid.z * size.z));
 
 	if (m_pList == nullptr)
 	{// リストマネージャー生成

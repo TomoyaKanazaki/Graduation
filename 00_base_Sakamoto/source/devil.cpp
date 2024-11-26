@@ -1311,7 +1311,7 @@ void CDevil::TileScroll(D3DXVECTOR3 Move, float GritSize)
 
 		//グリット番号を位置に変換
 		pos = pTile->GetGrid().ToWorld();
-		pos.y = 20.0f;
+		pos.y = 0.0f;
 
 		pTile->SetPos(pos);
 	}
@@ -1334,7 +1334,7 @@ void CDevil::WallScroll(D3DXVECTOR3 Move, float GritSize)
 
 		//グリット番号を位置に変換
 		pos = pWall->GetGrid().ToWorld();
-		pos.y = 20.0f;
+		pos.y = 0.0f;
 
 		pWall->SetPos(pos);
 	}
