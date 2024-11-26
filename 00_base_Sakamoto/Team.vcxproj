@@ -97,6 +97,7 @@
     <ClCompile Include="source\softcream.cpp" />
     <ClCompile Include="source\sound.cpp" />
     <ClCompile Include="source\texture.cpp" />
+    <ClCompile Include="source\tile.cpp" />
     <ClCompile Include="source\timer.cpp" />
     <ClCompile Include="source\title.cpp" />
     <ClCompile Include="source\tutorial.cpp" />
@@ -182,6 +183,7 @@
     <ClInclude Include="source\softcream.h" />
     <ClInclude Include="source\sound.h" />
     <ClInclude Include="source\texture.h" />
+    <ClInclude Include="source\tile.h" />
     <ClInclude Include="source\timer.h" />
     <ClInclude Include="source\title.h" />
     <ClInclude Include="source\tutorial.h" />

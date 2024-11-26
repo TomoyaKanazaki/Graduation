@@ -283,6 +283,9 @@
     <ClCompile Include="source\select.cpp">
       <Filter>ソース ファイル\01_Mode</Filter>
     </ClCompile>
+    <ClCompile Include="source\tile.cpp">
+      <Filter>ソース ファイル\07_Map</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\2DUI_edit.h">
@@ -527,6 +530,9 @@
     </ClInclude>
     <ClInclude Include="source\select.h">
       <Filter>ソース ファイル\01_Mode</Filter>
+    </ClInclude>
+    <ClInclude Include="source\tile.h">
+      <Filter>ソース ファイル\07_Map</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
