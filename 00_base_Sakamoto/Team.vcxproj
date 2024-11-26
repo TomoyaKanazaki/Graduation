@@ -307,7 +307,7 @@
       <SDLCheck>true</SDLCheck>
       <PrecompiledHeaderFile>precompile.h</PrecompiledHeaderFile>
       <ForcedIncludeFiles>precompile.h</ForcedIncludeFiles>
-      <AdditionalIncludeDirectories>source\lib;source\lib\Effekseer\Include\EffekseerRendererGL;source\lib\Effekseer\Include\EffekseerRendererDX9;source\lib\Effekseer\Include\Effekseer;..\hidapi;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>source\lib;source\lib\Effekseer\Include\EffekseerRendererGL;source\lib\Effekseer\Include\EffekseerRendererDX9;source\lib\Effekseer\Include\Effekseer;C:\Users\student\Desktop\Graduation\00_base_Sakamoto\source;..\hidapi;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <SupportJustMyCode>true</SupportJustMyCode>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <LanguageStandard>stdcpp17</LanguageStandard>

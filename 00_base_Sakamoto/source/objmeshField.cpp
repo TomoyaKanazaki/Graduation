@@ -288,12 +288,12 @@ void CObjmeshField::Draw(void)
 	m_pDevice->SetTexture(0, pTexture->GetAddress(GetIdx()));
 
 	//ポリゴンの描画
-	m_pDevice->DrawIndexedPrimitive(D3DPT_TRIANGLESTRIP,
-		0,
-		0,
-		0,//用意した頂点の数
-		0,
-		(m_vtxWidth * m_vtxHeight + m_vtxWidth * (m_vtxHeight - 2) + 2 * (m_vtxHeight - 2)) - 2);//描画するプリミティブの数
+	//m_pDevice->DrawIndexedPrimitive(D3DPT_TRIANGLESTRIP,
+	//	0,
+	//	0,
+	//	0,//用意した頂点の数
+	//	0,
+	//	(m_vtxWidth * m_vtxHeight + m_vtxWidth * (m_vtxHeight - 2) + 2 * (m_vtxHeight - 2)) - 2);//描画するプリミティブの数
 }
 
 //====================================================================
