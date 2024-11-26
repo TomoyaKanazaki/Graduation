@@ -238,7 +238,7 @@ CMapSystem::GRID CMapSystem::CalcGrid(const D3DXVECTOR3& pos)
 	return grid;
 }
 
-#if 0
+#if 1
 
 //==========================================
 //  マップ情報の読み込み
@@ -254,7 +254,7 @@ void CMapSystem::Load(const char* pFilename)
 	}
 
 		//ファイルを開く
-	FILE* pFile = fopen(pFilename, "r");
+	FILE* pFile = fopen("data\\TXT\\STAGE\\Block.txt", "r");
 
 	if (pFile != nullptr)
 	{//ファイルが開けた場合
@@ -321,9 +321,7 @@ void CMapSystem::Load(const char* pFilename)
 
 }
 
-#endif
-
-#if 1
+#else
 
 void CMapSystem::Load(const char* pFilename)
 {

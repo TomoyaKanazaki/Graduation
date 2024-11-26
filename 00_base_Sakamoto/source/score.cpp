@@ -95,6 +95,12 @@ HRESULT CScore::Init(void)
 //====================================================================
 void CScore::Uninit(void)
 {
+	for (int nCntObject = 0; nCntObject < NUM_SCORE; nCntObject++)
+	{
+		m_apObject[nCntObject]->Uninit();
+		m_apObject[nCntObject] = nullptr;
+	}
+
 	SetDeathFlag(true);
 }
 
