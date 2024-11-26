@@ -139,6 +139,15 @@ HRESULT CSelect::Init(void)
 
 	for (int nCnt = 0; nCnt < NUM_SCROLLTYPE; nCnt++)
 	{
+
+		// スクロール
+		m_pTexScroll[nCnt] = CObject2D::Create();
+		m_pTexScroll[nCnt]->SetPos(D3DXVECTOR3(SCROOL_POS.x + (STAGE_DISTANCE.x * nCnt), SCROOL_POS.y + (STAGE_DISTANCE.y * nCnt), SCROOL_POS.z));
+		m_pTexScroll[nCnt]->SetSize(D3DXVECTOR3(100.0f, 100.0f, 0.0f));
+	}
+
+	for (int nCnt = 0; nCnt < NUM_SCROLLTYPE; nCnt++)
+	{
 		if (m_pScrollSelect[nCnt] == nullptr)
 		{
 			// ボタン
@@ -160,6 +169,21 @@ HRESULT CSelect::Init(void)
 				break;
 			}
 		}
+
+		// スクロール
+		if (m_pTexScroll[nCnt] != nullptr)
+		{
+			switch (nCnt)
+			{
+			case 0:
+				m_pTexScroll[nCnt]->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\scroll.png"));
+				break;
+			case 1:
+				m_pTexScroll[nCnt]->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\scroll.png"));
+				break;
+			}
+		}
+
 	}
 
 	// ボタン

@@ -13,6 +13,7 @@
 #define NUM_SCROLLTYPE (2)
 #define NUM_STAGE (3)
 #define MAX_TITLEUI (3)
+#define NUM_SCROLL (2)
 
 // 前方宣言
 class CObject2D;
@@ -62,6 +63,7 @@ private:
 	CObject2D* m_pStageSelect[NUM_STAGE];		//ステージセレクト
 	CObject2D* m_pScrollSelect[NUM_SCROLLTYPE];	//スクロールセレクト
 	CObject2D* m_pTitleButton;					//ボタン入力UIのポリゴン
+	CObject2D* m_pTexScroll[NUM_SCROLL];		// テクスチャスクロール
 	CObjmeshDome* m_pMeshDome;					// メッシュドーム
 
 	int m_nSelect;
