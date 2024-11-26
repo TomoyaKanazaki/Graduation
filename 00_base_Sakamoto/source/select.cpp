@@ -117,8 +117,7 @@ HRESULT CSelect::Init(void)
 			// ボタン
 			m_pStageSelect[nCnt] = CObject2D::Create();
 			m_pStageSelect[nCnt]->SetPos(D3DXVECTOR3(STAGE_POS.x + (SCROOL_DISTANCE.x * nCnt), STAGE_POS.y + (SCROOL_DISTANCE.y * nCnt), STAGE_POS.z));
-			m_pStageSelect[nCnt]->SetWidth(STAGE_SIZE.x);
-			m_pStageSelect[nCnt]->SetHeight(STAGE_SIZE.y);
+			m_pStageSelect[nCnt]->SetSize(D3DXVECTOR3(STAGE_SIZE.x, STAGE_SIZE.y, 0.0f));
 		}
 
 		if (m_pStageSelect[nCnt] != nullptr)
@@ -145,8 +144,7 @@ HRESULT CSelect::Init(void)
 			// ボタン
 			m_pScrollSelect[nCnt] = CObject2D::Create();
 			m_pScrollSelect[nCnt]->SetPos(D3DXVECTOR3(SCROOL_POS.x + (STAGE_DISTANCE.x * nCnt), SCROOL_POS.y + (STAGE_DISTANCE.y * nCnt), SCROOL_POS.z));
-			m_pScrollSelect[nCnt]->SetWidth(SCROOL_SIZE.x);
-			m_pScrollSelect[nCnt]->SetHeight(SCROOL_SIZE.y);
+			m_pScrollSelect[nCnt]->SetSize(D3DXVECTOR3(SCROOL_SIZE.x, SCROOL_SIZE.y, 0.0f));
 			m_pScrollSelect[nCnt]->SetColor(SELECT_COLOR_FALSE);
 		}
 
@@ -169,8 +167,7 @@ HRESULT CSelect::Init(void)
 	{
 		m_pTitleButton = CObject2D::Create();
 		m_pTitleButton->SetPos(BUTTON_POS);
-		m_pTitleButton->SetWidth(BUTTON_SIZE.x);
-		m_pTitleButton->SetHeight(BUTTON_SIZE.y);
+		m_pTitleButton->SetSize(D3DXVECTOR3(BUTTON_SIZE.x, BUTTON_SIZE.y, 0.0f));
 		//m_pTitleButton->SetColor(SELECT_COLOR_TRUE);
 	}
 

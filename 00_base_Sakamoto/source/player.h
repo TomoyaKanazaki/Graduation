@@ -13,20 +13,8 @@
 #include "MapSystem.h"
 
 //前方宣言
-class CObject2D;
-class CObject3D;
-class CObjGauge2D;
-class CUltimate;
 class CSlowManager;
-class CObjectBillboard;
-class CNumber;
-class CMoveHelpUI;
-class CParameterUI;
-
-class CEnemy;
-class CBoss;
 class CLifeUi;
-class CFire;
 class CObjectX;
 
 //オブジェクトプレイヤークラス
@@ -108,6 +96,8 @@ public:
 	void SetRot(D3DXVECTOR3 rot) { m_rot = rot; }
 	D3DXVECTOR3 GetRot(void) { return m_rot; }
 	void SetSize(D3DXVECTOR3 size) { m_size = size; }
+	float GetHeight(void) { return m_size.y; }
+	void SetHeight(float fHeight) { m_size.y = fHeight; }
 	D3DXVECTOR3 GetSize(void) { return m_size; }
 	void SetState(STATE State) { m_State = State; }
 	STATE GetState(void) { return m_State; }

@@ -85,20 +85,17 @@ HRESULT CTimer::Init(void)
 			if (nCntObject < 2)
 			{
 				m_apObject[nCntObject]->SetPos(D3DXVECTOR3(m_pos.x + (nCntObject * SPACE_TIME) - 7.0f, m_pos.y, m_pos.z));
-				m_apObject[nCntObject]->SetWidth(50.0f);
-				m_apObject[nCntObject]->SetHeight(50.0f);
+				m_apObject[nCntObject]->SetSize(D3DXVECTOR3(50.0f, 50.0f, 0.0f));
 			}
 			else if (nCntObject < 4)
 			{
 				m_apObject[nCntObject]->SetPos(D3DXVECTOR3(m_pos.x + (nCntObject * SPACE_TIME), m_pos.y, m_pos.z));
-				m_apObject[nCntObject]->SetWidth(50.0f);
-				m_apObject[nCntObject]->SetHeight(50.0f);
+				m_apObject[nCntObject]->SetSize(D3DXVECTOR3(50.0f, 50.0f, 0.0f));
 			}
 			else
 			{
 				m_apObject[nCntObject]->SetPos(D3DXVECTOR3(m_pos.x + (nCntObject * (SPACE_TIME - 5.0f)) + 20.0f, m_pos.y + 5.0f, m_pos.z));
-				m_apObject[nCntObject]->SetWidth(40.0f);
-				m_apObject[nCntObject]->SetHeight(40.0f);
+				m_apObject[nCntObject]->SetSize(D3DXVECTOR3(40.0f, 40.0f, 0.0f));
 			}
 
 			m_apObject[nCntObject]->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f));

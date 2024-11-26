@@ -121,9 +121,6 @@
     <ClCompile Include="source\debugproc.cpp">
       <Filter>ソース ファイル\00_System</Filter>
     </ClCompile>
-    <ClCompile Include="source\logo.cpp">
-      <Filter>ソース ファイル\01_Mode</Filter>
-    </ClCompile>
     <ClCompile Include="source\camera.cpp">
       <Filter>ソース ファイル\03_Direction</Filter>
     </ClCompile>
@@ -325,9 +322,6 @@
       <Filter>ソース ファイル\00_System</Filter>
     </ClInclude>
     <ClInclude Include="source\game.h">
-      <Filter>ソース ファイル\01_Mode</Filter>
-    </ClInclude>
-    <ClInclude Include="source\logo.h">
       <Filter>ソース ファイル\01_Mode</Filter>
     </ClInclude>
     <ClInclude Include="source\Pause.h">

@@ -82,8 +82,7 @@ HRESULT CScore::Init(void)
 			m_apObject[nCntObject]->SetNumber(0);
 
 			m_apObject[nCntObject]->SetPos(D3DXVECTOR3(m_pos.x + (nCntObject * SPACE_SCORE), m_pos.y, m_pos.z));
-			m_apObject[nCntObject]->SetWidth(SCORE_SIZE.x);
-			m_apObject[nCntObject]->SetHeight(SCORE_SIZE.y);
+			m_apObject[nCntObject]->SetSize(D3DXVECTOR3(SCORE_SIZE));
 
 			m_apObject[nCntObject]->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 		}

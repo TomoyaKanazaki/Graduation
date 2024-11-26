@@ -980,13 +980,6 @@ void CDevil::DebugKey(void)
 	CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
 	D3DXVECTOR3 CameraRot = CManager::GetInstance()->GetCamera()->GetRot();
 
-	CInputMouse* pMouse = CManager::GetInstance()->GetInputMouse();
-
-	if (pMouse->GetTrigger(pMouse->PUSH_WHEEL))
-	{
-		HitDamage(10.0f);
-	}
-
 	//キーボードの移動処理
 	if (pInputKeyboard->GetPress(DIK_UP))
 	{

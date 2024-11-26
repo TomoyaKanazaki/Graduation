@@ -26,14 +26,12 @@ public:
 	void Draw(void);
 
 	//取得処理・設定処理
-	int GetSample(void) { return m_nSample; }
-	void SetSample(int Sample) { m_nSample = Sample; }
+	
 
 	// 静的メンバ関数
 	static CListManager<C2DUI>* GetList(void); // リスト取得
 
 private:
-	int m_nSample;							//サンプル変数
 
 	// 静的メンバ変数
 	static CListManager<C2DUI>* m_pList; // オブジェクトリスト

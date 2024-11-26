@@ -72,6 +72,8 @@ public:
 	virtual void SetGrid(const CMapSystem::GRID& pos) { m_Grid = pos; }
 	CMapSystem::GRID GetGrid(void) { return m_Grid; }
 
+	void HitDamage(float fDamage) {};
+
 	// 静的メンバ関数
 	static CListManager<CEnemy>* GetList(void); // リスト取得
 

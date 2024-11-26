@@ -67,31 +67,27 @@ HRESULT CPause::Init(void)
 		{
 		case 0:
 			m_pPauseFG[nCnt]->SetPos(D3DXVECTOR3(640.0f, 360.0f, 0.0f));
-			m_pPauseFG[nCnt]->SetWidth(1280.0f);
-			m_pPauseFG[nCnt]->SetHeight(720.0f);
+			m_pPauseFG[nCnt]->SetSize(D3DXVECTOR3(1280.0f, 720.0f, 0.0f));
 			m_pPauseFG[nCnt]->SetColor(D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f));
 			break;
 
 		case 1:
 			m_pPauseFG[nCnt]->SetPos(D3DXVECTOR3(220.0f, 400.0f, 0.0f));
-			m_pPauseFG[nCnt]->SetWidth(295.0f);
-			m_pPauseFG[nCnt]->SetHeight(600.0f);
+			m_pPauseFG[nCnt]->SetSize(D3DXVECTOR3(295.0f, 600.0f, 0.0f));
 			m_pPauseFG[nCnt]->SetColor(D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f));
 			m_pPauseFG[nCnt]->SetTexture("data\\TEXTURE\\pause\\paper00.png");
 			break;
 
 		case 2:
 			m_pPauseFG[nCnt]->SetPos(D3DXVECTOR3(220.0f, 400.0f, 0.0f));
-			m_pPauseFG[nCnt]->SetWidth(90.0f);
-			m_pPauseFG[nCnt]->SetHeight(500.0f);
+			m_pPauseFG[nCnt]->SetSize(D3DXVECTOR3(90.0f, 500.0f, 0.0f));
 			m_pPauseFG[nCnt]->SetColor(D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f));
 			m_pPauseFG[nCnt]->SetTexture("data\\TEXTURE\\pause\\pause_03.png");
 			break;
 
 		case 3:
 			m_pPauseFG[nCnt]->SetPos(D3DXVECTOR3(220.0f, 100.0f, 0.0f));
-			m_pPauseFG[nCnt]->SetWidth(360.0f);
-			m_pPauseFG[nCnt]->SetHeight(100.0f);
+			m_pPauseFG[nCnt]->SetSize(D3DXVECTOR3(360.0f, 100.0f, 0.0f));
 			m_pPauseFG[nCnt]->SetColor(D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f));
 			m_pPauseFG[nCnt]->SetTexture("data\\TEXTURE\\pause\\makimono00.png");
 			break;
@@ -108,16 +104,13 @@ HRESULT CPause::Init(void)
 		switch (nCnt)
 		{
 		case 0:
-			m_pPauseUI[nCnt]->SetWidth(600.0f);
-			m_pPauseUI[nCnt]->SetHeight(150.0f);
+			m_pPauseUI[nCnt]->SetSize(D3DXVECTOR3(600.0f, 150.0f, 0.0f));
 			break;
 		case 1:
-			m_pPauseUI[nCnt]->SetWidth(600.0f);
-			m_pPauseUI[nCnt]->SetHeight(150.0f);
+			m_pPauseUI[nCnt]->SetSize(D3DXVECTOR3(600.0f, 150.0f, 0.0f));
 			break;
 		case 2:
-			m_pPauseUI[nCnt]->SetWidth(600.0f);
-			m_pPauseUI[nCnt]->SetHeight(150.0f);
+			m_pPauseUI[nCnt]->SetSize(D3DXVECTOR3(600.0f, 150.0f, 0.0f));
 			break;
 		}
 		m_pPauseUI[nCnt]->SetPos(D3DXVECTOR3(1080.0f, 200.0f + nCnt * 200.0f, 0.0f));
@@ -131,8 +124,7 @@ HRESULT CPause::Init(void)
 
 	m_pPauseMark = CObject2D::Create();
 	m_pPauseMark->SetType(CObject::TYPE_TUTORIALUI);
-	m_pPauseMark->SetWidth(140.0f);
-	m_pPauseMark->SetHeight(140.0f);
+	m_pPauseMark->SetSize(D3DXVECTOR3(140.0f, 140.0f, 0.0f));
 	m_pPauseMark->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 	m_pPauseMark->SetPos(INITVECTOR3);
 	m_pPauseMark->SetTexture("data\\TEXTURE\\pause\\shuriken00.png");
@@ -193,8 +185,7 @@ void CPause::Update(void)
 			if (nCnt == m_PauseSelect)
 			{
 				m_pPauseUI[nCnt]->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-				m_pPauseUI[nCnt]->SetWidth(900.0f);
-				m_pPauseUI[nCnt]->SetHeight(225.0f);
+				m_pPauseUI[nCnt]->SetSize(D3DXVECTOR3(900.0f, 225.0f, 0.0f));
 
 				m_pPauseUI[nCnt]->SetPos(D3DXVECTOR3(m_InitPos[nCnt].x - 150.0f, m_InitPos[nCnt].y, m_InitPos[nCnt].z));
 				m_pPauseMark->SetPos(D3DXVECTOR3(m_InitPos[nCnt].x - 610.0f, m_InitPos[nCnt].y - 57.0f, m_InitPos[nCnt].z));
@@ -215,9 +206,8 @@ void CPause::Update(void)
 			else
 			{
 				m_pPauseUI[nCnt]->SetColor(D3DXCOLOR(0.6f, 0.6f, 0.6f, 0.75f));
-				m_pPauseUI[nCnt]->SetWidth(600.0f);
-				m_pPauseUI[nCnt]->SetHeight(150.0f);
-			
+				m_pPauseUI[nCnt]->SetSize(D3DXVECTOR3(600.0f, 150.0f, 0.0f));
+
 				m_pPauseUI[nCnt]->SetPos(D3DXVECTOR3(m_InitPos[nCnt].x, m_InitPos[nCnt].y, m_InitPos[nCnt].z));
 			}
 		}

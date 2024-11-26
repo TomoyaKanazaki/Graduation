@@ -101,8 +101,7 @@ HRESULT CRanking::Init(void)
 				m_apObject[nCntObject][nCntRank] = CNumber::Create();
 				m_apObject[nCntObject][nCntRank]->SetNumber(0);
 				m_apObject[nCntObject][nCntRank]->SetPos(D3DXVECTOR3(m_pos.x + (nCntObject * NUMBER_DISTANCE), m_pos.y + (nCntRank * RANKING_DISTANCE), m_pos.z));
-				m_apObject[nCntObject][nCntRank]->SetWidth(RANKING_SIZE.x);
-				m_apObject[nCntObject][nCntRank]->SetHeight(RANKING_SIZE.y);
+				m_apObject[nCntObject][nCntRank]->SetSize(RANKING_SIZE);
 			}
 		}
 	}
@@ -157,15 +156,13 @@ void CRanking::SetUseTime(bool Set)
 					{
 						//”Žš‚Ì¶¬
 						m_apObject[nCntObject][nCntRank]->SetPos(D3DXVECTOR3(m_pos.x + (nCntObject * NUMBER_DISTANCE - 4.0f), m_pos.y + (nCntRank * RANKING_DISTANCE), m_pos.z));
-						m_apObject[nCntObject][nCntRank]->SetWidth(RANKING_SIZE.x);
-						m_apObject[nCntObject][nCntRank]->SetHeight(RANKING_SIZE.y);
+						m_apObject[nCntObject][nCntRank]->SetSize(RANKING_SIZE);
 					}
 					else if (nCntObject < NUM_TIME - 2)
 					{
 						//”Žš‚Ì¶¬
 						m_apObject[nCntObject][nCntRank]->SetPos(D3DXVECTOR3(m_pos.x + (nCntObject * NUMBER_DISTANCE), m_pos.y + (nCntRank * RANKING_DISTANCE), m_pos.z));
-						m_apObject[nCntObject][nCntRank]->SetWidth(RANKING_SIZE.x);
-						m_apObject[nCntObject][nCntRank]->SetHeight(RANKING_SIZE.y);
+						m_apObject[nCntObject][nCntRank]->SetSize(RANKING_SIZE);
 					}
 					else
 					{
@@ -174,8 +171,7 @@ void CRanking::SetUseTime(bool Set)
 							m_pos.x + (nCntObject * NUMBER_DISTANCE + RANKING_SIZE.x * 0.2f), 
 							m_pos.y + (nCntRank * RANKING_DISTANCE + RANKING_SIZE.y * 0.2f), 
 							m_pos.z));
-						m_apObject[nCntObject][nCntRank]->SetWidth(RANKING_SIZE.x * 0.8f);
-						m_apObject[nCntObject][nCntRank]->SetHeight(RANKING_SIZE.y * 0.8f);
+						m_apObject[nCntObject][nCntRank]->SetSize(RANKING_SIZE);
 					}
 				}
 			}

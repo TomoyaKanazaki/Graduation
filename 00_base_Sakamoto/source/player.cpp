@@ -1652,12 +1652,6 @@ void CPlayer::DebugKey(void)
 {
 #ifdef _DEBUG
 
-	CInputMouse* pMouse = CManager::GetInstance()->GetInputMouse();
-
-	if (pMouse->GetTrigger(pMouse->PUSH_WHEEL))
-	{
-		HitDamage(10.0f);
-	}
 	CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
 
 	//キーボードの移動処理
