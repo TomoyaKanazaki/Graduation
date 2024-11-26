@@ -126,13 +126,13 @@ HRESULT CTitle::Init(void)
 			switch (nCnt)
 			{
 			case 0:
-				m_pModeSelect[nCnt]->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\TitleSelect00.png"));
+				m_pModeSelect[nCnt]->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\singleplay.png"));
 				break;
 			case 1:
-				m_pModeSelect[nCnt]->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\TitleSelect01.png"));
+				m_pModeSelect[nCnt]->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\multiplay.png"));
 				break;
 			case 2:
-				m_pModeSelect[nCnt]->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\TitleSelect02.png"));
+				m_pModeSelect[nCnt]->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\tutorial.png"));
 				break;
 			}
 		}
