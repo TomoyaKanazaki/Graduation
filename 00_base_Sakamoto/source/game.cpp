@@ -516,13 +516,11 @@ void CGame::DeleteMap(void)
 		{
 			CObject* pObjNext = pObj->GetNext();
 
-			CObject::TYPE type = pObj->GetType();			//種類を取得
+			CObject::OBJECT_TYPE type = pObj->GetType();			//種類を取得
 
 			if (type == CObject::TYPE_CUBEBLOCK ||
-				type == CObject::TYPE_CUBEDAMEGE ||
 				type == CObject::TYPE_ENEMY3D ||
-				type == CObject::TYPE_MAPMODEL ||
-				type == CObject::TYPE_STAIR)
+				type == CObject::TYPE_MAPMODEL)
 			{//種類がマップ関連の時
 				pObj->Uninit();
 			}

@@ -12,7 +12,6 @@
 #include "CubeEffect.h"
 #include "useful.h"
 #include "camera.h"
-#include "2DEffect.h"
 #include "Scene.h"
 
 //====================================================================

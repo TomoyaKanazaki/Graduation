@@ -9,7 +9,6 @@
 #include "bowabowa.h"
 #include "player.h"
 #include "useful.h"
-#include "effect.h"
 #include "MapSystem.h"
 #include "bible.h"
 #include "game.h"

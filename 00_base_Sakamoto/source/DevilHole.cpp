@@ -10,7 +10,6 @@
 #include "texture.h"
 #include "XModel.h"
 #include "player.h"
-#include "effect.h"
 #include "objmeshField.h"
 #include "game.h"
 #include "tutorial.h"

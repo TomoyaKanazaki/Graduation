@@ -110,7 +110,7 @@ void CMask::Draw()
 //========================================
 // 個別の色設定
 //========================================
-void CMask::SetColor(CObject::TYPE Type, D3DXCOLOR col)
+void CMask::SetColor(CObject::OBJECT_TYPE Type, D3DXCOLOR col)
 {
 	// オブジェクトの種類設定
 	SetType(Type);
