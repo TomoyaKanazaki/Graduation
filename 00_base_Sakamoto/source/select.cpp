@@ -36,6 +36,9 @@ namespace
 	const D3DXVECTOR2 BUTTON_SIZE = { 300.0f, 60.0f };						// ボタンの大きさ
 
 	const float DOME_ROT_SPEED = 0.001f;	// メッシュドームの回転速度
+
+	const float SCROOL_SPEED = 0.05f; // スクロールの速度
+	const float SCROOL_SCALE = 0.1f; // スクロールの倍率
 }
 
 //静的メンバ変数宣言
@@ -71,7 +74,8 @@ CSelect::CSelect()
 	m_nStep = 0;
 	m_nSetStage = 0;
 	m_nTime = 0;
-	m_fTex = 0.0f;
+	m_fTex[0] = 0.0f;
+	m_fTex[1] = 0.0f;
 	m_Type = SCROLL_NONE;
 }
 
@@ -248,28 +252,21 @@ void CSelect::Update(void)
 		ScrollButton();
 	}
 
-	// スクロール処理 //
-	if (m_Type == SCROLL_SMOOTH)
-	{// スクロールスムーズの時
+	// スクロール処理
+	m_fTex[0] += SCROOL_SPEED * SCROOL_SCALE;
 
-		m_fTex += 0.005f;
+	// テクスチャ[0]移動量加算
+	m_pTexScroll[0]->SetScroll(D3DXVECTOR2(m_fTex[0],1.0f));
 
-		// テクスチャ[0]移動量加算
-		m_pTexScroll[0]->SetScroll(D3DXVECTOR2(m_fTex,1.0f));
-	}
-	else if (m_Type == SCROLL_LAGGY)
-	{// スクロールカクカクの時
+	m_nTime++;
 
-		m_fTex += 0.005f;
-		m_nTime++;
+	if (m_nTime >= 20)
+	{
+		// テクスチャ[1]移動量加算
+		m_fTex[1] += SCROOL_SPEED;
+		m_pTexScroll[1]->SetScroll(D3DXVECTOR2(m_fTex[1], 1.0f));
 
-		if (m_nTime >= 10)
-		{
-			// テクスチャ[1]移動量加算
-			m_pTexScroll[1]->SetScroll(D3DXVECTOR2(m_fTex, 1.0f));
-
-			m_nTime = 0;
-		}
+		m_nTime = 0;
 	}
 }
 

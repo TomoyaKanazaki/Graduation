@@ -79,7 +79,7 @@ private:
 	bool m_bStart;
 	bool m_bSlash;
 	bool m_bTurn;
-	float m_fTex;
+	float m_fTex[2];
 	int m_nTime;
 	SCROLL_TYPE m_Type;
 };
