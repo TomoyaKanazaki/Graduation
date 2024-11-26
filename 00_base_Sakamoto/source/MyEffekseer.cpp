@@ -245,6 +245,11 @@ void CMyEffekseer::Update(void)
 		DebugProc::Print(DebugProc::POINT_CENTER, str.data());
 		DebugProc::Print(DebugProc::POINT_CENTER, ": %f, %f", pos.X, pos.Z);
 		DebugProc::Print(DebugProc::POINT_CENTER, "\n");
+
+		if (effect->GetEfkType() == CMyEffekseer::TYPE_HITTHEWALL)
+		{
+			int n = 0;
+		}
 #endif
 		// エフェクトの再生が終了していない場合次に進む
 		if (m_EfkManager->Exists(Handle) && !effect->IsDeath()) { continue; }

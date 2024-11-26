@@ -27,6 +27,7 @@ public:
 	void Draw(void);
 
 	void CollisionEnemy();
+	void CollisionWall();
 
 	void SetMove(D3DXVECTOR3 move) { m_move = move; }
 	D3DXVECTOR3 GetMove(void) { return m_move; }
@@ -41,7 +42,6 @@ private:
 
 	// メンバ変数
 	CListManager<CFire>::AIterator m_iterator; // イテレーター
-	int m_nIdxXModel;				// Xモデルの番号
 	int m_nLife;					// 体力
 	float m_Scaling;				// 大きさ
 	float m_fColorA;				// 不透明度

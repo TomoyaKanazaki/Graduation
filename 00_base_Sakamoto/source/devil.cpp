@@ -1339,7 +1339,7 @@ void CDevil::PlayerScroll(D3DXVECTOR3 Move, float GritSize)
 		{// 卵状態の時、ブロックが存在しない位置にホーミングする
 
 			CMapSystem::GRID Grit = pPlayer->GetGrid();;
-			if (!CMapSystem::GetInstance()->GetGritBool(Grit.x, Grit.z))
+			if (!CMapSystem::GetInstance()->GetGritBool(Grit))
 			{
 				D3DXVECTOR3 PlayerPos = pPlayer->GetPos();
 				D3DXVECTOR3 AnswerPos = INITVECTOR3;

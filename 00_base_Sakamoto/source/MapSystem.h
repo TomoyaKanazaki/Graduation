@@ -63,7 +63,9 @@ public:
 	GRID GetCenter() { return m_gridCenter; };
 
 	void SetGritBool(int nWight, int nHeight, bool Set) { m_nMapGrit[nWight][nHeight] = Set; }
+	void SetGritBool(const GRID& grid, bool Set) { m_nMapGrit[grid.x][grid.z] = Set; }
 	bool GetGritBool(int nWight, int nHeight) { return m_nMapGrit[nWight][nHeight]; }
+	bool GetGritBool(const GRID& grid) { return m_nMapGrit[grid.x][grid.z]; }
 
 	void SetMapPos(D3DXVECTOR3 pos) { m_MapPos = pos; }
 	D3DXVECTOR3 GetMapPos(void) { return m_MapPos; }

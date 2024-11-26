@@ -184,6 +184,9 @@ void CFire::Update(void)
 	// 敵との判定
 	CollisionEnemy();
 
+	// 壁の判定
+	CollisionWall();
+
 	// 減算
 	m_nLife--;
 
@@ -230,6 +233,25 @@ void CFire::CollisionEnemy()
 			return;
 		}
 	}
+}
+
+//==========================================
+//  壁の判定
+//==========================================
+void CFire::CollisionWall()
+{
+	// 自身のグリッド座標が移動可能な場合関数を抜ける
+	if (!CMapSystem::GetInstance()->GetGritBool(m_Grid)) { return; }
+
+	// 自身の情報を取得
+	D3DXVECTOR3 pos = GetPos();
+	D3DXVECTOR3 rot = GetRot();
+
+	// エフェクトを生成
+	MyEffekseer::EffectCreate(CMyEffekseer::TYPE_HITTHEWALL, false, useful::CalcMatrix(pos, rot, *GetUseMultiMatrix()), rot, D3DXVECTOR3(25.0f, 25.0f, 25.0f));
+
+	// 自身を削除
+	Uninit();
 }
 
 //====================================================================
