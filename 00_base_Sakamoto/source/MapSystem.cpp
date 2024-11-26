@@ -307,7 +307,7 @@ void CMapSystem::Load(const char* pFilename)
 					// 削除
 
 					// 経路探索用情報の設定
-					generator->addCollision({ m_pMapSystem->m_gridCenter.x, m_pMapSystem->m_gridCenter.z }); // 通過不可地点を追加
+					generator->addCollision(m_pMapSystem->m_gridCenter.ToAStar()); // 通過不可地点を追加
 
 					fscanf(pFile, "%s", &aEndMessage[0]);
 				}
@@ -424,7 +424,7 @@ void CMapSystem::Load(const char* pFilename)
 								pMapSystem->SetGritBool(pMapSystem->m_gridCenter.x, pMapSystem->m_gridCenter.z, true);
 
 								// 経路探索用情報の設定
-								generator->addCollision({ pMapSystem->m_gridCenter.x, pMapSystem->m_gridCenter.z }); // 通過不可地点を追加
+								generator->addCollision(pMapSystem->m_gridCenter.ToAStar()); // 通過不可地点を追加
 
 								continue;
 							}
@@ -580,6 +580,21 @@ D3DXVECTOR3 CMapSystem::GRID::ToWorld()
 	}
 
 	return pos;
+}
+
+//==========================================
+//  A*用の座標系に変換する
+//==========================================
+AStar::Vec2i CMapSystem::GRID::ToAStar()
+{
+	// 変数宣言
+	AStar::Vec2i vec;
+
+	// 値を代入
+	vec.x = x;
+	vec.y = z;
+
+	return vec;
 }
 
 //==========================================
