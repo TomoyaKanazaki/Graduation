@@ -21,7 +21,7 @@ CObject2D::CObject2D(int nPriority) :CObject(nPriority)
 	m_Color = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	MultiTarget = false;
+	m_MultiTarget = false;
 }
 
 //====================================================================
@@ -184,7 +184,7 @@ void CObject2D::Draw(void)
 
 	//assert(GetIdx() != -1);		//テクスチャの番号を入れ忘れた場合エラーを吐く
 
-	if (MultiTarget == true)
+	if (m_MultiTarget == true)
 	{
 		//テクスチャの設定
 		m_pDevice->SetTexture(0, m_pTargetTexture);
@@ -345,9 +345,11 @@ void CObject2D::SetScroll(D3DXVECTOR2 Tex)
 //====================================================================
 void CObject2D::SetColor(D3DXCOLOR col)
 {
+	if (m_pVtxBuff == nullptr) { return; }
+
 	m_Color = col;
 
-	VERTEX_2D*pVtx;	//頂点ポインタを所得
+	VERTEX_2D *pVtx;	//頂点ポインタを所得
 
 	//頂点バッファをロックし、両店情報へのポインタを所得
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);

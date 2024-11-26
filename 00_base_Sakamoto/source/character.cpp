@@ -88,7 +88,7 @@ HRESULT CCharacter::Init(const char* pModelName)
 
 	if (m_pShadow == nullptr)
 	{// âeê∂ê¨
-		m_pShadow = CShadow::Create(m_pos, SHADOW_SIZE, SHADOW_SIZE);
+		m_pShadow = CShadow::Create(m_pos, D3DXVECTOR3(SHADOW_SIZE, 0.0f, SHADOW_SIZE));
 	}
 
 	return S_OK;

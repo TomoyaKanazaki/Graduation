@@ -40,6 +40,7 @@ public:
 		TYPE_RAIL,				// レール
 		TYPE_SOFTCREAM,			// ソフトクリーム
 		TYPE_FRIEDEGG,			// 目玉焼き
+		TYPE_TILE,				// 床
 		TYPE_MAX,
 	};
 

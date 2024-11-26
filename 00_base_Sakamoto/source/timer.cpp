@@ -46,21 +46,21 @@ CTimer::~CTimer()
 //====================================================================
 CTimer* CTimer::Create()
 {
-	CTimer* pMultiBG = nullptr;
+	CTimer* pTimer = nullptr;
 
-	if (pMultiBG == nullptr)
+	if (pTimer == nullptr)
 	{
 		//オブジェクト2Dの生成
-		pMultiBG = new CTimer();
+		pTimer = new CTimer();
 	}
 
 	//オブジェクトの初期化処理
-	if (FAILED(pMultiBG->Init()))
+	if (FAILED(pTimer->Init()))
 	{//初期化処理が失敗した場合
 		return nullptr;
 	}
 
-	return pMultiBG;
+	return pTimer;
 }
 
 //====================================================================
@@ -109,6 +109,12 @@ HRESULT CTimer::Init(void)
 //====================================================================
 void CTimer::Uninit(void)
 {
+	for (int nCntObject = 0; nCntObject < NUM_TIME; nCntObject++)
+	{
+		m_apObject[nCntObject]->Uninit();
+		m_apObject[nCntObject] = nullptr;
+	}
+
 	SetDeathFlag(true);
 }
 

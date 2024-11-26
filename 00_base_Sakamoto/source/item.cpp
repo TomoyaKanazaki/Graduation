@@ -159,7 +159,7 @@ HRESULT CItem::Init(const char* pModelName)
 
 	if (m_pShadow == nullptr)
 	{// シャドウ生成
-		m_pShadow = CShadow::Create(pos, SHADOW_SIZE, SHADOW_SIZE, SHADOW_LIMIT);
+		m_pShadow = CShadow::Create(pos, D3DXVECTOR3(SHADOW_SIZE, 0.0f, SHADOW_SIZE), SHADOW_LIMIT);
 	}
 
 	pos.y = BASE_Y;
@@ -327,6 +327,9 @@ bool CItem::CollisionPlayer()
 		// 死んでる場合は取得できない
 		if(player->GetState() == CPlayer::STATE_EGG || player->GetState() == CPlayer::STATE_DEATH)
 		{ continue; }
+
+		// 自身が死んでいた場合関数を抜ける
+		if (GetDeathFlag()) { return true; }
 
 		// プレイヤーの座標(グリッド単位)を取得
 		CMapSystem::GRID gridPlayer = player->GetGrid();
