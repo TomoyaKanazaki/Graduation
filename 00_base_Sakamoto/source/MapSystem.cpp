@@ -12,6 +12,7 @@
 
 #include "AStar.h"
 #include "CubeBlock.h"
+#include "tile.h"
 
 // 定数定義
 namespace
@@ -342,7 +343,6 @@ void CMapSystem::Load(const char* pFilename)
 	D3DXVECTOR3 posStart = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// グリッド開始位置
 	D3DXVECTOR2 charOffset = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// グリッドのオフセット
 	D3DXVECTOR3 size = D3DXVECTOR3(fMapSystemGritSize, 0.0f, fMapSystemGritSize);		// グリッドサイズ
-	float fSpaceOffset = 0.0f;		// 空白のオフセット
 
 	int nMaxWidth = 0, nMaxHeight = 0;		// グリッドの最大行列数
 
@@ -372,6 +372,7 @@ void CMapSystem::Load(const char* pFilename)
 
 				// 開始位置を生成位置に設定
 				posOffset = posStart;
+				pMapSystem->m_MapPos = posStart;		// マップの位置に設定
 			}
 			else if (str == "GRID_SIZE_Y")
 			{
@@ -404,11 +405,27 @@ void CMapSystem::Load(const char* pFilename)
 						for (int nCntWidth = 0; nCntWidth < nMaxWidth; nCntWidth++)
 						{ // 行カウント
 
+							// 1行ずつ読み込み
 							std::getline(issChar, str, ',');
 
-							if (str == "0") { continue; }	// 空白は無視する
+							if (str == "") { continue; }	// 空白は無視する
+							else if (str == "0")
+							{ // 床の場合
+
+								// 行列数設定
+								pMapSystem->m_gridCenter.x = nCntWidth;
+								pMapSystem->m_gridCenter.z = nCntHeight;
+
+								pMapSystem->SetGritBool(pMapSystem->m_gridCenter.x, pMapSystem->m_gridCenter.z, true);
+
+								// 床モデルの生成
+								CTile::Create(pMapSystem->m_gridCenter);
+
+								// 経路探索用情報の設定
+								generator->addCollision({ pMapSystem->m_gridCenter.x, pMapSystem->m_gridCenter.z }); // 通過不可地点を追加
+							}
 							else if(str == "1")
-							{ // 特殊操作ではない場合
+							{ // 壁の場合
 
 								// 行列数設定
 								pMapSystem->m_gridCenter.x = nCntWidth;
@@ -417,30 +434,16 @@ void CMapSystem::Load(const char* pFilename)
 								pMapSystem->SetGritBool(pMapSystem->m_gridCenter.x, pMapSystem->m_gridCenter.z, true);
 
 								// キューブブロックの生成
-								CCubeBlock* pBlock = CCubeBlock::Create(pMapSystem->m_gridCenter, size); // GRIDとグリッドサイズを引数にする
-
-								// 優先順位を設定
-								//pChar->SetPriority(PRIORITY);
-
-								// 現在の行列の最後尾に生成した文字を追加
-								//m_vecSelect.back().push_back(pChar);
+								CCubeBlock::Create(pMapSystem->m_gridCenter, size); // GRIDとグリッドサイズを引数にする
 
 								// 経路探索用情報の設定
 								generator->addCollision({ pMapSystem->m_gridCenter.x, pMapSystem->m_gridCenter.z }); // 通過不可地点を追加
-
-								// 横位置にグリッド分のオフセットを与える
-								//posOffset.x += charOffset.x;
 							}
 
 						}
 
+						// 次の行読み込み
 						std::getline(file, str);
-
-						// 横位置を先頭に戻す
-						//posOffset.x = posStart.x;
-
-						// 縦位置にグリッド分のオフセットを与える
-						//posOffset.y += charOffset.y;
 					}
 
 				}
