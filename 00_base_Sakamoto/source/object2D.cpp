@@ -17,8 +17,6 @@ CObject2D::CObject2D(int nPriority) :CObject(nPriority)
 	m_pTexture = nullptr;
 	m_pTargetTexture = nullptr;
 	m_pVtxBuff = nullptr;
-	m_Width = 10.0f;
-	m_Height = 10.0f;
 	m_AddDarw = false;
 	m_Color = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -85,8 +83,8 @@ HRESULT CObject2D::Init(void)
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
 	//頂点座標の設定 
-	float nLength = sqrtf(m_Width * m_Width + m_Height * m_Height) * 0.5f;
-	float fAngle = atan2f(m_Width, m_Height);
+	float nLength = sqrtf(m_size.x * m_size.x + m_size.y * m_size.y) * 0.5f;
+	float fAngle = atan2f(m_size.x, m_size.y);
 
 	pVtx[0].pos.x = m_pos.x + sinf(-D3DX_PI + fAngle + m_rot.z) * nLength;
 	pVtx[0].pos.y = m_pos.y + cosf(-D3DX_PI + fAngle + m_rot.z) * nLength;
@@ -230,8 +228,8 @@ void CObject2D::SetVerTex(void)
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
 	//頂点座標の設定 
-	float nLength = sqrtf(m_Width * m_Width + m_Height * m_Height) * 0.5f;
-	float fAngle = atan2f(m_Width, m_Height);
+	float nLength = sqrtf(m_size.x * m_size.x + m_size.y * m_size.y) * 0.5f;
+	float fAngle = atan2f(m_size.x, m_size.y);
 
 	pVtx[0].pos.x = m_pos.x + sinf(-D3DX_PI + fAngle + m_rot.z) * nLength;
 	pVtx[0].pos.y = m_pos.y + cosf(-D3DX_PI + fAngle + m_rot.z) * nLength;

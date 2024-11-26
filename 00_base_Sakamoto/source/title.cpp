@@ -103,8 +103,7 @@ HRESULT CTitle::Init(void)
 	// タイトル文字
 	m_pLogo = CObject2D::Create();
 	m_pLogo->SetPos(TITLE_LOGO_POS);
-	m_pLogo->SetWidth(TITLE_LOGO_SIZE.x);
-	m_pLogo->SetHeight(TITLE_LOGO_SIZE.y);
+	m_pLogo->SetSize(D3DXVECTOR3(TITLE_LOGO_SIZE.x, TITLE_LOGO_SIZE.y, 0.0f));
 	if (m_pLogo != nullptr)
 	{
 		m_pLogo->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\devilins.png"));
@@ -117,8 +116,7 @@ HRESULT CTitle::Init(void)
 			// ボタン
 			m_pModeSelect[nCnt] = CObject2D::Create();
 			m_pModeSelect[nCnt]->SetPos(D3DXVECTOR3(SELECT_POS.x + (SELECT_DISTANCE.x * nCnt), SELECT_POS.y + (SELECT_DISTANCE.y * nCnt), SELECT_POS.z));
-			m_pModeSelect[nCnt]->SetWidth(BUTTON_SIZE.x);
-			m_pModeSelect[nCnt]->SetHeight(BUTTON_SIZE.y);
+			m_pModeSelect[nCnt]->SetSize(D3DXVECTOR3(BUTTON_SIZE.x, BUTTON_SIZE.y, 0.0f));
 		}
 
 		if (m_pModeSelect[nCnt] != nullptr)
@@ -126,13 +124,13 @@ HRESULT CTitle::Init(void)
 			switch (nCnt)
 			{
 			case 0:
-				m_pModeSelect[nCnt]->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\TitleSelect00.png"));
+				m_pModeSelect[nCnt]->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\singleplay.png"));
 				break;
 			case 1:
-				m_pModeSelect[nCnt]->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\TitleSelect01.png"));
+				m_pModeSelect[nCnt]->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\multiplay.png"));
 				break;
 			case 2:
-				m_pModeSelect[nCnt]->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\TitleSelect02.png"));
+				m_pModeSelect[nCnt]->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\tutorial.png"));
 				break;
 			}
 		}
@@ -143,9 +141,7 @@ HRESULT CTitle::Init(void)
 	{
 		m_pTitleButton = CObject2D::Create();
 		m_pTitleButton->SetPos(BUTTON_POS);
-		m_pTitleButton->SetWidth(BUTTON_SIZE.x);
-		m_pTitleButton->SetHeight(BUTTON_SIZE.y);
-		//m_pTitleButton->SetColorA(0.2f);
+		m_pTitleButton->SetSize(D3DXVECTOR3(BUTTON_SIZE.x, BUTTON_SIZE.y, 0.0f));
 	}
 
 	if (m_pTitleButton != nullptr)

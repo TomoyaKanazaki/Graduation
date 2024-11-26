@@ -24,8 +24,6 @@ namespace
 //====================================================================
 CNumber::CNumber(int nPriority) : CObject2D(nPriority)
 {
-	SetWidth(NUMBER_WIGHT);
-	SetHeight(NUMBER_HEIGHT);
 	m_nNumber = 0;
 }
 
@@ -65,6 +63,8 @@ CNumber *CNumber::Create(void)
 HRESULT CNumber::Init(void)
 {
 	CObject2D::Init();
+
+	SetSize(D3DXVECTOR3(NUMBER_WIGHT, NUMBER_HEIGHT, 0.0f));
 
 	//テクスチャ設定
 	SetTexture("data\\TEXTURE\\Number_02.png");

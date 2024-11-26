@@ -218,8 +218,6 @@ void CMotion::LoadData(const char *pFilename)
 	if (pFile != nullptr)
 	{//ファイルが開けた場合
 
-		int nCntModel = 0;
-		int nCntParts = 0;
 		int nCntMotion = 0;
 		int nCntKeySet = 0;
 		int nCntKey = 0;

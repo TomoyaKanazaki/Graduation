@@ -171,9 +171,6 @@ void CObjectXtex::Draw(void)
 //====================================================================
 void CObjectXtex::BindFile(LPD3DXMESH pMesh, LPD3DXBUFFER pBuffMat, DWORD pdwNumMat)
 {
-	//デバイスの取得
-	LPDIRECT3DDEVICE9 m_pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
-
 	//情報の割り当て
 	m_pMesh = pMesh;
 	m_pBuffMat = pBuffMat;

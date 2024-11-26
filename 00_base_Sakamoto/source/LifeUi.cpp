@@ -23,9 +23,6 @@ namespace
 //====================================================================
 CLifeUi::CLifeUi(int nPriority) : CObject2D(nPriority)
 {
-	SetWidth(SAMPLE_WIGHT);
-	SetHeight(SAMPLE_HEIGHT);
-	m_nSample = 0;
 	m_pNumber = nullptr;
 }
 
@@ -69,8 +66,7 @@ HRESULT CLifeUi::Init(void)
 	//テクスチャ設定
 	SetTexture("data\\TEXTURE\\player\\life.png");
 
-	//新しくcppを作成した時は新しいTYPEを列挙に追加して指定すること
-	SetType(CObject::TYPE_SAMPLE);
+	SetSize(D3DXVECTOR3(SAMPLE_WIGHT, SAMPLE_HEIGHT, 0.0f));
 
 	m_pNumber = CNumber::Create();
 

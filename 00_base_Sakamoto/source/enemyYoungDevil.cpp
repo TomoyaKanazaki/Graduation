@@ -16,12 +16,10 @@
 #include "tutorial.h"
 #include "object3D.h"
 #include "debugproc.h"
-#include "2DEffect.h"
 #include "camera.h"
 #include "input.h"
 #include "player.h"
 #include "useful.h"
-#include "effect.h"
 
 //==========================================
 //  ’è”’è‹`
@@ -184,7 +182,7 @@ void CEnemyYoungDevil::HitDamage(float fDamage)
 {
 	CEnemy::HitDamage(fDamage);
 
-	if (GetLife() > 0 && m_Action != ACTION_TEST)
+	if (m_Action != ACTION_TEST)
 	{
 		m_nStateCount = 1000;
 	}

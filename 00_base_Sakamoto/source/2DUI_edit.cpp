@@ -217,8 +217,7 @@ void C2DUIEdit::Update(void)
 	//位置更新----------------------------------------------------------
 	m_pEditUI->SetPos(m_EditPos);
 	m_pEditUI->SetRot(m_EditRot);
-	m_pEditUI->SetWidth(m_EditSize.x);
-	m_pEditUI->SetHeight(m_EditSize.y);
+	m_pEditUI->SetSize(m_EditSize);
 
 	//オブジェクト設置----------------------------------------------------------
 	if (pInputKeyboard->GetTrigger(DIK_RETURN) == true)
@@ -226,8 +225,7 @@ void C2DUIEdit::Update(void)
 		pEditUI = C2DUI::Create();
 		pEditUI->SetPos(m_EditPos);
 		pEditUI->SetRot(m_EditRot);
-		pEditUI->SetWidth(m_EditSize.x);
-		pEditUI->SetHeight(m_EditSize.y);
+		pEditUI->SetSize(m_EditSize);
 		pEditUI->SetTexture(m_cTextureName);
 	}
 
@@ -261,7 +259,7 @@ void C2DUIEdit::DeleteObject(D3DXVECTOR3 pos)
 		D3DXVECTOR3 size = pUI->GetSize();
 
 		// 矩形の当たり判定
-		if (useful::CollisionRectangle2D(pos, pUI->GetPos(), D3DXVECTOR3(DELETE_WIGHT, DELETE_HEIGHT, 0.0f), D3DXVECTOR3(pUI->GetWidth() * 0.5f, pUI->GetHeight() * 0.5f, 0.0f), useful::COLLISION_XY) == true)
+		if (useful::CollisionRectangle2D(pos, pUI->GetPos(), D3DXVECTOR3(DELETE_WIGHT, DELETE_HEIGHT, 0.0f), pUI->GetSize() * 0.5f, useful::COLLISION_XY) == true)
 		{// UI削除
 			pUI->Uninit();
 		}
@@ -336,8 +334,8 @@ void C2DUIEdit::SaveData(void)
 			fprintf(pFile, "%f\n", pUI->GetRot().z);
 
 			//大きさの取得
-			fprintf(pFile, "%f ", pUI->GetWidth());
-			fprintf(pFile, "%f\n", pUI->GetHeight());
+			fprintf(pFile, "%f ", pUI->GetSize().x);
+			fprintf(pFile, "%f\n", pUI->GetSize().y);
 
 			fprintf(pFile, "%s\n", pUI->GetTexture());
 
@@ -371,7 +369,6 @@ void C2DUIEdit::LoadData(char* Name, D3DXVECTOR3 pos)
 		D3DXVECTOR3 SetRot = INITVECTOR3;
 		D3DXVECTOR3 SetSize = INITVECTOR3;
 		char TexName[128] = {};
-		int nTex = 0;
 		char aStartMessage[32] = {};	//スタートメッセージ
 		char aSetMessage[32] = {};		//セットメッセージ
 
@@ -401,8 +398,7 @@ void C2DUIEdit::LoadData(char* Name, D3DXVECTOR3 pos)
 					C2DUI* pUI = C2DUI::Create();
 					pUI->SetPos(pos + SetPos);
 					pUI->SetRot(SetRot);
-					pUI->SetWidth(SetSize.x);
-					pUI->SetHeight(SetSize.y);
+					pUI->SetSize(SetSize);
 					pUI->SetTexture(&TexName[0]);
 				}
 			}

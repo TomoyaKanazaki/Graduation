@@ -63,6 +63,10 @@ namespace MyEffekseer
 		"data\\EFFEKSEER\\Effect\\bornguid01.efkefc",		  // 生成ガイド player2
 		"data\\EFFEKSEER\\Effect\\got_theitem.efkefc",		  // アイテムを持っているとき
 		"data\\EFFEKSEER\\Effect\\acention.efkefc",		  // アイテムを持っているとき
+		"data\\EFFEKSEER\\Effect\\revive_medaman.efkefc",		  // メダマンの復活ガイド
+		"data\\EFFEKSEER\\Effect\\revive_bonbon.efkefc",		  // ボンボンの復活ガイド
+		"data\\EFFEKSEER\\Effect\\revive_smalldevil.efkefc",	  // 小デビルの復活ガイド
+
 	};
 
 	//============================================

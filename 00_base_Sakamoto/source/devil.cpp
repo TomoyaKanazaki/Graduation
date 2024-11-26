@@ -16,7 +16,6 @@
 #include "tutorial.h"
 #include "object3D.h"
 #include "debugproc.h"
-#include "2DEffect.h"
 #include "camera.h"
 #include "input.h"
 #include "enemy.h"
@@ -25,7 +24,6 @@
 #include "slowManager.h"
 #include "Number.h"
 #include "MapModel.h"
-#include "effect.h"
 #include "bowabowa.h"
 #include "Cross.h"
 #include "objmeshField.h"
@@ -224,7 +222,6 @@ void CDevil::Update(void)
 	CCharacter::Update();
 
 	D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
-	CEffect* pTestEffect = nullptr;
 
 	//for (int nCnt = 0; nCnt < 4; nCnt++)
 	//{
@@ -981,15 +978,7 @@ void CDevil::DebugKey(void)
 
 	//キーボードの取得
 	CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
-	CInputJoypad* pInputJoypad = CManager::GetInstance()->GetInputJoyPad();
 	D3DXVECTOR3 CameraRot = CManager::GetInstance()->GetCamera()->GetRot();
-
-	CInputMouse* pMouse = CManager::GetInstance()->GetInputMouse();
-
-	if (pMouse->GetTrigger(pMouse->PUSH_WHEEL))
-	{
-		HitDamage(10.0f);
-	}
 
 	//キーボードの移動処理
 	if (pInputKeyboard->GetPress(DIK_UP))
@@ -1308,7 +1297,6 @@ void CDevil::PlayerScroll(D3DXVECTOR3 Move, float GritSize)
 			D3DXVECTOR3 Size = pPlayer->GetSize();
 			D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
 			float G_Size = CMapSystem::GetInstance()->GetGritSize();
-			float AAA = 1.0f;
 
 			pos += Move;
 
@@ -1380,8 +1368,6 @@ void CDevil::GritScroll(D3DXVECTOR3 Move)
 {
 	D3DXVECTOR3 InitPos = CMapSystem::GetInstance()->GetInitPos();
 	D3DXVECTOR3 MapPos = CMapSystem::GetInstance()->GetMapPos();
-	int MapWightMax = CMapSystem::GetInstance()->GetWightMax();
-	int MapHeightMax = CMapSystem::GetInstance()->GetHeightMax();
 	float MapGrit = CMapSystem::GetInstance()->GetGritSize();
 	MapPos += Move;
 	m_MapDifference = -(InitPos - MapPos);

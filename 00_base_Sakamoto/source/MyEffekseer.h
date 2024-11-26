@@ -52,6 +52,9 @@ public:
 		TYPE_BORNGUID2,			// 復活ガイド　プレイヤー2
 		TYPE_GOT_THEITEM,		// アイテム持っているとき
 		TYPE_ACENTION,			// 昇天
+		TYPE_REVIVE_MEDAMAN,	// メダマンの復活ガイド
+		TYPE_REVIVE_BONBON,		// ボンボンの復活ガイド
+		TYPE_REVIVE_SMALLDEVIL, // 子デビルの復活ガイド
 		TYPE_MAX,
 		TYPE_NONE  // なんもない
 	};

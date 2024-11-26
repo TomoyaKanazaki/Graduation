@@ -73,7 +73,6 @@ CResult* CResult::GetInstance(void)
 //====================================================================
 HRESULT CResult::Init(void)
 {
-	CTexture *pTexture = CManager::GetInstance()->GetTexture();;
 	CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_BGM_RESULT);
 
 	m_LifeData = CManager::GetInstance()->GetEndScore();
@@ -81,8 +80,7 @@ HRESULT CResult::Init(void)
 	//背景
 	m_pBg = CObject2D::Create();
 	m_pBg->SetPos(D3DXVECTOR3(640.0f, 360.0f, 0.0f));
-	m_pBg->SetWidth(1280.0f);
-	m_pBg->SetHeight(720.0f);
+	m_pBg->SetSize(D3DXVECTOR3(1280.0f, 720.0f, 0.0f));
 	m_pBg->SetColor(D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
 
 	//今回のスコア
@@ -91,8 +89,7 @@ HRESULT CResult::Init(void)
 		//数字の生成
 		m_apLife[nCntObject] = CNumber::Create();
 		m_apLife[nCntObject]->SetPos(D3DXVECTOR3(SCORE_VALUE_POS.x + (nCntObject * 45.0f), SCORE_VALUE_POS.y, SCORE_VALUE_POS.z));
-		m_apLife[nCntObject]->SetWidth(60.0f);
-		m_apLife[nCntObject]->SetHeight(72.0f);
+		m_apLife[nCntObject]->SetSize(D3DXVECTOR3(60.0f, 72.0f, 0.0f));
 		m_apLife[nCntObject]->SetColor(D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
 	}
 
@@ -106,16 +103,14 @@ HRESULT CResult::Init(void)
 	//"評価点"っていうテクスチャポリゴン
 	m_pScoreTex = CObject2D::Create();
 	m_pScoreTex->SetPos(SCORE_TEX_POS);
-	m_pScoreTex->SetWidth(200.0f);
-	m_pScoreTex->SetHeight(80.0f);
+	m_pScoreTex->SetSize(D3DXVECTOR3(200.0f, 80.0f, 0.0f));
 	m_pScoreTex->SetTexture("data\\TEXTURE\\result_score.png");
 
 	//全体ランキング(「ランキング」)
-	CObject2D *m_pRank = CObject2D::Create();
-	m_pRank->SetPos(D3DXVECTOR3(SCREEN_WIDTH * 0.80f, SCREEN_HEIGHT * 0.185f, 0.0f));
-	m_pRank->SetWidth(340.0f);
-	m_pRank->SetHeight(180.0f);
-	m_pRank->SetTexture("data\\TEXTURE\\ranking.png");
+	CObject2D *pRank = CObject2D::Create();
+	pRank->SetPos(D3DXVECTOR3(SCREEN_WIDTH * 0.80f, SCREEN_HEIGHT * 0.185f, 0.0f));
+	pRank->SetSize(D3DXVECTOR3(340.0f, 180.0f, 0.0f));
+	pRank->SetTexture("data\\TEXTURE\\ranking.png");
 
 	//全体ランキング(スコア)
 	m_pLifeRanking = CRanking::Create("data\\TXT\\LifeRanking.txt");
@@ -127,15 +122,14 @@ HRESULT CResult::Init(void)
 	{
 		CNumber *pNumRank = m_pLifeRanking->GetNumRankScore( 0, nCntObject);
 		D3DXVECTOR3 RankPos = pNumRank->GetPos();
-		RankPos.y += pNumRank->GetHeight() * 0.5f;
+		RankPos.y += pNumRank->GetSize().y * 0.5f;
 
 		//数字の生成
-		CObject2D* m_pRank = CObject2D::Create();
-		m_pRank->SetPos(D3DXVECTOR3(RankPos.x - 150.0f, RankPos.y + 17.0f, RankPos.z));
-		m_pRank->SetWidth(256.0f);
-		m_pRank->SetHeight(102.4f);
-		m_pRank->SetTexture("data\\TEXTURE\\RANKING_TEXT.png");
-		m_pRank->SetAnim(D3DXVECTOR2(0.0f, nCntObject * 0.2f),
+		pRank = CObject2D::Create();
+		pRank->SetPos(D3DXVECTOR3(RankPos.x - 150.0f, RankPos.y + 17.0f, RankPos.z));
+		pRank->SetSize(D3DXVECTOR3(256.0f, 102.4f, 0.0f));
+		pRank->SetTexture("data\\TEXTURE\\RANKING_TEXT.png");
+		pRank->SetAnim(D3DXVECTOR2(0.0f, nCntObject * 0.2f),
 						 D3DXVECTOR2(1.0f, nCntObject * 0.2f + 0.2f));
 	}
 

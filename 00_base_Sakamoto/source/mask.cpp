@@ -48,8 +48,7 @@ HRESULT CMask::Init()
 	CObject2D::Init();
 
 	// 幅、高さの設定
-	SetWidth(SCREEN_WIDTH_F);
-	SetHeight(SCREEN_HEIGHT_F);
+	SetSize(SCREEN_SIZE);
 
 	// 位置設定
 	SetPos(SCREEN_CENTER_F);
@@ -110,7 +109,7 @@ void CMask::Draw()
 //========================================
 // 個別の色設定
 //========================================
-void CMask::SetColor(CObject::TYPE Type, D3DXCOLOR col)
+void CMask::SetColor(CObject::OBJECT_TYPE Type, D3DXCOLOR col)
 {
 	// オブジェクトの種類設定
 	SetType(Type);

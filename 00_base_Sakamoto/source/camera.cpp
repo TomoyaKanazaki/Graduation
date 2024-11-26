@@ -239,8 +239,6 @@ void CCamera::ControlCamera(void)
 {
 	//デバイスの取得
 	CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
-	CInputJoypad* pInputJoypad = CManager::GetInstance()->GetInputJoyPad();
-	CInputMouse* pInputMouse = CManager::GetInstance()->GetInputMouse();
 
 	if (m_rot.x <= D3DX_PI * 0.5f && m_rot.x >= -(D3DX_PI * 0.5f))
 	{//入力

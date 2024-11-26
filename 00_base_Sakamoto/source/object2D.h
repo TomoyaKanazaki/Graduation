@@ -39,10 +39,8 @@ public:
 	D3DXVECTOR3 GetPos(void) { return m_pos; }
 	void SetRot(D3DXVECTOR3 rot) { m_rot = rot; }
 	D3DXVECTOR3 GetRot(void) { return m_rot; }
-	void SetWidth(float Width) { m_Width = Width; }
-	float GetWidth(void) { return m_Width; }
-	void SetHeight(float Height) { m_Height = Height; }
-	float GetHeight(void) { return m_Height; }
+	void SetSize(D3DXVECTOR3 size) { m_size = size; }
+	D3DXVECTOR3 GetSize(void) { return m_size; }
 	D3DXCOLOR GetColor(void) { return m_Color; }
 	virtual void SetIdx(int Idx) { m_nIdxTexture = Idx; }
 	virtual int GetIdx(void) { return m_nIdxTexture; }
@@ -57,12 +55,11 @@ protected:
 
 private:
 	int m_nIdxTexture;
-	float m_Width;							//幅
-	float m_Height;							//高さ
 	bool m_AddDarw;							//描画の時に加算合成をするかどうか
 	D3DXCOLOR m_Color;						//色
 	D3DXVECTOR3 m_pos;						//頂点の位置
 	D3DXVECTOR3 m_rot;						//向き
+	D3DXVECTOR3 m_size;						//サイズ
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;		//頂点バッファへのポインタ
 	LPDIRECT3DTEXTURE9 m_pTexture;			//テクスチャへのポインタ
 	LPDIRECT3DTEXTURE9 m_pTargetTexture;	//テクスチャへのポインタ

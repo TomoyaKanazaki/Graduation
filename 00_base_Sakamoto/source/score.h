@@ -12,9 +12,6 @@
 
 //マクロ定義
 #define NUM_SCORE (6)		//スコアの桁数
-
-//前方宣言
-class CObject;
 class CNumber;
 
 //スコアクラス

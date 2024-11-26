@@ -19,7 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\2DEffect.cpp" />
     <ClCompile Include="source\2DUI.cpp" />
     <ClCompile Include="source\2DUI_edit.cpp" />
     <ClCompile Include="source\AStar.cpp" />
@@ -35,7 +34,6 @@
     <ClCompile Include="source\devil.cpp" />
     <ClCompile Include="source\DevilHole.cpp" />
     <ClCompile Include="source\Edit.cpp" />
-    <ClCompile Include="source\effect.cpp" />
     <ClCompile Include="source\enemy.cpp" />
     <ClCompile Include="source\enemyBonbon.cpp" />
     <ClCompile Include="source\enemyMedaman.cpp" />
@@ -51,7 +49,6 @@
     <ClCompile Include="source\LifeUi.cpp" />
     <ClCompile Include="source\light.cpp" />
     <ClCompile Include="source\listManager.cpp" />
-    <ClCompile Include="source\logo.cpp" />
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\manager.cpp" />
     <ClCompile Include="source\MapModel.cpp" />
@@ -59,7 +56,6 @@
     <ClCompile Include="source\mask.cpp" />
     <ClCompile Include="source\MiniMapCamera.cpp" />
     <ClCompile Include="source\model.cpp" />
-    <ClCompile Include="source\modelEffect.cpp" />
     <ClCompile Include="source\motion.cpp" />
     <ClCompile Include="source\MyEffekseer.cpp" />
     <ClCompile Include="source\number.cpp" />
@@ -79,7 +75,6 @@
     <ClCompile Include="source\objmeshField.cpp" />
     <ClCompile Include="source\objmeshRing.cpp" />
     <ClCompile Include="source\objmeshWall.cpp" />
-    <ClCompile Include="source\particle.cpp" />
     <ClCompile Include="source\Pause.cpp" />
     <ClCompile Include="source\player.cpp" />
     <ClCompile Include="source\precompile.cpp">
@@ -109,7 +104,6 @@
     <ClCompile Include="source\Xmodel.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\2DEffect.h" />
     <ClInclude Include="source\2DUI.h" />
     <ClInclude Include="source\2DUI_edit.h" />
     <ClInclude Include="source\AStar.h" />
@@ -125,7 +119,6 @@
     <ClInclude Include="source\devil.h" />
     <ClInclude Include="source\DevilHole.h" />
     <ClInclude Include="source\Edit.h" />
-    <ClInclude Include="source\effect.h" />
     <ClInclude Include="source\enemy.h" />
     <ClInclude Include="source\enemyBonbon.h" />
     <ClInclude Include="source\enemyMedaman.h" />
@@ -142,7 +135,6 @@
     <ClInclude Include="source\LifeUi.h" />
     <ClInclude Include="source\light.h" />
     <ClInclude Include="source\listManager.h" />
-    <ClInclude Include="source\logo.h" />
     <ClInclude Include="source\main.h" />
     <ClInclude Include="source\manager.h" />
     <ClInclude Include="source\MapModel.h" />
@@ -150,7 +142,6 @@
     <ClInclude Include="source\mask.h" />
     <ClInclude Include="source\MiniMapCamera.h" />
     <ClInclude Include="source\model.h" />
-    <ClInclude Include="source\modelEffect.h" />
     <ClInclude Include="source\motion.h" />
     <ClInclude Include="source\MyEffekseer.h" />
     <ClInclude Include="source\number.h" />
@@ -170,7 +161,6 @@
     <ClInclude Include="source\objmeshField.h" />
     <ClInclude Include="source\objmeshRing.h" />
     <ClInclude Include="source\objmeshWall.h" />
-    <ClInclude Include="source\particle.h" />
     <ClInclude Include="source\Pause.h" />
     <ClInclude Include="source\player.h" />
     <ClInclude Include="source\precompile.h">
@@ -269,7 +259,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;HIDAPI_EXPORTS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
