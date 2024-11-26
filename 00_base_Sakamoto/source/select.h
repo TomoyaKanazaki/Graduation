@@ -42,6 +42,13 @@ public:
 	CSelect();
 	~CSelect();
 
+	enum SCROLL_TYPE
+	{
+		SCROLL_SMOOTH = 0,	// スムーズ
+		SCROLL_LAGGY,		// カクカク
+		SCROLL_NONE
+	};
+
 	static CSelect* GetInstance();
 
 	virtual HRESULT Init(void);
@@ -72,5 +79,8 @@ private:
 	bool m_bStart;
 	bool m_bSlash;
 	bool m_bTurn;
+	float m_fTex;
+	int m_nTime;
+	SCROLL_TYPE m_Type;
 };
 #endif

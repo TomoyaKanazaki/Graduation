@@ -56,6 +56,10 @@ CSelect::CSelect()
 		m_pScrollSelect[nCnt] = nullptr;
 	}
 
+	for (int nCnt = 0; nCnt < NUM_SCROLLTYPE; nCnt++)
+	{
+		m_pTexScroll[nCnt] = nullptr;
+	}
 	m_pTitleButton = nullptr;
 	m_pMeshDome = nullptr;
 
@@ -66,6 +70,9 @@ CSelect::CSelect()
 	m_nSelect = 0;
 	m_nStep = 0;
 	m_nSetStage = 0;
+	m_nTime = 0;
+	m_fTex = 0.0f;
+	m_Type = SCROLL_NONE;
 }
 
 //====================================================================
@@ -139,24 +146,14 @@ HRESULT CSelect::Init(void)
 
 	for (int nCnt = 0; nCnt < NUM_SCROLLTYPE; nCnt++)
 	{
-
-		// スクロール
-		m_pTexScroll[nCnt] = CObject2D::Create();
-		m_pTexScroll[nCnt]->SetPos(D3DXVECTOR3(SCROOL_POS.x + (STAGE_DISTANCE.x * nCnt), SCROOL_POS.y + (STAGE_DISTANCE.y * nCnt), SCROOL_POS.z));
-		m_pTexScroll[nCnt]->SetSize(D3DXVECTOR3(100.0f, 100.0f, 0.0f));
-	}
-
-	for (int nCnt = 0; nCnt < NUM_SCROLLTYPE; nCnt++)
-	{
 		if (m_pScrollSelect[nCnt] == nullptr)
 		{
 			// ボタン
 			m_pScrollSelect[nCnt] = CObject2D::Create();
-			m_pScrollSelect[nCnt]->SetPos(D3DXVECTOR3(SCROOL_POS.x + (STAGE_DISTANCE.x * nCnt), SCROOL_POS.y + (STAGE_DISTANCE.y * nCnt), SCROOL_POS.z));
+			m_pScrollSelect[nCnt]->SetPos(D3DXVECTOR3(300.0f + (500.0f * nCnt), SCROOL_POS.y + (STAGE_DISTANCE.y * nCnt), SCROOL_POS.z));
 			m_pScrollSelect[nCnt]->SetSize(D3DXVECTOR3(400.0f, 200.0f, 0.0f));
 			m_pScrollSelect[nCnt]->SetColor(SELECT_COLOR_FALSE);
 		}
-
 		if (m_pScrollSelect[nCnt] != nullptr)
 		{
 			switch (nCnt)
@@ -169,7 +166,17 @@ HRESULT CSelect::Init(void)
 				break;
 			}
 		}
+	}
 
+	for (int nCnt = 0; nCnt < NUM_SCROLL; nCnt++)
+	{
+		if (m_pTexScroll[nCnt] == nullptr)
+		{
+			// スクロール
+			m_pTexScroll[nCnt] = CObject2D::Create();
+			m_pTexScroll[nCnt]->SetPos(D3DXVECTOR3(550.0f+ (470.0f * nCnt), SCROOL_POS.y + (STAGE_DISTANCE.y * nCnt), SCROOL_POS.z));
+			m_pTexScroll[nCnt]->SetSize(D3DXVECTOR3(100.0f, 100.0f, 0.0f));
+		}
 		// スクロール
 		if (m_pTexScroll[nCnt] != nullptr)
 		{
@@ -183,7 +190,6 @@ HRESULT CSelect::Init(void)
 				break;
 			}
 		}
-
 	}
 
 	// ボタン
@@ -240,6 +246,30 @@ void CSelect::Update(void)
 
 		// 決定処理
 		ScrollButton();
+	}
+
+	// スクロール処理 //
+	if (m_Type == SCROLL_SMOOTH)
+	{// スクロールスムーズの時
+
+		m_fTex += 0.005f;
+
+		// テクスチャ[0]移動量加算
+		m_pTexScroll[0]->SetScroll(D3DXVECTOR2(m_fTex,1.0f));
+	}
+	else if (m_Type == SCROLL_LAGGY)
+	{// スクロールカクカクの時
+
+		m_fTex += 0.005f;
+		m_nTime++;
+
+		if (m_nTime >= 10)
+		{
+			// テクスチャ[1]移動量加算
+			m_pTexScroll[1]->SetScroll(D3DXVECTOR2(m_fTex, 1.0f));
+
+			m_nTime = 0;
+		}
 	}
 }
 
@@ -338,7 +368,6 @@ void CSelect::ScrollSelect(void)
 		}
 	}
 
-
 	for (int nCnt = 0; nCnt < NUM_SCROLLTYPE; nCnt++)
 	{
 		if (m_pScrollSelect[nCnt] != nullptr)
@@ -346,10 +375,16 @@ void CSelect::ScrollSelect(void)
 			if (m_nSelect == nCnt)
 			{
 				m_pScrollSelect[nCnt]->SetColor(SELECT_COLOR_TRUE);
+
+				// スムーズタイプに変更
+				m_Type = SCROLL_LAGGY;
 			}
 			else
 			{
 				m_pScrollSelect[nCnt]->SetColor(SELECT_COLOR_FALSE);
+
+				// カクカクタイプに変更
+				m_Type = SCROLL_SMOOTH;
 			}
 		}
 	}
