@@ -27,6 +27,8 @@ public:
 	void Update(void);
 	void Draw(void);
 
+	CMapSystem::GRID GetGrid(void) { return m_Grid; }	// グリッド取得
+
 	// 静的メンバ関数
 	static CListManager<CTile>* GetList(void); // リスト取得
 

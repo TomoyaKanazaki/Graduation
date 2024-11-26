@@ -38,12 +38,6 @@ CTile::CTile(int nPriority) : CObjectX(nPriority)
 	//m_nIdxXModel = 0;			//マテリアルの数
 	m_Grid.x = 0;
 	m_Grid.z = 0;
-	
-	//for (int nCnt = 0; nCnt < DIRECTION; nCnt++)
-	//{
-	//	m_bSet[nCnt] = false;			//上下左右の穴が埋まっているかどうか
-	//	m_pHoleKey[nCnt] = nullptr;		//上下左右の穴を埋めるポリゴン
-	//}
 }
 
 //====================================================================
@@ -106,7 +100,7 @@ HRESULT CTile::Init(char* pModelName)
 	D3DXVECTOR3 size = GetSize() * 2.0f;		// モデルのサイズ取得
 
 	// 位置設定
-	CObjectX::SetPos(D3DXVECTOR3(MapSystemPos.x + m_Grid.x * size.x, 0.0f, MapSystemPos.z - m_Grid.z * size.z));
+	CObjectX::SetPos(D3DXVECTOR3(MapSystemPos.x + m_Grid.x * size.x, 20.0f, MapSystemPos.z - m_Grid.z * size.z));
 
 	if (m_pList == nullptr)
 	{// リストマネージャー生成
