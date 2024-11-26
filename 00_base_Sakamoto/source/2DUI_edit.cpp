@@ -371,7 +371,6 @@ void C2DUIEdit::LoadData(char* Name, D3DXVECTOR3 pos)
 		D3DXVECTOR3 SetRot = INITVECTOR3;
 		D3DXVECTOR3 SetSize = INITVECTOR3;
 		char TexName[128] = {};
-		int nTex = 0;
 		char aStartMessage[32] = {};	//スタートメッセージ
 		char aSetMessage[32] = {};		//セットメッセージ
 

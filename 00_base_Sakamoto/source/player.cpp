@@ -14,7 +14,6 @@
 #include "tutorial.h"
 #include "object3D.h"
 #include "debugproc.h"
-#include "2DEffect.h"
 #include "camera.h"
 #include "input.h"
 #include "enemy.h"
@@ -23,7 +22,6 @@
 #include "slowManager.h"
 #include "Number.h"
 #include "MapModel.h"
-#include "effect.h"
 #include "sound.h"
 #include "LifeUi.h"
 #include "cross.h"
@@ -291,9 +289,6 @@ void CPlayer::GameUpdate(void)
 	{
 		//壁があるか判断
 		SearchWall();
-
-		//キーボードの取得
-		CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
 
 		if (
 			(m_State != STATE_EGG && CollisionStageIn() == true && 
@@ -579,8 +574,6 @@ D3DXVECTOR3 CPlayer::MoveInputKey(D3DXVECTOR3 Move)
 //====================================================================
 D3DXVECTOR3 CPlayer::MoveInputPadStick(D3DXVECTOR3 Move)
 {
-	//キーボードの取得
-	CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
 	CInputJoypad* pInputJoypad = CManager::GetInstance()->GetInputJoyPad();
 
 	for (int nCnt = 0; nCnt < MAX_PLAYER; nCnt++)
@@ -655,8 +648,6 @@ D3DXVECTOR3 CPlayer::MoveInputPadStick(D3DXVECTOR3 Move)
 //====================================================================
 D3DXVECTOR3 CPlayer::MoveInputPadKey(D3DXVECTOR3 Move)
 {
-	//キーボードの取得
-	CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
 	CInputJoypad* pInputJoypad = CManager::GetInstance()->GetInputJoyPad();
 
 	for (int nCnt = 0; nCnt < MAX_PLAYER; nCnt++)
@@ -733,10 +724,6 @@ D3DXVECTOR3 CPlayer::MoveInputPadKey(D3DXVECTOR3 Move)
 //====================================================================
 void CPlayer::Rot(void)
 {
-	//キーボードの取得
-	CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
-	CInputMouse* pInputMouse = CManager::GetInstance()->GetInputMouse();
-	CInputJoypad* pInputJoypad = CManager::GetInstance()->GetInputJoyPad();
 	D3DXVECTOR3 CameraRot = CManager::GetInstance()->GetCamera()->GetRot();
 
 	//移動方向に向きを合わせる処理
@@ -1482,8 +1469,6 @@ void CPlayer::ObjPosUpdate(void)
 	{
 		fSpeed = m_pSlow->GetValue();
 	}
-
-	CDevil* pDevil = CGame::GetInstance()->GetDevil();
 
 	//Y軸の位置更新
 	m_pos.y += m_Objmove.y * CManager::GetInstance()->GetGameSpeed() * fSpeed;

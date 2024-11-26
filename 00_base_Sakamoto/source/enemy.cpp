@@ -14,7 +14,6 @@
 #include "game.h"
 #include "tutorial.h"
 #include "object3D.h"
-#include "2DEffect.h"
 #include "camera.h"
 #include "input.h"
 #include "player.h"
@@ -23,8 +22,6 @@
 #include "LevelModelEffect.h"
 #include "slowManager.h"
 #include "score.h"
-#include "modelEffect.h"
-#include "Effect.h"
 #include "devil.h"
 #include "DevilHole.h"
 #include "objmeshField.h"
@@ -390,9 +387,6 @@ void CEnemy::UpdatePos(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR3& s
 void CEnemy::Rot(D3DXVECTOR3& rotMy)
 {
 	//キーボードの取得
-	CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
-	CInputMouse* pInputMouse = CManager::GetInstance()->GetInputMouse();
-	CInputJoypad* pInputJoypad = CManager::GetInstance()->GetInputJoyPad();
 	D3DXVECTOR3 CameraRot = CManager::GetInstance()->GetCamera()->GetRot();
 
 	//移動方向に向きを合わせる処理

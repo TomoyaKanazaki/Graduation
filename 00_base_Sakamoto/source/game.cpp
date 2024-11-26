@@ -321,7 +321,6 @@ void CGame::Update(void)
 	//デバイスの取得
 	LPDIRECT3DDEVICE9 m_pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
 	CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
-	CInputJoypad* pInputJoypad = CManager::GetInstance()->GetInputJoyPad();
 
 	DebugProc::Print(DebugProc::POINT_LEFT, "ゲームスピード : %f\n", CManager::GetInstance()->GetGameSpeed());
 
@@ -479,11 +478,6 @@ void CGame::StageClear(int Stage)
 //====================================================================
 void CGame::EventUpdate(void)
 {
-	CCamera* pCamera = CManager::GetInstance()->GetCamera();
-
-	CInputMouse* pMouse = CManager::GetInstance()->GetInputMouse();
-	float EventFinish = 0.0f;
-
 	if (m_nEventNumber == 0) //=====================================================================
 	{
 		switch (m_nEventWave)
@@ -522,13 +516,11 @@ void CGame::DeleteMap(void)
 		{
 			CObject* pObjNext = pObj->GetNext();
 
-			CObject::TYPE type = pObj->GetType();			//種類を取得
+			CObject::OBJECT_TYPE type = pObj->GetType();			//種類を取得
 
 			if (type == CObject::TYPE_CUBEBLOCK ||
-				type == CObject::TYPE_CUBEDAMEGE ||
 				type == CObject::TYPE_ENEMY3D ||
-				type == CObject::TYPE_MAPMODEL ||
-				type == CObject::TYPE_STAIR)
+				type == CObject::TYPE_MAPMODEL)
 			{//種類がマップ関連の時
 				pObj->Uninit();
 			}
@@ -549,8 +541,6 @@ void CGame::LoadStageRailBlock(const char* pFilename)
 	if (pFile != nullptr)
 	{//ファイルが開けた場合
 
-		char Getoff[32] = {};
-		char boolLife[32] = {};
 		char aString[128] = {};			//ゴミ箱
 		char aStartMessage[32] = {};	//スタートメッセージ
 		char aSetMessage[32] = {};		//セットメッセージ
@@ -561,7 +551,6 @@ void CGame::LoadStageRailBlock(const char* pFilename)
 		{
 			CMapSystem* pMapSystem = CMapSystem::GetInstance();
 			D3DXVECTOR3 MapSystemPos = pMapSystem->GetMapPos();
-			float MapSystemGritSize = pMapSystem->GetGritSize() * 0.5f;
 
 			while (1)
 			{

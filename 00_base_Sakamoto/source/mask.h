@@ -26,7 +26,7 @@ public:
 	void Update();
 	void Draw();
 
-	void SetColor(CObject::TYPE type, D3DXCOLOR col);	// ŒÂ•Ê‚ÌFİ’è
+	void SetColor(CObject::OBJECT_TYPE type, D3DXCOLOR col);	// ŒÂ•Ê‚ÌFİ’è
 
 private:
 	//ƒƒ“ƒo•Ï”

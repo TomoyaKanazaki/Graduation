@@ -309,14 +309,9 @@ void CCharacter::LoadModel(const char* pFilename)
 		D3DXVECTOR3 ModelRot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 		char ModelName[128] = {};
 		int nCntModel = 0;
-		int nCntParts = 0;
-		int nCntMotion = 0;
-		int nCntKeySet = 0;
-		int nCntKey = 0;
 
 		char aString[128] = {};				//ゴミ箱
 		char aMessage[128] = {};			//スタートとエンドのメッセージ
-		char aBool[128] = {};				//bool変換用メッセージ
 
 		// 読み込み開始-----------------------------------------------------
 		while (1)

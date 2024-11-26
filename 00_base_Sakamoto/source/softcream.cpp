@@ -11,7 +11,6 @@
 #include "XModel.h"
 #include "player.h"
 #include "MapSystem.h"
-#include "effect.h"
 #include "game.h"
 #include "objmeshField.h"
 

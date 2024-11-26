@@ -95,7 +95,7 @@ HRESULT CObjmeshRing::Init(void)
 	//頂点バッファをロックし、両店情報へのポインタを所得
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
-	for (int nCnt = 0, nData = 0, nCenterW = 0, nCenterH = 0, nHeight = 0; nCnt < HEIGHT_SIZE * WAIGHT_SIZE; nCnt++)
+	for (int nCnt = 0, nCenterW = 0, nCenterH = 0, nHeight = 0; nCnt < HEIGHT_SIZE * WAIGHT_SIZE; nCnt++)
 	{
 		//横番号の代入
 		nCenterW = nCnt % WAIGHT_SIZE;
@@ -227,7 +227,7 @@ void CObjmeshRing::Update(void)
 	//頂点バッファをロックし、両店情報へのポインタを所得
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
-	for (int nCnt = 0, nData = 0, nCenterW = 0, nCenterH = 0, nHeight = 0; nCnt < HEIGHT_SIZE * WAIGHT_SIZE; nCnt++)
+	for (int nCnt = 0, nHeight = 0; nCnt < HEIGHT_SIZE * WAIGHT_SIZE; nCnt++)
 	{
 		pVtx[nCnt].pos.x = sinf(D3DX_PI * (1.0f / ((WAIGHT_SIZE - 1) / 2)) * (nCnt - nHeight)) * m_Radius;
 		pVtx[nCnt].pos.y = CYLINDER_HEIGHT * ((HEIGHT_SIZE - 1) - nHeight);
@@ -376,7 +376,7 @@ void CObjmeshRing::SetColor(D3DXCOLOR col)
 	//頂点バッファをロックし、両店情報へのポインタを所得
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
-	for (int nCnt = 0, nData = 0, nCenterW = 0, nCenterH = 0, nHeight = 0; nCnt < HEIGHT_SIZE * WAIGHT_SIZE; nCnt++)
+	for (int nCnt = 0; nCnt < HEIGHT_SIZE * WAIGHT_SIZE; nCnt++)
 	{
 		//頂点カラーの設定
 		pVtx[nCnt].col = m_Color;

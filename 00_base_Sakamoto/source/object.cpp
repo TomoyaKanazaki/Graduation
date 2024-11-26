@@ -117,11 +117,7 @@ void CObject::UpdateAll(void)
 			{
 				if (CManager::GetInstance()->GetPause() == true)
 				{
-					if (pObject->m_type == TYPE_SAMPLE)
-					{
-						//更新処理
-						pObject->Update();
-					}
+
 				}
 				else if(CManager::GetInstance()->GetEdit() == true)
 				{
@@ -273,7 +269,7 @@ void CObject::MultiTargetDraw(void)
 			{
 				if (pObject->m_Appear == true)
 				{
-					if (pObject->GetType() != TYPE_PLAYER3D && pObject->GetType() != TYPE_SAMPLE)
+					if (pObject->GetType() != TYPE_PLAYER3D)
 					{
 						//描画処理
 						pObject->Draw();
@@ -354,7 +350,6 @@ void CObject::DebugKey()
 
 				if (
 					pObject->m_type == TYPE_2DUI ||
-					pObject->m_type == TYPE_LOG ||
 					pObject->m_type == TYPE_OBJECT2D ||
 					pObject->m_type == TYPE_TIME ||
 					pObject->m_type == TYPE_NUMBER
@@ -384,7 +379,6 @@ void CObject::ResetObjectMap(void)
 
 			if (
 				pObject->m_type == TYPE_PLAYER3D ||
-				pObject->m_type == TYPE_BREAKBLOCK3D ||
 				pObject->m_type == TYPE_ENEMY3D
 				)
 			{
@@ -468,15 +462,6 @@ void CObject::DeleteBlock(void)
 		while (pObject != nullptr)
 		{
 			CObject *pObjectNext = pObject->m_pNext;	//次のオブジェクトを保存
-
-			if (
-				pObject->m_type == TYPE_BREAKBLOCK3D
-				)
-			{
-				pObject->Uninit();
-
-				pObject->SetDeathFlag(true);
-			}
 
 			pObject = pObjectNext;
 		}

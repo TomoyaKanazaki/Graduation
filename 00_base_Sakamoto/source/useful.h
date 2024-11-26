@@ -55,6 +55,8 @@ int GetFps(void);
 // 使用頻度の高い関数マクロ
 #define NUM_ARRAY(a)	(sizeof((a)) / sizeof((a)[0]))	// 配列の要素数計算
 
+#define PRIORITY_MAX (8)	//描画順の最大数
+
 // 名前空間
 namespace useful
 {

@@ -249,9 +249,6 @@ void CRollRock::Move(void)
 {
 	D3DXVECTOR3 SlopeRot = INITVECTOR3;
 
-	// ŽZo‚ÉŽg—p‚·‚é•Ï”
-	CDevil* pDevil = nullptr;
-
 	SlopeRot = CGame::GetInstance()->GetDevil()->GetDevilRot();
 
 	// ŒX‚«‚É‚æ‚éˆÚ“®—ÊÝ’è

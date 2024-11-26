@@ -16,12 +16,10 @@
 #include "tutorial.h"
 #include "object3D.h"
 #include "debugproc.h"
-#include "2DEffect.h"
 #include "camera.h"
 #include "input.h"
 #include "player.h"
 #include "useful.h"
-#include "effect.h"
 
 //==========================================
 //  ’è”’è‹`

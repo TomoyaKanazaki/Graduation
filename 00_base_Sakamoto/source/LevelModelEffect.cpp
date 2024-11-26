@@ -13,7 +13,6 @@
 #include "motion.h"
 #include "input.h"
 #include "sound.h"
-#include "Effect.h"
 #include "game.h"
 #include "time.h"
 #include "camera.h"

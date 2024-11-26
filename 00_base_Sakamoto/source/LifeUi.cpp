@@ -69,9 +69,6 @@ HRESULT CLifeUi::Init(void)
 	//テクスチャ設定
 	SetTexture("data\\TEXTURE\\player\\life.png");
 
-	//新しくcppを作成した時は新しいTYPEを列挙に追加して指定すること
-	SetType(CObject::TYPE_SAMPLE);
-
 	m_pNumber = CNumber::Create();
 
 	return S_OK;

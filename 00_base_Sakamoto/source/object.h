@@ -7,61 +7,39 @@
 #ifndef _OBJECT_H_
 #define _OBJECT_H_
 
-//マクロ定義
-#define MAX_OBJECT (8102)	//オブジェクトの最大数
-#define PRIORITY_MAX (8)	//描画順の最大数
-
 class CObject
 {
 public:
-	enum TYPE
+
+	// オブジェクトの種類
+	enum OBJECT_TYPE
 	{
-		TYPE_NONE = 0,
-		TYPE_SAMPLE,
-		TYPE_OBJECT2D,
-		TYPE_PLAYER2D,
-		TYPE_PLAYER3D,
-		TYPE_ENEMY3D,
-		TYPE_FIRE,
-		TYPE_EXPLOSION,
-		TYPE_EFFECT,
-		TYPE_PARTICLE,
-		TYPE_TIME,
-		TYPE_NUMBER,
-		TYPE_BREAKBLOCK3D,
-		TYPE_TUTORIALUI,
-		TYPE_FG,
-		TYPE_BLOCK,
-		TYPE_MAPCHECKPOINT,
-		TYPE_PLAYEREFFECT,
-		TYPE_BOSS,
-		TYPE_CUBEBLOCK,
-		TYPE_CUBECOLL,
-		TYPE_CUBEDAMEGE,
-		TYPE_CUBEEFFECT,
-		TYPE_CUBESPIN,
-		TYPE_LOG,
-		TYPE_2DUI,
-		TYPE_3DUI,
-		TYPE_MAPMODEL,
-		TYPE_FIRESTYLE,
-		TYPE_STAIR,
-		TYPE_GIMMICK,
-		TYPE_BOX,
-		TYPE_OBJMESHFIELD,
-		TYPE_ARROW,
-		TYPE_DEBRIS,
-		TYPE_DEVIL,
-		TYPE_BOWABOWA,
-		TYPE_CROSS,
-		TYPE_SCROLLALLOW,
-		TYPE_DEVILHOLE,
-		TYPE_DEVILKEY,
-		TYPE_BIBLE,
-		TYPE_RAILBLOCK,
-		TYPE_RAIL,
-		TYPE_SOFTCREAM,
-		TYPE_FRIEDEGG,
+		TYPE_NONE = 0,			// 使用禁止
+		TYPE_OBJECT2D,			// オブジェクト2D
+		TYPE_PLAYER3D,			// 3Dのプレイヤー
+		TYPE_ENEMY3D,			// 3Dの敵
+		TYPE_FIRE,				// 炎
+		TYPE_TIME,				// 時間
+		TYPE_NUMBER,			// 数字
+		TYPE_TUTORIALUI,		// チュートリアルUI
+		TYPE_BLOCK,				// ブロック
+		TYPE_PLAYEREFFECT,		// プレイヤーのエフェクト
+		TYPE_CUBEBLOCK,			// キューブ
+		TYPE_CUBEEFFECT,		// キューブのエフェクト
+		TYPE_2DUI,				// 2DのUI
+		TYPE_MAPMODEL,			// マップ上のモデル
+		TYPE_OBJMESHFIELD,		// フィールド
+		TYPE_DEVIL,				// デビル
+		TYPE_BOWABOWA,			// ボワボワ
+		TYPE_CROSS,				// クロス
+		TYPE_SCROLLALLOW,		// 矢印
+		TYPE_DEVILHOLE,			// デビルホール
+		TYPE_DEVILKEY,			// デビルホールにはめるやつ
+		TYPE_BIBLE,				// 聖書
+		TYPE_RAILBLOCK,			// 動くブロック
+		TYPE_RAIL,				// レール
+		TYPE_SOFTCREAM,			// ソフトクリーム
+		TYPE_FRIEDEGG,			// 目玉焼き
 		TYPE_MAX,
 	};
 
@@ -75,7 +53,7 @@ public:
 	};
 	
 	CObject(int nPriority = 3);
-	~CObject();
+	virtual ~CObject();
 
 	static void ReleaseAll(void);
 	static void UpdateAll(void);
@@ -95,8 +73,8 @@ public:
 	void SetDeathFlag(bool Set) { m_bDeath = Set; }
 	bool GetDeathFlag(void) { return m_bDeath; }
 
-	void SetType(TYPE type) { m_type = type; }
-	TYPE GetType(void) { return m_type; }
+	void SetType(OBJECT_TYPE type) { m_type = type; }
+	OBJECT_TYPE GetType(void) { return m_type; }
 	virtual D3DXVECTOR3 GetPos(void) { return D3DXVECTOR3(0.0f, 0.0f, 0.0f); }
 	virtual D3DXVECTOR3 GetPosOld(void) { return D3DXVECTOR3(0.0f, 0.0f, 0.0f); }
 	virtual void HitDamage(float Damage) {}
@@ -133,7 +111,7 @@ private:
 	static bool m_bLevelStop;				//レベルアップ時のポーズ
 	bool m_bLevelUI;						//レベルアップ時のUI
 	bool m_Appear;							//表示状態かどうか
-	TYPE m_type;							//オブジェクトの種類
+	OBJECT_TYPE m_type;							//オブジェクトの種類
 };
 
 #endif
