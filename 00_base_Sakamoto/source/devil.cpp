@@ -33,6 +33,8 @@
 #include "scrollarrow.h"
 #include "fire.h"
 #include "Scene.h"
+#include "tile.h"
+#include "wall.h"
 
 //===========================================
 // 定数定義
@@ -1099,6 +1101,12 @@ void CDevil::ObjectScroll(D3DXVECTOR3 Move)
 
 	// ファイアボールのスクロール
 	FireScroll(Move, m_GritSize);
+
+	// 床のスクロール
+	TileScroll(Move, m_GritSize);
+
+	// 壁のスクロール
+	WallScroll(Move, m_GritSize);
 }
 
 //====================================================================
@@ -1113,14 +1121,19 @@ void CDevil::CrossScroll(D3DXVECTOR3 Move, float GritSize)
 	// 十字架のリストの中身を確認する
 	for (CCross* pCross : list)
 	{
+		// マップ変数
 		D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
+		
+		// オブジェ変数
 		D3DXVECTOR3 pos = pCross->GetPos();
 		D3DXVECTOR3 Size = pCross->GetSize();
 
+		// 移動	
 		pos += Move;
 
+		// x座標判定
 		if (Move.x > 0.0f)
-		{
+		{// 移動量がプラス
 			if (m_DevilPos.x + MapSize.x < pos.x - GritSize)
 			{
 				pos.x = -MapSize.x + m_DevilPos.x - GritSize + Move.x;
@@ -1133,8 +1146,10 @@ void CDevil::CrossScroll(D3DXVECTOR3 Move, float GritSize)
 				pos.x = MapSize.x + m_DevilPos.x + GritSize + Move.x;
 			}
 		}
+
+		// z座標判定
 		if (Move.z > 0.0f)
-		{
+		{// 移動量がプラス
 			if (m_DevilPos.z + MapSize.z < pos.z - GritSize)
 			{
 				pos.z = -MapSize.z + m_DevilPos.z - GritSize + Move.z;
@@ -1278,6 +1293,53 @@ void CDevil::FireScroll(D3DXVECTOR3 Move, float GritSize)
 		fire->SetPos(pos);
 	}
 }
+
+//====================================================================
+// 床のスクロール
+//====================================================================
+void CDevil::TileScroll(D3DXVECTOR3 Move, float GritSize)
+{
+	// 十字架のリスト構造が無ければ抜ける
+	if (CTile::GetList() == nullptr) { return; }
+	std::list<CTile*> list = CTile::GetList()->GetList();    // リストを取得
+
+	// キューブブロックのリストの中身を確認する
+	for (CTile* pTile : list)
+	{
+		// 縦横のナンバーと高さを設定する
+		D3DXVECTOR3 pos = INITVECTOR3;
+
+		//グリット番号を位置に変換
+		pos = pTile->GetGrid().ToWorld();
+		pos.y = 0.0f;
+
+		pTile->SetPos(pos);
+	}
+}
+
+//====================================================================
+// 壁のスクロール
+//====================================================================
+void CDevil::WallScroll(D3DXVECTOR3 Move, float GritSize)
+{
+	// 十字架のリスト構造が無ければ抜ける
+	if (CWall::GetList() == nullptr) { return; }
+	std::list<CWall*> list = CWall::GetList()->GetList();    // リストを取得
+
+	// キューブブロックのリストの中身を確認する
+	for (CWall* pWall : list)
+	{
+		// 縦横のナンバーと高さを設定する
+		D3DXVECTOR3 pos = INITVECTOR3;
+
+		//グリット番号を位置に変換
+		pos = pWall->GetGrid().ToWorld();
+		pos.y = 0.0f;
+
+		pWall->SetPos(pos);
+	}
+}
+
 
 //====================================================================
 // プレイヤーのスクロール

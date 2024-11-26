@@ -102,6 +102,7 @@
     <ClCompile Include="source\title.cpp" />
     <ClCompile Include="source\tutorial.cpp" />
     <ClCompile Include="source\useful.cpp" />
+    <ClCompile Include="source\wall.cpp" />
     <ClCompile Include="source\Xmodel.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -188,6 +189,7 @@
     <ClInclude Include="source\title.h" />
     <ClInclude Include="source\tutorial.h" />
     <ClInclude Include="source\useful.h" />
+    <ClInclude Include="source\wall.h" />
     <ClInclude Include="source\Xmodel.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

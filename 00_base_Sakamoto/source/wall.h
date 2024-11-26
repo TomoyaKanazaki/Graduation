@@ -1,26 +1,26 @@
 //============================================
 //
-//	床モデルの処理 [tile.h]
+//	壁モデルの処理 [wall.h]
 //	Author:Satone Shion
 //
 //============================================
-#ifndef _TILE_H_
-#define _TILE_H_
+#ifndef _WALL_H_
+#define _WALL_H_
 
 #include "main.h"
 #include "objectX.h"
 #include "MapSystem.h"
 
-//床クラス
-class CTile : public CObjectX
+//壁クラス
+class CWall : public CObjectX
 {
 public:
 
-	CTile(int nPriority = 3);
-	CTile(int nPriority, CMapSystem::GRID gridCenter);
-	~CTile();
+	CWall(int nPriority = 3);
+	CWall(int nPriority, CMapSystem::GRID gridCenter);
+	~CWall();
 
-	static CTile* Create(CMapSystem::GRID gridCenter);
+	static CWall* Create(CMapSystem::GRID gridCenter);
 
 	HRESULT Init(char* pModelName);
 	void Uninit(void);
@@ -30,17 +30,17 @@ public:
 	CMapSystem::GRID GetGrid(void) { return m_Grid; }	// グリッド取得
 
 	// 静的メンバ関数
-	static CListManager<CTile>* GetList(void); // リスト取得
+	static CListManager<CWall>* GetList(void); // リスト取得
 
 private:
 
 	CMapSystem::GRID m_Grid;	//グリット番号
 
 	// 静的メンバ変数
-	static CListManager<CTile>* m_pList; // オブジェクトリスト
+	static CListManager<CWall>* m_pList; // オブジェクトリスト
 
 	// メンバ変数
-	CListManager<CTile>::AIterator m_iterator; // イテレーター
+	CListManager<CWall>::AIterator m_iterator; // イテレーター
 
 };
 #endif
