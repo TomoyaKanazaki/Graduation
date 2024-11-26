@@ -18,7 +18,7 @@ public:
 	CShadow(int nPriority = 7);
 	~CShadow();
 
-	static CShadow* Create(const D3DXVECTOR3& pos, const float fWidth, const float fHeight, const float fLimit = -1.0f);
+	static CShadow* Create(const D3DXVECTOR3& pos, const D3DXVECTOR3& size, const float fLimit = -1.0f);
 
 	HRESULT Init();
 	void Uninit();

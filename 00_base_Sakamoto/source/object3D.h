@@ -31,10 +31,10 @@ public:
 	void SetAnim(void);																		//テクスチャ座標の設定
 	void SetAnim(D3DXVECTOR2 Tex);															//テクスチャ座標の設定
 	void SetColor(D3DXCOLOR col);															//頂点カラーの設定
-	void SetColorA(float A) { m_Color.a = A; SetColor(m_Color); }							//頂点不透明度の設定
+	void SetAlpha(float A) { m_Color.a = A; SetColor(m_Color); }							//頂点不透明度の設定
 	void SetTexture(const char *name);
 
-	void SetpVtx(float Width, float Height);
+	void SetVtx(const D3DXVECTOR3& size);
 
 	void SetPos(D3DXVECTOR3 pos) { m_pos = pos; }
 	D3DXVECTOR3 GetPos(void) { return m_pos; }
@@ -42,10 +42,8 @@ public:
 	D3DXVECTOR3 GetPosOld(void) { return m_posOld; }
 	void SetRot(D3DXVECTOR3 rot) { m_rot = rot; }
 	D3DXVECTOR3 GetRot(void) { return m_rot; }
-	void SetWidth(float Width) { m_fWidth = Width; }
-	float GetWidth(void) { return m_fWidth; }
-	void SetHeight(float Height) { m_Height = Height; }
-	float GetHeight(void) { return m_Height; }
+	void SetSize(D3DXVECTOR3 size) { m_size = size; }
+	D3DXVECTOR3 GetSize(void) { return m_size; }
 	void SetAddDorw(bool Set) { m_AddDarw = Set; }
 	bool GetAddDorw(void) { return m_AddDarw; }
 	void SetLighting(bool Set) { m_Lighting = Set; }
@@ -66,13 +64,12 @@ protected:
 
 private:
 	int m_nIdxTexture;
-	float m_fWidth;							//幅
-	float m_Height;							//高さ
 	bool m_AddDarw;							//加算合成
 	bool m_Lighting;						//ライティング
 	D3DXVECTOR3 m_pos;						//現在の位置
 	D3DXVECTOR3 m_posOld;					//過去の位置
 	D3DXVECTOR3 m_rot;						//向き
+	D3DXVECTOR3 m_size;						//サイズ
 	D3DXVECTOR2 m_Scroll;					//スクロールアニメーション
 	D3DXVECTOR2 m_ScrollSpeed;				//スクロールの速度
 	D3DXCOLOR m_Color;						//色

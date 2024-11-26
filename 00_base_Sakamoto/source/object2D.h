@@ -46,7 +46,7 @@ public:
 	virtual int GetIdx(void) { return m_nIdxTexture; }
 	void SetAddDraw(bool Set) { m_AddDarw = Set; }
 	void SetTargetTexture(LPDIRECT3DTEXTURE9 Texture) { m_pTargetTexture = Texture; }
-	void SetMultiTarget(bool Set) { MultiTarget = Set; }
+	void SetMultiTarget(bool Set) { m_MultiTarget = Set; }
 	void SetNULL(void);
 
 protected:
@@ -63,7 +63,7 @@ private:
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;		//頂点バッファへのポインタ
 	LPDIRECT3DTEXTURE9 m_pTexture;			//テクスチャへのポインタ
 	LPDIRECT3DTEXTURE9 m_pTargetTexture;	//テクスチャへのポインタ
-	bool MultiTarget;						//マルチターゲットレンダリングをオンにするかどうか
+	bool m_MultiTarget;						//マルチターゲットレンダリングをオンにするかどうか
 
 };
 #endif

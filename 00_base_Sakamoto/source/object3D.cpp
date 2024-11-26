@@ -12,17 +12,15 @@
 #include "objmeshField.h"
 #include "texture.h"
 
-#define POLYDON_SIZE (10.0f)
 
 //====================================================================
 //コンストラクタ
 //====================================================================
-CObject3D::CObject3D(int nPriority) :CObject(nPriority)
+CObject3D::CObject3D(int nPriority) :CObject(nPriority),
+m_size(INITVECTOR3)
 {
 	m_pTexture = nullptr;
 	m_pVtxBuff = nullptr;
-	m_fWidth = POLYDON_SIZE;
-	m_Height = POLYDON_SIZE;
 	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_Color = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
@@ -87,11 +85,11 @@ HRESULT CObject3D::Init(void)
 	//頂点バッファをロックし、両店情報へのポインタを所得
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
-	//頂点座標の設定 
-	pVtx[0].pos = D3DXVECTOR3(-m_fWidth * 0.5f, 0.0f, +m_Height * 0.5f);
-	pVtx[1].pos = D3DXVECTOR3(+m_fWidth * 0.5f, 0.0f, +m_Height * 0.5f);
-	pVtx[2].pos = D3DXVECTOR3(-m_fWidth * 0.5f, 0.0f, -m_Height * 0.5f);
-	pVtx[3].pos = D3DXVECTOR3(+m_fWidth * 0.5f, 0.0f, -m_Height * 0.5f);
+	//頂点座標の設定
+	pVtx[0].pos = D3DXVECTOR3(-m_size.x * 0.5f, m_size.z * 0.5f, 0.0f);
+	pVtx[1].pos = D3DXVECTOR3(m_size.x * 0.5f, m_size.z * 0.5f, 0.0f);
+	pVtx[2].pos = D3DXVECTOR3(-m_size.x * 0.5f, -m_size.z * 0.5f, 0.0f);
+	pVtx[3].pos = D3DXVECTOR3(m_size.x * 0.5f, -m_size.z * 0.5f, 0.0f);
 
 	//法線ベクトルの設定
 	pVtx[0].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
@@ -266,11 +264,11 @@ void CObject3D::SetVerTex(void)
 	//頂点バッファをロックし、両店情報へのポインタを所得
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
-	//頂点座標の設定 
-	pVtx[0].pos = D3DXVECTOR3(-m_fWidth * 0.5f, +m_Height * 0.5f, 0.0f);
-	pVtx[1].pos = D3DXVECTOR3(+m_fWidth * 0.5f, +m_Height * 0.5f, 0.0f);
-	pVtx[2].pos = D3DXVECTOR3(-m_fWidth * 0.5f, -m_Height * 0.5f, 0.0f);
-	pVtx[3].pos = D3DXVECTOR3(+m_fWidth * 0.5f, -m_Height * 0.5f, 0.0f);
+	//頂点座標の設定
+	pVtx[0].pos = D3DXVECTOR3(-m_size.x * 0.5f, m_size.z * 0.5f, 0.0f);
+	pVtx[1].pos = D3DXVECTOR3(m_size.x * 0.5f, m_size.z * 0.5f, 0.0f);
+	pVtx[2].pos = D3DXVECTOR3(-m_size.x * 0.5f, -m_size.z * 0.5f, 0.0f);
+	pVtx[3].pos = D3DXVECTOR3(m_size.x * 0.5f, -m_size.z * 0.5f, 0.0f);
 
 	//頂点バッファをアンロックする
 	m_pVtxBuff->Unlock();
@@ -352,20 +350,19 @@ void CObject3D::SetTexture(const char *name)
 //====================================================================
 // 頂点座標の設定
 //====================================================================
-void CObject3D::SetpVtx(float Width, float Height)
+void CObject3D::SetVtx(const D3DXVECTOR3& size)
 {
-	m_fWidth = Width;
-	m_Height = Height;
+	m_size = size;
 	VERTEX_3D* pVtx;
 
 	//頂点バッファをロックし頂点情報へのポインタを取得
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
 	//頂点座標の設定
-	pVtx[0].pos = D3DXVECTOR3(-m_fWidth, 0.0f, +m_Height);
-	pVtx[1].pos = D3DXVECTOR3(+m_fWidth, 0.0f, +m_Height);
-	pVtx[2].pos = D3DXVECTOR3(-m_fWidth, 0.0f, -m_Height);
-	pVtx[3].pos = D3DXVECTOR3(+m_fWidth, 0.0f, -m_Height);
+	pVtx[0].pos = D3DXVECTOR3(-m_size.x * 0.5f, m_size.z * 0.5f, 0.0f);
+	pVtx[1].pos = D3DXVECTOR3(m_size.x * 0.5f, m_size.z * 0.5f, 0.0f);
+	pVtx[2].pos = D3DXVECTOR3(-m_size.x * 0.5f, -m_size.z * 0.5f, 0.0f);
+	pVtx[3].pos = D3DXVECTOR3(m_size.x * 0.5f, -m_size.z * 0.5f, 0.0f);
 
 	//法線ベクトルの設定
 	pVtx[0].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
