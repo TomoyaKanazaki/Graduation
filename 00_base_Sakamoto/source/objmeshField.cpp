@@ -287,7 +287,7 @@ void CObjmeshField::Draw(void)
 	//ƒeƒNƒXƒ`ƒƒ‚ÌÝ’è
 	m_pDevice->SetTexture(0, pTexture->GetAddress(GetIdx()));
 
-	//ƒ|ƒŠƒSƒ“‚Ì•`‰æ
+	////ƒ|ƒŠƒSƒ“‚Ì•`‰æ
 	//m_pDevice->DrawIndexedPrimitive(D3DPT_TRIANGLESTRIP,
 	//	0,
 	//	0,
