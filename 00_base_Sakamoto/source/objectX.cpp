@@ -92,7 +92,7 @@ HRESULT CObjectX::Init(const char* pModelName)
 	pXModel->GetXModelInfo(&m_pBuffMat, &m_dwNumMat, &m_pMesh, m_IdxModelNumber);
 
 	// ƒ‚ƒfƒ‹î•ñ‚ðŽæ“¾
-	CXModel::XModel* pXmodel = CManager::GetInstance()->GetXModel()->GetXModel(m_IdxModelNumber);
+	CManager::GetInstance()->GetXModel()->GetXModel(m_IdxModelNumber);
 
 	CTexture* pTexture = CManager::GetInstance()->GetTexture();
 

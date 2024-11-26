@@ -267,7 +267,6 @@ void CTutorial::Update(void)
 	//デバイスの取得
 	LPDIRECT3DDEVICE9 m_pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
 	CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
-	CInputJoypad* pInputJoypad = CManager::GetInstance()->GetInputJoyPad();
 
 	DebugProc::Print(DebugProc::POINT_LEFT, "ゲームスピード : %f\n", CManager::GetInstance()->GetGameSpeed());
 
@@ -425,12 +424,6 @@ void CTutorial::StageClear(int Stage)
 //====================================================================
 void CTutorial::EventUpdate(void)
 {
-	
-	CCamera* pCamera = CManager::GetInstance()->GetCamera();
-
-	CInputMouse* pMouse = CManager::GetInstance()->GetInputMouse();
-	float EventFinish = 0.0f;
-
 	if (m_nEventNumber == 0) //=====================================================================
 	{
 		switch (m_nEventWave)
@@ -495,9 +488,6 @@ void CTutorial::LoadStageRailBlock(const char* pFilename)
 
 	if (pFile != nullptr)
 	{//ファイルが開けた場合
-
-		char Getoff[32] = {};
-		char boolLife[32] = {};
 		char aString[128] = {};			//ゴミ箱
 		char aStartMessage[32] = {};	//スタートメッセージ
 		char aSetMessage[32] = {};		//セットメッセージ
@@ -508,7 +498,6 @@ void CTutorial::LoadStageRailBlock(const char* pFilename)
 		{
 			CMapSystem* pMapSystem = CMapSystem::GetInstance();
 			D3DXVECTOR3 MapSystemPos = pMapSystem->GetMapPos();
-			float MapSystemGritSize = pMapSystem->GetGritSize() * 0.5f;
 
 			while (1)
 			{

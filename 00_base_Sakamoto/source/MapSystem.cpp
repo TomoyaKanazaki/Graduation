@@ -21,7 +21,7 @@ namespace
 }
 
 //静的メンバ変数宣言
-CMapSystem* CMapSystem::pMapSystem = nullptr;
+CMapSystem* CMapSystem::m_pMapSystem = nullptr;
 bool CMapSystem::m_nMapGrit[NUM_WIGHT][NUM_HEIGHT] = {false};
 std::vector<std::tuple<>> CMapSystem::m_nData;	// 複数の値を保持
 
@@ -60,11 +60,12 @@ CMapSystem::~CMapSystem()
 //====================================================================
 CMapSystem* CMapSystem::GetInstance(void)
 {
-	if (pMapSystem == nullptr)
+	if (m_pMapSystem == nullptr)
 	{
-		pMapSystem = new CMapSystem;
+		m_pMapSystem = new CMapSystem;
+		m_pMapSystem->Init();
 	}
-	return pMapSystem;
+	return m_pMapSystem;
 }
 
 //====================================================================
@@ -76,7 +77,7 @@ void CMapSystem::Init()
 	{
 		for (int nCntH = 0; nCntH < NUM_HEIGHT; nCntH++)
 		{
-			pMapSystem->m_nMapGrit[nCntW][nCntH] = false;
+			m_pMapSystem->m_nMapGrit[nCntW][nCntH] = false;
 		}
 	}
 
@@ -101,10 +102,10 @@ void CMapSystem::Init()
 //====================================================================
 void CMapSystem::Uninit(void)
 {
-	if (pMapSystem != nullptr)
+	if (m_pMapSystem != nullptr)
 	{
-		delete pMapSystem;
-		pMapSystem = nullptr;
+		delete m_pMapSystem;
+		m_pMapSystem = nullptr;
 	}
 
 	delete AStar::Generator::GetInstance();
@@ -256,8 +257,6 @@ void CMapSystem::Load(const char* pFilename)
 	if (pFile != nullptr)
 	{//ファイルが開けた場合
 
-		char Getoff[32] = {};
-		char boolLife[32] = {};
 		char aString[128] = {};			//ゴミ箱
 		char aStartMessage[32] = {};	//スタートメッセージ
 		char aSetMessage[32] = {};		//セットメッセージ
@@ -266,9 +265,9 @@ void CMapSystem::Load(const char* pFilename)
 		fscanf(pFile, "%s", &aStartMessage[0]);
 		if (strcmp(&aStartMessage[0], "STARTSETSTAGE") == 0)
 		{
-			CMapSystem* pMapSystem = CMapSystem::GetInstance();
-			D3DXVECTOR3 MapSystemPos = pMapSystem->GetMapPos();
-			float MapSystemGritSize = pMapSystem->GetGritSize() * 0.5f;
+			m_pMapSystem = CMapSystem::GetInstance();
+			D3DXVECTOR3 MapSystemPos = m_pMapSystem->GetMapPos();
+			float MapSystemGritSize = m_pMapSystem->GetGritSize() * 0.5f;
 			D3DXVECTOR3 size = D3DXVECTOR3(MapSystemGritSize, 15.0f, MapSystemGritSize);
 
 			while (1)
@@ -277,31 +276,31 @@ void CMapSystem::Load(const char* pFilename)
 				if (strcmp(&aSetMessage[0], "STARTSETBLOCK") == 0)
 				{
 					fscanf(pFile, "%s", &aString[0]);
-					fscanf(pFile, "%d", &pMapSystem->m_gridCenter.x);
+					fscanf(pFile, "%d", &m_pMapSystem->m_gridCenter.x);
 
 					fscanf(pFile, "%s", &aString[0]);
-					fscanf(pFile, "%d", &pMapSystem->m_gridCenter.z);
+					fscanf(pFile, "%d", &m_pMapSystem->m_gridCenter.z);
 
 					fscanf(pFile, "%s", &aString[0]);
 					fscanf(pFile, "%s", &aString[0]);
 
-					pMapSystem->SetGritBool(pMapSystem->m_gridCenter.x, pMapSystem->m_gridCenter.z, true);
+					m_pMapSystem->SetGritBool(m_pMapSystem->m_gridCenter.x, m_pMapSystem->m_gridCenter.z, true);
 
 					// キューブブロックの生成
-					CCubeBlock* pBlock = CCubeBlock::Create(pMapSystem->m_gridCenter, size); // GRIDとグリッドサイズを引数にする
+					CCubeBlock::Create(m_pMapSystem->m_gridCenter, size); // GRIDとグリッドサイズを引数にする
 
 					// 削除
 					{
 						//pBlock->SetWightNumber(WightNumber); // GRIDで設定(不要)
 						//pBlock->SetHeightNumber(HeightNumber); // GRIDで設定(不要)
-						//pBlock->SetPos(D3DXVECTOR3(MapSystemPos.x + pMapSystem->m_gridCenter.x * 100.0f, 50.0f, MapSystemPos.z - pMapSystem->m_gridCenter.z * 100.0f)); // GRIDをもとに内部で計算
+						//pBlock->SetPos(D3DXVECTOR3(MapSystemPos.x + m_pMapSystem->m_gridCenter.x * 100.0f, 50.0f, MapSystemPos.z - m_pMapSystem->m_gridCenter.z * 100.0f)); // GRIDをもとに内部で計算
 						//pBlock->SetSize(D3DXVECTOR3(MapSystemGritSize, MapSystemGritSize, MapSystemGritSize)); // xzはグリッドサイズが必要、ｙは内部で定数化
 						//pBlock->SetTexture(&aString[0]); // 内部で定数化
 					}
 					// 削除
 
 					// 経路探索用情報の設定
-					generator->addCollision({ pMapSystem->m_gridCenter.x, pMapSystem->m_gridCenter.z }); // 通過不可地点を追加
+					generator->addCollision({ m_pMapSystem->m_gridCenter.x, m_pMapSystem->m_gridCenter.z }); // 通過不可地点を追加
 
 					fscanf(pFile, "%s", &aEndMessage[0]);
 				}

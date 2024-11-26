@@ -75,7 +75,7 @@ public:
 	};
 	
 	CObject(int nPriority = 3);
-	~CObject();
+	virtual ~CObject();
 
 	static void ReleaseAll(void);
 	static void UpdateAll(void);
