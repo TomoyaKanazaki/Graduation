@@ -34,6 +34,7 @@
 #include "fire.h"
 #include "Scene.h"
 #include "tile.h"
+#include "wall.h"
 
 //===========================================
 // 定数定義
@@ -1103,6 +1104,9 @@ void CDevil::ObjectScroll(D3DXVECTOR3 Move)
 
 	// 床のスクロール
 	TileScroll(Move, m_GritSize);
+
+	// 壁のスクロール
+	WallScroll(Move, m_GritSize);
 }
 
 //====================================================================
@@ -1312,6 +1316,30 @@ void CDevil::TileScroll(D3DXVECTOR3 Move, float GritSize)
 		pTile->SetPos(pos);
 	}
 }
+
+//====================================================================
+// 壁のスクロール
+//====================================================================
+void CDevil::WallScroll(D3DXVECTOR3 Move, float GritSize)
+{
+	// 十字架のリスト構造が無ければ抜ける
+	if (CWall::GetList() == nullptr) { return; }
+	std::list<CWall*> list = CWall::GetList()->GetList();    // リストを取得
+
+	// キューブブロックのリストの中身を確認する
+	for (CWall* pWall : list)
+	{
+		// 縦横のナンバーと高さを設定する
+		D3DXVECTOR3 pos = INITVECTOR3;
+
+		//グリット番号を位置に変換
+		pos = pWall->GetGrid().ToWorld();
+		pos.y = 20.0f;
+
+		pWall->SetPos(pos);
+	}
+}
+
 
 //====================================================================
 // プレイヤーのスクロール

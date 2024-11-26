@@ -1,37 +1,32 @@
 //============================================
 //
-//	床モデルの処理 [tile.cpp]
+//	壁モデルの処理 [wall.cpp]
 //	Author:Satone Shion
 //
 //============================================
-#include "tile.h"
+#include "wall.h"
 #include "renderer.h"
 #include "manager.h"
-#include "texture.h"
-#include "XModel.h"
-#include "player.h"
 #include "objmeshField.h"
 #include "game.h"
-#include "tutorial.h"
 
 //==========================================
 //  定数定義
 //==========================================
 namespace
 {
-	//const D3DXVECTOR3 SAMPLE_SIZE = D3DXVECTOR3(50.0f, 0.0f, 50.0f);		//当たり判定
-	//const int DIRECTION = 4;	// デビルホールの最大方向
+	
 }
 
 //====================================================================
 //静的メンバ変数宣言
 //====================================================================
-CListManager<CTile>* CTile::m_pList = nullptr; // オブジェクトリスト
+CListManager<CWall>* CWall::m_pList = nullptr; // オブジェクトリスト
 
 //====================================================================
 //コンストラクタ
 //====================================================================
-CTile::CTile(int nPriority) : CObjectX(nPriority)
+CWall::CWall(int nPriority) : CObjectX(nPriority)
 {
 	SetSize(INITVECTOR3);
 	SetPos(INITVECTOR3);
@@ -43,7 +38,7 @@ CTile::CTile(int nPriority) : CObjectX(nPriority)
 //====================================================================
 //コンストラクタ(オーバーロード)
 //====================================================================
-CTile::CTile(int nPriority, CMapSystem::GRID gridCenter) : CObjectX(nPriority)
+CWall::CWall(int nPriority, CMapSystem::GRID gridCenter) : CObjectX(nPriority)
 {
 	SetSize(INITVECTOR3);
 	SetPos(INITVECTOR3);
@@ -55,7 +50,7 @@ CTile::CTile(int nPriority, CMapSystem::GRID gridCenter) : CObjectX(nPriority)
 //====================================================================
 //デストラクタ
 //====================================================================
-CTile::~CTile()
+CWall::~CWall()
 {
 
 }
@@ -63,18 +58,18 @@ CTile::~CTile()
 //====================================================================
 //生成処理
 //====================================================================
-CTile* CTile::Create(CMapSystem::GRID gridCenter)
+CWall* CWall::Create(CMapSystem::GRID gridCenter)
 {
-	CTile* pSample = nullptr;
+	CWall* pSample = nullptr;
 
 	if (pSample == nullptr)
 	{
 		// 床の生成
-		pSample = new CTile(3, gridCenter);
+		pSample = new CWall(3, gridCenter);
 	}
 
 	// 床の初期化処理
-	if (FAILED(pSample->Init("data\\MODEL\\floor.x")))
+	if (FAILED(pSample->Init("data\\MODEL\\wall.x")))
 	{//初期化処理が失敗した場合
 		return nullptr;
 	}
@@ -85,7 +80,7 @@ CTile* CTile::Create(CMapSystem::GRID gridCenter)
 //====================================================================
 //初期化処理
 //====================================================================
-HRESULT CTile::Init(char* pModelName)
+HRESULT CWall::Init(char* pModelName)
 {
 	CMapSystem* pMapSystem = CMapSystem::GetInstance();		// マップシステムの情報
 	D3DXVECTOR3 MapSystemPos = pMapSystem->GetMapPos();
@@ -104,7 +99,7 @@ HRESULT CTile::Init(char* pModelName)
 
 	if (m_pList == nullptr)
 	{// リストマネージャー生成
-		m_pList = CListManager<CTile>::Create();
+		m_pList = CListManager<CWall>::Create();
 		if (m_pList == nullptr) { assert(false); return E_FAIL; }
 	}
 
@@ -117,7 +112,7 @@ HRESULT CTile::Init(char* pModelName)
 //====================================================================
 //終了処理
 //====================================================================
-void CTile::Uninit(void)
+void CWall::Uninit(void)
 {
 	// リストから自身のオブジェクトを削除
 	m_pList->DelList(m_iterator);
@@ -135,7 +130,7 @@ void CTile::Uninit(void)
 //====================================================================
 //更新処理
 //====================================================================
-void CTile::Update(void)
+void CWall::Update(void)
 {
 	//頂点情報の更新
 	CObjectX::Update();
@@ -144,7 +139,7 @@ void CTile::Update(void)
 //====================================================================
 //描画処理
 //====================================================================
-void CTile::Draw(void)
+void CWall::Draw(void)
 {
 	CObjectX::Draw();
 }
@@ -152,7 +147,7 @@ void CTile::Draw(void)
 //====================================================================
 //リスト取得
 //====================================================================
-CListManager<CTile>* CTile::GetList(void)
+CListManager<CWall>* CWall::GetList(void)
 {
 	return m_pList;
 }

@@ -112,6 +112,7 @@ private:
 	void PlayerScroll(D3DXVECTOR3 Move, float GritSize);	// プレイヤーのスクロール
 	void FireScroll(D3DXVECTOR3 Move, float GritSize);	// ファイアボールのスクロール
 	void TileScroll(D3DXVECTOR3 Move, float GritSize);	// 床のスクロール
+	void WallScroll(D3DXVECTOR3 Move, float GritSize);	// 壁のスクロール
 
 	void GritScroll(D3DXVECTOR3 Move);		//グリットのスクロール
 	void CollisionPressPlayer(CPlayer* pPlayer, D3DXVECTOR3 pos, D3DXVECTOR3 Size);	//プレイヤーが潰される時の処理
