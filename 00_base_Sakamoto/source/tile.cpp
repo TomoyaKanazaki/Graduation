@@ -1,10 +1,10 @@
 //============================================
 //
-//	デビルホールの処理 [Tile.cpp]
-//	Author:sakamoto kai
+//	デビルホールの処理 [tile.cpp]
+//	Author:Satone Shion
 //
 //============================================
-#include "Tile.h"
+#include "tile.h"
 #include "renderer.h"
 #include "manager.h"
 #include "texture.h"
@@ -35,18 +35,27 @@ CTile::CTile(int nPriority) : CObjectX(nPriority)
 {
 	SetSize(INITVECTOR3);
 	SetPos(INITVECTOR3);
-	m_nIdxXModel = 0;			//マテリアルの数
+	//m_nIdxXModel = 0;			//マテリアルの数
 	m_Grid.x = 0;
 	m_Grid.z = 0;
-	m_pos = INITVECTOR3;	
-	m_posOld = INITVECTOR3;
-	m_move = INITVECTOR3;
 	
 	//for (int nCnt = 0; nCnt < DIRECTION; nCnt++)
 	//{
 	//	m_bSet[nCnt] = false;			//上下左右の穴が埋まっているかどうか
 	//	m_pHoleKey[nCnt] = nullptr;		//上下左右の穴を埋めるポリゴン
 	//}
+}
+
+//====================================================================
+//コンストラクタ(オーバーロード)
+//====================================================================
+CTile::CTile(int nPriority, CMapSystem::GRID gridCenter) : CObjectX(nPriority)
+{
+	SetSize(INITVECTOR3);
+	SetPos(INITVECTOR3);
+	//m_nIdxXModel = 0;			//マテリアルの数
+	m_Grid.x = gridCenter.x;	// グリッドの位置X
+	m_Grid.z = gridCenter.z;	// グリッドの位置Z
 }
 
 //====================================================================
@@ -60,18 +69,18 @@ CTile::~CTile()
 //====================================================================
 //生成処理
 //====================================================================
-CTile* CTile::Create(char* pModelName)
+CTile* CTile::Create(CMapSystem::GRID gridCenter)
 {
 	CTile* pSample = nullptr;
 
 	if (pSample == nullptr)
 	{
-		//オブジェクト2Dの生成
-		pSample = new CTile();
+		// 床の生成
+		pSample = new CTile(3, gridCenter);
 	}
 
-	//オブジェクトの初期化処理
-	if (FAILED(pSample->Init(pModelName)))
+	// 床の初期化処理
+	if (FAILED(pSample->Init("data\\MODEL\\floor.x")))
 	{//初期化処理が失敗した場合
 		return nullptr;
 	}
@@ -84,12 +93,20 @@ CTile* CTile::Create(char* pModelName)
 //====================================================================
 HRESULT CTile::Init(char* pModelName)
 {
-	SetType(CObject::TYPE_DEVILHOLE);
+	CMapSystem* pMapSystem = CMapSystem::GetInstance();		// マップシステムの情報
+	D3DXVECTOR3 MapSystemPos = pMapSystem->GetMapPos();
+
+	SetType(CObject::TYPE_TILE);
 
 	CObjectX::Init(pModelName);
 
 	//マップとのマトリックスの掛け合わせをオンにする
 	SetUseMultiMatrix(CGame::GetInstance()->GetMapField()->GetMatrix());
+
+	D3DXVECTOR3 size = GetSize() * 2.0f;		// モデルのサイズ取得
+
+	// 位置設定
+	CObjectX::SetPos(D3DXVECTOR3(MapSystemPos.x + m_Grid.x * size.x, 0.0f, MapSystemPos.z - m_Grid.z * size.z));
 
 	if (m_pList == nullptr)
 	{// リストマネージャー生成
@@ -126,13 +143,6 @@ void CTile::Uninit(void)
 //====================================================================
 void CTile::Update(void)
 {
-	D3DXVECTOR3 pos = GetPos();
-
-	//位置更新
-	pos += m_move;
-
-	SetPos(pos);
-
 	//頂点情報の更新
 	CObjectX::Update();
 }
