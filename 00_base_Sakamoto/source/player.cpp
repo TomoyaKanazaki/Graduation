@@ -111,6 +111,7 @@ m_EggMove(INITVECTOR3),
 m_bInvincible(true),
 m_nInvincibleCount(0),
 m_UseMultiMatrix(nullptr),
+m_nTime(0),
 m_pShadow(nullptr)
 {
 
@@ -658,7 +659,6 @@ D3DXVECTOR3 CPlayer::MoveInputPadKey(D3DXVECTOR3 Move)
 			if ((pInputJoypad->GetPress(CInputJoypad::BUTTON_UP, nCnt) && m_OKU && m_bGritCenter) ||
 				(pInputJoypad->GetPress(CInputJoypad::BUTTON_UP, nCnt) && m_MoveState == MOVE_STATE_DOWN))
 			{
-				CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
 				D3DXMATRIX mat = *GetUseMultiMatrix();
 				D3DXVECTOR3 ef = useful::CalcMatrix(m_pos, m_rot, mat);
 				MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, m_rot);
@@ -673,7 +673,6 @@ D3DXVECTOR3 CPlayer::MoveInputPadKey(D3DXVECTOR3 Move)
 				(pInputJoypad->GetPress(CInputJoypad::BUTTON_DOWN, nCnt) && m_MoveState == MOVE_STATE_UP)) &&
 				pInputJoypad->GetPress(CInputJoypad::BUTTON_UP, nCnt) == false)
 			{
-				CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
 				D3DXMATRIX mat = *GetUseMultiMatrix();
 				D3DXVECTOR3 ef = useful::CalcMatrix(m_pos, m_rot, mat);
 				MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, m_rot);
@@ -687,7 +686,6 @@ D3DXVECTOR3 CPlayer::MoveInputPadKey(D3DXVECTOR3 Move)
 			else if ((pInputJoypad->GetPress(CInputJoypad::BUTTON_LEFT, nCnt) && m_OKL && m_bGritCenter) ||
 				(pInputJoypad->GetPress(CInputJoypad::BUTTON_LEFT, nCnt) && m_MoveState == MOVE_STATE_RIGHT))
 			{
-				CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
 				D3DXMATRIX mat = *GetUseMultiMatrix();
 				D3DXVECTOR3 ef = useful::CalcMatrix(m_pos, m_rot, mat);
 				MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, m_rot);
@@ -702,7 +700,6 @@ D3DXVECTOR3 CPlayer::MoveInputPadKey(D3DXVECTOR3 Move)
 				(pInputJoypad->GetPress(CInputJoypad::BUTTON_RIGHT, nCnt) && m_MoveState == MOVE_STATE_LEFT)) &&
 				pInputJoypad->GetPress(CInputJoypad::BUTTON_LEFT, nCnt) == false)
 			{
-				CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
 				D3DXMATRIX mat = *GetUseMultiMatrix();
 				D3DXVECTOR3 ef = useful::CalcMatrix(m_pos, m_rot, mat);
 				MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, m_rot);
@@ -839,6 +836,16 @@ void CPlayer::StateManager(void)
 		break;
 
 	case STATE_WALK:
+
+		m_nTime++;
+
+		if (m_nTime >= 20)
+		{
+			// ƒTƒEƒ“ƒh‚ÌÄ¶
+			CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
+
+			m_nTime = 0;
+		}
 		break;
 
 	case STATE_ATTACK:

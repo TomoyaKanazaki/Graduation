@@ -191,6 +191,7 @@ private:
 	bool m_bGritCenter;			//グリットの中心位置にいるかどうか
 
 	int m_nLife;				//ライフ
+	int m_nTime;
 	bool m_OKL;					//左への進行が許されるかどうか
 	bool m_OKR;					//右への進行が許されるかどうか
 	bool m_OKU;					//上への進行が許されるかどうか

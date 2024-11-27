@@ -31,8 +31,6 @@ namespace
 
 	const D3DXVECTOR3 BUTTON_POS = D3DXVECTOR3(640.0f, 670.0f, 0.0f);		// ボタンの位置
 	const D3DXVECTOR2 BUTTON_SIZE = { 300.0f, 160.0f };						// ボタンの大きさ
-
-	const float DOME_ROT_SPEED = 0.001f;	// メッシュドームの回転速度
 }
 
 //静的メンバ変数宣言
@@ -84,7 +82,7 @@ CTitle* CTitle::GetInstance(void)
 //====================================================================
 HRESULT CTitle::Init(void)
 {
-	//CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_BGM_TITLE);
+	CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_BGM_TITLE);
 
 	CTexture *pTexture = CManager::GetInstance()->GetTexture();
 
@@ -160,6 +158,8 @@ HRESULT CTitle::Init(void)
 //====================================================================
 void CTitle::Uninit(void)
 {
+	CManager::GetInstance()->GetSound()->StopSound(CSound::SOUND_LABEL_BGM_TITLE);
+
 	//全てのオブジェクトの破棄
 	CObject::ReleaseAll();
 
@@ -198,6 +198,8 @@ void CTitle::Select(void)
 		CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_DOWN) == true ||
 		CManager::GetInstance()->GetInputJoyPad()->GetTrigger(CInputJoypad::BUTTON_DOWN, 0))
 	{
+		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_SELECT);
+
 		m_nSelect++;
 
 		if (m_nSelect >= MAX_SELECT)
@@ -209,6 +211,8 @@ void CTitle::Select(void)
 		CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_UP) == true ||
 		CManager::GetInstance()->GetInputJoyPad()->GetTrigger(CInputJoypad::BUTTON_UP, 0))
 	{
+		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_SELECT);
+
 		m_nSelect--;
 
 		if (m_nSelect < 0)
@@ -242,7 +246,7 @@ void CTitle::Button(void)
 	if (CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_RETURN) == true)
 	{
 		CManager::GetInstance()->SetTypeInput(CManager::GetInstance()->TYPE_MNK);	// 入力タイプ：キーマウ
-		//CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_ENTER_PUSH);
+		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_ENTER);
 
 		switch (m_nSelect)
 		{

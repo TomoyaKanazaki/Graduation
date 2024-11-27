@@ -31,6 +31,8 @@ public:
 		SOUND_LABEL_SE_EAT,	// タマゴンの捕食
 		SOUND_LABEL_SE_GET_CROSS,	// 十字架
 		SOUND_LABEL_SE_GET_BOWA,	// ぼあぼあ
+		SOUND_LABEL_SE_SELECT,		// 選択
+		SOUND_LABEL_SE_ENTER,		// 決定
 
 		// BGM
 		SOUND_LABEL_BGM_TITLE,	// タイトルbgm

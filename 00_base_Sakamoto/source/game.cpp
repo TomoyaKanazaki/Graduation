@@ -23,6 +23,7 @@
 #include "SlopeDevice.h"
 #include "mask.h"
 
+#include "sound.h"
 #include "shadow.h"
 
 namespace
@@ -134,7 +135,7 @@ CGame* CGame::GetInstance(void)
 HRESULT CGame::Init(void)
 {
 	////BGMの再生
-	//CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_BGM_TUTORIAL);
+	CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_BGM_STAGE1);
 
 	if (m_pMask == nullptr)
 	{// 2Dマスクの生成
@@ -288,6 +289,8 @@ HRESULT CGame::Init(void)
 //====================================================================
 void CGame::Uninit(void)
 {
+	CManager::GetInstance()->GetSound()->StopSound(CSound::SOUND_LABEL_BGM_STAGE2);
+
 	// スロー情報の全削除
 	CSlowManager::ReleaseAll();
 
