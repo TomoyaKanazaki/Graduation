@@ -243,7 +243,7 @@ CMapSystem::GRID CMapSystem::CalcGrid(const D3DXVECTOR3& pos)
 	return grid;
 }
 
-#if 0
+#if 1
 
 //==========================================
 //  ƒ}ƒbƒvî•ñ‚Ì“Ç‚İ‚İ
