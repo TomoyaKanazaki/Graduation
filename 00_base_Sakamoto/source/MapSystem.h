@@ -44,6 +44,7 @@ public:
 
 		// åvéZä÷êî
 		D3DXVECTOR3 ToWorld();
+		AStar::Vec2i ToAStar();
 
 		int x;
 		int z;
