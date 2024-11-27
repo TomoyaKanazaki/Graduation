@@ -424,7 +424,7 @@ void CMapSystem::Load(const char* pFilename)
 								pMapSystem->SetGritBool(pMapSystem->m_gridCenter.x, pMapSystem->m_gridCenter.z, true);
 
 								// 経路探索用情報の設定
-								generator->addCollision({ pMapSystem->m_gridCenter.x, pMapSystem->m_gridCenter.z }); // 通過不可地点を追加
+								//generator->addCollision({ pMapSystem->m_gridCenter.x, pMapSystem->m_gridCenter.z }); // 通過不可地点を追加
 
 								continue;
 							}
@@ -435,9 +435,6 @@ void CMapSystem::Load(const char* pFilename)
 							// グリッド設定の判定
 							bGridSet = false;
 
-							// 経路探索用情報の設定
-							generator->addCollision({ pMapSystem->m_gridCenter.x, pMapSystem->m_gridCenter.z }); // 通過不可地点を追加	
-
 							// オブジェクトを設置
 							if (str == "2")
 							{ // 十字架
@@ -445,19 +442,24 @@ void CMapSystem::Load(const char* pFilename)
 								// 十字架の生成
 								CItem::Create(CItem::TYPE_CROSS, pMapSystem->m_gridCenter);
 							}
-							//else if (str == "3")
-							//{ // デビルホール
+							else if (str == "3")
+							{ // デビルホールの生成範囲
 
-							//	// デビルホールの生成
-							//	CDevilHole::Create("data\\MODEL\\DevilHole.x");
+								// 経路探索用情報の設定
+								//generator->addCollision({ pMapSystem->m_gridCenter.x, pMapSystem->m_gridCenter.z }); // 通過不可地点を追加
+							}
+							else if (str == "4")
+							{ // デビルホール
 
-							//	// グリッド設定の判定
-							//	bGridSet = true;
+								// デビルホールの生成
+								CDevilHole::Create(pMapSystem->m_gridCenter);
 
-							//	/*pDevilHole = CDevilHole::Create("data\\MODEL\\DevilHole.x");
-							//	pDevilHole->SetGrid(CMapSystem::GRID(11, 7));
-							//	CMapSystem::GetInstance()->SetGritBool(11, 7, true);*/
-							//}
+								// グリッド設定の判定
+								bGridSet = true;
+
+								// 経路探索用情報の設定
+								//generator->addCollision({ pMapSystem->m_gridCenter.x, pMapSystem->m_gridCenter.z }); // 通過不可地点を追加
+							}
 
 							// グリッド判定の設定
 							pMapSystem->SetGritBool(pMapSystem->m_gridCenter.x, pMapSystem->m_gridCenter.z, bGridSet);
