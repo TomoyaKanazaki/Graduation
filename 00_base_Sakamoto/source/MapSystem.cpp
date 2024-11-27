@@ -347,7 +347,7 @@ void CMapSystem::Load(const char* pFilename)
 	D3DXVECTOR3 posStart = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// グリッド開始位置
 	D3DXVECTOR2 charOffset = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// グリッドのオフセット
 	D3DXVECTOR3 size = D3DXVECTOR3(fMapSystemGritSize, 0.0f, fMapSystemGritSize);		// グリッドサイズ
-	int nMaxWidth = 0, nMaxHeight = 0;		// グリッドの最大行列数
+	GRID MaxGrid;		// グリッドの最大数
 
 	// グリッド設定の判定
 	bool bGridSet = false;
@@ -383,7 +383,7 @@ void CMapSystem::Load(const char* pFilename)
 			else if (str == "NUM_GRID")
 			{
 				// グリッドの行列数を読み込み
-				iss >> nMaxWidth >> nMaxHeight;
+				iss >> MaxGrid.x >> MaxGrid.z;
 			}
 
 			else if (str == "STARTSETSTAGE")
@@ -394,7 +394,7 @@ void CMapSystem::Load(const char* pFilename)
 					// 終端の場合ステージ生成を抜ける
 					if (str == "ENDSETSTAGE") { break; }
 
-					for (int nCntHeight = 0; nCntHeight < nMaxHeight; nCntHeight++)
+					for (int nCntHeight = 0; nCntHeight < MaxGrid.z; nCntHeight++)
 					{ // 列カウント
 
 						// 横一行分の配列を拡張
@@ -403,7 +403,7 @@ void CMapSystem::Load(const char* pFilename)
 						// カンマ区切りごとにデータを読込
 						std::istringstream issChar(str);	// 文字列ストリーム
 
-						for (int nCntWidth = 0; nCntWidth < nMaxWidth; nCntWidth++)
+						for (int nCntWidth = 0; nCntWidth < MaxGrid.x; nCntWidth++)
 						{ // 行カウント
 
 							// 1行ずつ読み込み
