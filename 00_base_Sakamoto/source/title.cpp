@@ -198,6 +198,8 @@ void CTitle::Select(void)
 		CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_DOWN) == true ||
 		CManager::GetInstance()->GetInputJoyPad()->GetTrigger(CInputJoypad::BUTTON_DOWN, 0))
 	{
+		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_SELECT);
+
 		m_nSelect++;
 
 		if (m_nSelect >= MAX_SELECT)
@@ -209,6 +211,8 @@ void CTitle::Select(void)
 		CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_UP) == true ||
 		CManager::GetInstance()->GetInputJoyPad()->GetTrigger(CInputJoypad::BUTTON_UP, 0))
 	{
+		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_SELECT);
+
 		m_nSelect--;
 
 		if (m_nSelect < 0)
@@ -242,7 +246,7 @@ void CTitle::Button(void)
 	if (CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_RETURN) == true)
 	{
 		CManager::GetInstance()->SetTypeInput(CManager::GetInstance()->TYPE_MNK);	// 入力タイプ：キーマウ
-		//CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_ENTER_PUSH);
+		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_ENTER);
 
 		switch (m_nSelect)
 		{
