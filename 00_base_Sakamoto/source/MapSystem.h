@@ -28,7 +28,8 @@ public:
 		MAPTYPE_NONE = 0,		// 何でもない(床)
 		MAPTYPE_WALL,			// 壁
 		MAPTYPE_CROSS,			// 十字架
-		MAPTYPE_DEVILHOLL,		// デビルホール
+		MAPTYPE_DEVILHOLLRANGE,	// デビルホールの生成範囲
+		MAPTYPE_DEVILHOLL,
 		MAPTYPE_MAX
 	};
 

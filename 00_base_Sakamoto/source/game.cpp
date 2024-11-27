@@ -203,7 +203,7 @@ HRESULT CGame::Init(void)
 	//レールブロックの生成
 	LoadStageRailBlock("data\\TXT\\STAGE\\RailBlock.txt");
 
-	CDevilHole* pDevilHole = nullptr;
+	//CDevilHole* pDevilHole = nullptr;
 
 	//ステージの読み込み
 	switch (CManager::GetInstance()->GetStage())
@@ -211,9 +211,9 @@ HRESULT CGame::Init(void)
 	case 0:
 		CMapSystem::Load("data\\TXT\\STAGE\\Block.csv");
 
-		pDevilHole = CDevilHole::Create("data\\MODEL\\DevilHole.x");
+		/*pDevilHole = CDevilHole::Create("data\\MODEL\\DevilHole.x");
 		pDevilHole->SetGrid(CMapSystem::GRID(11, 7));
-		CMapSystem::GetInstance()->SetGritBool(11, 7, true);
+		CMapSystem::GetInstance()->SetGritBool(11, 7, true);*/
 
 		// TODO : 外部書き出しを利用する
 		{

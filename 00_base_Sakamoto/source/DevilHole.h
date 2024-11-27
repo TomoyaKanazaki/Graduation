@@ -20,6 +20,7 @@ class CDevilHole : public CObjectX
 public:
 
 	CDevilHole(int nPriority = 3);
+	CDevilHole(int nPriority, CMapSystem::GRID gridCenter);
 	~CDevilHole();
 
 	//ƒTƒ“ƒvƒ‹‚Ìó‘Ô
@@ -30,7 +31,7 @@ public:
 		STATE_MAX,
 	};
 
-	static CDevilHole* Create(char* pModelName);
+	static CDevilHole* Create(CMapSystem::GRID gridCenter);
 
 	HRESULT Init(char* pModelName);
 	void Uninit(void);

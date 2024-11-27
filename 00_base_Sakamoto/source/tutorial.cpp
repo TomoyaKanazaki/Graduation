@@ -161,7 +161,7 @@ HRESULT CTutorial::Init(void)
 	case 0:
 		CMapSystem::Load("data\\TXT\\STAGE\\Block.txt");
 
-		pDevilHole = CDevilHole::Create("data\\MODEL\\DevilHole.x");
+		//pDevilHole = CDevilHole::Create("data\\MODEL\\DevilHole.x");
 		pDevilHole->SetGrid(CMapSystem::GRID(11, 7));
 		CMapSystem::GetInstance()->SetGritBool(11, 7, true);
 
@@ -199,7 +199,7 @@ HRESULT CTutorial::Init(void)
 	case 1:
 		CMapSystem::Load("data\\TXT\\STAGE\\Block.txt");
 
-		pDevilHole = CDevilHole::Create("data\\MODEL\\DevilHole.x");
+		//pDevilHole = CDevilHole::Create("data\\MODEL\\DevilHole.x");
 		pDevilHole->SetGrid(CMapSystem::GRID(11, 7));
 		CMapSystem::GetInstance()->SetGritBool(11, 7, true);
 

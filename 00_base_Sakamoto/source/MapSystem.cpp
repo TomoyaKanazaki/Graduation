@@ -347,7 +347,7 @@ void CMapSystem::Load(const char* pFilename)
 	D3DXVECTOR3 posStart = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// グリッド開始位置
 	D3DXVECTOR2 charOffset = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// グリッドのオフセット
 	D3DXVECTOR3 size = D3DXVECTOR3(fMapSystemGritSize, 0.0f, fMapSystemGritSize);		// グリッドサイズ
-	int nMaxWidth = 0, nMaxHeight = 0;		// グリッドの最大行列数
+	GRID MaxGrid;		// グリッドの最大数
 
 	// グリッド設定の判定
 	bool bGridSet = false;
@@ -383,7 +383,7 @@ void CMapSystem::Load(const char* pFilename)
 			else if (str == "NUM_GRID")
 			{
 				// グリッドの行列数を読み込み
-				iss >> nMaxWidth >> nMaxHeight;
+				iss >> MaxGrid.x >> MaxGrid.z;
 			}
 
 			else if (str == "STARTSETSTAGE")
@@ -394,7 +394,7 @@ void CMapSystem::Load(const char* pFilename)
 					// 終端の場合ステージ生成を抜ける
 					if (str == "ENDSETSTAGE") { break; }
 
-					for (int nCntHeight = 0; nCntHeight < nMaxHeight; nCntHeight++)
+					for (int nCntHeight = 0; nCntHeight < MaxGrid.z; nCntHeight++)
 					{ // 列カウント
 
 						// 横一行分の配列を拡張
@@ -403,7 +403,7 @@ void CMapSystem::Load(const char* pFilename)
 						// カンマ区切りごとにデータを読込
 						std::istringstream issChar(str);	// 文字列ストリーム
 
-						for (int nCntWidth = 0; nCntWidth < nMaxWidth; nCntWidth++)
+						for (int nCntWidth = 0; nCntWidth < MaxGrid.x; nCntWidth++)
 						{ // 行カウント
 
 							// 1行ずつ読み込み
@@ -435,9 +435,6 @@ void CMapSystem::Load(const char* pFilename)
 							// グリッド設定の判定
 							bGridSet = false;
 
-							// 経路探索用情報の設定
-							generator->addCollision({ pMapSystem->m_gridCenter.x, pMapSystem->m_gridCenter.z }); // 通過不可地点を追加	
-
 							// オブジェクトを設置
 							if (str == "2")
 							{ // 十字架
@@ -445,19 +442,27 @@ void CMapSystem::Load(const char* pFilename)
 								// 十字架の生成
 								CItem::Create(CItem::TYPE_CROSS, pMapSystem->m_gridCenter);
 							}
-							//else if (str == "3")
-							//{ // デビルホール
+							else if (str == "3")
+							{ // デビルホールの生成範囲
 
-							//	// デビルホールの生成
-							//	CDevilHole::Create("data\\MODEL\\DevilHole.x");
+								// グリッド設定の判定
+								bGridSet = true;
 
-							//	// グリッド設定の判定
-							//	bGridSet = true;
+								// 経路探索用情報の設定
+								generator->addCollision(pMapSystem->m_gridCenter.ToAStar()); // 通過不可地点を追加
+							}
+							else if (str == "4")
+							{ // デビルホール
 
-							//	/*pDevilHole = CDevilHole::Create("data\\MODEL\\DevilHole.x");
-							//	pDevilHole->SetGrid(CMapSystem::GRID(11, 7));
-							//	CMapSystem::GetInstance()->SetGritBool(11, 7, true);*/
-							//}
+								// デビルホールの生成
+								CDevilHole::Create(pMapSystem->m_gridCenter);
+
+								// グリッド設定の判定
+								bGridSet = true;
+
+								// 経路探索用情報の設定
+								generator->addCollision(pMapSystem->m_gridCenter.ToAStar()); // 通過不可地点を追加
+							}
 
 							// グリッド判定の設定
 							pMapSystem->SetGritBool(pMapSystem->m_gridCenter.x, pMapSystem->m_gridCenter.z, bGridSet);

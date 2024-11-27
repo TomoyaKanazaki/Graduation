@@ -48,13 +48,45 @@ CDevilHole::CDevilHole(int nPriority) : CObjectX(nPriority)
 	m_posOld = INITVECTOR3;
 	m_move = INITVECTOR3;
 	m_rot = INITVECTOR3;
-	
+	m_Grid.x = 0;
+	m_Grid.z = 0;
+
 	for (int nCnt = 0; nCnt < DIRECTION; nCnt++)
 	{
 		m_bSet[nCnt] = false;			//上下左右の穴が埋まっているかどうか
 		m_pHoleKey[nCnt] = nullptr;		//上下左右の穴を埋めるポリゴン
 	}
 }
+
+//====================================================================
+//コンストラクタ(オーバーロード)
+//====================================================================
+CDevilHole::CDevilHole(int nPriority, CMapSystem::GRID gridCenter) : CObjectX(nPriority)
+{
+	SetSize(SAMPLE_SIZE);
+	SetPos(INITVECTOR3);
+	m_nIdxXModel = 0;			//マテリアルの数
+	m_CollisionPos = INITVECTOR3;
+	m_bCollision = false;
+	m_State = STATE_NORMAL;
+	m_nStateCount = 0;
+	m_Scaling = 1.0f;
+	m_fColorA = 0.0f;
+	m_Grid.x = 0;
+	m_Grid.z = 0;
+	m_pos = INITVECTOR3;
+	m_posOld = INITVECTOR3;
+	m_move = INITVECTOR3;
+	m_rot = INITVECTOR3;
+	m_Grid = gridCenter;		// グリッド
+
+	for (int nCnt = 0; nCnt < DIRECTION; nCnt++)
+	{
+		m_bSet[nCnt] = false;			//上下左右の穴が埋まっているかどうか
+		m_pHoleKey[nCnt] = nullptr;		//上下左右の穴を埋めるポリゴン
+	}
+}
+
 
 //====================================================================
 //デストラクタ
@@ -67,18 +99,18 @@ CDevilHole::~CDevilHole()
 //====================================================================
 //生成処理
 //====================================================================
-CDevilHole* CDevilHole::Create(char* pModelName)
+CDevilHole* CDevilHole::Create(CMapSystem::GRID gridCenter)
 {
 	CDevilHole* pSample = nullptr;
 
 	if (pSample == nullptr)
 	{
 		//オブジェクト2Dの生成
-		pSample = new CDevilHole();
+		pSample = new CDevilHole(3, gridCenter);
 	}
 
 	//オブジェクトの初期化処理
-	if (FAILED(pSample->Init(pModelName)))
+	if (FAILED(pSample->Init("data\\MODEL\\devilhole\\devil_hole_base.x")))
 	{//初期化処理が失敗した場合
 		return nullptr;
 	}
