@@ -608,9 +608,9 @@ void CGame::LoadStageRailBlock(const char* pFilename)
 					}
 
 					CMapSystem::GetInstance()->SetGritBool(WightNumber, HeightNumber, true);
-					CRailBlock* pBlock = CRailBlock::Create(WightNumber, HeightNumber, false, nMax, &RailMove[0]);
+					/*CRailBlock* pBlock = CRailBlock::Create(WightNumber, HeightNumber, false, nMax, &RailMove[0]);
 					pBlock->SetPos(D3DXVECTOR3(pBlock->GetPos().x, 50.0f, pBlock->GetPos().z));
-					pBlock->SetSize(D3DXVECTOR3(50.0f, 50.0f, 50.0f));
+					pBlock->SetSize(D3DXVECTOR3(50.0f, 50.0f, 50.0f));*/
 
 					fscanf(pFile, "%s", &aEndMessage[0]);
 				}

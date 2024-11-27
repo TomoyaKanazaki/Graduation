@@ -520,10 +520,10 @@ void CTutorial::LoadStageRailBlock(const char* pFilename)
 						fscanf(pFile, "%d", &RailMove[nCnt]);
 					}
 
-					CMapSystem::GetInstance()->SetGritBool(WightNumber, HeightNumber, true);
+					/*CMapSystem::GetInstance()->SetGritBool(WightNumber, HeightNumber, true);
 					CRailBlock* pBlock = CRailBlock::Create(WightNumber, HeightNumber, false, nMax, &RailMove[0]);
 					pBlock->SetPos(D3DXVECTOR3(pBlock->GetPos().x, 50.0f, pBlock->GetPos().z));
-					pBlock->SetSize(D3DXVECTOR3(50.0f, 50.0f, 50.0f));
+					pBlock->SetSize(D3DXVECTOR3(50.0f, 50.0f, 50.0f));*/
 
 					fscanf(pFile, "%s", &aEndMessage[0]);
 				}
