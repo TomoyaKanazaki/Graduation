@@ -13,23 +13,24 @@
 namespace
 {
 	const float SPACE_SCORE = 40.0f;		//スコア同士の隙間
-	const D3DXVECTOR3 SCORE_POS = D3DXVECTOR3(50.0f, 40.0f, 0.0f);		//スコアの位置
 	const int INIT_SCORE = 0;		//スコアの位置
 	const D3DXVECTOR2 SCORE_SIZE = D3DXVECTOR2(50.0f,50.0f);
 }
 
 //静的メンバ変数宣言
-CNumber* CScore::m_apObject[NUM_SCORE] = {};
-D3DXVECTOR3 CScore::m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-int CScore::m_nScore = 0;
-int CScore::m_nNumber[NUM_SCORE] = { 0 };
 
 //====================================================================
 //コンストラクタ
 //====================================================================
 CScore::CScore(int nPriority) : CObject(nPriority)
 {
-
+	for (int nCntObject = 0; nCntObject < NUM_SCORE; nCntObject++)
+	{
+		m_apObject[nCntObject] = nullptr;
+		m_nNumber[nCntObject] = 0;
+	}
+	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_nScore = 0;
 }
 
 //====================================================================
@@ -69,7 +70,7 @@ HRESULT CScore::Init(void)
 {
 	SetType(CObject::TYPE_TIME);
 
-	SetPos(SCORE_POS);
+	m_pos = (INITVECTOR3);
 
 	SetScore(INIT_SCORE);
 
@@ -97,8 +98,11 @@ void CScore::Uninit(void)
 {
 	for (int nCntObject = 0; nCntObject < NUM_SCORE; nCntObject++)
 	{
-		m_apObject[nCntObject]->Uninit();
-		m_apObject[nCntObject] = nullptr;
+		if (m_apObject[nCntObject] != nullptr)
+		{
+			m_apObject[nCntObject]->Uninit();
+			m_apObject[nCntObject] = nullptr;
+		}
 	}
 
 	SetDeathFlag(true);
@@ -141,5 +145,22 @@ void CScore::Draw(void)
 	for (int nCntObject = 0; nCntObject < NUM_SCORE; nCntObject++)
 	{
 		m_apObject[nCntObject]->Draw();
+	}
+}
+
+//====================================================================
+//位置の設定
+//====================================================================
+void CScore::SetPos(D3DXVECTOR3 pos)
+{
+	m_pos = pos;
+
+	for (int nCntObject = 0; nCntObject < NUM_SCORE; nCntObject++)
+	{
+		if (m_apObject[nCntObject] != nullptr)
+		{
+			//数字の位置設定
+			m_apObject[nCntObject]->SetPos(D3DXVECTOR3(m_pos.x + (nCntObject * SPACE_SCORE), m_pos.y, m_pos.z));
+		}
 	}
 }

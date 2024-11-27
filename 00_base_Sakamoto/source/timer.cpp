@@ -13,7 +13,7 @@
 namespace
 {
 	const float SPACE_TIME = 40.0f;		//タイム同士の隙間
-	const D3DXVECTOR3 TIME_POS = D3DXVECTOR3(1050.0f, 40.0f, 0.0f);		//タイムの位置
+	const D3DXVECTOR3 TIME_POS = D3DXVECTOR3(540.0f, 40.0f, 0.0f);		//タイムの位置
 }
 
 //静的メンバ変数宣言

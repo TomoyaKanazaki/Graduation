@@ -34,6 +34,7 @@
 #include "objmeshField.h"
 #include "RollRock.h"
 #include "shadow.h"
+#include "score.h"
 #include "mask.h"
 
 #include "MyEffekseer.h"
@@ -111,7 +112,8 @@ m_EggMove(INITVECTOR3),
 m_bInvincible(true),
 m_nInvincibleCount(0),
 m_UseMultiMatrix(nullptr),
-m_pShadow(nullptr)
+m_pShadow(nullptr),
+m_pScore(nullptr)
 {
 
 }
@@ -183,26 +185,54 @@ HRESULT CPlayer::Init(int PlayNumber)
 	CCharacter::SetUseStencil(true);
 	CCharacter::SetUseShadowMtx(true);
 
-	m_pLifeUi = CLifeUi::Create();
+	if (m_pLifeUi == nullptr)
+	{
+		m_pLifeUi = CLifeUi::Create();
+	}
+
+	if (m_pScore == nullptr)
+	{
+		m_pScore = CScore::Create();
+	}
 
 	switch (m_nPlayNumber)
 	{
 	case 0:
-		// 数字の位置
-		m_pLifeUi->GetNumber()->SetPos(D3DXVECTOR3(LIFE_POS00.x + 200.0f, LIFE_POS00.y, LIFE_POS00.z));
 
-		// 体力
-		m_pLifeUi->SetPos(LIFE_POS00);
-		m_pLifeUi->GetNumber()->SetNumber(m_nLife);
+		if (m_pLifeUi != nullptr)
+		{
+			// 数字の位置
+			m_pLifeUi->GetNumber()->SetPos(D3DXVECTOR3(LIFE_POS00.x + 200.0f, LIFE_POS00.y, LIFE_POS00.z));
+
+			// 体力
+			m_pLifeUi->SetPos(LIFE_POS00);
+			m_pLifeUi->GetNumber()->SetNumber(m_nLife);
+		}
+		
+		if (m_pScore != nullptr)
+		{
+			m_pScore->SetPos(D3DXVECTOR3(50.0f, 40.0f, 0.0f));
+		}
+
 		break;
 
 	case 1:
-		// 数字の位置
-		m_pLifeUi->GetNumber()->SetPos(D3DXVECTOR3(LIFE_POS01.x + 200.0f, LIFE_POS01.y, LIFE_POS01.z));
 
-		// 体力
-		m_pLifeUi->SetPos(LIFE_POS01);
-		m_pLifeUi->GetNumber()->SetNumber(m_nLife);
+		if (m_pLifeUi != nullptr)
+		{
+			// 数字の位置
+			m_pLifeUi->GetNumber()->SetPos(D3DXVECTOR3(LIFE_POS01.x + 200.0f, LIFE_POS01.y, LIFE_POS01.z));
+
+			// 体力
+			m_pLifeUi->SetPos(LIFE_POS01);
+			m_pLifeUi->GetNumber()->SetNumber(m_nLife);
+		}
+
+		if (m_pScore != nullptr)
+		{
+			m_pScore->SetPos(D3DXVECTOR3(1050.0f, 40.0f, 0.0f));
+		}
+
 		break;
 	}
 
@@ -242,6 +272,12 @@ void CPlayer::Uninit(void)
 
 	// キャラクタークラスの終了（継承）
 	CCharacter::Uninit();
+
+	// スコアの削除
+	if (m_pScore != nullptr)
+	{
+		m_pScore = nullptr;
+	}
 }
 
 //====================================================================
