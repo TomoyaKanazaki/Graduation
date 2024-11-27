@@ -14,6 +14,8 @@
 #include "CubeBlock.h"
 #include "tile.h"
 #include "wall.h"
+#include "item.h"
+#include "DevilHole.h"
 
 // 定数定義
 namespace
@@ -47,6 +49,7 @@ CMapSystem::CMapSystem() :
 	m_InitPos = m_MapPos;
 	m_MapSize = MAP_SIZE;
 	m_MapSize = D3DXVECTOR3((NUM_WIGHT - 1) * 50.0f, 0.0f, (NUM_HEIGHT - 1) * 50.0f);
+	//m_MapType = MAPTYPE_NONE;			// マップオブジェクトの種類
 }
 
 //====================================================================
@@ -240,7 +243,7 @@ CMapSystem::GRID CMapSystem::CalcGrid(const D3DXVECTOR3& pos)
 	return grid;
 }
 
-#if 0
+#if 1
 
 //==========================================
 //  マップ情報の読み込み
@@ -344,8 +347,10 @@ void CMapSystem::Load(const char* pFilename)
 	D3DXVECTOR3 posStart = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// グリッド開始位置
 	D3DXVECTOR2 charOffset = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// グリッドのオフセット
 	D3DXVECTOR3 size = D3DXVECTOR3(fMapSystemGritSize, 0.0f, fMapSystemGritSize);		// グリッドサイズ
-
 	int nMaxWidth = 0, nMaxHeight = 0;		// グリッドの最大行列数
+
+	// グリッド設定の判定
+	bool bGridSet = false;
 
 	// ファイルを開く
 	std::ifstream file(pFilename);	// ファイルストリーム
@@ -374,11 +379,6 @@ void CMapSystem::Load(const char* pFilename)
 				// 開始位置を生成位置に設定
 				posOffset = posStart;
 				pMapSystem->m_MapPos = posStart;		// マップの位置に設定
-			}
-			else if (str == "GRID_SIZE_Y")
-			{
-				// グリッドサイズYを読み込み
-				iss >> size.y;
 			}
 			else if (str == "NUM_GRID")
 			{
@@ -409,37 +409,58 @@ void CMapSystem::Load(const char* pFilename)
 							// 1行ずつ読み込み
 							std::getline(issChar, str, ',');
 
+							// 行列数設定
+							pMapSystem->m_gridCenter.x = nCntWidth;
+							pMapSystem->m_gridCenter.z = nCntHeight;
+
 							if (str == "") { continue; }	// 空白は無視する
-							else if (str == "0")
-							{ // 床の場合
-
-								// 行列数設定
-								pMapSystem->m_gridCenter.x = nCntWidth;
-								pMapSystem->m_gridCenter.z = nCntHeight;
-
-								pMapSystem->SetGritBool(pMapSystem->m_gridCenter.x, pMapSystem->m_gridCenter.z, false);
-
-								// 床モデルの生成
-								CTile::Create(pMapSystem->m_gridCenter);
-
-								// 経路探索用情報の設定
-								generator->addCollision({ pMapSystem->m_gridCenter.x, pMapSystem->m_gridCenter.z }); // 通過不可地点を追加
-							}
-							else if(str == "1")
+							else if (str == "1")
 							{ // 壁の場合
-
-								// 行列数設定
-								pMapSystem->m_gridCenter.x = nCntWidth;
-								pMapSystem->m_gridCenter.z = nCntHeight;
-
-								pMapSystem->SetGritBool(pMapSystem->m_gridCenter.x, pMapSystem->m_gridCenter.z, true);
 
 								// 壁モデルの生成
 								CWall::Create(pMapSystem->m_gridCenter);
 
+								// グリッド判定の設定
+								pMapSystem->SetGritBool(pMapSystem->m_gridCenter.x, pMapSystem->m_gridCenter.z, true);
+
 								// 経路探索用情報の設定
 								generator->addCollision({ pMapSystem->m_gridCenter.x, pMapSystem->m_gridCenter.z }); // 通過不可地点を追加
+
+								continue;
 							}
+
+							// 床モデルの生成
+							CTile::Create(pMapSystem->m_gridCenter);
+
+							// グリッド設定の判定
+							bGridSet = false;
+
+							// 経路探索用情報の設定
+							generator->addCollision({ pMapSystem->m_gridCenter.x, pMapSystem->m_gridCenter.z }); // 通過不可地点を追加	
+
+							// オブジェクトを設置
+							if (str == "2")
+							{ // 十字架
+
+								// 十字架の生成
+								CItem::Create(CItem::TYPE_CROSS, pMapSystem->m_gridCenter);
+							}
+							//else if (str == "3")
+							//{ // デビルホール
+
+							//	// デビルホールの生成
+							//	CDevilHole::Create("data\\MODEL\\DevilHole.x");
+
+							//	// グリッド設定の判定
+							//	bGridSet = true;
+
+							//	/*pDevilHole = CDevilHole::Create("data\\MODEL\\DevilHole.x");
+							//	pDevilHole->SetGrid(CMapSystem::GRID(11, 7));
+							//	CMapSystem::GetInstance()->SetGritBool(11, 7, true);*/
+							//}
+
+							// グリッド判定の設定
+							pMapSystem->SetGritBool(pMapSystem->m_gridCenter.x, pMapSystem->m_gridCenter.z, bGridSet);
 
 						}
 
