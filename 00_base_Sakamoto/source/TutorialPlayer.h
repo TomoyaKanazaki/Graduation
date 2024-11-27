@@ -34,15 +34,9 @@ public:
 	void Update(void);
 	void Draw(void);
 
-	// 静的メンバ関数
-	static CListManager<CTutorialPlayer>* GetList(void);	// リスト取得
+	void Death(void) override;
 
 private:
-	// 静的メンバ変数
-	static CListManager<CTutorialPlayer>* m_pList; // オブジェクトリスト
-
-	// メンバ変数
-	CListManager<CTutorialPlayer>::AIterator m_iterator; // イテレーター
 };
 
 #endif

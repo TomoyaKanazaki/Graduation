@@ -17,6 +17,8 @@ class CSlowManager;
 class CLifeUi;
 class CObjectX;
 class CScore;
+class CObjmeshField;
+class CDevil;
 
 //オブジェクトプレイヤークラス
 class CPlayer : public CCharacter
@@ -116,6 +118,14 @@ public:
 	bool GetPressObj(void) { return m_bPressObj; }
 	CScore* GetScore(void) { return m_pScore; }
 
+	void SetLife(int Set) { m_nLife = Set; }
+	int GetLife(void) { return m_nLife; }
+
+	void SetStateCount(int Set) { m_nStateCount = Set; }
+	int GetStateCount(void) { return m_nStateCount; }
+
+	CLifeUi* GetLifeUI(void) { return m_pLifeUi; }
+
 	void SetUseItem(bool bUse) { m_UseItem = bUse; }
 	bool GetbUseItem() { return m_UseItem; }
 
@@ -125,7 +135,7 @@ public:
 	virtual void SetGrid(const CMapSystem::GRID& pos) { m_Grid = pos; }
 	CMapSystem::GRID GetGrid(void) { return m_Grid; }
 
-	void Death(void);
+	virtual void Death(void);
 	bool SortObject(D3DXVECTOR3 pos);					// オブジェクトとのソート処理
 
 	void SetItemType(ITEM_TYPE eType);
@@ -158,6 +168,8 @@ private:
 	void CollisionStageOut(void);					// ステージ外の当たり判定
 	bool CollisionStageIn(void);					// ステージ内にいるかどうか
 	void CollisionPressStageOut(void);				// ステージ外の圧死判定
+	CObjmeshField* GetListTopField(void);
+	CDevil* GetListTopDevil(void);
 
 	void CameraPosUpdate(void);	//カメラ位置更新処理
 	void PosUpdate(void);		//位置更新処理

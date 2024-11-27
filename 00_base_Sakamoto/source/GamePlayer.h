@@ -34,15 +34,9 @@ public:
 	void Update(void);
 	void Draw(void);
 
-	// 静的メンバ関数
-	static CListManager<CGamePlayer>* GetList(void);	// リスト取得
+	void Death(void) override;
 
 private:
-	// 静的メンバ変数
-	static CListManager<CGamePlayer>* m_pList; // オブジェクトリスト
-
-	// メンバ変数
-	CListManager<CGamePlayer>::AIterator m_iterator; // イテレーター
 };
 
 #endif
