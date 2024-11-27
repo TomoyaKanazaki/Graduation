@@ -42,6 +42,7 @@
     <ClCompile Include="source\fire.cpp" />
     <ClCompile Include="source\friedegg.cpp" />
     <ClCompile Include="source\game.cpp" />
+    <ClCompile Include="source\GamePlayer.cpp" />
     <ClCompile Include="source\input.cpp" />
     <ClCompile Include="source\item.cpp" />
     <ClCompile Include="source\LevelModelEffect.cpp" />
@@ -101,6 +102,7 @@
     <ClCompile Include="source\timer.cpp" />
     <ClCompile Include="source\title.cpp" />
     <ClCompile Include="source\tutorial.cpp" />
+    <ClCompile Include="source\TutorialPlayer.cpp" />
     <ClCompile Include="source\useful.cpp" />
     <ClCompile Include="source\wall.cpp" />
     <ClCompile Include="source\Xmodel.cpp" />
@@ -129,6 +131,7 @@
     <ClInclude Include="source\fire.h" />
     <ClInclude Include="source\friedegg.h" />
     <ClInclude Include="source\game.h" />
+    <ClInclude Include="source\GamePlayer.h" />
     <ClInclude Include="source\input.h" />
     <ClInclude Include="source\item.h" />
     <ClInclude Include="source\LevelModelEffect.h" />
@@ -188,6 +191,7 @@
     <ClInclude Include="source\timer.h" />
     <ClInclude Include="source\title.h" />
     <ClInclude Include="source\tutorial.h" />
+    <ClInclude Include="source\TutorialPlayer.h" />
     <ClInclude Include="source\useful.h" />
     <ClInclude Include="source\wall.h" />
     <ClInclude Include="source\Xmodel.h" />

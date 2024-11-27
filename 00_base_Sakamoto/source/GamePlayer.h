@@ -1,0 +1,48 @@
+//============================================
+//
+//	ゲームのプレイヤー [GamePlayer.h]
+//	Author:sakamoto kai
+//
+//============================================
+#ifndef _GAME_PLAYER_H_
+#define _GAME_PLAYER_H_
+
+#include "player.h"
+#include "useful.h"
+#include "Model.h"
+#include "MapSystem.h"
+
+//前方宣言
+class CSlowManager;
+class CLifeUi;
+class CObjectX;
+class CScore;
+
+//オブジェクトプレイヤークラス
+class CGamePlayer : public CPlayer
+{
+private:
+	static const int ENCOUNT_MAX = 128;
+
+public:
+	CGamePlayer(int nPriority = 2);
+	~CGamePlayer();
+
+	static CGamePlayer* Create(int PlayNumber);
+	HRESULT Init(int PlayNumber) override;
+	void Uninit(void);
+	void Update(void);
+	void Draw(void);
+
+	// 静的メンバ関数
+	static CListManager<CGamePlayer>* GetList(void);	// リスト取得
+
+private:
+	// 静的メンバ変数
+	static CListManager<CGamePlayer>* m_pList; // オブジェクトリスト
+
+	// メンバ変数
+	CListManager<CGamePlayer>::AIterator m_iterator; // イテレーター
+};
+
+#endif

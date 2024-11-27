@@ -22,10 +22,10 @@ public:
 	~CScore();
 
 	static CScore* Create();
-	static void SetScore(int nScore) { m_nScore = nScore; }
-	static int GetScore(void) { return m_nScore; }
-	static void SetPos(D3DXVECTOR3 pos) { m_pos = pos; }
-	static void AddScore(int nScore) { m_nScore += nScore; }
+	void SetScore(int nScore) { m_nScore = nScore; }
+	int GetScore(void) { return m_nScore; }
+	void SetPos(D3DXVECTOR3 pos);
+	void AddScore(int nScore) { m_nScore += nScore; }
 
 	HRESULT Init(void);
 	void Uninit(void);
@@ -34,11 +34,11 @@ public:
 	void SetNULL(void);
 
 private:
-	static CNumber* m_apObject[NUM_SCORE];
-	static D3DXVECTOR3 m_pos;
-	static int m_nCount;
-	static int m_nScore;
-	static int m_nNumber[NUM_SCORE];
+	CNumber* m_apObject[NUM_SCORE];
+	D3DXVECTOR3 m_pos;
+	int m_nCount;
+	int m_nScore;
+	int m_nNumber[NUM_SCORE];
 };
 
 #endif
