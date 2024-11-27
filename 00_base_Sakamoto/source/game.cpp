@@ -7,6 +7,7 @@
 #include "game.h"
 #include "fade.h"
 #include "objmeshField.h"
+#include "GamePlayer.h"
 #include "player.h"
 #include "camera.h"
 #include "timer.h"
@@ -179,23 +180,23 @@ HRESULT CGame::Init(void)
 	if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_SINGLE)
 	{
 		//プレイヤーの生成
-		m_pPlayer[0] = CPlayer::Create(0);
+		m_pPlayer[0] = CGamePlayer::Create(0);
 		m_pPlayer[0]->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(11, 9)));
 		//m_pMask->SetColor();
 	}
 	else if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
 	{
 		//プレイヤーの生成
-		m_pPlayer[0] = CPlayer::Create(0);
+		m_pPlayer[0] = CGamePlayer::Create(0);
 		m_pPlayer[0]->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(11, 9)));
 
-		m_pPlayer[1] = CPlayer::Create(1);
+		m_pPlayer[1] = CGamePlayer::Create(1);
 		m_pPlayer[1]->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(11, 4)));
 	}
 	else
 	{
 		//プレイヤーの生成
-		m_pPlayer[0] = CPlayer::Create(0);
+		m_pPlayer[0] = CGamePlayer::Create(0);
 		m_pPlayer[0]->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(11, 9)));
 	}
 
