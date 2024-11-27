@@ -112,9 +112,9 @@ m_EggMove(INITVECTOR3),
 m_bInvincible(true),
 m_nInvincibleCount(0),
 m_UseMultiMatrix(nullptr),
-m_pShadow(nullptr)
-m_pScore(nullptr)
-m_nTime(0),
+m_pShadow(nullptr),
+m_pScore(nullptr),
+m_nTime(0)
 {
 
 }
