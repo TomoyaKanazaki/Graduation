@@ -31,8 +31,6 @@ namespace
 
 	const D3DXVECTOR3 BUTTON_POS = D3DXVECTOR3(640.0f, 670.0f, 0.0f);		// ボタンの位置
 	const D3DXVECTOR2 BUTTON_SIZE = { 300.0f, 160.0f };						// ボタンの大きさ
-
-	const float DOME_ROT_SPEED = 0.001f;	// メッシュドームの回転速度
 }
 
 //静的メンバ変数宣言
@@ -84,7 +82,7 @@ CTitle* CTitle::GetInstance(void)
 //====================================================================
 HRESULT CTitle::Init(void)
 {
-	//CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_BGM_TITLE);
+	CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_BGM_TITLE);
 
 	CTexture *pTexture = CManager::GetInstance()->GetTexture();
 
@@ -160,6 +158,8 @@ HRESULT CTitle::Init(void)
 //====================================================================
 void CTitle::Uninit(void)
 {
+	CManager::GetInstance()->GetSound()->StopSound(CSound::SOUND_LABEL_BGM_TITLE);
+
 	//全てのオブジェクトの破棄
 	CObject::ReleaseAll();
 

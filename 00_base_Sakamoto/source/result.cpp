@@ -73,6 +73,7 @@ CResult* CResult::GetInstance(void)
 //====================================================================
 HRESULT CResult::Init(void)
 {
+	////BGMの再生
 	CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_BGM_RESULT);
 
 	m_LifeData = CManager::GetInstance()->GetEndScore();
@@ -143,6 +144,8 @@ HRESULT CResult::Init(void)
 //====================================================================
 void CResult::Uninit(void)
 {
+	CManager::GetInstance()->GetSound()->StopSound(CSound::SOUND_LABEL_BGM_RESULT);
+
 	//全てのオブジェクトの破棄
 	CObject::ReleaseAll();
 
