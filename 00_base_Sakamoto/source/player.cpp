@@ -111,6 +111,7 @@ m_EggMove(INITVECTOR3),
 m_bInvincible(true),
 m_nInvincibleCount(0),
 m_UseMultiMatrix(nullptr),
+m_nTime(0),
 m_pShadow(nullptr)
 {
 
@@ -807,10 +808,6 @@ void CPlayer::ActionState(void)
 	{
 		if (m_Action != ACTION_MOVE)
 		{
-
-			// サウンドの再生
-			CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
-
 			m_Action = ACTION_MOVE;
 			pMotion->Set(ACTION_MOVE, 5);
 		}
@@ -839,6 +836,16 @@ void CPlayer::StateManager(void)
 		break;
 
 	case STATE_WALK:
+
+		m_nTime++;
+
+		if (m_nTime >= 20)
+		{
+			// サウンドの再生
+			CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
+
+			m_nTime = 0;
+		}
 		break;
 
 	case STATE_ATTACK:
