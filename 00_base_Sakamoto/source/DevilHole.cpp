@@ -48,8 +48,8 @@ CDevilHole::CDevilHole(int nPriority) : CObjectX(nPriority)
 	m_posOld = INITVECTOR3;
 	m_move = INITVECTOR3;
 	m_rot = INITVECTOR3;
-	m_Grid.x = 0.0f;
-	m_Grid.z = 0.0f;
+	m_Grid.x = 0;
+	m_Grid.z = 0;
 
 	for (int nCnt = 0; nCnt < DIRECTION; nCnt++)
 	{
@@ -110,7 +110,7 @@ CDevilHole* CDevilHole::Create(CMapSystem::GRID gridCenter)
 	}
 
 	//オブジェクトの初期化処理
-	if (FAILED(pSample->Init("data\\MODEL\\DevilHole.x")))
+	if (FAILED(pSample->Init("data\\MODEL\\devilhole\\devil_hole_base.x")))
 	{//初期化処理が失敗した場合
 		return nullptr;
 	}

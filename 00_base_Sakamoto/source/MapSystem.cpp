@@ -243,7 +243,7 @@ CMapSystem::GRID CMapSystem::CalcGrid(const D3DXVECTOR3& pos)
 	return grid;
 }
 
-#if 1
+#if 0
 
 //==========================================
 //  マップ情報の読み込み
@@ -445,8 +445,11 @@ void CMapSystem::Load(const char* pFilename)
 							else if (str == "3")
 							{ // デビルホールの生成範囲
 
+								// グリッド設定の判定
+								bGridSet = true;
+
 								// 経路探索用情報の設定
-								//generator->addCollision({ pMapSystem->m_gridCenter.x, pMapSystem->m_gridCenter.z }); // 通過不可地点を追加
+								generator->addCollision(pMapSystem->m_gridCenter.ToAStar()); // 通過不可地点を追加
 							}
 							else if (str == "4")
 							{ // デビルホール
@@ -458,7 +461,7 @@ void CMapSystem::Load(const char* pFilename)
 								bGridSet = true;
 
 								// 経路探索用情報の設定
-								//generator->addCollision({ pMapSystem->m_gridCenter.x, pMapSystem->m_gridCenter.z }); // 通過不可地点を追加
+								generator->addCollision(pMapSystem->m_gridCenter.ToAStar()); // 通過不可地点を追加
 							}
 
 							// グリッド判定の設定
