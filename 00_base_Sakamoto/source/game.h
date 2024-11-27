@@ -55,7 +55,6 @@ public:
 	CDevil* GetDevil(void) { return m_pDevil; }
 	CBoss* GetBoss(void) { return m_pBoss; }
 	CPause* GetPause(void) { return m_pPause; }
-	CScore* GetScore(void) { return m_pScore; }
 	CEdit* GetEdit(void) { return m_pEdit; }
 	CTimer* GetTime(void) { return m_pTime; }
 	CObjmeshField* GetMapField(void) { return m_pMapField; }
@@ -123,7 +122,6 @@ private:
 
 	CEdit* m_pEdit;							//エディットモードのポインタ
 	CPause* m_pPause;						//ポーズのポインタ
-	CScore* m_pScore;						//スコアのポインタ
 	CTimer* m_pTime;						//タイムのポインタ
 	CObjmeshDome* m_pMeshDomeUp;			//メッシュドーム
 	CObjmeshField* m_pMapField;				//マップフィールド

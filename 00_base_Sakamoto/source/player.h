@@ -16,6 +16,7 @@
 class CSlowManager;
 class CLifeUi;
 class CObjectX;
+class CScore;
 
 //オブジェクトプレイヤークラス
 class CPlayer : public CCharacter
@@ -113,6 +114,7 @@ public:
 	D3DXMATRIX *GetUseMultiMatrix(void) { return m_UseMultiMatrix; }
 	void SetPressObj(bool Set) { m_bPressObj = Set; }
 	bool GetPressObj(void) { return m_bPressObj; }
+	CScore* GetScore(void) { return m_pScore; }
 
 	void SetUseItem(bool bUse) { m_UseItem = bUse; }
 	bool GetbUseItem() { return m_UseItem; }
@@ -206,6 +208,7 @@ private:
 	CSlowManager* m_pSlow;		// スロー
 
 	ITEM_TYPE m_eItemType;		// 持ってるアイテムの種類
+	CScore* m_pScore;			// スコアのポインタ
 
 	CObjectX* m_pUpEgg;			//卵モデルの上
 	CObjectX* m_pDownEgg;		//卵モデルの下
