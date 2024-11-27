@@ -22,6 +22,16 @@ class CMapSystem
 {
 public:
 
+	// マップのオブジェクトの種類
+	enum MAPTYPE
+	{
+		MAPTYPE_NONE = 0,		// 何でもない(床)
+		MAPTYPE_WALL,			// 壁
+		MAPTYPE_CROSS,			// 十字架
+		MAPTYPE_DEVILHOLL,		// デビルホール
+		MAPTYPE_MAX
+	};
+
 	// 特殊な座標系を管理する構造体
 	struct GRID
 	{
@@ -92,6 +102,8 @@ public:
 	int m_HeightMax;
 	float m_fGritSize;
 	D3DXVECTOR3 m_MapSize;		//マップの境界線の大きさ
+
+	//MAPTYPE m_MapType;			// マップオブジェクトの種類
 
 };
 

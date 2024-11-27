@@ -234,11 +234,11 @@ HRESULT CGame::Init(void)
 		}
 
 		// 十字架の生成
-		CItem::Create(CItem::TYPE_CROSS, CMapSystem::GRID(11, 2));
+		/*CItem::Create(CItem::TYPE_CROSS, CMapSystem::GRID(11, 2));
 		CItem::Create(CItem::TYPE_CROSS, CMapSystem::GRID(20, 4));
 		CItem::Create(CItem::TYPE_CROSS, CMapSystem::GRID(22, 9));
 		CItem::Create(CItem::TYPE_CROSS, CMapSystem::GRID(6, 11));
-		CItem::Create(CItem::TYPE_CROSS, CMapSystem::GRID(16, 11));
+		CItem::Create(CItem::TYPE_CROSS, CMapSystem::GRID(16, 11));*/
 
 		// ソフトクリームの生成
 		CItem::Create(CItem::TYPE_SOFTCREAM, CMapSystem::GetInstance()->GetCenter());
@@ -248,9 +248,9 @@ HRESULT CGame::Init(void)
 	case 1:
 		CMapSystem::Load("data\\TXT\\STAGE\\Block.txt");
 
-		pDevilHole = CDevilHole::Create("data\\MODEL\\DevilHole.x");
+		/*pDevilHole = CDevilHole::Create("data\\MODEL\\DevilHole.x");
 		pDevilHole->SetGrid(CMapSystem::GRID(11,7));
-		CMapSystem::GetInstance()->SetGritBool(11, 7, true);
+		CMapSystem::GetInstance()->SetGritBool(11, 7, true);*/
 
 		// 聖書生成
 		CItem::Create(CItem::TYPE_BIBLE, CMapSystem::GRID(BIBLE_OUTGRIT - 1, BIBLE_OUTGRIT - 1));
