@@ -105,21 +105,9 @@ CSelect* CSelect::GetInstance(void)
 //====================================================================
 HRESULT CSelect::Init(void)
 {
-	//CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_BGM_TITLE);
+	CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_BGM_TITLE);
 
 	CTexture* pTexture = CManager::GetInstance()->GetTexture();
-
-	// スカイドーム
-	m_pMeshDome = CObjmeshDome::Create();
-	if (m_pMeshDome)
-	{
-		//m_pMeshDome->SetTexture("data\\TEXTURE\\sky.jpg");
-	}
-
-	// メッシュフィールド
-	CObjmeshField* pMeshField = CObjmeshField::Create(21, 21);
-	pMeshField->SetPos(INITVECTOR3);
-	//pMeshField->SetTexture("data\\TEXTURE\\field00.jpg");
 
 	for (int nCnt = 0; nCnt < NUM_STAGE; nCnt++)
 	{
@@ -221,6 +209,8 @@ HRESULT CSelect::Init(void)
 //====================================================================
 void CSelect::Uninit(void)
 {
+	CManager::GetInstance()->GetSound()->StopSound(CSound::SOUND_LABEL_BGM_TITLE);
+
 	//全てのオブジェクトの破棄
 	CObject::ReleaseAll();
 
@@ -289,6 +279,8 @@ void CSelect::StageSelect(void)
 	{
 		m_nSelect++;
 
+		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_SELECT);
+
 		if (m_nSelect >= NUM_STAGE)
 		{
 			m_nSelect = 0;
@@ -299,6 +291,8 @@ void CSelect::StageSelect(void)
 		CManager::GetInstance()->GetInputJoyPad()->GetTrigger(CInputJoypad::BUTTON_LEFT, 0))
 	{
 		m_nSelect--;
+
+		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_SELECT);
 
 		if (m_nSelect < 0)
 		{
@@ -331,6 +325,8 @@ void CSelect::StageButton(void)
 	if (CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_RETURN) == true ||
 		CManager::GetInstance()->GetInputJoyPad()->GetTrigger(CInputJoypad::BUTTON_A, 0) == true)
 	{
+		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_ENTER);
+
 		m_nSetStage = m_nSelect;
 		m_nSelect = 0;
 		m_nStep++;
@@ -348,6 +344,8 @@ void CSelect::ScrollSelect(void)
 	{
 		m_nSelect++;
 
+		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_SELECT);
+
 		if (m_nSelect >= NUM_SCROLLTYPE)
 		{
 			m_nSelect = 0;
@@ -358,6 +356,8 @@ void CSelect::ScrollSelect(void)
 		CManager::GetInstance()->GetInputJoyPad()->GetTrigger(CInputJoypad::BUTTON_LEFT, 0))
 	{
 		m_nSelect--;
+
+		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_SELECT);
 
 		if (m_nSelect < 0)
 		{
@@ -396,7 +396,7 @@ void CSelect::ScrollButton(void)
 		CManager::GetInstance()->GetInputJoyPad()->GetTrigger(CInputJoypad::BUTTON_A, 0) == true)
 	{
 		CManager::GetInstance()->SetTypeInput(CManager::GetInstance()->TYPE_MNK);	// 入力タイプ：キーマウ
-		//CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_ENTER_PUSH);
+		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_ENTER);
 
 		switch (m_nSelect)
 		{

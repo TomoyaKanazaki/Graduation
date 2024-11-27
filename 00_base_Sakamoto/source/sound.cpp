@@ -19,6 +19,8 @@ CSound::SOUNDINFO CSound::m_aSoundInfo[SOUND_LABEL_MAX] =
 	{ "data/SE/13_SE_eat.wav", 0 },				// 捕食
 	{ "data/SE/14_SE_getbible.wav", 0 },				// 聖書
 	{ "data/SE/15_SE_getboa.wav", 0 },				// ぼあ
+	{ "data/SE/16_SE_select.wav", 0 },				// 選択
+	{ "data/SE/17_SE_enter.wav", 0 },				// 決定
 
 	// BGM
 	{ "data/BGM/00_BGM_title.wav", -1 },				// タイトル
