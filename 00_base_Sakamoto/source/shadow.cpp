@@ -86,8 +86,8 @@ HRESULT CShadow::Init()
 	// 継承クラスの初期化
 	CObject3D::Init();
 
-	// マップとのマトリックスの掛け合わせをオンにする
-	SetUseMultiMatrix(CGame::GetInstance()->GetMapField()->GetMatrix());
+	//マップとのマトリックスの掛け合わせをオンにする
+	SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
 
 	// テクスチャ設定
 	SetTexture("data\\TEXTURE\\player\\shadow000.jpg");
