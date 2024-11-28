@@ -459,12 +459,6 @@ void CMapSystem::Load(const char* pFilename)
 
 								// 転がる岩生成
 								CRollRock::Create(pMapSystem->m_gridCenter);
-
-								// グリッド設定の判定
-								bGridSet = true;
-
-								// 経路探索用情報の設定
-								generator->addCollision(pMapSystem->m_gridCenter.ToAStar()); // 通過不可地点を追加
 							}
 
 							// グリッド判定の設定

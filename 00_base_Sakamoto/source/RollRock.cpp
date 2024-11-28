@@ -119,6 +119,7 @@ HRESULT CRollRock::Init(char* pModelName)
 {
 	// ˆÊ’u
 	m_pos = m_Grid.ToWorld();
+	m_pos.y = 50.0f;
 
 	SetType(CObject::TYPE_ENEMY3D);
 
