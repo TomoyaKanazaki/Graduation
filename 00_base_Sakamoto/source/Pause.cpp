@@ -9,9 +9,6 @@
 #include "Fade.h"
 
 //ê√ìIÉÅÉìÉoïœêîêÈåæ
-CObject2D *CPause::m_pPauseUI[MAX_PAUSE] = {};
-CObject2D *CPause::m_pPauseFG[MAX_FG] = {};
-CObject2D *CPause::m_pPauseMark = nullptr;
 bool CPause::m_bColor = false;
 
 //====================================================================
@@ -21,6 +18,11 @@ CPause::CPause()
 {
 	m_PauseSelect = 0;
 	m_Appear = false;
+	for (int nCnt = 0; nCnt < MAX_PAUSE; nCnt++)
+	{
+		m_pPauseUI[nCnt] = nullptr;
+	}
+	m_pPauseFG = nullptr;
 }
 
 //====================================================================
@@ -58,79 +60,34 @@ CPause *CPause::Create()
 //====================================================================
 HRESULT CPause::Init(void)
 {
-	for (int nCnt = 0; nCnt < MAX_FG; nCnt++)
+	if (m_pPauseFG == nullptr)
 	{
-		m_pPauseFG[nCnt] = CObject2D::Create();
-		m_pPauseFG[nCnt]->SetType(CObject::TYPE_TUTORIALUI);
-
-		switch (nCnt)
-		{
-		case 0:
-			m_pPauseFG[nCnt]->SetPos(D3DXVECTOR3(640.0f, 360.0f, 0.0f));
-			m_pPauseFG[nCnt]->SetSize(D3DXVECTOR3(1280.0f, 720.0f, 0.0f));
-			m_pPauseFG[nCnt]->SetColor(D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f));
-			break;
-
-		case 1:
-			m_pPauseFG[nCnt]->SetPos(D3DXVECTOR3(220.0f, 400.0f, 0.0f));
-			m_pPauseFG[nCnt]->SetSize(D3DXVECTOR3(295.0f, 600.0f, 0.0f));
-			m_pPauseFG[nCnt]->SetColor(D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f));
-			m_pPauseFG[nCnt]->SetTexture("data\\TEXTURE\\pause\\paper00.png");
-			break;
-
-		case 2:
-			m_pPauseFG[nCnt]->SetPos(D3DXVECTOR3(220.0f, 400.0f, 0.0f));
-			m_pPauseFG[nCnt]->SetSize(D3DXVECTOR3(90.0f, 500.0f, 0.0f));
-			m_pPauseFG[nCnt]->SetColor(D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f));
-			m_pPauseFG[nCnt]->SetTexture("data\\TEXTURE\\pause\\pause_03.png");
-			break;
-
-		case 3:
-			m_pPauseFG[nCnt]->SetPos(D3DXVECTOR3(220.0f, 100.0f, 0.0f));
-			m_pPauseFG[nCnt]->SetSize(D3DXVECTOR3(360.0f, 100.0f, 0.0f));
-			m_pPauseFG[nCnt]->SetColor(D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f));
-			m_pPauseFG[nCnt]->SetTexture("data\\TEXTURE\\pause\\makimono00.png");
-			break;
-
-		default:
-			break;
-		}
+		m_pPauseFG = CObject2D::Create();
+		m_pPauseFG->SetType(CObject::TYPE_TUTORIALUI);
+		m_pPauseFG->SetPos(D3DXVECTOR3(640.0f, 360.0f, 0.0f));
+		m_pPauseFG->SetSize(D3DXVECTOR3(1280.0f, 720.0f, 0.0f));
+		m_pPauseFG->SetColor(D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.8f));
+		m_pPauseFG->SetAppear(false);
 	}
 
 	for (int nCnt = 0; nCnt < MAX_PAUSE; nCnt++)
 	{
-		m_pPauseUI[nCnt] = CObject2D::Create();
-		m_pPauseUI[nCnt]->SetType(CObject::TYPE_TUTORIALUI);
-		switch (nCnt)
+		if (m_pPauseUI[nCnt] == nullptr)
 		{
-		case 0:
-			m_pPauseUI[nCnt]->SetSize(D3DXVECTOR3(600.0f, 150.0f, 0.0f));
-			break;
-		case 1:
-			m_pPauseUI[nCnt]->SetSize(D3DXVECTOR3(600.0f, 150.0f, 0.0f));
-			break;
-		case 2:
-			m_pPauseUI[nCnt]->SetSize(D3DXVECTOR3(600.0f, 150.0f, 0.0f));
-			break;
+			m_pPauseUI[nCnt] = CObject2D::Create();
+			m_pPauseUI[nCnt]->SetPos(D3DXVECTOR3(640.0f, 200.0f + nCnt * 200.0f, 0.0f));
+			m_pPauseUI[nCnt]->SetSize(D3DXVECTOR3(150.0f, 50.0f, 0.0f));
+			m_pPauseUI[nCnt]->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f));
+			m_pPauseUI[nCnt]->SetType(CObject::TYPE_TUTORIALUI);
+			m_pPauseUI[nCnt]->SetAppear(false);
 		}
-		m_pPauseUI[nCnt]->SetPos(D3DXVECTOR3(1080.0f, 200.0f + nCnt * 200.0f, 0.0f));
-		m_pPauseUI[nCnt]->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.5f));
-
-		m_InitPos[nCnt] = m_pPauseUI[nCnt]->GetPos();
 	}
-	m_pPauseUI[0]->SetTexture("data\\TEXTURE\\pause\\pause_00.png");
-	m_pPauseUI[1]->SetTexture("data\\TEXTURE\\pause\\pause_01.png");
-	m_pPauseUI[2]->SetTexture("data\\TEXTURE\\pause\\pause_02.png");
+	//m_pPauseUI[0]->SetTexture("data\\TEXTURE\\pause\\pause_00.png");
+	//m_pPauseUI[1]->SetTexture("data\\TEXTURE\\pause\\pause_01.png");
+	//m_pPauseUI[2]->SetTexture("data\\TEXTURE\\pause\\pause_02.png");
 
-	m_pPauseMark = CObject2D::Create();
-	m_pPauseMark->SetType(CObject::TYPE_TUTORIALUI);
-	m_pPauseMark->SetSize(D3DXVECTOR3(140.0f, 140.0f, 0.0f));
-	m_pPauseMark->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-	m_pPauseMark->SetPos(INITVECTOR3);
-	m_pPauseMark->SetTexture("data\\TEXTURE\\pause\\shuriken00.png");
-
-	m_MoveRot = 0.04f;
-	m_MarkRot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_Appear = false;
+	CManager::GetInstance()->SetPause(false);
 
 	return S_OK;
 }
@@ -140,7 +97,20 @@ HRESULT CPause::Init(void)
 //====================================================================
 void CPause::Uninit(void)
 {
+	if (m_pPauseFG != nullptr)
+	{
+		m_pPauseFG->Uninit();
+		m_pPauseFG = nullptr;
+	}
 
+	for (int nCnt = 0; nCnt < MAX_PAUSE; nCnt++)
+	{
+		if (m_pPauseUI[nCnt] != nullptr)
+		{
+			m_pPauseUI[nCnt]->Uninit();
+			m_pPauseUI[nCnt] = nullptr;
+		}
+	}
 }
 
 //====================================================================
@@ -182,34 +152,26 @@ void CPause::Update(void)
 
 		for (int nCnt = 0; nCnt < MAX_PAUSE; nCnt++)
 		{
-			if (nCnt == m_PauseSelect)
+			if (m_pPauseUI[nCnt] != nullptr)
 			{
-				m_pPauseUI[nCnt]->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-				m_pPauseUI[nCnt]->SetSize(D3DXVECTOR3(900.0f, 225.0f, 0.0f));
+				m_pPauseUI[nCnt]->SetAppear(true);
+				m_pPauseUI[nCnt]->SetPos(D3DXVECTOR3(640.0f, 200.0f + nCnt * 200.0f, 0.0f));
+				m_pPauseUI[nCnt]->SetSize(D3DXVECTOR3(150.0f, 50.0f, 0.0f));
 
-				m_pPauseUI[nCnt]->SetPos(D3DXVECTOR3(m_InitPos[nCnt].x - 150.0f, m_InitPos[nCnt].y, m_InitPos[nCnt].z));
-				m_pPauseMark->SetPos(D3DXVECTOR3(m_InitPos[nCnt].x - 610.0f, m_InitPos[nCnt].y - 57.0f, m_InitPos[nCnt].z));
-
-				m_MarkRot.z -= m_MoveRot;
-
-				if (m_MarkRot.z >= D3DX_PI)
+				if (nCnt == m_PauseSelect)
 				{
-					m_MarkRot.z -= D3DX_PI * 2;
+					m_pPauseUI[nCnt]->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 				}
-				else if (m_MarkRot.z <= -D3DX_PI)
+				else
 				{
-					m_MarkRot.z += D3DX_PI * 2;
+					m_pPauseUI[nCnt]->SetColor(D3DXCOLOR(0.6f, 0.6f, 0.6f, 0.75f));
 				}
-
-				m_pPauseMark->SetRot(m_MarkRot);
 			}
-			else
-			{
-				m_pPauseUI[nCnt]->SetColor(D3DXCOLOR(0.6f, 0.6f, 0.6f, 0.75f));
-				m_pPauseUI[nCnt]->SetSize(D3DXVECTOR3(600.0f, 150.0f, 0.0f));
+		}
 
-				m_pPauseUI[nCnt]->SetPos(D3DXVECTOR3(m_InitPos[nCnt].x, m_InitPos[nCnt].y, m_InitPos[nCnt].z));
-			}
+		if (m_pPauseFG != nullptr)
+		{
+			m_pPauseFG->SetAppear(true);
 		}
 
 		if (CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_RETURN) == true ||
@@ -223,20 +185,7 @@ void CPause::Update(void)
 			case 0:
 				break;
 			case 1:
-
-				switch (CScene::GetMode())
-				{
-				case CScene::MODE_GAME:
-
-					CFade::SetFade(CScene::MODE_GAME);
-
-					break;
-				case CScene::MODE_TUTORIAL:
-
-					CFade::SetFade(CScene::MODE_TUTORIAL);
-
-					break;
-				}
+				CFade::SetFade(CScene::GetMode());
 				break;
 			case 2:
 				CFade::SetFade(CScene::MODE_TITLE);
@@ -246,51 +195,22 @@ void CPause::Update(void)
 				break;
 			}
 			CManager::GetInstance()->SetPause(false);
-			m_Appear = false;
 		}
-	}
-
-	if (m_Appear == true)
-	{
-		for (int nCnt = 0; nCnt < MAX_PAUSE; nCnt++)
-		{
-			m_pPauseUI[nCnt]->SetAppear(true);		
-		}
-		for (int nCnt = 0; nCnt < MAX_FG; nCnt++)
-		{
-			m_pPauseFG[nCnt]->SetAppear(true);
-		}
-		m_pPauseMark->SetAppear(true);
-
-		if (!m_bColor)
-		{
-			m_pPauseFG[0]->SetColor(D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.8f));
-			m_pPauseFG[1]->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-			m_pPauseFG[2]->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-			m_pPauseFG[3]->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-		}
-		m_bColor = true;
 	}
 	else
 	{
 		for (int nCnt = 0; nCnt < MAX_PAUSE; nCnt++)
 		{
-			m_pPauseUI[nCnt]->SetAppear(false);
+			if (m_pPauseUI[nCnt] != nullptr)
+			{
+				m_pPauseUI[nCnt]->SetAppear(false);
+			}
 		}
-		for (int nCnt = 0; nCnt < MAX_FG; nCnt++)
-		{
-			m_pPauseFG[nCnt]->SetAppear(false);
-		}
-		m_pPauseMark->SetAppear(false);
 
-		if (m_bColor)
+		if (m_pPauseFG != nullptr)
 		{
-			m_pPauseFG[0]->SetColor(D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f));
-			m_pPauseFG[1]->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f));
-			m_pPauseFG[2]->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f));
-			m_pPauseFG[3]->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f));
+			m_pPauseFG->SetAppear(false);
 		}
-		m_bColor = false;
 	}
 }
 

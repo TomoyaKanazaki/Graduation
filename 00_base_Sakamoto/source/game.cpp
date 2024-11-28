@@ -23,6 +23,7 @@
 #include "SlopeDevice.h"
 #include "mask.h"
 #include "signal.h"
+#include "pause.h"
 
 #include "sound.h"
 #include "shadow.h"
@@ -135,6 +136,11 @@ HRESULT CGame::Init(void)
 	////BGMの再生
 	CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_BGM_STAGE1);
 
+	if (m_pPause == nullptr)
+	{
+		m_pPause = CPause::Create();
+	}
+
 	if (m_pMask == nullptr)
 	{// 2Dマスクの生成
 		m_pMask = CMask::Create();
@@ -174,8 +180,6 @@ HRESULT CGame::Init(void)
 	m_pDevil = CDevil::Create();
 	m_pDevil->SetPos(D3DXVECTOR3(0.0f, 100.0f, 500.0f));
 	m_pDevil->SetScrollType((CDevil::SCROLL_TYPE)(CManager::GetInstance()->GetScrollType()));
-
-
 
 	//レールブロックの生成
 	LoadStageRailBlock("data\\TXT\\STAGE\\RailBlock.txt");
@@ -285,6 +289,12 @@ HRESULT CGame::Init(void)
 //====================================================================
 void CGame::Uninit(void)
 {
+	if (m_pPause != nullptr)
+	{
+		m_pPause->Uninit();
+	}
+
+
 	CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_BGM_STAGE2);
 
 	// スロー情報の全削除
@@ -425,6 +435,11 @@ void CGame::Update(void)
 			}
 		}
 
+		if (m_pPause != nullptr)
+		{
+			m_pPause->Update();
+		}
+
 #ifdef _DEBUG
 
 		if (pInputKeyboard->GetTrigger(DIK_F3))
@@ -446,7 +461,10 @@ void CGame::Update(void)
 //====================================================================
 void CGame::Draw(void)
 {
-
+	if (m_pPause != nullptr)
+	{
+		m_pPause->Draw();
+	}
 }
 
 //====================================================================
