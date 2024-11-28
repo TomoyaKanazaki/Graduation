@@ -41,8 +41,7 @@ CWall::CWall(int nPriority, CMapSystem::GRID gridCenter) : CObjectX(nPriority)
 {
 	SetSize(INITVECTOR3);
 	SetPos(INITVECTOR3);
-	m_Grid.x = gridCenter.x;	// グリッドの位置X
-	m_Grid.z = gridCenter.z;	// グリッドの位置Z
+	m_Grid = gridCenter;	// グリッドの位置
 }
 
 //====================================================================
@@ -80,9 +79,6 @@ CWall* CWall::Create(CMapSystem::GRID gridCenter)
 //====================================================================
 HRESULT CWall::Init(char* pModelName)
 {
-	CMapSystem* pMapSystem = CMapSystem::GetInstance();		// マップシステムの情報
-	D3DXVECTOR3 MapSystemPos = pMapSystem->GetMapPos();
-
 	SetType(CObject::TYPE_TILE);
 
 	CObjectX::Init(pModelName);
@@ -90,10 +86,8 @@ HRESULT CWall::Init(char* pModelName)
 	//マップとのマトリックスの掛け合わせをオンにする
 	SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
 
-	D3DXVECTOR3 size = GetSize() * 2.0f;		// モデルのサイズ取得
-
 	// 位置設定
-	CObjectX::SetPos(D3DXVECTOR3(MapSystemPos.x + m_Grid.x * size.x, 0.0f, MapSystemPos.z - m_Grid.z * size.z));
+	CObjectX::SetPos(m_Grid.ToWorld());
 
 	if (m_pList == nullptr)
 	{// リストマネージャー生成

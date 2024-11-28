@@ -210,9 +210,9 @@ HRESULT CTutorial::Init(void)
 	}
 
 	//ì]Ç™ÇÈä‚ÇÃê∂ê¨
-	CRollRock* pRock = CRollRock::Create("data\\MODEL\\BlockTest.x");
+	/*CRollRock* pRock = CRollRock::Create("data\\MODEL\\BlockTest.x");
 	D3DXVECTOR3 RockPos = CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(16, 2));
-	pRock->SetPos(D3DXVECTOR3(RockPos.x, 50.0f, RockPos.z));
+	pRock->SetPos(D3DXVECTOR3(RockPos.x, 50.0f, RockPos.z));*/
 
 	//// ìGÇÃê∂ê¨
 	//CEnemy::Create(CEnemy::ENEMY_MEDAMAN, CMapSystem::GRID(9, 7));

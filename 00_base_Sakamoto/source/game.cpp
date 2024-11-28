@@ -215,7 +215,7 @@ HRESULT CGame::Init(void)
 		break;
 
 	case 1:
-		CMapSystem::Load("data\\TXT\\STAGE\\Block.txt");
+		CMapSystem::Load("data\\TXT\\STAGE\\map00.csv");
 
 		// ¹‘¶¬
 		CItem::Create(CItem::TYPE_BIBLE, CMapSystem::GRID(BIBLE_OUTGRIT - 1, BIBLE_OUTGRIT - 1));
@@ -247,9 +247,9 @@ HRESULT CGame::Init(void)
 	}
 
 	//“]‚ª‚éŠâ‚Ì¶¬
-	CRollRock *pRock = CRollRock::Create("data\\MODEL\\BlockTest.x");
+	/*CRollRock *pRock = CRollRock::Create("data\\MODEL\\BlockTest.x");
 	D3DXVECTOR3 RockPos = CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(16, 2));
-	pRock->SetPos(D3DXVECTOR3(RockPos.x, 50.0f, RockPos.z));
+	pRock->SetPos(D3DXVECTOR3(RockPos.x, 50.0f, RockPos.z));*/
 
 	return S_OK;
 }

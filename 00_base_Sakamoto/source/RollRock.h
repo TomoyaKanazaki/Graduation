@@ -14,15 +14,16 @@
 //前方宣言
 class CObjGauge2D;
 
-//オブジェクトプレイヤークラス
+//転がる岩クラス
 class CRollRock : public CObjectX
 {
 public:
 
 	CRollRock(int nPriority = 3);
+	CRollRock(int nPriority, CMapSystem::GRID gridCenter);
 	~CRollRock();
 
-	static CRollRock* Create(char* pModelName);
+	static CRollRock* Create(CMapSystem::GRID gridCenter);
 
 	HRESULT Init(char* pModelName);
 	void Uninit(void);

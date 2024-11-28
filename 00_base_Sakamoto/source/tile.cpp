@@ -80,9 +80,6 @@ CTile* CTile::Create(CMapSystem::GRID gridCenter)
 //====================================================================
 HRESULT CTile::Init(char* pModelName)
 {
-	CMapSystem* pMapSystem = CMapSystem::GetInstance();		// マップシステムの情報
-	D3DXVECTOR3 MapSystemPos = pMapSystem->GetMapPos();
-
 	SetType(CObject::TYPE_TILE);
 
 	CObjectX::Init(pModelName);
@@ -90,10 +87,8 @@ HRESULT CTile::Init(char* pModelName)
 	//マップとのマトリックスの掛け合わせをオンにする
 	SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
 
-	D3DXVECTOR3 size = GetSize() * 2.0f;		// モデルのサイズ取得
-
 	// 位置設定
-	CObjectX::SetPos(D3DXVECTOR3(MapSystemPos.x + m_Grid.x * size.x, 0.0f, MapSystemPos.z - m_Grid.z * size.z));
+	CObjectX::SetPos(m_Grid.ToWorld());
 
 	if (m_pList == nullptr)
 	{// リストマネージャー生成
