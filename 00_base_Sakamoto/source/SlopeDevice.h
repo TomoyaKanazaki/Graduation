@@ -7,10 +7,10 @@
 #ifndef _SLOPE_DEVICE_H_
 #define _SLOPE_DEVICE_H_
 
-#include "character.h"
+#include "objectcharacter.h"
 
 //オブジェクトプレイヤークラス
-class CSlopeDevice : public CCharacter
+class CSlopeDevice : public CObjectCharacter
 {
 public:
 

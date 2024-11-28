@@ -7,7 +7,7 @@
 #ifndef _DEVIL_H_
 #define _DEVIL_H_
 
-#include "character.h"
+#include "objectcharacter.h"
 #include "useful.h"
 #include "MapSystem.h"
 
@@ -29,7 +29,7 @@ class CBoss;
 class CPlayer;
 
 //オブジェクトプレイヤークラス
-class CDevil : public CCharacter
+class CDevil : public CObjectCharacter
 {
 private:
 	static const int ENCOUNT_MAX = 128;

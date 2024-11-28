@@ -76,12 +76,6 @@
     <ClCompile Include="source\objmeshWall.cpp">
       <Filter>ソース ファイル\02_Object</Filter>
     </ClCompile>
-    <ClCompile Include="source\2DUI_edit.cpp">
-      <Filter>ソース ファイル\00_System</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Edit.cpp">
-      <Filter>ソース ファイル\00_System</Filter>
-    </ClCompile>
     <ClCompile Include="source\Xmodel.cpp">
       <Filter>ソース ファイル\00_System</Filter>
     </ClCompile>
@@ -244,9 +238,6 @@
     <ClCompile Include="source\friedegg.cpp">
       <Filter>ソース ファイル\10_item</Filter>
     </ClCompile>
-    <ClCompile Include="source\character.cpp">
-      <Filter>ソース ファイル\03_Direction</Filter>
-    </ClCompile>
     <ClCompile Include="source\AStar.cpp">
       <Filter>ソース ファイル\11_library</Filter>
     </ClCompile>
@@ -283,15 +274,12 @@
     <ClCompile Include="source\GamePlayer.cpp">
       <Filter>ソース ファイル\08_player</Filter>
     </ClCompile>
+    <ClCompile Include="source\objectcharacter.cpp">
+      <Filter>ソース ファイル\02_Object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\2DUI_edit.h">
-      <Filter>ソース ファイル\00_System</Filter>
-    </ClInclude>
     <ClInclude Include="source\debugproc.h">
-      <Filter>ソース ファイル\00_System</Filter>
-    </ClInclude>
-    <ClInclude Include="source\Edit.h">
       <Filter>ソース ファイル\00_System</Filter>
     </ClInclude>
     <ClInclude Include="source\input.h">
@@ -486,9 +474,6 @@
     <ClInclude Include="source\friedegg.h">
       <Filter>ソース ファイル\10_item</Filter>
     </ClInclude>
-    <ClInclude Include="source\character.h">
-      <Filter>ソース ファイル\03_Direction</Filter>
-    </ClInclude>
     <ClInclude Include="source\AStar.h">
       <Filter>ソース ファイル\11_library</Filter>
     </ClInclude>
@@ -527,6 +512,9 @@
     </ClInclude>
     <ClInclude Include="source\GamePlayer.h">
       <Filter>ソース ファイル\08_player</Filter>
+    </ClInclude>
+    <ClInclude Include="source\objectcharacter.h">
+      <Filter>ソース ファイル\02_Object</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

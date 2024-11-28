@@ -5,7 +5,7 @@
 //
 //============================================
 
-#include "character.h"
+#include "objectcharacter.h"
 
 #include "manager.h"
 #include "renderer.h"
@@ -31,7 +31,7 @@ namespace
 //====================================================================
 //コンストラクタ
 //====================================================================
-CCharacter::CCharacter(int nPriority) : CObject(nPriority),
+CObjectCharacter::CObjectCharacter(int nPriority) : CObject(nPriority),
 m_pShadow(nullptr)
 {
 	for (int nCnt = 0; nCnt < MODEL_NUM; nCnt++)
@@ -57,7 +57,7 @@ m_pShadow(nullptr)
 //====================================================================
 //デストラクタ
 //====================================================================
-CCharacter::~CCharacter()
+CObjectCharacter::~CObjectCharacter()
 {
 
 }
@@ -65,7 +65,7 @@ CCharacter::~CCharacter()
 //====================================================================
 // 初期化処理（継承以外での初期化処理）
 //====================================================================
-HRESULT CCharacter::Init(const char* pModelName)
+HRESULT CObjectCharacter::Init(const char* pModelName)
 {
 	strcpy(&m_aModelName[0], pModelName);
 
@@ -97,7 +97,7 @@ HRESULT CCharacter::Init(const char* pModelName)
 //====================================================================
 //終了処理
 //====================================================================
-void CCharacter::Uninit(void)
+void CObjectCharacter::Uninit(void)
 {
 	for (int nCntModel = 0; nCntModel < m_nNumModel; nCntModel++)
 	{
@@ -130,7 +130,7 @@ void CCharacter::Uninit(void)
 //====================================================================
 //更新処理
 //====================================================================
-void CCharacter::Update(void)
+void CObjectCharacter::Update(void)
 {
 	D3DXVECTOR3 pos = GetPos();
 
@@ -150,7 +150,7 @@ void CCharacter::Update(void)
 //====================================================================
 //描画処理
 //====================================================================
-void CCharacter::Draw(void)
+void CObjectCharacter::Draw(void)
 {
 	//デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
@@ -242,7 +242,7 @@ void CCharacter::Draw(void)
 //====================================================================
 // キャラクターテキスト設定処理
 //====================================================================
-void CCharacter::SetTxtCharacter(const char* pFilename)
+void CObjectCharacter::SetTxtCharacter(const char* pFilename)
 {
 	strcpy(&m_aModelName[0], pFilename);
 
@@ -267,7 +267,7 @@ void CCharacter::SetTxtCharacter(const char* pFilename)
 //====================================================================
 // モデル取得処理
 //====================================================================
-CModel* CCharacter::GetModel(int nCnt)
+CModel* CObjectCharacter::GetModel(int nCnt)
 {
 	if (m_apModel[nCnt] != nullptr)
 	{
@@ -282,7 +282,7 @@ CModel* CCharacter::GetModel(int nCnt)
 //====================================================================
 // モーション取得処理
 //====================================================================
-CMotion* CCharacter::GetMotion(void)
+CMotion* CObjectCharacter::GetMotion(void)
 {
 	if (m_pMotion != nullptr)
 	{
@@ -297,7 +297,7 @@ CMotion* CCharacter::GetMotion(void)
 //====================================================================
 // モデルロード処理
 //====================================================================
-void CCharacter::LoadModel(const char* pFilename)
+void CObjectCharacter::LoadModel(const char* pFilename)
 {
 	//ファイルを開く
 	FILE* pFile = fopen(pFilename, "r");

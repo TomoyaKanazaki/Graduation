@@ -10,7 +10,7 @@
 #include "renderer.h"
 #include "model.h"
 #include "motion.h"
-#include "character.h"
+#include "objectcharacter.h"
 #include "game.h"
 #include "tutorial.h"
 #include "object3D.h"
@@ -75,7 +75,7 @@ CListManager<CEnemy>* CEnemy::m_pList = nullptr; // オブジェクトリスト
 //====================================================================
 //コンストラクタ
 //====================================================================
-CEnemy::CEnemy(int nPriority) :CCharacter(nPriority),
+CEnemy::CEnemy(int nPriority) :CObjectCharacter(nPriority),
 m_pPath(nullptr),
 m_fCoordinateTimer(0.0f),
 m_nTargetIndex(0),
@@ -213,7 +213,7 @@ void CEnemy::Uninit(void)
 	}
 
 	// キャラクタークラスの終了（継承）
-	CCharacter::Uninit();
+	CObjectCharacter::Uninit();
 }
 
 //====================================================================
@@ -269,7 +269,7 @@ void CEnemy::Update(void)
 	}
 
 	// キャラクタークラスの更新（継承）
-	CCharacter::Update();
+	CObjectCharacter::Update();
 
 	// デバッグ表示
 	DebugProc::Print(DebugProc::POINT_LEFT, "[敵]横 %d : 縦 %d\n", m_Grid.x, m_Grid.z);
@@ -287,7 +287,7 @@ void CEnemy::Update(void)
 void CEnemy::Draw(void)
 {
 	// キャラクタークラスの描画（継承）
-	CCharacter::Draw();
+	CObjectCharacter::Draw();
 }
 
 //====================================================================
@@ -314,11 +314,11 @@ bool CEnemy::Hit(int nLife)
 HRESULT CEnemy::InitModel(const char* pFilename)
 {
 	// キャラクターテキスト読み込み処理
-	CCharacter::Init(pFilename);
+	CObjectCharacter::Init(pFilename);
 
 	// マトリックス設定
-	CCharacter::SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
-	CCharacter::SetUseStencil(true);
+	CObjectCharacter::SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
+	CObjectCharacter::SetUseStencil(true);
 
 	return S_OK;
 }
