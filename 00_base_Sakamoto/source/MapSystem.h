@@ -23,15 +23,15 @@ class CMapSystem
 public:
 
 	// マップのオブジェクトの種類
-	enum MAPTYPE
-	{
-		MAPTYPE_NONE = 0,		// 何でもない(床)
-		MAPTYPE_WALL,			// 壁
-		MAPTYPE_CROSS,			// 十字架
-		MAPTYPE_DEVILHOLLRANGE,	// デビルホールの生成範囲
-		MAPTYPE_DEVILHOLL,
-		MAPTYPE_MAX
-	};
+	//enum MAPTYPE
+	//{
+	//	MAPTYPE_NONE = 0,		// 何でもない(床)
+	//	MAPTYPE_WALL,			// 壁
+	//	MAPTYPE_CROSS,			// 十字架
+	//	MAPTYPE_DEVILHOLLRANGE,	// デビルホールの生成範囲
+	//	MAPTYPE_DEVILHOLL,
+	//	MAPTYPE_MAX
+	//};
 
 	// 特殊な座標系を管理する構造体
 	struct GRID

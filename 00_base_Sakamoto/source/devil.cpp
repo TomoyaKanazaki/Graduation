@@ -19,7 +19,6 @@
 #include "camera.h"
 #include "input.h"
 #include "enemy.h"
-#include "objGauge2D.h"
 #include "CubeBlock.h"
 #include "slowManager.h"
 #include "Number.h"

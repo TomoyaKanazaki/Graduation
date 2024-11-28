@@ -36,6 +36,8 @@ CRailBlock::CRailBlock(int nPriority) :CObjectX(nPriority)
 {
 	m_pTop = nullptr;		// 先頭のレールへのポインタ
 	m_pCur = nullptr;		// 最後尾のレールへのポインタ
+	m_Grid.x = 0;
+	m_Grid.z = 0;
 
 	for (int nCnt = 0; nCnt < 4; nCnt++)
 	{
@@ -50,8 +52,7 @@ CRailBlock::CRailBlock(int nPriority, CMapSystem::GRID gridCenter) : CObjectX(nP
 {
 	SetSize(INITVECTOR3);
 	SetPos(INITVECTOR3);
-	m_Grid.x = gridCenter.x;	// グリッドの位置X
-	m_Grid.z = gridCenter.z;	// グリッドの位置Z
+	m_Grid = gridCenter;		// グリッド
 }
 
 //====================================================================
@@ -72,7 +73,7 @@ CRailBlock* CRailBlock::Create(CMapSystem::GRID gridCenter)
 	if (pObjectBlock == nullptr)
 	{
 		//オブジェクト3Dの生成
-		pObjectBlock = new CRailBlock();
+		pObjectBlock = new CRailBlock(3, gridCenter);
 	}
 
 	//オブジェクトの初期化処理
@@ -97,12 +98,13 @@ HRESULT CRailBlock::Init(char* pModelName)
 
 	SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
 
+	// 初期化処理
 	CObjectX::Init(pModelName);
 
-	//SetPos(m_StartGrid.ToWorld());
+	// 位置設定
+	SetPos(m_Grid.ToWorld());
 
-	//SetTexture("data\\TEXTURE\\Wood001.png");
-
+	// 種類の設定
 	SetType(TYPE_RAILBLOCK);
 
 	/*if (Edit == false)
@@ -140,7 +142,7 @@ void CRailBlock::Uninit(void)
 	}
 
 	//自身が所持するレールを全て削除する
-	CRail* pRail = m_pTop;
+	/*CRail* pRail = m_pTop;
 	while (1)
 	{
 		if (pRail != nullptr)
@@ -155,7 +157,7 @@ void CRailBlock::Uninit(void)
 		}
 	}
 	m_pTop = nullptr;
-	m_pCur = nullptr;
+	m_pCur = nullptr;*/
 
 	CObjectX::Uninit();
 }
@@ -190,6 +192,7 @@ void CRailBlock::Update(void)
 	//	RailCheck();
 	//}
 
+	// 位置設定
 	SetPos(Pos);
 	SetPosOld(PosOld);
 

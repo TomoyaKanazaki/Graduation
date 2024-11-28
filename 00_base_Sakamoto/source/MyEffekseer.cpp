@@ -9,7 +9,6 @@
 #include <windows.h>
 
 #include <iostream>
-#include <string>
 #include <locale>
 #include <codecvt>
 
@@ -37,35 +36,35 @@ namespace MyEffekseer
 	// エフェクトの名前
 	const char* EFFECT_PATH[] =
 	{
-		"data\\EFFEKSEER\\Effect\\fireball.efkefc",       // ファイアボール
-		"data\\EFFEKSEER\\Effect\\charge.efkefc",         // チャージ
-		"data\\EFFEKSEER\\Effect\\smoke.efkefc",          // スモーク
-		"data\\EFFEKSEER\\Effect\\hit.efkefc",			  // ヒット
-		"data\\EFFEKSEER\\Effect\\get_items.efkefc",      // アイテム取得
-		"data\\EFFEKSEER\\Effect\\eat.efkefc",			  // 捕食
-		"data\\EFFEKSEER\\Effect\\medaman_respawn.efkefc",			  // メダマンのリスポーン
-		"data\\EFFEKSEER\\Effect\\bonbon_respawn.efkefc",			  // ボンボンのリスポーン
-		"data\\EFFEKSEER\\Effect\\smalldevil_respawn.efkefc",		  // コデビルのリスポーン
-		"data\\EFFEKSEER\\Effect\\boaboa.efkefc",		  // ボアボア
-		"data\\EFFEKSEER\\Effect\\cross.efkefc",		  // 十字架
-		"data\\EFFEKSEER\\Effect\\bible.efkefc",		  // 聖書
-		"data\\EFFEKSEER\\Effect\\dustcloud.efkefc",		  // 歩いた時の砂埃
-		"data\\EFFEKSEER\\Effect\\fall_smoke.efkefc",		  // 落下の土煙
-		"data\\EFFEKSEER\\Effect\\born_player00.efkefc",		  // プレイヤー１の卵落下
-		"data\\EFFEKSEER\\Effect\\born_player01.efkefc",		  // プレイヤー2の卵落下
-		"data\\EFFEKSEER\\Effect\\drop.efkefc",				// タマゴンの汗
-		"data\\EFFEKSEER\\Effect\\speedup.efkefc",		  // 加速
-		"data\\EFFEKSEER\\Effect\\roll.efkefc",		  // 石が転がる
-		"data\\EFFEKSEER\\Effect\\wall_hit_thewall.efkefc",		  // 壁に火が当たる
-		"data\\EFFEKSEER\\Effect\\suprise.efkefc",		  // 小デビルが当たる
-		"data\\EFFEKSEER\\Effect\\steam.efkefc",		  // 卵から出る湯気
-		"data\\EFFEKSEER\\Effect\\bornguid00.efkefc",		  // 生成ガイド player1
-		"data\\EFFEKSEER\\Effect\\bornguid01.efkefc",		  // 生成ガイド player2
-		"data\\EFFEKSEER\\Effect\\got_theitem.efkefc",		  // アイテムを持っているとき
-		"data\\EFFEKSEER\\Effect\\acention.efkefc",		  // アイテムを持っているとき
-		"data\\EFFEKSEER\\Effect\\revive_medaman.efkefc",		  // メダマンの復活ガイド
-		"data\\EFFEKSEER\\Effect\\revive_bonbon.efkefc",		  // ボンボンの復活ガイド
-		"data\\EFFEKSEER\\Effect\\revive_smalldevil.efkefc",	  // 小デビルの復活ガイド
+		"data\\EFFEKSEER\\Effect\\fireball.efkefc",				// ファイアボール
+		"data\\EFFEKSEER\\Effect\\charge.efkefc",				// チャージ
+		"data\\EFFEKSEER\\Effect\\smoke.efkefc",				// スモーク
+		"data\\EFFEKSEER\\Effect\\hit.efkefc",					// ヒット
+		"data\\EFFEKSEER\\Effect\\get_items.efkefc",			// アイテム取得
+		"data\\EFFEKSEER\\Effect\\eat.efkefc",					// 捕食
+		"data\\EFFEKSEER\\Effect\\medaman_respawn.efkefc",		// メダマンのリスポーン
+		"data\\EFFEKSEER\\Effect\\bonbon_respawn.efkefc",		// ボンボンのリスポーン
+		"data\\EFFEKSEER\\Effect\\smalldevil_respawn.efkefc",	// コデビルのリスポーン
+		"data\\EFFEKSEER\\Effect\\boaboa.efkefc",				// ボアボア
+		"data\\EFFEKSEER\\Effect\\cross.efkefc",				// 十字架
+		"data\\EFFEKSEER\\Effect\\bible.efkefc",				// 聖書
+		"data\\EFFEKSEER\\Effect\\dustcloud.efkefc",			// 歩いた時の砂埃
+		"data\\EFFEKSEER\\Effect\\fall_smoke.efkefc",			// 落下の土煙
+		"data\\EFFEKSEER\\Effect\\born_player00.efkefc",		// プレイヤー１の卵落下
+		"data\\EFFEKSEER\\Effect\\born_player01.efkefc",		// プレイヤー2の卵落下
+		"data\\EFFEKSEER\\Effect\\drop.efkefc",					// タマゴンの汗
+		"data\\EFFEKSEER\\Effect\\speedup.efkefc",				// 加速
+		"data\\EFFEKSEER\\Effect\\roll.efkefc",					// 石が転がる
+		"data\\EFFEKSEER\\Effect\\wall_hit_thewall.efkefc",		// 壁に火が当たる
+		"data\\EFFEKSEER\\Effect\\suprise.efkefc",				// 小デビルが当たる
+		"data\\EFFEKSEER\\Effect\\steam.efkefc",				// 卵から出る湯気
+		"data\\EFFEKSEER\\Effect\\bornguid00.efkefc",			// 生成ガイド player1
+		"data\\EFFEKSEER\\Effect\\bornguid01.efkefc",			// 生成ガイド player2
+		"data\\EFFEKSEER\\Effect\\got_theitem.efkefc",			// アイテムを持っているとき
+		"data\\EFFEKSEER\\Effect\\acention.efkefc",				// アイテムを持っているとき
+		"data\\EFFEKSEER\\Effect\\revive_medaman.efkefc",		// メダマンの復活ガイド
+		"data\\EFFEKSEER\\Effect\\revive_bonbon.efkefc",		// ボンボンの復活ガイド
+		"data\\EFFEKSEER\\Effect\\revive_smalldevil.efkefc",	// 小デビルの復活ガイド
 
 	};
 
@@ -108,7 +107,9 @@ static_assert(NUM_ARRAY(MyEffekseer::EFFECT_PATH) == CMyEffekseer::TYPE_MAX, "ER
 //===========================================================
 // コンストラクタ
 //===========================================================
-CMyEffekseer::CMyEffekseer()
+CMyEffekseer::CMyEffekseer() :
+	m_nNum(0),
+	m_nTime(0)
 {
 }
 
@@ -117,6 +118,11 @@ CMyEffekseer::CMyEffekseer()
 //===========================================================
 CMyEffekseer::~CMyEffekseer()
 {
+	if (m_pInstance != nullptr)
+	{
+		delete m_pInstance;
+		m_pInstance = nullptr;
+	}
 }
 
 //===========================================================
@@ -207,6 +213,9 @@ void CMyEffekseer::Uninit(void)
 	{
 		effect->Uninit();
 	}
+
+	m_EfkRenderer->Release();
+	m_EfkManager->Release();
 
 	// 自身を終了する
 	delete m_pInstance;
@@ -392,7 +401,10 @@ CListManager<CEffekseer>* CEffekseer::m_pList = nullptr; // オブジェクトリスト]
 //===========================================================
 CEffekseer::CEffekseer() :
 	m_eType(CMyEffekseer::TYPE_NONE),
-	m_bDeath(false)
+	m_bDeath(false),
+	m_EfkName(nullptr),
+	m_bLoop(false),
+	m_efkHandle(0)
 {
 
 }

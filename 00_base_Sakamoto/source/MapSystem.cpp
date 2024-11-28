@@ -16,6 +16,7 @@
 #include "wall.h"
 #include "item.h"
 #include "DevilHole.h"
+#include "RailBlock.h"
 
 // 定数定義
 namespace
@@ -469,6 +470,14 @@ void CMapSystem::Load(const char* pFilename)
 							else if (str == "5")
 							{ // レールブロック
 
+								// レールブロックの生成
+								CRailBlock::Create(pMapSystem->m_gridCenter);
+
+								// グリッド設定の判定
+								bGridSet = true;
+
+								// 経路探索用情報の設定
+								//generator->addCollision(pMapSystem->m_gridCenter.ToAStar()); // 通過不可地点を追加
 							}
 
 							// グリッド判定の設定
