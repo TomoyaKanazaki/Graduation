@@ -342,6 +342,7 @@ void CManager::Uninit(void)
 	{
 		// エフェクシアの終了処理
 		m_pEffect->Uninit();
+		delete m_pEffect;
 		m_pEffect = nullptr;
 	}
 }

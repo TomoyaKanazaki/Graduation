@@ -205,8 +205,9 @@ void CMyEffekseer::Uninit(void)
 		effect->Uninit();
 	}
 
-	// 自身を終了する
-	delete this;
+	// Effekseerのマネージャのリソースを解放
+	m_EfkManager.Reset();
+	m_EfkManager = nullptr;
 }
 
 //===========================================================
@@ -236,7 +237,7 @@ void CMyEffekseer::Update(void)
 		m_EfkManager->SetRotation(Handle, rot.X, rot.Y, rot.Z);
 		m_EfkManager->SetScale(Handle, scale.X, scale.Y, scale.Z);
 
-#if 0 // 金崎のデバッグ用
+#if 1 // 金崎のデバッグ用
 		DebugProc::Print(DebugProc::POINT_CENTER, "エフェクトの種類 : ");
 		auto str = magic_enum::enum_name(effect->GetEfkType());
 		DebugProc::Print(DebugProc::POINT_CENTER, str.data());
@@ -422,8 +423,6 @@ void CEffekseer::Uninit(void)
 		// リストマネージャーの破棄
 		m_pList->Release(m_pList);
 	}
-
-	m_effect.Reset();
 
 	// 自身の終了
 	delete this;

@@ -512,7 +512,7 @@ D3DXVECTOR3 CPlayer::MoveInputKey(D3DXVECTOR3 Move)
 		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
 		D3DXMATRIX mat = *GetUseMultiMatrix();
 		D3DXVECTOR3 ef = useful::CalcMatrix(m_pos, m_rot, mat);
-		MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, m_rot);
+		//MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, m_rot);
 
 		Move.z += 1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 		Move.x += 1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
@@ -527,7 +527,7 @@ D3DXVECTOR3 CPlayer::MoveInputKey(D3DXVECTOR3 Move)
 		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
 		D3DXMATRIX mat = *GetUseMultiMatrix();
 		D3DXVECTOR3 ef = useful::CalcMatrix(m_pos, m_rot, mat);
-		MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, m_rot);
+		//MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, m_rot);
 
 		Move.z += -1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 		Move.x += -1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
@@ -541,7 +541,7 @@ D3DXVECTOR3 CPlayer::MoveInputKey(D3DXVECTOR3 Move)
 		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
 		D3DXMATRIX mat = *GetUseMultiMatrix();
 		D3DXVECTOR3 ef = useful::CalcMatrix(m_pos, m_rot, mat);
-		MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, m_rot);
+		//MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, m_rot);
 
 		Move.x += -1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 		Move.z -= -1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
@@ -556,7 +556,7 @@ D3DXVECTOR3 CPlayer::MoveInputKey(D3DXVECTOR3 Move)
 		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
 		D3DXMATRIX mat = *GetUseMultiMatrix();
 		D3DXVECTOR3 ef = useful::CalcMatrix(m_pos, m_rot, mat);
-		MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, m_rot);
+		//MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, m_rot);
 
 		Move.x += 1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 		Move.z -= 1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
@@ -586,7 +586,7 @@ D3DXVECTOR3 CPlayer::MoveInputPadStick(D3DXVECTOR3 Move)
 				CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
 				D3DXMATRIX mat = *GetUseMultiMatrix();
 				D3DXVECTOR3 ef = useful::CalcMatrix(m_pos, m_rot, mat);
-				MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, m_rot);
+				//MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, m_rot);
 
 				Move.z += 1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 				Move.x += 1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
@@ -600,7 +600,7 @@ D3DXVECTOR3 CPlayer::MoveInputPadStick(D3DXVECTOR3 Move)
 				CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
 				D3DXMATRIX mat = *GetUseMultiMatrix();
 				D3DXVECTOR3 ef = useful::CalcMatrix(m_pos, m_rot, mat);
-				MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, m_rot);
+				//MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, m_rot);
 
 				Move.z += -1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 				Move.x += -1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
@@ -614,7 +614,7 @@ D3DXVECTOR3 CPlayer::MoveInputPadStick(D3DXVECTOR3 Move)
 				CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
 				D3DXMATRIX mat = *GetUseMultiMatrix();
 				D3DXVECTOR3 ef = useful::CalcMatrix(m_pos, m_rot, mat);
-				MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, m_rot);
+				//MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, m_rot);
 
 				Move.x += -1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 				Move.z -= -1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
@@ -628,7 +628,7 @@ D3DXVECTOR3 CPlayer::MoveInputPadStick(D3DXVECTOR3 Move)
 				CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
 				D3DXMATRIX mat = *GetUseMultiMatrix();
 				D3DXVECTOR3 ef = useful::CalcMatrix(m_pos, m_rot, mat);
-				MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, m_rot);
+				//MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, m_rot);
 
 				Move.x += 1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 				Move.z -= 1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
@@ -659,7 +659,7 @@ D3DXVECTOR3 CPlayer::MoveInputPadKey(D3DXVECTOR3 Move)
 			{
 				D3DXMATRIX mat = *GetUseMultiMatrix();
 				D3DXVECTOR3 ef = useful::CalcMatrix(m_pos, m_rot, mat);
-				MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, m_rot);
+				//MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, m_rot);
 
 				Move.z += 1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 				Move.x += 1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
@@ -673,7 +673,7 @@ D3DXVECTOR3 CPlayer::MoveInputPadKey(D3DXVECTOR3 Move)
 			{
 				D3DXMATRIX mat = *GetUseMultiMatrix();
 				D3DXVECTOR3 ef = useful::CalcMatrix(m_pos, m_rot, mat);
-				MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, m_rot);
+				//MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, m_rot);
 
 				Move.z += -1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 				Move.x += -1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
@@ -686,7 +686,7 @@ D3DXVECTOR3 CPlayer::MoveInputPadKey(D3DXVECTOR3 Move)
 			{
 				D3DXMATRIX mat = *GetUseMultiMatrix();
 				D3DXVECTOR3 ef = useful::CalcMatrix(m_pos, m_rot, mat);
-				MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, m_rot);
+				//MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, m_rot);
 
 				Move.x += -1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 				Move.z -= -1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
@@ -700,7 +700,7 @@ D3DXVECTOR3 CPlayer::MoveInputPadKey(D3DXVECTOR3 Move)
 			{
 				D3DXMATRIX mat = *GetUseMultiMatrix();
 				D3DXVECTOR3 ef = useful::CalcMatrix(m_pos, m_rot, mat);
-				MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, m_rot);
+				//MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, m_rot);
 
 				Move.x += 1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 				Move.z -= 1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
