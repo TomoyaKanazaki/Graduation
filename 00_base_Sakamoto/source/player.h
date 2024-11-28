@@ -133,7 +133,6 @@ public:
 	CMapSystem::GRID GetGrid(void) { return m_Grid; }
 
 	virtual void Death(void);
-	bool SortObject(D3DXVECTOR3 pos);					// オブジェクトとのソート処理
 
 	void SetItemType(ITEM_TYPE eType);
 	ITEM_TYPE GetItemType() { return m_eItemType; }		// アイテムの種類取得

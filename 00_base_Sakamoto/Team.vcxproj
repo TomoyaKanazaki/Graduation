@@ -42,7 +42,6 @@
     <ClCompile Include="source\GamePlayer.cpp" />
     <ClCompile Include="source\input.cpp" />
     <ClCompile Include="source\item.cpp" />
-    <ClCompile Include="source\lib\Scene.cpp" />
     <ClCompile Include="source\LifeUi.cpp" />
     <ClCompile Include="source\light.cpp" />
     <ClCompile Include="source\listManager.cpp" />
@@ -78,6 +77,7 @@
     <ClCompile Include="source\renderer.cpp" />
     <ClCompile Include="source\result.cpp" />
     <ClCompile Include="source\RollRock.cpp" />
+    <ClCompile Include="source\Scene.cpp" />
     <ClCompile Include="source\score.cpp" />
     <ClCompile Include="source\scrollarrow.cpp" />
     <ClCompile Include="source\select.cpp" />
@@ -122,7 +122,6 @@
     <ClInclude Include="source\input.h" />
     <ClInclude Include="source\item.h" />
     <ClInclude Include="source\lib\magic_enum.hpp" />
-    <ClInclude Include="source\lib\Scene.h" />
     <ClInclude Include="source\LifeUi.h" />
     <ClInclude Include="source\light.h" />
     <ClInclude Include="source\listManager.h" />
@@ -157,6 +156,7 @@
     <ClInclude Include="source\renderer.h" />
     <ClInclude Include="source\result.h" />
     <ClInclude Include="source\RollRock.h" />
+    <ClInclude Include="source\Scene.h" />
     <ClInclude Include="source\score.h" />
     <ClInclude Include="source\scrollarrow.h" />
     <ClInclude Include="source\select.h" />
