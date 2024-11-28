@@ -176,13 +176,13 @@ HRESULT CPlayer::Init(int PlayNumber)
 	m_MoveState = MOVE_STATE_WAIT;
 
 	//マップとのマトリックスの掛け合わせをオンにする
-	SetUseMultiMatrix(GetListTopField()->GetMatrix());
+	SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
 
 	// キャラクターテキスト読み込み処理
 	CCharacter::Init("data\\TXT\\motion_tamagon1P.txt");
 
 	// キャラクターのマトリックス設定
-	CCharacter::SetUseMultiMatrix(GetListTopField()->GetMatrix());
+	CCharacter::SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
 	CCharacter::SetUseStencil(true);
 	CCharacter::SetUseShadowMtx(true);
 
@@ -285,39 +285,6 @@ void CPlayer::Uninit(void)
 //====================================================================
 void CPlayer::Update(void)
 {
-	switch (CScene::GetMode())
-	{
-	case CScene::MODE_TITLE:
-		TitleUpdate();
-		break;
-
-	case CScene::MODE_GAME:
-		GameUpdate();
-		break;
-
-	case CScene::MODE_TUTORIAL:
-		TutorialUpdate();
-		break;
-
-	case CScene::MODE_RESULT:
-		break;
-	}
-}
-
-//====================================================================
-//タイトルでの更新処理
-//====================================================================
-void CPlayer::TitleUpdate(void)
-{
-	// キャラクタークラスの更新（継承）
-	CCharacter::Update();
-}
-
-//====================================================================
-//ゲームでの更新処理
-//====================================================================
-void CPlayer::GameUpdate(void)
-{
 	// 過去の位置に代入
 	m_posOld = m_pos;
 
@@ -327,11 +294,11 @@ void CPlayer::GameUpdate(void)
 		SearchWall();
 
 		if (
-			(m_State != STATE_EGG && CollisionStageIn() == true && 
-			CMapSystem::GetInstance()->GetGritBool(m_Grid.x,m_Grid.z) == false)||
+			(m_State != STATE_EGG && CollisionStageIn() == true &&
+				CMapSystem::GetInstance()->GetGritBool(m_Grid.x, m_Grid.z) == false) ||
 			(m_State == STATE_EGG && CollisionStageIn() == true &&
-			CMapSystem::GetInstance()->GetGritBool(m_Grid.x, m_Grid.z) == false &&
-			m_bGritCenter == true && m_pos.y <= 0.0f)
+				CMapSystem::GetInstance()->GetGritBool(m_Grid.x, m_Grid.z) == false &&
+				m_bGritCenter == true && m_pos.y <= 0.0f)
 			)
 		{// ステージ内にいる かつ ブロックの無いグリッド上の時
 			// 移動処理
@@ -429,14 +396,6 @@ void CPlayer::GameUpdate(void)
 	auto str = magic_enum::enum_name(m_State);
 	DebugProc::Print(DebugProc::POINT_LEFT, str.data());
 	DebugProc::Print(DebugProc::POINT_LEFT, "\n");
-}
-
-//====================================================================
-//チュートリアルでの更新処理
-//====================================================================
-void CPlayer::TutorialUpdate(void)
-{
-
 }
 
 //====================================================================
@@ -952,7 +911,7 @@ void CPlayer::StateManager(void)
 			m_pUpEgg = CObjectX::Create("data\\MODEL\\00_Player\\1P\\upper_egg.x");
 			m_pUpEgg->SetMatColor(D3DXCOLOR(0.263529f, 0.570980f, 0.238431f, 1.0f));
 
-			m_pUpEgg->SetUseMultiMatrix(GetListTopField()->GetMatrix());
+			m_pUpEgg->SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
 		}
 
 		if (m_pDownEgg == nullptr)
@@ -960,7 +919,7 @@ void CPlayer::StateManager(void)
 			m_pDownEgg = CObjectX::Create("data\\MODEL\\00_Player\\1P\\downer_egg.x");
 			m_pDownEgg->SetMatColor(D3DXCOLOR(0.263529f, 0.570980f, 0.238431f, 1.0f));
 
-			m_pDownEgg->SetUseMultiMatrix(GetListTopField()->GetMatrix());
+			m_pDownEgg->SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
 		}
 		break;
 	}
@@ -1078,7 +1037,7 @@ void CPlayer::CollisionMoveRailBlock(useful::COLLISION XYZ)
 	// レールブロックリストの中身を確認する
 	for (CRailBlock* pRailBlock : list)
 	{
-		D3DXVECTOR3 D_pos = GetListTopDevil()->GetDevilPos();
+		D3DXVECTOR3 D_pos = CDevil::GetListTop()->GetDevilPos();
 		D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
 		float G_Size = CMapSystem::GetInstance()->GetGritSize();
 
@@ -1171,7 +1130,7 @@ void CPlayer::CollisionMoveRock(useful::COLLISION XYZ)
 	// レールブロックリストの中身を確認する
 	for (CRollRock* pRock : list)
 	{
-		D3DXVECTOR3 D_pos = GetListTopDevil()->GetDevilPos();
+		D3DXVECTOR3 D_pos = CDevil::GetListTop()->GetDevilPos();
 		D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
 		float G_Size = CMapSystem::GetInstance()->GetGritSize();
 
@@ -1323,7 +1282,7 @@ void CPlayer::CollisionEnemy(void)
 //====================================================================
 void CPlayer::CollisionStageOut(void)
 {
-	D3DXVECTOR3 D_pos = GetListTopDevil()->GetDevilPos();
+	D3DXVECTOR3 D_pos = CDevil::GetListTop()->GetDevilPos();
 	D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
 	float G_Size = CMapSystem::GetInstance()->GetGritSize();
 
@@ -1358,7 +1317,7 @@ void CPlayer::CollisionStageOut(void)
 //====================================================================
 bool CPlayer::CollisionStageIn(void)
 {
-	D3DXVECTOR3 D_pos = GetListTopDevil()->GetDevilPos();
+	D3DXVECTOR3 D_pos = CDevil::GetListTop()->GetDevilPos();
 	D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
 	float G_Size = CMapSystem::GetInstance()->GetGritSize();
 
@@ -1380,7 +1339,7 @@ void CPlayer::CollisionPressStageOut(void)
 {
 	if (m_bPressObj == true)
 	{
-		D3DXVECTOR3 D_pos = GetListTopDevil()->GetDevilPos();
+		D3DXVECTOR3 D_pos = CDevil::GetListTop()->GetDevilPos();
 		D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
 		float G_Size = CMapSystem::GetInstance()->GetGritSize() * 0.5f;
 
@@ -1459,7 +1418,7 @@ void CPlayer::PosUpdate(void)
 		fSpeed = m_pSlow->GetValue();
 	}
 
-	CDevil* pDevil = GetListTopDevil();
+	CDevil* pDevil = CDevil::GetListTop();
 
 	//Y軸の位置更新
 	m_pos.y += m_move.y * CManager::GetInstance()->GetGameSpeed() * fSpeed;
@@ -1607,9 +1566,9 @@ void CPlayer::EggMove(void)
 			m_EggMove.x = m_EggMove.x * EGG_MOVE_DEL;
 			m_EggMove.z = m_EggMove.z * EGG_MOVE_DEL;
 
-			if (pos.y < GetListTopField()->GetPos().y + 30.0f)
+			if (pos.y < CObjmeshField::GetListTop()->GetPos().y + 30.0f)
 			{
-				pos.y = GetListTopField()->GetPos().y + 30.0f;
+				pos.y = CObjmeshField::GetListTop()->GetPos().y + 30.0f;
 			}
 			else
 			{
@@ -1851,41 +1810,6 @@ void CPlayer::SetModelColor(CModel::COLORTYPE Type, D3DXCOLOR Col)
 	}
 }
 
-//====================================================================
-// マップ取得
-//====================================================================
-CObjmeshField* CPlayer::GetListTopField(void)
-{
-	// キューブブロックのリスト構造が無ければ抜ける
-	if (CObjmeshField::GetList() == nullptr) { return nullptr; }
-	std::list<CObjmeshField*> list = CObjmeshField::GetList()->GetList();    // リストを取得
-
-	// キューブブロックリストの中身を確認する
-	for (CObjmeshField* pField : list)
-	{
-		return pField;
-	} 
-
-	return nullptr;
-}
-
-//====================================================================
-// デビル取得
-//====================================================================
-CDevil* CPlayer::GetListTopDevil(void)
-{
-	// キューブブロックのリスト構造が無ければ抜ける
-	if (CDevil::GetList() == nullptr) { return nullptr; }
-	std::list<CDevil*> list = CDevil::GetList()->GetList();    // リストを取得
-
-	// キューブブロックリストの中身を確認する
-	for (CDevil* pDevil : list)
-	{
-		return pDevil;
-	}
-
-	return nullptr;
-}
 
 //==========================================
 //  リストの取得

@@ -8,6 +8,7 @@
 #include "fade.h"
 #include "objmeshField.h"
 #include "player.h"
+#include "TutorialPlayer.h"
 #include "camera.h"
 #include "timer.h"
 #include "Score.h"
@@ -115,10 +116,10 @@ HRESULT CTutorial::Init(void)
 	m_pMapField = CObjmeshField::Create(nMapWightMax - 1, nMapHeigtMax - 1);
 	m_pMapField->SetPos(INITVECTOR3);
 
-	// 下床の生成
-	CObjmeshField* pBottonField = CObjmeshField::Create(BOTTOM_FIELD_VTX_WIDTH, BOTTOM_FIELD_VTX_HEIGHT);
-	pBottonField->SetTexture(BOTTOM_FIELD_TEX);
-	pBottonField->SetPos(BOTTOM_FIELD_POS);
+	//// 下床の生成
+	//CObjmeshField* pBottonField = CObjmeshField::Create(BOTTOM_FIELD_VTX_WIDTH, BOTTOM_FIELD_VTX_HEIGHT);
+	//pBottonField->SetTexture(BOTTOM_FIELD_TEX);
+	//pBottonField->SetPos(BOTTOM_FIELD_POS);
 	m_bGameEnd = false;
 
 	//デビルの生成
@@ -128,22 +129,22 @@ HRESULT CTutorial::Init(void)
 	if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_SINGLE)
 	{
 		//プレイヤーの生成
-		m_pPlayer[0] = CPlayer::Create(0);
+		m_pPlayer[0] = CTutorialPlayer::Create(0);
 		m_pPlayer[0]->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(11, 9)));
 	}
 	else if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
 	{
 		//プレイヤーの生成
-		m_pPlayer[0] = CPlayer::Create(0);
+		m_pPlayer[0] = CTutorialPlayer::Create(0);
 		m_pPlayer[0]->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(11, 9)));
 
-		m_pPlayer[1] = CPlayer::Create(1);
+		m_pPlayer[1] = CTutorialPlayer::Create(1);
 		m_pPlayer[1]->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(11, 4)));
 	}
 	else
 	{
 		//プレイヤーの生成
-		m_pPlayer[0] = CPlayer::Create(0);
+		m_pPlayer[0] = CTutorialPlayer::Create(0);
 		m_pPlayer[0]->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(11, 9)));
 	}
 
@@ -162,8 +163,8 @@ HRESULT CTutorial::Init(void)
 		CMapSystem::Load("data\\TXT\\STAGE\\Block.txt");
 
 		//pDevilHole = CDevilHole::Create("data\\MODEL\\DevilHole.x");
-		pDevilHole->SetGrid(CMapSystem::GRID(11, 7));
-		CMapSystem::GetInstance()->SetGritBool(11, 7, true);
+		//pDevilHole->SetGrid(CMapSystem::GRID(11, 7));
+		//CMapSystem::GetInstance()->SetGritBool(11, 7, true);
 
 		// TODO : 外部書き出しを利用する
 		{
@@ -217,16 +218,16 @@ HRESULT CTutorial::Init(void)
 	D3DXVECTOR3 RockPos = CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(16, 2));
 	pRock->SetPos(D3DXVECTOR3(RockPos.x, 50.0f, RockPos.z));
 
-	// 敵の生成
-	CEnemy::Create(CEnemy::ENEMY_MEDAMAN, CMapSystem::GRID(9, 7));
-	CEnemy::Create(CEnemy::ENEMY_BONBON, CMapSystem::GRID(11, 5));
-	CEnemy::Create(CEnemy::ENEMY_LITTLEDEVIL, CMapSystem::GRID(13, 7));
+	//// 敵の生成
+	//CEnemy::Create(CEnemy::ENEMY_MEDAMAN, CMapSystem::GRID(9, 7));
+	//CEnemy::Create(CEnemy::ENEMY_BONBON, CMapSystem::GRID(11, 5));
+	//CEnemy::Create(CEnemy::ENEMY_LITTLEDEVIL, CMapSystem::GRID(13, 7));
 
 #if _DEBUG
-	if (m_pEdit == nullptr)
-	{
-		m_pEdit = CEdit::Create();
-	}
+	//if (m_pEdit == nullptr)
+	//{
+	//	m_pEdit = CEdit::Create();
+	//}
 #endif
 	return S_OK;
 }
@@ -245,12 +246,12 @@ void CTutorial::Uninit(void)
 	m_pBoss = nullptr;
 
 #if _DEBUG
-	if (m_pEdit != nullptr)
-	{
-		//m_pEdit->Uninit();
-		delete m_pEdit;
-		m_pEdit = nullptr;
-	}
+	//if (m_pEdit != nullptr)
+	//{
+	//	//m_pEdit->Uninit();
+	//	delete m_pEdit;
+	//	m_pEdit = nullptr;
+	//}
 #endif
 
 	if (m_pTutorial != nullptr)

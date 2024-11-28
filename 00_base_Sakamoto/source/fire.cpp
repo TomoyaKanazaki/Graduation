@@ -100,7 +100,7 @@ HRESULT CFire::Init(char* pModelName)
 	// Œp³ƒNƒ‰ƒX‚Ì‰Šú‰»
 	CObjectX::Init(pModelName);
 
-	SetUseMultiMatrix(CGame::GetInstance()->GetMapField()->GetMatrix());
+	SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
 
 	// ‰Š‚Ì‘Ì—Í
 	m_nLife = FIRE_LIFE;

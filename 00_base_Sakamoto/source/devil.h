@@ -94,6 +94,7 @@ public:
 
 	// 静的メンバ関数
 	static CListManager<CDevil>* GetList(void); // リスト取得
+	static CDevil* GetListTop(void); // リスト取得
 
 private:
 	void ActionState(void);		//モーションと状態の管理

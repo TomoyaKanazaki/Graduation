@@ -209,7 +209,7 @@ void CDevil::Update(void)
 	posOldMy = posMy;
 
 	// マップの傾き
-	m_DevilRot = CGame::GetInstance()->GetMapField()->GetRot();
+	m_DevilRot = CObjmeshField::GetListTop()->GetRot();
 
 	//状態の管理
 	StateManager();
@@ -390,7 +390,7 @@ void CDevil::Move(int Arroow)
 //====================================================================
 void CDevil::BackSlope(void)
 {
-	CObjmeshField* pMapField = CGame::GetInstance()->GetMapField();
+	CObjmeshField* pMapField = CObjmeshField::GetListTop();
 	D3DXVECTOR3 MapRot = pMapField->GetRot();
 	bool bBackOK = false;
 
@@ -505,7 +505,7 @@ void CDevil::BackSlope(void)
 //====================================================================
 void CDevil::Slope(int Arroow)
 {	
-	CObjmeshField *pMapField = CGame::GetInstance()->GetMapField();
+	CObjmeshField *pMapField = CObjmeshField::GetListTop();
 	D3DXVECTOR3 MapRot = pMapField->GetRot();
 
 	switch (m_ScrollType)
@@ -1004,7 +1004,7 @@ void CDevil::DebugKey(void)
 
 	if (pInputKeyboard->GetPress(DIK_5))
 	{
-		CObjmeshField* pMapField = CGame::GetInstance()->GetMapField();
+		CObjmeshField* pMapField = CObjmeshField::GetListTop();
 		D3DXVECTOR3 MapRot = pMapField->GetRot();
 		MapRot = INITVECTOR3;
 		pMapField->SetRot(MapRot);
@@ -1528,11 +1528,7 @@ float CDevil::MoveSlopeX(float Move)
 {
 	float fSlopeMove = 1.0f;
 
-	D3DXVECTOR3 DevilRot = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
-	if (CScene::GetMode() == CScene::MODE_GAME)
-	{
-		DevilRot = m_DevilRot;
-	}
+	D3DXVECTOR3 DevilRot = m_DevilRot;
 
 	if (Move > 0.0f)
 	{
@@ -1553,11 +1549,7 @@ float CDevil::MoveSlopeZ(float Move)
 {
 	float fSlopeMove = 1.0f;
 
-	D3DXVECTOR3 DevilRot = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
-	if (CScene::GetMode() == CScene::MODE_GAME)
-	{
-		DevilRot = CGame::GetInstance()->GetDevil()->GetDevilRot();
-	}
+	D3DXVECTOR3 DevilRot = m_DevilRot;
 
 	if (Move > 0.0f)
 	{
@@ -1577,4 +1569,16 @@ float CDevil::MoveSlopeZ(float Move)
 CListManager<CDevil>* CDevil::GetList(void)
 {
 	return m_pList;
+}
+
+//====================================================================
+//リストの先頭取得
+//====================================================================
+CDevil* CDevil::GetListTop(void)
+{
+	if (CDevil::GetList() == nullptr) { return nullptr; }
+	std::list<CDevil*> list = CDevil::GetList()->GetList();    // リストを取得
+	CDevil* pDevil = list.front();
+
+	return pDevil;
 }
