@@ -82,19 +82,22 @@ public:
 	void SetMapPos(D3DXVECTOR3 pos) { m_MapPos = pos; }
 	D3DXVECTOR3 GetMapPos(void) { return m_MapPos; }
 	D3DXVECTOR3 GetInitPos(void) { return m_InitPos; }
+	D3DXVECTOR3 GetPlayerPos(int PlayNumber);			// プレイヤーの位置取得
+
 	int GetWightMax(void) { return m_WightMax; }
 	int GetHeightMax(void) { return m_HeightMax; }
-	float GetGritSize(void) { return m_fGritSize; }
 
 	void SetMapSize(D3DXVECTOR3 size) { m_MapSize = size; }
 	D3DXVECTOR3 GetMapSize(void) { return m_MapSize; }
 
 	static void Load(const char* pFilename); // マップ情報の読み込み
+	static float GetGritSize();
 
 public:
 
 	static CMapSystem* m_pMapSystem;
 	static std::vector<std::tuple<>> m_nData;	// 複数の値を保持
+	static std::vector<GRID> m_PosPlayer;		// プレイヤーの位置を保持
 
 	static bool m_nMapGrit[NUM_WIGHT][NUM_HEIGHT];	//グリットにブロックが存在していたらtrue
 	GRID m_gridCenter;

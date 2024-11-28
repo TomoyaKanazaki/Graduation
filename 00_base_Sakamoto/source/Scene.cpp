@@ -121,7 +121,7 @@ void CScene::Draw(void)
 void CScene::SetMode(MODE mode)
 {
 	CScene* pScene = CManager::GetInstance()->GetScene();
-	CManager::GetInstance()->GetSound()->StopSound();
+	CManager::GetInstance()->GetSound()->Stop();
 
 	if (pScene != nullptr)
 	{

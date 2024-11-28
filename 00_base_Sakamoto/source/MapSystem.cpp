@@ -17,6 +17,7 @@
 #include "item.h"
 #include "DevilHole.h"
 #include "RailBlock.h"
+#include "GamePlayer.h"
 
 // 定数定義
 namespace
@@ -28,7 +29,8 @@ namespace
 //静的メンバ変数宣言
 CMapSystem* CMapSystem::m_pMapSystem = nullptr;
 bool CMapSystem::m_nMapGrit[NUM_WIGHT][NUM_HEIGHT] = {false};
-std::vector<std::tuple<>> CMapSystem::m_nData;	// 複数の値を保持
+std::vector<std::tuple<>> CMapSystem::m_nData = {};	// 複数の値を保持
+std::vector<CMapSystem::GRID> CMapSystem::m_PosPlayer = {};	// プレイヤーの位置を保持
 
 //====================================================================
 //コンストラクタ
@@ -46,7 +48,7 @@ CMapSystem::CMapSystem() :
 	m_WightMax = NUM_WIGHT;
 	m_HeightMax = NUM_HEIGHT;
 	m_fGritSize = GRID_SIZE;
-	m_MapPos = D3DXVECTOR3((((m_WightMax * 0.5f) * -100.0f) + m_fGritSize * 0.5f), 0.0f, (((m_HeightMax * 0.5f) * 100.0f) - m_fGritSize * 0.5f));
+	m_MapPos = D3DXVECTOR3((((NUM_WIGHT * 0.5f) * -GRID_SIZE) + GRID_SIZE * 0.5f), 0.0f, (((NUM_HEIGHT * 0.5f) * GRID_SIZE) - GRID_SIZE * 0.5f));
 	m_InitPos = m_MapPos;
 	m_MapSize = MAP_SIZE;
 	m_MapSize = D3DXVECTOR3((NUM_WIGHT - 1) * 50.0f, 0.0f, (NUM_HEIGHT - 1) * 50.0f);
@@ -244,7 +246,33 @@ CMapSystem::GRID CMapSystem::CalcGrid(const D3DXVECTOR3& pos)
 	return grid;
 }
 
-#if 1
+
+//==========================================
+//  １マスのサイズを取得
+//==========================================
+float CMapSystem::GetGritSize(void)
+{
+	return GRID_SIZE;
+}
+
+//==========================================
+// プレイヤーの位置取得
+//==========================================
+D3DXVECTOR3 CMapSystem::GetPlayerPos(int PlayNumber)
+{
+	D3DXVECTOR3 pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		// 位置
+
+	// 位置
+	if (PlayNumber < m_PosPlayer.size())
+	{ // 読み込んだ数以内だったら
+		
+		// 座標入れる
+		pos = m_PosPlayer[PlayNumber].ToWorld();
+	}
+	return pos;
+}
+
+#if 0
 
 //==========================================
 //  マップ情報の読み込み
@@ -349,6 +377,7 @@ void CMapSystem::Load(const char* pFilename)
 	D3DXVECTOR2 charOffset = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// グリッドのオフセット
 	D3DXVECTOR3 size = D3DXVECTOR3(fMapSystemGritSize, 0.0f, fMapSystemGritSize);		// グリッドサイズ
 	GRID MaxGrid;		// グリッドの最大数
+	int nNumPlayer = 0;	// プレイヤーの数
 
 	// グリッド設定の判定
 	bool bGridSet = false;
@@ -478,6 +507,12 @@ void CMapSystem::Load(const char* pFilename)
 
 								// 経路探索用情報の設定
 								//generator->addCollision(pMapSystem->m_gridCenter.ToAStar()); // 通過不可地点を追加
+							}
+							else if (str == "6")
+							{ // プレイヤー
+
+								// プレイヤーのグリッド位置
+								pMapSystem->m_PosPlayer.push_back(pMapSystem->m_gridCenter);
 							}
 
 							// グリッド判定の設定

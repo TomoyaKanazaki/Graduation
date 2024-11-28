@@ -57,7 +57,7 @@ CSound::~CSound()
 //=============================================================================
 // 初期化処理
 //=============================================================================
-HRESULT CSound::InitSound(HWND hWnd)
+HRESULT CSound::Init(HWND hWnd)
 {
 	HRESULT hr;
 
@@ -198,7 +198,7 @@ HRESULT CSound::InitSound(HWND hWnd)
 //=============================================================================
 // 終了処理
 //=============================================================================
-void CSound::UninitSound(void)
+void CSound::Uninit(void)
 {
 	// 一時停止
 	for (int nCntSound = 0; nCntSound < SOUND_LABEL_MAX; nCntSound++)
@@ -271,7 +271,7 @@ HRESULT CSound::PlaySound(SOUND_LABEL label)
 //=============================================================================
 // セグメント停止(ラベル指定)
 //=============================================================================
-void CSound::StopSound(SOUND_LABEL label)
+void CSound::Stop(SOUND_LABEL label)
 {
 	XAUDIO2_VOICE_STATE xa2state;
 
@@ -290,7 +290,7 @@ void CSound::StopSound(SOUND_LABEL label)
 //=============================================================================
 // セグメント停止(全て)
 //=============================================================================
-void CSound::StopSound(void)
+void CSound::Stop(void)
 {
 	// 一時停止
 	for (int nCntSound = 0; nCntSound < SOUND_LABEL_MAX; nCntSound++)

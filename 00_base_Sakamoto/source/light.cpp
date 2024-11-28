@@ -46,45 +46,16 @@ HRESULT CLight::Init(void)
 		//ライトの拡散光を設定
 		m_aLight[nCntlight].Diffuse = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 
-		//ライトの方向を設定
-		switch (CScene::GetMode())
+		switch (nCntlight)
 		{
-		case CScene::MODE_TITLE:
-		case CScene::MODE_SELECT:
-		case CScene::MODE_TUTORIAL:
-
-			// タイトルとチュートリアル
-			switch (nCntlight)
-			{
-			case 0:
-				vecDir[nCntlight] = D3DXVECTOR3(0.22f, -0.87f, 0.44f);
-				break;
-			case 1:
-				vecDir[nCntlight] = D3DXVECTOR3(-0.18f, 0.88f, -0.44f);
-				break;
-			case 2:
-				vecDir[nCntlight] = D3DXVECTOR3(0.89f, -0.11f, 0.44f);
-				break;
-			}
-
+		case 0:
+			vecDir[nCntlight] = D3DXVECTOR3(0.22f, -0.87f, 0.44f);
 			break;
-
-		case CScene::MODE_GAME:
-
-				// ゲーム中
-			switch (nCntlight)
-			{
-			case 0:
-				vecDir[nCntlight] = D3DXVECTOR3(0.22f, -0.87f, 0.44f);
-				break;
-			case 1:
-				vecDir[nCntlight] = D3DXVECTOR3(-0.18f, 0.88f, -0.44f);
-				break;
-			case 2:
-				vecDir[nCntlight] = D3DXVECTOR3(0.89f, -0.11f, 0.44f);
-				break;
-			}
-
+		case 1:
+			vecDir[nCntlight] = D3DXVECTOR3(-0.18f, 0.88f, -0.44f);
+			break;
+		case 2:
+			vecDir[nCntlight] = D3DXVECTOR3(0.89f, -0.11f, 0.44f);
 			break;
 		}
 

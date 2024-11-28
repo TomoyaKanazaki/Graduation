@@ -26,11 +26,6 @@ namespace
 	const float DELTA_TIME = 60.0f;
 }
 
-//==========================================
-//  静的メンバ変数宣言
-//==========================================
-CMyEffekseer* CMyEffekseer::m_pInstance = nullptr; // 自身のポインタ
-
 namespace MyEffekseer
 {
 	// エフェクトの名前
@@ -118,11 +113,7 @@ CMyEffekseer::CMyEffekseer() :
 //===========================================================
 CMyEffekseer::~CMyEffekseer()
 {
-	if (m_pInstance != nullptr)
-	{
-		delete m_pInstance;
-		m_pInstance = nullptr;
-	}
+
 }
 
 //===========================================================
@@ -214,11 +205,8 @@ void CMyEffekseer::Uninit(void)
 		effect->Uninit();
 	}
 
-	m_EfkRenderer->Release();
-	m_EfkManager->Release();
-
 	// 自身を終了する
-	delete m_pInstance;
+	delete this;
 }
 
 //===========================================================
@@ -345,21 +333,6 @@ void CMyEffekseer::Draw(void)
 	m_EfkRenderer->EndRendering();
 }
 
-//==========================================
-//  自身の取得
-//==========================================
-CMyEffekseer* CMyEffekseer::GetInstance(void)
-{
-	// 自身が存在していない場合生成する
-	if (m_pInstance == nullptr)
-	{
-		assert(false);
-		return nullptr;
-	}
-
-	return m_pInstance;
-}
-
 //===========================================================
 // モジュール設定
 //===========================================================
@@ -449,6 +422,8 @@ void CEffekseer::Uninit(void)
 		// リストマネージャーの破棄
 		m_pList->Release(m_pList);
 	}
+
+	m_effect.Reset();
 
 	// 自身の終了
 	delete this;
