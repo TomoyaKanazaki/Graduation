@@ -131,6 +131,15 @@ HRESULT CTitle::Init(void)
 				m_pModeSelect[nCnt]->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\tutorial.png"));
 				break;
 			}
+
+			if (m_nSelect == nCnt)
+			{
+				m_pModeSelect[nCnt]->SetColor(SELECT_COLOR_TRUE);
+			}
+			else
+			{
+				m_pModeSelect[nCnt]->SetColor(SELECT_COLOR_FALSE);
+			}
 		}
 	}
 
@@ -174,11 +183,14 @@ void CTitle::Uninit(void)
 //====================================================================
 void CTitle::Update(void)
 {	
-	// ‘I‘ğˆ—
-	Select();
+	if (CManager::GetInstance()->GetFade()->GetFade() != CFade::FADE_OUT)
+	{
+		// ‘I‘ğˆ—
+		Select();
 
-	// Œˆ’èˆ—
-	Button();
+		// Œˆ’èˆ—
+		Button();
+	}
 }
 
 //====================================================================
