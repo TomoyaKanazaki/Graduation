@@ -76,12 +76,6 @@
     <ClCompile Include="source\objmeshWall.cpp">
       <Filter>ソース ファイル\02_Object</Filter>
     </ClCompile>
-    <ClCompile Include="source\2DUI_edit.cpp">
-      <Filter>ソース ファイル\00_System</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Edit.cpp">
-      <Filter>ソース ファイル\00_System</Filter>
-    </ClCompile>
     <ClCompile Include="source\Xmodel.cpp">
       <Filter>ソース ファイル\00_System</Filter>
     </ClCompile>
@@ -285,13 +279,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\2DUI_edit.h">
-      <Filter>ソース ファイル\00_System</Filter>
-    </ClInclude>
     <ClInclude Include="source\debugproc.h">
-      <Filter>ソース ファイル\00_System</Filter>
-    </ClInclude>
-    <ClInclude Include="source\Edit.h">
       <Filter>ソース ファイル\00_System</Filter>
     </ClInclude>
     <ClInclude Include="source\input.h">
