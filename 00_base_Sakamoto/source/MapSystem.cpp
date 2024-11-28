@@ -17,7 +17,7 @@
 #include "item.h"
 #include "DevilHole.h"
 #include "RailBlock.h"
-#include "GamePlayer.h"
+#include "enemy.h"
 
 // 定数定義
 namespace
@@ -513,6 +513,27 @@ void CMapSystem::Load(const char* pFilename)
 
 								// プレイヤーのグリッド位置
 								pMapSystem->m_PosPlayer.push_back(pMapSystem->m_gridCenter);
+							}
+							else if (str == "7")
+							{ // 敵(メダマン)
+
+								// メダマン生成
+								CEnemy::Create(CEnemy::ENEMY_MEDAMAN, pMapSystem->m_gridCenter);
+
+							}
+							else if (str == "8")
+							{ // 敵(ボンボン)
+
+								// ボンボン生成
+								CEnemy::Create(CEnemy::ENEMY_BONBON, pMapSystem->m_gridCenter);
+
+							}
+							else if (str == "9")
+							{ // 敵(子デビル)
+
+								// 子デビル生成
+								CEnemy::Create(CEnemy::ENEMY_LITTLEDEVIL, pMapSystem->m_gridCenter);
+
 							}
 
 							// グリッド判定の設定
