@@ -130,13 +130,13 @@ CEdit::CEdit()
 		AppearCollision();
 	}
 
-	m_EditRailBlock = nullptr;
+	/*m_EditRailBlock = nullptr;
 	if (m_EditRailBlock == nullptr)
 	{
 		m_EditRailBlock = CRailBlock::Create(0, 0, true, 0, 0);
 		m_EditRailBlock->SetPos(D3DXVECTOR3(-1000.0f, 50.0f, -1000.0f));
 		m_EditRailBlock->SetAppear(false);
-	}
+	}*/
 
 	m_EditPos = D3DXVECTOR3(0.0f, 50.0f, 0.0f);
 	m_EditRot = INITVECTOR3;
@@ -416,8 +416,8 @@ void CEdit::UpdateRailBlock(void)
 	D3DXVECTOR3 MapPos = CMapSystem::GetInstance()->GetMapPos();
 
 	m_EditRailBlock->SetAppear(true);
-	m_EditRailBlock->SetWightNumber(m_MapGritWight);
-	m_EditRailBlock->SetHeightNumber(m_MapGritHeight);
+	//m_EditRailBlock->SetWightNumber(m_MapGritWight);
+	//m_EditRailBlock->SetHeightNumber(m_MapGritHeight);
 
 	m_EditRailBlock->SetSize(m_EditSize);
 	m_EditRailBlock->EditRailUpdate();
@@ -426,9 +426,9 @@ void CEdit::UpdateRailBlock(void)
 	{
 
 		CMapSystem::GetInstance()->SetGritBool(CMapSystem::GRID(m_MapGritWight, m_MapGritHeight), true);
-		CRailBlock* pBlock = CRailBlock::Create(m_MapGritWight, m_MapGritHeight, false, m_nRailMax, &m_nRailMove[0]);
+		/*CRailBlock* pBlock = CRailBlock::Create(m_MapGritWight, m_MapGritHeight, false, m_nRailMax, &m_nRailMove[0]);
 		pBlock->SetPos(CMapSystem::GRID(m_MapGritWight, m_MapGritHeight).ToWorld());
-		pBlock->SetSize(D3DXVECTOR3(50.0f, 50.0f, 50.0f));
+		pBlock->SetSize(D3DXVECTOR3(50.0f, 50.0f, 50.0f));*/
 		m_nRailMax = 0;
 		m_EditRailBlock->RailDelete();
 	}
@@ -797,29 +797,29 @@ void CEdit::CollisionBlock(void)
 	if (m_pEditBlock != nullptr)
 	{
 		// マップモデルのリスト構造が無ければ抜ける
-		if (CCubeBlock::GetList() == nullptr) { return; }
-		std::list<CCubeBlock*> list = CCubeBlock::GetList()->GetList();    // リストを取得
+		//if (CCubeBlock::GetList() == nullptr) { return; }
+		//std::list<CCubeBlock*> list = CCubeBlock::GetList()->GetList();    // リストを取得
 
-		// マップモデルリストの中身を確認する
-		for (CCubeBlock* pCubeModel : list)
-		{
-			D3DXVECTOR3 MyPos = m_pEditBlock->GetPos();
-			D3DXVECTOR3 MySize = m_pEditBlock->GetSize() * 2.0f;
-			D3DXVECTOR3 BlockPos = pCubeModel->GetPos();
-			D3DXVECTOR3 BlockSize = pCubeModel->GetSize();
-			D3DXVECTOR3 BlockMove = pCubeModel->GetMove();
+		//// マップモデルリストの中身を確認する
+		//for (CCubeBlock* pCubeModel : list)
+		//{
+		//	D3DXVECTOR3 MyPos = m_pEditBlock->GetPos();
+		//	D3DXVECTOR3 MySize = m_pEditBlock->GetSize() * 2.0f;
+		//	D3DXVECTOR3 BlockPos = pCubeModel->GetPos();
+		//	D3DXVECTOR3 BlockSize = pCubeModel->GetSize();
+		//	D3DXVECTOR3 BlockMove = pCubeModel->GetMove();
 
-			if (BlockPos.x + BlockSize.x > MyPos.x &&
-				BlockPos.x - BlockSize.x < MyPos.x &&
-				BlockPos.z + BlockSize.z > MyPos.z &&
-				BlockPos.z - BlockSize.z < MyPos.z &&
-				BlockPos.y + BlockSize.y > MyPos.y &&
-				BlockPos.y - BlockSize.y < MyPos.y &&
-				m_pEditBlock != pCubeModel)
-			{
-				pCubeModel->Uninit();
-			}
-		}
+		//	if (BlockPos.x + BlockSize.x > MyPos.x &&
+		//		BlockPos.x - BlockSize.x < MyPos.x &&
+		//		BlockPos.z + BlockSize.z > MyPos.z &&
+		//		BlockPos.z - BlockSize.z < MyPos.z &&
+		//		BlockPos.y + BlockSize.y > MyPos.y &&
+		//		BlockPos.y - BlockSize.y < MyPos.y &&
+		//		m_pEditBlock != pCubeModel)
+		//	{
+		//		pCubeModel->Uninit();
+		//	}
+		//}
 	}
 }
 
@@ -834,26 +834,26 @@ void CEdit::CollisionRailBlock(void)
 		if (CRailBlock::GetList() == nullptr) { return; }
 		std::list<CRailBlock*> list = CRailBlock::GetList()->GetList();    // リストを取得
 
-		// マップモデルリストの中身を確認する
-		for (CRailBlock* pRailBlock : list)
-		{
-			D3DXVECTOR3 MyPos = m_EditRailBlock->GetPos();
-			D3DXVECTOR3 MySize = m_EditRailBlock->GetSize() * 2.0f;
-			D3DXVECTOR3 BlockPos = pRailBlock->GetPos();
-			D3DXVECTOR3 BlockSize = pRailBlock->GetSize();
-			D3DXVECTOR3 BlockMove = pRailBlock->GetMove();
+		//// マップモデルリストの中身を確認する
+		//for (CRailBlock* pRailBlock : list)
+		//{
+		//	D3DXVECTOR3 MyPos = m_EditRailBlock->GetPos();
+		//	D3DXVECTOR3 MySize = m_EditRailBlock->GetSize() * 2.0f;
+		//	D3DXVECTOR3 BlockPos = pRailBlock->GetPos();
+		//	D3DXVECTOR3 BlockSize = pRailBlock->GetSize();
+		//	D3DXVECTOR3 BlockMove = pRailBlock->GetMove();
 
-			if (BlockPos.x + BlockSize.x > MyPos.x &&
-				BlockPos.x - BlockSize.x < MyPos.x &&
-				BlockPos.z + BlockSize.z > MyPos.z &&
-				BlockPos.z - BlockSize.z < MyPos.z &&
-				BlockPos.y + BlockSize.y > MyPos.y &&
-				BlockPos.y - BlockSize.y < MyPos.y &&
-				m_EditRailBlock != pRailBlock)
-			{
-				pRailBlock->Uninit();
-			}
-		}
+		//	if (BlockPos.x + BlockSize.x > MyPos.x &&
+		//		BlockPos.x - BlockSize.x < MyPos.x &&
+		//		BlockPos.z + BlockSize.z > MyPos.z &&
+		//		BlockPos.z - BlockSize.z < MyPos.z &&
+		//		BlockPos.y + BlockSize.y > MyPos.y &&
+		//		BlockPos.y - BlockSize.y < MyPos.y &&
+		//		m_EditRailBlock != pRailBlock)
+		//	{
+		//		pRailBlock->Uninit();
+		//	}
+		//}
 	}
 }
 
@@ -947,22 +947,22 @@ void CEdit::SaveBlock(void)
 		// ステージをセーブする開始の合図
 		fprintf(pFile, "%s\n\n", "STARTSETSTAGE");
 
-		// キューブブロックのリスト構造が無ければ抜ける
-		if (CCubeBlock::GetList() == nullptr) { return; }
-		std::list<CCubeBlock*> list = CCubeBlock::GetList()->GetList();    // リストを取得
+		//// キューブブロックのリスト構造が無ければ抜ける
+		//if (CCubeBlock::GetList() == nullptr) { return; }
+		//std::list<CCubeBlock*> list = CCubeBlock::GetList()->GetList();    // リストを取得
 
-		// キューブブロックリストの中身を確認する
-		for (CCubeBlock* pCubeBlock : list)
-		{
-			fprintf(pFile, "%s\n", "STARTSETBLOCK");
+		//// キューブブロックリストの中身を確認する
+		//for (CCubeBlock* pCubeBlock : list)
+		//{
+		//	fprintf(pFile, "%s\n", "STARTSETBLOCK");
 
-			//ステージをセーブした終了の合図
-			fprintf(pFile, "WIGHT %d\n", pCubeBlock->GetWightNumber());
-			fprintf(pFile, "HEIGHT %d\n", pCubeBlock->GetHeightNumber());
-			fprintf(pFile, "TEXTURE %s\n", pCubeBlock->GetTextureName());
+		//	//ステージをセーブした終了の合図
+		//	fprintf(pFile, "WIGHT %d\n", pCubeBlock->GetWightNumber());
+		//	fprintf(pFile, "HEIGHT %d\n", pCubeBlock->GetHeightNumber());
+		//	fprintf(pFile, "TEXTURE %s\n", pCubeBlock->GetTextureName());
 
-			fprintf(pFile, "%s\n\n", "ENDSETBLOCK");
-		}
+		//	fprintf(pFile, "%s\n\n", "ENDSETBLOCK");
+		//}
 
 		//ステージをセーブした終了の合図
 		fprintf(pFile, "%s", "ENDSETSTAGE");
@@ -999,24 +999,24 @@ void CEdit::SaveRailBlock(void)
 		// キューブブロックリストの中身を確認する
 		for (CRailBlock* pRailBlock : list)
 		{
-			if (pRailBlock != m_EditRailBlock)
-			{
-				fprintf(pFile, "%s\n", "STARTSETRAILBLOCK");
+			//if (pRailBlock != m_EditRailBlock)
+			//{
+			//	fprintf(pFile, "%s\n", "STARTSETRAILBLOCK");
 
-				//ステージをセーブした終了の合図
-				fprintf(pFile, "WIGHT %d\n", pRailBlock->GetWightNumber());
-				fprintf(pFile, "HEIGHT %d\n", pRailBlock->GetHeightNumber());
-				fprintf(pFile, "MAX %d\n", pRailBlock->GetRailMax());
-				fprintf(pFile, "MOVE ");
+			//	//ステージをセーブした終了の合図
+			//	fprintf(pFile, "WIGHT %d\n", pRailBlock->GetWightNumber());
+			//	fprintf(pFile, "HEIGHT %d\n", pRailBlock->GetHeightNumber());
+			//	fprintf(pFile, "MAX %d\n", pRailBlock->GetRailMax());
+			//	fprintf(pFile, "MOVE ");
 
-				for (int nCnt = 0; nCnt < pRailBlock->GetRailMax(); nCnt++)
-				{
-					fprintf(pFile, "%d ", pRailBlock->GetRailMove(nCnt));
-				}
-				fprintf(pFile, "\n");
+			//	for (int nCnt = 0; nCnt < pRailBlock->GetRailMax(); nCnt++)
+			//	{
+			//		fprintf(pFile, "%d ", pRailBlock->GetRailMove(nCnt));
+			//	}
+			//	fprintf(pFile, "\n");
 
-				fprintf(pFile, "%s\n\n", "ENDSETRAILBLOCK");
-			}
+			//	fprintf(pFile, "%s\n\n", "ENDSETRAILBLOCK");
+			//}
 		}
 
 		//ステージをセーブした終了の合図

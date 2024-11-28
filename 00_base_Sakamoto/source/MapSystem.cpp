@@ -243,7 +243,7 @@ CMapSystem::GRID CMapSystem::CalcGrid(const D3DXVECTOR3& pos)
 	return grid;
 }
 
-#if 1
+#if 0
 
 //==========================================
 //  マップ情報の読み込み
@@ -384,6 +384,9 @@ void CMapSystem::Load(const char* pFilename)
 			{
 				// グリッドの行列数を読み込み
 				iss >> MaxGrid.x >> MaxGrid.z;
+
+				// 経路探索用情報の設定
+				generator->setWorldSize(MaxGrid.ToAStar()); // 世界の大きさ
 			}
 
 			else if (str == "STARTSETSTAGE")
@@ -462,6 +465,10 @@ void CMapSystem::Load(const char* pFilename)
 
 								// 経路探索用情報の設定
 								generator->addCollision(pMapSystem->m_gridCenter.ToAStar()); // 通過不可地点を追加
+							}
+							else if (str == "5")
+							{ // レールブロック
+
 							}
 
 							// グリッド判定の設定
