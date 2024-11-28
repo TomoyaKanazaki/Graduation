@@ -154,7 +154,7 @@ HRESULT CResult::Init(void)
 //====================================================================
 void CResult::Uninit(void)
 {
-	CManager::GetInstance()->GetSound()->StopSound(CSound::SOUND_LABEL_BGM_RESULT);
+	CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_BGM_RESULT);
 
 	//全てのオブジェクトの破棄
 	CObject::ReleaseAll();

@@ -71,7 +71,7 @@ public:
 	CMiniMapCamera* GetMiniMapCamera(void) { return m_pMiniMapCamera; }
 	CTexture *GetTexture(void) { return m_pTexture; }
 	CXModel *GetXModel(void) { return m_pXModel; }
-	CFade *GetFade(void) { return m_Fade; }
+	CFade *GetFade(void) { return m_pFade; }
 	CSound *GetSound(void) { return m_pSound; }
 	CRanking* GetRanking(void) { return m_pRanking; }
 	CLight* GetLight(void) { return m_pLight; }
@@ -151,7 +151,7 @@ private:
 	CTexture *m_pTexture;				//テクスチャのポインタ
 	CXModel *m_pXModel;					//Xモデルのポインタ
 	CLevelUP *m_LevelUP;				//レベルアップのポインタ
-	CFade *m_Fade;						//フェードのポインタ
+	CFade *m_pFade;						//フェードのポインタ
 	CSound *m_pSound;					//サウンドのポインタ
 	CRanking* m_pRanking;
 	CBlockManager* m_pBlockManager;

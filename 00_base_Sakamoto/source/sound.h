@@ -46,11 +46,11 @@ public:
 	//*****************************************************************************
 	// ÉÅÉìÉoä÷êîêÈåæ
 	//*****************************************************************************
-	HRESULT InitSound(HWND hWnd);
-	void UninitSound(void);
+	HRESULT Init(HWND hWnd);
+	void Uninit(void);
 	HRESULT PlaySound(SOUND_LABEL label);
-	void StopSound(SOUND_LABEL label);
-	void StopSound(void);
+	void Stop(SOUND_LABEL label);
+	void Stop(void);
 
 private:
 

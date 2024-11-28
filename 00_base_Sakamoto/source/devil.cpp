@@ -43,11 +43,11 @@ namespace
 	int SCROOL_TIME = 300;						// スクロール時間
 
 	int SCROOL_MOVEGRID_01 = 3;					// スクロールの移動マス幅
-	float SCROOL_SPEED_01 = (CMapSystem::GetInstance()->GetGritSize() * SCROOL_MOVEGRID_01 / SCROOL_TIME);				// スクロールの移動速度
+	float SCROOL_SPEED_01 = (CMapSystem::GetGritSize() * SCROOL_MOVEGRID_01 / SCROOL_TIME);				// スクロールの移動速度
 
 	int SCROOL_COUNT_02 = 12;					// スクロールの移動回数
 	int SCROOL_MOVEGRID_02 = 3;					// スクロールの移動マス幅
-	float SCROOL_SPEED_02 = (CMapSystem::GetInstance()->GetGritSize() * SCROOL_MOVEGRID_02) / SCROOL_COUNT_02;				// スクロールの移動速度
+	float SCROOL_SPEED_02 = (CMapSystem::GetGritSize() * SCROOL_MOVEGRID_02) / SCROOL_COUNT_02;				// スクロールの移動速度
 
 	int SLOPE_TIME = 300;						// 傾き操作時間
 	int SLOPE_RAND = 25;						// 傾き発生確率

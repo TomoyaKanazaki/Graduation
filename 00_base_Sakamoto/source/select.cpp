@@ -209,7 +209,7 @@ HRESULT CSelect::Init(void)
 //====================================================================
 void CSelect::Uninit(void)
 {
-	CManager::GetInstance()->GetSound()->StopSound(CSound::SOUND_LABEL_BGM_TITLE);
+	CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_BGM_TITLE);
 
 	//全てのオブジェクトの破棄
 	CObject::ReleaseAll();

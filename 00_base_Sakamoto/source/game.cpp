@@ -282,7 +282,7 @@ HRESULT CGame::Init(void)
 //====================================================================
 void CGame::Uninit(void)
 {
-	CManager::GetInstance()->GetSound()->StopSound(CSound::SOUND_LABEL_BGM_STAGE2);
+	CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_BGM_STAGE2);
 
 	// ƒXƒ[î•ñ‚Ì‘Síœ
 	CSlowManager::ReleaseAll();

@@ -54,7 +54,7 @@ CManager::CManager() :
 	m_pXModel = nullptr;
 	m_pScene = nullptr;
 	m_LevelUP = nullptr;
-	m_Fade = nullptr;
+	m_pFade = nullptr;
 	m_pSound = nullptr;
 	m_pRanking = nullptr;
 	m_pBlockManager = nullptr;
@@ -109,7 +109,7 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	}
 
 	//サウンドの初期化処理
-	if (FAILED(m_pSound->InitSound(hWnd)))
+	if (FAILED(m_pSound->Init(hWnd)))
 	{//初期化処理が失敗した場合
 		return E_FAIL;
 	}
@@ -178,8 +178,10 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 		m_pEffect->Init();
 	}
 
-	CMapSystem::GetInstance()->Init();
-
+	// マップシステムの初期化
+	CMapSystem::GetInstance();
+	
+	// テクスチャの初期化	
 	if (m_pTexture == nullptr)
 	{
 		//テクスチャの生成
@@ -199,23 +201,20 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 		m_pXModel = new CXModel;
 	}
 
-	////アイテムマネージャの読み込み処理
-	//CItemManager::Load();
-
 	//全てのXモデルの読み込み
 	if (FAILED(m_pXModel->Load()))
 	{//読み込みが失敗した場合
 		return E_FAIL;
 	}
 
-	if (m_Fade == nullptr)
+	if (m_pFade == nullptr)
 	{
 		//フェードの生成
-		m_Fade = new CFade;
+		m_pFade = new CFade;
 
-		if (m_Fade != nullptr)
+		if (m_pFade != nullptr)
 		{
-			m_Fade->Init(SET_MODE);
+			m_pFade->Init(SET_MODE);
 		}
 	}
 	
@@ -230,15 +229,15 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 void CManager::Uninit(void)
 {
 	//BGMの停止
-	m_pSound->StopSound();
+	m_pSound->Stop();
 
-	if (m_Fade != nullptr)
+	if (m_pFade != nullptr)
 	{
 		//フェードの終了処理
-		m_Fade->Uninit();
+		m_pFade->Uninit();
 
-		delete m_Fade;
-		m_Fade = nullptr;
+		delete m_pFade;
+		m_pFade = nullptr;
 	}
 
 	if (m_pScene != nullptr)
@@ -330,7 +329,7 @@ void CManager::Uninit(void)
 	if (m_pSound != nullptr)
 	{
 		//サウンドの終了処理
-		m_pSound->UninitSound();
+		m_pSound->Uninit();
 
 		delete m_pSound;
 		m_pSound = nullptr;
@@ -339,7 +338,7 @@ void CManager::Uninit(void)
 	// エフェクシアの終了
 	if (m_pEffect != nullptr)
 	{
-		//サウンドの終了処理
+		// エフェクシアの終了処理
 		m_pEffect->Uninit();
 
 		delete m_pEffect;
@@ -357,19 +356,19 @@ void CManager::Update(void)
 	DebugProc::Print(DebugProc::POINT_CENTER, "FPS : %d\n", GetFps());
 
 	//カメラの更新処理
-	m_pCamera->Update();
+	(m_pCamera != nullptr) ? m_pCamera->Update() : assert(false);
 
 	//ライトの更新処理
-	m_pLight->Update();
+	m_pLight != nullptr ? m_pLight->Update() : assert(false);
 
 	//キーボードの更新処理
-	m_pInputKeyboard->Update();
+	m_pInputKeyboard != nullptr ? m_pInputKeyboard->Update() : assert(false);
 
 	//ジョイパッドの更新処理
-	m_pInputJoyPad->Update();
+	m_pInputJoyPad != nullptr ? m_pInputJoyPad->Update() : assert(false);
 
 	//マウスの更新処理
-	m_pInputMouse->Update();
+	m_pInputMouse != nullptr ? m_pInputMouse->Update() : assert(false);
 
 #ifdef _DEBUG
 
@@ -396,24 +395,23 @@ void CManager::Update(void)
 	if ((CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_P) == true ||
 		CManager::GetInstance()->GetInputJoyPad()->GetTrigger(CInputJoypad::BUTTON_START, 0) == true) &&
 		m_PauseOK == true &&
-		m_Fade->GetFade() == CFade::FADE_NONE)
+		m_pFade->GetFade() == CFade::FADE_NONE)
 	{
 		//条件？ 処理１：処理２;
 		m_Pause = m_Pause ? false : true;
-		//CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_BOSS_DASH);
 	}
 
 	//シーンの更新処理
-	m_pScene->Update();
+	m_pScene != nullptr ? m_pScene->Update() : assert(false);
 
 	//レンダラーの更新処理
-	m_pRenderer->Update();
+	m_pRenderer != nullptr ? m_pRenderer->Update() : assert(false);
 
 	//フェードの更新処理
-	m_Fade->Update();
+	m_pFade != nullptr ? m_pFade->Update() : assert(false);
 
 	// エフェクシアの更新
-	m_pEffect->Update();
+	m_pEffect != nullptr ? m_pEffect->Update() : assert(false);
 }
 
 //====================================================================
@@ -422,5 +420,5 @@ void CManager::Update(void)
 void CManager::Draw(void)
 {
 	//レンダラーの描画処理
-	m_pRenderer->Draw();
+	m_pRenderer != nullptr ? m_pRenderer->Draw() : assert(false);
 }

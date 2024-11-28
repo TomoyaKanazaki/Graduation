@@ -84,12 +84,12 @@ public:
 	D3DXVECTOR3 GetInitPos(void) { return m_InitPos; }
 	int GetWightMax(void) { return m_WightMax; }
 	int GetHeightMax(void) { return m_HeightMax; }
-	float GetGritSize(void) { return m_fGritSize; }
 
 	void SetMapSize(D3DXVECTOR3 size) { m_MapSize = size; }
 	D3DXVECTOR3 GetMapSize(void) { return m_MapSize; }
 
 	static void Load(const char* pFilename); // É}ÉbÉvèÓïÒÇÃì«Ç›çûÇ›
+	static float GetGritSize();
 
 public:
 
