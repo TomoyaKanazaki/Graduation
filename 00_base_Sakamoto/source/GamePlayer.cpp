@@ -106,6 +106,11 @@ void CGamePlayer::Draw(void)
 //====================================================================
 void CGamePlayer::Death(void)
 {
+	// 昇天エフェクト
+	D3DXMATRIX mat = *GetUseMultiMatrix();
+	D3DXVECTOR3 ef = useful::CalcMatrix(GetPos(), GetRot(), mat);
+	MyEffekseer::EffectCreate(CMyEffekseer::TYPE_ACENTION, false, ef, GetRot());
+
 	if (GetState() != STATE_EGG && GetState() != STATE_DEATH)
 	{
 		SetLife(GetLife() - 1);
