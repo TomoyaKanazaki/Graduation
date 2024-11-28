@@ -173,7 +173,7 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 		return E_FAIL;
 	}
 
-	// エフェクトの生成
+	 //エフェクトの生成
 	if (m_pEffect == nullptr)
 	{
 		m_pEffect = new CMyEffekseer;
