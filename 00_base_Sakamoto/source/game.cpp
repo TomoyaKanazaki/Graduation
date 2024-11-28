@@ -175,8 +175,6 @@ HRESULT CGame::Init(void)
 	m_pDevil->SetPos(D3DXVECTOR3(0.0f, 100.0f, 500.0f));
 	m_pDevil->SetScrollType((CDevil::SCROLL_TYPE)(CManager::GetInstance()->GetScrollType()));
 
-
-
 	//レールブロックの生成
 	LoadStageRailBlock("data\\TXT\\STAGE\\RailBlock.txt");
 
@@ -243,8 +241,6 @@ HRESULT CGame::Init(void)
 		break;
 	}
 
-#if 1
-
 	if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_SINGLE)
 	{
 		//プレイヤーの生成
@@ -264,8 +260,6 @@ HRESULT CGame::Init(void)
 		//プレイヤーの生成
 		m_pPlayer[0] = CGamePlayer::Create(0);
 	}
-
-#endif
 
 	//転がる岩の生成
 	CRollRock *pRock = CRollRock::Create("data\\MODEL\\BlockTest.x");

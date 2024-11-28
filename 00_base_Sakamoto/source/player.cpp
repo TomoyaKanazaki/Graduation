@@ -35,6 +35,7 @@
 #include "shadow.h"
 #include "score.h"
 #include "mask.h"
+#include "wall.h"
 
 #include "MyEffekseer.h"
 
@@ -156,7 +157,7 @@ HRESULT CPlayer::Init(int PlayNumber)
 
 	m_nPlayNumber = PlayNumber;
 
-	// プレイヤーのグリッド位置取得
+	// プレイヤーの位置取得
 	m_pos = pMapSystem->GetPlayerPos(PlayNumber);
 
 	// サイズの設定
@@ -939,17 +940,17 @@ void CPlayer::StateManager(void)
 //====================================================================
 void CPlayer::CollisionWall(useful::COLLISION XYZ)
 {
-	// キューブブロックのリスト構造が無ければ抜ける
-	if (CCubeBlock::GetList() == nullptr) { return; }
-	std::list<CCubeBlock*> list = CCubeBlock::GetList()->GetList();    // リストを取得
+	// 壁のリスト構造が無ければ抜ける
+	if (CWall::GetList() == nullptr) { return; }
+	std::list<CWall*> list = CWall::GetList()->GetList();    // リストを取得
 
-	// キューブブロックリストの中身を確認する
-	for (CCubeBlock* pCubeBlock : list)
+	// 壁リストの中身を確認する
+	for (CWall* pWall : list)
 	{
-		D3DXVECTOR3 pos = pCubeBlock->GetPos();
-		D3DXVECTOR3 posOld = pCubeBlock->GetPosOld();
-		D3DXVECTOR3 Move = pCubeBlock->GetMove();
-		D3DXVECTOR3 Size = pCubeBlock->GetSize();
+		D3DXVECTOR3 pos = pWall->GetPos();
+		D3DXVECTOR3 posOld = pWall->GetPosOld();
+		D3DXVECTOR3 Move = D3DXVECTOR3(0.0f,0.0f,0.0f);
+		D3DXVECTOR3 Size = pWall->GetSize();
 
 		// 矩形の当たり判定
 		if (useful::CollisionBlock(pos, pos, Move, Size, &m_pos, m_posOld, &m_move, &m_Objmove, m_size, &m_bJump, XYZ) == true)
@@ -967,17 +968,15 @@ void CPlayer::CollisionWall(useful::COLLISION XYZ)
 //====================================================================
 void CPlayer::CollisionPressWall(useful::COLLISION XYZ)
 {
-	// キューブブロックのリスト構造が無ければ抜ける
-	if (CCubeBlock::GetList() == nullptr) { return; }
-	std::list<CCubeBlock*> list = CCubeBlock::GetList()->GetList();    // リストを取得
+	// 壁のリスト構造が無ければ抜ける
+	if (CWall::GetList() == nullptr) { return; }
+	std::list<CWall*> list = CWall::GetList()->GetList();    // リストを取得
 
 	// キューブブロックリストの中身を確認する
-	for (CCubeBlock* pCubeBlock : list)
+	for (CWall* pWall : list)
 	{
-		D3DXVECTOR3 pos = pCubeBlock->GetPos();
-		D3DXVECTOR3 posOld = pCubeBlock->GetPosOld();
-		D3DXVECTOR3 Move = pCubeBlock->GetMove();
-		D3DXVECTOR3 Size = pCubeBlock->GetSize();
+		D3DXVECTOR3 pos = pWall->GetPos();
+		D3DXVECTOR3 Size = pWall->GetSize();
 
 		// 矩形の当たり判定
 		if (useful::CollisionRectangle2D(m_pos, pos, m_size, Size, XYZ) == true)
