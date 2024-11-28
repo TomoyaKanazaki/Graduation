@@ -413,6 +413,12 @@ void CGame::Update(void)
 				}
 
 				CManager::GetInstance()->SetEndScore(EndScore);
+
+				if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
+				{
+					CManager::GetInstance()->SetEnd1PScore(m_pPlayer[0]->GetScore()->GetScore());
+					CManager::GetInstance()->SetEnd2PScore(m_pPlayer[1]->GetScore()->GetScore());
+				}
 			}
 		}
 
@@ -463,6 +469,12 @@ void CGame::StageClear(int Stage)
 		}
 
 		CManager::GetInstance()->SetEndScore(EndScore);
+
+		if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
+		{
+			CManager::GetInstance()->SetEnd1PScore(m_pPlayer[0]->GetScore()->GetScore());
+			CManager::GetInstance()->SetEnd2PScore(m_pPlayer[1]->GetScore()->GetScore());
+		}
 	}
 	else
 	{
@@ -482,6 +494,12 @@ void CGame::StageClear(int Stage)
 		}
 
 		CManager::GetInstance()->SetEndScore(EndScore);
+
+		if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
+		{
+			CManager::GetInstance()->SetEnd1PScore(m_pPlayer[0]->GetScore()->GetScore());
+			CManager::GetInstance()->SetEnd2PScore(m_pPlayer[1]->GetScore()->GetScore());
+		}
 	}
 }
 
