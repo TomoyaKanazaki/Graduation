@@ -22,6 +22,7 @@
 #include "bowabowa.h"
 #include "SlopeDevice.h"
 #include "mask.h"
+#include "signal.h"
 
 #include "sound.h"
 #include "shadow.h"
@@ -230,6 +231,10 @@ HRESULT CGame::Init(void)
 				}
 			}
 		}
+
+		// –îˆóƒ‚ƒfƒ‹¶¬
+		CSignal::Create("data\\MODEL\\signal.x",D3DXVECTOR3(-100.0f,100.0f,300.0f));
+		CSignal::Create("data\\MODEL\\signal.x", D3DXVECTOR3(100.0f, 100.0f, 300.0f));
 
 		// \š‰Ë‚Ì¶¬
 		/*CItem::Create(CItem::TYPE_CROSS, CMapSystem::GRID(11, 2));
