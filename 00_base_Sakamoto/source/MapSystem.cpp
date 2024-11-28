@@ -18,6 +18,7 @@
 #include "DevilHole.h"
 #include "RailBlock.h"
 #include "enemy.h"
+#include "RollRock.h"
 
 // 定数定義
 namespace
@@ -272,91 +273,9 @@ D3DXVECTOR3 CMapSystem::GetPlayerPos(int PlayNumber)
 	return pos;
 }
 
-#if 0
-
 //==========================================
 //  マップ情報の読み込み
 //==========================================
-void CMapSystem::Load(const char* pFilename)
-{
-	// 経路探索用の情報を取得
-	auto generator = AStar::Generator::GetInstance();
-	if (generator == nullptr)
-	{
-		assert(false);
-		generator = AStar::Generator::Create();
-	}
-
-		//ファイルを開く
-	FILE* pFile = fopen("data\\TXT\\STAGE\\Block.txt", "r");
-
-	if (pFile != nullptr)
-	{//ファイルが開けた場合
-
-		char aString[128] = {};			//ゴミ箱
-		char aStartMessage[32] = {};	//スタートメッセージ
-		char aSetMessage[32] = {};		//セットメッセージ
-		char aEndMessage[32] = {};		//終了メッセージ
-
-		fscanf(pFile, "%s", &aStartMessage[0]);
-		if (strcmp(&aStartMessage[0], "STARTSETSTAGE") == 0)
-		{
-			m_pMapSystem = CMapSystem::GetInstance();
-			D3DXVECTOR3 MapSystemPos = m_pMapSystem->GetMapPos();
-			float MapSystemGritSize = m_pMapSystem->GetGritSize() * 0.5f;
-			D3DXVECTOR3 size = D3DXVECTOR3(MapSystemGritSize, 15.0f, MapSystemGritSize);
-
-			while (1)
-			{
-				fscanf(pFile, "%s", &aSetMessage[0]);
-				if (strcmp(&aSetMessage[0], "STARTSETBLOCK") == 0)
-				{
-					fscanf(pFile, "%s", &aString[0]);
-					fscanf(pFile, "%d", &m_pMapSystem->m_gridCenter.x);
-
-					fscanf(pFile, "%s", &aString[0]);
-					fscanf(pFile, "%d", &m_pMapSystem->m_gridCenter.z);
-
-					fscanf(pFile, "%s", &aString[0]);
-					fscanf(pFile, "%s", &aString[0]);
-
-					m_pMapSystem->SetGritBool(m_pMapSystem->m_gridCenter.x, m_pMapSystem->m_gridCenter.z, true);
-
-					// キューブブロックの生成
-					CCubeBlock::Create(m_pMapSystem->m_gridCenter, size); // GRIDとグリッドサイズを引数にする
-
-					// 削除
-					{
-						//pBlock->SetWightNumber(WightNumber); // GRIDで設定(不要)
-						//pBlock->SetHeightNumber(HeightNumber); // GRIDで設定(不要)
-						//pBlock->SetPos(D3DXVECTOR3(MapSystemPos.x + m_pMapSystem->m_gridCenter.x * 100.0f, 50.0f, MapSystemPos.z - m_pMapSystem->m_gridCenter.z * 100.0f)); // GRIDをもとに内部で計算
-						//pBlock->SetSize(D3DXVECTOR3(MapSystemGritSize, MapSystemGritSize, MapSystemGritSize)); // xzはグリッドサイズが必要、ｙは内部で定数化
-						//pBlock->SetTexture(&aString[0]); // 内部で定数化
-					}
-					// 削除
-
-					// 経路探索用情報の設定
-					generator->addCollision(m_pMapSystem->m_gridCenter.ToAStar()); // 通過不可地点を追加
-
-					fscanf(pFile, "%s", &aEndMessage[0]);
-				}
-				else if (strcmp(&aSetMessage[0], "ENDSETSTAGE") == 0)
-				{
-					break;
-				}
-			}
-		}
-		fclose(pFile);
-	}
-	else
-	{//ファイルが開けなかった場合
-		printf("***ファイルを開けませんでした***\n");
-	}
-
-}
-
-#else
-
 void CMapSystem::Load(const char* pFilename)
 {
 	// 経路探索用の情報を取得
@@ -535,6 +454,12 @@ void CMapSystem::Load(const char* pFilename)
 								CEnemy::Create(CEnemy::ENEMY_LITTLEDEVIL, pMapSystem->m_gridCenter);
 
 							}
+							else if (str == "10")
+							{ // 転がる岩
+
+								// 転がる岩生成
+								CRollRock::Create(pMapSystem->m_gridCenter);
+							}
 
 							// グリッド判定の設定
 							pMapSystem->SetGritBool(pMapSystem->m_gridCenter.x, pMapSystem->m_gridCenter.z, bGridSet);
@@ -553,8 +478,6 @@ void CMapSystem::Load(const char* pFilename)
 	// ファイルを閉じる
 	file.close();
 }
-
-#endif // 0
 
 //==========================================
 //  グリッドを算出

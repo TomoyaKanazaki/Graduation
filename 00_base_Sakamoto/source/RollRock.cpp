@@ -15,6 +15,7 @@
 #include "MapSystem.h"
 #include "CubeBlock.h"
 #include "objmeshField.h"
+#include "wall.h"
 
 //==========================================
 //  定数定義
@@ -47,6 +48,33 @@ CRollRock::CRollRock(int nPriority) : CObjectX(nPriority)
 	m_posOld = INITVECTOR3;
 	m_move = INITVECTOR3;
 	m_rot = INITVECTOR3;
+	m_Grid.x = 0.0f;
+	m_Grid.z = 0.0f;
+
+	m_OKL = false;
+	m_OKR = false;
+	m_OKU = false;
+	m_OKD = false;
+}
+
+//====================================================================
+//コンストラクタ(オーバーロード)
+//====================================================================
+CRollRock::CRollRock(int nPriority, CMapSystem::GRID gridCenter) : CObjectX(nPriority)
+{
+	SetSize(SAMPLE_SIZE);
+	SetPos(INITVECTOR3);
+	m_nIdxXModel = 0;			//マテリアルの数
+	m_CollisionPos = INITVECTOR3;
+	m_bCollision = false;
+	m_nStateCount = 0;
+	m_Scaling = 1.0f;
+	m_fColorA = 0.0f;
+	m_pos = INITVECTOR3;
+	m_posOld = INITVECTOR3;
+	m_move = INITVECTOR3;
+	m_rot = INITVECTOR3;
+	m_Grid = gridCenter;		// グリッド
 
 	m_OKL = false;
 	m_OKR = false;
@@ -65,18 +93,18 @@ CRollRock::~CRollRock()
 //====================================================================
 //生成処理
 //====================================================================
-CRollRock* CRollRock::Create(char* pModelName)
+CRollRock* CRollRock::Create(CMapSystem::GRID gridCenter)
 {
 	CRollRock* pSample = nullptr;
 
 	if (pSample == nullptr)
 	{
 		//オブジェクト2Dの生成
-		pSample = new CRollRock();
+		pSample = new CRollRock(3, gridCenter);
 	}
 
 	//オブジェクトの初期化処理
-	if (FAILED(pSample->Init(pModelName)))
+	if (FAILED(pSample->Init("data\\MODEL\\BlockTest.x")))
 	{//初期化処理が失敗した場合
 		return nullptr;
 	}
@@ -89,12 +117,19 @@ CRollRock* CRollRock::Create(char* pModelName)
 //====================================================================
 HRESULT CRollRock::Init(char* pModelName)
 {
+	// 位置
+	m_pos = m_Grid.ToWorld();
+	m_pos.y = 50.0f;
+
 	SetType(CObject::TYPE_ENEMY3D);
 
 	CObjectX::Init(pModelName);
 
 	//マップとのマトリックスの掛け合わせをオンにする
 	SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
+
+	// 位置設定
+	CObjectX::SetPos(m_pos);
 
 	SetSize(SAMPLE_SIZE);
 
@@ -345,16 +380,16 @@ void CRollRock::Move(void)
 void CRollRock::CollisionWall(useful::COLLISION XYZ)
 {
 	// キューブブロックのリスト構造が無ければ抜ける
-	if (CCubeBlock::GetList() == nullptr) { return; }
-	std::list<CCubeBlock*> list = CCubeBlock::GetList()->GetList();    // リストを取得
+	if (CWall::GetList() == nullptr) { return; }
+	std::list<CWall*> list = CWall::GetList()->GetList();    // リストを取得
 
 	// キューブブロックリストの中身を確認する
-	for (CCubeBlock* pCubeBlock : list)
+	for (CWall* pWall : list)
 	{
-		D3DXVECTOR3 pos = pCubeBlock->GetPos();
-		D3DXVECTOR3 posOld = pCubeBlock->GetPosOld();
-		D3DXVECTOR3 Move = pCubeBlock->GetMove();
-		D3DXVECTOR3 Size = pCubeBlock->GetSize();
+		D3DXVECTOR3 pos = pWall->GetPos();
+		D3DXVECTOR3 posOld = pWall->GetPosOld();
+		D3DXVECTOR3 Move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		D3DXVECTOR3 Size = pWall->GetSize();
 
 		D3DXVECTOR3 ObjMove = INITVECTOR3;
 		D3DXVECTOR3 MySize = GetSize();
