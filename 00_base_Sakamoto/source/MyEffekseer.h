@@ -68,8 +68,6 @@ public:
 	::EffekseerRendererDX9::RendererRef GetEffekseerRenderer(void) { return m_EfkRenderer; }  // エフェクトレンダラー
 	::Effekseer::ManagerRef GetEfkManager(void) { return m_EfkManager; }                      // エフェクトマネージャ
 
-	static CMyEffekseer* GetInstance(void);  // 自分自身
-
 	// モジュール
 	void SetupEffekseerModules(::Effekseer::ManagerRef efkManager);
 
@@ -77,7 +75,6 @@ public:
 
 private:
 
-	static CMyEffekseer* m_pInstance;  // 自分自身のポインタ
 	EffekseerRendererDX9::RendererRef m_EfkRenderer;
 	::Effekseer::Matrix44 m_CameraMatrix;
 	::Effekseer::Matrix44 m_ProjectionMatrix;
@@ -118,7 +115,7 @@ public:
 	const char* GetEfkName(void) { return m_EfkName; }					// エフェクトの名前
 	CMyEffekseer::TYPE GetEfkType() { return m_eType; }					// エフェクトの種類
 	bool IsLoop(void) { return m_bLoop; }								// ループするフラグ
-	bool IsDeath(void) { return m_bDeath; }								// ループするフラグ
+	bool IsDeath(void) { return m_bDeath; }								// 死亡フラグ
 
 	// 静的メンバ関数
 	static CListManager<CEffekseer>* GetList(); // リスト取得
