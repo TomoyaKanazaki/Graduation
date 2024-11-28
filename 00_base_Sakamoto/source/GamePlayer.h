@@ -30,6 +30,7 @@ public:
 
 	static CGamePlayer* Create(int PlayNumber);
 	HRESULT Init(int PlayNumber) override;
+
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);
@@ -37,6 +38,8 @@ public:
 	void Death(void) override;
 
 private:
+	CMapSystem::GRID m_Grid;		// ƒOƒŠƒbƒh‚Ìî•ñ
+
 };
 
 #endif

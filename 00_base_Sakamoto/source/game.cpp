@@ -175,28 +175,7 @@ HRESULT CGame::Init(void)
 	m_pDevil->SetPos(D3DXVECTOR3(0.0f, 100.0f, 500.0f));
 	m_pDevil->SetScrollType((CDevil::SCROLL_TYPE)(CManager::GetInstance()->GetScrollType()));
 
-	if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_SINGLE)
-	{
-		//プレイヤーの生成
-		m_pPlayer[0] = CGamePlayer::Create(0);
-		m_pPlayer[0]->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(11, 9)));
-		//m_pMask->SetColor();
-	}
-	else if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
-	{
-		//プレイヤーの生成
-		m_pPlayer[0] = CGamePlayer::Create(0);
-		m_pPlayer[0]->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(11, 9)));
 
-		m_pPlayer[1] = CGamePlayer::Create(1);
-		m_pPlayer[1]->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(11, 4)));
-	}
-	else
-	{
-		//プレイヤーの生成
-		m_pPlayer[0] = CGamePlayer::Create(0);
-		m_pPlayer[0]->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(11, 9)));
-	}
 
 	//レールブロックの生成
 	LoadStageRailBlock("data\\TXT\\STAGE\\RailBlock.txt");
@@ -263,6 +242,30 @@ HRESULT CGame::Init(void)
 
 		break;
 	}
+
+#if 1
+
+	if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_SINGLE)
+	{
+		//プレイヤーの生成
+		m_pPlayer[0] = CGamePlayer::Create(0);
+		//m_pMask->SetColor();
+	}
+	else if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
+	{
+		//プレイヤーの生成
+		for (int nCnt = 0; nCnt < NUM_PLAYER; nCnt++)
+		{
+			m_pPlayer[nCnt] = CGamePlayer::Create(nCnt);
+		}
+	}
+	else
+	{
+		//プレイヤーの生成
+		m_pPlayer[0] = CGamePlayer::Create(0);
+	}
+
+#endif
 
 	//転がる岩の生成
 	CRollRock *pRock = CRollRock::Create("data\\MODEL\\BlockTest.x");
@@ -413,6 +416,12 @@ void CGame::Update(void)
 				}
 
 				CManager::GetInstance()->SetEndScore(EndScore);
+
+				if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
+				{
+					CManager::GetInstance()->SetEnd1PScore(m_pPlayer[0]->GetScore()->GetScore());
+					CManager::GetInstance()->SetEnd2PScore(m_pPlayer[1]->GetScore()->GetScore());
+				}
 			}
 		}
 
@@ -463,6 +472,12 @@ void CGame::StageClear(int Stage)
 		}
 
 		CManager::GetInstance()->SetEndScore(EndScore);
+
+		if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
+		{
+			CManager::GetInstance()->SetEnd1PScore(m_pPlayer[0]->GetScore()->GetScore());
+			CManager::GetInstance()->SetEnd2PScore(m_pPlayer[1]->GetScore()->GetScore());
+		}
 	}
 	else
 	{
@@ -482,6 +497,12 @@ void CGame::StageClear(int Stage)
 		}
 
 		CManager::GetInstance()->SetEndScore(EndScore);
+
+		if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
+		{
+			CManager::GetInstance()->SetEnd1PScore(m_pPlayer[0]->GetScore()->GetScore());
+			CManager::GetInstance()->SetEnd2PScore(m_pPlayer[1]->GetScore()->GetScore());
+		}
 	}
 }
 

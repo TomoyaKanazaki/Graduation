@@ -152,7 +152,12 @@ CPlayer* CPlayer::Create(int PlayNumber)
 //====================================================================
 HRESULT CPlayer::Init(int PlayNumber)
 {
+	CMapSystem* pMapSystem = CMapSystem::GetInstance();		// マップシステムの情報
+
 	m_nPlayNumber = PlayNumber;
+
+	// プレイヤーのグリッド位置取得
+	m_pos = pMapSystem->GetPlayerPos(PlayNumber);
 
 	// サイズの設定
 	m_size = COLLISION_SIZE;

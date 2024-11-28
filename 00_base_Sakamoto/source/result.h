@@ -41,13 +41,19 @@ private:
 	bool m_Appear;
 
 	CObject2D* m_pBg;			// 背景
-	CObject2D* m_pScoreTex;		// 
+	CObject2D* m_pScoreTex;		// スコアテキスト
+	CObject2D* m_p1PTex;		// [1P]テキスト
+	CObject2D* m_p2PTex;		// [2P]テキスト
 
-	CRanking* m_pLifeRanking;	// 
-	CNumber* m_apLife[6];		// 
+	CNumber* m_apScore[6];		// 今回のスコア(数字)
+	CNumber* m_ap1P[6];			// 1Pの今回のスコア(数字)
+	CNumber* m_ap2P[6];			// 2Pの今回のスコア(数字)
+	CRanking* m_pLifeRanking;	// ランキング
 
 	int m_AddScoreCount;
-	int m_LifeData;
+	int m_ScoreData;
+	int m_1PData;
+	int m_2PData;
 	int m_RankData;
 };
 #endif

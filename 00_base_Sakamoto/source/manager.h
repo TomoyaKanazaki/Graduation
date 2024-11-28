@@ -86,6 +86,10 @@ public:
 	bool GetPause(void) { return m_Pause; }
 	void SetEndScore(int Set) { m_EndScore = Set; }
 	int GetEndScore(void) { return m_EndScore; }
+	void SetEnd1PScore(int Set) { m_End1PScore = Set; }
+	int GetEnd1PScore(void) { return m_End1PScore; }
+	void SetEnd2PScore(int Set) { m_End2PScore = Set; }
+	int GetEnd2PScore(void) { return m_End2PScore; }
 	void SetEndTime(int Set) { m_EndTime = Set; }
 	int GetEndTime(void) { return m_EndTime; }
 	void SetTutorialStart(bool Set) { m_SetTutorial = Set; }
@@ -130,6 +134,8 @@ private:
 	int m_nStage;							//現在のステージ
 	float GameSpeed;					//ゲームスピード
 	int m_EndScore;						//最終的なスコア
+	int m_End1PScore;						//最終的なスコア
+	int m_End2PScore;						//最終的なスコア
 	int m_EndTime;						//最終的なタイム
 	bool m_bGameClear;					//ゲームクリア状態か
 	bool m_SetTutorial;					//エディットモードかどうか

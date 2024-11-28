@@ -61,6 +61,8 @@ CManager::CManager() :
 	m_typeInput = TYPE_INPUT::TYPE_NONE;
 	m_nStage = 0;
 	m_ScrollType = 0;
+	m_End1PScore = 0;
+	m_End2PScore = 0;
 }
 
 //====================================================================
