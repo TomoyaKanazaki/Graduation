@@ -757,24 +757,51 @@ void CDevil::CollisionOut()
 //====================================================================
 void CDevil::ActionState(void)
 {
-	// 移動モーション
-	//if (m_move.x > 0.1f || m_move.x < -0.1f || m_move.z > 0.1f || m_move.z < -0.1f)
-	//{
-	//	if (m_Action != ACTION_SIGNAL_UP)
-	//	{
-	//		m_Action = ACTION_SIGNAL_UP;
-	//		m_pMotion->Set(ACTION_SIGNAL_UP, 5);
-	//	}
-	//}
-	//// ニュートラルモーション
-	//else
-	//{
-	//	if (m_Action != ACTION_NEUTRAL)
-	//	{
-	//		m_Action = ACTION_NEUTRAL;
-	//		m_pMotion->Set(ACTION_NEUTRAL, 5);
-	//	}
-	//}
+	// 上モーション
+	if (m_DevilArrow == 0)
+	{
+		if (m_Action != ACTION_SIGNAL_UP)
+		{
+			m_Action = ACTION_SIGNAL_UP;
+			GetMotion()->Set(ACTION_SIGNAL_UP, 5);
+		}
+	}
+	// 下モーション
+	if (m_DevilArrow == 1)
+	{
+		if (m_Action != ACTION_SIGNAL_DOWN)
+		{
+			m_Action = ACTION_SIGNAL_DOWN;
+			GetMotion()->Set(ACTION_SIGNAL_DOWN, 5);
+		}
+	}
+	// 左モーション
+	if (m_DevilArrow == 2)
+	{
+		if (m_Action != ACTION_SIGNAL_LEFT)
+		{
+			m_Action = ACTION_SIGNAL_LEFT;
+			GetMotion()->Set(ACTION_SIGNAL_LEFT, 5);
+		}
+	}
+	// 右モーション
+	if (m_DevilArrow == 3)
+	{
+		if (m_Action != ACTION_SIGNAL_RIGHT)
+		{
+			m_Action = ACTION_SIGNAL_RIGHT;
+			GetMotion()->Set(ACTION_SIGNAL_RIGHT, 5);
+		}
+	}
+	// ニュートラルモーション
+	else
+	{
+		if (m_Action != ACTION_NEUTRAL)
+		{
+			m_Action = ACTION_NEUTRAL;
+			GetMotion()->Set(ACTION_NEUTRAL, 5);
+		}
+	}
 }
 
 //====================================================================
