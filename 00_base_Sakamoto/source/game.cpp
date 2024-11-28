@@ -190,7 +190,7 @@ HRESULT CGame::Init(void)
 	switch (CManager::GetInstance()->GetStage())
 	{
 	case 0:
-		CMapSystem::Load("data\\TXT\\STAGE\\map00.csv");
+		CMapSystem::Load("data\\TXT\\STAGE\\map01.csv");
 
 		// TODO : ŠO•”‘‚«o‚µ‚ğ—˜—p‚·‚é
 		{
