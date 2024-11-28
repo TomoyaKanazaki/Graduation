@@ -225,21 +225,24 @@ void CSelect::Uninit(void)
 //====================================================================
 void CSelect::Update(void)
 {
-	if (m_nStep == 0)
+	if (CManager::GetInstance()->GetFade()->GetFade() != CFade::FADE_OUT)
 	{
-		// 選択処理
-		StageSelect();
+		if (m_nStep == 0)
+		{
+			// 選択処理
+			StageSelect();
 
-		// 決定処理
-		StageButton();
-	}
-	else
-	{
-		// 選択処理
-		ScrollSelect();
+			// 決定処理
+			StageButton();
+		}
+		else
+		{
+			// 選択処理
+			ScrollSelect();
 
-		// 決定処理
-		ScrollButton();
+			// 決定処理
+			ScrollButton();
+		}
 	}
 
 	// スクロール処理

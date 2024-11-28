@@ -7,7 +7,7 @@
 #ifndef _DEVIL_H_
 #define _DEVIL_H_
 
-#include "character.h"
+#include "objectcharacter.h"
 #include "useful.h"
 #include "MapSystem.h"
 
@@ -29,7 +29,7 @@ class CBoss;
 class CPlayer;
 
 //オブジェクトプレイヤークラス
-class CDevil : public CCharacter
+class CDevil : public CObjectCharacter
 {
 private:
 	static const int ENCOUNT_MAX = 128;
@@ -94,6 +94,7 @@ public:
 
 	// 静的メンバ関数
 	static CListManager<CDevil>* GetList(void); // リスト取得
+	static CDevil* GetListTop(void); // リスト取得
 
 private:
 	void ActionState(void);		//モーションと状態の管理

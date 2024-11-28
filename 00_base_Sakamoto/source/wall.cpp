@@ -88,7 +88,7 @@ HRESULT CWall::Init(char* pModelName)
 	CObjectX::Init(pModelName);
 
 	//マップとのマトリックスの掛け合わせをオンにする
-	SetUseMultiMatrix(CGame::GetInstance()->GetMapField()->GetMatrix());
+	SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
 
 	D3DXVECTOR3 size = GetSize() * 2.0f;		// モデルのサイズ取得
 

@@ -8,10 +8,10 @@
 #ifndef _LEVEL_MODEL_EFFECT_H_
 #define _LEVEL_MODEL_EFFECT_H_
 
-#include "character.h"
+#include "objectcharacter.h"
 
 // プレイヤーのレベルエフェクト処理クラス
-class CLevelModelEffect : public CCharacter
+class CLevelModelEffect : public CObjectCharacter
 {
 public:
 	CLevelModelEffect(int nPriority = 5);

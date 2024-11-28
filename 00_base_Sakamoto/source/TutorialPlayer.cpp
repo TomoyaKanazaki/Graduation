@@ -8,6 +8,11 @@
 #include "object.h"
 #include "manager.h"
 #include "MyEffekseer.h"
+#include "Item.h"
+#include "sound.h"
+#include "game.h"
+#include "LifeUi.h"
+#include "number.h"
 
 //===========================================
 // 定数定義
@@ -20,7 +25,6 @@ namespace
 //===========================================
 // 静的メンバ変数宣言
 //===========================================
-CListManager<CTutorialPlayer>* CTutorialPlayer::m_pList = nullptr; // オブジェクトリスト
 
 //====================================================================
 //コンストラクタ
@@ -74,16 +78,6 @@ HRESULT CTutorialPlayer::Init(int PlayNumber)
 //====================================================================
 void CTutorialPlayer::Uninit(void)
 {
-	// リストから自身のオブジェクトを削除
-	m_pList->DelList(m_iterator);
-
-	if (m_pList->GetNumAll() == 0)
-	{ // オブジェクトが一つもない場合
-
-		// リストマネージャーの破棄
-		m_pList->Release(m_pList);
-	}
-
 	// キャラクタークラスの終了（継承）
 	CPlayer::Uninit();
 }
@@ -105,10 +99,35 @@ void CTutorialPlayer::Draw(void)
 	CPlayer::Draw();
 }
 
-//==========================================
-//  リストの取得
-//==========================================
-CListManager<CTutorialPlayer>* CTutorialPlayer::GetList(void)
+//====================================================================
+//ダメージ処理
+//====================================================================
+void CTutorialPlayer::Death(void)
 {
-	return m_pList;
+	if (GetState() != STATE_EGG && GetState() != STATE_DEATH)
+	{
+		// 聖書を所持しているときにその場に聖書を落とす
+		if (GetItemType() == TYPE_BIBLE)
+		{
+			// 聖書生成
+			CItem::Create(CItem::TYPE_BIBLE, CMapSystem::GRID(GetGrid()));
+		}
+
+		if (GetLifeUI() != nullptr)
+		{
+			GetLifeUI()->GetNumber()->SetNumber(GetLife());
+		}
+
+		SetState(STATE_DEATH);
+		SetMove(INITVECTOR3);
+		SetObjMoveX(0.0f);
+		SetObjMoveZ(0.0f);
+		SetStateCount(150);
+
+		// ダメージ音(仮)
+		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_DEATH);
+
+		// アイテムを所持していない状態にする
+		SetItemType(TYPE_NONE);
+	}
 }

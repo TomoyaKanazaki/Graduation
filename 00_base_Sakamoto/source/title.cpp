@@ -131,6 +131,15 @@ HRESULT CTitle::Init(void)
 				m_pModeSelect[nCnt]->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\tutorial.png"));
 				break;
 			}
+
+			if (m_nSelect == nCnt)
+			{
+				m_pModeSelect[nCnt]->SetColor(SELECT_COLOR_TRUE);
+			}
+			else
+			{
+				m_pModeSelect[nCnt]->SetColor(SELECT_COLOR_FALSE);
+			}
 		}
 	}
 
@@ -174,11 +183,14 @@ void CTitle::Uninit(void)
 //====================================================================
 void CTitle::Update(void)
 {	
-	// ‘I‘ðˆ—
-	Select();
+	if (CManager::GetInstance()->GetFade()->GetFade() != CFade::FADE_OUT)
+	{
+		// ‘I‘ðˆ—
+		Select();
 
-	// Œˆ’èˆ—
-	Button();
+		// Œˆ’èˆ—
+		Button();
+	}
 }
 
 //====================================================================
@@ -261,9 +273,9 @@ void CTitle::Button(void)
 			CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_MULTI);
 			break;
 		case 2:
-			//// ƒQ[ƒ€‘JˆÚ
-			//CFade::SetFade(CScene::MODE_TUTORIAL);
-			//CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_SINGLE);
+			// ƒQ[ƒ€‘JˆÚ
+			CFade::SetFade(CScene::MODE_TUTORIAL);
+			CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_SINGLE);
 			break;
 		}
 	}
@@ -285,9 +297,9 @@ void CTitle::Button(void)
 			CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_MULTI);
 			break;
 		case 2:
-			//// ƒQ[ƒ€‘JˆÚ
-			//CFade::SetFade(CScene::MODE_TUTORIAL);
-			//CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_SINGLE);
+			// ƒQ[ƒ€‘JˆÚ
+			CFade::SetFade(CScene::MODE_TUTORIAL);
+			CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_SINGLE);
 			break;
 		}
 	}

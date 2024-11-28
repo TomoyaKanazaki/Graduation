@@ -52,19 +52,10 @@
     <ClCompile Include="source\object3D.cpp">
       <Filter>ソース ファイル\02_Object</Filter>
     </ClCompile>
-    <ClCompile Include="source\objectAnim2d.cpp">
-      <Filter>ソース ファイル\02_Object</Filter>
-    </ClCompile>
     <ClCompile Include="source\objectBillboard.cpp">
       <Filter>ソース ファイル\02_Object</Filter>
     </ClCompile>
     <ClCompile Include="source\objectX.cpp">
-      <Filter>ソース ファイル\02_Object</Filter>
-    </ClCompile>
-    <ClCompile Include="source\objectXtex.cpp">
-      <Filter>ソース ファイル\02_Object</Filter>
-    </ClCompile>
-    <ClCompile Include="source\objGauge2D.cpp">
       <Filter>ソース ファイル\02_Object</Filter>
     </ClCompile>
     <ClCompile Include="source\objmeshCube.cpp">
@@ -84,12 +75,6 @@
     </ClCompile>
     <ClCompile Include="source\objmeshWall.cpp">
       <Filter>ソース ファイル\02_Object</Filter>
-    </ClCompile>
-    <ClCompile Include="source\2DUI_edit.cpp">
-      <Filter>ソース ファイル\00_System</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Edit.cpp">
-      <Filter>ソース ファイル\00_System</Filter>
     </ClCompile>
     <ClCompile Include="source\Xmodel.cpp">
       <Filter>ソース ファイル\00_System</Filter>
@@ -161,9 +146,6 @@
       <Filter>ソース ファイル\05_UI_2D</Filter>
     </ClCompile>
     <ClCompile Include="source\numberBillboard.cpp">
-      <Filter>ソース ファイル\06_UI_3D</Filter>
-    </ClCompile>
-    <ClCompile Include="source\numberFall.cpp">
       <Filter>ソース ファイル\06_UI_3D</Filter>
     </ClCompile>
     <ClCompile Include="source\CubeBlock.cpp">
@@ -256,9 +238,6 @@
     <ClCompile Include="source\friedegg.cpp">
       <Filter>ソース ファイル\10_item</Filter>
     </ClCompile>
-    <ClCompile Include="source\character.cpp">
-      <Filter>ソース ファイル\03_Direction</Filter>
-    </ClCompile>
     <ClCompile Include="source\AStar.cpp">
       <Filter>ソース ファイル\11_library</Filter>
     </ClCompile>
@@ -289,24 +268,21 @@
     <ClCompile Include="source\wall.cpp">
       <Filter>ソース ファイル\07_Map</Filter>
     </ClCompile>
-    <ClCompile Include="source\GamePlayer.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="source\TutorialPlayer.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\08_player</Filter>
+    </ClCompile>
+    <ClCompile Include="source\GamePlayer.cpp">
+      <Filter>ソース ファイル\08_player</Filter>
+    </ClCompile>
+    <ClCompile Include="source\objectcharacter.cpp">
+      <Filter>ソース ファイル\02_Object</Filter>
     </ClCompile>
     <ClCompile Include="source\signal.cpp">
       <Filter>ソース ファイル\06_UI_3D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\2DUI_edit.h">
-      <Filter>ソース ファイル\00_System</Filter>
-    </ClInclude>
     <ClInclude Include="source\debugproc.h">
-      <Filter>ソース ファイル\00_System</Filter>
-    </ClInclude>
-    <ClInclude Include="source\Edit.h">
       <Filter>ソース ファイル\00_System</Filter>
     </ClInclude>
     <ClInclude Include="source\input.h">
@@ -360,19 +336,10 @@
     <ClInclude Include="source\object3D.h">
       <Filter>ソース ファイル\02_Object</Filter>
     </ClInclude>
-    <ClInclude Include="source\objectAnim2d.h">
-      <Filter>ソース ファイル\02_Object</Filter>
-    </ClInclude>
     <ClInclude Include="source\objectBillboard.h">
       <Filter>ソース ファイル\02_Object</Filter>
     </ClInclude>
     <ClInclude Include="source\objectX.h">
-      <Filter>ソース ファイル\02_Object</Filter>
-    </ClInclude>
-    <ClInclude Include="source\objectXtex.h">
-      <Filter>ソース ファイル\02_Object</Filter>
-    </ClInclude>
-    <ClInclude Include="source\objGauge2D.h">
       <Filter>ソース ファイル\02_Object</Filter>
     </ClInclude>
     <ClInclude Include="source\objmeshCube.h">
@@ -439,9 +406,6 @@
       <Filter>ソース ファイル\05_UI_2D</Filter>
     </ClInclude>
     <ClInclude Include="source\numberBillboard.h">
-      <Filter>ソース ファイル\06_UI_3D</Filter>
-    </ClInclude>
-    <ClInclude Include="source\numberFall.h">
       <Filter>ソース ファイル\06_UI_3D</Filter>
     </ClInclude>
     <ClInclude Include="source\shrinkingBillboard.h">
@@ -513,9 +477,6 @@
     <ClInclude Include="source\friedegg.h">
       <Filter>ソース ファイル\10_item</Filter>
     </ClInclude>
-    <ClInclude Include="source\character.h">
-      <Filter>ソース ファイル\03_Direction</Filter>
-    </ClInclude>
     <ClInclude Include="source\AStar.h">
       <Filter>ソース ファイル\11_library</Filter>
     </ClInclude>
@@ -549,8 +510,15 @@
     <ClInclude Include="source\wall.h">
       <Filter>ソース ファイル\07_Map</Filter>
     </ClInclude>
-    <ClInclude Include="source\GamePlayer.h" />
-    <ClInclude Include="source\TutorialPlayer.h" />
+    <ClInclude Include="source\TutorialPlayer.h">
+      <Filter>ソース ファイル\08_player</Filter>
+    </ClInclude>
+    <ClInclude Include="source\GamePlayer.h">
+      <Filter>ソース ファイル\08_player</Filter>
+    </ClInclude>
+    <ClInclude Include="source\objectcharacter.h">
+      <Filter>ソース ファイル\02_Object</Filter>
+    </ClInclude>
     <ClInclude Include="source\signal.h">
       <Filter>ソース ファイル\06_UI_3D</Filter>
     </ClInclude>

@@ -155,7 +155,7 @@ HRESULT CItem::Init(const char* pModelName)
 	CObjectX::Init(pModelName);
 
 	//マップとのマトリックスの掛け合わせをオンにする
-	SetUseMultiMatrix(CGame::GetInstance()->GetMapField()->GetMatrix());
+	SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
 
 	if (m_pShadow == nullptr)
 	{// シャドウ生成

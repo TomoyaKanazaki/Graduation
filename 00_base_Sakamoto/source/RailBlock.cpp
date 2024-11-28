@@ -32,15 +32,27 @@ CListManager<CRailBlock>* CRailBlock::m_pList = nullptr; // オブジェクトリスト
 //====================================================================
 //コンストラクタ
 //====================================================================
-CRailBlock::CRailBlock(int nPriority) :CCubeBlock(nPriority)
+CRailBlock::CRailBlock(int nPriority) :CObjectX(nPriority)
 {
 	m_pTop = nullptr;		// 先頭のレールへのポインタ
 	m_pCur = nullptr;		// 最後尾のレールへのポインタ
+	m_Grid.x = 0;
+	m_Grid.z = 0;
 
 	for (int nCnt = 0; nCnt < 4; nCnt++)
 	{
 		bMoveOK[nCnt] = false;
 	}
+}
+
+//====================================================================
+//コンストラクタ(オーバーロード)
+//====================================================================
+CRailBlock::CRailBlock(int nPriority, CMapSystem::GRID gridCenter) : CObjectX(nPriority)
+{
+	SetSize(INITVECTOR3);
+	SetPos(INITVECTOR3);
+	m_Grid = gridCenter;		// グリッド
 }
 
 //====================================================================
@@ -54,18 +66,18 @@ CRailBlock::~CRailBlock()
 //====================================================================
 //生成処理
 //====================================================================
-CRailBlock* CRailBlock::Create(int nMapWight, int nMapHeight, bool Edit, int Max, int* nMove)
+CRailBlock* CRailBlock::Create(CMapSystem::GRID gridCenter)
 {
 	CRailBlock* pObjectBlock = nullptr;
 
 	if (pObjectBlock == nullptr)
 	{
 		//オブジェクト3Dの生成
-		pObjectBlock = new CRailBlock();
+		pObjectBlock = new CRailBlock(3, gridCenter);
 	}
 
 	//オブジェクトの初期化処理
-	if (FAILED(pObjectBlock->Init(nMapWight, nMapHeight, Edit, Max, nMove)))
+	if (FAILED(pObjectBlock->Init("data\\MODEL\\railblock.x")))
 	{//初期化処理が失敗した場合
 		return nullptr;
 	}
@@ -76,30 +88,31 @@ CRailBlock* CRailBlock::Create(int nMapWight, int nMapHeight, bool Edit, int Max
 //====================================================================
 //初期化処理
 //====================================================================
-HRESULT CRailBlock::Init(int nMapWight, int nMapHeight, bool Edit, int Max, int* nMove)
+HRESULT CRailBlock::Init(char* pModelName)
 {
-	SetWightNumber(nMapWight);
+	/*SetWightNumber(nMapWight);
 	SetHeightNumber(nMapHeight);
 
 	m_StartGrid.x = nMapWight;
-	m_StartGrid.z = nMapHeight;
+	m_StartGrid.z = nMapHeight;*/
 
-	SetUseMultiMatrix(CGame::GetInstance()->GetMapField()->GetMatrix());
+	SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
 
-	CObjmeshCube::Init();
+	// 初期化処理
+	CObjectX::Init(pModelName);
 
-	SetPos(m_StartGrid.ToWorld());
+	// 位置設定
+	SetPos(m_Grid.ToWorld());
 
-	SetTexture("data\\TEXTURE\\Wood001.png");
-
+	// 種類の設定
 	SetType(TYPE_RAILBLOCK);
 
-	if (Edit == false)
+	/*if (Edit == false)
 	{
 		RailSet(Max, nMove);
 
 		RailCheck();
-	}
+	}*/
 
 	if (m_pList == nullptr)
 	{// リストマネージャー生成
@@ -129,7 +142,7 @@ void CRailBlock::Uninit(void)
 	}
 
 	//自身が所持するレールを全て削除する
-	CRail* pRail = m_pTop;
+	/*CRail* pRail = m_pTop;
 	while (1)
 	{
 		if (pRail != nullptr)
@@ -144,9 +157,9 @@ void CRailBlock::Uninit(void)
 		}
 	}
 	m_pTop = nullptr;
-	m_pCur = nullptr;
+	m_pCur = nullptr;*/
 
-	CObjmeshCube::Uninit();
+	CObjectX::Uninit();
 }
 
 //====================================================================
@@ -160,29 +173,30 @@ void CRailBlock::Update(void)
 	Move(&Pos);
 
 	// 横番号が前回と一致しない時にグリットのブロックの有無を切り替える
-	if (GetWightNumber() != CMapSystem::GetInstance()->CalcGridX(Pos.x))
-	{
-		CMapSystem::GetInstance()->SetGritBool(GetWightNumber(), GetHeightNumber(), false);
-		SetWightNumber(CMapSystem::GetInstance()->CalcGridX(Pos.x));
-		CMapSystem::GetInstance()->SetGritBool(GetWightNumber(), GetHeightNumber(), true);
+	//if (GetWightNumber() != CMapSystem::GetInstance()->CalcGridX(Pos.x))
+	//{
+	//	CMapSystem::GetInstance()->SetGritBool(GetWightNumber(), GetHeightNumber(), false);
+	//	SetWightNumber(CMapSystem::GetInstance()->CalcGridX(Pos.x));
+	//	CMapSystem::GetInstance()->SetGritBool(GetWightNumber(), GetHeightNumber(), true);
 
-		RailCheck();
-	}
+	//	RailCheck();
+	//}
 
-	// 縦番号が前回と一致しない時にグリットのブロックの有無を切り替える
-	if (GetHeightNumber() != CMapSystem::GetInstance()->CalcGridZ(Pos.z))
-	{
-		CMapSystem::GetInstance()->SetGritBool(GetWightNumber(), GetHeightNumber(), false);
-		SetHeightNumber(CMapSystem::GetInstance()->CalcGridZ(Pos.z));
-		CMapSystem::GetInstance()->SetGritBool(GetWightNumber(), GetHeightNumber(), true);
+	//// 縦番号が前回と一致しない時にグリットのブロックの有無を切り替える
+	//if (GetHeightNumber() != CMapSystem::GetInstance()->CalcGridZ(Pos.z))
+	//{
+	//	CMapSystem::GetInstance()->SetGritBool(GetWightNumber(), GetHeightNumber(), false);
+	//	SetHeightNumber(CMapSystem::GetInstance()->CalcGridZ(Pos.z));
+	//	CMapSystem::GetInstance()->SetGritBool(GetWightNumber(), GetHeightNumber(), true);
 
-		RailCheck();
-	}
+	//	RailCheck();
+	//}
 
+	// 位置設定
 	SetPos(Pos);
 	SetPosOld(PosOld);
 
-	CCubeBlock::Update();
+	CObjectX::Update();
 }
 
 //====================================================================
@@ -190,7 +204,7 @@ void CRailBlock::Update(void)
 //====================================================================
 void CRailBlock::Draw(void)
 {
-	CCubeBlock::Draw();
+	CObjectX::Draw();
 }
 
 //====================================================================
@@ -202,148 +216,148 @@ void CRailBlock::Move(D3DXVECTOR3* Pos)
 
 	D3DXVECTOR3 SlopeMove = INITVECTOR3;
 	D3DXVECTOR3 SlopeRot = INITVECTOR3;
-	SlopeRot = CGame::GetInstance()->GetDevil()->GetDevilRot();
-	D3DXVECTOR3 GritPos = CMapSystem::GRID(GetWightNumber(), GetHeightNumber()).ToWorld();
-	D3DXVECTOR3 GritDistance = *Pos - GritPos;	//グリットの中心とした時の相対位置、差分
+	SlopeRot = CDevil::GetListTop()->GetDevilRot();
+	//D3DXVECTOR3 GritPos = CMapSystem::GRID(GetWightNumber(), GetHeightNumber()).ToWorld();
+	//D3DXVECTOR3 GritDistance = *Pos - GritPos;	//グリットの中心とした時の相対位置、差分
 
 	//傾きによる移動量設定
 	SlopeMove.x = -SlopeRot.z * 10.0f;
 	SlopeMove.z = SlopeRot.x * 10.0f;
 
-	if (useful::CollisionCircle(GritPos, D3DXVECTOR3(Pos->x, GritPos.y, Pos->z), RAIL_WIGHT) == true)
-	{// ブロックの中心にある時に上下か左右のどちらかになるまでに移動する
+	//if (useful::CollisionCircle(GritPos, D3DXVECTOR3(Pos->x, GritPos.y, Pos->z), RAIL_WIGHT) == true)
+	//{// ブロックの中心にある時に上下か左右のどちらかになるまでに移動する
 
-		Pos->x += SlopeMove.x;
-		Pos->z += SlopeMove.z;
-	}
-	else
-	{// ブロックの中心にないとき
+	//	Pos->x += SlopeMove.x;
+	//	Pos->z += SlopeMove.z;
+	//}
+	//else
+	//{// ブロックの中心にないとき
 
-		//上下移動
-		if (GritPos.x - Pos->x >= -5.0f && GritPos.x - Pos->x <= RAIL_WIGHT)
-		{
-			Pos->z += SlopeMove.z;
-		}
-		else
-		{
-			Pos->z = GritPos.z;
-		}
+	//	//上下移動
+	//	if (GritPos.x - Pos->x >= -5.0f && GritPos.x - Pos->x <= RAIL_WIGHT)
+	//	{
+	//		Pos->z += SlopeMove.z;
+	//	}
+	//	else
+	//	{
+	//		Pos->z = GritPos.z;
+	//	}
 
-		//左右移動
-		if (GritPos.z - Pos->z >= -5.0f && GritPos.z - Pos->z <= RAIL_WIGHT)
-		{
-			Pos->x += SlopeMove.x;
-		}
-		else
-		{
-			Pos->x = GritPos.x;
-		}
-	}
+	//	//左右移動
+	//	if (GritPos.z - Pos->z >= -5.0f && GritPos.z - Pos->z <= RAIL_WIGHT)
+	//	{
+	//		Pos->x += SlopeMove.x;
+	//	}
+	//	else
+	//	{
+	//		Pos->x = GritPos.x;
+	//	}
+	//}
 
 	// 上
-	if (!bMoveOK[0])
-	{
-		if (Pos->z > GritPos.z)
-		{
-			Pos->z = GritPos.z;
-		}
-	}
+	//if (!bMoveOK[0])
+	//{
+	//	if (Pos->z > GritPos.z)
+	//	{
+	//		Pos->z = GritPos.z;
+	//	}
+	//}
 
-	// 下
-	if (!bMoveOK[1])
-	{
-		if (Pos->z < GritPos.z)
-		{
-			Pos->z = GritPos.z;
-		}
-	}
+	//// 下
+	//if (!bMoveOK[1])
+	//{
+	//	if (Pos->z < GritPos.z)
+	//	{
+	//		Pos->z = GritPos.z;
+	//	}
+	//}
 
-	// 左
-	if (!bMoveOK[2])
-	{
-		if (Pos->x < GritPos.x)
-		{
-			Pos->x = GritPos.x;
-		}
-	}
+	//// 左
+	//if (!bMoveOK[2])
+	//{
+	//	if (Pos->x < GritPos.x)
+	//	{
+	//		Pos->x = GritPos.x;
+	//	}
+	//}
 
-	// 右
-	if (!bMoveOK[3])
-	{
-		if (Pos->x > GritPos.x)
-		{
-			Pos->x = GritPos.x;
-		}
-	}
+	//// 右
+	//if (!bMoveOK[3])
+	//{
+	//	if (Pos->x > GritPos.x)
+	//	{
+	//		Pos->x = GritPos.x;
+	//	}
+	//}
 
 	// 左右のグリットの番号がエラー番号(マップ外)に飛び出てる時
-	if (CMapSystem::GetInstance()->CalcGridX(Pos->x) == -1)
-	{
-		if (Pos->x > 0.0f)	//右のグリット外に出たとき
-		{
-			if (SlopeMove.x > 0.0f && bMoveOK[3])	//X軸の動きが[+]で右にレールが存在する時
-			{
-				//１つ右のグリットに移動
-				GritPos = CMapSystem::GRID(GetWightNumber() + 1, GetHeightNumber()).ToWorld();
-			}
-			else
-			{
-				// 現在のグリットに移動
-				GritPos = CMapSystem::GRID(GetWightNumber(), GetHeightNumber()).ToWorld();
-			}
-		}
-		else if (Pos->x < 0.0f)	//左のグリット外に出たとき
-		{
-			if (SlopeMove.x < 0.0f && bMoveOK[2])	//X軸の動きが[-]で左にレールが存在する時
-			{
-				//１つ右のグリットに移動
-				GritPos = CMapSystem::GRID(GetWightNumber() - 1, GetHeightNumber()).ToWorld();
-			}
-			else
-			{
-				// 現在のグリットに移動
-				GritPos = CMapSystem::GRID(GetWightNumber(), GetHeightNumber()).ToWorld();
-			}
-		}
-			Pos->x = GritPos.x;
-	}
+	//if (CMapSystem::GetInstance()->CalcGridX(Pos->x) == -1)
+	//{
+	//	if (Pos->x > 0.0f)	//右のグリット外に出たとき
+	//	{
+	//		if (SlopeMove.x > 0.0f && bMoveOK[3])	//X軸の動きが[+]で右にレールが存在する時
+	//		{
+	//			//１つ右のグリットに移動
+	//			GritPos = CMapSystem::GRID(GetWightNumber() + 1, GetHeightNumber()).ToWorld();
+	//		}
+	//		else
+	//		{
+	//			// 現在のグリットに移動
+	//			GritPos = CMapSystem::GRID(GetWightNumber(), GetHeightNumber()).ToWorld();
+	//		}
+	//	}
+	//	else if (Pos->x < 0.0f)	//左のグリット外に出たとき
+	//	{
+	//		if (SlopeMove.x < 0.0f && bMoveOK[2])	//X軸の動きが[-]で左にレールが存在する時
+	//		{
+	//			//１つ右のグリットに移動
+	//			GritPos = CMapSystem::GRID(GetWightNumber() - 1, GetHeightNumber()).ToWorld();
+	//		}
+	//		else
+	//		{
+	//			// 現在のグリットに移動
+	//			GritPos = CMapSystem::GRID(GetWightNumber(), GetHeightNumber()).ToWorld();
+	//		}
+	//	}
+	//		Pos->x = GritPos.x;
+	//}
 
-	// 上下のグリットの番号がエラー番号(マップ外)に飛び出てる時
-	if (CMapSystem::GetInstance()->CalcGridZ(Pos->z) == -1)
-	{
-		if (Pos->z > 0.0f)	//右のグリット外に出たとき
-		{
-			if (SlopeMove.z > 0.0f && bMoveOK[0])	//Z軸の動きが[+]で右にレールが存在する時
-			{
-				//１つ右のグリットに移動
-				GritPos = CMapSystem::GRID(GetWightNumber(), GetHeightNumber() - 1).ToWorld();
-			}
-			else
-			{
-				// 現在のグリットに移動
-				GritPos = CMapSystem::GRID(GetWightNumber(), GetHeightNumber()).ToWorld();
-			}
-		}
-		else if (Pos->z < 0.0f)	//左のグリット外に出たとき
-		{
-			if (SlopeMove.z < 0.0f && bMoveOK[1])	//Z軸の動きが[-]で左にレールが存在する時
-			{
-				//１つ右のグリットに移動
-				GritPos = CMapSystem::GRID(GetWightNumber(), GetHeightNumber() + 1).ToWorld();
-			}
-			else
-			{
-				// 現在のグリットに移動
-				GritPos = CMapSystem::GRID(GetWightNumber(), GetHeightNumber()).ToWorld();
-			}
-		}
-		Pos->z = GritPos.z;
-	}
+	//// 上下のグリットの番号がエラー番号(マップ外)に飛び出てる時
+	//if (CMapSystem::GetInstance()->CalcGridZ(Pos->z) == -1)
+	//{
+	//	if (Pos->z > 0.0f)	//右のグリット外に出たとき
+	//	{
+	//		if (SlopeMove.z > 0.0f && bMoveOK[0])	//Z軸の動きが[+]で右にレールが存在する時
+	//		{
+	//			//１つ右のグリットに移動
+	//			GritPos = CMapSystem::GRID(GetWightNumber(), GetHeightNumber() - 1).ToWorld();
+	//		}
+	//		else
+	//		{
+	//			// 現在のグリットに移動
+	//			GritPos = CMapSystem::GRID(GetWightNumber(), GetHeightNumber()).ToWorld();
+	//		}
+	//	}
+	//	else if (Pos->z < 0.0f)	//左のグリット外に出たとき
+	//	{
+	//		if (SlopeMove.z < 0.0f && bMoveOK[1])	//Z軸の動きが[-]で左にレールが存在する時
+	//		{
+	//			//１つ右のグリットに移動
+	//			GritPos = CMapSystem::GRID(GetWightNumber(), GetHeightNumber() + 1).ToWorld();
+	//		}
+	//		else
+	//		{
+	//			// 現在のグリットに移動
+	//			GritPos = CMapSystem::GRID(GetWightNumber(), GetHeightNumber()).ToWorld();
+	//		}
+	//	}
+	//	Pos->z = GritPos.z;
+	//}
 
 	DebugProc::Print(DebugProc::POINT_LEFT, "[レールブロック]位置 %f : %f : %f\n", Pos->x, Pos->y, Pos->z);
-	DebugProc::Print(DebugProc::POINT_LEFT, "[レールブロック]横番号 %d \n", GetWightNumber());
+	/*DebugProc::Print(DebugProc::POINT_LEFT, "[レールブロック]横番号 %d \n", GetWightNumber());
 	DebugProc::Print(DebugProc::POINT_LEFT, "[レールブロック]縦番号 %d \n", GetHeightNumber());
-	DebugProc::Print(DebugProc::POINT_LEFT, "[レールブロック]差分 %f : %f \n", GritDistance.x, GritDistance.z);
+	DebugProc::Print(DebugProc::POINT_LEFT, "[レールブロック]差分 %f : %f \n", GritDistance.x, GritDistance.z);*/
 	DebugProc::Print(DebugProc::POINT_LEFT, "[テストブロック]差分 %f : %f \n", TestPos.x, TestPos.z);
 }
 
@@ -353,29 +367,29 @@ void CRailBlock::Move(D3DXVECTOR3* Pos)
 void CRailBlock::RailCheck(void)
 {
 	CRail* pRail = m_pTop;
-	int WightNumber = GetWightNumber();
-	int HeightNumber = GetHeightNumber();
+	//int WightNumber = GetWightNumber();
+	//int HeightNumber = GetHeightNumber();
 
-	//ブロック内のリストを回してブロックとグリット番号が一致するレールの上下左右の有無を見る
-	while (1)
-	{
-		if (WightNumber == pRail->GetWightNumber() &&
-			HeightNumber == pRail->GetHeightNumber())
-		{
-			for (int nCnt = 0; nCnt < 4; nCnt++)
-			{
-				bMoveOK[nCnt] = pRail->GetRailOK(nCnt);
-			}
-			return;
-		}
+	////ブロック内のリストを回してブロックとグリット番号が一致するレールの上下左右の有無を見る
+	//while (1)
+	//{
+	//	if (WightNumber == pRail->GetWightNumber() &&
+	//		HeightNumber == pRail->GetHeightNumber())
+	//	{
+	//		for (int nCnt = 0; nCnt < 4; nCnt++)
+	//		{
+	//			bMoveOK[nCnt] = pRail->GetRailOK(nCnt);
+	//		}
+	//		return;
+	//	}
 
-		if (pRail == m_pCur)
-		{
-			break;
-		}
+	//	if (pRail == m_pCur)
+	//	{
+	//		break;
+	//	}
 
-		pRail = pRail->GetNextRail();
-	}
+	//	pRail = pRail->GetNextRail();
+	//}
 }
 
 //====================================================================
@@ -425,84 +439,84 @@ void CRailBlock::RailAddWrite(void)
 //====================================================================
 void CRailBlock::RailSet(int Max, int* nMove)
 {
-	m_nMax = Max;		//レール数
+	//m_nMax = Max;		//レール数
 
-	// 事前に設定したレールの設置を行う
-	m_pTop = CRail::Create();
-	m_pTop->SetWightNumber(GetWightNumber());
-	m_pTop->SetHeightNumber(GetHeightNumber());
-	m_pTop->NextSet((CRail::RAIL_POS)nMove[0]);
-	m_nMove[0] = nMove[0];
+	//// 事前に設定したレールの設置を行う
+	//m_pTop = CRail::Create();
+	//m_pTop->SetWightNumber(GetWightNumber());
+	//m_pTop->SetHeightNumber(GetHeightNumber());
+	//m_pTop->NextSet((CRail::RAIL_POS)nMove[0]);
+	//m_nMove[0] = nMove[0];
 
-	// レール設置
-	CRail* pRail = m_pTop->GetNextRail();
+	//// レール設置
+	//CRail* pRail = m_pTop->GetNextRail();
 
-	for (int nCnt = 1; nCnt < m_nMax; nCnt++)
-	{
-		m_nMove[nCnt] = nMove[nCnt];
-		pRail->NextSet((CRail::RAIL_POS)nMove[nCnt]);
+	//for (int nCnt = 1; nCnt < m_nMax; nCnt++)
+	//{
+	//	m_nMove[nCnt] = nMove[nCnt];
+	//	pRail->NextSet((CRail::RAIL_POS)nMove[nCnt]);
 
-		//設置したレールと置いてあるレールの位置が同じときに移動可能方向を追加する
-		CRail* pCheckRail = m_pTop;
-		while (1)
-		{
-			if (pRail->GetWightNumber() == pCheckRail->GetWightNumber() &&
-				pRail->GetHeightNumber() == pCheckRail->GetHeightNumber() &&
-				pCheckRail != m_pCur)
-			{
-				pCheckRail->SetRailOK(nMove[nCnt], true);
-			}
+	//	//設置したレールと置いてあるレールの位置が同じときに移動可能方向を追加する
+	//	CRail* pCheckRail = m_pTop;
+	//	while (1)
+	//	{
+	//		if (pRail->GetWightNumber() == pCheckRail->GetWightNumber() &&
+	//			pRail->GetHeightNumber() == pCheckRail->GetHeightNumber() &&
+	//			pCheckRail != m_pCur)
+	//		{
+	//			pCheckRail->SetRailOK(nMove[nCnt], true);
+	//		}
 
-			pCheckRail = pCheckRail->GetNextRail();
+	//		pCheckRail = pCheckRail->GetNextRail();
 
-			if (pCheckRail == nullptr)
-			{
-				break;
-			}
-		}
-		//=======================
+	//		if (pCheckRail == nullptr)
+	//		{
+	//			break;
+	//		}
+	//	}
+	//	//=======================
 
-		pRail = pRail->GetNextRail();
+	//	pRail = pRail->GetNextRail();
 
-		m_pCur = pRail;
+	//	m_pCur = pRail;
 
-		//設置したレールと置いてあるレールの位置が同じときに移動可能方向を追加する
-		pCheckRail = m_pTop;
-		while (1)
-		{
-			if (pRail->GetWightNumber() == pCheckRail->GetWightNumber() &&
-				pRail->GetHeightNumber() == pCheckRail->GetHeightNumber() &&
-				pCheckRail != m_pCur)
-			{
-				switch (nMove[nCnt])
-				{
-				case 0:
-					pCheckRail->SetRailOK(1, true);
-					break;
+	//	//設置したレールと置いてあるレールの位置が同じときに移動可能方向を追加する
+	//	pCheckRail = m_pTop;
+	//	while (1)
+	//	{
+	//		if (pRail->GetWightNumber() == pCheckRail->GetWightNumber() &&
+	//			pRail->GetHeightNumber() == pCheckRail->GetHeightNumber() &&
+	//			pCheckRail != m_pCur)
+	//		{
+	//			switch (nMove[nCnt])
+	//			{
+	//			case 0:
+	//				pCheckRail->SetRailOK(1, true);
+	//				break;
 
-				case 1:
-					pCheckRail->SetRailOK(0, true);
-					break;
+	//			case 1:
+	//				pCheckRail->SetRailOK(0, true);
+	//				break;
 
-				case 2:
-					pCheckRail->SetRailOK(3, true);
-					break;
+	//			case 2:
+	//				pCheckRail->SetRailOK(3, true);
+	//				break;
 
-				case 3:
-					pCheckRail->SetRailOK(2, true);
-					break;
-				}
-			}
+	//			case 3:
+	//				pCheckRail->SetRailOK(2, true);
+	//				break;
+	//			}
+	//		}
 
-			if (pCheckRail == m_pCur)
-			{
-				break;
-			}
+	//		if (pCheckRail == m_pCur)
+	//		{
+	//			break;
+	//		}
 
-			pCheckRail = pCheckRail->GetNextRail();
-		}
-		//=======================
-	}
+	//		pCheckRail = pCheckRail->GetNextRail();
+	//	}
+	//	//=======================
+	//}
 }
 
 //====================================================================
@@ -510,33 +524,33 @@ void CRailBlock::RailSet(int Max, int* nMove)
 //====================================================================
 void CRailBlock::EditRailSet(int Number)
 {
-	int nWightNumber = GetWightNumber();
-	int nHeightNumber = GetHeightNumber();
+	/*int nWightNumber = GetWightNumber();
+	int nHeightNumber = GetHeightNumber();*/
 
-	if (m_pTop == nullptr)
-	{
-		// 事前に設定したレールの設置を行う
-		m_pTop = CRail::Create();
-		m_pTop->SetWightNumber(nWightNumber);
-		m_pTop->SetHeightNumber(nHeightNumber);
-		m_pTop->NextSet((CRail::RAIL_POS)Number);
+	//if (m_pTop == nullptr)
+	//{
+	//	// 事前に設定したレールの設置を行う
+	//	m_pTop = CRail::Create();
+	//	m_pTop->SetWightNumber(nWightNumber);
+	//	m_pTop->SetHeightNumber(nHeightNumber);
+	//	m_pTop->NextSet((CRail::RAIL_POS)Number);
 
-		m_pCur = m_pTop->GetNextRail();
-	}
-	else
-	{
-		// レール設置
-		CRail* pRail = m_pCur;
+	//	m_pCur = m_pTop->GetNextRail();
+	//}
+	//else
+	//{
+	//	// レール設置
+	//	CRail* pRail = m_pCur;
 
-		nWightNumber = pRail->GetWightNumber();
-		nHeightNumber = pRail->GetHeightNumber();
+	//	nWightNumber = pRail->GetWightNumber();
+	//	nHeightNumber = pRail->GetHeightNumber();
 
-		pRail->SetWightNumber(nWightNumber);
-		pRail->SetHeightNumber(nHeightNumber);
-		pRail->NextSet((CRail::RAIL_POS)Number);
+	//	pRail->SetWightNumber(nWightNumber);
+	//	pRail->SetHeightNumber(nHeightNumber);
+	//	pRail->NextSet((CRail::RAIL_POS)Number);
 
-		m_pCur = pRail->GetNextRail();
-	}
+	//	m_pCur = pRail->GetNextRail();
+	//}
 }
 
 //====================================================================
@@ -545,63 +559,63 @@ void CRailBlock::EditRailSet(int Number)
 void CRailBlock::EditRailUpdate(void)
 {
 	CRail* pRail = m_pTop;
-	int WightNumber = GetWightNumber();
-	int HeightNumber = GetHeightNumber();
+	//int WightNumber = GetWightNumber();
+	//int HeightNumber = GetHeightNumber();
 
-	if (pRail == nullptr)
-	{
-		return;
-	}
+	//if (pRail == nullptr)
+	//{
+	//	return;
+	//}
 
 
-	//ブロック内のリストを回してブロックとグリット番号が一致するレールの上下左右の有無を見る
-	while (1)
-	{
-		if (pRail == m_pTop)
-		{
-			pRail->SetWightNumber(WightNumber);
-			pRail->SetHeightNumber(HeightNumber);
-		}
-		else
-		{
-			switch (pRail->GetPrevRail()->GetNextNumber())
-			{
-			case 0:
-				pRail->SetWightNumber(WightNumber);
-				pRail->SetHeightNumber(HeightNumber - 1);
-				break;
+	////ブロック内のリストを回してブロックとグリット番号が一致するレールの上下左右の有無を見る
+	//while (1)
+	//{
+	//	if (pRail == m_pTop)
+	//	{
+	//		pRail->SetWightNumber(WightNumber);
+	//		pRail->SetHeightNumber(HeightNumber);
+	//	}
+	//	else
+	//	{
+	//		switch (pRail->GetPrevRail()->GetNextNumber())
+	//		{
+	//		case 0:
+	//			pRail->SetWightNumber(WightNumber);
+	//			pRail->SetHeightNumber(HeightNumber - 1);
+	//			break;
 
-			case 1:
-				pRail->SetWightNumber(WightNumber);
-				pRail->SetHeightNumber(HeightNumber + 1);
-				break;
+	//		case 1:
+	//			pRail->SetWightNumber(WightNumber);
+	//			pRail->SetHeightNumber(HeightNumber + 1);
+	//			break;
 
-			case 2:
-				pRail->SetWightNumber(WightNumber - 1);
-				pRail->SetHeightNumber(HeightNumber);
-				break;
+	//		case 2:
+	//			pRail->SetWightNumber(WightNumber - 1);
+	//			pRail->SetHeightNumber(HeightNumber);
+	//			break;
 
-			case 3:
-				pRail->SetWightNumber(WightNumber + 1);
-				pRail->SetHeightNumber(HeightNumber);
-				break;
-			}
-		}
+	//		case 3:
+	//			pRail->SetWightNumber(WightNumber + 1);
+	//			pRail->SetHeightNumber(HeightNumber);
+	//			break;
+	//		}
+	//	}
 
-		WightNumber = pRail->GetWightNumber();
-		HeightNumber = pRail->GetHeightNumber();
+	//	WightNumber = pRail->GetWightNumber();
+	//	HeightNumber = pRail->GetHeightNumber();
 
-		if (pRail == m_pCur)
-		{
-			break;
-		}
+	//	if (pRail == m_pCur)
+	//	{
+	//		break;
+	//	}
 
-		pRail = pRail->GetNextRail();
-		if (pRail == nullptr)
-		{
-			pRail = m_pCur;
-		}
-	}
+	//	pRail = pRail->GetNextRail();
+	//	if (pRail == nullptr)
+	//	{
+	//		pRail = m_pCur;
+	//	}
+	//}
 }
 
 //====================================================================

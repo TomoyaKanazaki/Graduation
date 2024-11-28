@@ -2,30 +2,41 @@
 //
 //	レールブロックの処理 [RailBlock.h]
 //	Author:sakamoto kai
+//  Author:Satone Shion
 //
 //============================================
 #ifndef _RAILBLOCK_H_
 #define _RAILBLOCK_H_
 
 #include "main.h"
-#include "CubeBlock.h"
+#include "ObjectX.h"
 #include "MapSystem.h"
 
 class CRail;
 
 //オブジェクトメッシュフィールドクラス
-class CRailBlock : public CCubeBlock
+class CRailBlock : public CObjectX
 {
 public:
 	CRailBlock(int nPriority = 3);
+	CRailBlock(int nPriority, CMapSystem::GRID gridCenter);
 	~CRailBlock();
 
-	static CRailBlock* Create(int nMapWight, int nMapHeight, bool Edit, int Max, int *nMove);
+	static CRailBlock* Create(CMapSystem::GRID gridCenter);
+
+	HRESULT Init(char* pModelName);
+	void Uninit(void);
+	void Update(void);
+	void Draw(void);
+
+	CMapSystem::GRID GetGrid(void) { return m_Grid; }	// グリッド取得
+
+	/*static CRailBlock* Create(int nMapWight, int nMapHeight, bool Edit, int Max, int *nMove);
 
 	HRESULT Init(int nMapWight, int nMapHeight, bool Edit, int Max = 0, int* nMove = 0);
 	void Uninit(void);
 	void Update(void);
-	void Draw(void);
+	void Draw(void);*/
 
 	void EditRailSet(int Number);
 	void EditRailUpdate(void);
@@ -43,7 +54,9 @@ private:
 	void RailAddWrite();
 	void RailSet(int Max, int* nMove);
 
-	CMapSystem::GRID m_StartGrid;	//開始時のグリット番号
+	//CMapSystem::GRID m_StartGrid;	//開始時のグリット番号
+
+	CMapSystem::GRID m_Grid;	//グリット番号
 
 	bool bMoveOK[4];
 	int m_nMax;

@@ -20,12 +20,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\2DUI.cpp" />
-    <ClCompile Include="source\2DUI_edit.cpp" />
     <ClCompile Include="source\AStar.cpp" />
     <ClCompile Include="source\bible.cpp" />
     <ClCompile Include="source\bowabowa.cpp" />
     <ClCompile Include="source\camera.cpp" />
-    <ClCompile Include="source\character.cpp" />
+    <ClCompile Include="source\objectcharacter.cpp" />
     <ClCompile Include="source\cross.cpp" />
     <ClCompile Include="source\CubeBlock.cpp" />
     <ClCompile Include="source\CubeEffect.cpp" />
@@ -33,7 +32,6 @@
     <ClCompile Include="source\deltatime.cpp" />
     <ClCompile Include="source\devil.cpp" />
     <ClCompile Include="source\DevilHole.cpp" />
-    <ClCompile Include="source\Edit.cpp" />
     <ClCompile Include="source\enemy.cpp" />
     <ClCompile Include="source\enemyBonbon.cpp" />
     <ClCompile Include="source\enemyMedaman.cpp" />
@@ -61,15 +59,11 @@
     <ClCompile Include="source\MyEffekseer.cpp" />
     <ClCompile Include="source\number.cpp" />
     <ClCompile Include="source\numberBillboard.cpp" />
-    <ClCompile Include="source\numberFall.cpp" />
     <ClCompile Include="source\object.cpp" />
     <ClCompile Include="source\object2D.cpp" />
     <ClCompile Include="source\object3D.cpp" />
-    <ClCompile Include="source\objectAnim2d.cpp" />
     <ClCompile Include="source\objectBillboard.cpp" />
     <ClCompile Include="source\objectX.cpp" />
-    <ClCompile Include="source\objectXtex.cpp" />
-    <ClCompile Include="source\objGauge2D.cpp" />
     <ClCompile Include="source\objmeshCube.cpp" />
     <ClCompile Include="source\objmeshCylinder.cpp" />
     <ClCompile Include="source\objmeshDome.cpp" />
@@ -110,12 +104,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\2DUI.h" />
-    <ClInclude Include="source\2DUI_edit.h" />
     <ClInclude Include="source\AStar.h" />
     <ClInclude Include="source\bible.h" />
     <ClInclude Include="source\bowabowa.h" />
     <ClInclude Include="source\camera.h" />
-    <ClInclude Include="source\character.h" />
+    <ClInclude Include="source\objectcharacter.h" />
     <ClInclude Include="source\cross.h" />
     <ClInclude Include="source\CubeBlock.h" />
     <ClInclude Include="source\CubeEffect.h" />
@@ -123,7 +116,6 @@
     <ClInclude Include="source\deltatime.h" />
     <ClInclude Include="source\devil.h" />
     <ClInclude Include="source\DevilHole.h" />
-    <ClInclude Include="source\Edit.h" />
     <ClInclude Include="source\enemy.h" />
     <ClInclude Include="source\enemyBonbon.h" />
     <ClInclude Include="source\enemyMedaman.h" />
@@ -152,15 +144,11 @@
     <ClInclude Include="source\MyEffekseer.h" />
     <ClInclude Include="source\number.h" />
     <ClInclude Include="source\numberBillboard.h" />
-    <ClInclude Include="source\numberFall.h" />
     <ClInclude Include="source\object.h" />
     <ClInclude Include="source\object2D.h" />
     <ClInclude Include="source\object3D.h" />
-    <ClInclude Include="source\objectAnim2d.h" />
     <ClInclude Include="source\objectBillboard.h" />
     <ClInclude Include="source\objectX.h" />
-    <ClInclude Include="source\objectXtex.h" />
-    <ClInclude Include="source\objGauge2D.h" />
     <ClInclude Include="source\objmeshCube.h" />
     <ClInclude Include="source\objmeshCylinder.h" />
     <ClInclude Include="source\objmeshDome.h" />

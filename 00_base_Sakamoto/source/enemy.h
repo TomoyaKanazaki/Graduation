@@ -7,7 +7,7 @@
 #ifndef _ENEMY_H_
 #define _ENEMY_H_
 
-#include "character.h"
+#include "objectcharacter.h"
 #include "useful.h"
 #include "MapSystem.h"
 #include "AStar.h"
@@ -18,7 +18,7 @@ class CLevelModelEffect;
 class CSlowManager;
 
 //オブジェクトエネミークラス
-class CEnemy : public CCharacter
+class CEnemy : public CObjectCharacter
 {
 public:
 	CEnemy(int nPriority = 2);
