@@ -434,7 +434,7 @@ void CRenderer::Draw(void)
 			//全てのオブジェクト2Dの描画処理
 			CObject::DrawAll(0);
 
-			// エフェクシアの更新
+			// エフェクシアの描画
 			CManager::GetInstance()->GetEffect()->Draw();
 
 			//ビューポートの設定
