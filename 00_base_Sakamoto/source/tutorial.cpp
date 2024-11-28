@@ -12,7 +12,6 @@
 #include "camera.h"
 #include "timer.h"
 #include "Score.h"
-#include "Edit.h"
 #include "devil.h"
 #include "DevilHole.h"
 #include "renderer.h"
@@ -223,12 +222,6 @@ HRESULT CTutorial::Init(void)
 	//CEnemy::Create(CEnemy::ENEMY_BONBON, CMapSystem::GRID(11, 5));
 	//CEnemy::Create(CEnemy::ENEMY_LITTLEDEVIL, CMapSystem::GRID(13, 7));
 
-#if _DEBUG
-	//if (m_pEdit == nullptr)
-	//{
-	//	m_pEdit = CEdit::Create();
-	//}
-#endif
 	return S_OK;
 }
 
@@ -242,17 +235,6 @@ void CTutorial::Uninit(void)
 
 	//全てのオブジェクトの破棄
 	CObject::ReleaseAll();
-
-	m_pBoss = nullptr;
-
-#if _DEBUG
-	//if (m_pEdit != nullptr)
-	//{
-	//	//m_pEdit->Uninit();
-	//	delete m_pEdit;
-	//	m_pEdit = nullptr;
-	//}
-#endif
 
 	if (m_pTutorial != nullptr)
 	{
@@ -288,12 +270,6 @@ void CTutorial::Update(void)
 			//レンダーステートの設定
 			m_pDevice->SetRenderState(D3DRS_FILLMODE, 0);
 		}
-	}
-
-	if (CManager::GetInstance()->GetEdit() == true)
-	{
-		CManager::GetInstance()->GetCamera()->SetCameraMode(CCamera::CAMERAMODE_CONTROL);
-		m_pEdit->Update();
 	}
 
 	if (pInputKeyboard->GetTrigger(DIK_1) == true)

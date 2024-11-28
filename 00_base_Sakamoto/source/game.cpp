@@ -12,7 +12,6 @@
 #include "camera.h"
 #include "timer.h"
 #include "Score.h"
-#include "Edit.h"
 #include "devil.h"
 #include "DevilHole.h"
 #include "renderer.h"
@@ -63,7 +62,6 @@ CGame::CGame()
 	CManager::GetInstance()->GetCamera()->SetBib(false);
 	CManager::GetInstance()->GetCamera()->SetCameraMode(CCamera::CAMERAMODE_DOWNVIEW);
 
-	m_pEdit = nullptr;
 	m_pPause = nullptr;
 	m_pTime = nullptr;
 	m_p2DSample = nullptr;
@@ -81,7 +79,6 @@ CGame::CGame()
 		m_pPlayer[nCnt] = nullptr;
 	}
 	m_pDevil = nullptr;
-	m_pBoss = nullptr;
 	m_pMask = nullptr;
 
 	m_bGameEnd = false;
@@ -272,12 +269,6 @@ HRESULT CGame::Init(void)
 	CEnemy::Create(CEnemy::ENEMY_BONBON, CMapSystem::GRID(11, 5));
 	CEnemy::Create(CEnemy::ENEMY_LITTLEDEVIL, CMapSystem::GRID(13, 7));
 
-#if _DEBUG
-	if (m_pEdit == nullptr)
-	{
-		m_pEdit = CEdit::Create();
-	}
-#endif
 	return S_OK;
 }
 
@@ -293,17 +284,6 @@ void CGame::Uninit(void)
 
 	//全てのオブジェクトの破棄
 	CObject::ReleaseAll();
-
-	m_pBoss = nullptr;
-
-#if _DEBUG
-	if (m_pEdit != nullptr)
-	{
-		//m_pEdit->Uninit();
-		delete m_pEdit;
-		m_pEdit = nullptr;
-	}
-#endif
 
 	CScene::Uninit();
 
@@ -341,12 +321,6 @@ void CGame::Update(void)
 			//レンダーステートの設定
 			m_pDevice->SetRenderState(D3DRS_FILLMODE, 0);
 		}
-	}
-
-	if (CManager::GetInstance()->GetEdit() == true)
-	{
-		CManager::GetInstance()->GetCamera()->SetCameraMode(CCamera::CAMERAMODE_CONTROL);
-		m_pEdit->Update();
 	}
 
 	if (pInputKeyboard->GetTrigger(DIK_1) == true)
