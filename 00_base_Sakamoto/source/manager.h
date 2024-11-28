@@ -43,7 +43,8 @@ public:
 
 	enum GAME_MODE
 	{
-		MODE_SINGLE = 0,
+		MODE_NONE = 0,
+		MODE_SINGLE,
 		MODE_MULTI,
 		MODE_MAX
 	};

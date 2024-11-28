@@ -53,6 +53,15 @@ namespace
 	const D3DXVECTOR3 MULTI_1P_VALUE_POS(D3DXVECTOR3(MULTI_1P_TEX_POS.x + 105.0f, MULTI_1P_TEX_POS.y, 0.0f));		//スコアの値の位置
 	const D3DXVECTOR3 MULTI_2P_VALUE_POS(D3DXVECTOR3(MULTI_2P_TEX_POS.x + 105.0f, MULTI_2P_TEX_POS.y, 0.0f));		//スコアの値の位置
 
+	//タイトルからの遷移用
+	const D3DXVECTOR3 NONE_RANKING_TXT_POS(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, 160.0f, 0.0f));						//「RANKING」の位置
+	const D3DXVECTOR3 NONE_RANKING_TXT_SIZE(D3DXVECTOR3(230.0f, 120.0f, 0.0f));									//「RANKING」の大きさ
+
+	const D3DXVECTOR3 NONE_RANKING_NUMBER_POS(D3DXVECTOR3(SCREEN_WIDTH * 0.46f, SCREEN_HEIGHT * 0.355f, 0.0f));	// ランキングに含まれる数字の位置
+	const D3DXVECTOR2 NONE_RANKING_NUMBER_SIZE(D3DXVECTOR2(120.0f, 120.0f));										// ランキングに含まれる数字の大きさ
+
+	const D3DXVECTOR3 NONE_RANKING_RANK_POS(D3DXVECTOR3(-485.0f, 20.0f, 0.0f));								//「○位」の位置
+	const D3DXVECTOR3 NONE_RANKING_RANK_SIZE(D3DXVECTOR3(200.0f, 90.0f, 0.0f));								//「○位」の大きさ
 
 	const float SCORE_DISTANCE(25.0f);																	//スコアと数字の距離
 }
@@ -118,7 +127,7 @@ HRESULT CResult::Init(void)
 	//背景
 	m_pBg = CObject2D::Create();
 	m_pBg->SetPos(D3DXVECTOR3(640.0f, 360.0f, 0.0f));
-	m_pBg->SetSize(D3DXVECTOR3(1280.0f, 720.0f,0.0f));
+	m_pBg->SetSize(D3DXVECTOR3(1280.0f, 720.0f, 0.0f));
 	m_pBg->SetColor(D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
 
 	if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_SINGLE)
@@ -172,7 +181,7 @@ HRESULT CResult::Init(void)
 				D3DXVECTOR2(1.0f, nCntObject * 0.2f + 0.2f));
 		}
 	}
-	else
+	else if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
 	{
 		m_1PData = CManager::GetInstance()->GetEnd1PScore();
 		m_2PData = CManager::GetInstance()->GetEnd2PScore();
@@ -183,7 +192,7 @@ HRESULT CResult::Init(void)
 		m_pScoreTex->SetPos(MULTI_SCORE_TEX_POS);
 		m_pScoreTex->SetSize(MULTI_SCORE_TEX_SIZE);
 		m_pScoreTex->SetTexture("data\\TEXTURE\\result_score.png");
-	
+
 		//今回のスコア
 		for (int nCntObject = 0; nCntObject < 6; nCntObject++)
 		{
@@ -270,6 +279,35 @@ HRESULT CResult::Init(void)
 			CObject2D* pNumber = CObject2D::Create();
 			pNumber->SetPos(D3DXVECTOR3(RankPos.x + MULTI_RANKING_RANK_POS.x, RankPos.y + MULTI_RANKING_RANK_POS.y, RankPos.z));
 			pNumber->SetSize(MULTI_RANKING_RANK_SIZE);
+			pNumber->SetTexture("data\\TEXTURE\\RANKING_TEXT.png");
+			pNumber->SetAnim(D3DXVECTOR2(0.0f, nCntObject * 0.2f),
+				D3DXVECTOR2(1.0f, nCntObject * 0.2f + 0.2f));
+		}
+	}
+	else
+	{
+		//全体ランキング(「ランキング」)
+		CObject2D* m_pRank = CObject2D::Create();
+		m_pRank->SetPos(NONE_RANKING_TXT_POS);
+		m_pRank->SetSize(NONE_RANKING_TXT_SIZE);
+		m_pRank->SetTexture("data\\TEXTURE\\ranking.png");
+
+		//全体ランキング(スコア)
+		m_pLifeRanking = CRanking::Create("data\\TXT\\LifeRanking.txt");
+		m_pLifeRanking->SetPos(NONE_RANKING_NUMBER_POS);
+		m_pLifeRanking->SetRanking(m_ScoreData);
+
+		//全体ランキング(順位)
+		for (int nCntObject = 0; nCntObject < 5; nCntObject++)
+		{
+			CNumber* pNumRank = m_pLifeRanking->GetNumRankScore(0, nCntObject);
+			D3DXVECTOR3 RankPos = D3DXVECTOR3(pNumRank->GetPos().x, pNumRank->GetPos().y, pNumRank->GetPos().z);
+			RankPos.y += pNumRank->GetSize().y * 0.5f;
+
+			//数字の生成
+			CObject2D* pNumber = CObject2D::Create();
+			pNumber->SetPos(D3DXVECTOR3(RankPos.x + NONE_RANKING_RANK_POS.x, RankPos.y + NONE_RANKING_RANK_POS.y, RankPos.z));
+			pNumber->SetSize(NONE_RANKING_RANK_SIZE);
 			pNumber->SetTexture("data\\TEXTURE\\RANKING_TEXT.png");
 			pNumber->SetAnim(D3DXVECTOR2(0.0f, nCntObject * 0.2f),
 				D3DXVECTOR2(1.0f, nCntObject * 0.2f + 0.2f));

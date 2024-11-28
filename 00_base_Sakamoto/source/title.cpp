@@ -20,10 +20,10 @@ namespace
 	const char* MAP_XMODEL_PASS("data\\TXT\\STAGE\\XModel_Tutorial_000.txt");
 	const char* MAP_GIMMICK_PASS("data\\TXT\\STAGE\\Gimmick_Tutorial_000.txt");
 
-	const D3DXVECTOR3 TITLE_LOGO_POS = D3DXVECTOR3(640.0f, 241.0f, 0.0f);	// タイトルロゴの位置
+	const D3DXVECTOR3 TITLE_LOGO_POS = D3DXVECTOR3(640.0f, 150.0f, 0.0f);	// タイトルロゴの位置
 	const D3DXVECTOR2 TITLE_LOGO_SIZE = { 600.0f, 240.0f };				// タイトルロゴの大きさ
 
-	const D3DXVECTOR3 SELECT_POS = D3DXVECTOR3(640.0f, 400.0f, 0.0f);		// 選択項目の位置
+	const D3DXVECTOR3 SELECT_POS = D3DXVECTOR3(640.0f, 300.0f, 0.0f);		// 選択項目の位置
 	const D3DXVECTOR2 SELECT_SIZE = D3DXVECTOR2(300.0f, 80.0f);				// 選択項目の大きさ
 	const D3DXVECTOR2 SELECT_DISTANCE = D3DXVECTOR2(0.0f + (SELECT_SIZE.x * 0.0f), 5.0f + (SELECT_SIZE.y * 1.0f));	// 選択項目の幅
 	const D3DXCOLOR SELECT_COLOR_TRUE = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);	// 選択状態項目の色
@@ -277,6 +277,11 @@ void CTitle::Button(void)
 			CFade::SetFade(CScene::MODE_TUTORIAL);
 			CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_SINGLE);
 			break;
+		case 3:
+			// ゲーム遷移
+			CFade::SetFade(CScene::MODE_RESULT);
+			CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_NONE);
+			break;
 		}
 	}
 	else if (CManager::GetInstance()->GetInputJoyPad()->GetTrigger(CInputJoypad::BUTTON_A, 0) == true)
@@ -300,6 +305,11 @@ void CTitle::Button(void)
 			// ゲーム遷移
 			CFade::SetFade(CScene::MODE_TUTORIAL);
 			CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_SINGLE);
+			break;
+		case 3:
+			// ゲーム遷移
+			CFade::SetFade(CScene::MODE_RESULT);
+			CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_NONE);
 			break;
 		}
 	}
