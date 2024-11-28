@@ -27,7 +27,6 @@
     <ClCompile Include="source\objectcharacter.cpp" />
     <ClCompile Include="source\cross.cpp" />
     <ClCompile Include="source\CubeBlock.cpp" />
-    <ClCompile Include="source\CubeEffect.cpp" />
     <ClCompile Include="source\debugproc.cpp" />
     <ClCompile Include="source\deltatime.cpp" />
     <ClCompile Include="source\devil.cpp" />
@@ -43,7 +42,6 @@
     <ClCompile Include="source\GamePlayer.cpp" />
     <ClCompile Include="source\input.cpp" />
     <ClCompile Include="source\item.cpp" />
-    <ClCompile Include="source\LevelModelEffect.cpp" />
     <ClCompile Include="source\lib\Scene.cpp" />
     <ClCompile Include="source\LifeUi.cpp" />
     <ClCompile Include="source\light.cpp" />
@@ -53,12 +51,10 @@
     <ClCompile Include="source\MapModel.cpp" />
     <ClCompile Include="source\MapSystem.cpp" />
     <ClCompile Include="source\mask.cpp" />
-    <ClCompile Include="source\MiniMapCamera.cpp" />
     <ClCompile Include="source\model.cpp" />
     <ClCompile Include="source\motion.cpp" />
     <ClCompile Include="source\MyEffekseer.cpp" />
     <ClCompile Include="source\number.cpp" />
-    <ClCompile Include="source\numberBillboard.cpp" />
     <ClCompile Include="source\object.cpp" />
     <ClCompile Include="source\object2D.cpp" />
     <ClCompile Include="source\object3D.cpp" />
@@ -86,7 +82,6 @@
     <ClCompile Include="source\scrollarrow.cpp" />
     <ClCompile Include="source\select.cpp" />
     <ClCompile Include="source\shadow.cpp" />
-    <ClCompile Include="source\shrinkingBillboard.cpp" />
     <ClCompile Include="source\SlopeDevice.cpp" />
     <ClCompile Include="source\slowManager.cpp" />
     <ClCompile Include="source\softcream.cpp" />
@@ -110,7 +105,6 @@
     <ClInclude Include="source\objectcharacter.h" />
     <ClInclude Include="source\cross.h" />
     <ClInclude Include="source\CubeBlock.h" />
-    <ClInclude Include="source\CubeEffect.h" />
     <ClInclude Include="source\debugproc.h" />
     <ClInclude Include="source\deltatime.h" />
     <ClInclude Include="source\devil.h" />
@@ -126,7 +120,6 @@
     <ClInclude Include="source\GamePlayer.h" />
     <ClInclude Include="source\input.h" />
     <ClInclude Include="source\item.h" />
-    <ClInclude Include="source\LevelModelEffect.h" />
     <ClInclude Include="source\lib\magic_enum.hpp" />
     <ClInclude Include="source\lib\Scene.h" />
     <ClInclude Include="source\LifeUi.h" />
@@ -137,12 +130,10 @@
     <ClInclude Include="source\MapModel.h" />
     <ClInclude Include="source\MapSystem.h" />
     <ClInclude Include="source\mask.h" />
-    <ClInclude Include="source\MiniMapCamera.h" />
     <ClInclude Include="source\model.h" />
     <ClInclude Include="source\motion.h" />
     <ClInclude Include="source\MyEffekseer.h" />
     <ClInclude Include="source\number.h" />
-    <ClInclude Include="source\numberBillboard.h" />
     <ClInclude Include="source\object.h" />
     <ClInclude Include="source\object2D.h" />
     <ClInclude Include="source\object3D.h" />
@@ -169,7 +160,6 @@
     <ClInclude Include="source\scrollarrow.h" />
     <ClInclude Include="source\select.h" />
     <ClInclude Include="source\shadow.h" />
-    <ClInclude Include="source\shrinkingBillboard.h" />
     <ClInclude Include="source\SlopeDevice.h" />
     <ClInclude Include="source\slowManager.h" />
     <ClInclude Include="source\softcream.h" />

@@ -19,7 +19,6 @@
 #include "player.h"
 #include "useful.h"
 #include "CubeBlock.h"
-#include "LevelModelEffect.h"
 #include "slowManager.h"
 #include "score.h"
 #include "devil.h"

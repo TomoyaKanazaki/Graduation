@@ -17,14 +17,8 @@
     <Filter Include="ソース ファイル\03_Direction">
       <UniqueIdentifier>{2c170ff7-1664-4e8c-a9d6-2d7b42b5f0c9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\04_Effect">
-      <UniqueIdentifier>{221f18f2-9405-4aee-9d70-7fa9b72637c1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\05_UI_2D">
       <UniqueIdentifier>{e61929ba-15f9-448a-af70-f63266035893}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\06_UI_3D">
-      <UniqueIdentifier>{1c4aaf95-2dbe-4143-b8bc-5193aff62828}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\07_Map">
       <UniqueIdentifier>{68bbe91a-253a-4dca-badb-6f8ea7478361}</UniqueIdentifier>
@@ -115,14 +109,8 @@
     <ClCompile Include="source\light.cpp">
       <Filter>ソース ファイル\03_Direction</Filter>
     </ClCompile>
-    <ClCompile Include="source\MiniMapCamera.cpp">
-      <Filter>ソース ファイル\03_Direction</Filter>
-    </ClCompile>
     <ClCompile Include="source\sound.cpp">
       <Filter>ソース ファイル\03_Direction</Filter>
-    </ClCompile>
-    <ClCompile Include="source\CubeEffect.cpp">
-      <Filter>ソース ファイル\04_Effect</Filter>
     </ClCompile>
     <ClCompile Include="source\renderer.cpp">
       <Filter>ソース ファイル\00_System</Filter>
@@ -145,9 +133,6 @@
     <ClCompile Include="source\timer.cpp">
       <Filter>ソース ファイル\05_UI_2D</Filter>
     </ClCompile>
-    <ClCompile Include="source\numberBillboard.cpp">
-      <Filter>ソース ファイル\06_UI_3D</Filter>
-    </ClCompile>
     <ClCompile Include="source\CubeBlock.cpp">
       <Filter>ソース ファイル\07_Map</Filter>
     </ClCompile>
@@ -156,9 +141,6 @@
     </ClCompile>
     <ClCompile Include="source\enemyMedaman.cpp">
       <Filter>ソース ファイル\09_enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="source\LevelModelEffect.cpp">
-      <Filter>ソース ファイル\04_Effect</Filter>
     </ClCompile>
     <ClCompile Include="source\model.cpp">
       <Filter>ソース ファイル\03_Direction</Filter>
@@ -174,9 +156,6 @@
     </ClCompile>
     <ClCompile Include="source\player.cpp">
       <Filter>ソース ファイル\08_player</Filter>
-    </ClCompile>
-    <ClCompile Include="source\shrinkingBillboard.cpp">
-      <Filter>ソース ファイル\06_UI_3D</Filter>
     </ClCompile>
     <ClCompile Include="source\slowManager.cpp">
       <Filter>ソース ファイル\00_System</Filter>
@@ -366,9 +345,6 @@
     <ClInclude Include="source\light.h">
       <Filter>ソース ファイル\03_Direction</Filter>
     </ClInclude>
-    <ClInclude Include="source\MiniMapCamera.h">
-      <Filter>ソース ファイル\03_Direction</Filter>
-    </ClInclude>
     <ClInclude Include="source\model.h">
       <Filter>ソース ファイル\03_Direction</Filter>
     </ClInclude>
@@ -377,12 +353,6 @@
     </ClInclude>
     <ClInclude Include="source\sound.h">
       <Filter>ソース ファイル\03_Direction</Filter>
-    </ClInclude>
-    <ClInclude Include="source\CubeEffect.h">
-      <Filter>ソース ファイル\04_Effect</Filter>
-    </ClInclude>
-    <ClInclude Include="source\LevelModelEffect.h">
-      <Filter>ソース ファイル\04_Effect</Filter>
     </ClInclude>
     <ClInclude Include="source\2DUI.h">
       <Filter>ソース ファイル\05_UI_2D</Filter>
@@ -401,12 +371,6 @@
     </ClInclude>
     <ClInclude Include="source\timer.h">
       <Filter>ソース ファイル\05_UI_2D</Filter>
-    </ClInclude>
-    <ClInclude Include="source\numberBillboard.h">
-      <Filter>ソース ファイル\06_UI_3D</Filter>
-    </ClInclude>
-    <ClInclude Include="source\shrinkingBillboard.h">
-      <Filter>ソース ファイル\06_UI_3D</Filter>
     </ClInclude>
     <ClInclude Include="source\CubeBlock.h">
       <Filter>ソース ファイル\07_Map</Filter>

@@ -9,7 +9,6 @@
 #include "manager.h"
 #include "texture.h"
 #include "XModel.h"
-#include "CubeEffect.h"
 #include "useful.h"
 #include "camera.h"
 #include "Scene.h"
@@ -40,7 +39,6 @@ CMapModel::CMapModel(int nPriority) : CObjectX(nPriority)
 	m_nStateCount = 0;
 	m_Scaling = 1.0f;
 	m_fColorA = 0.0f;
-	m_pDebugBlock = nullptr;		//デバッグ用ブロック
 	collisionSize = INITVECTOR3;
 	m_bBreakable = false;
 	m_bDebris = false;
@@ -134,12 +132,6 @@ void CMapModel::Uninit(void)
 
 		// リストマネージャーの破棄
 		m_pList->Release(m_pList);
-	}
-
-	if (m_pDebugBlock != nullptr)
-	{
-		m_pDebugBlock->Uninit();
-		m_pDebugBlock = nullptr;
 	}
 
 	CObjectX::Uninit();
@@ -246,49 +238,6 @@ void CMapModel::StateManager(void)
 	if (m_nStateCount > 0)
 	{
 		m_nStateCount--;
-	}
-}
-
-//====================================================================
-//ブロックの生成
-//====================================================================
-void CMapModel::CreateBlock(void)
-{
-	if (m_pDebugBlock == nullptr)
-	{
-		m_pDebugBlock = CCubeEffect::Create();
-		m_pDebugBlock->SetPos(GetPos());
-		m_pDebugBlock->SetSize(GetSize());
-
-		if (m_bCollision == true)
-		{
-			m_pDebugBlock->SetColor(D3DXCOLOR(1.0f, 0.0f, 0.0f, 0.5f));
-		}
-		else
-		{
-			m_pDebugBlock->SetColor(D3DXCOLOR(0.0f, 0.0f, 1.0f, 0.5f));
-		}
-	}
-}
-
-//====================================================================
-//ブロックの更新
-//====================================================================
-void CMapModel::UpdateBlock(void)
-{
-	if (m_pDebugBlock != nullptr)
-	{
-		m_pDebugBlock->SetPos(GetPos());
-		m_pDebugBlock->SetSize(GetSize());
-
-		if (m_bCollision == true)
-		{
-			m_pDebugBlock->SetColor(D3DXCOLOR(1.0f, 0.0f, 0.0f, 0.5f));
-		}
-		else
-		{
-			m_pDebugBlock->SetColor(D3DXCOLOR(0.0f, 0.0f, 1.0f, 0.5f));
-		}
 	}
 }
 
