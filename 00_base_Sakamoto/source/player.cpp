@@ -17,7 +17,6 @@
 #include "camera.h"
 #include "input.h"
 #include "enemy.h"
-#include "objGauge2D.h"
 #include "CubeBlock.h"
 #include "slowManager.h"
 #include "Number.h"
@@ -1849,42 +1848,6 @@ void CPlayer::SetModelColor(CModel::COLORTYPE Type, D3DXCOLOR Col)
 			pModel->SetColor(Col);
 		}
 	}
-}
-
-//====================================================================
-// マップ取得
-//====================================================================
-CObjmeshField* CPlayer::GetListTopField(void)
-{
-	// キューブブロックのリスト構造が無ければ抜ける
-	if (CObjmeshField::GetList() == nullptr) { return nullptr; }
-	std::list<CObjmeshField*> list = CObjmeshField::GetList()->GetList();    // リストを取得
-
-	// キューブブロックリストの中身を確認する
-	for (CObjmeshField* pField : list)
-	{
-		return pField;
-	} 
-
-	return nullptr;
-}
-
-//====================================================================
-// デビル取得
-//====================================================================
-CDevil* CPlayer::GetListTopDevil(void)
-{
-	// キューブブロックのリスト構造が無ければ抜ける
-	if (CDevil::GetList() == nullptr) { return nullptr; }
-	std::list<CDevil*> list = CDevil::GetList()->GetList();    // リストを取得
-
-	// キューブブロックリストの中身を確認する
-	for (CDevil* pDevil : list)
-	{
-		return pDevil;
-	}
-
-	return nullptr;
 }
 
 //==========================================

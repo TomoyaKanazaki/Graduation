@@ -52,19 +52,10 @@
     <ClCompile Include="source\object3D.cpp">
       <Filter>ソース ファイル\02_Object</Filter>
     </ClCompile>
-    <ClCompile Include="source\objectAnim2d.cpp">
-      <Filter>ソース ファイル\02_Object</Filter>
-    </ClCompile>
     <ClCompile Include="source\objectBillboard.cpp">
       <Filter>ソース ファイル\02_Object</Filter>
     </ClCompile>
     <ClCompile Include="source\objectX.cpp">
-      <Filter>ソース ファイル\02_Object</Filter>
-    </ClCompile>
-    <ClCompile Include="source\objectXtex.cpp">
-      <Filter>ソース ファイル\02_Object</Filter>
-    </ClCompile>
-    <ClCompile Include="source\objGauge2D.cpp">
       <Filter>ソース ファイル\02_Object</Filter>
     </ClCompile>
     <ClCompile Include="source\objmeshCube.cpp">
@@ -161,9 +152,6 @@
       <Filter>ソース ファイル\05_UI_2D</Filter>
     </ClCompile>
     <ClCompile Include="source\numberBillboard.cpp">
-      <Filter>ソース ファイル\06_UI_3D</Filter>
-    </ClCompile>
-    <ClCompile Include="source\numberFall.cpp">
       <Filter>ソース ファイル\06_UI_3D</Filter>
     </ClCompile>
     <ClCompile Include="source\CubeBlock.cpp">
@@ -357,19 +345,10 @@
     <ClInclude Include="source\object3D.h">
       <Filter>ソース ファイル\02_Object</Filter>
     </ClInclude>
-    <ClInclude Include="source\objectAnim2d.h">
-      <Filter>ソース ファイル\02_Object</Filter>
-    </ClInclude>
     <ClInclude Include="source\objectBillboard.h">
       <Filter>ソース ファイル\02_Object</Filter>
     </ClInclude>
     <ClInclude Include="source\objectX.h">
-      <Filter>ソース ファイル\02_Object</Filter>
-    </ClInclude>
-    <ClInclude Include="source\objectXtex.h">
-      <Filter>ソース ファイル\02_Object</Filter>
-    </ClInclude>
-    <ClInclude Include="source\objGauge2D.h">
       <Filter>ソース ファイル\02_Object</Filter>
     </ClInclude>
     <ClInclude Include="source\objmeshCube.h">
@@ -436,9 +415,6 @@
       <Filter>ソース ファイル\05_UI_2D</Filter>
     </ClInclude>
     <ClInclude Include="source\numberBillboard.h">
-      <Filter>ソース ファイル\06_UI_3D</Filter>
-    </ClInclude>
-    <ClInclude Include="source\numberFall.h">
       <Filter>ソース ファイル\06_UI_3D</Filter>
     </ClInclude>
     <ClInclude Include="source\shrinkingBillboard.h">
