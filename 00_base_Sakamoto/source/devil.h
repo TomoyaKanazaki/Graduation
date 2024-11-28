@@ -94,6 +94,9 @@ public:
 
 	void SetModelDisp(bool Sst);
 
+	void SetStateNumber(int nNum) { m_nStateNum = nNum; }
+	int GetStateNumber(void) { return m_nStateNum; }
+
 	// 静的メンバ関数
 	static CListManager<CDevil>* GetList(void); // リスト取得
 	static CDevil* GetListTop(void); // リスト取得
@@ -133,6 +136,7 @@ private:
 	float m_fActionCount;			//行動のカウント
 	STATE m_State;					//状態
 	int m_nStateCount;				//状態管理用カウント
+	int m_nStateNum;				//状態番号
 	bool m_bSlope;					//傾き状態かどうか
 
 	CMapSystem::GRID m_MinGrid;		//マップで一番左上にあるブロックの番号

@@ -205,8 +205,9 @@ void CMyEffekseer::Uninit(void)
 		effect->Uninit();
 	}
 
-	// 自身を終了する
-	delete this;
+	// Effekseerのマネージャのリソースを解放
+	m_EfkManager.Reset();
+	m_EfkManager = nullptr;
 }
 
 //===========================================================
@@ -422,8 +423,6 @@ void CEffekseer::Uninit(void)
 		// リストマネージャーの破棄
 		m_pList->Release(m_pList);
 	}
-
-	m_effect.Reset();
 
 	// 自身の終了
 	delete this;

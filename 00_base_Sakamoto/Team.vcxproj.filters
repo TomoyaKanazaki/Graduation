@@ -480,9 +480,11 @@
     <ClInclude Include="source\objectcharacter.h">
       <Filter>ソース ファイル\02_Object</Filter>
     </ClInclude>
-    <ClInclude Include="source\signal.h" />
     <ClInclude Include="source\Scene.h">
       <Filter>ソース ファイル\01_Mode</Filter>
+    </ClInclude>
+    <ClInclude Include="source\signal.h">
+      <Filter>ソース ファイル</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

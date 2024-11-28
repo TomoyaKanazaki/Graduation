@@ -139,7 +139,7 @@ CItem* CItem::Create(const TYPE eType, const CMapSystem::GRID& pos)
 	pItem->SetGrid(pos);
 
 	// エフェクトを生成
-	//pItem->SetEffect();
+	pItem->SetEffect();
 
 	return pItem;
 }
