@@ -7,7 +7,7 @@
 #ifndef _PLAYER_H_
 #define _PLAYER_H_
 
-#include "character.h"
+#include "objectcharacter.h"
 #include "useful.h"
 #include "Model.h"
 #include "MapSystem.h"
@@ -21,7 +21,7 @@ class CObjmeshField;
 class CDevil;
 
 //オブジェクトプレイヤークラス
-class CPlayer : public CCharacter
+class CPlayer : public CObjectCharacter
 {
 private:
 	static const int ENCOUNT_MAX = 128;

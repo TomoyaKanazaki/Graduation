@@ -12,7 +12,7 @@
 #include "player.h"
 #include "game.h"
 
-#include "character.h"
+#include "objectcharacter.h"
 #include "model.h"
 #include "motion.h"
 
@@ -34,7 +34,7 @@ CListManager<CSlopeDevice>* CSlopeDevice::m_pList = nullptr; // オブジェクトリス
 //====================================================================
 //コンストラクタ
 //====================================================================
-CSlopeDevice::CSlopeDevice(int nPriority) : CCharacter(nPriority)
+CSlopeDevice::CSlopeDevice(int nPriority) : CObjectCharacter(nPriority)
 {
 	m_State = STATE(0);
 	m_nStateCount = 0;
@@ -121,7 +121,7 @@ void CSlopeDevice::Uninit(void)
 	}
 
 	// キャラクタークラスの終了（継承）
-	CCharacter::Uninit();
+	CObjectCharacter::Uninit();
 }
 
 //====================================================================
@@ -142,7 +142,7 @@ void CSlopeDevice::Update(void)
 	StateManager(rotMy);
 
 	// キャラクタークラスの更新（継承）
-	CCharacter::Update();
+	CObjectCharacter::Update();
 
 	// 値更新
 	SetPos(posMy);			// 位置
@@ -157,7 +157,7 @@ void CSlopeDevice::Update(void)
 void CSlopeDevice::Draw(void)
 {
 	// キャラクタークラスの描画（継承）
-	CCharacter::Draw();
+	CObjectCharacter::Draw();
 }
 
 //====================================================================
@@ -165,7 +165,7 @@ void CSlopeDevice::Draw(void)
 //====================================================================
 HRESULT CSlopeDevice::InitModel(const char* pModelNameSlopeDevice, const char* pModelNameEnemy)
 {
-	CCharacter::SetTxtCharacter(pModelNameSlopeDevice);
+	CObjectCharacter::SetTxtCharacter(pModelNameSlopeDevice);
 
 	return S_OK;
 }

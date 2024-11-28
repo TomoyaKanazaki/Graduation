@@ -17,11 +17,11 @@ class CShadow;
 #define FILE_NAME_SIZE	(128)	// ファイル名の最大文字数
 
 // キャラクタークラス
-class CCharacter : public CObject
+class CObjectCharacter : public CObject
 {
 public:
-	CCharacter(int nPriority = 3);
-	~CCharacter();
+	CObjectCharacter(int nPriority = 3);
+	~CObjectCharacter();
 
 	virtual HRESULT Init(void) { return S_OK; };
 	virtual HRESULT Init(int PlayNumber) { return S_OK; };

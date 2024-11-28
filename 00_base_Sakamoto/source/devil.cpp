@@ -9,7 +9,7 @@
 #include "object.h"
 #include "manager.h"
 #include "renderer.h"
-#include "character.h"
+#include "objectcharacter.h"
 #include "model.h"
 #include "motion.h"
 #include "game.h"
@@ -66,7 +66,7 @@ CListManager<CDevil>* CDevil::m_pList = nullptr; // オブジェクトリスト
 //====================================================================
 //コンストラクタ
 //====================================================================
-CDevil::CDevil(int nPriority) : CCharacter(nPriority)
+CDevil::CDevil(int nPriority) : CObjectCharacter(nPriority)
 {
 	SetSize(D3DXVECTOR3(750.0f, 0.0f, 550.0f));
 	m_move = INITVECTOR3;
@@ -131,7 +131,7 @@ HRESULT CDevil::Init(void)
 	SetType(CObject::TYPE_DEVIL);
 
 	// キャラクターテキストの設定処理
-	CCharacter::Init("data\\TXT\\MOTION\\01_enemy\\motion_devil.txt");
+	CObjectCharacter::Init("data\\TXT\\MOTION\\01_enemy\\motion_devil.txt");
 	
 	switch (CScene::GetMode())
 	{
@@ -191,7 +191,7 @@ void CDevil::Uninit(void)
 	}
 
 	// キャラクタークラスの終了（継承）
-	CCharacter::Uninit();
+	CObjectCharacter::Uninit();
 }
 
 //====================================================================
@@ -220,7 +220,7 @@ void CDevil::Update(void)
 	CollisionOut();
 
 	// キャラクタークラスの更新（継承）
-	CCharacter::Update();
+	CObjectCharacter::Update();
 
 	D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
 
@@ -273,7 +273,7 @@ void CDevil::Update(void)
 void CDevil::Draw(void)
 {
 	// キャラクタークラスの描画（継承）
-	CCharacter::Draw();
+	CObjectCharacter::Draw();
 }
 
 //====================================================================

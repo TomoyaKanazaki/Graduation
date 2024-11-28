@@ -77,7 +77,7 @@ CListManager<CPlayer>* CPlayer::m_pList = nullptr; // オブジェクトリスト
 //====================================================================
 //コンストラクタ
 //====================================================================
-CPlayer::CPlayer(int nPriority) : CCharacter(nPriority),
+CPlayer::CPlayer(int nPriority) : CObjectCharacter(nPriority),
 m_size(INITVECTOR3),
 m_pos(INITVECTOR3),
 m_move(INITVECTOR3),
@@ -178,12 +178,12 @@ HRESULT CPlayer::Init(int PlayNumber)
 	SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
 
 	// キャラクターテキスト読み込み処理
-	CCharacter::Init("data\\TXT\\motion_tamagon1P.txt");
+	CObjectCharacter::Init("data\\TXT\\motion_tamagon1P.txt");
 
 	// キャラクターのマトリックス設定
-	CCharacter::SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
-	CCharacter::SetUseStencil(true);
-	CCharacter::SetUseShadowMtx(true);
+	CObjectCharacter::SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
+	CObjectCharacter::SetUseStencil(true);
+	CObjectCharacter::SetUseShadowMtx(true);
 
 	if (m_pLifeUi == nullptr)
 	{
@@ -270,7 +270,7 @@ void CPlayer::Uninit(void)
 	}
 
 	// キャラクタークラスの終了（継承）
-	CCharacter::Uninit();
+	CObjectCharacter::Uninit();
 
 	// スコアの削除
 	if (m_pScore != nullptr)
@@ -379,7 +379,7 @@ void CPlayer::Update(void)
 	EggMove();
 
 	// キャラクタークラスの更新（継承）
-	CCharacter::Update();
+	CObjectCharacter::Update();
 
 	//モーションの管理
 	ActionState();
@@ -403,11 +403,11 @@ void CPlayer::Update(void)
 void CPlayer::Draw(void)
 {
 	// 無理やり一時的位置情報交換（pos・rotの置き換え完了次第削除）
-	CCharacter::SetPos(GetPos());
-	CCharacter::SetRot(GetRot());
+	CObjectCharacter::SetPos(GetPos());
+	CObjectCharacter::SetRot(GetRot());
 
 	// キャラクタークラスの描画（継承）
-	CCharacter::Draw();
+	CObjectCharacter::Draw();
 }
 
 //====================================================================

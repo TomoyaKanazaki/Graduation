@@ -8,7 +8,7 @@
 #include "object.h"
 #include "manager.h"
 #include "renderer.h"
-#include "character.h"
+#include "objectcharacter.h"
 #include "model.h"
 #include "motion.h"
 #include "input.h"
@@ -38,7 +38,7 @@ CListManager<CLevelModelEffect>* CLevelModelEffect::m_pList = nullptr; // オブジ
 //====================================================================
 //コンストラクタ
 //====================================================================
-CLevelModelEffect::CLevelModelEffect(int nPriority) :CCharacter(nPriority)
+CLevelModelEffect::CLevelModelEffect(int nPriority) :CObjectCharacter(nPriority)
 {
 	m_Action = ACTION_WAIT;
 	m_Color = D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f);
@@ -83,7 +83,7 @@ HRESULT CLevelModelEffect::Init(void)
 	SetType(CObject::TYPE_PLAYEREFFECT);
 
 	// キャラクターテキスト設定処理 
-	CCharacter::SetTxtCharacter("data\\TXT\\motion_foot_light_spear.txt");
+	CObjectCharacter::SetTxtCharacter("data\\TXT\\motion_foot_light_spear.txt");
 
 	if (m_pList == nullptr)
 	{// リストマネージャー生成
@@ -113,7 +113,7 @@ void CLevelModelEffect::Uninit(void)
 	}
 
 	// キャラクタークラスの終了（継承）
-	CCharacter::Uninit();
+	CObjectCharacter::Uninit();
 }
 
 //====================================================================
@@ -145,7 +145,7 @@ void CLevelModelEffect::Update(void)
 	}
 
 	// キャラクタークラスの更新（継承）
-	CCharacter::Update();
+	CObjectCharacter::Update();
 }
 
 //====================================================================
@@ -201,7 +201,7 @@ void CLevelModelEffect::SetPose(int nType, int nKey, float nCounter, int nModelN
 void CLevelModelEffect::Draw(void)
 {
 	// キャラクタークラスの描画（継承）
-	CCharacter::Draw();
+	CObjectCharacter::Draw();
 }
 
 //====================================================================
