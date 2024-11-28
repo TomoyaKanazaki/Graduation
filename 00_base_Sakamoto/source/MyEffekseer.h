@@ -55,6 +55,7 @@ public:
 		TYPE_REVIVE_MEDAMAN,	// メダマンの復活ガイド
 		TYPE_REVIVE_BONBON,		// ボンボンの復活ガイド
 		TYPE_REVIVE_SMALLDEVIL, // 子デビルの復活ガイド
+		TYPE_GET_SOFTCREAM,		// ソフトクリーム取得
 		TYPE_MAX,
 		TYPE_NONE  // なんもない
 	};

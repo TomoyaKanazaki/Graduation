@@ -190,11 +190,7 @@ HRESULT CGame::Init(void)
 	switch (CManager::GetInstance()->GetStage())
 	{
 	case 0:
-		CMapSystem::Load("data\\TXT\\STAGE\\Block.csv");
-
-		/*pDevilHole = CDevilHole::Create("data\\MODEL\\DevilHole.x");
-		pDevilHole->SetGrid(CMapSystem::GRID(11, 7));
-		CMapSystem::GetInstance()->SetGritBool(11, 7, true);*/
+		CMapSystem::Load("data\\TXT\\STAGE\\map00.csv");
 
 		// TODO : 外部書き出しを利用する
 		{
@@ -219,13 +215,6 @@ HRESULT CGame::Init(void)
 		CSignal::Create("data\\MODEL\\signal.x",D3DXVECTOR3(-100.0f,100.0f,300.0f));
 		CSignal::Create("data\\MODEL\\signal.x", D3DXVECTOR3(100.0f, 100.0f, 300.0f));
 
-		// 十字架の生成
-		/*CItem::Create(CItem::TYPE_CROSS, CMapSystem::GRID(11, 2));
-		CItem::Create(CItem::TYPE_CROSS, CMapSystem::GRID(20, 4));
-		CItem::Create(CItem::TYPE_CROSS, CMapSystem::GRID(22, 9));
-		CItem::Create(CItem::TYPE_CROSS, CMapSystem::GRID(6, 11));
-		CItem::Create(CItem::TYPE_CROSS, CMapSystem::GRID(16, 11));*/
-
 		// ソフトクリームの生成
 		CItem::Create(CItem::TYPE_SOFTCREAM, CMapSystem::GetInstance()->GetCenter());
 
@@ -233,10 +222,6 @@ HRESULT CGame::Init(void)
 
 	case 1:
 		CMapSystem::Load("data\\TXT\\STAGE\\Block.txt");
-
-		/*pDevilHole = CDevilHole::Create("data\\MODEL\\DevilHole.x");
-		pDevilHole->SetGrid(CMapSystem::GRID(11,7));
-		CMapSystem::GetInstance()->SetGritBool(11, 7, true);*/
 
 		// 聖書生成
 		CItem::Create(CItem::TYPE_BIBLE, CMapSystem::GRID(BIBLE_OUTGRIT - 1, BIBLE_OUTGRIT - 1));
@@ -246,8 +231,6 @@ HRESULT CGame::Init(void)
 
 		break;
 	}
-
-#if 1
 
 	if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_SINGLE)
 	{
@@ -269,17 +252,10 @@ HRESULT CGame::Init(void)
 		m_pPlayer[0] = CGamePlayer::Create(0);
 	}
 
-#endif
-
 	//転がる岩の生成
 	CRollRock *pRock = CRollRock::Create("data\\MODEL\\BlockTest.x");
 	D3DXVECTOR3 RockPos = CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(16, 2));
 	pRock->SetPos(D3DXVECTOR3(RockPos.x, 50.0f, RockPos.z));
-
-	// 敵の生成
-	CEnemy::Create(CEnemy::ENEMY_MEDAMAN, CMapSystem::GRID(9, 7));
-	CEnemy::Create(CEnemy::ENEMY_BONBON, CMapSystem::GRID(11, 5));
-	CEnemy::Create(CEnemy::ENEMY_LITTLEDEVIL, CMapSystem::GRID(13, 7));
 
 	return S_OK;
 }

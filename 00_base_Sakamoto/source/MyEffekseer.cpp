@@ -60,7 +60,7 @@ namespace MyEffekseer
 		"data\\EFFEKSEER\\Effect\\revive_medaman.efkefc",		// メダマンの復活ガイド
 		"data\\EFFEKSEER\\Effect\\revive_bonbon.efkefc",		// ボンボンの復活ガイド
 		"data\\EFFEKSEER\\Effect\\revive_smalldevil.efkefc",	// 小デビルの復活ガイド
-
+		"data\\EFFEKSEER\\Effect\\get_thesoft.efkefc",			// ソフトクリーム取得
 	};
 
 	//============================================
@@ -205,11 +205,9 @@ void CMyEffekseer::Uninit(void)
 		effect->Uninit();
 	}
 
-	//m_EfkRenderer->Release();
-	//m_EfkManager->Release();
-
-	// 自身を終了する
-	delete this;
+	// Effekseerのマネージャのリソースを解放
+	m_EfkManager.Reset();
+	m_EfkManager = nullptr;
 }
 
 //===========================================================

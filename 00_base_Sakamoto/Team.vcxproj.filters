@@ -35,6 +35,9 @@
     <Filter Include="ソース ファイル\11_library">
       <UniqueIdentifier>{d4c6cca2-cae9-4185-be80-e05a03b5868b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\06_UI_3D">
+      <UniqueIdentifier>{2827c4be-b2b3-44d2-bfb3-b65c8b2d90d1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\object.cpp">
@@ -253,11 +256,11 @@
     <ClCompile Include="source\objectcharacter.cpp">
       <Filter>ソース ファイル\02_Object</Filter>
     </ClCompile>
-    <ClCompile Include="source\signal.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="source\Scene.cpp">
       <Filter>ソース ファイル\01_Mode</Filter>
+    </ClCompile>
+    <ClCompile Include="source\signal.cpp">
+      <Filter>ソース ファイル\06_UI_3D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -480,9 +483,11 @@
     <ClInclude Include="source\objectcharacter.h">
       <Filter>ソース ファイル\02_Object</Filter>
     </ClInclude>
-    <ClInclude Include="source\signal.h" />
     <ClInclude Include="source\Scene.h">
       <Filter>ソース ファイル\01_Mode</Filter>
+    </ClInclude>
+    <ClInclude Include="source\signal.h">
+      <Filter>ソース ファイル\06_UI_3D</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -10,7 +10,7 @@
 #include "objectX.h"
 #include "main.h"
 
-class CScrollArrow;
+class CDevil;
 
 //==========================================
 //  クラス定義
@@ -18,6 +18,16 @@ class CScrollArrow;
 class CSignal : public CObjectX
 {
 public:
+	// モーション
+	enum ACTION_TYPE
+	{
+		ACTION_NONE = 0,			// 待機
+		ACTION_SIGNAL_UP,			// 傾き信号「上」
+		ACTION_SIGNAL_DOWN,			// 傾き信号「下」
+		ACTION_SIGNAL_LEFT,			// 傾き信号「左」
+		ACTION_SIGNAL_RIGHT,		// 傾き信号「右」
+		ACTION_MAX,					// 最大
+	};
 
 	// メンバ変数
 	CSignal(int nPriority = 2);
@@ -41,6 +51,7 @@ private:
 	int m_nIdxXModel;		//Xモデルの番号
 	int m_nIdxTexture;		//テクスチャの番号
 	int m_nStateCount;		//状態管理用変数
+	int m_nStateNum;
 
 	float m_fColorA;		//不透明度
 	float m_Scaling;		//大きさ
@@ -49,7 +60,7 @@ private:
 
 	D3DXVECTOR3 m_rot;		//回転量
 
-	CScrollArrow* m_pScrollArrow;
+	//CDevil* m_pDevil;
 
 	// 静的メンバ変数
 	static CListManager<CSignal>* m_pList; // オブジェクトリスト
