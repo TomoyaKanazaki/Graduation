@@ -295,6 +295,9 @@
     <ClCompile Include="source\TutorialPlayer.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="source\signal.cpp">
+      <Filter>ソース ファイル\06_UI_3D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\2DUI_edit.h">
@@ -548,5 +551,8 @@
     </ClInclude>
     <ClInclude Include="source\GamePlayer.h" />
     <ClInclude Include="source\TutorialPlayer.h" />
+    <ClInclude Include="source\signal.h">
+      <Filter>ソース ファイル\06_UI_3D</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

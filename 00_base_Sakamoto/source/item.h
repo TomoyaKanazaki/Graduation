@@ -88,7 +88,7 @@ private:
 	// メンバ変数
 	CListManager<CItem>::AIterator m_iterator; // イテレーター
 
-	TYPE m_eType;		// 種類
+	TYPE m_eType;			// 種類
 
 	int m_nIdxXModel;		//Xモデルの番号
 	int m_nIdxTexture;		//テクスチャの番号
