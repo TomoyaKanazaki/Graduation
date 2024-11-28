@@ -90,6 +90,7 @@ CDevil::CDevil(int nPriority) : CObjectCharacter(nPriority)
 	m_ScrollArrow[0] = nullptr;
 	m_ScrollArrow[1] = nullptr;
 	m_ScrollType = SCROLL_TYPE_NORMAL;
+	m_nStateNum = 0;
 }
 
 //====================================================================
@@ -852,6 +853,8 @@ void CDevil::StateManager(void)
 					m_SlopwArrowOld = m_DevilArrow;
 
 					m_nStateCount = SLOPE_TIME;
+
+					m_nStateNum = m_DevilArrow;
 				}
 				else
 				{// åXÇ´ñﬂÇµèÛë‘ÇÃéû
@@ -886,6 +889,7 @@ void CDevil::StateManager(void)
 					}
 				}
 				m_ScrollArrowOld = m_DevilArrow;
+				m_nStateNum = m_DevilArrow;
 			}
 
 			for (int nCnt = 0; nCnt < 2; nCnt++)
