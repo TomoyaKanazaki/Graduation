@@ -10,7 +10,7 @@
 #include "Scene.h"
 
 //マクロ定義
-#define MAX_SELECT (3)
+#define MAX_SELECT (4)
 #define MAX_TITLEUI (3)
 
 // 前方宣言

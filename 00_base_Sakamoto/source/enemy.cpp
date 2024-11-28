@@ -233,7 +233,7 @@ void CEnemy::Update(void)
 	SearchWall(posMy);
 
 	// ó‘Ô‚ÌXV
-	//StateManager(posMy);
+	StateManager(posMy);
 
 	// ˆÚ“®•ûŒüˆ—
 	Rot(rotMy);
@@ -242,7 +242,7 @@ void CEnemy::Update(void)
 	UpdatePos(posMy,posOldMy,sizeMy);
 
 	//// ƒvƒŒƒCƒ„[‚Ö‚ÌÅ’ZŒo˜H’Tõ
-	//Coordinate();
+	Coordinate();
 
 	// Å’ZŒn˜I‚ğ‚½‚Ç‚é
 	Route();

@@ -117,7 +117,11 @@ void CObject::UpdateAll(void)
 			{
 				if (CManager::GetInstance()->GetPause() == true)
 				{
-
+					if (pObject->m_type == TYPE_TUTORIALUI)
+					{
+						//XVˆ—
+						pObject->Update();
+					}
 				}
 				else if(CManager::GetInstance()->GetEdit() == true)
 				{
