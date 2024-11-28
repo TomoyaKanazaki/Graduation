@@ -170,7 +170,7 @@ HRESULT CEnemy::Init(void)
 	SetType(CObject::TYPE_ENEMY3D);
 
 	//マップとのマトリックスの掛け合わせをオンにする
-	SetUseMultiMatrix(CGame::GetInstance()->GetMapField()->GetMatrix());
+	SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
 
 	// スローの生成(配属、タグの設定)
 	m_pSlow = CSlowManager::Create(m_pSlow->CAMP_ENEMY, m_pSlow->TAG_ENEMY);
@@ -317,7 +317,7 @@ HRESULT CEnemy::InitModel(const char* pFilename)
 	CCharacter::Init(pFilename);
 
 	// マトリックス設定
-	CCharacter::SetUseMultiMatrix(CGame::GetInstance()->GetMapField()->GetMatrix());
+	CCharacter::SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
 	CCharacter::SetUseStencil(true);
 
 	return S_OK;
@@ -351,7 +351,7 @@ void CEnemy::UpdatePos(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR3& s
 		}
 	}
 
-	CDevil* pDevil = CGame::GetInstance()->GetDevil();
+	CDevil* pDevil = CDevil::GetListTop();
 
 	//Y軸の位置更新
 	posMy.y += m_move.y * CManager::GetInstance()->GetGameSpeed() * fSpeed;

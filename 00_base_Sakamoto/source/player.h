@@ -79,9 +79,6 @@ public:
 	HRESULT Init(int PlayNumber) override;
 	void Uninit(void);
 	void Update(void);
-	void TitleUpdate(void);
-	void GameUpdate(void);
-	void TutorialUpdate(void);
 	void Draw(void);
 
 	void SetPlayNumber(int Number) { m_nPlayNumber = Number; }
@@ -168,8 +165,6 @@ private:
 	void CollisionStageOut(void);					// ステージ外の当たり判定
 	bool CollisionStageIn(void);					// ステージ内にいるかどうか
 	void CollisionPressStageOut(void);				// ステージ外の圧死判定
-	CObjmeshField* GetListTopField(void);
-	CDevil* GetListTopDevil(void);
 
 	void CameraPosUpdate(void);	//カメラ位置更新処理
 	void PosUpdate(void);		//位置更新処理

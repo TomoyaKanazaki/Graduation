@@ -416,3 +416,15 @@ CListManager<CObjmeshField>* CObjmeshField::GetList(void)
 {
 	return m_pList;
 }
+
+//====================================================================
+//リストの先頭取得
+//====================================================================
+CObjmeshField* CObjmeshField::GetListTop(void)
+{
+	if (CObjmeshField::GetList() == nullptr) { return nullptr; }
+	std::list<CObjmeshField*> list = CObjmeshField::GetList()->GetList();    // リストを取得
+	CObjmeshField* pField = list.front();
+
+	return pField;
+}

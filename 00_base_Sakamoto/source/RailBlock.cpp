@@ -96,8 +96,7 @@ HRESULT CRailBlock::Init(char* pModelName)
 	m_StartGrid.x = nMapWight;
 	m_StartGrid.z = nMapHeight;*/
 
-	//マップとのマトリックスの掛け合わせをオンにする
-	SetUseMultiMatrix(CGame::GetInstance()->GetMapField()->GetMatrix());
+	SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
 
 	// 初期化処理
 	CObjectX::Init(pModelName);
@@ -217,7 +216,7 @@ void CRailBlock::Move(D3DXVECTOR3* Pos)
 
 	D3DXVECTOR3 SlopeMove = INITVECTOR3;
 	D3DXVECTOR3 SlopeRot = INITVECTOR3;
-	SlopeRot = CGame::GetInstance()->GetDevil()->GetDevilRot();
+	SlopeRot = CDevil::GetListTop()->GetDevilRot();
 	//D3DXVECTOR3 GritPos = CMapSystem::GRID(GetWightNumber(), GetHeightNumber()).ToWorld();
 	//D3DXVECTOR3 GritDistance = *Pos - GritPos;	//グリットの中心とした時の相対位置、差分
 
