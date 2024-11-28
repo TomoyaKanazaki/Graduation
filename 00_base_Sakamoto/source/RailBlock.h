@@ -2,6 +2,7 @@
 //
 //	レールブロックの処理 [RailBlock.h]
 //	Author:sakamoto kai
+//  Author:Satone Shion
 //
 //============================================
 #ifndef _RAILBLOCK_H_
