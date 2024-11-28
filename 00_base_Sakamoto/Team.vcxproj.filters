@@ -232,9 +232,6 @@
     <ClCompile Include="source\shadow.cpp">
       <Filter>ソース ファイル\03_Direction</Filter>
     </ClCompile>
-    <ClCompile Include="source\lib\Scene.cpp">
-      <Filter>ソース ファイル\01_Mode</Filter>
-    </ClCompile>
     <ClCompile Include="source\manager.cpp">
       <Filter>ソース ファイル\00_System</Filter>
     </ClCompile>
@@ -257,7 +254,10 @@
       <Filter>ソース ファイル\02_Object</Filter>
     </ClCompile>
     <ClCompile Include="source\signal.cpp">
-      <Filter>ソース ファイル\06_UI_3D</Filter>
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Scene.cpp">
+      <Filter>ソース ファイル\01_Mode</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -459,9 +459,6 @@
     <ClInclude Include="source\shadow.h">
       <Filter>ソース ファイル\03_Direction</Filter>
     </ClInclude>
-    <ClInclude Include="source\lib\Scene.h">
-      <Filter>ソース ファイル\01_Mode</Filter>
-    </ClInclude>
     <ClInclude Include="source\manager.h">
       <Filter>ソース ファイル\00_System</Filter>
     </ClInclude>
@@ -483,8 +480,9 @@
     <ClInclude Include="source\objectcharacter.h">
       <Filter>ソース ファイル\02_Object</Filter>
     </ClInclude>
-    <ClInclude Include="source\signal.h">
-      <Filter>ソース ファイル\06_UI_3D</Filter>
+    <ClInclude Include="source\signal.h" />
+    <ClInclude Include="source\Scene.h">
+      <Filter>ソース ファイル\01_Mode</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
