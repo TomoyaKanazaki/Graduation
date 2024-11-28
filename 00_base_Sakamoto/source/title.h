@@ -50,6 +50,7 @@ public:
 private:
 	void Select(void);				// 選択
 	void Button(void);				// ボタン
+	void AutoFade();				// 自動遷移処理
 
 	// シングルトン
 	static CTitle* m_pTitle;
@@ -65,5 +66,6 @@ private:
 	bool m_bStart;
 	bool m_bSlash;
 	bool m_bTurn;
+	float m_fTimer; // 自動遷移タイマー
 };
 #endif

@@ -35,6 +35,8 @@ public:
 
 private:
 
+	void AutoFade();			// 自動遷移処理
+
 	// シングルトン
 	static CResult* m_pResult;
 
@@ -55,5 +57,7 @@ private:
 	int m_1PData;
 	int m_2PData;
 	int m_RankData;
+
+	float m_fTimer; // 自動遷移タイマー
 };
 #endif

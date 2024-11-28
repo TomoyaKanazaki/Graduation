@@ -31,6 +31,8 @@ namespace
 
 	const D3DXVECTOR3 BUTTON_POS = D3DXVECTOR3(640.0f, 670.0f, 0.0f);		// ボタンの位置
 	const D3DXVECTOR2 BUTTON_SIZE = { 300.0f, 160.0f };						// ボタンの大きさ
+
+	const float FADE_TIME = 5.0f; // 自動で遷移するまでの時間
 }
 
 //静的メンバ変数宣言
@@ -39,7 +41,8 @@ CTitle* CTitle::m_pTitle = nullptr;
 //====================================================================
 //コンストラクタ
 //====================================================================
-CTitle::CTitle()
+CTitle::CTitle() :
+	m_fTimer(0.0f)
 {
 	for (int nCnt = 0; nCnt < MAX_SELECT; nCnt++)
 	{
@@ -159,6 +162,9 @@ HRESULT CTitle::Init(void)
 	// ライトの初期化
 	CManager::GetInstance()->GetLight()->Init();
 
+	// タイマーの初期化
+	m_fTimer = 0.0f;
+
 	return S_OK;
 }
 
@@ -190,6 +196,9 @@ void CTitle::Update(void)
 
 		// 決定処理
 		Button();
+
+		// 自動遷移
+		AutoFade();
 	}
 }
 
@@ -218,6 +227,9 @@ void CTitle::Select(void)
 		{
 			m_nSelect = 0;
 		}
+
+		// タイマーの初期化
+		m_fTimer = 0.0f;
 	}
 	if (CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_W) == true ||
 		CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_UP) == true ||
@@ -231,6 +243,9 @@ void CTitle::Select(void)
 		{
 			m_nSelect = MAX_SELECT - 1;
 		}
+
+		// タイマーの初期化
+		m_fTimer = 0.0f;
 	}
 
 
@@ -283,6 +298,9 @@ void CTitle::Button(void)
 			CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_NONE);
 			break;
 		}
+
+		// タイマーの初期化
+		m_fTimer = 0.0f;
 	}
 	else if (CManager::GetInstance()->GetInputJoyPad()->GetTrigger(CInputJoypad::BUTTON_A, 0) == true)
 	{
@@ -312,5 +330,24 @@ void CTitle::Button(void)
 			CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_NONE);
 			break;
 		}
+
+		// タイマーの初期化
+		m_fTimer = 0.0f;
+	}
+}
+
+//==========================================
+//  自動遷移処理
+//==========================================
+void CTitle::AutoFade()
+{
+	// 自動遷移タイマーを加算
+	m_fTimer += DeltaTime::Get();
+
+	// 規定時間を超えた場合ランキングに遷移する
+	if (m_fTimer >= FADE_TIME)
+	{
+		CFade::SetFade(CScene::MODE_RESULT);
+		CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_NONE);
 	}
 }

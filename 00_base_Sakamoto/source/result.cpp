@@ -64,6 +64,8 @@ namespace
 	const D3DXVECTOR3 NONE_RANKING_RANK_SIZE(D3DXVECTOR3(200.0f, 90.0f, 0.0f));								//「○位」の大きさ
 
 	const float SCORE_DISTANCE(25.0f);																	//スコアと数字の距離
+
+	const float FADE_TIME = 5.0f; // 自動で遷移するまでの時間
 }
 
 //静的メンバ変数宣言
@@ -72,7 +74,8 @@ CResult* CResult::m_pResult = nullptr;
 //====================================================================
 //コンストラクタ
 //====================================================================
-CResult::CResult()
+CResult::CResult() :
+	m_fTimer(0.0f)
 {
 	m_pBg = nullptr;
 	m_pLifeRanking = nullptr;
@@ -316,6 +319,9 @@ HRESULT CResult::Init(void)
 
 	CManager::GetInstance()->GetCamera()->SetCameraPos(D3DXVECTOR3(3500.0f, 450.0f, 0.0f));
 
+	// タイマーの初期化
+	m_fTimer = 0.0f;
+
 	return S_OK;
 }
 
@@ -352,6 +358,9 @@ void CResult::Update(void)
 		//CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_ENTER_PUSH);
 		//m_pLifeRanking->SaveRanking();
 	}
+
+	// 自動遷移
+	AutoFade();
 }
 
 //====================================================================
@@ -360,4 +369,19 @@ void CResult::Update(void)
 void CResult::Draw(void)
 {
 
+}
+
+//==========================================
+//  自動遷移処理
+//==========================================
+void CResult::AutoFade()
+{
+	// 自動遷移タイマーを加算
+	m_fTimer += DeltaTime::Get();
+
+	// 規定時間を超えた場合ランキングに遷移する
+	if (m_fTimer >= FADE_TIME)
+	{
+		CFade::SetFade(CScene::MODE_TITLE);
+	}
 }
