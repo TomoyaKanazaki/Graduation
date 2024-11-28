@@ -94,7 +94,7 @@ HRESULT CRollRock::Init(char* pModelName)
 	CObjectX::Init(pModelName);
 
 	//マップとのマトリックスの掛け合わせをオンにする
-	SetUseMultiMatrix(CGame::GetInstance()->GetMapField()->GetMatrix());
+	SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
 
 	SetSize(SAMPLE_SIZE);
 
@@ -249,7 +249,7 @@ void CRollRock::Move(void)
 {
 	D3DXVECTOR3 SlopeRot = INITVECTOR3;
 
-	SlopeRot = CGame::GetInstance()->GetDevil()->GetDevilRot();
+	SlopeRot = CDevil::GetListTop()->GetDevilRot();
 
 	// 傾きによる移動量設定
 	m_move.x = -SlopeRot.z * 10.0f;

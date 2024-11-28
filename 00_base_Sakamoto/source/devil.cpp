@@ -9,7 +9,7 @@
 #include "object.h"
 #include "manager.h"
 #include "renderer.h"
-#include "character.h"
+#include "objectcharacter.h"
 #include "model.h"
 #include "motion.h"
 #include "game.h"
@@ -19,7 +19,6 @@
 #include "camera.h"
 #include "input.h"
 #include "enemy.h"
-#include "objGauge2D.h"
 #include "CubeBlock.h"
 #include "slowManager.h"
 #include "Number.h"
@@ -67,7 +66,7 @@ CListManager<CDevil>* CDevil::m_pList = nullptr; // オブジェクトリスト
 //====================================================================
 //コンストラクタ
 //====================================================================
-CDevil::CDevil(int nPriority) : CCharacter(nPriority)
+CDevil::CDevil(int nPriority) : CObjectCharacter(nPriority)
 {
 	SetSize(D3DXVECTOR3(750.0f, 0.0f, 550.0f));
 	m_move = INITVECTOR3;
@@ -132,7 +131,7 @@ HRESULT CDevil::Init(void)
 	SetType(CObject::TYPE_DEVIL);
 
 	// キャラクターテキストの設定処理
-	CCharacter::Init("data\\TXT\\MOTION\\01_enemy\\motion_devil.txt");
+	CObjectCharacter::Init("data\\TXT\\MOTION\\01_enemy\\motion_devil.txt");
 	
 	switch (CScene::GetMode())
 	{
@@ -192,7 +191,7 @@ void CDevil::Uninit(void)
 	}
 
 	// キャラクタークラスの終了（継承）
-	CCharacter::Uninit();
+	CObjectCharacter::Uninit();
 }
 
 //====================================================================
@@ -209,7 +208,7 @@ void CDevil::Update(void)
 	posOldMy = posMy;
 
 	// マップの傾き
-	m_DevilRot = CGame::GetInstance()->GetMapField()->GetRot();
+	m_DevilRot = CObjmeshField::GetListTop()->GetRot();
 
 	//状態の管理
 	StateManager();
@@ -221,7 +220,7 @@ void CDevil::Update(void)
 	CollisionOut();
 
 	// キャラクタークラスの更新（継承）
-	CCharacter::Update();
+	CObjectCharacter::Update();
 
 	D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
 
@@ -274,7 +273,7 @@ void CDevil::Update(void)
 void CDevil::Draw(void)
 {
 	// キャラクタークラスの描画（継承）
-	CCharacter::Draw();
+	CObjectCharacter::Draw();
 }
 
 //====================================================================
@@ -390,7 +389,7 @@ void CDevil::Move(int Arroow)
 //====================================================================
 void CDevil::BackSlope(void)
 {
-	CObjmeshField* pMapField = CGame::GetInstance()->GetMapField();
+	CObjmeshField* pMapField = CObjmeshField::GetListTop();
 	D3DXVECTOR3 MapRot = pMapField->GetRot();
 	bool bBackOK = false;
 
@@ -505,7 +504,7 @@ void CDevil::BackSlope(void)
 //====================================================================
 void CDevil::Slope(int Arroow)
 {	
-	CObjmeshField *pMapField = CGame::GetInstance()->GetMapField();
+	CObjmeshField *pMapField = CObjmeshField::GetListTop();
 	D3DXVECTOR3 MapRot = pMapField->GetRot();
 
 	switch (m_ScrollType)
@@ -758,24 +757,51 @@ void CDevil::CollisionOut()
 //====================================================================
 void CDevil::ActionState(void)
 {
-	// 移動モーション
-	//if (m_move.x > 0.1f || m_move.x < -0.1f || m_move.z > 0.1f || m_move.z < -0.1f)
-	//{
-	//	if (m_Action != ACTION_SIGNAL_UP)
-	//	{
-	//		m_Action = ACTION_SIGNAL_UP;
-	//		m_pMotion->Set(ACTION_SIGNAL_UP, 5);
-	//	}
-	//}
-	//// ニュートラルモーション
-	//else
-	//{
-	//	if (m_Action != ACTION_NEUTRAL)
-	//	{
-	//		m_Action = ACTION_NEUTRAL;
-	//		m_pMotion->Set(ACTION_NEUTRAL, 5);
-	//	}
-	//}
+	// 上モーション
+	if (m_DevilArrow == 0)
+	{
+		if (m_Action != ACTION_SIGNAL_UP)
+		{
+			m_Action = ACTION_SIGNAL_UP;
+			GetMotion()->Set(ACTION_SIGNAL_UP, 5);
+		}
+	}
+	// 下モーション
+	if (m_DevilArrow == 1)
+	{
+		if (m_Action != ACTION_SIGNAL_DOWN)
+		{
+			m_Action = ACTION_SIGNAL_DOWN;
+			GetMotion()->Set(ACTION_SIGNAL_DOWN, 5);
+		}
+	}
+	// 左モーション
+	if (m_DevilArrow == 2)
+	{
+		if (m_Action != ACTION_SIGNAL_LEFT)
+		{
+			m_Action = ACTION_SIGNAL_LEFT;
+			GetMotion()->Set(ACTION_SIGNAL_LEFT, 5);
+		}
+	}
+	// 右モーション
+	if (m_DevilArrow == 3)
+	{
+		if (m_Action != ACTION_SIGNAL_RIGHT)
+		{
+			m_Action = ACTION_SIGNAL_RIGHT;
+			GetMotion()->Set(ACTION_SIGNAL_RIGHT, 5);
+		}
+	}
+	// ニュートラルモーション
+	else
+	{
+		if (m_Action != ACTION_NEUTRAL)
+		{
+			m_Action = ACTION_NEUTRAL;
+			GetMotion()->Set(ACTION_NEUTRAL, 5);
+		}
+	}
 }
 
 //====================================================================
@@ -1004,7 +1030,7 @@ void CDevil::DebugKey(void)
 
 	if (pInputKeyboard->GetPress(DIK_5))
 	{
-		CObjmeshField* pMapField = CGame::GetInstance()->GetMapField();
+		CObjmeshField* pMapField = CObjmeshField::GetListTop();
 		D3DXVECTOR3 MapRot = pMapField->GetRot();
 		MapRot = INITVECTOR3;
 		pMapField->SetRot(MapRot);
@@ -1528,11 +1554,7 @@ float CDevil::MoveSlopeX(float Move)
 {
 	float fSlopeMove = 1.0f;
 
-	D3DXVECTOR3 DevilRot = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
-	if (CScene::GetMode() == CScene::MODE_GAME)
-	{
-		DevilRot = m_DevilRot;
-	}
+	D3DXVECTOR3 DevilRot = m_DevilRot;
 
 	if (Move > 0.0f)
 	{
@@ -1553,11 +1575,7 @@ float CDevil::MoveSlopeZ(float Move)
 {
 	float fSlopeMove = 1.0f;
 
-	D3DXVECTOR3 DevilRot = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
-	if (CScene::GetMode() == CScene::MODE_GAME)
-	{
-		DevilRot = CGame::GetInstance()->GetDevil()->GetDevilRot();
-	}
+	D3DXVECTOR3 DevilRot = m_DevilRot;
 
 	if (Move > 0.0f)
 	{
@@ -1577,4 +1595,16 @@ float CDevil::MoveSlopeZ(float Move)
 CListManager<CDevil>* CDevil::GetList(void)
 {
 	return m_pList;
+}
+
+//====================================================================
+//リストの先頭取得
+//====================================================================
+CDevil* CDevil::GetListTop(void)
+{
+	if (CDevil::GetList() == nullptr) { return nullptr; }
+	std::list<CDevil*> list = CDevil::GetList()->GetList();    // リストを取得
+	CDevil* pDevil = list.front();
+
+	return pDevil;
 }

@@ -107,7 +107,9 @@ static_assert(NUM_ARRAY(MyEffekseer::EFFECT_PATH) == CMyEffekseer::TYPE_MAX, "ER
 //===========================================================
 // コンストラクタ
 //===========================================================
-CMyEffekseer::CMyEffekseer()
+CMyEffekseer::CMyEffekseer() :
+	m_nNum(0),
+	m_nTime(0)
 {
 }
 
@@ -116,6 +118,11 @@ CMyEffekseer::CMyEffekseer()
 //===========================================================
 CMyEffekseer::~CMyEffekseer()
 {
+	if (m_pInstance != nullptr)
+	{
+		delete m_pInstance;
+		m_pInstance = nullptr;
+	}
 }
 
 //===========================================================
@@ -206,6 +213,9 @@ void CMyEffekseer::Uninit(void)
 	{
 		effect->Uninit();
 	}
+
+	m_EfkRenderer->Release();
+	m_EfkManager->Release();
 
 	// 自身を終了する
 	delete m_pInstance;
@@ -391,7 +401,10 @@ CListManager<CEffekseer>* CEffekseer::m_pList = nullptr; // オブジェクトリスト]
 //===========================================================
 CEffekseer::CEffekseer() :
 	m_eType(CMyEffekseer::TYPE_NONE),
-	m_bDeath(false)
+	m_bDeath(false),
+	m_EfkName(nullptr),
+	m_bLoop(false),
+	m_efkHandle(0)
 {
 
 }

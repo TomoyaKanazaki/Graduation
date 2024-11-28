@@ -152,7 +152,7 @@ HRESULT CObjmeshRing::Init(void)
 		&m_pIdxBuff,
 		nullptr);
 
-	WORD* pIdx;	//インデックス情報へのポインタ
+	int* pIdx;	//インデックス情報へのポインタ
 
 	//インデックスバッファをロックし、頂点番号データへのポインタを所得
 	m_pIdxBuff->Lock(0, 0, (void**)&pIdx, 0);

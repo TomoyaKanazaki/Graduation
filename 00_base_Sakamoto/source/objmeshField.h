@@ -46,6 +46,7 @@ public:
 
 	// 静的メンバ関数
 	static CListManager<CObjmeshField>* GetList(void);	// リスト取得
+	static CObjmeshField* GetListTop(void);	// リスト取得
 
 protected:
 	LPDIRECT3DTEXTURE9 m_pTexture;			//テクスチャへのポインタ

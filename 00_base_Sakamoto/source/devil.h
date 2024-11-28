@@ -7,7 +7,7 @@
 #ifndef _DEVIL_H_
 #define _DEVIL_H_
 
-#include "character.h"
+#include "objectcharacter.h"
 #include "useful.h"
 #include "MapSystem.h"
 
@@ -29,7 +29,7 @@ class CBoss;
 class CPlayer;
 
 //オブジェクトプレイヤークラス
-class CDevil : public CCharacter
+class CDevil : public CObjectCharacter
 {
 private:
 	static const int ENCOUNT_MAX = 128;
@@ -42,10 +42,12 @@ public:
 	enum ACTION_TYPE
 	{
 		ACTION_NEUTRAL = 0,			// 待機
+		ACTION_DAMAGE = 0,			// 恐らくダメージ
 		ACTION_SIGNAL_UP,			// 傾き信号「上」
 		ACTION_SIGNAL_DOWN,			// 傾き信号「下」
 		ACTION_SIGNAL_LEFT,			// 傾き信号「左」
 		ACTION_SIGNAL_RIGHT,		// 傾き信号「右」
+		ACTION_KING,				// 玉座
 		ACTION_MAX,					// 最大
 	};
 
@@ -94,6 +96,7 @@ public:
 
 	// 静的メンバ関数
 	static CListManager<CDevil>* GetList(void); // リスト取得
+	static CDevil* GetListTop(void); // リスト取得
 
 private:
 	void ActionState(void);		//モーションと状態の管理

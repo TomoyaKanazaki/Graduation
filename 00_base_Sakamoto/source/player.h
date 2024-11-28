@@ -7,7 +7,7 @@
 #ifndef _PLAYER_H_
 #define _PLAYER_H_
 
-#include "character.h"
+#include "objectcharacter.h"
 #include "useful.h"
 #include "Model.h"
 #include "MapSystem.h"
@@ -21,7 +21,7 @@ class CObjmeshField;
 class CDevil;
 
 //オブジェクトプレイヤークラス
-class CPlayer : public CCharacter
+class CPlayer : public CObjectCharacter
 {
 private:
 	static const int ENCOUNT_MAX = 128;
@@ -79,9 +79,6 @@ public:
 	HRESULT Init(int PlayNumber) override;
 	void Uninit(void);
 	void Update(void);
-	void TitleUpdate(void);
-	void GameUpdate(void);
-	void TutorialUpdate(void);
 	void Draw(void);
 
 	void SetPlayNumber(int Number) { m_nPlayNumber = Number; }
@@ -136,7 +133,6 @@ public:
 	CMapSystem::GRID GetGrid(void) { return m_Grid; }
 
 	virtual void Death(void);
-	bool SortObject(D3DXVECTOR3 pos);					// オブジェクトとのソート処理
 
 	void SetItemType(ITEM_TYPE eType);
 	ITEM_TYPE GetItemType() { return m_eItemType; }		// アイテムの種類取得
@@ -168,8 +164,6 @@ private:
 	void CollisionStageOut(void);					// ステージ外の当たり判定
 	bool CollisionStageIn(void);					// ステージ内にいるかどうか
 	void CollisionPressStageOut(void);				// ステージ外の圧死判定
-	CObjmeshField* GetListTopField(void);
-	CDevil* GetListTopDevil(void);
 
 	void CameraPosUpdate(void);	//カメラ位置更新処理
 	void PosUpdate(void);		//位置更新処理

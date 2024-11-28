@@ -12,7 +12,6 @@
 #include "camera.h"
 #include "timer.h"
 #include "Score.h"
-#include "Edit.h"
 #include "devil.h"
 #include "DevilHole.h"
 #include "renderer.h"
@@ -23,6 +22,7 @@
 #include "bowabowa.h"
 #include "SlopeDevice.h"
 #include "mask.h"
+#include "signal.h"
 
 #include "sound.h"
 #include "shadow.h"
@@ -63,7 +63,6 @@ CGame::CGame()
 	CManager::GetInstance()->GetCamera()->SetBib(false);
 	CManager::GetInstance()->GetCamera()->SetCameraMode(CCamera::CAMERAMODE_DOWNVIEW);
 
-	m_pEdit = nullptr;
 	m_pPause = nullptr;
 	m_pTime = nullptr;
 	m_p2DSample = nullptr;
@@ -81,7 +80,6 @@ CGame::CGame()
 		m_pPlayer[nCnt] = nullptr;
 	}
 	m_pDevil = nullptr;
-	m_pBoss = nullptr;
 	m_pMask = nullptr;
 
 	m_bGameEnd = false;
@@ -213,6 +211,10 @@ HRESULT CGame::Init(void)
 			}
 		}
 
+		// 矢印モデル生成
+		CSignal::Create("data\\MODEL\\signal.x",D3DXVECTOR3(-100.0f,100.0f,300.0f));
+		CSignal::Create("data\\MODEL\\signal.x", D3DXVECTOR3(100.0f, 100.0f, 300.0f));
+
 		// 十字架の生成
 		/*CItem::Create(CItem::TYPE_CROSS, CMapSystem::GRID(11, 2));
 		CItem::Create(CItem::TYPE_CROSS, CMapSystem::GRID(20, 4));
@@ -275,12 +277,6 @@ HRESULT CGame::Init(void)
 	CEnemy::Create(CEnemy::ENEMY_BONBON, CMapSystem::GRID(11, 5));
 	CEnemy::Create(CEnemy::ENEMY_LITTLEDEVIL, CMapSystem::GRID(13, 7));
 
-#if _DEBUG
-	if (m_pEdit == nullptr)
-	{
-		m_pEdit = CEdit::Create();
-	}
-#endif
 	return S_OK;
 }
 
@@ -296,17 +292,6 @@ void CGame::Uninit(void)
 
 	//全てのオブジェクトの破棄
 	CObject::ReleaseAll();
-
-	m_pBoss = nullptr;
-
-#if _DEBUG
-	if (m_pEdit != nullptr)
-	{
-		//m_pEdit->Uninit();
-		delete m_pEdit;
-		m_pEdit = nullptr;
-	}
-#endif
 
 	CScene::Uninit();
 
@@ -344,12 +329,6 @@ void CGame::Update(void)
 			//レンダーステートの設定
 			m_pDevice->SetRenderState(D3DRS_FILLMODE, 0);
 		}
-	}
-
-	if (CManager::GetInstance()->GetEdit() == true)
-	{
-		CManager::GetInstance()->GetCamera()->SetCameraMode(CCamera::CAMERAMODE_CONTROL);
-		m_pEdit->Update();
 	}
 
 	if (pInputKeyboard->GetTrigger(DIK_1) == true)
@@ -437,6 +416,12 @@ void CGame::Update(void)
 				}
 
 				CManager::GetInstance()->SetEndScore(EndScore);
+
+				if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
+				{
+					CManager::GetInstance()->SetEnd1PScore(m_pPlayer[0]->GetScore()->GetScore());
+					CManager::GetInstance()->SetEnd2PScore(m_pPlayer[1]->GetScore()->GetScore());
+				}
 			}
 		}
 
@@ -487,6 +472,12 @@ void CGame::StageClear(int Stage)
 		}
 
 		CManager::GetInstance()->SetEndScore(EndScore);
+
+		if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
+		{
+			CManager::GetInstance()->SetEnd1PScore(m_pPlayer[0]->GetScore()->GetScore());
+			CManager::GetInstance()->SetEnd2PScore(m_pPlayer[1]->GetScore()->GetScore());
+		}
 	}
 	else
 	{
@@ -506,6 +497,12 @@ void CGame::StageClear(int Stage)
 		}
 
 		CManager::GetInstance()->SetEndScore(EndScore);
+
+		if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
+		{
+			CManager::GetInstance()->SetEnd1PScore(m_pPlayer[0]->GetScore()->GetScore());
+			CManager::GetInstance()->SetEnd2PScore(m_pPlayer[1]->GetScore()->GetScore());
+		}
 	}
 }
 
@@ -769,58 +766,4 @@ void CGame::SetBgObjTest(void)
 		pPost = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\post.x");
 		pPost->SetPos(D3DXVECTOR3(-900.0f, BOTTOM_FIELD_POS.y, -500.0f));
 	}
-}
-
-//====================================================================
-// サンプル系が入ってヨ（ゲームには絶対使わないヨ）
-//====================================================================
-void CGame::Sample(void)
-{
-	////各種オブジェクトの生成------------------------------------
-	//CObject2D* pCbject2D = CObject2D::Create();
-	//pCbject2D->SetPos(D3DXVECTOR3(640.0, 360.0f, 0.0f));
-
-	//CObject3D *pCbject3D = CObject3D::Create();
-	//pCbject3D->SetPos(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-
-	//CObjectBillboard* Billboard = CObjectBillboard::Create();
-	//Billboard->SetPos(D3DXVECTOR3(100.0f, 0.0f, 0.0f));
-
-	//CObjectX* pObjectX = CObjectX::Create("data\\MODEL\\player00.x");
-	//pObjectX->SetPos(D3DXVECTOR3(200.0f, 0.0f, 0.0f));
-
-	//CObjmeshCube* pObjCube = CObjmeshCube::Create();
-	//pObjCube->SetPos(D3DXVECTOR3(300.0f, 0.0f, 0.0f));
-
-	//CObjmeshField *pObjField = CObjmeshField::Create();
-	//pObjField->SetPos(D3DXVECTOR3(400.0f, 0.0f, 0.0f));
-
-	//CObjmeshWall* pObjWall = CObjmeshWall::Create();
-	//pObjWall->SetPos(D3DXVECTOR3(500.0f, 0.0f, 0.0f));
-
-	//CObjmeshCylinder* pObjCylinder = CObjmeshCylinder::Create();
-	//pObjCylinder->SetPos(D3DXVECTOR3(600.0f, 0.0f, 0.0f));
-
-	////各オブジェクトの子クラスの生成-----------------------------------------
-	//m_p2DSample = CSampleObj2D::Create(7);
-	//m_p2DSample->SetPos(D3DXVECTOR3(640.0f, 360.0f, 0.0f));
-	//m_p2DSample->SetWidth(1280.0f);
-	//m_p2DSample->SetHeight(720.0f);
-	//m_p2DSample->SetColor(D3DXCOLOR(0.0f, 0.0f, 1.0f, 0.5f));
-	//m_p2DSample->SetMultiTarget(true);
-
-	//CSampleObj3D* pSampleObj3D = CSampleObj3D::Create();
-	//pSampleObj3D->SetPos(D3DXVECTOR3(-100.0f, 0.0f, 0.0f));
-
-	//CSampleObjBillboard* pSampleObjBillboard = CSampleObjBillboard::Create();
-	//pSampleObjBillboard->SetPos(D3DXVECTOR3(-200.0f, 0.0f, 0.0f));
-
-	//CSampleObjectX* pSampleObjX = CSampleObjectX::Create("data\\MODEL\\enemy.x");
-	//pSampleObjX->SetPos(D3DXVECTOR3(-300.0f, 0.0f, 0.0f));
-
-	//CEnemy* pEnemy = CEnemy::Create();
-	//pEnemy->SetPos(D3DXVECTOR3(-500.0f, 0.0f, 0.0f));
-
-	//CSampleLvModel* pSampleLvModel = CSampleLvModel::Create();
-	//pSampleLvModel->SetPos(D3DXVECTOR3(-400.0f, 0.0f, 0.0f));
 }

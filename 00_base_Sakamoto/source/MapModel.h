@@ -12,7 +12,6 @@
 
 //前方宣言
 class CObjGauge2D;
-class CCubeEffect;
 
 //==========================
 // 定数定義
@@ -50,8 +49,6 @@ public:
 	void Draw(void);
 	void SetCollision(bool Set) { m_bCollision = Set; }
 	bool GetCollision(void) { return m_bCollision; }
-	void CreateBlock(void);		//デバッグ用ブロックの生成
-	void UpdateBlock(void);		//デバッグ用ブロックの更新
 	void SetEditIdx(int Idx) { m_EditIndex = Idx; }
 	int GetEditIdx(void) { return m_EditIndex; }
 	D3DXVECTOR3* GetScreenPos(void) { return &m_ScreenPos[0]; }
@@ -61,8 +58,6 @@ public:
 	D3DXVECTOR3 GetMove() { return m_move; }
 	void SetSpin(D3DXVECTOR3 spin) { m_Spin = spin; }
 	D3DXVECTOR3 GetSpin() { return m_Spin; }
-	void SetDebugBlock(CCubeEffect* pCubeEffect) { m_pDebugBlock = pCubeEffect; }
-	CCubeEffect*GetDebugBlock() { return m_pDebugBlock; }
 	void SetBreakable(bool set) { m_bBreakable = set; }
 	bool GetBreakable() { return m_bBreakable; }
 	void SetDebris(bool set) { m_bDebris = set; }
@@ -95,8 +90,6 @@ private:
 	bool m_bDebris;			//破片が出るかどうか
 	bool m_bBreakEffect;	//破壊エフェクトの状態かどうか
 	int m_bBreakBound;		//破壊エフェクト状態でバウンドした回数
-
-	CCubeEffect* m_pDebugBlock;		//デバッグ用ブロック
 
 	// 静的メンバ変数
 	static CListManager<CMapModel>* m_pList; // オブジェクトリスト

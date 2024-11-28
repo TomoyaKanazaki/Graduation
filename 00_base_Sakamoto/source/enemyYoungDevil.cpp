@@ -5,13 +5,12 @@
 //
 //============================================
 #include "enemyYoungDevil.h"
-#include "LevelModelEffect.h"
 #include "object.h"
 #include "manager.h"
 #include "renderer.h"
 #include "model.h"
 #include "motion.h"
-#include "character.h"
+#include "objectcharacter.h"
 #include "game.h"
 #include "tutorial.h"
 #include "object3D.h"

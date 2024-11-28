@@ -164,7 +164,7 @@ D3DXVECTOR3 CMapSystem::GetGritPos(const GRID& grid)
 	D3DXVECTOR3 Pos;
 	D3DXVECTOR3 DevilPos;
 
-	DevilPos = CGame::GetInstance()->GetDevil()->GetDevilPos();
+	DevilPos = CDevil::GetListTop()->GetDevilPos();
 
 	// グリット番号が最大値以上や最小値以下の時、範囲内に納める処理
 	CMapSystem::GRID temp = grid;
@@ -205,7 +205,7 @@ CMapSystem::GRID CMapSystem::CalcGrid(const D3DXVECTOR3& pos)
 
 	CDevil* pDevil = nullptr;
 
-	pDevil = CGame::GetInstance()->GetDevil();
+	pDevil = CDevil::GetListTop();
 
 	D3DXVECTOR3 DevilPos = pDevil->GetDevilPos();
 
@@ -245,6 +245,7 @@ CMapSystem::GRID CMapSystem::CalcGrid(const D3DXVECTOR3& pos)
 
 	return grid;
 }
+
 
 //==========================================
 // プレイヤーの位置取得
@@ -534,7 +535,7 @@ int CMapSystem::CalcGridX(const float posX)
 	// 算出に使用する変数
 	CDevil* pDevil = nullptr;
 
-	pDevil = CGame::GetInstance()->GetDevil();
+	pDevil = CDevil::GetListTop();
 
 	D3DXVECTOR3 DevilPos = pDevil->GetDevilPos();
 
@@ -567,7 +568,7 @@ int CMapSystem::CalcGridZ(const float posZ)
 	// 算出に使用する変数
 	CDevil* pDevil = nullptr;
 
-	pDevil = CGame::GetInstance()->GetDevil();
+	pDevil = CDevil::GetListTop();
 
 	D3DXVECTOR3 DevilPos = pDevil->GetDevilPos();
 
@@ -597,7 +598,7 @@ int CMapSystem::CalcGridZ(const float posZ)
 D3DXVECTOR3 CMapSystem::GRID::ToWorld()
 {
 	D3DXVECTOR3 pos;
-	D3DXVECTOR3 DevilPos = CGame::GetInstance()->GetDevil()->GetDevilPos();
+	D3DXVECTOR3 DevilPos = CDevil::GetListTop()->GetDevilPos();
 	CMapSystem* map = GetInstance();
 
 	// グリット番号が最大値以上や最小値以下の時、範囲内に納める処理
