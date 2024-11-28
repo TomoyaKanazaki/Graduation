@@ -41,6 +41,7 @@ public:
 		TYPE_SOFTCREAM,			// ソフトクリーム
 		TYPE_FRIEDEGG,			// 目玉焼き
 		TYPE_TILE,				// 床
+		TYPE_SIGNAL,			// 矢印
 		TYPE_MAX,
 	};
 

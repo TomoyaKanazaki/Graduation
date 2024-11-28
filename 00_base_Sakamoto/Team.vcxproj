@@ -82,6 +82,7 @@
     <ClCompile Include="source\scrollarrow.cpp" />
     <ClCompile Include="source\select.cpp" />
     <ClCompile Include="source\shadow.cpp" />
+    <ClCompile Include="source\signal.cpp" />
     <ClCompile Include="source\SlopeDevice.cpp" />
     <ClCompile Include="source\slowManager.cpp" />
     <ClCompile Include="source\softcream.cpp" />
@@ -160,6 +161,7 @@
     <ClInclude Include="source\scrollarrow.h" />
     <ClInclude Include="source\select.h" />
     <ClInclude Include="source\shadow.h" />
+    <ClInclude Include="source\signal.h" />
     <ClInclude Include="source\SlopeDevice.h" />
     <ClInclude Include="source\slowManager.h" />
     <ClInclude Include="source\softcream.h" />

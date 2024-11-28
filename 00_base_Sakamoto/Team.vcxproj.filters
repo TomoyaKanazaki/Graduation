@@ -256,6 +256,9 @@
     <ClCompile Include="source\objectcharacter.cpp">
       <Filter>ソース ファイル\02_Object</Filter>
     </ClCompile>
+    <ClCompile Include="source\signal.cpp">
+      <Filter>ソース ファイル\06_UI_3D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\debugproc.h">
@@ -479,6 +482,9 @@
     </ClInclude>
     <ClInclude Include="source\objectcharacter.h">
       <Filter>ソース ファイル\02_Object</Filter>
+    </ClInclude>
+    <ClInclude Include="source\signal.h">
+      <Filter>ソース ファイル\06_UI_3D</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

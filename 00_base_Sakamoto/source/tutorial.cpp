@@ -147,9 +147,6 @@ HRESULT CTutorial::Init(void)
 		m_pPlayer[0]->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(11, 9)));
 	}
 
-	m_pScore = CScore::Create();
-	m_pScore->SetScore(CManager::GetInstance()->GetEndScore());
-
 	//レールブロックの生成
 	LoadStageRailBlock("data\\TXT\\STAGE\\RailBlock.txt");
 
@@ -345,7 +342,6 @@ void CTutorial::Update(void)
 			{
 				CFade::SetFade(CScene::MODE_RESULT);
 				m_pTime->SetStopTime(true);
-				CManager::GetInstance()->SetEndScore(m_pScore->GetScore());
 			}
 		}
 
@@ -384,7 +380,6 @@ void CTutorial::StageClear(int Stage)
 
 		CFade::SetFade(CScene::MODE_RESULT);
 		m_pTime->SetStopTime(true);
-		CManager::GetInstance()->SetEndScore(m_pScore->GetScore());
 	}
 	else
 	{
@@ -392,7 +387,6 @@ void CTutorial::StageClear(int Stage)
 
 		CFade::SetFade(CScene::MODE_GAME);
 		m_pTime->SetStopTime(true);
-		CManager::GetInstance()->SetEndScore(m_pScore->GetScore());
 	}
 }
 
