@@ -95,7 +95,7 @@ private:
 	static bool m_bLevelStop;				//レベルアップ時のポーズ
 	bool m_bLevelUI;						//レベルアップ時のUI
 	bool m_Appear;							//表示状態かどうか
-	OBJECT_TYPE m_type;							//オブジェクトの種類
+	OBJECT_TYPE m_type;						//オブジェクトの種類
 };
 
 #endif
