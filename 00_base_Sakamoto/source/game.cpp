@@ -233,6 +233,8 @@ void CGame::Uninit(void)
 	if (m_pPause != nullptr)
 	{
 		m_pPause->Uninit();
+		delete m_pPause;
+		m_pPause = nullptr;
 	}
 
 
