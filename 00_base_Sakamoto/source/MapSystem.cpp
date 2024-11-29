@@ -19,12 +19,14 @@
 #include "RailBlock.h"
 #include "enemy.h"
 #include "RollRock.h"
+#include "objmeshField.h"
 
 // ’è”’è‹`
 namespace
 {
 	float GRID_SIZE = 100.0f;	// ƒOƒŠƒbƒh‚ÌƒTƒCƒY
 	D3DXVECTOR3 MAP_SIZE = D3DXVECTOR3(750.0f, 0.0f, 550.0f);		// ‰¡‚Ì“–‚½‚è”»’è
+	int BOWABOWA_RATE = 1; // ƒ{ƒƒ{ƒ‚Ì¶¬—¦ ( 0ˆÈ‰º‚ÅƒGƒ‰[ )
 }
 
 //Ã“Iƒƒ“ƒo•Ï”éŒ¾
@@ -37,7 +39,7 @@ std::vector<CMapSystem::GRID> CMapSystem::m_PosPlayer = {};	// ƒvƒŒƒCƒ„[‚ÌˆÊ’u‚
 //ƒRƒ“ƒXƒgƒ‰ƒNƒ^
 //====================================================================
 CMapSystem::CMapSystem() : 
-	m_gridCenter(0, 0)
+	m_mapCenter(0, 0)
 {
 	for (int nCntW = 0; nCntW < NUM_WIGHT; nCntW++)
 	{
@@ -103,7 +105,7 @@ void CMapSystem::Init()
 	generator->setDiagonalMovement(false); // Î‚ßˆÚ“®‚ğƒIƒt
 
 	// ’†S‚ğİ’è
-	m_gridCenter = GRID(NUM_WIGHT / 2, NUM_HEIGHT / 2);
+	m_mapCenter = GRID(NUM_WIGHT / 2, NUM_HEIGHT / 2);
 }
 
 //====================================================================
@@ -334,6 +336,12 @@ void CMapSystem::Load(const char* pFilename)
 				// ƒOƒŠƒbƒh‚Ìs—ñ”‚ğ“Ç‚İ‚İ
 				iss >> MaxGrid.x >> MaxGrid.z;
 
+				//°‚Ì¶¬
+				CGame::GetInstance()->SetMapField(CObjmeshField::Create(MaxGrid));
+				auto map = CGame::GetInstance()->GetMapField();
+				map->SetPos(INITVECTOR3);
+				map->SetAppear(false); // •`‰æ‚ğƒIƒt
+
 				// Œo˜H’Tõ—pî•ñ‚Ìİ’è
 				generator->setWorldSize(MaxGrid.ToAStar()); // ¢ŠE‚Ì‘å‚«‚³
 			}
@@ -362,27 +370,25 @@ void CMapSystem::Load(const char* pFilename)
 							std::getline(issChar, str, ',');
 
 							// s—ñ”İ’è
-							pMapSystem->m_gridCenter.x = nCntWidth;
-							pMapSystem->m_gridCenter.z = nCntHeight;
-
+							GRID grid = GRID(nCntWidth, nCntHeight);
 							if (str == "") { continue; }	// ‹ó”’‚Í–³‹‚·‚é
 							else if (str == "1")
 							{ // •Ç‚Ìê‡
 
 								// •Çƒ‚ƒfƒ‹‚Ì¶¬
-								CWall::Create(pMapSystem->m_gridCenter);
+								CWall::Create(grid);
 
 								// ƒOƒŠƒbƒh”»’è‚Ìİ’è
-								pMapSystem->SetGritBool(pMapSystem->m_gridCenter.x, pMapSystem->m_gridCenter.z, true);
+								pMapSystem->SetGritBool(grid.x, grid.z, true);
 
 								// Œo˜H’Tõ—pî•ñ‚Ìİ’è
-								generator->addCollision(pMapSystem->m_gridCenter.ToAStar()); // ’Ê‰ß•s‰Â’n“_‚ğ’Ç‰Á
+								generator->addCollision(grid.ToAStar()); // ’Ê‰ß•s‰Â’n“_‚ğ’Ç‰Á
 
 								continue;
 							}
 
 							// °ƒ‚ƒfƒ‹‚Ì¶¬
-							CTile::Create(pMapSystem->m_gridCenter);
+							CTile::Create(grid);
 
 							// ƒOƒŠƒbƒhİ’è‚Ì”»’è
 							bGridSet = false;
@@ -392,7 +398,7 @@ void CMapSystem::Load(const char* pFilename)
 							{ // \š‰Ë
 
 								// \š‰Ë‚Ì¶¬
-								CItem::Create(CItem::TYPE_CROSS, pMapSystem->m_gridCenter);
+								CItem::Create(CItem::TYPE_CROSS, grid);
 							}
 							else if (str == "3")
 							{ // ƒfƒrƒ‹ƒz[ƒ‹‚Ì¶¬”ÍˆÍ
@@ -401,68 +407,79 @@ void CMapSystem::Load(const char* pFilename)
 								bGridSet = true;
 
 								// Œo˜H’Tõ—pî•ñ‚Ìİ’è
-								generator->addCollision(pMapSystem->m_gridCenter.ToAStar()); // ’Ê‰ß•s‰Â’n“_‚ğ’Ç‰Á
+								generator->addCollision(grid.ToAStar()); // ’Ê‰ß•s‰Â’n“_‚ğ’Ç‰Á
 							}
 							else if (str == "4")
 							{ // ƒfƒrƒ‹ƒz[ƒ‹
 
 								// ƒfƒrƒ‹ƒz[ƒ‹‚Ì¶¬
-								CDevilHole::Create(pMapSystem->m_gridCenter);
+								CDevilHole::Create(grid);
+
+								// ƒ}ƒbƒv‚Ì’†S‚Éİ’è
+								pMapSystem->m_mapCenter = grid;
 
 								// ƒOƒŠƒbƒhİ’è‚Ì”»’è
 								bGridSet = true;
 
 								// Œo˜H’Tõ—pî•ñ‚Ìİ’è
-								generator->addCollision(pMapSystem->m_gridCenter.ToAStar()); // ’Ê‰ß•s‰Â’n“_‚ğ’Ç‰Á
+								generator->addCollision(grid.ToAStar()); // ’Ê‰ß•s‰Â’n“_‚ğ’Ç‰Á
 							}
 							else if (str == "5")
 							{ // ƒŒ[ƒ‹ƒuƒƒbƒN
 
 								// ƒŒ[ƒ‹ƒuƒƒbƒN‚Ì¶¬
-								CRailBlock::Create(pMapSystem->m_gridCenter);
+								CRailBlock::Create(grid);
 
 								// ƒOƒŠƒbƒhİ’è‚Ì”»’è
 								bGridSet = true;
 
 								// Œo˜H’Tõ—pî•ñ‚Ìİ’è
-								//generator->addCollision(pMapSystem->m_gridCenter.ToAStar()); // ’Ê‰ß•s‰Â’n“_‚ğ’Ç‰Á
 							}
 							else if (str == "6")
 							{ // ƒvƒŒƒCƒ„[
 
 								// ƒvƒŒƒCƒ„[‚ÌƒOƒŠƒbƒhˆÊ’u
-								pMapSystem->m_PosPlayer.push_back(pMapSystem->m_gridCenter);
+								pMapSystem->m_PosPlayer.push_back(grid);
 							}
 							else if (str == "7")
 							{ // “G(ƒƒ_ƒ}ƒ“)
 
 								// ƒƒ_ƒ}ƒ“¶¬
-								CEnemy::Create(CEnemy::ENEMY_MEDAMAN, pMapSystem->m_gridCenter);
+								CEnemy::Create(CEnemy::ENEMY_MEDAMAN, grid);
 
 							}
 							else if (str == "8")
 							{ // “G(ƒ{ƒ“ƒ{ƒ“)
 
 								// ƒ{ƒ“ƒ{ƒ“¶¬
-								CEnemy::Create(CEnemy::ENEMY_BONBON, pMapSystem->m_gridCenter);
+								CEnemy::Create(CEnemy::ENEMY_BONBON, grid);
 
 							}
 							else if (str == "9")
 							{ // “G(qƒfƒrƒ‹)
 
 								// qƒfƒrƒ‹¶¬
-								CEnemy::Create(CEnemy::ENEMY_LITTLEDEVIL, pMapSystem->m_gridCenter);
+								CEnemy::Create(CEnemy::ENEMY_LITTLEDEVIL, grid);
 
 							}
 							else if (str == "10")
 							{ // “]‚ª‚éŠâ
 
 								// “]‚ª‚éŠâ¶¬
-								CRollRock::Create(pMapSystem->m_gridCenter);
+								CRollRock::Create(grid);
+							}
+							else
+							{ // ƒ{ƒƒ{ƒ‚Ì¶¬
+								
+								// ƒ‰ƒ“ƒ_ƒ€¶¬
+								if (!(rand() % BOWABOWA_RATE))
+								{
+									CItem::Create(CItem::TYPE_BOWABOWA, grid);
+								}
 							}
 
 							// ƒOƒŠƒbƒh”»’è‚Ìİ’è
-							pMapSystem->SetGritBool(pMapSystem->m_gridCenter.x, pMapSystem->m_gridCenter.z, bGridSet);
+							pMapSystem->SetGritBool(grid, bGridSet);
 
 						}
 

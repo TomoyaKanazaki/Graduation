@@ -54,7 +54,7 @@ CObjmeshField::~CObjmeshField()
 //====================================================================
 //生成処理
 //====================================================================
-CObjmeshField* CObjmeshField::Create(int vtxWidth, int vtxHeight)
+CObjmeshField* CObjmeshField::Create(CMapSystem::GRID& grid)
 {
 	CObjmeshField* pObject3D = nullptr;
 
@@ -67,7 +67,7 @@ CObjmeshField* CObjmeshField::Create(int vtxWidth, int vtxHeight)
 	if (pObject3D != nullptr)
 	{
 		// 頂点数の設定
-		pObject3D->SetVtxSize(vtxWidth, vtxHeight);
+		pObject3D->SetVtxSize(grid.x, grid.z);
 	}
 
 	//オブジェクトの初期化処理

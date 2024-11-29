@@ -72,7 +72,7 @@ public:
 	int CalcGridX(const float posX);
 	int CalcGridZ(const float posZ);
 	GRID CalcGrid(const D3DXVECTOR3& pos);
-	GRID GetCenter() { return m_gridCenter; };
+	GRID GetCenter() { return m_mapCenter; };
 
 	void SetGritBool(int nWight, int nHeight, bool Set) { m_nMapGrit[nWight][nHeight] = Set; }
 	void SetGritBool(const GRID& grid, bool Set) { m_nMapGrit[grid.x][grid.z] = Set; }
@@ -89,6 +89,7 @@ public:
 
 	void SetMapSize(D3DXVECTOR3 size) { m_MapSize = size; }
 	D3DXVECTOR3 GetMapSize(void) { return m_MapSize; }
+	GRID GetMapGrid(void) { return m_MapGrid; }
 
 	static void Load(const char* pFilename); // マップ情報の読み込み
 	static float GetGritSize();
@@ -100,13 +101,14 @@ public:
 	static std::vector<GRID> m_PosPlayer;		// プレイヤーの位置を保持
 
 	static bool m_nMapGrit[NUM_WIGHT][NUM_HEIGHT];	//グリットにブロックが存在していたらtrue
-	GRID m_gridCenter;
+	GRID m_mapCenter;
 	D3DXVECTOR3 m_InitPos;
 	D3DXVECTOR3 m_MapPos;
 	int m_WightMax;
 	int m_HeightMax;
 	float m_fGritSize;
 	D3DXVECTOR3 m_MapSize;		//マップの境界線の大きさ
+	GRID m_MapGrid;		//マップの境界線の大きさ
 
 	//MAPTYPE m_MapType;			// マップオブジェクトの種類
 

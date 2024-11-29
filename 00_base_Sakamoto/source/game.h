@@ -69,6 +69,8 @@ public:
 	void SetBowabowa(int Bowabowa) { m_nNumBowabowa = Bowabowa; }
 	void AddBowabowa(int nNum) { m_nNumBowabowa+= nNum; }
 	void SetDevilHoleFinish(bool Set) { m_bDevilHoleFinish = Set; }
+
+	void SetMapField(CObjmeshField* map) { m_pMapField = map; }
 	
 	void DeleteMap(void);
 
