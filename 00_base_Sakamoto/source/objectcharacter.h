@@ -52,6 +52,9 @@ public:
 	void SetSize(D3DXVECTOR3 size) { m_size = size; }
 	D3DXVECTOR3 GetSize(void) { return m_size; }
 
+	void SetShadow(bool frag) { m_bUseShadow = frag; }
+	bool GetShadow() { return m_bUseShadow; }
+
 	void SetTxtCharacter(const char* pFilename);
 
 private:
@@ -75,6 +78,7 @@ private:
 	CShadow* m_pShadow;
 	bool m_bUseStencil;				// ステンシルバッファの使用の有無
 	bool m_bUseShadowMtx;			// シャドウマトリックスの使用の有無
+	bool m_bUseShadow;				// 影の使用フラグ
 };
 
 #endif

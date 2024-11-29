@@ -131,6 +131,9 @@ HRESULT CDevil::Init(void)
 	//種類設定
 	SetType(CObject::TYPE_DEVIL);
 
+	// 影を不使用に設定
+	SetShadow(false);
+
 	// キャラクターテキストの設定処理
 	CObjectCharacter::Init("data\\TXT\\MOTION\\01_enemy\\motion_devil.txt");
 	

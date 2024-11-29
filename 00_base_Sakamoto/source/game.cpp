@@ -32,8 +32,7 @@ namespace
 {
 	const int SAMPLE_NAMESPACE = 0;
 
-	const int BOTTOM_FIELD_VTX_WIDTH = 64;		// 下床の横数
-	const int BOTTOM_FIELD_VTX_HEIGHT = 64;		// 下床の縦数
+	const CMapSystem::GRID FIELD_GRID = { 64, 64 }; // 下の床のサイズ
 	const char* BOTTOM_FIELD_TEX = "data\\TEXTURE\\Field\\outside.jpg";		// 下床のテクスチャ
 	const D3DXVECTOR3 BOTTOM_FIELD_POS = D3DXVECTOR3(0.0f, -1500.0f, 0.0f);	// 下床の位置
 	const int BIBLE_OUTGRIT = 3;	// 聖書がマップの外側から何マス内側にいるか
@@ -160,27 +159,21 @@ HRESULT CGame::Init(void)
 	// 背景モデル設定処理（仮）
 	SetBgObjTest();
 
-	CMapSystem::GetInstance()->Init();
-
-	//マップのグリットの最大値を取得
-	int nMapWightMax = CMapSystem::GetInstance()->GetWightMax();
-	int nMapHeigtMax = CMapSystem::GetInstance()->GetHeightMax();
-
-	//床の生成
-	m_pMapField = CObjmeshField::Create(nMapWightMax -1, nMapHeigtMax - 1);
-	m_pMapField->SetPos(INITVECTOR3);
-	m_pMapField->SetAppear(false); // 描画をオフ
-
-	// 下床の生成
-	CObjmeshField* pBottonField = CObjmeshField::Create(BOTTOM_FIELD_VTX_WIDTH, BOTTOM_FIELD_VTX_HEIGHT);
-	pBottonField->SetTexture(BOTTOM_FIELD_TEX);
-	pBottonField->SetPos(BOTTOM_FIELD_POS);
-	m_bGameEnd = false;
-
 	//デビルの生成
 	m_pDevil = CDevil::Create();
 	m_pDevil->SetPos(D3DXVECTOR3(0.0f, 100.0f, 500.0f));
 	m_pDevil->SetScrollType((CDevil::SCROLL_TYPE)(CManager::GetInstance()->GetScrollType()));
+
+	// マップの生成
+	CMapSystem::GetInstance()->Init();
+	CMapSystem::Load("data\\TXT\\STAGE\\map01.csv");
+
+	// 下床の生成
+	auto grid = FIELD_GRID;
+	CObjmeshField* pBottonField = CObjmeshField::Create(grid);
+	pBottonField->SetTexture(BOTTOM_FIELD_TEX);
+	pBottonField->SetPos(BOTTOM_FIELD_POS);
+	m_bGameEnd = false;
 
 	//レールブロックの生成
 	//LoadStageRailBlock("data\\TXT\\STAGE\\RailBlock.txt");
@@ -189,26 +182,6 @@ HRESULT CGame::Init(void)
 	switch (CManager::GetInstance()->GetStage())
 	{
 	case 0:
-		CMapSystem::Load("data\\TXT\\STAGE\\map01.csv");
-
-		// TODO : 外部書き出しを利用する
-		{
-			// 幅・高さ取得
-			int nWidth = CMapSystem::GetInstance()->GetWightMax();
-			int nHeight = CMapSystem::GetInstance()->GetHeightMax();
-
-			for (int i = 1; i < nWidth; i++)
-			{
-				for (int nCnt = 1; nCnt < nHeight; nCnt++)
-				{// アイテム無い場所にボワボワ生成
-					if (CMapSystem::GetInstance()->GetGritBool(i, nCnt)) { continue; }
-
-					if (rand() % 5) { continue; }
-
-					CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(i, nCnt));
-				}
-			}
-		}
 
 		// 矢印モデル生成
 		CSignal::Create("data\\MODEL\\signal.x",D3DXVECTOR3(-100.0f,100.0f,300.0f));
@@ -220,7 +193,6 @@ HRESULT CGame::Init(void)
 		break;
 
 	case 1:
-		CMapSystem::Load("data\\TXT\\STAGE\\map01.csv");
 
 		// 聖書生成
 		CItem::Create(CItem::TYPE_BIBLE, CMapSystem::GRID(BIBLE_OUTGRIT - 1, BIBLE_OUTGRIT - 1));
