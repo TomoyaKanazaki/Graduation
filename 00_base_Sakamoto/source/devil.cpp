@@ -34,7 +34,7 @@
 #include "Scene.h"
 #include "tile.h"
 #include "wall.h"
-#include "SlopeDevice.h"
+#include "ScrollDevice.h"
 
 //===========================================
 // ’è”’è‹`
