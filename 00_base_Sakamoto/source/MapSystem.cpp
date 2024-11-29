@@ -551,8 +551,8 @@ int CMapSystem::CalcGridZ(const float posZ)
 			fCountPosZ = fCountPosZ + (DevilPos.z + (m_MapSize.z * 2.0f)) + m_fGritSize;
 		}
 
-		if (posZ < fCountPosZ + (m_fGritSize * 0.5f) &&
-			posZ >= fCountPosZ - (m_fGritSize * 0.5f))
+		if (posZ <= fCountPosZ + (m_fGritSize * 0.5f) &&
+			posZ > fCountPosZ - (m_fGritSize * 0.5f))
 		{
 			return i;
 		}
