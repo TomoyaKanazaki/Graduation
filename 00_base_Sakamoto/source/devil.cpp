@@ -402,7 +402,7 @@ void CDevil::Move(int Arroow)
 //====================================================================
 void CDevil::BackSlope(void)
 {
-	CObjmeshField* pMapField = CObjmeshField::GetListTop();
+	CObjmeshField* pMapField = CGame::GetInstance()->GetMapField();
 	D3DXVECTOR3 MapRot = pMapField->GetRot();
 	bool bBackOK = false;
 
@@ -517,7 +517,9 @@ void CDevil::BackSlope(void)
 //====================================================================
 void CDevil::Slope(int Arroow)
 {	
-	CObjmeshField *pMapField = CObjmeshField::GetListTop();
+	CObjmeshField *pMapField = CGame::GetInstance()->GetMapField();
+	if (pMapField == nullptr) { assert(false); }
+
 	D3DXVECTOR3 MapRot = pMapField->GetRot();
 
 	switch (m_ScrollType)
@@ -1065,7 +1067,7 @@ void CDevil::DebugKey(void)
 
 	if (pInputKeyboard->GetPress(DIK_5))
 	{
-		CObjmeshField* pMapField = CObjmeshField::GetListTop();
+		CObjmeshField* pMapField = CGame::GetInstance()->GetMapField();
 		D3DXVECTOR3 MapRot = pMapField->GetRot();
 		MapRot = INITVECTOR3;
 		pMapField->SetRot(MapRot);

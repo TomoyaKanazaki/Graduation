@@ -338,9 +338,9 @@ void CMapSystem::Load(const char* pFilename)
 
 				//床の生成
 				CGame::GetInstance()->SetMapField(CObjmeshField::Create(MaxGrid));
-				auto map = CGame::GetInstance()->GetMapField();
+				CObjmeshField* map = CGame::GetInstance()->GetMapField();
 				map->SetPos(INITVECTOR3);
-				map->SetAppear(false); // 描画をオフ
+				map->SetAppear(true); // 描画をオフ
 
 				// 経路探索用情報の設定
 				generator->setWorldSize(MaxGrid.ToAStar()); // 世界の大きさ
