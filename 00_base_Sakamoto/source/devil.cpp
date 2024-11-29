@@ -902,15 +902,15 @@ void CDevil::StateManager(void)
 				m_ScrollArrowOld = m_DevilArrow;
 				m_nStateNum = m_DevilArrow;
 
-				// 傾き装置のリスト構造が無ければ抜ける
-				if (CSlopeDevice::GetList() == nullptr) { return; }
-				std::list<CSlopeDevice*> list = CSlopeDevice::GetList()->GetList();    // リストを取得
+				// マップ移動装置のリスト構造が無ければ抜ける
+				if (CScrollDevice::GetList() == nullptr) { return; }
+				std::list<CScrollDevice*> list = CScrollDevice::GetList()->GetList();    // リストを取得
 
-				// 傾き装置のリストの中身を確認する
-				for (CSlopeDevice* pSlopeDevice : list)
+				// マップ移動装置のリストの中身を確認する
+				for (CScrollDevice* pScrollDevice : list)
 				{
 					// 回転状態に変更
-					pSlopeDevice->SetState(CSlopeDevice::STATE_ROTATE);
+					pScrollDevice->SetState(CScrollDevice::STATE_ROTATE);
 				}
 			}
 
@@ -969,15 +969,15 @@ void CDevil::StateManager(void)
 			m_State = STATE_WAIT;
 			m_nStateCount = 120;
 
-			// 傾き装置のリスト構造が無ければ抜ける
-			if (CSlopeDevice::GetList() == nullptr) { return; }
-			std::list<CSlopeDevice*> list = CSlopeDevice::GetList()->GetList();    // リストを取得
+			// マップ移動装置のリスト構造が無ければ抜ける
+			if (CScrollDevice::GetList() == nullptr) { return; }
+			std::list<CScrollDevice*> list = CScrollDevice::GetList()->GetList();    // リストを取得
 
-			// 傾き装置のリストの中身を確認する
-			for (CSlopeDevice* pSlopeDevice : list)
+			// マップ移動装置のリストの中身を確認する
+			for (CScrollDevice* pScrollDevice : list)
 			{
 				// 通常状態に変更
-				pSlopeDevice->SetState(CSlopeDevice::STATE_NORMAL);
+				pScrollDevice->SetState(CScrollDevice::STATE_NORMAL);
 			}
 		}
 
