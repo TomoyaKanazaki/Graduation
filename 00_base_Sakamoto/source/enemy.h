@@ -97,7 +97,8 @@ private:
 	void Route();	// 最短経路をたどる
 	void Effect(); // エフェクトを生成
 
-	CMapSystem::GRID m_Grid;	//グリット番号
+	CMapSystem::GRID m_Grid;		//グリット番号
+	CMapSystem::GRID m_SelectGrid;	//方向転換を行った時のグリッド番号
 
 	int m_nLife;				// 体力
 

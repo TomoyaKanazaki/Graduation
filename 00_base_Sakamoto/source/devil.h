@@ -11,8 +11,6 @@
 #include "useful.h"
 #include "MapSystem.h"
 
-#define SCROLL_ID 0
-
 //‘O•ûéŒ¾
 
 class CObject2D;

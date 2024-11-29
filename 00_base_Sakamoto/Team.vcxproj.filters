@@ -265,6 +265,9 @@
     <ClCompile Include="source\move.cpp">
       <Filter>ソース ファイル\08_player</Filter>
     </ClCompile>
+    <ClCompile Include="source\effect.cpp">
+      <Filter>ソース ファイル\03_Direction</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\debugproc.h">
@@ -494,6 +497,9 @@
     </ClInclude>
     <ClInclude Include="source\move.h">
       <Filter>ソース ファイル\08_player</Filter>
+    </ClInclude>
+    <ClInclude Include="source\effect.h">
+      <Filter>ソース ファイル\03_Direction</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

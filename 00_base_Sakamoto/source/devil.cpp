@@ -34,6 +34,7 @@
 #include "Scene.h"
 #include "tile.h"
 #include "wall.h"
+#include "MapSystem.h"
 #include "ScrollDevice.h"
 
 //===========================================
@@ -681,57 +682,50 @@ void CDevil::CollisionOut()
 	// キューブブロックリストの中身を確認する
 	for (CEnemy* pEnemy : list)
 	{
-		//D3DXVECTOR3 EnemyPos = pEnemy->GetPos();
-		//D3DXVECTOR3 Pos = m_DevilPos;
-		//D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
-		//float GritSize = CMapSystem::GetInstance()->GetGritSize();
-		//float Alignment = 0.0f;
-
-		//// ステージ外の当たり判定
-		//if (Pos.x + MapSize.x < EnemyPos.x) // 右
-		//{
-		//	Alignment = EnemyPos.x - (Pos.x + MapSize.x);				//はみ出した移動量分を算出する
-		//	EnemyPos.x = Pos.x - MapSize.x - GritSize + Alignment;		//位置設定
-		//}
-		//if (Pos.x - MapSize.x - GritSize > EnemyPos.x) // 左
-		//{
-		//	Alignment = EnemyPos.x - (Pos.x - MapSize.x - GritSize);	//はみ出した移動量分を算出する
-		//	EnemyPos.x = Pos.x + MapSize.x + Alignment;					//位置設定
-		//}
-		//if (Pos.z + MapSize.z + GritSize < EnemyPos.z) // 上
-		//{
-		//	Alignment = EnemyPos.z - (Pos.z + MapSize.z + GritSize);	//はみ出した移動量分を算出する
-		//	EnemyPos.z = Pos.z - MapSize.z + Alignment;					//位置設定
-		//}
-		//if (Pos.z - MapSize.z > EnemyPos.z) // 下
-		//{
-		//	Alignment = EnemyPos.z - (Pos.z - MapSize.z);				//はみ出した移動量分を算出する
-		//	EnemyPos.z = Pos.z + MapSize.z + GritSize + Alignment;		//位置設定
-		//}
-
-		//pEnemy->SetPos(EnemyPos);
-
 		CMapSystem::GRID EnemyGrid = pEnemy->GetGrid();
 		D3DXVECTOR3 EnemyPos = pEnemy->GetPos();
+		D3DXVECTOR3 EnemyMove = pEnemy->GetMove();
 		D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
 		float GritSize = CMapSystem::GetInstance()->GetGritSize() * 0.5f;
 
-		//m_MinGrid = CMapSystem::GRID(0, 0);
-		//m_MaxGrid = CMapSystem::GRID(NUM_WIGHT - 1, NUM_HEIGHT - 1);
-
 		//m_MinGrid.x = CMapSystem::GetInstance()->CalcGridX(m_DevilPos.x - MapSize.x - GritSize);	//左
-		//m_MinGrid.z = CMapSystem::GetInstance()->CalcGridZ(m_DevilPos.z + MapSize.z + GritSize);	//上
 		//m_MaxGrid.x = CMapSystem::GetInstance()->CalcGridX(m_DevilPos.x + MapSize.x - GritSize);	//右
+		//m_MinGrid.z = CMapSystem::GetInstance()->CalcGridZ(m_DevilPos.z + MapSize.z + GritSize - 1.0f);	//上
 		//m_MaxGrid.z = CMapSystem::GetInstance()->CalcGridZ(m_DevilPos.z - MapSize.z + GritSize);	//下
 
-		//CEffect* pEffect = CEffect::Create();
-		//pEffect->SetPos(D3DXVECTOR3(m_DevilPos.x - MapSize.x - GritSize, 0.0f, m_DevilPos.z + MapSize.z + GritSize));
-		//pEffect->SetRadius(25.0f);
-		//pEffect->SetColor(D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
-		//pEffect = CEffect::Create();
-		//pEffect->SetPos(D3DXVECTOR3(m_DevilPos.x + MapSize.x - GritSize, 0.0f, m_DevilPos.z - MapSize.z + GritSize));
-		//pEffect->SetRadius(25.0f);
-		//pEffect->SetColor(D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
+		//if (EnemyGrid.x == m_MinGrid.x)		//左
+		//{
+		//	if (EnemyMove.x < 0.0f || m_DevilArrow == 3)
+		//	{
+		//		EnemyPos = CMapSystem::GRID(m_MaxGrid.x, pEnemy->GetGrid().z).ToWorld();
+		//		EnemyPos.x += GritSize * 2;
+		//	}
+		//}
+		//if (EnemyGrid.x == m_MaxGrid.x)		//右
+		//{
+		//	if (EnemyMove.x > 0.0f || m_DevilArrow == 2)
+		//	{
+		//		EnemyPos = CMapSystem::GRID(m_MinGrid.x, pEnemy->GetGrid().z).ToWorld();
+		//		EnemyPos.x -= GritSize * 2;
+		//	}
+		//}
+
+		//if (EnemyGrid.z == m_MinGrid.z)		//上
+		//{
+		//	if (EnemyMove.z > 0.0f || m_DevilArrow == 0)
+		//	{
+		//		EnemyPos = CMapSystem::GRID(pEnemy->GetGrid().x, m_MaxGrid.z).ToWorld();
+		//		EnemyPos.z -= GritSize * 2;
+		//	}
+		//}
+		//if (EnemyGrid.z == m_MaxGrid.z)		//下
+		//{
+		//	if (EnemyMove.z < 0.0f || m_DevilArrow == 1)
+		//	{
+		//		EnemyPos = CMapSystem::GRID(pEnemy->GetGrid().x, m_MinGrid.z).ToWorld();
+		//		EnemyPos.z += GritSize * 2;
+		//	}
+		//}
 
 		if (EnemyGrid.x == -1)
 		{
@@ -1048,20 +1042,24 @@ void CDevil::DebugKey(void)
 	//キーボードの移動処理
 	if (pInputKeyboard->GetPress(DIK_UP))
 	{
+		m_DevilArrow = 0;
 		Move(0);
 
 	}
 	if (pInputKeyboard->GetPress(DIK_DOWN))
 	{
+		m_DevilArrow = 1;
 		Move(1);
 	}
 
 	if (pInputKeyboard->GetPress(DIK_LEFT))
 	{
+		m_DevilArrow = 2;
 		Move(2);
 	}
 	if (pInputKeyboard->GetPress(DIK_RIGHT))
 	{
+		m_DevilArrow = 3;
 		Move(3);
 	}
 
@@ -1516,6 +1514,26 @@ void CDevil::GritScroll(D3DXVECTOR3 Move)
 		MapPos.z = InitPos.z + Move.z;
 	}
 
+#ifdef _DEBUG
+
+	////　グリットの位置にエフェクトを表示
+	//for (int nCntW = 0; nCntW < CMapSystem::GetInstance()->GetWightMax(); nCntW++)
+	//{
+	//	for (int nCntH = 0; nCntH < CMapSystem::GetInstance()->GetHeightMax(); nCntH++)
+	//	{
+	//		if (CMapSystem::GetInstance()->GetGritBool(nCntW, nCntH))
+	//		{// ブロックが存在するグリットのみエフェクトを表示
+
+	//			CEffect* pEffect = CEffect::Create();
+	//			pEffect->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(nCntW, nCntH)));
+	//			pEffect->SetRadius(20.0f);
+	//			pEffect->SetLife(10);
+	//		}
+	//	}
+	//}
+
+#endif // _DEBUG
+
 	CMapSystem::GetInstance()->SetMapPos(MapPos);
 
 	// キューブブロックのリスト構造が無ければ抜ける
@@ -1539,26 +1557,6 @@ void CDevil::GritScroll(D3DXVECTOR3 Move)
 
 		pCubeBlock->SetPos(pos);
 	}
-
-#ifdef _DEBUG
-
-	////　グリットの位置にエフェクトを表示
-	//for (int nCntW = 0; nCntW < MapWightMax; nCntW++)
-	//{
-	//	for (int nCntH = 0; nCntH < MapHeightMax; nCntH++)
-	//	{
-	//		if (CMapSystem::GetInstance()->GetGritBool(nCntW, nCntH))
-	//		{// ブロックが存在するグリットのみエフェクトを表示
-
-	//			CEffect* pEffect = CEffect::Create();
-	//			pEffect->SetPos(pos);
-	//			pEffect->SetRadius(20.0f);
-	//			pEffect->SetLife(10);
-	//		}
-	//	}
-	//}
-
-#endif // _DEBUG
 }
 
 //====================================================================
