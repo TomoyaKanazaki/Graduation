@@ -77,8 +77,6 @@ HRESULT CEffect::Init(void)
 	m_nIdxTexture = pTexture->Regist("data\\TEXTURE\\Effect000.jpg");
 	m_cTexName = "data\\TEXTURE\\Effect000.jpg";
 
-	SetType(CObject::TYPE_EFFECT);
-
 	CObjectBillboard::Init();
 
 	//’¸“_ƒJƒ‰[‚Ìİ’è
