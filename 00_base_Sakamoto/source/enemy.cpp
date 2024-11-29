@@ -233,8 +233,8 @@ void CEnemy::Update(void)
 	// 過去の位置を記録
 	posOldMy = posMy;
 
-	//壁の索敵判定
-	SearchWall(posMy);
+	////壁の索敵判定
+	//SearchWall(posMy);
 
 	//// ランダム移動
 	//MoveSelect();
@@ -249,10 +249,10 @@ void CEnemy::Update(void)
 	UpdatePos(posMy,posOldMy,sizeMy);
 
 	// プレイヤーへの最短経路探索
-	//Coordinate();
+	Coordinate();
 
 	//// 最短経路をたどる
-	//Route();
+	Route();
 
 	// 自分の番号を設定
 	m_Grid = CMapSystem::GetInstance()->CMapSystem::CalcGrid(posMy);
@@ -476,23 +476,23 @@ void CEnemy::CollisionOut(D3DXVECTOR3& posMy)
 		D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
 		float GritSize = CMapSystem::GetInstance()->GetGritSize();
 
-		// ステージ外の当たり判定
-		if (Pos.x + MapSize.x < posMy.x) // 右
-		{
-			posMy.x = Pos.x -MapSize.x - GritSize;
-		}
-		if (Pos.x - MapSize.x - GritSize > posMy.x) // 左
-		{
-			posMy.x = Pos.x + MapSize.x;
-		}
-		if (Pos.z + MapSize.z + GritSize < posMy.z) // 上
-		{
-			posMy.z = Pos.z - MapSize.z;
-		}
-		if (Pos.z - MapSize.z > posMy.z) // 下
-		{
-			posMy.z = Pos.z + MapSize.z + GritSize;
-		}
+		//// ステージ外の当たり判定
+		//if (Pos.x + MapSize.x < posMy.x) // 右
+		//{
+		//	posMy.x = Pos.x -MapSize.x - GritSize;
+		//}
+		//if (Pos.x - MapSize.x - GritSize > posMy.x) // 左
+		//{
+		//	posMy.x = Pos.x + MapSize.x;
+		//}
+		//if (Pos.z + MapSize.z + GritSize < posMy.z) // 上
+		//{
+		//	posMy.z = Pos.z - MapSize.z;
+		//}
+		//if (Pos.z - MapSize.z > posMy.z) // 下
+		//{
+		//	posMy.z = Pos.z + MapSize.z + GritSize;
+		//}
 	}
 }
 

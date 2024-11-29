@@ -36,6 +36,7 @@
 #include "wall.h"
 #include "MapSystem.h"
 #include "ScrollDevice.h"
+#include "effect.h"
 
 //===========================================
 // ’è”’è‹`
@@ -728,6 +729,21 @@ void CDevil::CollisionOut()
 		//		EnemyPos.z += GritSize * 2;
 		//	}
 		//}
+
+		m_MinGrid.x = CMapSystem::GetInstance()->CalcGridX(m_DevilPos.x - MapSize.x - GritSize);	//¶
+		m_MinGrid.z = CMapSystem::GetInstance()->CalcGridZ(m_DevilPos.z + MapSize.z + GritSize);	//ã
+		m_MaxGrid.x = CMapSystem::GetInstance()->CalcGridX(m_DevilPos.x + MapSize.x - GritSize);	//‰E
+		m_MaxGrid.z = CMapSystem::GetInstance()->CalcGridZ(m_DevilPos.z - MapSize.z + GritSize);	//‰º
+
+		CEffect *Effect = CEffect::Create();
+		Effect->SetPos(CMapSystem::GetInstance()->GetGritPos(m_MinGrid));
+		//Effect->SetPos(D3DXVECTOR3(m_DevilPos.x - MapSize.x - GritSize, 0.0f, m_DevilPos.z + MapSize.z + GritSize));
+		Effect->SetRadius(50.0f);
+
+		Effect = CEffect::Create();
+		Effect->SetPos(CMapSystem::GetInstance()->GetGritPos(m_MaxGrid));
+		//Effect->SetPos(D3DXVECTOR3(m_DevilPos.x + MapSize.x - GritSize, 0.0f, m_DevilPos.z - MapSize.z + GritSize));
+		Effect->SetRadius(50.0f);
 
 		if (EnemyGrid.x == -1)
 		{
