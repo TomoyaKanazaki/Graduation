@@ -693,36 +693,51 @@ void CGame::SetBgObjTest(void)
 	// マップ移動装置
 	{
 		CScrollDevice* pScrollDevice = CScrollDevice::Create(SCROLL_DEVICE_MODEL, SCROLL_DEVICE_MODEL);
-		pScrollDevice->SetPos(D3DXVECTOR3(1800.0f, BOTTOM_FIELD_POS.y, -500.0f));
+		pScrollDevice->SetPos(D3DXVECTOR3(2300.0f, BOTTOM_FIELD_POS.y, 200.0f));
 
 		pScrollDevice = CScrollDevice::Create(SCROLL_DEVICE_MODEL, SCROLL_DEVICE_MODEL);
-		pScrollDevice->SetPos(D3DXVECTOR3(-1800.0f, BOTTOM_FIELD_POS.y, -500.0f));
+		pScrollDevice->SetPos(D3DXVECTOR3(-2300.0f, BOTTOM_FIELD_POS.y, 200.0f));
+	}
+
+	// ジャッキ
+	{
+		//CObjectX* pJack = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\jack.x");
+		//pJack->SetPos(D3DXVECTOR3(1300.0f, BOTTOM_FIELD_POS.y, 500.0f));
+		//pJack->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
+		//CObjectX* pPost = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\post.x");
+		//pPost->SetPos(D3DXVECTOR3(900.0f, BOTTOM_FIELD_POS.y, 500.0f));
+
+		//pJack = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\jack.x");
+		//pJack->SetPos(D3DXVECTOR3(1300.0f, BOTTOM_FIELD_POS.y, -500.0f));
+		//pJack->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
+		//pPost = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\post.x");
+		//pPost->SetPos(D3DXVECTOR3(900.0f, BOTTOM_FIELD_POS.y, -500.0f));
+
+		//pJack = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\jack.x");
+		//pJack->SetPos(D3DXVECTOR3(-1300.0f, BOTTOM_FIELD_POS.y, 500.0f));
+		//pJack->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
+		//pPost = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\post.x");
+		//pPost->SetPos(D3DXVECTOR3(-900.0f, BOTTOM_FIELD_POS.y, 500.0f));
+
+		//pJack = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\jack.x");
+		//pJack->SetPos(D3DXVECTOR3(-1300.0f, BOTTOM_FIELD_POS.y, -500.0f));
+		//pJack->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
+		//pPost = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\post.x");
+		//pPost->SetPos(D3DXVECTOR3(-900.0f, BOTTOM_FIELD_POS.y, -500.0f));
 	}
 
 	// ジャッキ
 	{
 		CObjectX* pJack = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\jack.x");
-		pJack->SetPos(D3DXVECTOR3(1300.0f, BOTTOM_FIELD_POS.y, 500.0f));
+		pJack->SetPos(D3DXVECTOR3(1300.0f, BOTTOM_FIELD_POS.y, 2750.0f));
 		pJack->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
 		CObjectX* pPost = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\post.x");
-		pPost->SetPos(D3DXVECTOR3(900.0f, BOTTOM_FIELD_POS.y, 500.0f));
+		pPost->SetPos(D3DXVECTOR3(900.0f, BOTTOM_FIELD_POS.y, 2750.0f));
 
 		pJack = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\jack.x");
-		pJack->SetPos(D3DXVECTOR3(1300.0f, BOTTOM_FIELD_POS.y, -500.0f));
-		pJack->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
-		pPost = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\post.x");
-		pPost->SetPos(D3DXVECTOR3(900.0f, BOTTOM_FIELD_POS.y, -500.0f));
-
-		pJack = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\jack.x");
-		pJack->SetPos(D3DXVECTOR3(-1300.0f, BOTTOM_FIELD_POS.y, 500.0f));
+		pJack->SetPos(D3DXVECTOR3(-1300.0f, BOTTOM_FIELD_POS.y, 2750.0f));
 		pJack->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
 		pPost = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\post.x");
-		pPost->SetPos(D3DXVECTOR3(-900.0f, BOTTOM_FIELD_POS.y, 500.0f));
-
-		pJack = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\jack.x");
-		pJack->SetPos(D3DXVECTOR3(-1300.0f, BOTTOM_FIELD_POS.y, -500.0f));
-		pJack->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
-		pPost = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\post.x");
-		pPost->SetPos(D3DXVECTOR3(-900.0f, BOTTOM_FIELD_POS.y, -500.0f));
+		pPost->SetPos(D3DXVECTOR3(-900.0f, BOTTOM_FIELD_POS.y, 2750.0f));
 	}
 }

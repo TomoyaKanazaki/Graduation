@@ -21,9 +21,6 @@ class CScore;
 //オブジェクトプレイヤークラス
 class CGamePlayer : public CPlayer
 {
-private:
-	static const int ENCOUNT_MAX = 128;
-
 public:
 	CGamePlayer(int nPriority = 2);
 	~CGamePlayer();
@@ -38,7 +35,9 @@ public:
 	void Death(void) override;
 
 private:
+
 	CMapSystem::GRID m_Grid;		// グリッドの情報
+	
 
 };
 
