@@ -208,9 +208,6 @@
     <ClCompile Include="source\scrollarrow.cpp">
       <Filter>ソース ファイル\05_UI_2D</Filter>
     </ClCompile>
-    <ClCompile Include="source\SlopeDevice.cpp">
-      <Filter>ソース ファイル\07_Map</Filter>
-    </ClCompile>
     <ClCompile Include="source\deltatime.cpp">
       <Filter>ソース ファイル\00_System</Filter>
     </ClCompile>
@@ -261,6 +258,9 @@
     </ClCompile>
     <ClCompile Include="source\signal.cpp">
       <Filter>ソース ファイル\06_UI_3D</Filter>
+    </ClCompile>
+    <ClCompile Include="source\ScrollDevice.cpp">
+      <Filter>ソース ファイル\07_Map</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -432,9 +432,6 @@
     <ClInclude Include="source\scrollarrow.h">
       <Filter>ソース ファイル\05_UI_2D</Filter>
     </ClInclude>
-    <ClInclude Include="source\SlopeDevice.h">
-      <Filter>ソース ファイル\07_Map</Filter>
-    </ClInclude>
     <ClInclude Include="source\deltatime.h">
       <Filter>ソース ファイル\00_System</Filter>
     </ClInclude>
@@ -488,6 +485,9 @@
     </ClInclude>
     <ClInclude Include="source\signal.h">
       <Filter>ソース ファイル\06_UI_3D</Filter>
+    </ClInclude>
+    <ClInclude Include="source\ScrollDevice.h">
+      <Filter>ソース ファイル\07_Map</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

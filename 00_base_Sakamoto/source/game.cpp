@@ -20,7 +20,7 @@
 #include "RailBlock.h"
 #include "RollRock.h"
 #include "bowabowa.h"
-#include "SlopeDevice.h"
+#include "ScrollDevice.h"
 #include "mask.h"
 #include "signal.h"
 #include "pause.h"

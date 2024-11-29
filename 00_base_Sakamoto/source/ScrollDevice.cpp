@@ -4,7 +4,7 @@
 //	Author:sakai minato
 //
 //============================================
-#include "SlopeDevice.h"
+#include "ScrollDevice.h"
 #include "renderer.h"
 #include "manager.h"
 #include "texture.h"
