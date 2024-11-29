@@ -33,7 +33,7 @@ namespace
 //====================================================================
 CObjectCharacter::CObjectCharacter(int nPriority) : CObject(nPriority),
 m_pShadow(nullptr),
-m_bUseShadow(false)
+m_bUseShadow(true)
 {
 	for (int nCnt = 0; nCnt < MODEL_NUM; nCnt++)
 	{

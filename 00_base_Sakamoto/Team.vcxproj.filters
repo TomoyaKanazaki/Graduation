@@ -262,6 +262,9 @@
     <ClCompile Include="source\ScrollDevice.cpp">
       <Filter>ソース ファイル\07_Map</Filter>
     </ClCompile>
+    <ClCompile Include="source\move.cpp">
+      <Filter>ソース ファイル\08_player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\debugproc.h">
@@ -488,6 +491,9 @@
     </ClInclude>
     <ClInclude Include="source\ScrollDevice.h">
       <Filter>ソース ファイル\07_Map</Filter>
+    </ClInclude>
+    <ClInclude Include="source\move.h">
+      <Filter>ソース ファイル\08_player</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
