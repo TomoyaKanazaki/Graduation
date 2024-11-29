@@ -237,7 +237,7 @@ void CMyEffekseer::Update(void)
 		m_EfkManager->SetRotation(Handle, rot.X, rot.Y, rot.Z);
 		m_EfkManager->SetScale(Handle, scale.X, scale.Y, scale.Z);
 
-#if 1 // 金崎のデバッグ用
+#if 0 // 金崎のデバッグ用
 		if (effect->GetEfkType() == TYPE_ACENTION)
 		{
 			DebugProc::Print(DebugProc::POINT_CENTER, "エフェクトの種類 : ");
