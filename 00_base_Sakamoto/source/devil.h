@@ -31,9 +31,6 @@ class CPlayer;
 //オブジェクトプレイヤークラス
 class CDevil : public CObjectCharacter
 {
-private:
-	static const int ENCOUNT_MAX = 128;
-
 public:
 	CDevil(int nPriority = 2);
 	~CDevil();
