@@ -24,6 +24,7 @@
     <ClCompile Include="source\bible.cpp" />
     <ClCompile Include="source\bowabowa.cpp" />
     <ClCompile Include="source\camera.cpp" />
+    <ClCompile Include="source\move.cpp" />
     <ClCompile Include="source\objectcharacter.cpp" />
     <ClCompile Include="source\cross.cpp" />
     <ClCompile Include="source\CubeBlock.cpp" />
@@ -103,6 +104,7 @@
     <ClInclude Include="source\bible.h" />
     <ClInclude Include="source\bowabowa.h" />
     <ClInclude Include="source\camera.h" />
+    <ClInclude Include="source\move.h" />
     <ClInclude Include="source\objectcharacter.h" />
     <ClInclude Include="source\cross.h" />
     <ClInclude Include="source\CubeBlock.h" />
