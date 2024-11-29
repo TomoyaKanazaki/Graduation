@@ -102,6 +102,9 @@ m_pEffect(nullptr)
 	m_Grid.x = 0;
 	m_Grid.z = 0;
 
+	m_SelectGrid.x = 0;
+	m_SelectGrid.z = 0;
+
 	m_nBugCounter = 0;
 }
 
@@ -232,6 +235,9 @@ void CEnemy::Update(void)
 	//壁の索敵判定
 	SearchWall(posMy);
 
+	//// ランダム移動
+	//MoveSelect();
+
 	// 状態の更新
 	StateManager(posMy);
 
@@ -241,7 +247,7 @@ void CEnemy::Update(void)
 	// 位置更新処理
 	UpdatePos(posMy,posOldMy,sizeMy);
 
-	//// プレイヤーへの最短経路探索
+	// プレイヤーへの最短経路探索
 	Coordinate();
 
 	// 最短系露をたどる
@@ -622,6 +628,8 @@ void CEnemy::MoveSelect()
 		{
 			m_SelectMove = SELECT_MOVE_DOWN;
 		}
+
+		m_SelectGrid = m_Grid;
 	}
 }
 
@@ -661,10 +669,11 @@ void CEnemy::SearchWall(D3DXVECTOR3& posMy)
 
 	DebugProc::Print(DebugProc::POINT_LEFT, "敵の位置 %f %f %f\n", MyGritPos.x, MyGritPos.y, MyGritPos.z);
 
-	if (posMy.x <= MyGritPos.x + ((MapGritSize * 0.5f) - GRIT_OK) &&
+	if ((posMy.x <= MyGritPos.x + ((MapGritSize * 0.5f) - GRIT_OK) &&
 		posMy.x >= MyGritPos.x - ((MapGritSize * 0.5f) - GRIT_OK) &&
 		posMy.z <= MyGritPos.z + ((MapGritSize * 0.5f) - GRIT_OK) &&
-		posMy.z >= MyGritPos.z - ((MapGritSize * 0.5f) - GRIT_OK))
+		posMy.z >= MyGritPos.z - ((MapGritSize * 0.5f) - GRIT_OK)) &&
+		(m_Grid.x != m_SelectGrid.x || m_Grid.z != m_SelectGrid.z))
 	{// グリットの中心位置に立っているなら操作を受け付ける
 
 		if (!m_OKR && OKR)
