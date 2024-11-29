@@ -9,6 +9,7 @@
 
 #include "main.h"
 #include "object.h"
+#include "MapSystem.h"
 
 //オブジェクトメッシュフィールドクラス
 class CObjmeshField : public CObject
@@ -17,7 +18,7 @@ public:
 	CObjmeshField(int nPriority = 3);
 	~CObjmeshField();
 
-	static CObjmeshField* Create(int vtxWidth, int vtxHeight);
+	static CObjmeshField* Create(CMapSystem::GRID& grid);
 
 	virtual HRESULT Init(void);
 	virtual void Uninit(void);

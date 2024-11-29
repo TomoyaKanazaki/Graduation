@@ -1,21 +1,21 @@
 //============================================
 //
-//	傾き装置の処理 [SlopeDevice.h]
+//	マップ移動装置の処理 [ScrollDevice.h]
 //	Author:sakai minato
 //
 //============================================
-#ifndef _SLOPE_DEVICE_H_
-#define _SLOPE_DEVICE_H_
+#ifndef _SCROLL_DEVICE_H_
+#define _SCROLL_DEVICE_H_
 
 #include "objectcharacter.h"
 
-//オブジェクトプレイヤークラス
-class CSlopeDevice : public CObjectCharacter
+// マップ移動装置クラス
+class CScrollDevice : public CObjectCharacter
 {
 public:
 
-	CSlopeDevice(int nPriority = 3);
-	~CSlopeDevice();
+	CScrollDevice(int nPriority = 3);
+	~CScrollDevice();
 
 	// 状態
 	enum STATE
@@ -42,15 +42,17 @@ public:
 		SETUP_TYPE_MAX,				// 最大
 	};
 
-	static CSlopeDevice* Create(const char* pModelNameSlopeDevice, const char* pModelNameEnemy);
+	static CScrollDevice* Create(const char* pModelNameSlopeDevice, const char* pModelNameEnemy);
 
 	HRESULT Init(void);
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);
 
+	void SetState(STATE state) { m_State = state; }
+
 	// 静的メンバ関数
-	static CListManager<CSlopeDevice>* GetList(void); // リスト取得
+	static CListManager<CScrollDevice>* GetList(void); // リスト取得
 
 private:
 	HRESULT InitModel(const char* pModelNameSlopeDevice, const char* pModelNameEnemy);
@@ -62,10 +64,10 @@ private:
 	int m_nStateCount;				//状態管理用変数
 
 	// 静的メンバ変数
-	static CListManager<CSlopeDevice>* m_pList; // オブジェクトリスト
+	static CListManager<CScrollDevice>* m_pList; // オブジェクトリスト
 
 	// メンバ変数
-	CListManager<CSlopeDevice>::AIterator m_iterator; // イテレーター
+	CListManager<CScrollDevice>::AIterator m_iterator; // イテレーター
 
 };
 #endif

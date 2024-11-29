@@ -24,6 +24,7 @@
     <ClCompile Include="source\bible.cpp" />
     <ClCompile Include="source\bowabowa.cpp" />
     <ClCompile Include="source\camera.cpp" />
+    <ClCompile Include="source\move.cpp" />
     <ClCompile Include="source\objectcharacter.cpp" />
     <ClCompile Include="source\cross.cpp" />
     <ClCompile Include="source\CubeBlock.cpp" />
@@ -80,10 +81,10 @@
     <ClCompile Include="source\Scene.cpp" />
     <ClCompile Include="source\score.cpp" />
     <ClCompile Include="source\scrollarrow.cpp" />
+    <ClCompile Include="source\ScrollDevice.cpp" />
     <ClCompile Include="source\select.cpp" />
     <ClCompile Include="source\shadow.cpp" />
     <ClCompile Include="source\signal.cpp" />
-    <ClCompile Include="source\SlopeDevice.cpp" />
     <ClCompile Include="source\slowManager.cpp" />
     <ClCompile Include="source\softcream.cpp" />
     <ClCompile Include="source\sound.cpp" />
@@ -103,6 +104,7 @@
     <ClInclude Include="source\bible.h" />
     <ClInclude Include="source\bowabowa.h" />
     <ClInclude Include="source\camera.h" />
+    <ClInclude Include="source\move.h" />
     <ClInclude Include="source\objectcharacter.h" />
     <ClInclude Include="source\cross.h" />
     <ClInclude Include="source\CubeBlock.h" />
@@ -159,10 +161,10 @@
     <ClInclude Include="source\Scene.h" />
     <ClInclude Include="source\score.h" />
     <ClInclude Include="source\scrollarrow.h" />
+    <ClInclude Include="source\ScrollDevice.h" />
     <ClInclude Include="source\select.h" />
     <ClInclude Include="source\shadow.h" />
     <ClInclude Include="source\signal.h" />
-    <ClInclude Include="source\SlopeDevice.h" />
     <ClInclude Include="source\slowManager.h" />
     <ClInclude Include="source\softcream.h" />
     <ClInclude Include="source\sound.h" />

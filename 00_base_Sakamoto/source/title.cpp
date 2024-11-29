@@ -89,17 +89,17 @@ HRESULT CTitle::Init(void)
 
 	CTexture *pTexture = CManager::GetInstance()->GetTexture();
 
-	// スカイドーム
-	m_pMeshDome = CObjmeshDome::Create();
-	if (m_pMeshDome)
-	{
-		//m_pMeshDome->SetTexture("data\\TEXTURE\\sky.jpg");
-	}
+	//// スカイドーム
+	//m_pMeshDome = CObjmeshDome::Create();
+	//if (m_pMeshDome)
+	//{
+	//	//m_pMeshDome->SetTexture("data\\TEXTURE\\sky.jpg");
+	//}
 
-	// メッシュフィールド
-	CObjmeshField* pMeshField = CObjmeshField::Create(21, 21);
-	pMeshField->SetPos(INITVECTOR3);
-	//pMeshField->SetTexture("data\\TEXTURE\\field00.jpg");
+	//// メッシュフィールド
+	//CObjmeshField* pMeshField = CObjmeshField::Create(21, 21);
+	//pMeshField->SetPos(INITVECTOR3);
+	////pMeshField->SetTexture("data\\TEXTURE\\field00.jpg");
 
 	// タイトル文字
 	m_pLogo = CObject2D::Create();

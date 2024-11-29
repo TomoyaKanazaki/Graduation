@@ -109,7 +109,7 @@ void CGamePlayer::Death(void)
 	// 昇天エフェクト
 	D3DXMATRIX mat = *GetUseMultiMatrix();
 	D3DXVECTOR3 ef = useful::CalcMatrix(GetPos(), GetRot(), mat);
-	MyEffekseer::EffectCreate(CMyEffekseer::TYPE_ACENTION, false, ef, GetRot());
+	MyEffekseer::EffectCreate(CMyEffekseer::TYPE_ACENTION, false, ef, GetRot(), D3DXVECTOR3(100.0f, 100.0f, 100.0f));
 
 	if (GetState() != STATE_EGG && GetState() != STATE_DEATH)
 	{

@@ -25,6 +25,7 @@
 #include "DevilHole.h"
 #include "objmeshField.h"
 #include "sound.h"
+#include "wall.h"
 
 #include "enemyBonbon.h"
 #include "enemyMedaman.h"
@@ -49,7 +50,7 @@ namespace
 		3.0f,
 		1.0f
 	};
-	const float TARGET_DIFF = 5.0f; // 許容範囲
+	const float TARGET_DIFF = 10.0f; // 許容範囲
 	const float MOVE_ASTAR = 150.0f; // 追跡時の移動速度
 
 	const CMyEffekseer::TYPE EFFECT_TYPE[] = // 経路探索を行う間隔
@@ -248,10 +249,10 @@ void CEnemy::Update(void)
 	UpdatePos(posMy,posOldMy,sizeMy);
 
 	// プレイヤーへの最短経路探索
-	Coordinate();
+	//Coordinate();
 
-	// 最短系露をたどる
-	Route();
+	//// 最短経路をたどる
+	//Route();
 
 	// 自分の番号を設定
 	m_Grid = CMapSystem::GetInstance()->CMapSystem::CalcGrid(posMy);
@@ -363,7 +364,7 @@ void CEnemy::UpdatePos(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR3& s
 	posMy.y += m_Objmove.y * CManager::GetInstance()->GetGameSpeed() * fSpeed;
 
 	// 壁との当たり判定
-	CollisionWall(posMy,posOldMy,sizeMy,useful::COLLISION_Y);
+	//CollisionWall(posMy,posOldMy,sizeMy,useful::COLLISION_Y);
 	CollisionDevilHole(useful::COLLISION_Y);
 
 	//X軸の位置更新
@@ -371,7 +372,7 @@ void CEnemy::UpdatePos(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR3& s
 	posMy.x += m_Objmove.x * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeX(m_move.x);
 
 	// 壁との当たり判定
-	CollisionWall(posMy, posOldMy, sizeMy, useful::COLLISION_X);
+	//CollisionWall(posMy, posOldMy, sizeMy, useful::COLLISION_X);
 	CollisionDevilHole(useful::COLLISION_X);
 
 	//Z軸の位置更新
@@ -379,7 +380,7 @@ void CEnemy::UpdatePos(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR3& s
 	posMy.z += m_Objmove.z * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeZ(m_move.z);
 
 	// 壁との当たり判定
-	CollisionWall(posMy, posOldMy, sizeMy, useful::COLLISION_Z);
+	//CollisionWall(posMy, posOldMy, sizeMy, useful::COLLISION_Z);
 	CollisionDevilHole(useful::COLLISION_Z);
 
 	//ステージ外との当たり判定
@@ -409,17 +410,17 @@ void CEnemy::Rot(D3DXVECTOR3& rotMy)
 //====================================================================
 void CEnemy::CollisionWall(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR3& size,useful::COLLISION XYZ)
 {
-	// キューブブロックのリスト構造が無ければ抜ける
-	if (CCubeBlock::GetList() == nullptr) { return; }
-	std::list<CCubeBlock*> list = CCubeBlock::GetList()->GetList();    // リストを取得
+	// 壁のリスト構造が無ければ抜ける
+	if (CWall::GetList() == nullptr) { return; }
+	std::list<CWall*> list = CWall::GetList()->GetList();    // リストを取得
 
-	// キューブブロックリストの中身を確認する
-	for (CCubeBlock* pCubeBlock : list)
+	// 壁リストの中身を確認する
+	for (CWall* pWall : list)
 	{
-		D3DXVECTOR3 pos = pCubeBlock->GetPos();
-		D3DXVECTOR3 posOld = pCubeBlock->GetPosOld();
-		D3DXVECTOR3 Move = pCubeBlock->GetMove();
-		D3DXVECTOR3 Size = pCubeBlock->GetSize();
+		D3DXVECTOR3 pos = pWall->GetPos();
+		D3DXVECTOR3 posOld = pWall->GetPosOld();
+		D3DXVECTOR3 Move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		D3DXVECTOR3 Size = pWall->GetSize();
 		bool bNullJump;
 
 		// 矩形の当たり判定
@@ -634,7 +635,7 @@ void CEnemy::MoveSelect()
 }
 
 //====================================================================
-// 壁との当たり判定
+// 壁の索敵判定
 //====================================================================
 void CEnemy::SearchWall(D3DXVECTOR3& posMy)
 {

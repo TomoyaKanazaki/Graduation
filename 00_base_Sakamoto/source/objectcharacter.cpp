@@ -32,7 +32,8 @@ namespace
 //コンストラクタ
 //====================================================================
 CObjectCharacter::CObjectCharacter(int nPriority) : CObject(nPriority),
-m_pShadow(nullptr)
+m_pShadow(nullptr),
+m_bUseShadow(true)
 {
 	for (int nCnt = 0; nCnt < MODEL_NUM; nCnt++)
 	{
@@ -86,7 +87,7 @@ HRESULT CObjectCharacter::Init(const char* pModelName)
 		m_pMotion->LoadData(pModelName);
 	}
 
-	if (m_pShadow == nullptr)
+	if (m_pShadow == nullptr && m_bUseShadow)
 	{// 影生成
 		m_pShadow = CShadow::Create(m_pos, D3DXVECTOR3(SHADOW_SIZE, 0.0f, SHADOW_SIZE));
 	}

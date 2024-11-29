@@ -35,6 +35,7 @@
 #include "tile.h"
 #include "wall.h"
 #include "MapSystem.h"
+#include "ScrollDevice.h"
 
 //===========================================
 // 定数定義
@@ -132,6 +133,9 @@ HRESULT CDevil::Init(void)
 	//種類設定
 	SetType(CObject::TYPE_DEVIL);
 
+	// 影を不使用に設定
+	SetShadow(false);
+
 	// キャラクターテキストの設定処理
 	CObjectCharacter::Init("data\\TXT\\MOTION\\01_enemy\\motion_devil.txt");
 	
@@ -206,6 +210,7 @@ void CDevil::Update(void)
 	D3DXVECTOR3 posOldMy = GetPosOld();		// 前回の位置
 	D3DXVECTOR3 rotMy = GetRot();			// 向き
 	D3DXVECTOR3 sizeMy = GetSize();			// 大きさ
+
 	// 過去の位置に代入
 	posOldMy = posMy;
 
@@ -267,6 +272,12 @@ void CDevil::Update(void)
 
 	DebugProc::Print(DebugProc::POINT_RIGHT, "[最小番号]左 %d : 上 %d\n", m_MinGrid.x, m_MinGrid.z);
 	DebugProc::Print(DebugProc::POINT_RIGHT, "[最大番号]右 %d : 下 %d\n", m_MaxGrid.x, m_MaxGrid.z);
+
+	// 値更新
+	SetPos(posMy);			// 位置
+	SetPosOld(posOldMy);	// 前回の位置
+	SetRot(rotMy);			// 向き
+	SetSize(sizeMy);		// 大きさ
 }
 
 //====================================================================
@@ -884,6 +895,17 @@ void CDevil::StateManager(void)
 				}
 				m_ScrollArrowOld = m_DevilArrow;
 				m_nStateNum = m_DevilArrow;
+
+				// マップ移動装置のリスト構造が無ければ抜ける
+				if (CScrollDevice::GetList() == nullptr) { return; }
+				std::list<CScrollDevice*> list = CScrollDevice::GetList()->GetList();    // リストを取得
+
+				// マップ移動装置のリストの中身を確認する
+				for (CScrollDevice* pScrollDevice : list)
+				{
+					// 回転状態に変更
+					pScrollDevice->SetState(CScrollDevice::STATE_ROTATE);
+				}
 			}
 
 			for (int nCnt = 0; nCnt < 2; nCnt++)
@@ -940,6 +962,17 @@ void CDevil::StateManager(void)
 		{
 			m_State = STATE_WAIT;
 			m_nStateCount = 120;
+
+			// マップ移動装置のリスト構造が無ければ抜ける
+			if (CScrollDevice::GetList() == nullptr) { return; }
+			std::list<CScrollDevice*> list = CScrollDevice::GetList()->GetList();    // リストを取得
+
+			// マップ移動装置のリストの中身を確認する
+			for (CScrollDevice* pScrollDevice : list)
+			{
+				// 通常状態に変更
+				pScrollDevice->SetState(CScrollDevice::STATE_NORMAL);
+			}
 		}
 
 		break;

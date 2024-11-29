@@ -1,10 +1,10 @@
 //============================================
 //
-//	傾き装置の処理 [SlopeDevice.cpp]
+//	マップ移動装置の処理 [ScrollDevice.cpp]
 //	Author:sakai minato
 //
 //============================================
-#include "SlopeDevice.h"
+#include "ScrollDevice.h"
 #include "renderer.h"
 #include "manager.h"
 #include "texture.h"
@@ -29,12 +29,12 @@ namespace
 //====================================================================
 //静的メンバ変数宣言
 //====================================================================
-CListManager<CSlopeDevice>* CSlopeDevice::m_pList = nullptr; // オブジェクトリスト
+CListManager<CScrollDevice>* CScrollDevice::m_pList = nullptr; // オブジェクトリスト
 
 //====================================================================
 //コンストラクタ
 //====================================================================
-CSlopeDevice::CSlopeDevice(int nPriority) : CObjectCharacter(nPriority)
+CScrollDevice::CScrollDevice(int nPriority) : CObjectCharacter(nPriority)
 {
 	m_State = STATE(0);
 	m_nStateCount = 0;
@@ -43,7 +43,7 @@ CSlopeDevice::CSlopeDevice(int nPriority) : CObjectCharacter(nPriority)
 //====================================================================
 //デストラクタ
 //====================================================================
-CSlopeDevice::~CSlopeDevice()
+CScrollDevice::~CScrollDevice()
 {
 
 }
@@ -51,10 +51,10 @@ CSlopeDevice::~CSlopeDevice()
 //====================================================================
 //生成処理
 //====================================================================
-CSlopeDevice* CSlopeDevice::Create(const char* pModelNameSlopeDevice, const char* pModelNameEnemy)
+CScrollDevice* CScrollDevice::Create(const char* pModelNameSlopeDevice, const char* pModelNameEnemy)
 {
 	// オブジェクトの生成処理
-	CSlopeDevice* pInstance = new CSlopeDevice();
+	CScrollDevice* pInstance = new CScrollDevice();
 
 	// オブジェクトの初期化処理
 	if (FAILED(pInstance->Init()))
@@ -74,7 +74,7 @@ CSlopeDevice* CSlopeDevice::Create(const char* pModelNameSlopeDevice, const char
 //====================================================================
 //初期化処理
 //====================================================================
-HRESULT CSlopeDevice::Init(void)
+HRESULT CScrollDevice::Init(void)
 {
 	SetType(CObject::TYPE_DEVILHOLE);
 
@@ -95,7 +95,7 @@ HRESULT CSlopeDevice::Init(void)
 
 	if (m_pList == nullptr)
 	{// リストマネージャー生成
-		m_pList = CListManager<CSlopeDevice>::Create();
+		m_pList = CListManager<CScrollDevice>::Create();
 		if (m_pList == nullptr) { assert(false); return E_FAIL; }
 	}
 
@@ -108,7 +108,7 @@ HRESULT CSlopeDevice::Init(void)
 //====================================================================
 //終了処理
 //====================================================================
-void CSlopeDevice::Uninit(void)
+void CScrollDevice::Uninit(void)
 {
 	// リストから自身のオブジェクトを削除
 	m_pList->DelList(m_iterator);
@@ -127,7 +127,7 @@ void CSlopeDevice::Uninit(void)
 //====================================================================
 //更新処理
 //====================================================================
-void CSlopeDevice::Update(void)
+void CScrollDevice::Update(void)
 {
 	// 値を取得
 	D3DXVECTOR3 posMy = GetPos();			// 位置
@@ -154,7 +154,7 @@ void CSlopeDevice::Update(void)
 //====================================================================
 //描画処理
 //====================================================================
-void CSlopeDevice::Draw(void)
+void CScrollDevice::Draw(void)
 {
 	// キャラクタークラスの描画（継承）
 	CObjectCharacter::Draw();
@@ -163,7 +163,7 @@ void CSlopeDevice::Draw(void)
 //====================================================================
 // モデル関連の初期化処理
 //====================================================================
-HRESULT CSlopeDevice::InitModel(const char* pModelNameSlopeDevice, const char* pModelNameEnemy)
+HRESULT CScrollDevice::InitModel(const char* pModelNameSlopeDevice, const char* pModelNameEnemy)
 {
 	CObjectCharacter::SetTxtCharacter(pModelNameSlopeDevice);
 
@@ -173,7 +173,7 @@ HRESULT CSlopeDevice::InitModel(const char* pModelNameSlopeDevice, const char* p
 //====================================================================
 //状態管理
 //====================================================================
-void CSlopeDevice::StateManager(D3DXVECTOR3& rotMy)
+void CScrollDevice::StateManager(D3DXVECTOR3& rotMy)
 {
 	switch (m_State)
 	{
@@ -196,7 +196,7 @@ void CSlopeDevice::StateManager(D3DXVECTOR3& rotMy)
 //====================================================================
 // 回転処理
 //====================================================================
-void CSlopeDevice::Rotate(D3DXVECTOR3& rotMy,int nNldxModel,D3DXVECTOR3 rotate)
+void CScrollDevice::Rotate(D3DXVECTOR3& rotMy,int nNldxModel,D3DXVECTOR3 rotate)
 {
 	// モデルの取得
 	CModel* pModel = GetModel(nNldxModel);
@@ -220,6 +220,9 @@ void CSlopeDevice::Rotate(D3DXVECTOR3& rotMy,int nNldxModel,D3DXVECTOR3 rotate)
 		rot -= rotate;
 	}
 
+	// 角度の正規化
+	useful::NormalizeAngle(&rot);
+
 	// モデルの回転設定
 	pModel->SetStartRot(rot);
 }
@@ -227,7 +230,7 @@ void CSlopeDevice::Rotate(D3DXVECTOR3& rotMy,int nNldxModel,D3DXVECTOR3 rotate)
 //====================================================================
 //リスト取得
 //====================================================================
-CListManager<CSlopeDevice>* CSlopeDevice::GetList(void)
+CListManager<CScrollDevice>* CScrollDevice::GetList(void)
 {
 	return m_pList;
 }

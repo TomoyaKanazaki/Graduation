@@ -54,7 +54,7 @@ CObjmeshField::~CObjmeshField()
 //====================================================================
 //生成処理
 //====================================================================
-CObjmeshField* CObjmeshField::Create(int vtxWidth, int vtxHeight)
+CObjmeshField* CObjmeshField::Create(CMapSystem::GRID& grid)
 {
 	CObjmeshField* pObject3D = nullptr;
 
@@ -67,7 +67,7 @@ CObjmeshField* CObjmeshField::Create(int vtxWidth, int vtxHeight)
 	if (pObject3D != nullptr)
 	{
 		// 頂点数の設定
-		pObject3D->SetVtxSize(vtxWidth, vtxHeight);
+		pObject3D->SetVtxSize(grid.x, grid.z);
 	}
 
 	//オブジェクトの初期化処理
@@ -312,13 +312,13 @@ void CObjmeshField::Draw(void)
 	//テクスチャの設定
 	m_pDevice->SetTexture(0, pTexture->GetAddress(GetIdx()));
 
-	////ポリゴンの描画
-	//m_pDevice->DrawIndexedPrimitive(D3DPT_TRIANGLESTRIP,
-	//	0,
-	//	0,
-	//	0,//用意した頂点の数
-	//	0,
-	//	(m_vtxWidth * m_vtxHeight + m_vtxWidth * (m_vtxHeight - 2) + 2 * (m_vtxHeight - 2)) - 2);//描画するプリミティブの数
+	//ポリゴンの描画
+	m_pDevice->DrawIndexedPrimitive(D3DPT_TRIANGLESTRIP,
+		0,
+		0,
+		0,//用意した頂点の数
+		0,
+		(m_vtxWidth * m_vtxHeight + m_vtxWidth * (m_vtxHeight - 2) + 2 * (m_vtxHeight - 2)) - 2);//描画するプリミティブの数
 }
 
 //====================================================================
