@@ -242,10 +242,10 @@ void CEnemy::Update(void)
 	// 位置更新処理
 	UpdatePos(posMy,posOldMy,sizeMy);
 
-	//// プレイヤーへの最短経路探索
+	// プレイヤーへの最短経路探索
 	Coordinate();
 
-	// 最短系露をたどる
+	// 最短経路をたどる
 	Route();
 
 	// 自分の番号を設定
