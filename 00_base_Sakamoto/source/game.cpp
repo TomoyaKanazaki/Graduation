@@ -169,6 +169,7 @@ HRESULT CGame::Init(void)
 	//è∞ÇÃê∂ê¨
 	m_pMapField = CObjmeshField::Create(nMapWightMax -1, nMapHeigtMax - 1);
 	m_pMapField->SetPos(INITVECTOR3);
+	m_pMapField->SetAppear(false); // ï`âÊÇÉIÉt
 
 	// â∫è∞ÇÃê∂ê¨
 	CObjmeshField* pBottonField = CObjmeshField::Create(BOTTOM_FIELD_VTX_WIDTH, BOTTOM_FIELD_VTX_HEIGHT);
