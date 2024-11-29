@@ -9,7 +9,7 @@
 
 #include "objectcharacter.h"
 
-//オブジェクトプレイヤークラス
+// オブジェクトプレイヤークラス
 class CSlopeDevice : public CObjectCharacter
 {
 public:
@@ -48,6 +48,8 @@ public:
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);
+
+	void SetState(STATE state) { m_State = state; }
 
 	// 静的メンバ関数
 	static CListManager<CSlopeDevice>* GetList(void); // リスト取得

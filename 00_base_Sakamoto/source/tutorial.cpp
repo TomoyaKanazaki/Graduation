@@ -107,12 +107,9 @@ HRESULT CTutorial::Init(void)
 
 	CMapSystem::GetInstance()->Init();
 
-	//マップのグリットの最大値を取得
-	int nMapWightMax = CMapSystem::GetInstance()->GetWightMax();
-	int nMapHeigtMax = CMapSystem::GetInstance()->GetHeightMax();
-
 	//床の生成
-	m_pMapField = CObjmeshField::Create(nMapWightMax - 1, nMapHeigtMax - 1);
+	auto grid = CMapSystem::GetInstance()->GetMapGrid();
+	m_pMapField = CObjmeshField::Create(grid);
 	m_pMapField->SetPos(INITVECTOR3);
 
 	//// 下床の生成

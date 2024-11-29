@@ -217,7 +217,7 @@ void CObjmeshRing::Update(void)
 	CPlayer *pPlayer = CGame::GetInstance()->GetPlayer(0);
 
 	//ダメージウェーブとプレイヤーの当たり判定
-	if (CollisionRing(pPlayer->GetPos(), m_pos, m_Radius + 15.0f, m_Radius - m_Radius * 0.1f, 0.0f, pPlayer->GetHeight()) == true)
+	if (CollisionRing(pPlayer->GetPos(), m_pos, m_Radius + 15.0f, m_Radius - m_Radius * 0.1f, 0.0f, pPlayer->GetSize().y) == true)
 	{
 		//pPlayer->HitDamage(50.0f);
 	}
