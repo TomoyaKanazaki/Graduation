@@ -242,11 +242,11 @@ void CEnemy::Update(void)
 	// ˆÊ’uXVˆ—
 	UpdatePos(posMy,posOldMy,sizeMy);
 
-	// ƒvƒŒƒCƒ„[‚Ö‚ÌÅ’ZŒo˜H’Tõ
-	Coordinate();
+	//// ƒvƒŒƒCƒ„[‚Ö‚ÌÅ’ZŒo˜H’Tõ
+	//Coordinate();
 
-	// Å’ZŒo˜H‚ð‚½‚Ç‚é
-	Route();
+	//// Å’ZŒo˜H‚ð‚½‚Ç‚é
+	//Route();
 
 	// Ž©•ª‚Ì”Ô†‚ðÝ’è
 	m_Grid = CMapSystem::GetInstance()->CMapSystem::CalcGrid(posMy);
