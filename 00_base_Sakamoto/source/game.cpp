@@ -169,6 +169,7 @@ HRESULT CGame::Init(void)
 	//床の生成
 	m_pMapField = CObjmeshField::Create(nMapWightMax -1, nMapHeigtMax - 1);
 	m_pMapField->SetPos(INITVECTOR3);
+	m_pMapField->SetAppear(false); // 描画をオフ
 
 	// 下床の生成
 	CObjmeshField* pBottonField = CObjmeshField::Create(BOTTOM_FIELD_VTX_WIDTH, BOTTOM_FIELD_VTX_HEIGHT);
@@ -182,9 +183,7 @@ HRESULT CGame::Init(void)
 	m_pDevil->SetScrollType((CDevil::SCROLL_TYPE)(CManager::GetInstance()->GetScrollType()));
 
 	//レールブロックの生成
-	LoadStageRailBlock("data\\TXT\\STAGE\\RailBlock.txt");
-
-	//CDevilHole* pDevilHole = nullptr;
+	//LoadStageRailBlock("data\\TXT\\STAGE\\RailBlock.txt");
 
 	//ステージの読み込み
 	switch (CManager::GetInstance()->GetStage())
@@ -221,7 +220,7 @@ HRESULT CGame::Init(void)
 		break;
 
 	case 1:
-		CMapSystem::Load("data\\TXT\\STAGE\\map00.csv");
+		CMapSystem::Load("data\\TXT\\STAGE\\map01.csv");
 
 		// 聖書生成
 		CItem::Create(CItem::TYPE_BIBLE, CMapSystem::GRID(BIBLE_OUTGRIT - 1, BIBLE_OUTGRIT - 1));
@@ -236,7 +235,6 @@ HRESULT CGame::Init(void)
 	{
 		//プレイヤーの生成
 		m_pPlayer[0] = CGamePlayer::Create(0);
-		//m_pMask->SetColor();
 	}
 	else if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
 	{
@@ -251,11 +249,6 @@ HRESULT CGame::Init(void)
 		//プレイヤーの生成
 		m_pPlayer[0] = CGamePlayer::Create(0);
 	}
-
-	//転がる岩の生成
-	/*CRollRock *pRock = CRollRock::Create("data\\MODEL\\BlockTest.x");
-	D3DXVECTOR3 RockPos = CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(16, 2));
-	pRock->SetPos(D3DXVECTOR3(RockPos.x, 50.0f, RockPos.z));*/
 
 	return S_OK;
 }
