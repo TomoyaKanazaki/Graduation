@@ -220,6 +220,9 @@ void CSlopeDevice::Rotate(D3DXVECTOR3& rotMy,int nNldxModel,D3DXVECTOR3 rotate)
 		rot -= rotate;
 	}
 
+	// Šp“x‚Ì³‹K‰»
+	useful::NormalizeAngle(&rot);
+
 	// ƒ‚ƒfƒ‹‚Ì‰ñ“]Ý’è
 	pModel->SetStartRot(rot);
 }

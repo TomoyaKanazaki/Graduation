@@ -34,6 +34,7 @@
 #include "Scene.h"
 #include "tile.h"
 #include "wall.h"
+#include "SlopeDevice.h"
 
 //===========================================
 // 定数定義
@@ -890,6 +891,17 @@ void CDevil::StateManager(void)
 				}
 				m_ScrollArrowOld = m_DevilArrow;
 				m_nStateNum = m_DevilArrow;
+
+				// 傾き装置のリスト構造が無ければ抜ける
+				if (CSlopeDevice::GetList() == nullptr) { return; }
+				std::list<CSlopeDevice*> list = CSlopeDevice::GetList()->GetList();    // リストを取得
+
+				// 傾き装置のリストの中身を確認する
+				for (CSlopeDevice* pSlopeDevice : list)
+				{
+					// 回転状態に変更
+					pSlopeDevice->SetState(CSlopeDevice::STATE_ROTATE);
+				}
 			}
 
 			for (int nCnt = 0; nCnt < 2; nCnt++)
@@ -946,6 +958,17 @@ void CDevil::StateManager(void)
 		{
 			m_State = STATE_WAIT;
 			m_nStateCount = 120;
+
+			// 傾き装置のリスト構造が無ければ抜ける
+			if (CSlopeDevice::GetList() == nullptr) { return; }
+			std::list<CSlopeDevice*> list = CSlopeDevice::GetList()->GetList();    // リストを取得
+
+			// 傾き装置のリストの中身を確認する
+			for (CSlopeDevice* pSlopeDevice : list)
+			{
+				// 通常状態に変更
+				pSlopeDevice->SetState(CSlopeDevice::STATE_NORMAL);
+			}
 		}
 
 		break;
