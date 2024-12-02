@@ -103,6 +103,8 @@ void CGamePlayer::Death(void)
 {
 	if (GetState() != STATE_EGG && GetState() != STATE_DEATH)
 	{
+		CPlayer::Death();
+
 		// 昇天エフェクト
 		D3DXMATRIX mat = *GetUseMultiMatrix();
 		D3DXVECTOR3 ef = useful::CalcMatrix(GetPos(), GetRot(), mat);

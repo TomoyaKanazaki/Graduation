@@ -36,6 +36,7 @@
 #include "score.h"
 #include "mask.h"
 #include "wall.h"
+#include "objectBillboard.h"
 
 #include "MyEffekseer.h"
 
@@ -112,7 +113,8 @@ m_pShadow(nullptr),
 m_pScore(nullptr),
 m_nTime(0),
 m_pEffectEgg(nullptr),
-m_pEffectSpeed(nullptr)
+m_pEffectSpeed(nullptr),
+m_pP_NumUI(nullptr)
 {
 
 }
@@ -153,9 +155,9 @@ HRESULT CPlayer::Init(int PlayNumber)
 {
 	// 値を取得
 	D3DXVECTOR3 posThis = GetPos();			// 位置
-	D3DXVECTOR3 posOldThis = GetPosOld();		// 前回の位置
+	D3DXVECTOR3 posOldThis = GetPosOld();	// 前回の位置
 	D3DXVECTOR3 rotThis = GetRot();			// 向き
-	D3DXVECTOR3 sizeThis = GetSize();			// 大きさ
+	D3DXVECTOR3 sizeThis = GetSize();		// 大きさ
 
 	CMapSystem* pMapSystem = CMapSystem::GetInstance();		// マップシステムの情報
 
@@ -188,62 +190,27 @@ HRESULT CPlayer::Init(int PlayNumber)
 	SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
 
 	// キャラクターテキスト読み込み処理
-	CObjectCharacter::Init("data\\TXT\\motion_tamagon1P.txt");
+	switch (m_nPlayNumber)
+	{
+	case 0:
+		CObjectCharacter::Init("data\\TXT\\motion_tamagon1P.txt");
+		break;
+
+	case 1:
+		CObjectCharacter::Init("data\\TXT\\motion_tamagon2P.txt");
+		break;
+	}
 
 	// キャラクターのマトリックス設定
 	CObjectCharacter::SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
 	CObjectCharacter::SetUseStencil(true);
 	CObjectCharacter::SetUseShadowMtx(true);
 
-	if (m_pLifeUi == nullptr)
-	{
-		m_pLifeUi = CLifeUi::Create();
-	}
+	//所持するUIの生成
+	UI_Create();
 
-	if (m_pScore == nullptr)
-	{
-		m_pScore = CScore::Create();
-	}
-
-	switch (m_nPlayNumber)
-	{
-	case 0:
-		if (m_pLifeUi != nullptr)
-		{
-			// 数字の位置
-			m_pLifeUi->GetNumber()->SetPos(D3DXVECTOR3(LIFE_POS00.x + 200.0f, LIFE_POS00.y, LIFE_POS00.z));
-
-			// 体力
-			m_pLifeUi->SetPos(LIFE_POS00);
-			m_pLifeUi->GetNumber()->SetNumber(m_nLife);
-		}
-		
-		if (m_pScore != nullptr)
-		{
-			m_pScore->SetPos(D3DXVECTOR3(50.0f, 40.0f, 0.0f));
-		}
-
-		break;
-
-	case 1:
-
-		if (m_pLifeUi != nullptr)
-		{
-			// 数字の位置
-			m_pLifeUi->GetNumber()->SetPos(D3DXVECTOR3(LIFE_POS01.x + 200.0f, LIFE_POS01.y, LIFE_POS01.z));
-
-			// 体力
-			m_pLifeUi->SetPos(LIFE_POS01);
-			m_pLifeUi->GetNumber()->SetNumber(m_nLife);
-		}
-
-		if (m_pScore != nullptr)
-		{
-			m_pScore->SetPos(D3DXVECTOR3(1050.0f, 40.0f, 0.0f));
-		}
-
-		break;
-	}
+	//所持するUIの初期化
+	UI_Init();
 
 	// アイテム状態を設定
 	SetItemType(CPlayer::TYPE_NONE);
@@ -378,6 +345,16 @@ void CPlayer::Update(void)
 		{
 			//画面外判定
 			CollisionStageOut(posThis);
+
+			if (m_pP_NumUI != nullptr)
+			{
+				m_pP_NumUI->SetPos(D3DXVECTOR3(
+					posThis.x,
+					posThis.y + 50.0f,
+					posThis.z + 50.0f));
+
+				m_pP_NumUI->SetAppear(true);
+			}
 		}
 
 		// 敵の判定
@@ -431,9 +408,9 @@ void CPlayer::Update(void)
 	DebugProc::Print(DebugProc::POINT_LEFT, "\n");
 
 	// 値更新
-	SetPos(posThis);			// 位置
+	SetPos(posThis);		// 位置
 	SetPosOld(posOldThis);	// 前回の位置
-	SetRot(rotThis);			// 向き
+	SetRot(rotThis);		// 向き
 	SetSize(sizeThis);		// 大きさ
 
 	// エフェクトの操作
@@ -447,6 +424,92 @@ void CPlayer::Draw(void)
 {
 	// キャラクタークラスの描画（継承）
 	CObjectCharacter::Draw();
+}
+
+//====================================================================
+//所持するUIの生成
+//====================================================================
+void CPlayer::UI_Create(void)
+{
+	//体力UIの生成
+	if (m_pLifeUi == nullptr)
+	{
+		m_pLifeUi = CLifeUi::Create();
+	}
+
+	//スコアの生成
+	if (m_pScore == nullptr)
+	{
+		m_pScore = CScore::Create();
+	}
+
+	//プレイヤー番号UIの生成
+	if (m_pP_NumUI == nullptr)
+	{
+		m_pP_NumUI = CObjectBillboard::Create();
+	}
+}
+
+//====================================================================
+//所持するUIの初期化
+//====================================================================
+void CPlayer::UI_Init(void)
+{
+	switch (m_nPlayNumber)
+	{
+	case 0:
+		if (m_pLifeUi != nullptr)
+		{
+			// 数字の位置
+			m_pLifeUi->GetNumber()->SetPos(D3DXVECTOR3(LIFE_POS00.x + 200.0f, LIFE_POS00.y, LIFE_POS00.z));
+
+			// 体力
+			m_pLifeUi->SetPos(LIFE_POS00);
+			m_pLifeUi->GetNumber()->SetNumber(m_nLife);
+		}
+
+		if (m_pScore != nullptr)
+		{
+			m_pScore->SetPos(D3DXVECTOR3(50.0f, 40.0f, 0.0f));
+		}
+
+		if (m_pP_NumUI != nullptr)
+		{
+			m_pP_NumUI->SetPos(GetPos());
+			m_pP_NumUI->SetWidth(50.0f);
+			m_pP_NumUI->SetHeight(50.0f);
+			m_pP_NumUI->SetTexture("data\\TEXTURE\\UI\\1p.png");
+		}
+
+		break;
+
+	case 1:
+
+		if (m_pLifeUi != nullptr)
+		{
+			// 数字の位置
+			m_pLifeUi->GetNumber()->SetPos(D3DXVECTOR3(LIFE_POS01.x + 200.0f, LIFE_POS01.y, LIFE_POS01.z));
+
+			// 体力
+			m_pLifeUi->SetPos(LIFE_POS01);
+			m_pLifeUi->GetNumber()->SetNumber(m_nLife);
+		}
+
+		if (m_pScore != nullptr)
+		{
+			m_pScore->SetPos(D3DXVECTOR3(1050.0f, 40.0f, 0.0f));
+		}
+
+		if (m_pP_NumUI != nullptr)
+		{
+			m_pP_NumUI->SetPos(GetPos());
+			m_pP_NumUI->SetWidth(50.0f);
+			m_pP_NumUI->SetHeight(50.0f);
+			m_pP_NumUI->SetTexture("data\\TEXTURE\\UI\\2p.png");
+		}
+
+		break;
+	}
 }
 
 //====================================================================
@@ -941,18 +1004,44 @@ void CPlayer::StateManager(D3DXVECTOR3& posThis)
 
 		if (m_pUpEgg == nullptr)
 		{
-			m_pUpEgg = CObjectX::Create("data\\MODEL\\00_Player\\1P\\upper_egg.x");
-			m_pUpEgg->SetMatColor(D3DXCOLOR(0.263529f, 0.570980f, 0.238431f, 1.0f));
+			// タマゴ読み込み処理
+			switch (m_nPlayNumber)
+			{
+			case 0:
+				m_pUpEgg = CObjectX::Create("data\\MODEL\\00_Player\\1P\\upper_egg.x");
+				m_pUpEgg->SetMatColor(D3DXCOLOR(0.263529f, 0.570980f, 0.238431f, 1.0f));
 
-			m_pUpEgg->SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
+				m_pUpEgg->SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
+				break;
+
+			case 1:
+				m_pUpEgg = CObjectX::Create("data\\MODEL\\00_Player\\1P\\upper_egg.x");
+				m_pUpEgg->SetMatColor(D3DXCOLOR(0.263529f, 0.570980f, 0.238431f, 1.0f));
+
+				m_pUpEgg->SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
+				break;
+			}
 		}
 
 		if (m_pDownEgg == nullptr)
 		{
-			m_pDownEgg = CObjectX::Create("data\\MODEL\\00_Player\\1P\\downer_egg.x");
-			m_pDownEgg->SetMatColor(D3DXCOLOR(0.263529f, 0.570980f, 0.238431f, 1.0f));
+			// タマゴ読み込み処理
+			switch (m_nPlayNumber)
+			{
+			case 0:
+				m_pDownEgg = CObjectX::Create("data\\MODEL\\00_Player\\1P\\downer_egg.x");
+				m_pDownEgg->SetMatColor(D3DXCOLOR(0.263529f, 0.570980f, 0.238431f, 1.0f));
 
-			m_pDownEgg->SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
+				m_pDownEgg->SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
+				break;
+
+			case 1:
+				m_pDownEgg = CObjectX::Create("data\\MODEL\\00_Player\\1P\\downer_egg.x");
+				m_pDownEgg->SetMatColor(D3DXCOLOR(0.263529f, 0.570980f, 0.238431f, 1.0f));
+
+				m_pDownEgg->SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
+				break;
+			}
 		}
 		break;
 	}
@@ -1670,7 +1759,10 @@ void CPlayer::ControlEffect(CEffekseer* pTarget)
 //====================================================================
 void CPlayer::Death(void)
 {
-
+	if (m_pP_NumUI != nullptr)
+	{
+		m_pP_NumUI->SetAppear(false);
+	}
 }
 
 //====================================================================
@@ -1686,12 +1778,12 @@ void CPlayer::DebugKey(void)
 	if (pInputKeyboard->GetTrigger(DIK_3))
 	{
 		m_nLife++;
-		m_pLifeUi->GetNumber()->SetNumber(m_nLife);;
+		m_pLifeUi->GetNumber()->SetNumber(m_nLife);
 	}
 	if (pInputKeyboard->GetTrigger(DIK_4))
 	{
 		m_nLife--;
-		m_pLifeUi->GetNumber()->SetNumber(m_nLife);;
+		m_pLifeUi->GetNumber()->SetNumber(m_nLife);
 	}
 
 #endif // !_DEBUG
