@@ -106,6 +106,8 @@ void CTutorialPlayer::Death(void)
 {
 	if (GetState() != STATE_EGG && GetState() != STATE_DEATH)
 	{
+		CPlayer::Death();
+
 		// ¹‘‚ğŠ‚µ‚Ä‚¢‚é‚Æ‚«‚É‚»‚Ìê‚É¹‘‚ğ—‚Æ‚·
 		if (GetItemType() == TYPE_BIBLE)
 		{

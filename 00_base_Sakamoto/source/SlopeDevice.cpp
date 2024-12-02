@@ -18,12 +18,14 @@
 
 #include "objmeshField.h"
 
+
 //==========================================
 //  定数定義
 //==========================================
 namespace
 {
-	const D3DXVECTOR3 ROTATE_ADD = D3DXVECTOR3(0.0f, 0.0f, 0.05f);
+	const D3DXVECTOR3 ASCENT_ADD = D3DXVECTOR3(0.0f, 1.5f, 0.0f);	// 上昇量
+	const D3DXVECTOR3 DESCENT_DEST = D3DXVECTOR3(0.0f, 1.5f, 0.0f);	// 下降量
 }
 
 //====================================================================
@@ -139,7 +141,7 @@ void CSlopeDevice::Update(void)
 	posOldMy = posMy;
 
 	//状態管理
-	StateManager(rotMy);
+	StateManager();
 
 	// キャラクタークラスの更新（継承）
 	CObjectCharacter::Update();
@@ -161,6 +163,49 @@ void CSlopeDevice::Draw(void)
 }
 
 //====================================================================
+// 特定条件（傾き）の状態設定処理
+//====================================================================
+void CSlopeDevice::SetState(STATE state, CScrollArrow::Arrow stateArrow)
+{
+	switch (stateArrow)
+	{
+	case CScrollArrow::STATE_UP:
+
+		if (m_LocateWorldType == LOCATE_WORLD_TYPE_TOP_LEFT ||
+			m_LocateWorldType == LOCATE_WORLD_TYPE_TOP_RIGHT)
+		{
+			m_State = state;
+		}
+		break;
+	case CScrollArrow::STATE_DOWN:
+
+		if (m_LocateWorldType == LOCATE_WORLD_TYPE_BOTTOM_LEFT ||
+			m_LocateWorldType == LOCATE_WORLD_TYPE_BOTTOM_RIGHT)
+		{
+			m_State = state;
+		}
+
+		break;
+	case CScrollArrow::STATE_LEFT:
+
+		if (m_LocateWorldType == LOCATE_WORLD_TYPE_TOP_LEFT ||
+			m_LocateWorldType == LOCATE_WORLD_TYPE_BOTTOM_LEFT)
+		{
+			m_State = state;
+		}
+		break;
+	case CScrollArrow::STATE_RIGHT:
+
+		if (m_LocateWorldType == LOCATE_WORLD_TYPE_TOP_RIGHT ||
+			m_LocateWorldType == LOCATE_WORLD_TYPE_BOTTOM_RIGHT)
+		{
+			m_State = state;
+		}
+		break;
+	}
+}
+
+//====================================================================
 // モデル関連の初期化処理
 //====================================================================
 HRESULT CSlopeDevice::InitModel(const char* pModelNameSlopeDevice, const char* pModelNameEnemy)
@@ -173,17 +218,21 @@ HRESULT CSlopeDevice::InitModel(const char* pModelNameSlopeDevice, const char* p
 //====================================================================
 //状態管理
 //====================================================================
-void CSlopeDevice::StateManager(D3DXVECTOR3& rotMy)
+void CSlopeDevice::StateManager(void)
 {
 	switch (m_State)
 	{
 	case STATE_NORMAL:
 		break;
-	case STATE_ROTATE:
+	case STATE_ASCENT:
 
-		// ローラーと回し車回転処理
-		Rotate(rotMy, SETUP_TYPE_ROLLRE, ROTATE_ADD);
-		Rotate(rotMy, SETUP_TYPE_MAWASIGURMA, ROTATE_ADD);
+		Ascent(SETUP_TYPE_ELEVATING_PART, ASCENT_ADD,D3DXVECTOR3(0.0f,200.0f,0.0f));
+
+		break;
+	case STATE_DESCENT:
+
+		Descent(SETUP_TYPE_ELEVATING_PART, DESCENT_DEST, D3DXVECTOR3(0.0f, 80.0f, 0.0f));
+
 		break;
 	}
 
@@ -194,9 +243,9 @@ void CSlopeDevice::StateManager(D3DXVECTOR3& rotMy)
 }
 
 //====================================================================
-// 回転処理
+// 上昇処理
 //====================================================================
-void CSlopeDevice::Rotate(D3DXVECTOR3& rotMy, int nNldxModel, D3DXVECTOR3 rotate)
+void CSlopeDevice::Ascent(int nNldxModel, D3DXVECTOR3 ascent, D3DXVECTOR3 ascentPosMax)
 {
 	// モデルの取得
 	CModel* pModel = GetModel(nNldxModel);
@@ -206,26 +255,47 @@ void CSlopeDevice::Rotate(D3DXVECTOR3& rotMy, int nNldxModel, D3DXVECTOR3 rotate
 		return;
 	}
 
-	// モデルの回転軸を取得
-	D3DXVECTOR3 rot = pModel->GetStartRot();
+	// モデルの位置を取得
+	D3DXVECTOR3 pos = pModel->GetStartPos();
 
-	if (rotMy.y == 0.0f)
+	// 最大上昇位置判定
+	if (pos.y <= ascentPosMax.y)
 	{
-		// 回転量減算
-		rot += rotate;
-	}
-	else if (rotMy.y == D3DX_PI)
-	{
-		// 回転量加算
-		rot -= rotate;
+		// 上昇量を加算
+		pos += ascent;
 	}
 
-	// 角度の正規化
-	useful::NormalizeAngle(&rot);
-
-	// モデルの回転設定
-	pModel->SetStartRot(rot);
+	// モデルの位置更新
+	pModel->SetStartPos(pos);
 }
+
+//====================================================================
+// 下降処理
+//====================================================================
+void CSlopeDevice::Descent(int nNldxModel, D3DXVECTOR3 descent, D3DXVECTOR3 descentPosMin)
+{
+	// モデルの取得
+	CModel* pModel = GetModel(nNldxModel);
+
+	if (pModel == nullptr)
+	{
+		return;
+	}
+
+	// モデルの位置を取得
+	D3DXVECTOR3 pos = pModel->GetStartPos();
+
+	// 最大下降位置判定
+	if (pos.y >= descentPosMin.y)
+	{
+		// 下降量を減算
+		pos -= descent;
+	}
+
+	// モデルの位置更新
+	pModel->SetStartPos(pos);
+}
+
 
 //====================================================================
 //リスト取得

@@ -21,6 +21,7 @@ class CSlowManager;
 class CObjectBillboard;
 class CNumber;
 class CScrollArrow;
+class CSignal;
 
 class CEnemy;
 class CBoss;
@@ -37,7 +38,6 @@ public:
 	enum ACTION_TYPE
 	{
 		ACTION_NEUTRAL = 0,			// 待機
-		ACTION_DAMAGE = 0,			// 恐らくダメージ
 		ACTION_SIGNAL_UP,			// 傾き信号「上」
 		ACTION_SIGNAL_DOWN,			// 傾き信号「下」
 		ACTION_SIGNAL_LEFT,			// 傾き信号「左」
@@ -89,9 +89,6 @@ public:
 
 	void SetModelDisp(bool Sst);
 
-	void SetStateNumber(int nNum) { m_nStateNum = nNum; }
-	int GetStateNumber(void) { return m_nStateNum; }
-
 	// 静的メンバ関数
 	static CListManager<CDevil>* GetList(void); // リスト取得
 	static CDevil* GetListTop(void); // リスト取得
@@ -114,6 +111,7 @@ private:
 	void FireScroll(D3DXVECTOR3 Move, float GritSize);	// ファイアボールのスクロール
 	void TileScroll(D3DXVECTOR3 Move, float GritSize);	// 床のスクロール
 	void WallScroll(D3DXVECTOR3 Move, float GritSize);	// 壁のスクロール
+	void SignalScroll(void);
 
 	void GritScroll(D3DXVECTOR3 Move);		//グリットのスクロール
 	void CollisionPressPlayer(CPlayer* pPlayer, D3DXVECTOR3 pos, D3DXVECTOR3 Size);	//プレイヤーが潰される時の処理
@@ -131,11 +129,13 @@ private:
 	float m_fActionCount;			//行動のカウント
 	STATE m_State;					//状態
 	int m_nStateCount;				//状態管理用カウント
-	int m_nStateNum;				//状態番号
+	int m_nStateNum;				//状態カウント
 	bool m_bSlope;					//傾き状態かどうか
 
 	CMapSystem::GRID m_MinGrid;		//マップで一番左上にあるブロックの番号
 	CMapSystem::GRID m_MaxGrid;		//マップで一番右下にあるブロックの番号
+
+	CSignal* m_pSignal[2];				//矢印モデルのポインタ
 
 	float m_CollisionRot;			//当たり判定用の向き
 

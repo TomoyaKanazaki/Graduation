@@ -223,6 +223,7 @@ void CEnemy::Uninit(void)
 	if (m_pEffect != nullptr)
 	{
 		m_pEffect->SetDeath();
+		m_pEffect = nullptr;
 	}
 
 	// ˆÚ“®ó‘Ô‚Ì”jŠü

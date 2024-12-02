@@ -10,6 +10,8 @@
 #include "manager.h"
 #include "game.h"
 #include "texture.h"
+#include "objmeshField.h"
+#include "MapSystem.h"
 
 #define POLYDON_SIZE (10.0f)
 
@@ -64,6 +66,9 @@ CObjectBillboard *CObjectBillboard::Create(void)
 //====================================================================
 HRESULT CObjectBillboard::Init(void)
 {
+	//マトリックスの掛け合わせをオンにする
+	SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
+
 	//デバイスの取得
 	LPDIRECT3DDEVICE9 m_pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
 
@@ -190,6 +195,14 @@ void CObjectBillboard::Draw(void)
 	D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);
 
 	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
+
+	if (m_UseMultiMatrix != nullptr)
+	{
+		//算出したマトリクスをかけ合わせる
+		D3DXMatrixMultiply(&m_mtxWorld,
+			&m_mtxWorld,
+			m_UseMultiMatrix);
+	}
 
 	//ワールドマトリックスの設定
 	m_pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);

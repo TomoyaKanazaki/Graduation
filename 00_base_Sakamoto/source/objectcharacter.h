@@ -60,8 +60,10 @@ public:
 
 	// 移動状態
 	void ChangeMoveState(CMoveState* pMoveState);   // 状態変更
-
 protected:
+
+	CShadow* m_pShadow;
+
 
 	CMoveState* m_pMoveState;		// 移動状態
 
@@ -83,7 +85,6 @@ private:
 	D3DXMATRIX m_mtxWorld;			// ワールドマトリックス
 	D3DXMATRIX* m_UseMultiMatrix;	// 掛け合わせるマトリックス
 
-	CShadow* m_pShadow;
 	bool m_bUseStencil;				// ステンシルバッファの使用の有無
 	bool m_bUseShadowMtx;			// シャドウマトリックスの使用の有無
 	bool m_bUseShadow;				// 影の使用フラグ
