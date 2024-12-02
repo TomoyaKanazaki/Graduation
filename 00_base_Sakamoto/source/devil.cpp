@@ -36,6 +36,7 @@
 #include "wall.h"
 #include "MapSystem.h"
 #include "ScrollDevice.h"
+#include "SlopeDevice.h"
 #include "effect.h"
 
 //===========================================
@@ -878,12 +879,34 @@ void CDevil::StateManager(void)
 					m_nStateCount = SLOPE_TIME;
 
 					m_nStateNum = m_DevilArrow;
+
+					// 傾き装置のリスト構造が無ければ抜ける
+					if (CSlopeDevice::GetList() == nullptr) { return; }
+					std::list<CSlopeDevice*> list = CSlopeDevice::GetList()->GetList();    // リストを取得
+
+					// 傾き装置のリストの中身を確認する
+					for (CSlopeDevice* pSlopeDevice : list)
+					{
+						// 方向の傾き装置を上昇状態に変更
+						pSlopeDevice->SetState(CSlopeDevice::STATE_ASCENT, (CScrollArrow::Arrow)m_DevilArrow);
+					}
 				}
 				else
 				{// 傾き戻し状態の時
 
 					// 傾きを戻す時だけ倍の時間を指定し、戻り切ったら傾き状態を終了とする
 					m_nStateCount = SLOPE_TIME * 2;
+
+					// 傾き装置のリスト構造が無ければ抜ける
+					if (CSlopeDevice::GetList() == nullptr) { return; }
+					std::list<CSlopeDevice*> list = CSlopeDevice::GetList()->GetList();    // リストを取得
+
+					// 傾き装置のリストの中身を確認する
+					for (CSlopeDevice* pSlopeDevice : list)
+					{
+						// 方向の傾き装置を上昇状態に変更
+						pSlopeDevice->SetState(CSlopeDevice::STATE_DESCENT, (CScrollArrow::Arrow)m_SlopwArrowOld);
+					}
 				}
 			}
 			else
@@ -934,6 +957,7 @@ void CDevil::StateManager(void)
 					{
 					case 0:
 						m_ScrollArrow[nCnt]->SetState(CScrollArrow::Arrow::STATE_UP);
+
 						break;
 
 					case 1:

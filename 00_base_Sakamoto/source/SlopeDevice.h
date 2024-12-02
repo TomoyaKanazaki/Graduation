@@ -10,6 +10,8 @@
 
 #include "objectcharacter.h"
 
+#include "scrollarrow.h"
+
 // ŒX‚«‘•’uƒNƒ‰ƒX
 class CSlopeDevice : public CObjectCharacter
 {
@@ -64,6 +66,7 @@ public:
 	void Draw(void);
 
 	void SetState(STATE state) { m_State = state; }
+	void SetState(STATE state, CScrollArrow::Arrow stateArrow);
 	
 	void SetLocateWorldType(LOCATE_WORLD_TYPE LocateWorldType) { m_LocateWorldType = LocateWorldType ;}
 
