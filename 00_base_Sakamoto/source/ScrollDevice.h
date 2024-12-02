@@ -55,7 +55,7 @@ public:
 	static CListManager<CScrollDevice>* GetList(void); // ƒŠƒXƒgŽæ“¾
 
 private:
-	HRESULT InitModel(const char* pModelNameSlopeDevice, const char* pModelNameEnemy);
+	HRESULT InitModel(const char* pModelNameScrollDevice, const char* pModelNameEnemy);
 
 	void StateManager(D3DXVECTOR3& rotMy);
 	void Rotate(D3DXVECTOR3& rotMy,int nNldxModel, D3DXVECTOR3 rotate);

@@ -34,7 +34,8 @@ CListManager<CRollRock>* CRollRock::m_pList = nullptr; // オブジェクトリスト
 //====================================================================
 //コンストラクタ
 //====================================================================
-CRollRock::CRollRock(int nPriority) : CObjectX(nPriority)
+CRollRock::CRollRock(int nPriority) : CObjectX(nPriority),
+m_pEffect(nullptr)
 {
 	SetSize(SAMPLE_SIZE);
 	SetPos(INITVECTOR3);
@@ -48,8 +49,8 @@ CRollRock::CRollRock(int nPriority) : CObjectX(nPriority)
 	m_posOld = INITVECTOR3;
 	m_move = INITVECTOR3;
 	m_rot = INITVECTOR3;
-	m_Grid.x = 0.0f;
-	m_Grid.z = 0.0f;
+	m_Grid.x = 0;
+	m_Grid.z = 0;
 
 	m_OKL = false;
 	m_OKR = false;
@@ -117,6 +118,7 @@ CRollRock* CRollRock::Create(CMapSystem::GRID gridCenter)
 //====================================================================
 HRESULT CRollRock::Init(char* pModelName)
 {
+	m_pEffect = nullptr;
 	// 位置
 	m_pos = m_Grid.ToWorld();
 	m_pos.y = 50.0f;
@@ -174,6 +176,13 @@ void CRollRock::Uninit(void)
 
 		// リストマネージャーの破棄
 		m_pList->Release(m_pList);
+	}
+
+	// エフェクトを消去
+	if (m_pEffect != nullptr)
+	{
+		m_pEffect->SetDeath();
+		m_pEffect = nullptr;
 	}
 
 	CObjectX::Uninit();
@@ -308,7 +317,7 @@ void CRollRock::Move(void)
 
 		if (CMapSystem::GetInstance()->GetGritBool(nRGridX, m_Grid.z) == true)
 		{//右
-			m_OKR = false;	
+			m_OKR = false;
 		}
 		else
 		{
@@ -371,6 +380,36 @@ void CRollRock::Move(void)
 	if (!m_OKD && m_move.z < 0.0f)
 	{
 		m_move.z = 0.0f;
+	}
+
+	// エフェクトの生成
+	if (m_pEffect == nullptr && (fabsf(m_move.x) > 0.1f || fabsf(m_move.z) > 0.1f))
+	{
+		D3DXVECTOR3 rot = INITVECTOR3;
+		rot.y = atan2f(-m_move.x, -m_move.z);
+		D3DXMATRIX mat = *GetUseMultiMatrix();
+		D3DXVECTOR3 ef = useful::CalcMatrix(m_pos, rot, mat);
+		m_pEffect = MyEffekseer::EffectCreate(CMyEffekseer::TYPE_ROLL, true, ef, rot);
+	}
+
+	// エフェクトを移動
+	if (m_pEffect != nullptr)
+	{
+		// 計算に使用する値の取得
+		D3DXMATRIX mat = *GetUseMultiMatrix();
+
+		// 座標と向きにマトリックスを反映
+		D3DXVECTOR3 pos = useful::CalcMatrix(m_pos, m_rot, mat);
+
+		// エフェクトに情報を適用
+		m_pEffect->SetPosition(pos);
+	}
+
+	// エフェクトを消去
+	if (m_pEffect != nullptr && fabsf(m_move.x) <= 0.1f && fabsf(m_move.z) <= 0.1f)
+	{
+		m_pEffect->SetDeath();
+		m_pEffect = nullptr;
 	}
 }
 

@@ -46,6 +46,7 @@ public:
 		// åvéZä÷êî
 		D3DXVECTOR3 ToWorld();
 		AStar::Vec2i ToAStar();
+		GRID ToGrid(const D3DXVECTOR3& pos);
 
 		int x;
 		int z;

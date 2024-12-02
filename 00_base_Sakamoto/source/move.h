@@ -9,33 +9,10 @@
 
 #include "main.h"
 
-////移動クラス
-//class CMove
-//{
-//public:
-//
-//	CMove();
-//	~CMove();
-//
-//	static CMove* Create();
-//
-//	HRESULT Init(void);
-//	void Uninit(void);
-//	void Update(void);
-//	void Draw(void);
-//
-//	// 静的メンバ関数
-//	static CListManager<CMove>* GetList(void); // リスト取得
-//
-//private:
-//
-//	// 静的メンバ変数
-//	static CListManager<CMove>* m_pList; // オブジェクトリスト
-//
-//	// メンバ変数
-//	CListManager<CMove>::AIterator m_iterator; // イテレーター
-//
-//};
+//============================================
+// 前方宣言
+//============================================
+class CMoveStateContext;        // 移動状態管理
 
 //============================================
 // 移動状態のインターフェースクラス
@@ -46,8 +23,20 @@ public:
     CMoveState() {};
     virtual ~CMoveState() {};
 
-    virtual void ChangeWalk() = 0;      // 歩行方法切り替え(ランダムor追跡)
-    virtual void Stop() = 0;
+    // 状態
+
+    // 操作
+    virtual void ControlRandom(CMoveStateContext* pMoveStateContext) {}        // 操作とランダム切り替え
+    virtual void ControlAStar(CMoveStateContext* pMoveStateContext) {}         // 操作と追跡切り替え
+    virtual void ControlStop(CMoveStateContext* pMoveStateContext) {}          // 操作と停止切り替え
+
+    // ランダム歩行
+    virtual void RandomAStar(CMoveStateContext* pMoveStateContext) {}           // ランダムと追跡切り替え
+    virtual void RandomStop(CMoveStateContext* pMoveStateContext) {}            // ランダムと停止切り替え
+
+    // 追跡
+    virtual void AStarStop(CMoveStateContext* pMoveStateContext) {}            // 追跡と停止切り替え
+
 };
 
 //============================================
@@ -77,7 +66,9 @@ public:
     CStateControl(){}
     ~CStateControl(){}
 
-
+    void ControlRandom(CMoveStateContext* pMoveStateContext) override;      // ランダムに切り替え
+    void ControlAStar(CMoveStateContext* pMoveStateContext) override;       // 追跡に切り替え
+    void ControlStop(CMoveStateContext* pMoveStateContext) override;        // 停止に切り替え
 };
 
 //============================================
@@ -89,16 +80,23 @@ public:
     CStateRandom(){}
     ~CStateRandom() {}
 
+    void ControlRandom(CMoveStateContext* pMoveStateContext) override;      // 操作に切り替え
+    void RandomAStar(CMoveStateContext* pMoveStateContext) override;        // 追跡に切り替え
+    void RandomStop(CMoveStateContext* pMoveStateContext) override;         // 停止に切り替え
 };
 
 //============================================
 // 追跡状態
 //============================================
-class CStateChase : public CMoveState
+class CStateAStar : public CMoveState
 {
 public:
-    CStateChase(){}
-    ~CStateChase() {}
+    CStateAStar(){}
+    ~CStateAStar() {}
+
+    void ControlAStar(CMoveStateContext* pMoveStateContext) override;       // 操作に切り替え
+    void RandomAStar(CMoveStateContext* pMoveStateContext) override;        // ランダム歩行に切り替え
+    void AStarStop(CMoveStateContext* pMoveStateContext) override;          // 停止に切り替え
 
 };
 
@@ -111,6 +109,10 @@ class CStateStop : public CMoveState
 public:
     CStateStop(){}
     ~CStateStop() {}
+
+    void ControlStop(CMoveStateContext* pMoveStateContext) override;        // 操作に切り替え
+    void RandomStop(CMoveStateContext* pMoveStateContext) override;         // ランダム歩行に切り替え
+    void AStarStop(CMoveStateContext* pMoveStateContext) override;          // 追跡に切り替え
 
 };
 
