@@ -616,6 +616,14 @@ AStar::Vec2i CMapSystem::GRID::ToAStar()
 }
 
 //==========================================
+//  グリッド座標に変換する
+//==========================================
+CMapSystem::GRID CMapSystem::GRID::ToGrid(const D3DXVECTOR3& pos)
+{
+	return CMapSystem::GetInstance()->CalcGrid(pos);
+}
+
+//==========================================
 //  代入演算子のオペレータ
 //==========================================
 CMapSystem::GRID& CMapSystem::GRID::operator=(const AStar::Vec2i& vec)
