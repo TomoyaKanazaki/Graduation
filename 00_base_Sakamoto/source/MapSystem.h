@@ -37,7 +37,7 @@ public:
 	struct GRID
 	{
 		// コンストラクタ
-		GRID() {};
+		GRID() : x(0), z(0) {};
 		GRID(int X, int Z) { x = X; z = Z; };
 
 		// デストラクタ
@@ -46,6 +46,7 @@ public:
 		// 計算関数
 		D3DXVECTOR3 ToWorld();
 		AStar::Vec2i ToAStar();
+		GRID ToGrid(const D3DXVECTOR3& pos);
 
 		int x;
 		int z;

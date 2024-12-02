@@ -163,9 +163,9 @@ void CScrollDevice::Draw(void)
 //====================================================================
 // ÉÇÉfÉãä÷òAÇÃèâä˙âªèàóù
 //====================================================================
-HRESULT CScrollDevice::InitModel(const char* pModelNameSlopeDevice, const char* pModelNameEnemy)
+HRESULT CScrollDevice::InitModel(const char* pModelNameScrollDevice, const char* pModelNameEnemy)
 {
-	CObjectCharacter::SetTxtCharacter(pModelNameSlopeDevice);
+	CObjectCharacter::SetTxtCharacter(pModelNameScrollDevice);
 
 	return S_OK;
 }

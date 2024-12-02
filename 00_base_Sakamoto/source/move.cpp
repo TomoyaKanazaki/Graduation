@@ -1,118 +1,147 @@
 //============================================
 //
-//	移動処理 [move.cpp]
-//	Author:morikawa shunya
+//	移動状態の管理 [move.cpp]
+//	Author:Satone Shion
 //
 //============================================
 #include "move.h"
-#include "renderer.h"
-#include "manager.h"
 
 //==========================================
 // 定数定義
 //==========================================
 namespace
+{}
+
+//**********************************************************************
+// 操作できる状態
+//**********************************************************************
+//==========================================
+// 操作からランダム歩行に切り替え
+//==========================================
+void CStateControl::ControlRandom(CMoveStateContext* pMoveStateContext)
 {
-	
+	// ランダム歩行状態にする
+	pMoveStateContext->ChangeState(new CStateRandom);
 }
 
-//===========================================
-// 静的メンバ変数宣言
-//===========================================
-CListManager<CMove>* CMove::m_pList = nullptr; // オブジェクトリスト
-
-//====================================================================
-//コンストラクタ
-//====================================================================
-CMove::CMove()
+//==========================================
+// 操作から追跡に切り替え
+//==========================================
+void CStateControl::ControlAStar(CMoveStateContext* pMoveStateContext)
 {
-	
+	// 追跡状態にする
+	pMoveStateContext->ChangeState(new CStateAStar);
 }
 
-//====================================================================
-//デストラクタ
-//====================================================================
-CMove::~CMove()
+//==========================================
+// 操作から停止に切り替え
+//==========================================
+void CStateControl::ControlStop(CMoveStateContext* pMoveStateContext)
 {
-
+	// 停止状態にする
+	pMoveStateContext->ChangeState(new CStateStop);
 }
 
-//====================================================================
-//生成処理
-//====================================================================
-CMove* CMove::Create(void)
+//**********************************************************************
+// ランダム歩行状態
+//**********************************************************************
+//==========================================
+// ランダム歩行から操作に切り替え
+//==========================================
+void CStateRandom::ControlRandom(CMoveStateContext* pMoveStateContext)
 {
-	CMove* pFire = nullptr;
+	// 操作状態にする
+	pMoveStateContext->ChangeState(new CStateControl);
+}
 
-	if (pFire == nullptr)
+//==========================================
+// ランダム歩行から追跡に切り替え
+//==========================================
+void CStateRandom::RandomAStar(CMoveStateContext* pMoveStateContext)
+{
+	// 追跡状態にする
+	pMoveStateContext->ChangeState(new CStateAStar);
+}
+
+//==========================================
+// ランダム歩行から停止に切り替え
+//==========================================
+void CStateRandom::RandomStop(CMoveStateContext* pMoveStateContext)
+{
+	// 停止状態にする
+	pMoveStateContext->ChangeState(new CStateStop);
+}
+
+//**********************************************************************
+// 追跡状態
+//**********************************************************************
+//==========================================
+// 追跡から操作に切り替え
+//==========================================
+void CStateAStar::ControlAStar(CMoveStateContext* pMoveStateContext)
+{
+	// 操作状態にする
+	pMoveStateContext->ChangeState(new CStateControl);
+}
+
+//==========================================
+// 追跡からランダム歩行に切り替え
+//==========================================
+void CStateAStar::RandomAStar(CMoveStateContext* pMoveStateContext)
+{
+	// ランダム歩行状態にする
+	pMoveStateContext->ChangeState(new CStateRandom);
+}
+
+//==========================================
+// 追跡から停止に切り替え
+//==========================================
+void CStateAStar::AStarStop(CMoveStateContext* pMoveStateContext)
+{
+	// 停止状態にする
+	pMoveStateContext->ChangeState(new CStateStop);
+}
+
+//**********************************************************************
+// 停止状態
+//**********************************************************************
+//==========================================
+// 停止から操作に切り替え
+//==========================================
+void CStateStop::ControlStop(CMoveStateContext* pMoveStateContext)
+{
+	// 操作状態にする
+	pMoveStateContext->ChangeState(new CStateControl);
+}
+
+//==========================================
+// 停止からランダム歩行に切り替え
+//==========================================
+void CStateStop::RandomStop(CMoveStateContext* pMoveStateContext)
+{
+	// ランダム歩行状態にする
+	pMoveStateContext->ChangeState(new CStateRandom);
+}
+
+//==========================================
+// 停止から追跡に切り替え
+//==========================================
+void CStateStop::AStarStop(CMoveStateContext* pMoveStateContext)
+{
+	// 追跡状態にする
+	pMoveStateContext->ChangeState(new CStateAStar);
+}
+
+//==========================================
+// 状態変更処理
+//==========================================
+void CMoveStateContext::ChangeState(CMoveState* pMoveState)
+{
+	if (m_pMoveState != nullptr)
 	{
-		//移動の生成
-		pFire = new CMove();
+		delete m_pMoveState;
+		m_pMoveState = nullptr;
 	}
 
-	//オブジェクトの初期化処理
-	if (FAILED(pFire->Init()))
-	{//初期化処理が失敗した場合
-		assert(false);
-		return nullptr;
-	}
-
-	return pFire;
-}
-
-//====================================================================
-//初期化処理
-//====================================================================
-HRESULT CMove::Init(void)
-{
-	// リストマネージャーの生成
-	if (m_pList == nullptr)
-	{
-		m_pList = CListManager<CMove>::Create();
-		if (m_pList == nullptr) { assert(false); return E_FAIL; }
-	}
-
-	// リストに自身のオブジェクトを追加・イテレーターを取得
-	m_iterator = m_pList->AddList(this);
-
-	return S_OK;
-}
-
-//====================================================================
-//終了処理
-//====================================================================
-void CMove::Uninit(void)
-{
-	// リストから自身のオブジェクトを削除
-	m_pList->DelList(m_iterator);
-
-	if (m_pList->GetNumAll() == 0)
-	{ // オブジェクトが一つもない場合
-
-		// リストマネージャーの破棄
-		m_pList->Release(m_pList);
-	}
-}
-
-//====================================================================
-//更新処理
-//====================================================================
-void CMove::Update(void)
-{
-}
-
-//====================================================================
-//描画処理
-//====================================================================
-void CMove::Draw(void)
-{
-	
-}
-
-//====================================================================
-//リスト取得
-//====================================================================
-CListManager<CMove>* CMove::GetList(void)
-{
-	return m_pList;
+	m_pMoveState = pMoveState;
 }

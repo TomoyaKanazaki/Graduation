@@ -55,7 +55,6 @@ public:
 	CPause* GetPause(void) { return m_pPause; }
 	CScore* GetScore(void) { return m_pScore; }
 	CTimer* GetTime(void) { return m_pTime; }
-	CObjmeshField* GetMapField(void) { return m_pMapField; }
 	CObjmeshDome* GetDomeUp(void) { return m_pMeshDomeUp; }
 	void SetCubeBlock(CCubeBlock* pBlock) { m_pCubeBlock = pBlock; }
 	CCubeBlock* GetCubeBlock(void) { return m_pCubeBlock; }
@@ -72,6 +71,9 @@ public:
 	void SetBowabowa(int Bowabowa) { m_nNumBowabowa = Bowabowa; }
 	void AddBowabowa(int nNum) { m_nNumBowabowa += nNum; }
 	void SetDevilHoleFinish(bool Set) { m_bDevilHoleFinish = Set; }
+
+	void SetMapField(CObjmeshField* map) { m_pMapField = map; }
+	CObjmeshField* GetMapField(void) { return m_pMapField; }
 
 	void DeleteMap(void);
 
