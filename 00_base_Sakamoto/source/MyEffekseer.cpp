@@ -255,7 +255,7 @@ void CMyEffekseer::Update(void)
 		m_EfkManager->StopEffect(Handle);
 
 		// ループエフェクトでない場合終了して次に進む
-		if (!effect->IsLoop() && effect->IsDeath())
+		if (!effect->IsLoop() || effect->IsDeath())
 		{
 			// 終了処理 
 			effect->Uninit();

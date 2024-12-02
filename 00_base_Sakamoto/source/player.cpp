@@ -112,7 +112,8 @@ m_pShadow(nullptr),
 m_pScore(nullptr),
 m_nTime(0),
 m_pEffectEgg(nullptr),
-m_pEffectSpeed(nullptr)
+m_pEffectSpeed(nullptr),
+m_pEffectGuide(nullptr)
 {
 
 }
@@ -438,6 +439,7 @@ void CPlayer::Update(void)
 
 	// エフェクトの操作
 	ControlEffect(m_pEffectEgg); // 卵のエフェクト
+	ControlEffect(m_pEffectSpeed); // 加減速のエフェクト
 }
 
 //====================================================================
@@ -608,7 +610,7 @@ D3DXVECTOR3 CPlayer::MoveInputPadStick(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThi
 	{
 		if (nCnt == m_nPlayNumber)
 		{
-			//キーボードの移動処理
+			//スティックの移動処理
 			if ((pInputJoypad->Get_Stick_Left(nCnt).y > 0.0f && m_OKU && m_bGritCenter) ||
 				(pInputJoypad->Get_Stick_Left(nCnt).y > 0.0f && m_MoveState == MOVE_STATE_DOWN))
 			{
@@ -1550,7 +1552,16 @@ void CPlayer::EggMove(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis)
 			{
 				D3DXMATRIX mat = *GetUseMultiMatrix();
 				D3DXVECTOR3 ef = useful::CalcMatrix(posThis, rotThis, mat);
-				m_pEffectEgg = MyEffekseer::EffectCreate(CMyEffekseer::TYPE_BORN_PLAYER_00, true, ef, rotThis);
+				m_pEffectEgg = MyEffekseer::EffectCreate((CMyEffekseer::TYPE)((int)CMyEffekseer::TYPE_BORN_PLAYER_00 + m_nPlayNumber), true, ef, rotThis);
+			}
+
+			// エフェクトの生成
+			if (m_pEffectGuide == nullptr)
+			{
+				D3DXMATRIX mat = *GetUseMultiMatrix();
+				CMapSystem::GRID grid = CMapSystem::GetInstance()->CalcGrid(posThis);
+				D3DXVECTOR3 ef = useful::CalcMatrix(grid.ToWorld(), rotThis, mat);
+				m_pEffectGuide = MyEffekseer::EffectCreate((CMyEffekseer::TYPE)((int)CMyEffekseer::TYPE_BORNGUID1 + m_nPlayNumber), true, ef, rotThis);
 			}
 		}
 

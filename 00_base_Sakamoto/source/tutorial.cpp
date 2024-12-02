@@ -107,20 +107,19 @@ HRESULT CTutorial::Init(void)
 
 	CMapSystem::GetInstance()->Init();
 
-	//床の生成
-	auto grid = CMapSystem::GetInstance()->GetMapGrid();
-	m_pMapField = CObjmeshField::Create(grid);
-	m_pMapField->SetPos(INITVECTOR3);
+	//デビルの生成
+	m_pDevil = CDevil::Create();
+	m_pDevil->SetPos(D3DXVECTOR3(0.0f, 100.0f, 500.0f));
+
+	// マップの生成
+	CMapSystem::GetInstance()->Init();
+	CMapSystem::Load("data\\TXT\\STAGE\\map01.csv");
 
 	//// 下床の生成
 	//CObjmeshField* pBottonField = CObjmeshField::Create(BOTTOM_FIELD_VTX_WIDTH, BOTTOM_FIELD_VTX_HEIGHT);
 	//pBottonField->SetTexture(BOTTOM_FIELD_TEX);
 	//pBottonField->SetPos(BOTTOM_FIELD_POS);
 	m_bGameEnd = false;
-
-	//デビルの生成
-	m_pDevil = CDevil::Create();
-	m_pDevil->SetPos(D3DXVECTOR3(0.0f, 100.0f, 500.0f));
 
 	if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_SINGLE)
 	{
