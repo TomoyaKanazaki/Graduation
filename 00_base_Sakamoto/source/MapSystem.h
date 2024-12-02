@@ -101,6 +101,7 @@ public:
 	static std::vector<std::tuple<>> m_nData;	// 複数の値を保持
 	static std::vector<GRID> m_PosPlayer;		// プレイヤーの位置を保持
 
+	// TODO : Load関数で動的確保する（ｻﾄﾈｼｵﾝ）
 	static bool m_nMapGrit[NUM_WIGHT][NUM_HEIGHT];	//グリットにブロックが存在していたらtrue
 	GRID m_mapCenter;
 	D3DXVECTOR3 m_InitPos;
