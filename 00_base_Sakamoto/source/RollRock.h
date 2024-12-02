@@ -69,6 +69,8 @@ private:
 	bool m_OKU;					//上への進行が許されるかどうか
 	bool m_OKD;					//下への進行が許されるかどうか
 
+	CEffekseer* m_pEffect; // エフェクト
+
 		// 静的メンバ変数
 	static CListManager<CRollRock>* m_pList; // オブジェクトリスト
 

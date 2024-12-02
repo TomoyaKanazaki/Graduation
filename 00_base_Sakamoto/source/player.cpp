@@ -293,6 +293,18 @@ void CPlayer::Uninit(void)
 	{
 		m_pScore = nullptr;
 	}
+
+	// エフェクトの削除
+	if (m_pEffectEgg != nullptr)
+	{
+		m_pEffectEgg->SetDeath();
+		m_pEffectEgg = nullptr;
+	}
+	if (m_pEffectSpeed != nullptr)
+	{
+		m_pEffectSpeed->SetDeath();
+		m_pEffectSpeed = nullptr;
+	}
 }
 
 //====================================================================
