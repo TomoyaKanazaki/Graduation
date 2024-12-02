@@ -403,7 +403,7 @@ void CDevil::Move(int Arroow)
 //====================================================================
 void CDevil::BackSlope(void)
 {
-	CObjmeshField* pMapField = CGame::GetInstance()->GetMapField();
+	CObjmeshField* pMapField = CObjmeshField::GetListTop();
 	D3DXVECTOR3 MapRot = pMapField->GetRot();
 	bool bBackOK = false;
 
@@ -518,7 +518,7 @@ void CDevil::BackSlope(void)
 //====================================================================
 void CDevil::Slope(int Arroow)
 {	
-	CObjmeshField *pMapField = CGame::GetInstance()->GetMapField();
+	CObjmeshField *pMapField = CObjmeshField::GetListTop();
 	if (pMapField == nullptr) { assert(false); }
 
 	D3DXVECTOR3 MapRot = pMapField->GetRot();

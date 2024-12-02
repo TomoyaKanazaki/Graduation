@@ -105,7 +105,7 @@ CSelect* CSelect::GetInstance(void)
 //====================================================================
 HRESULT CSelect::Init(void)
 {
-	CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_BGM_TITLE);
+	//CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_BGM_TITLE);
 
 	CTexture* pTexture = CManager::GetInstance()->GetTexture();
 
@@ -209,8 +209,6 @@ HRESULT CSelect::Init(void)
 //====================================================================
 void CSelect::Uninit(void)
 {
-	CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_BGM_TITLE);
-
 	//全てのオブジェクトの破棄
 	CObject::ReleaseAll();
 
@@ -225,6 +223,23 @@ void CSelect::Uninit(void)
 //====================================================================
 void CSelect::Update(void)
 {
+	// スクロール処理
+	m_fTex[0] += SCROOL_SPEED * SCROOL_SCALE;
+
+	// テクスチャ[0]移動量加算
+	m_pTexScroll[0]->SetScroll(D3DXVECTOR2(m_fTex[0],1.0f));
+
+	m_nTime++;
+
+	if (m_nTime >= 20)
+	{
+		// テクスチャ[1]移動量加算
+		m_fTex[1] += SCROOL_SPEED;
+		m_pTexScroll[1]->SetScroll(D3DXVECTOR2(m_fTex[1], 1.0f));
+
+		m_nTime = 0;
+	}
+
 	if (CManager::GetInstance()->GetFade()->GetFade() != CFade::FADE_OUT)
 	{
 		if (m_nStep == 0)
@@ -244,23 +259,6 @@ void CSelect::Update(void)
 			ScrollButton();
 		}
 	}
-
-	// スクロール処理
-	m_fTex[0] += SCROOL_SPEED * SCROOL_SCALE;
-
-	// テクスチャ[0]移動量加算
-	m_pTexScroll[0]->SetScroll(D3DXVECTOR2(m_fTex[0],1.0f));
-
-	m_nTime++;
-
-	if (m_nTime >= 20)
-	{
-		// テクスチャ[1]移動量加算
-		m_fTex[1] += SCROOL_SPEED;
-		m_pTexScroll[1]->SetScroll(D3DXVECTOR2(m_fTex[1], 1.0f));
-
-		m_nTime = 0;
-	}
 }
 
 //====================================================================
@@ -278,7 +276,8 @@ void CSelect::StageSelect(void)
 {
 	if (CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_D) == true ||
 		CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_RIGHT) == true ||
-		CManager::GetInstance()->GetInputJoyPad()->GetTrigger(CInputJoypad::BUTTON_RIGHT, 0))
+		CManager::GetInstance()->GetInputJoyPad()->GetTrigger(CInputJoypad::BUTTON_RIGHT, 0) ||
+		CManager::GetInstance()->GetInputJoyPad()->Get_LStick_Trigger(CInputJoypad::JOYPAD_LSTICK::LSTICK_RIGHT, 0) == true)
 	{
 		m_nSelect++;
 
@@ -291,7 +290,8 @@ void CSelect::StageSelect(void)
 	}
 	if (CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_A) == true ||
 		CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_LEFT) == true ||
-		CManager::GetInstance()->GetInputJoyPad()->GetTrigger(CInputJoypad::BUTTON_LEFT, 0))
+		CManager::GetInstance()->GetInputJoyPad()->GetTrigger(CInputJoypad::BUTTON_LEFT, 0) ||
+		CManager::GetInstance()->GetInputJoyPad()->Get_LStick_Trigger(CInputJoypad::JOYPAD_LSTICK::LSTICK_LEFT, 0) == true)
 	{
 		m_nSelect--;
 
@@ -334,6 +334,12 @@ void CSelect::StageButton(void)
 		m_nSelect = 0;
 		m_nStep++;
 	}
+	else if (CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_BACKSPACE) == true ||
+		CManager::GetInstance()->GetInputJoyPad()->GetTrigger(CInputJoypad::BUTTON_B, 0) == true)
+	{
+		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_ENTER);
+		CScene::SetMode(MODE_TITLE);
+	}
 }
 
 //====================================================================
@@ -343,7 +349,8 @@ void CSelect::ScrollSelect(void)
 {
 	if (CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_D) == true ||
 		CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_RIGHT) == true ||
-		CManager::GetInstance()->GetInputJoyPad()->GetTrigger(CInputJoypad::BUTTON_RIGHT, 0))
+		CManager::GetInstance()->GetInputJoyPad()->GetTrigger(CInputJoypad::BUTTON_RIGHT, 0) ||
+		CManager::GetInstance()->GetInputJoyPad()->Get_LStick_Trigger(CInputJoypad::JOYPAD_LSTICK::LSTICK_RIGHT, 0) == true)
 	{
 		m_nSelect++;
 
@@ -356,7 +363,8 @@ void CSelect::ScrollSelect(void)
 	}
 	if (CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_A) == true ||
 		CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_LEFT) == true ||
-		CManager::GetInstance()->GetInputJoyPad()->GetTrigger(CInputJoypad::BUTTON_LEFT, 0))
+		CManager::GetInstance()->GetInputJoyPad()->GetTrigger(CInputJoypad::BUTTON_LEFT, 0) ||
+		CManager::GetInstance()->GetInputJoyPad()->Get_LStick_Trigger(CInputJoypad::JOYPAD_LSTICK::LSTICK_LEFT, 0) == true)
 	{
 		m_nSelect--;
 
@@ -412,10 +420,14 @@ void CSelect::ScrollButton(void)
 			CFade::SetFade(CScene::MODE_GAME);
 			break;
 		}
+
+		CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_BGM_TITLE);
 	}
 	else if (CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_BACKSPACE) == true ||
 		CManager::GetInstance()->GetInputJoyPad()->GetTrigger(CInputJoypad::BUTTON_B, 0) == true)
 	{
+		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_ENTER);
+
 		for (int nCnt = 0; nCnt < NUM_SCROLLTYPE; nCnt++)
 		{
 			if (m_pScrollSelect[nCnt] != nullptr)
