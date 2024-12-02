@@ -53,7 +53,11 @@ CShadow* CShadow::Create(const D3DXVECTOR3& pos, const D3DXVECTOR3& size, const 
 	CShadow* pShadow = new CShadow;
 
 	// 初期化
-	pShadow->Init();
+	if (FAILED(pShadow->Init()))
+	{
+		assert(false);
+		return nullptr;
+	}
 
 	// 位置設定
 	pShadow->SetPos(pos);
@@ -84,7 +88,11 @@ CShadow* CShadow::Create(const D3DXVECTOR3& pos, const D3DXVECTOR3& size, const 
 HRESULT CShadow::Init()
 {
 	// 継承クラスの初期化
-	CObject3D::Init();
+	if (FAILED(CObject3D::Init()))
+	{
+		assert(false);
+		return E_FAIL;
+	}
 
 	//マップとのマトリックスの掛け合わせをオンにする
 	SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());

@@ -115,8 +115,6 @@ m_pEffectEgg(nullptr),
 m_pEffectSpeed(nullptr),
 m_pP_NumUI(nullptr),
 m_pEffectGuide(nullptr),
-
-m_pEffectGuide(nullptr),
 m_pEffectItem(nullptr)
 {
 
@@ -196,11 +194,11 @@ HRESULT CPlayer::Init(int PlayNumber)
 	switch (m_nPlayNumber)
 	{
 	case 0:
-		CObjectCharacter::Init("data\\TXT\\motion_tamagon1P.txt");
+		if (FAILED(CObjectCharacter::Init("data\\TXT\\motion_tamagon1P.txt"))) { assert(false); }
 		break;
 
 	case 1:
-		CObjectCharacter::Init("data\\TXT\\motion_tamagon2P.txt");
+		if (FAILED(CObjectCharacter::Init("data\\TXT\\motion_tamagon2P.txt"))) { assert(false); }
 		break;
 	}
 
