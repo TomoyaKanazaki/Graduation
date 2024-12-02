@@ -38,6 +38,7 @@
 #include "ScrollDevice.h"
 #include "SlopeDevice.h"
 #include "effect.h"
+#include "signal.h"
 
 //===========================================
 // ’è”’è‹`
@@ -94,6 +95,8 @@ CDevil::CDevil(int nPriority) : CObjectCharacter(nPriority)
 	m_ScrollArrow[0] = nullptr;
 	m_ScrollArrow[1] = nullptr;
 	m_ScrollType = SCROLL_TYPE_NORMAL;
+	m_pSignal[0] = nullptr;
+	m_pSignal[1] = nullptr;
 	m_nStateNum = 0;
 }
 
@@ -103,6 +106,7 @@ CDevil::CDevil(int nPriority) : CObjectCharacter(nPriority)
 CDevil::~CDevil()
 {
 
+}
 }
 
 //====================================================================
@@ -147,8 +151,8 @@ HRESULT CDevil::Init(void)
 		break;
 
 	case CScene::MODE_GAME:
-	case CScene::MODE_TUTORIAL:
 
+	case CScene::MODE_TUTORIAL:
 		break;
 
 	case CScene::MODE_RESULT:
@@ -165,6 +169,19 @@ HRESULT CDevil::Init(void)
 	{
 		m_ScrollArrow[1] = CScrollArrow::Create();
 		m_ScrollArrow[1]->SetPos((D3DXVECTOR3(1200.0f, 120.0f, 0.0f)));
+	}
+
+	// –îˆó¶¬
+	if (m_pSignal[0] == nullptr)
+	{
+		m_pSignal[0] = CSignal::Create("data\\MODEL\\signal.x");
+		m_pSignal[0]->SetPos(D3DXVECTOR3(-1000.0f,200.0f,500.0f));
+	}
+
+	if (m_pSignal[1] == nullptr)
+	{
+		m_pSignal[1] = CSignal::Create("data\\MODEL\\signal.x");
+		m_pSignal[1]->SetPos(D3DXVECTOR3(1000.0f, 200.0f, 500.0f));
 	}
 
 	// ƒXƒ[‚Ì¶¬
@@ -218,6 +235,9 @@ void CDevil::Update(void)
 
 	// ƒ}ƒbƒv‚ÌŒX‚«
 	m_DevilRot = CObjmeshField::GetListTop()->GetRot();
+
+	// –îˆó‚Ì‰ñ“]
+	SignalScroll();
 
 	//ó‘Ô‚ÌŠÇ—
 	StateManager();
@@ -788,6 +808,7 @@ void CDevil::ActionState(void)
 		if (m_Action != ACTION_SIGNAL_UP)
 		{
 			m_Action = ACTION_SIGNAL_UP;
+			m_nStateNum = ACTION_SIGNAL_UP;
 			GetMotion()->Set(ACTION_SIGNAL_UP, 5);
 		}
 	}
@@ -797,6 +818,7 @@ void CDevil::ActionState(void)
 		if (m_Action != ACTION_SIGNAL_DOWN)
 		{
 			m_Action = ACTION_SIGNAL_DOWN;
+			m_nStateNum = ACTION_SIGNAL_DOWN;
 			GetMotion()->Set(ACTION_SIGNAL_DOWN, 5);
 		}
 	}
@@ -806,6 +828,7 @@ void CDevil::ActionState(void)
 		if (m_Action != ACTION_SIGNAL_LEFT)
 		{
 			m_Action = ACTION_SIGNAL_LEFT;
+			m_nStateNum = ACTION_SIGNAL_LEFT;
 			GetMotion()->Set(ACTION_SIGNAL_LEFT, 5);
 		}
 	}
@@ -815,6 +838,7 @@ void CDevil::ActionState(void)
 		if (m_Action != ACTION_SIGNAL_RIGHT)
 		{
 			m_Action = ACTION_SIGNAL_RIGHT;
+			m_nStateNum = ACTION_SIGNAL_RIGHT;
 			GetMotion()->Set(ACTION_SIGNAL_RIGHT, 5);
 		}
 	}
@@ -1598,6 +1622,35 @@ void CDevil::GritScroll(D3DXVECTOR3 Move)
 		pos.y = 50.0f;
 
 		pCubeBlock->SetPos(pos);
+	}
+}
+
+//====================================================================
+// –îˆó‚ª‰ñ“]‚·‚éˆ—
+//====================================================================
+void CDevil::SignalScroll(void)
+{
+	switch (m_nStateNum)
+	{
+	case ACTION_SIGNAL_UP:
+		m_pSignal[0]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI,0.0f));
+		m_pSignal[1]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
+		break;
+
+	case ACTION_SIGNAL_DOWN:
+		m_pSignal[0]->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+		m_pSignal[1]->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f)); 
+		break;
+
+	case ACTION_SIGNAL_RIGHT:
+		m_pSignal[0]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
+		m_pSignal[1]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
+		break;
+
+	case ACTION_SIGNAL_LEFT:
+		m_pSignal[0]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
+		m_pSignal[1]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f)); 
+		break;
 	}
 }
 
