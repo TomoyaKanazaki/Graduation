@@ -58,7 +58,7 @@ namespace
 	int SLOPE_RAND = 25;						// 傾き発生確率
 	float STAGE_ROT_LIMIT = D3DX_PI * 0.15f;	// 傾きの角度制限
 
-	float SLOPE_SPEED01 = 0.00075f;				// 傾きの移動速度
+	float SLOPE_SPEED01 = 0.0075f;				// 傾きの移動速度
 
 	float SLOPE_SPEED02 = 0.0125f;				// 傾きの移動速度
 }
@@ -223,6 +223,8 @@ void CDevil::Uninit(void)
 //====================================================================
 void CDevil::Update(void)
 {
+	m_ScrollType = SCROLL_TYPE_MAX;
+
 	// 値を取得
 	D3DXVECTOR3 posMy = GetPos();			// 位置
 	D3DXVECTOR3 posOldMy = GetPosOld();		// 前回の位置

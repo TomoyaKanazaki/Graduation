@@ -20,6 +20,8 @@
 #include "shadow.h"
 #include "mask.h"
 
+#include "move.h"
+
 //====================================================================
 // 定数定義
 //====================================================================
@@ -53,6 +55,8 @@ m_bUseShadow(true)
 
 	m_bUseStencil = false;
 	m_bUseShadowMtx = false;
+
+	m_pMoveState = nullptr;
 }
 
 //====================================================================
@@ -92,6 +96,11 @@ HRESULT CObjectCharacter::Init(const char* pModelName)
 		m_pShadow = CShadow::Create(m_pos, D3DXVECTOR3(SHADOW_SIZE, 0.0f, SHADOW_SIZE));
 	}
 
+	if (m_pMoveState == nullptr)
+	{ // 移動状態設定
+		m_pMoveState = new CStateStop();		// 停止状態
+	}
+
 	return S_OK;
 }
 
@@ -123,6 +132,13 @@ void CObjectCharacter::Uninit(void)
 		//モーションの破棄
 		delete m_pMotion;
 		m_pMotion = nullptr;
+	}
+
+	// 移動状態の破棄
+	if (m_pMoveState != nullptr)
+	{
+		delete m_pMoveState;
+		m_pMoveState = nullptr;
 	}
 
 	SetDeathFlag(true);
@@ -238,6 +254,20 @@ void CObjectCharacter::Draw(void)
 
 	//ステンシルバッファ無効
 	pDevice->SetRenderState(D3DRS_STENCILENABLE, FALSE);
+}
+
+//==========================================
+// 状態変更処理
+//==========================================
+void CObjectCharacter::ChangeMoveState(CMoveState* pMoveState)
+{
+	if (m_pMoveState != nullptr)
+	{
+		delete m_pMoveState;
+		m_pMoveState = nullptr;
+	}
+
+	m_pMoveState = pMoveState;
 }
 
 //====================================================================
