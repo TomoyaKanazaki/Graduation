@@ -132,7 +132,7 @@ public:
 private:
 
 	void ActionState(void);							//モーションと状態の管理
-	void StateManager(D3DXVECTOR3& posMy);			//状態管理
+	void StateManager(D3DXVECTOR3& posMy, D3DXVECTOR3& rotThis);			//状態管理
 	void Move(D3DXVECTOR3& posMy, D3DXVECTOR3& rotMy);								//移動処理
 	D3DXVECTOR3 MoveInputKey(D3DXVECTOR3& posMy, D3DXVECTOR3& rotMy,D3DXVECTOR3 Move);		//移動入力キーボード
 	D3DXVECTOR3 MoveInputPadStick(D3DXVECTOR3& posMy, D3DXVECTOR3& rotMy, D3DXVECTOR3 Move);//移動入力パッドスティック
