@@ -10,8 +10,126 @@
 // ’è”’è‹`
 //==========================================
 namespace
+{}
+
+//**********************************************************************
+// ‘€ì‚Å‚«‚éó‘Ô
+//**********************************************************************
+//==========================================
+// ‘€ì‚©‚çƒ‰ƒ“ƒ_ƒ€•às‚ÉØ‚è‘Ö‚¦
+//==========================================
+void CStateControl::ControlRandom(CMoveStateContext* pMoveStateContext)
 {
-	
+	// ƒ‰ƒ“ƒ_ƒ€•àsó‘Ô‚É‚·‚é
+	pMoveStateContext->ChangeState(new CStateRandom);
+}
+
+//==========================================
+// ‘€ì‚©‚ç’ÇÕ‚ÉØ‚è‘Ö‚¦
+//==========================================
+void CStateControl::ControlAStar(CMoveStateContext* pMoveStateContext)
+{
+	// ’ÇÕó‘Ô‚É‚·‚é
+	pMoveStateContext->ChangeState(new CStateAStar);
+}
+
+//==========================================
+// ‘€ì‚©‚ç’âŽ~‚ÉØ‚è‘Ö‚¦
+//==========================================
+void CStateControl::ControlStop(CMoveStateContext* pMoveStateContext)
+{
+	// ’âŽ~ó‘Ô‚É‚·‚é
+	pMoveStateContext->ChangeState(new CStateStop);
+}
+
+//**********************************************************************
+// ƒ‰ƒ“ƒ_ƒ€•àsó‘Ô
+//**********************************************************************
+//==========================================
+// ƒ‰ƒ“ƒ_ƒ€•às‚©‚ç‘€ì‚ÉØ‚è‘Ö‚¦
+//==========================================
+void CStateRandom::ControlRandom(CMoveStateContext* pMoveStateContext)
+{
+	// ‘€ìó‘Ô‚É‚·‚é
+	pMoveStateContext->ChangeState(new CStateControl);
+}
+
+//==========================================
+// ƒ‰ƒ“ƒ_ƒ€•às‚©‚ç’ÇÕ‚ÉØ‚è‘Ö‚¦
+//==========================================
+void CStateRandom::RandomAStar(CMoveStateContext* pMoveStateContext)
+{
+	// ’ÇÕó‘Ô‚É‚·‚é
+	pMoveStateContext->ChangeState(new CStateAStar);
+}
+
+//==========================================
+// ƒ‰ƒ“ƒ_ƒ€•às‚©‚ç’âŽ~‚ÉØ‚è‘Ö‚¦
+//==========================================
+void CStateRandom::RandomStop(CMoveStateContext* pMoveStateContext)
+{
+	// ’âŽ~ó‘Ô‚É‚·‚é
+	pMoveStateContext->ChangeState(new CStateStop);
+}
+
+//**********************************************************************
+// ’ÇÕó‘Ô
+//**********************************************************************
+//==========================================
+// ’ÇÕ‚©‚ç‘€ì‚ÉØ‚è‘Ö‚¦
+//==========================================
+void CStateAStar::ControlAStar(CMoveStateContext* pMoveStateContext)
+{
+	// ‘€ìó‘Ô‚É‚·‚é
+	pMoveStateContext->ChangeState(new CStateControl);
+}
+
+//==========================================
+// ’ÇÕ‚©‚çƒ‰ƒ“ƒ_ƒ€•às‚ÉØ‚è‘Ö‚¦
+//==========================================
+void CStateAStar::RandomAStar(CMoveStateContext* pMoveStateContext)
+{
+	// ƒ‰ƒ“ƒ_ƒ€•àsó‘Ô‚É‚·‚é
+	pMoveStateContext->ChangeState(new CStateRandom);
+}
+
+//==========================================
+// ’ÇÕ‚©‚ç’âŽ~‚ÉØ‚è‘Ö‚¦
+//==========================================
+void CStateAStar::AStarStop(CMoveStateContext* pMoveStateContext)
+{
+	// ’âŽ~ó‘Ô‚É‚·‚é
+	pMoveStateContext->ChangeState(new CStateStop);
+}
+
+//**********************************************************************
+// ’âŽ~ó‘Ô
+//**********************************************************************
+//==========================================
+// ’âŽ~‚©‚ç‘€ì‚ÉØ‚è‘Ö‚¦
+//==========================================
+void CStateStop::ControlStop(CMoveStateContext* pMoveStateContext)
+{
+	// ‘€ìó‘Ô‚É‚·‚é
+	pMoveStateContext->ChangeState(new CStateControl);
+}
+
+//==========================================
+// ’âŽ~‚©‚çƒ‰ƒ“ƒ_ƒ€•às‚ÉØ‚è‘Ö‚¦
+//==========================================
+void CStateStop::RandomStop(CMoveStateContext* pMoveStateContext)
+{
+	// ƒ‰ƒ“ƒ_ƒ€•àsó‘Ô‚É‚·‚é
+	pMoveStateContext->ChangeState(new CStateRandom);
+}
+
+//==========================================
+// ’âŽ~‚©‚ç’ÇÕ‚ÉØ‚è‘Ö‚¦
+//==========================================
+void CStateStop::AStarStop(CMoveStateContext* pMoveStateContext)
+{
+	// ’ÇÕó‘Ô‚É‚·‚é
+	pMoveStateContext->ChangeState(new CStateAStar);
 }
 
 //==========================================

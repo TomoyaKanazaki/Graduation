@@ -1,21 +1,22 @@
 //============================================
 //
-//	マップ移動装置の処理 [ScrollDevice.h]
+//	傾き装置の処理 [SlopeDevice.h]
 //	Author:sakai minato
 //
 //============================================
-#ifndef _SCROLL_DEVICE_H_
-#define _SCROLL_DEVICE_H_
+
+#ifndef _SLOPE_DEVICE_H_
+#define _SLOPE_DEVICE_H_
 
 #include "objectcharacter.h"
 
-// マップ移動装置クラス
-class CScrollDevice : public CObjectCharacter
+// 傾き装置クラス
+class CSlopeDevice : public CObjectCharacter
 {
 public:
 
-	CScrollDevice(int nPriority = 3);
-	~CScrollDevice();
+	CSlopeDevice(int nPriority = 3);
+	~CSlopeDevice();
 
 	// 状態
 	enum STATE
@@ -42,7 +43,7 @@ public:
 		SETUP_TYPE_MAX,				// 最大
 	};
 
-	static CScrollDevice* Create(const char* pModelNameSlopeDevice, const char* pModelNameEnemy);
+	static CSlopeDevice* Create(const char* pModelNameSlopeDevice, const char* pModelNameEnemy);
 
 	HRESULT Init(void);
 	void Uninit(void);
@@ -52,22 +53,21 @@ public:
 	void SetState(STATE state) { m_State = state; }
 
 	// 静的メンバ関数
-	static CListManager<CScrollDevice>* GetList(void); // リスト取得
+	static CListManager<CSlopeDevice>* GetList(void); // リスト取得
 
 private:
-	HRESULT InitModel(const char* pModelNameScrollDevice, const char* pModelNameEnemy);
+	HRESULT InitModel(const char* pModelNameSlopeDevice, const char* pModelNameEnemy);
 
 	void StateManager(D3DXVECTOR3& rotMy);
-	void Rotate(D3DXVECTOR3& rotMy,int nNldxModel, D3DXVECTOR3 rotate);
 
 	STATE m_State;					//状態
 	int m_nStateCount;				//状態管理用変数
 
 	// 静的メンバ変数
-	static CListManager<CScrollDevice>* m_pList; // オブジェクトリスト
+	static CListManager<CSlopeDevice>* m_pList; // オブジェクトリスト
 
 	// メンバ変数
-	CListManager<CScrollDevice>::AIterator m_iterator; // イテレーター
+	CListManager<CSlopeDevice>::AIterator m_iterator; // イテレーター
 
 };
 #endif
