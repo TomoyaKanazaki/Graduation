@@ -115,8 +115,6 @@ m_pEffectEgg(nullptr),
 m_pEffectSpeed(nullptr),
 m_pP_NumUI(nullptr),
 m_pEffectGuide(nullptr),
-
-m_pEffectGuide(nullptr),
 m_pEffectItem(nullptr)
 {
 
