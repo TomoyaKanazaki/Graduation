@@ -14,10 +14,10 @@ NUM_MODEL = 4
 #------------------------------------------------------------------------------
 # モデルファイル名
 #------------------------------------------------------------------------------
-MODEL_FILENAME = data/MODEL/03_staging/00_SlopeDevice/base.x	# [0]土台
-MODEL_FILENAME = data/MODEL/03_staging/00_SlopeDevice/wheel.x	# [1]回し車
-MODEL_FILENAME = data/MODEL/03_staging/00_SlopeDevice/tube.x		# [2]ローラー
-MODEL_FILENAME = data/MODEL/03_staging/00_SlopeDevice/conecter.x			# [3]先っぽ
+MODEL_FILENAME = data/MODEL/03_staging/00_ScrollDevice/base.x	# [0]土台
+MODEL_FILENAME = data/MODEL/03_staging/00_ScrollDevice/wheel.x	# [1]回し車
+MODEL_FILENAME = data/MODEL/03_staging/00_ScrollDevice/tube.x		# [2]ローラー
+MODEL_FILENAME = data/MODEL/03_staging/00_ScrollDevice/conecter.x			# [3]先っぽ
 
 #------------------------------------------------------------------------------
 # キャラクター情報

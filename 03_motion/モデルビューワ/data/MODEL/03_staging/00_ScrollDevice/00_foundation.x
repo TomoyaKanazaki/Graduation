@@ -343,7 +343,7 @@ Mesh {
    0.270000;0.270000;0.270000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "data\\TEXTURE\\Material\\SlopeDevice\\line.jpg";
+    "data\\TEXTURE\\Material\\ScrollDevice\\line.jpg";
    }
   }
   Material {

@@ -19,7 +19,7 @@ Scene {
 }
 Material 3 {
 	"base" col(1.000 0.043 0.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.250) power(5.00)
-	"mat4" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.270) power(5.00) tex("data\TEXTURE\Material\SlopeDevice\line.jpg")
+	"mat4" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.270) power(5.00) tex("data\TEXTURE\Material\ScrollDevice\line.jpg")
 	"mat1" col(1.000 0.729 0.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.440) power(5.00)
 }
 Object "tube" {

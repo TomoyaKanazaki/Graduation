@@ -37,7 +37,7 @@ namespace
 	const D3DXVECTOR3 BOTTOM_FIELD_POS = D3DXVECTOR3(0.0f, -1500.0f, 0.0f);	// 下床の位置
 	const int BIBLE_OUTGRIT = 3;	// 聖書がマップの外側から何マス内側にいるか
 
-	const char* SCROLL_DEVICE_MODEL = "data\\TXT\\MOTION\\02_staging\\00_SlopeDevice\\motion_slopedevice.txt";
+	const char* SCROLL_DEVICE_MODEL = "data\\TXT\\MOTION\\02_staging\\00_ScrollDevice\\motion_scrolldevice.txt";
 }
 
 //静的メンバ変数宣言
