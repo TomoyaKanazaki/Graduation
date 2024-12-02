@@ -268,7 +268,7 @@
     <ClCompile Include="source\effect.cpp">
       <Filter>ソース ファイル\03_Direction</Filter>
     </ClCompile>
-    <ClCompile Include="SlopeDevice.cpp">
+    <ClCompile Include="source\SlopeDevice.cpp">
       <Filter>ソース ファイル\07_Map</Filter>
     </ClCompile>
   </ItemGroup>
@@ -504,7 +504,7 @@
     <ClInclude Include="source\effect.h">
       <Filter>ソース ファイル\03_Direction</Filter>
     </ClInclude>
-    <ClInclude Include="SlopeDevice.h">
+    <ClInclude Include="source\SlopeDevice.h">
       <Filter>ソース ファイル\07_Map</Filter>
     </ClInclude>
   </ItemGroup>

@@ -19,7 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="SlopeDevice.cpp" />
     <ClCompile Include="source\2DUI.cpp" />
     <ClCompile Include="source\AStar.cpp" />
     <ClCompile Include="source\bible.cpp" />
@@ -87,6 +86,7 @@
     <ClCompile Include="source\select.cpp" />
     <ClCompile Include="source\shadow.cpp" />
     <ClCompile Include="source\signal.cpp" />
+    <ClCompile Include="source\SlopeDevice.cpp" />
     <ClCompile Include="source\slowManager.cpp" />
     <ClCompile Include="source\softcream.cpp" />
     <ClCompile Include="source\sound.cpp" />
@@ -101,7 +101,6 @@
     <ClCompile Include="source\Xmodel.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="SlopeDevice.h" />
     <ClInclude Include="source\2DUI.h" />
     <ClInclude Include="source\AStar.h" />
     <ClInclude Include="source\bible.h" />
@@ -169,6 +168,7 @@
     <ClInclude Include="source\select.h" />
     <ClInclude Include="source\shadow.h" />
     <ClInclude Include="source\signal.h" />
+    <ClInclude Include="source\SlopeDevice.h" />
     <ClInclude Include="source\slowManager.h" />
     <ClInclude Include="source\softcream.h" />
     <ClInclude Include="source\sound.h" />
