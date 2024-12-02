@@ -596,7 +596,7 @@ D3DXVECTOR3 CPlayer::MoveInputPadStick(D3DXVECTOR3& posMy, D3DXVECTOR3& rotMy, D
 	{
 		if (nCnt == m_nPlayNumber)
 		{
-			//キーボードの移動処理
+			//スティックの移動処理
 			if ((pInputJoypad->Get_Stick_Left(nCnt).y > 0.0f && m_OKU && m_bGritCenter) ||
 				(pInputJoypad->Get_Stick_Left(nCnt).y > 0.0f && m_MoveState == MOVE_STATE_DOWN))
 			{

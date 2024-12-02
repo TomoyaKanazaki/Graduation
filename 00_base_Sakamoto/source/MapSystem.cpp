@@ -336,9 +336,18 @@ void CMapSystem::Load(const char* pFilename)
 				// グリッドの行列数を読み込み
 				iss >> MaxGrid.x >> MaxGrid.z;
 
+				CObjmeshField* map = nullptr;
 				//床の生成
-				CGame::GetInstance()->SetMapField(CObjmeshField::Create(MaxGrid));
-				CObjmeshField* map = CGame::GetInstance()->GetMapField();
+				if (CScene::GetMode() == CScene::MODE_GAME)
+				{
+					CGame::GetInstance()->SetMapField(CObjmeshField::Create(MaxGrid));
+					map = CGame::GetInstance()->GetMapField();
+				}
+				else if (CScene::GetMode() == CScene::MODE_TUTORIAL)
+				{
+					CTutorial::GetInstance()->SetMapField(CObjmeshField::Create(MaxGrid));
+					map = CTutorial::GetInstance()->GetMapField();
+				}
 				map->SetPos(INITVECTOR3);
 				map->SetAppear(true); // 描画をオフ
 

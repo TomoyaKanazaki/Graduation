@@ -53,7 +53,6 @@ public:
 	CDevil* GetDevil(void) { return m_pDevil; }
 	CPause* GetPause(void) { return m_pPause; }
 	CTimer* GetTime(void) { return m_pTime; }
-	CObjmeshField* GetMapField(void) { return m_pMapField; }
 	CObjmeshDome* GetDomeUp(void) { return m_pMeshDomeUp; }
 	void SetCubeBlock(CCubeBlock* pBlock) { m_pCubeBlock = pBlock; }
 	CCubeBlock* GetCubeBlock(void) { return m_pCubeBlock; }
@@ -71,6 +70,7 @@ public:
 	void SetDevilHoleFinish(bool Set) { m_bDevilHoleFinish = Set; }
 
 	void SetMapField(CObjmeshField* map) { m_pMapField = map; }
+	CObjmeshField* GetMapField(void) { return m_pMapField; }
 	
 	void DeleteMap(void);
 

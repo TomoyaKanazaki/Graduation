@@ -173,8 +173,6 @@ HRESULT CTitle::Init(void)
 //====================================================================
 void CTitle::Uninit(void)
 {
-	CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_BGM_TITLE);
-
 	//‘S‚Ä‚ÌƒIƒuƒWƒFƒNƒg‚Ì”jŠü
 	CObject::ReleaseAll();
 
@@ -215,9 +213,11 @@ void CTitle::Draw(void)
 //====================================================================
 void CTitle::Select(void)
 {
+	// ‰º“ü—Íˆ—
 	if (CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_S) == true ||
 		CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_DOWN) == true ||
-		CManager::GetInstance()->GetInputJoyPad()->GetTrigger(CInputJoypad::BUTTON_DOWN, 0))
+		CManager::GetInstance()->GetInputJoyPad()->GetTrigger(CInputJoypad::BUTTON_DOWN, 0) ||
+		CManager::GetInstance()->GetInputJoyPad()->Get_LStick_Trigger(CInputJoypad::JOYPAD_LSTICK::LSTICK_DOWN, 0) == true)
 	{
 		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_SELECT);
 
@@ -231,9 +231,12 @@ void CTitle::Select(void)
 		// ƒ^ƒCƒ}[‚Ì‰Šú‰»
 		m_fTimer = 0.0f;
 	}
+
+	// ã“ü—Íˆ—
 	if (CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_W) == true ||
 		CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_UP) == true ||
-		CManager::GetInstance()->GetInputJoyPad()->GetTrigger(CInputJoypad::BUTTON_UP, 0))
+		CManager::GetInstance()->GetInputJoyPad()->GetTrigger(CInputJoypad::BUTTON_UP, 0) ||
+		CManager::GetInstance()->GetInputJoyPad()->Get_LStick_Trigger(CInputJoypad::JOYPAD_LSTICK::LSTICK_UP, 0) == true)
 	{
 		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_SELECT);
 
@@ -278,24 +281,28 @@ void CTitle::Button(void)
 		switch (m_nSelect)
 		{
 		case 0:
-			// ƒQ[ƒ€‘JˆÚ
-			CFade::SetFade(CScene::MODE_SELECT);
+			// ‘I‘ð‰æ–Ê‘JˆÚ
+			//CFade::SetFade(CScene::MODE_SELECT);
+			CScene::SetMode(MODE_SELECT);
 			CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_SINGLE);
 			break;
 		case 1:
-			// ƒQ[ƒ€‘JˆÚ
-			CFade::SetFade(CScene::MODE_SELECT);
+			// ‘I‘ð‰æ–Ê‘JˆÚ
+			//CFade::SetFade(CScene::MODE_SELECT);
+			CScene::SetMode(MODE_SELECT);
 			CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_MULTI);
 			break;
 		case 2:
-			// ƒQ[ƒ€‘JˆÚ
+			// ƒ`ƒ…[ƒgƒŠƒAƒ‹‘JˆÚ
 			CFade::SetFade(CScene::MODE_TUTORIAL);
 			CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_SINGLE);
+			CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_BGM_TITLE);
 			break;
 		case 3:
-			// ƒQ[ƒ€‘JˆÚ
+			// ƒŠƒUƒ‹ƒg‘JˆÚ
 			CFade::SetFade(CScene::MODE_RESULT);
 			CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_NONE);
+			CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_BGM_TITLE);
 			break;
 		}
 
@@ -310,24 +317,28 @@ void CTitle::Button(void)
 		switch (m_nSelect)
 		{
 		case 0:
-			// ƒQ[ƒ€‘JˆÚ
-			CFade::SetFade(CScene::MODE_SELECT);
+			// ‘I‘ð‰æ–Ê‘JˆÚ
+			//CFade::SetFade(CScene::MODE_SELECT);
+			CScene::SetMode(MODE_SELECT);
 			CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_SINGLE);
 			break;
 		case 1:
-			// ƒQ[ƒ€‘JˆÚ
-			CFade::SetFade(CScene::MODE_SELECT);
+			// ‘I‘ð‰æ–Ê‘JˆÚ
+			//CFade::SetFade(CScene::MODE_SELECT);
+			CScene::SetMode(MODE_SELECT);
 			CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_MULTI);
 			break;
 		case 2:
-			// ƒQ[ƒ€‘JˆÚ
+			// ƒ`ƒ…[ƒgƒŠƒAƒ‹‘JˆÚ
 			CFade::SetFade(CScene::MODE_TUTORIAL);
 			CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_SINGLE);
+			CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_BGM_TITLE);
 			break;
 		case 3:
-			// ƒQ[ƒ€‘JˆÚ
+			// ƒŠƒUƒ‹ƒg‘JˆÚ
 			CFade::SetFade(CScene::MODE_RESULT);
 			CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_NONE);
+			CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_BGM_TITLE);
 			break;
 		}
 
