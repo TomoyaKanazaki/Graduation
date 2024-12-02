@@ -12,7 +12,8 @@
 //============================================
 // 前方宣言
 //============================================
-class CMoveStateContext;        // 移動状態管理
+//class CMoveStateContext;        // 移動状態管理
+class CObjectCharacter;         // キャラクター情報
 
 //============================================
 // 移動状態のインターフェースクラス
@@ -26,19 +27,21 @@ public:
     // 状態
 
     // 操作
-    virtual void ControlRandom(CMoveStateContext* pMoveStateContext) {}        // 操作とランダム切り替え
-    virtual void ControlAStar(CMoveStateContext* pMoveStateContext) {}         // 操作と追跡切り替え
-    virtual void ControlStop(CMoveStateContext* pMoveStateContext) {}          // 操作と停止切り替え
+    virtual void ControlRandom(CObjectCharacter* pCharacter) {}        // 操作とランダム切り替え
+    virtual void ControlAStar(CObjectCharacter* pCharacter) {}         // 操作と追跡切り替え
+    virtual void ControlStop(CObjectCharacter* pCharacter) {}          // 操作と停止切り替え
 
     // ランダム歩行
-    virtual void RandomAStar(CMoveStateContext* pMoveStateContext) {}           // ランダムと追跡切り替え
-    virtual void RandomStop(CMoveStateContext* pMoveStateContext) {}            // ランダムと停止切り替え
+    virtual void RandomAStar(CObjectCharacter* pCharacter) {}           // ランダムと追跡切り替え
+    virtual void RandomStop(CObjectCharacter* pCharacter) {}            // ランダムと停止切り替え
 
     // 追跡
-    virtual void AStarStop(CMoveStateContext* pMoveStateContext) {}            // 追跡と停止切り替え
+    virtual void AStarStop(CObjectCharacter* pCharacter) {}            // 追跡と停止切り替え
 
+    //virtual void Move()
 };
 
+#if 0
 //============================================
 // 移動状態管理クラス
 //============================================
@@ -57,6 +60,8 @@ private:
 
 };
 
+#endif
+
 //============================================
 // 操作出来る状態
 //============================================
@@ -66,9 +71,9 @@ public:
     CStateControl(){}
     ~CStateControl(){}
 
-    void ControlRandom(CMoveStateContext* pMoveStateContext) override;      // ランダムに切り替え
-    void ControlAStar(CMoveStateContext* pMoveStateContext) override;       // 追跡に切り替え
-    void ControlStop(CMoveStateContext* pMoveStateContext) override;        // 停止に切り替え
+    void ControlRandom(CObjectCharacter* pCharacter) override;      // ランダムに切り替え
+    void ControlAStar(CObjectCharacter* pCharacter) override;       // 追跡に切り替え
+    void ControlStop(CObjectCharacter* pCharacter) override;        // 停止に切り替え
 };
 
 //============================================
@@ -80,9 +85,9 @@ public:
     CStateRandom(){}
     ~CStateRandom() {}
 
-    void ControlRandom(CMoveStateContext* pMoveStateContext) override;      // 操作に切り替え
-    void RandomAStar(CMoveStateContext* pMoveStateContext) override;        // 追跡に切り替え
-    void RandomStop(CMoveStateContext* pMoveStateContext) override;         // 停止に切り替え
+    void ControlRandom(CObjectCharacter* pCharacter) override;      // 操作に切り替え
+    void RandomAStar(CObjectCharacter* pCharacter) override;        // 追跡に切り替え
+    void RandomStop(CObjectCharacter* pCharacter) override;         // 停止に切り替え
 };
 
 //============================================
@@ -94,9 +99,9 @@ public:
     CStateAStar(){}
     ~CStateAStar() {}
 
-    void ControlAStar(CMoveStateContext* pMoveStateContext) override;       // 操作に切り替え
-    void RandomAStar(CMoveStateContext* pMoveStateContext) override;        // ランダム歩行に切り替え
-    void AStarStop(CMoveStateContext* pMoveStateContext) override;          // 停止に切り替え
+    void ControlAStar(CObjectCharacter* pCharacter) override;       // 操作に切り替え
+    void RandomAStar(CObjectCharacter* pCharacter) override;        // ランダム歩行に切り替え
+    void AStarStop(CObjectCharacter* pCharacter) override;          // 停止に切り替え
 
 };
 
@@ -110,9 +115,9 @@ public:
     CStateStop(){}
     ~CStateStop() {}
 
-    void ControlStop(CMoveStateContext* pMoveStateContext) override;        // 操作に切り替え
-    void RandomStop(CMoveStateContext* pMoveStateContext) override;         // ランダム歩行に切り替え
-    void AStarStop(CMoveStateContext* pMoveStateContext) override;          // 追跡に切り替え
+    void ControlStop(CObjectCharacter* pCharacter) override;        // 操作に切り替え
+    void RandomStop(CObjectCharacter* pCharacter) override;         // ランダム歩行に切り替え
+    void AStarStop(CObjectCharacter* pCharacter) override;          // 追跡に切り替え
 
 };
 

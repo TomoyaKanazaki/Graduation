@@ -212,11 +212,10 @@ private:
 	CLifeUi* m_pLifeUi;				//体力UI
 	CObjectBillboard* m_pP_NumUI;	//プレイヤー番号UI		
 
-	CShadow* m_pShadow;				//影
-
 	CEffekseer* m_pEffectEgg;		// 卵のエフェクト
 	CEffekseer* m_pEffectSpeed;		// 加減速のエフェクト
 	CEffekseer* m_pEffectGuide; // 復活位置のエフェクト
+	CEffekseer* m_pEffectItem; // アイテム所持エフェクト
 
 	// 静的メンバ変数
 	static CListManager<CPlayer>* m_pList; // オブジェクトリスト

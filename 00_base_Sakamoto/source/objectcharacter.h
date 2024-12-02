@@ -12,6 +12,7 @@
 class CModel;
 class CMotion;
 class CShadow;
+class CMoveState;		// 移動の状態
 
 #define MODEL_NUM		(64)	// モデルの数
 #define FILE_NAME_SIZE	(128)	// ファイル名の最大文字数
@@ -57,9 +58,14 @@ public:
 
 	void SetTxtCharacter(const char* pFilename);
 
+	// 移動状態
+	void ChangeMoveState(CMoveState* pMoveState);   // 状態変更
 protected:
 
 	CShadow* m_pShadow;
+
+
+	CMoveState* m_pMoveState;		// 移動状態
 
 private:
 

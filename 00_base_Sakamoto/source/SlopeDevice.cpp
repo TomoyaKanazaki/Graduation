@@ -18,6 +18,7 @@
 
 #include "objmeshField.h"
 
+
 //==========================================
 //  定数定義
 //==========================================
@@ -37,7 +38,7 @@ CListManager<CSlopeDevice>* CSlopeDevice::m_pList = nullptr; // オブジェクトリス
 //====================================================================
 CSlopeDevice::CSlopeDevice(int nPriority) : CObjectCharacter(nPriority)
 {
-	m_State = STATE(1);
+	m_State = STATE(0);
 	m_nStateCount = 0;
 }
 
@@ -162,6 +163,49 @@ void CSlopeDevice::Draw(void)
 }
 
 //====================================================================
+// 特定条件（傾き）の状態設定処理
+//====================================================================
+void CSlopeDevice::SetState(STATE state, CScrollArrow::Arrow stateArrow)
+{
+	switch (stateArrow)
+	{
+	case CScrollArrow::STATE_UP:
+
+		if (m_LocateWorldType == LOCATE_WORLD_TYPE_TOP_LEFT ||
+			m_LocateWorldType == LOCATE_WORLD_TYPE_TOP_RIGHT)
+		{
+			m_State = state;
+		}
+		break;
+	case CScrollArrow::STATE_DOWN:
+
+		if (m_LocateWorldType == LOCATE_WORLD_TYPE_BOTTOM_LEFT ||
+			m_LocateWorldType == LOCATE_WORLD_TYPE_BOTTOM_RIGHT)
+		{
+			m_State = state;
+		}
+
+		break;
+	case CScrollArrow::STATE_LEFT:
+
+		if (m_LocateWorldType == LOCATE_WORLD_TYPE_TOP_LEFT ||
+			m_LocateWorldType == LOCATE_WORLD_TYPE_BOTTOM_LEFT)
+		{
+			m_State = state;
+		}
+		break;
+	case CScrollArrow::STATE_RIGHT:
+
+		if (m_LocateWorldType == LOCATE_WORLD_TYPE_TOP_RIGHT ||
+			m_LocateWorldType == LOCATE_WORLD_TYPE_BOTTOM_RIGHT)
+		{
+			m_State = state;
+		}
+		break;
+	}
+}
+
+//====================================================================
 // モデル関連の初期化処理
 //====================================================================
 HRESULT CSlopeDevice::InitModel(const char* pModelNameSlopeDevice, const char* pModelNameEnemy)
@@ -220,10 +264,6 @@ void CSlopeDevice::Ascent(int nNldxModel, D3DXVECTOR3 ascent, D3DXVECTOR3 ascent
 		// 上昇量を加算
 		pos += ascent;
 	}
-	else
-	{
-		m_State = STATE(2);
-	}
 
 	// モデルの位置更新
 	pModel->SetStartPos(pos);
@@ -250,10 +290,6 @@ void CSlopeDevice::Descent(int nNldxModel, D3DXVECTOR3 descent, D3DXVECTOR3 desc
 	{
 		// 下降量を減算
 		pos -= descent;
-	}
-	else
-	{
-		m_State = STATE(1);
 	}
 
 	// モデルの位置更新
