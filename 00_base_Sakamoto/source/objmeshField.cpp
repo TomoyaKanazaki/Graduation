@@ -268,7 +268,7 @@ void CObjmeshField::SetNULL(void)
 //====================================================================
 void CObjmeshField::Update(void)
 {
-
+	DebugProc::Print(DebugProc::POINT_CENTER, "è∞Ç†ÇÈÇÊ\n");
 }
 
 //====================================================================

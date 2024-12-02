@@ -103,6 +103,9 @@ m_pEffect(nullptr)
 	m_Grid.x = 0;
 	m_Grid.z = 0;
 
+	m_SelectGrid.x = 0;
+	m_SelectGrid.z = 0;
+
 	m_nBugCounter = 0;
 }
 
@@ -230,8 +233,11 @@ void CEnemy::Update(void)
 	// 過去の位置を記録
 	posOldMy = posMy;
 
-	//壁の索敵判定
-	SearchWall(posMy);
+	////壁の索敵判定
+	//SearchWall(posMy);
+
+	//// ランダム移動
+	//MoveSelect();
 
 	// 状態の更新
 	StateManager(posMy);
@@ -242,11 +248,11 @@ void CEnemy::Update(void)
 	// 位置更新処理
 	UpdatePos(posMy,posOldMy,sizeMy);
 
-	//// プレイヤーへの最短経路探索
-	//Coordinate();
+	// プレイヤーへの最短経路探索
+	Coordinate();
 
 	//// 最短経路をたどる
-	//Route();
+	Route();
 
 	// 自分の番号を設定
 	m_Grid = CMapSystem::GetInstance()->CMapSystem::CalcGrid(posMy);
@@ -470,23 +476,23 @@ void CEnemy::CollisionOut(D3DXVECTOR3& posMy)
 		D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
 		float GritSize = CMapSystem::GetInstance()->GetGritSize();
 
-		// ステージ外の当たり判定
-		if (Pos.x + MapSize.x < posMy.x) // 右
-		{
-			posMy.x = Pos.x -MapSize.x - GritSize;
-		}
-		if (Pos.x - MapSize.x - GritSize > posMy.x) // 左
-		{
-			posMy.x = Pos.x + MapSize.x;
-		}
-		if (Pos.z + MapSize.z + GritSize < posMy.z) // 上
-		{
-			posMy.z = Pos.z - MapSize.z;
-		}
-		if (Pos.z - MapSize.z > posMy.z) // 下
-		{
-			posMy.z = Pos.z + MapSize.z + GritSize;
-		}
+		//// ステージ外の当たり判定
+		//if (Pos.x + MapSize.x < posMy.x) // 右
+		//{
+		//	posMy.x = Pos.x -MapSize.x - GritSize;
+		//}
+		//if (Pos.x - MapSize.x - GritSize > posMy.x) // 左
+		//{
+		//	posMy.x = Pos.x + MapSize.x;
+		//}
+		//if (Pos.z + MapSize.z + GritSize < posMy.z) // 上
+		//{
+		//	posMy.z = Pos.z - MapSize.z;
+		//}
+		//if (Pos.z - MapSize.z > posMy.z) // 下
+		//{
+		//	posMy.z = Pos.z + MapSize.z + GritSize;
+		//}
 	}
 }
 
@@ -623,6 +629,8 @@ void CEnemy::MoveSelect()
 		{
 			m_SelectMove = SELECT_MOVE_DOWN;
 		}
+
+		m_SelectGrid = m_Grid;
 	}
 }
 
@@ -662,10 +670,11 @@ void CEnemy::SearchWall(D3DXVECTOR3& posMy)
 
 	DebugProc::Print(DebugProc::POINT_LEFT, "敵の位置 %f %f %f\n", MyGritPos.x, MyGritPos.y, MyGritPos.z);
 
-	if (posMy.x <= MyGritPos.x + ((MapGritSize * 0.5f) - GRIT_OK) &&
+	if ((posMy.x <= MyGritPos.x + ((MapGritSize * 0.5f) - GRIT_OK) &&
 		posMy.x >= MyGritPos.x - ((MapGritSize * 0.5f) - GRIT_OK) &&
 		posMy.z <= MyGritPos.z + ((MapGritSize * 0.5f) - GRIT_OK) &&
-		posMy.z >= MyGritPos.z - ((MapGritSize * 0.5f) - GRIT_OK))
+		posMy.z >= MyGritPos.z - ((MapGritSize * 0.5f) - GRIT_OK)) &&
+		(m_Grid.x != m_SelectGrid.x || m_Grid.z != m_SelectGrid.z))
 	{// グリットの中心位置に立っているなら操作を受け付ける
 
 		if (!m_OKR && OKR)

@@ -11,8 +11,6 @@
 #include "useful.h"
 #include "MapSystem.h"
 
-#define SCROLL_ID 0
-
 //前方宣言
 
 class CObject2D;
@@ -31,9 +29,6 @@ class CPlayer;
 //オブジェクトプレイヤークラス
 class CDevil : public CObjectCharacter
 {
-private:
-	static const int ENCOUNT_MAX = 128;
-
 public:
 	CDevil(int nPriority = 2);
 	~CDevil();

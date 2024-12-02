@@ -338,9 +338,9 @@ void CMapSystem::Load(const char* pFilename)
 
 				//è∞ÇÃê∂ê¨
 				CGame::GetInstance()->SetMapField(CObjmeshField::Create(MaxGrid));
-				auto map = CGame::GetInstance()->GetMapField();
+				CObjmeshField* map = CGame::GetInstance()->GetMapField();
 				map->SetPos(INITVECTOR3);
-				map->SetAppear(false); // ï`âÊÇÉIÉt
+				map->SetAppear(true); // ï`âÊÇÉIÉt
 
 				// åoòHíTçıópèÓïÒÇÃê›íË
 				generator->setWorldSize(MaxGrid.ToAStar()); // ê¢äEÇÃëÂÇ´Ç≥
@@ -551,8 +551,8 @@ int CMapSystem::CalcGridZ(const float posZ)
 			fCountPosZ = fCountPosZ + (DevilPos.z + (m_MapSize.z * 2.0f)) + m_fGritSize;
 		}
 
-		if (posZ < fCountPosZ + (m_fGritSize * 0.5f) &&
-			posZ >= fCountPosZ - (m_fGritSize * 0.5f))
+		if (posZ <= fCountPosZ + (m_fGritSize * 0.5f) &&
+			posZ > fCountPosZ - (m_fGritSize * 0.5f))
 		{
 			return i;
 		}

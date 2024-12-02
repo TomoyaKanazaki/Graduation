@@ -22,10 +22,6 @@ namespace
 
 }
 
-//===========================================
-// 静的メンバ変数宣言
-//===========================================
-
 //====================================================================
 //コンストラクタ
 //====================================================================
@@ -100,19 +96,18 @@ void CGamePlayer::Draw(void)
 	CPlayer::Draw();
 }
 
-
 //====================================================================
 //ダメージ処理
 //====================================================================
 void CGamePlayer::Death(void)
 {
-	// 昇天エフェクト
-	D3DXMATRIX mat = *GetUseMultiMatrix();
-	D3DXVECTOR3 ef = useful::CalcMatrix(GetPos(), GetRot(), mat);
-	MyEffekseer::EffectCreate(CMyEffekseer::TYPE_ACENTION, false, ef, GetRot(), D3DXVECTOR3(100.0f, 100.0f, 100.0f));
-
 	if (GetState() != STATE_EGG && GetState() != STATE_DEATH)
 	{
+		// 昇天エフェクト
+		D3DXMATRIX mat = *GetUseMultiMatrix();
+		D3DXVECTOR3 ef = useful::CalcMatrix(GetPos(), GetRot(), mat);
+		MyEffekseer::EffectCreate(CMyEffekseer::TYPE_ACENTION, false, ef, GetRot(), D3DXVECTOR3(100.0f, 100.0f, 100.0f));
+
 		SetLife(GetLife() - 1);
 
 		// 聖書を所持しているときにその場に聖書を落とす

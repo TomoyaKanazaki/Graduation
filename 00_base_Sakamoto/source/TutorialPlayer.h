@@ -21,9 +21,6 @@ class CScore;
 //オブジェクトプレイヤークラス
 class CTutorialPlayer : public CPlayer
 {
-private:
-	static const int ENCOUNT_MAX = 128;
-
 public:
 	CTutorialPlayer(int nPriority = 2);
 	~CTutorialPlayer();

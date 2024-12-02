@@ -83,7 +83,7 @@ private:
 
 	// メンバ関数
 	virtual void Move(D3DXVECTOR3& pos) { } // 移動処理
-	virtual  void SetEffect() {};
+	virtual void SetEffect() {};
 
 	// メンバ変数
 	CListManager<CItem>::AIterator m_iterator; // イテレーター
