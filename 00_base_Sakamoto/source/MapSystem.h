@@ -37,7 +37,7 @@ public:
 	struct GRID
 	{
 		// コンストラクタ
-		GRID() {};
+		GRID() : x(0), z(0) {};
 		GRID(int X, int Z) { x = X; z = Z; };
 
 		// デストラクタ
