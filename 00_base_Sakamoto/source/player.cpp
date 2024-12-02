@@ -112,7 +112,8 @@ m_pScore(nullptr),
 m_nTime(0),
 m_pEffectEgg(nullptr),
 m_pEffectSpeed(nullptr),
-m_pEffectGuide(nullptr)
+m_pEffectGuide(nullptr),
+m_pEffectItem(nullptr)
 {
 
 }
@@ -351,6 +352,7 @@ void CPlayer::Update(void)
 		{
 			// タイマーを加算
 			m_fCrossTimer += DeltaTime::Get();
+			DebugProc::Print(DebugProc::POINT_CENTER, "残り時間 : %f", m_fCrossTimer);
 
 			// 十字架の所持可能時間を超過した場合
 			if (m_fCrossTimer >= CROSS_TIME)
@@ -439,6 +441,7 @@ void CPlayer::Update(void)
 	// エフェクトの操作
 	ControlEffect(m_pEffectEgg); // 卵のエフェクト
 	ControlEffect(m_pEffectSpeed); // 加減速のエフェクト
+	ControlEffect(m_pEffectItem); // アイテム所持エフェクト
 	if (m_pShadow != nullptr)
 	{
 		ControlEffect(m_pEffectGuide, &m_pShadow->GetPos()); // 復活位置のガイドエフェクト
@@ -523,8 +526,6 @@ void CPlayer::Move(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis)
 			m_bInvincible = true;
 			m_nInvincibleCount = INVINCIBLE_TIME;
 		}
-
-		SetItemType(m_eItemType);
 
 		//移動状態にする
 		m_State = STATE_WALK;
@@ -1794,6 +1795,17 @@ void CPlayer::SetItemType(ITEM_TYPE eType)
 	// アイテムのタイプを設定
 	m_eItemType = eType;
 
+	// エフェクトの生成
+	if (eType != TYPE_NONE)
+	{
+		if (m_pEffectItem == nullptr)
+		{
+			D3DXMATRIX mat = *GetUseMultiMatrix();
+			D3DXVECTOR3 ef = useful::CalcMatrix(GetPos(), GetRot(), mat);
+			m_pEffectItem = MyEffekseer::EffectCreate(CMyEffekseer::TYPE_GOT_THEITEM, true, ef, GetRot());
+		}
+	}
+
 	// 所持しているアイテムによってモデルの表示を切り替える
 	switch (eType)
 	{
@@ -1809,11 +1821,20 @@ void CPlayer::SetItemType(ITEM_TYPE eType)
 	case TYPE_BIBLE:
 		SetPartsDisp(9, false);		// 十字架のモデル非表示
 		SetPartsDisp(10, true);		// 聖書のモデル表示
+
 		break;
 
 	default:
 		SetPartsDisp(9, false);		// 十字架のモデル非表示
 		SetPartsDisp(10, false);	// 聖書のモデル非表示
+
+		// エフェクトの削除
+		if (m_pEffectItem != nullptr)
+		{
+			m_pEffectItem->SetDeath();
+			m_pEffectItem = nullptr;
+		}
+
 		break;
 	}
 }
