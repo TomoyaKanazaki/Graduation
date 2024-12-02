@@ -113,8 +113,9 @@ m_pScore(nullptr),
 m_nTime(0),
 m_pEffectEgg(nullptr),
 m_pEffectSpeed(nullptr),
-m_pP_NumUI(nullptr)
-m_pEffectGuide(nullptr)
+m_pP_NumUI(nullptr),
+m_pEffectGuide(nullptr),
+m_pShadow(nullptr)
 {
 
 }
