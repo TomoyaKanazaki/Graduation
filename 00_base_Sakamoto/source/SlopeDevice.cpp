@@ -181,9 +181,6 @@ void CSlopeDevice::StateManager(D3DXVECTOR3& rotMy)
 		break;
 	case STATE_ROTATE:
 
-		// ƒ[ƒ‰[‚Æ‰ñ‚µŽÔ‰ñ“]ˆ—
-		Rotate(rotMy, SETUP_TYPE_ROLLRE, ROTATE_ADD);
-		Rotate(rotMy, SETUP_TYPE_MAWASIGURMA, ROTATE_ADD);
 		break;
 	}
 
@@ -191,40 +188,6 @@ void CSlopeDevice::StateManager(D3DXVECTOR3& rotMy)
 	{
 		m_nStateCount--;
 	}
-}
-
-//====================================================================
-// ‰ñ“]ˆ—
-//====================================================================
-void CSlopeDevice::Rotate(D3DXVECTOR3& rotMy, int nNldxModel, D3DXVECTOR3 rotate)
-{
-	// ƒ‚ƒfƒ‹‚ÌŽæ“¾
-	CModel* pModel = GetModel(nNldxModel);
-
-	if (pModel == nullptr)
-	{
-		return;
-	}
-
-	// ƒ‚ƒfƒ‹‚Ì‰ñ“]Ž²‚ðŽæ“¾
-	D3DXVECTOR3 rot = pModel->GetStartRot();
-
-	if (rotMy.y == 0.0f)
-	{
-		// ‰ñ“]—ÊŒ¸ŽZ
-		rot += rotate;
-	}
-	else if (rotMy.y == D3DX_PI)
-	{
-		// ‰ñ“]—Ê‰ÁŽZ
-		rot -= rotate;
-	}
-
-	// Šp“x‚Ì³‹K‰»
-	useful::NormalizeAngle(&rot);
-
-	// ƒ‚ƒfƒ‹‚Ì‰ñ“]Ý’è
-	pModel->SetStartRot(rot);
 }
 
 //====================================================================

@@ -59,7 +59,6 @@ private:
 	HRESULT InitModel(const char* pModelNameSlopeDevice, const char* pModelNameEnemy);
 
 	void StateManager(D3DXVECTOR3& rotMy);
-	void Rotate(D3DXVECTOR3& rotMy, int nNldxModel, D3DXVECTOR3 rotate);
 
 	STATE m_State;					//ó‘Ô
 	int m_nStateCount;				//ó‘ÔŠÇ——p•Ï”
