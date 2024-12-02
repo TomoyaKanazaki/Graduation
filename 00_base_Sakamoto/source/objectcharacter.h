@@ -57,6 +57,10 @@ public:
 
 	void SetTxtCharacter(const char* pFilename);
 
+protected:
+
+	CShadow* m_pShadow;
+
 private:
 
 	void LoadModel(const char* pFilename);
@@ -75,7 +79,6 @@ private:
 	D3DXMATRIX m_mtxWorld;			// ワールドマトリックス
 	D3DXMATRIX* m_UseMultiMatrix;	// 掛け合わせるマトリックス
 
-	CShadow* m_pShadow;
 	bool m_bUseStencil;				// ステンシルバッファの使用の有無
 	bool m_bUseShadowMtx;			// シャドウマトリックスの使用の有無
 	bool m_bUseShadow;				// 影の使用フラグ

@@ -109,12 +109,12 @@ m_pDownEgg(nullptr),
 m_EggMove(INITVECTOR3),
 m_bInvincible(true),
 m_nInvincibleCount(0),
-m_pShadow(nullptr),
 m_pScore(nullptr),
 m_nTime(0),
 m_pEffectEgg(nullptr),
 m_pEffectSpeed(nullptr),
 m_pP_NumUI(nullptr)
+m_pEffectGuide(nullptr)
 {
 
 }
@@ -415,6 +415,11 @@ void CPlayer::Update(void)
 
 	// エフェクトの操作
 	ControlEffect(m_pEffectEgg); // 卵のエフェクト
+	ControlEffect(m_pEffectSpeed); // 加減速のエフェクト
+	if (m_pShadow != nullptr)
+	{
+		ControlEffect(m_pEffectGuide, &m_pShadow->GetPos()); // 復活位置のガイドエフェクト
+	}
 }
 
 //====================================================================
@@ -1639,7 +1644,15 @@ void CPlayer::EggMove(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis)
 			{
 				D3DXMATRIX mat = *GetUseMultiMatrix();
 				D3DXVECTOR3 ef = useful::CalcMatrix(posThis, rotThis, mat);
-				m_pEffectEgg = MyEffekseer::EffectCreate(CMyEffekseer::TYPE_BORN_PLAYER_00, true, ef, rotThis);
+				m_pEffectEgg = MyEffekseer::EffectCreate((CMyEffekseer::TYPE)((int)CMyEffekseer::TYPE_BORN_PLAYER_00 + m_nPlayNumber), true, ef, rotThis);
+			}
+
+			// エフェクトの生成
+			if (m_pEffectGuide == nullptr && m_pShadow != nullptr)
+			{
+				D3DXMATRIX mat = *GetUseMultiMatrix();
+				D3DXVECTOR3 ef = useful::CalcMatrix(m_pShadow->GetPos(), rotThis, mat);
+				m_pEffectGuide = MyEffekseer::EffectCreate((CMyEffekseer::TYPE)((int)CMyEffekseer::TYPE_BORNGUID1 + m_nPlayNumber), true, ef, rotThis);
 			}
 		}
 
@@ -1663,6 +1676,13 @@ void CPlayer::EggMove(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis)
 			{
 				m_pEffectEgg->SetDeath();
 				m_pEffectEgg = nullptr;
+			}
+
+			// エフェクトの削除
+			if (m_pEffectGuide != nullptr)
+			{
+				m_pEffectGuide->SetDeath();
+				m_pEffectGuide = nullptr;
 			}
 		}
 
@@ -1735,23 +1755,52 @@ void CPlayer::EggMove(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis)
 //==========================================
 //  エフェクトの移動
 //==========================================
-void CPlayer::ControlEffect(CEffekseer* pTarget)
+void CPlayer::ControlEffect(CEffekseer* pTarget, const D3DXVECTOR3* pPos)
+{
+	// 向きの変更
+	RotationEffect(pTarget);
+
+	// 移動
+	MoveEffect(pTarget, pPos);
+}
+
+//==========================================
+//  エフェクトの回転
+//==========================================
+void CPlayer::RotationEffect(CEffekseer* pTarget)
 {
 	// 対象のエフェクトがnullの場合関数を抜ける
 	if (pTarget == nullptr) { return; }
-	 
+
 	// 計算に使用する値の取得
 	D3DXMATRIX mat = *GetUseMultiMatrix();
-	D3DXVECTOR3 pos = GetPos();
-	D3DXVECTOR3 rot = GetRot();
 
-	// 座標と向きにマトリックスを反映
+	// 向きにマトリックスを反映
+	D3DXVECTOR3 rot = useful::CalcMatrixToRot(mat);
+
+	// エフェクトに情報を適用
+	pTarget->SetRotation(rot);
+}
+
+//==========================================
+//  エフェクトの移動
+//==========================================
+void CPlayer::MoveEffect(CEffekseer* pTarget, const D3DXVECTOR3* pPos)
+{
+	// 対象のエフェクトがnullの場合関数を抜ける
+	if (pTarget == nullptr) { return; }
+
+	// 計算に使用する値の取得
+	D3DXMATRIX mat = *GetUseMultiMatrix();
+	D3DXVECTOR3 rot = GetRot();
+	D3DXVECTOR3 pos = (pPos != nullptr) ? *pPos : GetPos();
+
+	// 座標にマトリックスを反映
 	pos = useful::CalcMatrix(pos, rot, mat);
 	rot = useful::CalcMatrixToRot(mat);
 
 	// エフェクトに情報を適用
 	pTarget->SetPosition(pos);
-	pTarget->SetRotation(rot);
 }
 
 //====================================================================
