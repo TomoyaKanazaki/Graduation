@@ -465,35 +465,35 @@ void CEnemy::CollisionDevilHole(useful::COLLISION XYZ)
 //====================================================================
 void CEnemy::CollisionOut(D3DXVECTOR3& posMy)
 {
-	// キューブブロックのリスト構造が無ければ抜ける
-	if (CDevil::GetList() == nullptr) { return; }
-	std::list<CDevil*> list = CDevil::GetList()->GetList();    // リストを取得
+	// //キューブブロックのリスト構造が無ければ抜ける
+	//if (CDevil::GetList() == nullptr) { return; }
+	//std::list<CDevil*> list = CDevil::GetList()->GetList();    // リストを取得
 
-	// キューブブロックリストの中身を確認する
-	for (CDevil* pDevil : list)
-	{
-		D3DXVECTOR3 Pos = pDevil->GetDevilPos();
-		D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
-		float GritSize = CMapSystem::GetInstance()->GetGritSize();
+	// //キューブブロックリストの中身を確認する
+	//for (CDevil* pDevil : list)
+	//{
+	//	D3DXVECTOR3 Pos = pDevil->GetDevilPos();
+	//	D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
+	//	float GritSize = CMapSystem::GetInstance()->GetGritSize();
 
-		//// ステージ外の当たり判定
-		//if (Pos.x + MapSize.x < posMy.x) // 右
-		//{
-		//	posMy.x = Pos.x -MapSize.x - GritSize;
-		//}
-		//if (Pos.x - MapSize.x - GritSize > posMy.x) // 左
-		//{
-		//	posMy.x = Pos.x + MapSize.x;
-		//}
-		//if (Pos.z + MapSize.z + GritSize < posMy.z) // 上
-		//{
-		//	posMy.z = Pos.z - MapSize.z;
-		//}
-		//if (Pos.z - MapSize.z > posMy.z) // 下
-		//{
-		//	posMy.z = Pos.z + MapSize.z + GritSize;
-		//}
-	}
+	//	// ステージ外の当たり判定
+	//	if (Pos.x + MapSize.x < posMy.x) // 右
+	//	{
+	//		posMy.x = Pos.x -MapSize.x - GritSize;
+	//	}
+	//	if (Pos.x - MapSize.x - GritSize > posMy.x) // 左
+	//	{
+	//		posMy.x = Pos.x + MapSize.x;
+	//	}
+	//	if (Pos.z + MapSize.z + GritSize < posMy.z) // 上
+	//	{
+	//		posMy.z = Pos.z - MapSize.z;
+	//	}
+	//	if (Pos.z - MapSize.z > posMy.z) // 下
+	//	{
+	//		posMy.z = Pos.z + MapSize.z + GritSize;
+	//	}
+	//}
 }
 
 //====================================================================

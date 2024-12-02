@@ -763,7 +763,7 @@ D3DXVECTOR3 useful::CalcMatrix(const D3DXVECTOR3& pos, const D3DXVECTOR3& rot, c
 }
 
 //==========================================
-//  マトリックスから角度を産出する
+//  マトリックスから角度を算出する
 //==========================================
 D3DXVECTOR3 useful::CalcMatrixToRot(const D3DXMATRIX& mtx)
 {

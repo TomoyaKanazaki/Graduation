@@ -157,6 +157,8 @@ private:
 	void RotUpdate(D3DXVECTOR3& rotMy);		//向き更新処理
 	void EggMove(D3DXVECTOR3& posMy, D3DXVECTOR3& rotMy);			//卵の動き
 
+	void ControlEffect(CEffekseer* pTarget); // エフェクトの操作
+
 	void DebugKey(void);		//デバッグキー
 
 	int m_nPlayNumber;			//プレイ用番号
@@ -204,6 +206,9 @@ private:
 	CLifeUi* m_pLifeUi;
 
 	CShadow* m_pShadow;
+
+	CEffekseer* m_pEffectEgg; // 卵のエフェクト
+	CEffekseer* m_pEffectSpeed; // 加減速のエフェクト
 
 	// 静的メンバ変数
 	static CListManager<CPlayer>* m_pList; // オブジェクトリスト
