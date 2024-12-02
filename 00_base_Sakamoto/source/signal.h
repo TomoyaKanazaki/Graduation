@@ -60,7 +60,7 @@ private:
 
 	D3DXVECTOR3 m_rot;		//回転量
 
-	//CDevil* m_pDevil;
+	CDevil* m_pDevil;
 
 	// 静的メンバ変数
 	static CListManager<CSignal>* m_pList; // オブジェクトリスト

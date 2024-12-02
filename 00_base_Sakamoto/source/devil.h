@@ -89,7 +89,6 @@ public:
 
 	void SetModelDisp(bool Sst);
 
-	void SetStateNumber(int nNum) { m_nStateNum = nNum; }
 	int GetStateNumber(void) { return m_nStateNum; }
 
 	// Ã“Iƒƒ“ƒoŠÖ”
