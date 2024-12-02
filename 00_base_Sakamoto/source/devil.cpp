@@ -37,6 +37,7 @@
 #include "MapSystem.h"
 #include "ScrollDevice.h"
 #include "effect.h"
+#include "signal.h"
 
 //===========================================
 // 定数定義
@@ -93,6 +94,8 @@ CDevil::CDevil(int nPriority) : CObjectCharacter(nPriority)
 	m_ScrollArrow[0] = nullptr;
 	m_ScrollArrow[1] = nullptr;
 	m_ScrollType = SCROLL_TYPE_NORMAL;
+	m_pSignal[0] = nullptr;
+	m_pSignal[1] = nullptr;
 	m_nStateNum = 0;
 }
 
@@ -146,8 +149,8 @@ HRESULT CDevil::Init(void)
 		break;
 
 	case CScene::MODE_GAME:
-	case CScene::MODE_TUTORIAL:
 
+	case CScene::MODE_TUTORIAL:
 		break;
 
 	case CScene::MODE_RESULT:
@@ -164,6 +167,19 @@ HRESULT CDevil::Init(void)
 	{
 		m_ScrollArrow[1] = CScrollArrow::Create();
 		m_ScrollArrow[1]->SetPos((D3DXVECTOR3(1200.0f, 120.0f, 0.0f)));
+	}
+
+	// 矢印生成
+	if (m_pSignal[0] == nullptr)
+	{
+		m_pSignal[0] = CSignal::Create("data\\MODEL\\signal.x");
+		m_pSignal[0]->SetPos(D3DXVECTOR3(-1000.0f,200.0f,500.0f));
+	}
+
+	if (m_pSignal[1] == nullptr)
+	{
+		m_pSignal[1] = CSignal::Create("data\\MODEL\\signal.x");
+		m_pSignal[1]->SetPos(D3DXVECTOR3(1000.0f, 200.0f, 500.0f));
 	}
 
 	// スローの生成
@@ -217,6 +233,9 @@ void CDevil::Update(void)
 
 	// マップの傾き
 	m_DevilRot = CObjmeshField::GetListTop()->GetRot();
+
+	// 矢印の回転
+	SignalScroll();
 
 	//状態の管理
 	StateManager();
@@ -787,6 +806,7 @@ void CDevil::ActionState(void)
 		if (m_Action != ACTION_SIGNAL_UP)
 		{
 			m_Action = ACTION_SIGNAL_UP;
+			m_nStateNum = ACTION_SIGNAL_UP;
 			GetMotion()->Set(ACTION_SIGNAL_UP, 5);
 		}
 	}
@@ -796,6 +816,7 @@ void CDevil::ActionState(void)
 		if (m_Action != ACTION_SIGNAL_DOWN)
 		{
 			m_Action = ACTION_SIGNAL_DOWN;
+			m_nStateNum = ACTION_SIGNAL_DOWN;
 			GetMotion()->Set(ACTION_SIGNAL_DOWN, 5);
 		}
 	}
@@ -805,6 +826,7 @@ void CDevil::ActionState(void)
 		if (m_Action != ACTION_SIGNAL_LEFT)
 		{
 			m_Action = ACTION_SIGNAL_LEFT;
+			m_nStateNum = ACTION_SIGNAL_LEFT;
 			GetMotion()->Set(ACTION_SIGNAL_LEFT, 5);
 		}
 	}
@@ -814,6 +836,7 @@ void CDevil::ActionState(void)
 		if (m_Action != ACTION_SIGNAL_RIGHT)
 		{
 			m_Action = ACTION_SIGNAL_RIGHT;
+			m_nStateNum = ACTION_SIGNAL_RIGHT;
 			GetMotion()->Set(ACTION_SIGNAL_RIGHT, 5);
 		}
 	}
@@ -876,8 +899,6 @@ void CDevil::StateManager(void)
 					m_SlopwArrowOld = m_DevilArrow;
 
 					m_nStateCount = SLOPE_TIME;
-
-					m_nStateNum = m_DevilArrow;
 				}
 				else
 				{// 傾き戻し状態の時
@@ -912,7 +933,6 @@ void CDevil::StateManager(void)
 					}
 				}
 				m_ScrollArrowOld = m_DevilArrow;
-				m_nStateNum = m_DevilArrow;
 
 				// マップ移動装置のリスト構造が無ければ抜ける
 				if (CScrollDevice::GetList() == nullptr) { return; }
@@ -1574,6 +1594,35 @@ void CDevil::GritScroll(D3DXVECTOR3 Move)
 		pos.y = 50.0f;
 
 		pCubeBlock->SetPos(pos);
+	}
+}
+
+//====================================================================
+// 矢印が回転する処理
+//====================================================================
+void CDevil::SignalScroll(void)
+{
+	switch (m_nStateNum)
+	{
+	case ACTION_SIGNAL_UP:
+		m_pSignal[0]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI,0.0f));
+		m_pSignal[1]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
+		break;
+
+	case ACTION_SIGNAL_DOWN:
+		m_pSignal[0]->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+		m_pSignal[1]->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f)); 
+		break;
+
+	case ACTION_SIGNAL_RIGHT:
+		m_pSignal[0]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
+		m_pSignal[1]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
+		break;
+
+	case ACTION_SIGNAL_LEFT:
+		m_pSignal[0]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
+		m_pSignal[1]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f)); 
+		break;
 	}
 }
 
