@@ -273,6 +273,16 @@ void CPlayer::Uninit(void)
 		m_pEffectSpeed->SetDeath();
 		m_pEffectSpeed = nullptr;
 	}
+	if (m_pEffectItem != nullptr)
+	{
+		m_pEffectItem->SetDeath();
+		m_pEffectItem = nullptr;
+	}
+	if (m_pEffectGuide != nullptr)
+	{
+		m_pEffectGuide->SetDeath();
+		m_pEffectGuide = nullptr;
+	}
 }
 
 //====================================================================
@@ -389,7 +399,7 @@ void CPlayer::Update(void)
 	}
 
 	//卵の動き
-	EggMove(posThis,rotThis);
+	EggMove(posThis, rotThis);
 
 	// キャラクタークラスの更新（継承）
 	CObjectCharacter::Update();
@@ -562,6 +572,9 @@ void CPlayer::Move(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis)
 					pModel->SetDisp(true);
 				}
 			}
+
+			// アイテムを破棄
+			SetItemType(TYPE_NONE);
 
 			m_EggMove.y = EGG_MOVE.y;
 

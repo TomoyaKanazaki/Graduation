@@ -9,8 +9,6 @@
 
 #include "Scene.h"
 
-#define NUM_PLAYER (2)
-
 //前方宣言
 class CTutorialUI;
 class CPlayer;
@@ -49,7 +47,7 @@ public:
 	virtual void Update(void);
 	virtual void Draw(void);
 
-	CPlayer* GetPlayer(int Num) { return m_pPlayer[Num]; }
+	CPlayer* GetPlayer(int Num) { return m_pPlayer.at(Num); }
 	CDevil* GetDevil(void) { return m_pDevil; }
 	CPause* GetPause(void) { return m_pPause; }
 	CTimer* GetTime(void) { return m_pTime; }
@@ -89,7 +87,7 @@ private:
 	static CGame* m_pGame;
 
 	//インゲーム用変数
-	CPlayer* m_pPlayer[NUM_PLAYER];			//プレイヤーのポインタ
+	std::vector<CPlayer*> m_pPlayer;						//プレイヤーのポインタ
 	CDevil* m_pDevil;						//デビルのポインタ
 
 	int m_nNumBowabowa;						//ボワボワの数
