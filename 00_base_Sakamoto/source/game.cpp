@@ -168,7 +168,7 @@ HRESULT CGame::Init(void)
 
 	// マップの生成
 	CMapSystem::GetInstance()->Init();
-	CMapSystem::Load("data\\TXT\\STAGE\\map01.csv");
+	CMapSystem::Load("data\\TXT\\STAGE\\map03.csv");
 
 	// 下床の生成
 	auto grid = FIELD_GRID;
@@ -180,15 +180,14 @@ HRESULT CGame::Init(void)
 	//レールブロックの生成
 	//LoadStageRailBlock("data\\TXT\\STAGE\\RailBlock.txt");
 
+	// 矢印モデル生成
+	//CSignal::Create("data\\MODEL\\signal.x", D3DXVECTOR3(-100.0f, 100.0f, 300.0f));
+	//CSignal::Create("data\\MODEL\\signal.x", D3DXVECTOR3(100.0f, 100.0f, 300.0f));
+
 	//ステージの読み込み
 	switch (CManager::GetInstance()->GetStage())
 	{
 	case 0:
-
-		// 矢印モデル生成
-		CSignal::Create("data\\MODEL\\signal.x",D3DXVECTOR3(-100.0f,100.0f,300.0f));
-		CSignal::Create("data\\MODEL\\signal.x", D3DXVECTOR3(100.0f, 100.0f, 300.0f));
-
 		// ソフトクリームの生成
 		CItem::Create(CItem::TYPE_SOFTCREAM, CMapSystem::GetInstance()->GetCenter());
 

@@ -38,8 +38,8 @@ CSignal::CSignal(int nPriority) : CObjectX(nPriority)
 	m_fColorA = 0.0f;			// 不透明度
 	m_Scaling = 0.0f;			// 大きさ
 	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);			// 移動量
-	/*m_nStateNum = 0;
-	m_pDevil = nullptr;*/
+	m_nStateNum = 0;
+	m_pDevil = nullptr;
 }
 
 //====================================================================
@@ -85,7 +85,7 @@ HRESULT CSignal::Init(const char* pModelName)
 {
 	/*if (m_pDevil == nullptr)
 	{
-		m_pDevil = new CDevil;
+		m_pDevil = CDevil::Create();
 	}*/
 
 	D3DXVECTOR3 pos = GetPos();
@@ -125,10 +125,10 @@ void CSignal::Uninit()
 		// リストマネージャーの破棄
 		m_pList->Release(m_pList);
 	}
-	/*if (m_pDevil != nullptr)
+	if (m_pDevil != nullptr)
 	{
 		m_pDevil = nullptr;
-	}*/
+	}
 
 	// 継承クラスの終了
 	CObjectX::Uninit();
@@ -146,33 +146,33 @@ void CSignal::Update()
 	// 情報の更新
 	SetPos(D3DXVECTOR3(pos.x, 300.0f, pos.z));
 
-	//if (m_pDevil == nullptr) { assert(false); }
-	//m_nStateNum = m_pDevil->GetStateNumber();
+	if (m_pDevil == nullptr) { assert(false); }
+	m_nStateNum = m_pDevil->GetStateNumber();
 
-	//switch (m_nStateNum)
-	//{
-	//case ACTION_SIGNAL_UP:
-	//	rot = D3DXVECTOR3(0.0f, 180.0f, 0.0f);
-	//	SetRot(rot);
-	//	break;
+	switch (m_nStateNum)
+	{
+	case ACTION_SIGNAL_UP:
+		rot = D3DXVECTOR3(0.0f, 180.0f, 0.0f);
+		SetRot(rot);
+		break;
 
-	//case ACTION_SIGNAL_DOWN:
-	//	rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	//	SetRot(rot);
-	//	break;
+	case ACTION_SIGNAL_DOWN:
+		rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		SetRot(rot);
+		break;
 
-	//case ACTION_SIGNAL_RIGHT:
+	case ACTION_SIGNAL_RIGHT:
 
-	//	rot = D3DXVECTOR3(0.0f, -90.0f, 0.0f);
-	//	SetRot(rot);
-	//	break;
+		rot = D3DXVECTOR3(0.0f, 90.0f, 0.0f);
+		SetRot(rot);
+		break;
 
-	//case ACTION_SIGNAL_LEFT:
+	case ACTION_SIGNAL_LEFT:
 
-	//	rot = D3DXVECTOR3(0.0f, 90.0f, 0.0f);
-	//	SetRot(rot);
-	//	break;
-	//}
+		rot = D3DXVECTOR3(0.0f, -90.0f, 0.0f);
+		SetRot(rot);
+		break;
+	}
 
 	// 親クラスの更新処理
 	CObjectX::Update();

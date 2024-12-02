@@ -157,7 +157,9 @@ private:
 	void RotUpdate(D3DXVECTOR3& rotMy);		//向き更新処理
 	void EggMove(D3DXVECTOR3& posMy, D3DXVECTOR3& rotMy);			//卵の動き
 
-	void ControlEffect(CEffekseer* pTarget); // エフェクトの操作
+	void ControlEffect(CEffekseer* pTarget, const D3DXVECTOR3* pPos = nullptr); // エフェクトの操作
+	void RotationEffect(CEffekseer* pTarget); // エフェクトの操作
+	void MoveEffect(CEffekseer* pTarget, const D3DXVECTOR3* pPos = nullptr); // エフェクトの操作
 
 	void DebugKey(void);		//デバッグキー
 
@@ -204,8 +206,6 @@ private:
 	D3DXVECTOR3 m_EggMove;		//卵の動き
 
 	CLifeUi* m_pLifeUi;
-
-	CShadow* m_pShadow;
 
 	CEffekseer* m_pEffectEgg; // 卵のエフェクト
 	CEffekseer* m_pEffectSpeed; // 加減速のエフェクト
