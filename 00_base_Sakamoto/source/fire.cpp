@@ -225,7 +225,14 @@ void CFire::CollisionEnemy()
 			// エフェクトを生成
 			D3DXVECTOR3 pos = pEnemy->GetPos();
 			D3DXVECTOR3 rot = pEnemy->GetRot();
-			MyEffekseer::EffectCreate(CMyEffekseer::TYPE_HIT, false, useful::CalcMatrix(pos, rot, *GetUseMultiMatrix()), rot, D3DXVECTOR3(25.0f, 25.0f, 25.0f));
+			if (pEnemy->GetEnemyType() == CEnemy::ENEMY_LITTLEDEVIL)
+			{
+				MyEffekseer::EffectCreate(CMyEffekseer::TYPE_HIT_SMALLDEVIL, false, useful::CalcMatrix(pos, rot, *GetUseMultiMatrix()), rot);
+			}
+			else
+			{
+				MyEffekseer::EffectCreate(CMyEffekseer::TYPE_HIT, false, useful::CalcMatrix(pos, rot, *GetUseMultiMatrix()), rot);
+			}
 
 			// 削除
 			Uninit();
