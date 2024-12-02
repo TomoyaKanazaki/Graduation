@@ -26,6 +26,7 @@
 #include "objmeshField.h"
 #include "sound.h"
 #include "wall.h"
+#include "move.h"
 
 #include "enemyBonbon.h"
 #include "enemyMedaman.h"
@@ -107,6 +108,8 @@ m_pEffect(nullptr)
 	m_SelectGrid.z = 0;
 
 	m_nBugCounter = 0;
+
+	m_pMoveState = nullptr;
 }
 
 //====================================================================
@@ -178,6 +181,13 @@ HRESULT CEnemy::Init(void)
 	// スローの生成(配属、タグの設定)
 	m_pSlow = CSlowManager::Create(m_pSlow->CAMP_ENEMY, m_pSlow->TAG_ENEMY);
 
+	// 移動状態設定
+	//if (m_pMoveState == nullptr)
+	//{ // 移動状態設定
+	//	m_pMoveState = new CStateStop();		// 停止状態
+	//	m_pMoveState->RandomStop(this);			// ランダム歩行状態
+	//}
+
 	// リストマネージャーの生成
 	if (m_pList == nullptr)
 	{
@@ -215,6 +225,13 @@ void CEnemy::Uninit(void)
 		m_pEffect->SetDeath();
 	}
 
+	// 移動状態の破棄
+	/*if (m_pMoveState != nullptr)
+	{
+		delete m_pMoveState;
+		m_pMoveState = nullptr;
+	}*/
+
 	// キャラクタークラスの終了（継承）
 	CObjectCharacter::Uninit();
 }
@@ -247,6 +264,9 @@ void CEnemy::Update(void)
 
 	// 位置更新処理
 	UpdatePos(posMy,posOldMy,sizeMy);
+
+	// 追跡状態にする
+	//m_pMoveState->RandomAStar(this);
 
 	// プレイヤーへの最短経路探索
 	Coordinate();

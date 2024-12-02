@@ -5,6 +5,7 @@
 //
 //============================================
 #include "move.h"
+#include "objectcharacter.h"
 
 //==========================================
 // 定数定義
@@ -18,28 +19,28 @@ namespace
 //==========================================
 // 操作からランダム歩行に切り替え
 //==========================================
-void CStateControl::ControlRandom(CMoveStateContext* pMoveStateContext)
+void CStateControl::ControlRandom(CObjectCharacter* pCharacter)
 {
 	// ランダム歩行状態にする
-	pMoveStateContext->ChangeState(new CStateRandom);
+	pCharacter->ChangeMoveState(new CStateRandom);
 }
 
 //==========================================
 // 操作から追跡に切り替え
 //==========================================
-void CStateControl::ControlAStar(CMoveStateContext* pMoveStateContext)
+void CStateControl::ControlAStar(CObjectCharacter* pCharacter)
 {
 	// 追跡状態にする
-	pMoveStateContext->ChangeState(new CStateAStar);
+	pCharacter->ChangeMoveState(new CStateAStar);
 }
 
 //==========================================
 // 操作から停止に切り替え
 //==========================================
-void CStateControl::ControlStop(CMoveStateContext* pMoveStateContext)
+void CStateControl::ControlStop(CObjectCharacter* pCharacter)
 {
 	// 停止状態にする
-	pMoveStateContext->ChangeState(new CStateStop);
+	pCharacter->ChangeMoveState(new CStateStop);
 }
 
 //**********************************************************************
@@ -48,28 +49,28 @@ void CStateControl::ControlStop(CMoveStateContext* pMoveStateContext)
 //==========================================
 // ランダム歩行から操作に切り替え
 //==========================================
-void CStateRandom::ControlRandom(CMoveStateContext* pMoveStateContext)
+void CStateRandom::ControlRandom(CObjectCharacter* pCharacter)
 {
 	// 操作状態にする
-	pMoveStateContext->ChangeState(new CStateControl);
+	pCharacter->ChangeMoveState(new CStateControl);
 }
 
 //==========================================
 // ランダム歩行から追跡に切り替え
 //==========================================
-void CStateRandom::RandomAStar(CMoveStateContext* pMoveStateContext)
+void CStateRandom::RandomAStar(CObjectCharacter* pCharacter)
 {
 	// 追跡状態にする
-	pMoveStateContext->ChangeState(new CStateAStar);
+	pCharacter->ChangeMoveState(new CStateAStar);
 }
 
 //==========================================
 // ランダム歩行から停止に切り替え
 //==========================================
-void CStateRandom::RandomStop(CMoveStateContext* pMoveStateContext)
+void CStateRandom::RandomStop(CObjectCharacter* pCharacter)
 {
 	// 停止状態にする
-	pMoveStateContext->ChangeState(new CStateStop);
+	pCharacter->ChangeMoveState(new CStateStop);
 }
 
 //**********************************************************************
@@ -78,28 +79,28 @@ void CStateRandom::RandomStop(CMoveStateContext* pMoveStateContext)
 //==========================================
 // 追跡から操作に切り替え
 //==========================================
-void CStateAStar::ControlAStar(CMoveStateContext* pMoveStateContext)
+void CStateAStar::ControlAStar(CObjectCharacter* pCharacter)
 {
 	// 操作状態にする
-	pMoveStateContext->ChangeState(new CStateControl);
+	pCharacter->ChangeMoveState(new CStateControl);
 }
 
 //==========================================
 // 追跡からランダム歩行に切り替え
 //==========================================
-void CStateAStar::RandomAStar(CMoveStateContext* pMoveStateContext)
+void CStateAStar::RandomAStar(CObjectCharacter* pCharacter)
 {
 	// ランダム歩行状態にする
-	pMoveStateContext->ChangeState(new CStateRandom);
+	pCharacter->ChangeMoveState(new CStateRandom);
 }
 
 //==========================================
 // 追跡から停止に切り替え
 //==========================================
-void CStateAStar::AStarStop(CMoveStateContext* pMoveStateContext)
+void CStateAStar::AStarStop(CObjectCharacter* pCharacter)
 {
 	// 停止状態にする
-	pMoveStateContext->ChangeState(new CStateStop);
+	pCharacter->ChangeMoveState(new CStateStop);
 }
 
 //**********************************************************************
@@ -108,34 +109,35 @@ void CStateAStar::AStarStop(CMoveStateContext* pMoveStateContext)
 //==========================================
 // 停止から操作に切り替え
 //==========================================
-void CStateStop::ControlStop(CMoveStateContext* pMoveStateContext)
+void CStateStop::ControlStop(CObjectCharacter* pCharacter)
 {
 	// 操作状態にする
-	pMoveStateContext->ChangeState(new CStateControl);
+	pCharacter->ChangeMoveState(new CStateControl);
 }
 
 //==========================================
 // 停止からランダム歩行に切り替え
 //==========================================
-void CStateStop::RandomStop(CMoveStateContext* pMoveStateContext)
+void CStateStop::RandomStop(CObjectCharacter* pCharacter)
 {
 	// ランダム歩行状態にする
-	pMoveStateContext->ChangeState(new CStateRandom);
+	pCharacter->ChangeMoveState(new CStateRandom);
 }
 
 //==========================================
 // 停止から追跡に切り替え
 //==========================================
-void CStateStop::AStarStop(CMoveStateContext* pMoveStateContext)
+void CStateStop::AStarStop(CObjectCharacter* pCharacter)
 {
 	// 追跡状態にする
-	pMoveStateContext->ChangeState(new CStateAStar);
+	pCharacter->ChangeMoveState(new CStateAStar);
 }
 
+#if 0
 //==========================================
 // 状態変更処理
 //==========================================
-void CMoveStateContext::ChangeState(CMoveState* pMoveState)
+void CMoveStateContext::ChangeMoveState(CMoveState* pMoveState)
 {
 	if (m_pMoveState != nullptr)
 	{
@@ -145,3 +147,4 @@ void CMoveStateContext::ChangeState(CMoveState* pMoveState)
 
 	m_pMoveState = pMoveState;
 }
+#endif
