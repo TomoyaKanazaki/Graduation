@@ -452,7 +452,7 @@ void CPlayer::UI_Create(void)
 	}
 
 	//ƒvƒŒƒCƒ„[”Ô†UI‚Ì¶¬
-	if (m_pP_NumUI == nullptr)
+	if (m_pP_NumUI == nullptr && CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
 	{
 		m_pP_NumUI = CObjectBillboard::Create();
 	}
