@@ -178,6 +178,7 @@ void CTitle::Uninit(void)
 
 	if (m_pTitle != nullptr)
 	{
+		delete m_pTitle;
 		m_pTitle = nullptr;
 	}
 }

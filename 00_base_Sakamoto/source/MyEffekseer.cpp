@@ -61,6 +61,7 @@ namespace MyEffekseer
 		"data\\EFFEKSEER\\Effect\\revive_bonbon.efkefc",		// ボンボンの復活ガイド
 		"data\\EFFEKSEER\\Effect\\revive_smalldevil.efkefc",	// 小デビルの復活ガイド
 		"data\\EFFEKSEER\\Effect\\get_thesoft.efkefc",			// ソフトクリーム取得
+		"data\\EFFEKSEER\\Effect\\softcream.efkefc",			// ソフトクリームオーラ
 	};
 
 	//============================================

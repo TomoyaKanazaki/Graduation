@@ -109,7 +109,6 @@ CGame::CGame()
 //====================================================================
 CGame::~CGame()
 {
-
 }
 
 //====================================================================
@@ -206,12 +205,6 @@ HRESULT CGame::Init(void)
 		m_pPlayer.push_back(CGamePlayer::Create(i));
 	}
 
-#ifdef _DEBUG
-	// デバッグの時にプレイヤーが生成されていなかった場合の１体だけ生成する
-	assert(m_pPlayer.size() >= 1);
-	m_pPlayer.push_back(CGamePlayer::Create(0));
-#endif
-
 	return S_OK;
 }
 
@@ -227,6 +220,13 @@ void CGame::Uninit(void)
 		m_pPause = nullptr;
 	}
 
+	// プレイヤーの解放
+	while(1)
+	{
+		if (m_pPlayer.size() <= 0) { m_pPlayer.clear(); break; }
+		m_pPlayer.back()->SetDeathFlag(true);
+		m_pPlayer.pop_back();
+	}
 
 	CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_BGM_STAGE2);
 
@@ -240,6 +240,7 @@ void CGame::Uninit(void)
 
 	if (m_pGame != nullptr)
 	{
+		delete m_pGame;
 		m_pGame = nullptr;
 	}
 }
@@ -350,7 +351,7 @@ void CGame::Update(void)
 
 				int EndScore = 0;
 
-				for (int nCnt = 0; nCnt < m_pPlayer.size(); nCnt++)
+				for (unsigned int nCnt = 0; nCnt < m_pPlayer.size(); nCnt++)
 				{
 					if (m_pPlayer.at(nCnt) != nullptr)
 					{
@@ -414,7 +415,7 @@ void CGame::StageClear(int Stage)
 
 		int EndScore = 0;
 
-		for (int nCnt = 0; nCnt < m_pPlayer.size(); nCnt++)
+		for (unsigned int nCnt = 0; nCnt < m_pPlayer.size(); nCnt++)
 		{
 			if (m_pPlayer.at(nCnt) != nullptr)
 			{
@@ -439,7 +440,7 @@ void CGame::StageClear(int Stage)
 
 		int EndScore = 0;
 
-		for (int nCnt = 0; nCnt < m_pPlayer.size(); nCnt++)
+		for (unsigned int nCnt = 0; nCnt < m_pPlayer.size(); nCnt++)
 		{
 			if (m_pPlayer.at(nCnt) != nullptr)
 			{
