@@ -151,6 +151,19 @@ bool CSoftCream::Hit(CPlayer* pPlayer)
 }
 
 //==========================================
+//  エフェクトを生成
+//==========================================
+void CSoftCream::SetEffect()
+{
+	// 自身の情報を取得する
+	D3DXVECTOR3 pos = GetPos();
+	pos.y = 0.0f;
+	D3DXVECTOR3 rot = GetRot();
+
+	Effect(MyEffekseer::EffectCreate(CMyEffekseer::TYPE_SOFTCREAM, true, useful::CalcMatrix(pos, rot, *GetUseMultiMatrix()), rot, D3DXVECTOR3(20.0f, 20.0f, 20.0f)));
+}
+
+//==========================================
 // リストの取得
 //==========================================
 CListManager<CSoftCream>* CSoftCream::GetList(void)
