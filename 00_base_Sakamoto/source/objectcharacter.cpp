@@ -48,8 +48,10 @@ m_bUseShadow(true)
 
 	m_pos = INITVECTOR3;
 	m_posOld = INITVECTOR3;
-	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_move = INITVECTOR3;
+	m_rot = INITVECTOR3;
 	m_size = INITVECTOR3;
+	m_Objmove = INITVECTOR3;
 
 	m_UseMultiMatrix = nullptr;
 

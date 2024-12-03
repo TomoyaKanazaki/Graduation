@@ -94,15 +94,14 @@ m_pEffect(nullptr)
 	m_EnemyType = ENEMY_MEDAMAN;
 	m_MoveState = MOVE_STATE_WAIT;
 	m_pSlow = nullptr;
-	m_SelectMove = SELECT_MOVE_MAX;
 
 	m_HitState = HIT_STATE_NORMAL;
 	m_nHitStateCount = 0;
 
-	m_OKL = true;
-	m_OKR = true;
-	m_OKU = true;
-	m_OKD = true;
+	m_Progress.bOKL = true;
+	m_Progress.bOKR = true;
+	m_Progress.bOKU = true;
+	m_Progress.bOKD = true;
 
 	m_Grid.x = 0;
 	m_Grid.z = 0;
@@ -187,6 +186,9 @@ HRESULT CEnemy::Init(void)
 
 	// スローの生成(配属、タグの設定)
 	m_pSlow = CSlowManager::Create(m_pSlow->CAMP_ENEMY, m_pSlow->TAG_ENEMY);
+
+	// 移動向きの状態を設定
+	m_pMoveState->SetRotState(CMoveState::ROTSTATE_MAX);
 
 	// 移動状態設定
 	if (m_pMoveState == nullptr)
@@ -633,23 +635,25 @@ void CEnemy::MoveSelect()
 {
 	float OKRot[4];
 	int RotNumber = 0;
-
-	if (m_OKL && m_SelectMove != SELECT_MOVE_RIGHT)
+	CMoveState::ROTSTATE RotState = m_pMoveState->GetRotState();	// 移動方向の状態
+	
+	
+	if (m_Progress.bOKL && RotState != CMoveState::ROTSTATE_RIGHT)
 	{
 		OKRot[RotNumber] = D3DX_PI * -0.5f;
 		RotNumber++;
 	}
-	if (m_OKR && m_SelectMove != SELECT_MOVE_LEFT)
+	if (m_Progress.bOKR && RotState != CMoveState::ROTSTATE_LEFT)
 	{
 		OKRot[RotNumber] = D3DX_PI * 0.5f;
 		RotNumber++;
 	}
-	if (m_OKU && m_SelectMove != SELECT_MOVE_DOWN)
+	if (m_Progress.bOKU && RotState != CMoveState::ROTSTATE_DOWN)
 	{
 		OKRot[RotNumber] = D3DX_PI * 0.0f;
 		RotNumber++;
 	}
-	if (m_OKD && m_SelectMove != SELECT_MOVE_UP)
+	if (m_Progress.bOKD && RotState != CMoveState::ROTSTATE_UP)
 	{
 		OKRot[RotNumber] = D3DX_PI * 1.0f;
 		RotNumber++;
@@ -664,19 +668,19 @@ void CEnemy::MoveSelect()
 
 		if (m_move.x >= 3.0f)
 		{
-			m_SelectMove = SELECT_MOVE_RIGHT;
+			RotState = CMoveState::ROTSTATE_RIGHT;
 		}
 		else if (m_move.x <= -3.0f)
 		{
-			m_SelectMove = SELECT_MOVE_LEFT;
+			RotState = CMoveState::ROTSTATE_LEFT;
 		}
 		else if (m_move.z >= 3.0f)
 		{
-			m_SelectMove = SELECT_MOVE_UP;
+			RotState = CMoveState::ROTSTATE_UP;
 		}
 		else if (m_move.z <= -3.0f)
 		{
-			m_SelectMove = SELECT_MOVE_DOWN;
+			RotState = CMoveState::ROTSTATE_DOWN;
 		}
 
 		m_SelectGrid = m_Grid;
@@ -726,34 +730,34 @@ void CEnemy::SearchWall(D3DXVECTOR3& posMy)
 		(m_Grid.x != m_SelectGrid.x || m_Grid.z != m_SelectGrid.z))
 	{// グリットの中心位置に立っているなら操作を受け付ける
 
-		if (!m_OKR && OKR)
+		if (!m_Progress.bOKR && OKR)
 		{
 			m_MoveState = MOVE_STATE_WAIT;
 		}
-		if (!m_OKL && OKL)
+		if (!m_Progress.bOKL && OKL)
 		{
 			m_MoveState = MOVE_STATE_WAIT;
 		}
-		if (!m_OKU && OKU)
+		if (!m_Progress.bOKU && OKU)
 		{
 			m_MoveState = MOVE_STATE_WAIT;
 		}
-		if (!m_OKD && OKD)
+		if (!m_Progress.bOKD && OKD)
 		{
 			m_MoveState = MOVE_STATE_WAIT;
 		}
 
-		m_OKR = OKR;	//右
-		m_OKL = OKL;	//左
-		m_OKU = OKU;	//上
-		m_OKD = OKD;	//下
+		m_Progress.bOKR = OKR;	//右
+		m_Progress.bOKL = OKL;	//左
+		m_Progress.bOKU = OKU;	//上
+		m_Progress.bOKD = OKD;	//下
 	}
 	else
 	{
-		m_OKR = false;	//右
-		m_OKL = false;	//左
-		m_OKU = false;	//上
-		m_OKD = false;	//下
+		m_Progress.bOKR = false;	//右
+		m_Progress.bOKL = false;	//左
+		m_Progress.bOKU = false;	//上
+		m_Progress.bOKD = false;	//下
 	}
 }
 

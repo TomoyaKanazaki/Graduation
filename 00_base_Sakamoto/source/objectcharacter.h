@@ -56,18 +56,22 @@ public:
 
 	void SetPos(D3DXVECTOR3 pos) { m_pos = pos; }
 	D3DXVECTOR3 GetPos(void) { return m_pos; }
-
 	void SetRot(D3DXVECTOR3 rot) { m_rot = rot; }
 	D3DXVECTOR3 GetRot(void) { return m_rot; }
-
 	void SetPosOld(D3DXVECTOR3 posOld) { m_posOld = posOld; }
 	D3DXVECTOR3 GetPosOld(void) { return m_posOld; }
-
 	void SetSize(D3DXVECTOR3 size) { m_size = size; }
 	D3DXVECTOR3 GetSize(void) { return m_size; }
-
 	void SetShadow(bool frag) { m_bUseShadow = frag; }
 	bool GetShadow() { return m_bUseShadow; }
+	void SetMove(D3DXVECTOR3 move) { m_move = move; }	// 移動の設定
+	void SetMoveX(float moveX) { m_move.x = moveX; }	// 移動の設定X
+	void SetMoveZ(float moveZ) { m_move.z = moveZ; }	// 移動の設定Y
+	D3DXVECTOR3 GetMove(void) { return m_move; }		// 移動の取得
+	void SetObjMoveX(float move) { m_Objmove.x = move; }
+	void SetObjMoveZ(float move) { m_Objmove.z = move; }
+	D3DXVECTOR3 GetObjMove(void) { return m_Objmove; }
+
 
 	void SetTxtCharacter(const char* pFilename);
 
@@ -83,6 +87,9 @@ protected:
 	CShadow* m_pShadow;
 	CMoveState* m_pMoveState;		// 移動状態
 	PROGGRESS m_Progress;			// 移動の進行許可状況
+
+	D3DXVECTOR3 m_move;				//移動量
+	D3DXVECTOR3 m_Objmove;			//オブジェクトから影響される移動量
 
 	bool m_bGritCenter;				//グリットの中心位置にいるかどうか
 
