@@ -7,6 +7,7 @@
 #include "Pause.h"
 #include "object2D.h"
 #include "Fade.h"
+#include "sound.h"
 
 //Ã“Iƒƒ“ƒo•Ï”éŒ¾
 bool CPause::m_bColor = false;
@@ -128,7 +129,7 @@ void CPause::Update(void)
 			pInputJoypad->GetTrigger(CInputJoypad::BUTTON_UP, 0) == true ||
 			pInputJoypad->Get_LStick_Trigger(CInputJoypad::LSTICK_UP, 0) == true)
 		{
-			//CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_SELECT_PUSH);
+			CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_SELECT);
 			m_PauseSelect--;
 
 			if (m_PauseSelect < 0)
@@ -141,7 +142,7 @@ void CPause::Update(void)
 			pInputJoypad->GetTrigger(CInputJoypad::BUTTON_DOWN, 0) == true ||
 			pInputJoypad->Get_LStick_Trigger(CInputJoypad::LSTICK_DOWN, 0) == true)
 		{
-			//CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_SELECT_PUSH);
+			CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_SELECT);
 			m_PauseSelect++;
 
 			if (m_PauseSelect > MAX_PAUSE - 1)
@@ -178,7 +179,7 @@ void CPause::Update(void)
 			CManager::GetInstance()->GetInputJoyPad()->GetTrigger(CInputJoypad::BUTTON_A, 0) == true ||
 			CManager::GetInstance()->GetInputJoyPad()->GetTrigger(CInputJoypad::BUTTON_B, 0) == true)
 		{
-			//CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_ENTER_PUSH);
+			CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_ENTER);
 
 			switch (m_PauseSelect)
 			{
