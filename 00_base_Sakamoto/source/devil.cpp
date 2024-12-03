@@ -48,7 +48,7 @@ namespace
 {
 	int SCROOL_TIME = 300;						// スクロール時間
 
-	int SCROOL_MOVEGRID_01 = 15;					// スクロールの移動マス幅
+	int SCROOL_MOVEGRID_01 = 3;					// スクロールの移動マス幅
 	float SCROOL_SPEED_01 = (CMapSystem::GetGritSize() * SCROOL_MOVEGRID_01 / SCROOL_TIME);				// スクロールの移動速度
 
 	int SCROOL_COUNT_02 = 12;					// スクロールの移動回数

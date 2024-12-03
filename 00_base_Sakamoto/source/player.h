@@ -68,13 +68,13 @@ public:
 	void SetPlayNumber(int Number) { m_nPlayNumber = Number; }
 	int GetPlayNumber(void) { return m_nPlayNumber; }
 
-	void SetMove(D3DXVECTOR3 move) { m_move = move; }
-	void SetMoveX(float moveX) { m_move.x = moveX; }
-	void SetMoveZ(float moveZ) { m_move.z = moveZ; }
-	D3DXVECTOR3 GetMove(void) { return m_move; }
-	void SetObjMoveX(float move) { m_Objmove.x = move; }
-	void SetObjMoveZ(float move) { m_Objmove.z = move; }
-	D3DXVECTOR3 GetObjMove(void) { return m_Objmove; }
+	//void SetMove(D3DXVECTOR3 move) { m_move = move; }
+	//void SetMoveX(float moveX) { m_move.x = moveX; }
+	//void SetMoveZ(float moveZ) { m_move.z = moveZ; }
+	//D3DXVECTOR3 GetMove(void) { return m_move; }
+	/*void SetObjMoveX(float move) { m_Objmove.x = move; }
+	void SetObjMoveZ(float move) { m_Objmove.z = move; }*/
+	/*D3DXVECTOR3 GetObjMove(void) { return m_Objmove; }*/
 	void SetState(STATE State) { m_State = State; }
 	STATE GetState(void) { return m_State; }
 	bool GetJump(void) { return m_bJump; }
@@ -162,8 +162,8 @@ private:
 	int m_nPlayNumber;				//プレイ用番号
 	ACTION_TYPE m_Action;
 	ACTION_TYPE m_AtkAction;		//攻撃状態記録用変数
-	D3DXVECTOR3 m_move;				//移動量
-	D3DXVECTOR3 m_Objmove;			//オブジェクトから影響される移動量
+	//D3DXVECTOR3 m_move;				//移動量
+	//D3DXVECTOR3 m_Objmove;			//オブジェクトから影響される移動量
 	D3DXVECTOR3 m_rotDest;			//向きの目的地
 	D3DXVECTOR3 m_AutoMoveRot;		//自動移動の移動方向
 	D3DXVECTOR3 m_AtkPos;			//攻撃位置
