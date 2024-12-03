@@ -77,10 +77,6 @@ CGame::CGame()
 	m_pMeshDomeUp = nullptr;
 	m_pMapField = nullptr;
 	m_pCubeBlock = nullptr;
-	for (int nCnt = 0; nCnt < NUM_PLAYER; nCnt++)
-	{
-		m_pPlayer[nCnt] = nullptr;
-	}
 	m_pDevil = nullptr;
 	m_pMask = nullptr;
 
@@ -113,7 +109,6 @@ CGame::CGame()
 //====================================================================
 CGame::~CGame()
 {
-
 }
 
 //====================================================================
@@ -204,23 +199,10 @@ HRESULT CGame::Init(void)
 		break;
 	}
 
-	if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_SINGLE)
+	// プレイヤーを生成する
+	for (int i = 0; i < CManager::GetInstance()->GetGameMode(); ++i)
 	{
-		//プレイヤーの生成
-		m_pPlayer[0] = CGamePlayer::Create(0);
-	}
-	else if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
-	{
-		//プレイヤーの生成
-		for (int nCnt = 0; nCnt < NUM_PLAYER; nCnt++)
-		{
-			m_pPlayer[nCnt] = CGamePlayer::Create(nCnt);
-		}
-	}
-	else
-	{
-		//プレイヤーの生成
-		m_pPlayer[0] = CGamePlayer::Create(0);
+		m_pPlayer.push_back(CGamePlayer::Create(i));
 	}
 
 	return S_OK;
@@ -238,6 +220,13 @@ void CGame::Uninit(void)
 		m_pPause = nullptr;
 	}
 
+	// プレイヤーの解放
+	while(1)
+	{
+		if (m_pPlayer.size() <= 0) { m_pPlayer.clear(); break; }
+		m_pPlayer.back()->SetDeathFlag(true);
+		m_pPlayer.pop_back();
+	}
 
 	CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_BGM_STAGE2);
 
@@ -251,6 +240,7 @@ void CGame::Uninit(void)
 
 	if (m_pGame != nullptr)
 	{
+		delete m_pGame;
 		m_pGame = nullptr;
 	}
 }
@@ -361,11 +351,11 @@ void CGame::Update(void)
 
 				int EndScore = 0;
 
-				for (int nCnt = 0; nCnt < NUM_PLAYER; nCnt++)
+				for (unsigned int nCnt = 0; nCnt < m_pPlayer.size(); nCnt++)
 				{
-					if (m_pPlayer[nCnt] != nullptr)
+					if (m_pPlayer.at(nCnt) != nullptr)
 					{
-						EndScore += m_pPlayer[nCnt]->GetScore()->GetScore();
+						EndScore += m_pPlayer.at(nCnt)->GetScore()->GetScore();
 					}
 				}
 
@@ -373,8 +363,8 @@ void CGame::Update(void)
 
 				if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
 				{
-					CManager::GetInstance()->SetEnd1PScore(m_pPlayer[0]->GetScore()->GetScore());
-					CManager::GetInstance()->SetEnd2PScore(m_pPlayer[1]->GetScore()->GetScore());
+					CManager::GetInstance()->SetEnd1PScore(m_pPlayer.at(0)->GetScore()->GetScore());
+					CManager::GetInstance()->SetEnd2PScore(m_pPlayer.at(1)->GetScore()->GetScore());
 				}
 			}
 		}
@@ -425,11 +415,11 @@ void CGame::StageClear(int Stage)
 
 		int EndScore = 0;
 
-		for (int nCnt = 0; nCnt < NUM_PLAYER; nCnt++)
+		for (unsigned int nCnt = 0; nCnt < m_pPlayer.size(); nCnt++)
 		{
-			if (m_pPlayer[nCnt] != nullptr)
+			if (m_pPlayer.at(nCnt) != nullptr)
 			{
-				EndScore += m_pPlayer[nCnt]->GetScore()->GetScore();
+				EndScore += m_pPlayer.at(nCnt)->GetScore()->GetScore();
 			}
 		}
 
@@ -437,8 +427,8 @@ void CGame::StageClear(int Stage)
 
 		if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
 		{
-			CManager::GetInstance()->SetEnd1PScore(m_pPlayer[0]->GetScore()->GetScore());
-			CManager::GetInstance()->SetEnd2PScore(m_pPlayer[1]->GetScore()->GetScore());
+			CManager::GetInstance()->SetEnd1PScore(m_pPlayer.at(0)->GetScore()->GetScore());
+			CManager::GetInstance()->SetEnd2PScore(m_pPlayer.at(1)->GetScore()->GetScore());
 		}
 	}
 	else
@@ -450,11 +440,11 @@ void CGame::StageClear(int Stage)
 
 		int EndScore = 0;
 
-		for (int nCnt = 0; nCnt < NUM_PLAYER; nCnt++)
+		for (unsigned int nCnt = 0; nCnt < m_pPlayer.size(); nCnt++)
 		{
-			if (m_pPlayer[nCnt] != nullptr)
+			if (m_pPlayer.at(nCnt) != nullptr)
 			{
-				EndScore += m_pPlayer[nCnt]->GetScore()->GetScore();
+				EndScore += m_pPlayer.at(nCnt)->GetScore()->GetScore();
 			}
 		}
 
@@ -462,8 +452,8 @@ void CGame::StageClear(int Stage)
 
 		if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
 		{
-			CManager::GetInstance()->SetEnd1PScore(m_pPlayer[0]->GetScore()->GetScore());
-			CManager::GetInstance()->SetEnd2PScore(m_pPlayer[1]->GetScore()->GetScore());
+			CManager::GetInstance()->SetEnd1PScore(m_pPlayer.at(0)->GetScore()->GetScore());
+			CManager::GetInstance()->SetEnd2PScore(m_pPlayer.at(1)->GetScore()->GetScore());
 		}
 	}
 }

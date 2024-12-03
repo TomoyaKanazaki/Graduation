@@ -337,6 +337,7 @@ void CResult::Uninit(void)
 
 	if (m_pResult != nullptr)
 	{
+		delete m_pResult;
 		m_pResult = nullptr;
 	}
 }

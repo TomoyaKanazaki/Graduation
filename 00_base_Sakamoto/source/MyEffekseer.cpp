@@ -61,6 +61,7 @@ namespace MyEffekseer
 		"data\\EFFEKSEER\\Effect\\revive_bonbon.efkefc",		// ボンボンの復活ガイド
 		"data\\EFFEKSEER\\Effect\\revive_smalldevil.efkefc",	// 小デビルの復活ガイド
 		"data\\EFFEKSEER\\Effect\\get_thesoft.efkefc",			// ソフトクリーム取得
+		"data\\EFFEKSEER\\Effect\\softcream.efkefc",			// ソフトクリームオーラ
 	};
 
 	//============================================
@@ -221,8 +222,6 @@ void CMyEffekseer::Update(void)
 	// エフェクトリストを取得
 	if (CEffekseer::GetList() == nullptr) { return; }
 	std::list<CEffekseer*> list = CEffekseer::GetList()->GetList();    // リストを取得
-
-	DebugProc::Print(DebugProc::POINT_CENTER, "エフェクト数 : %d\n", list.size());
 
 	for(CEffekseer* effect : list)
 	{

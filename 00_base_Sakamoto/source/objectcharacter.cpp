@@ -68,29 +68,19 @@ CObjectCharacter::~CObjectCharacter()
 }
 
 //====================================================================
-// 初期化処理（継承以外での初期化処理）
+// 生成処理
 //====================================================================
-HRESULT CObjectCharacter::Init(const char* pModelName)
+CObjectCharacter* CObjectCharacter::Create(void)
 {
-	strcpy(&m_aModelName[0], pModelName);
 
-	//モデルの生成
-	LoadModel(pModelName);
+	return nullptr;
+}
 
-	//モーションの生成
-	if (m_pMotion == nullptr)
-	{
-		//モーションの生成
-		m_pMotion = new CMotion;
-	}
-
-	//初期化処理
-	if (m_pMotion != nullptr)
-	{
-		m_pMotion->SetModel(&m_apModel[0], m_nNumModel);
-		m_pMotion->LoadData(pModelName);
-	}
-
+//====================================================================
+// 初期化処理
+//====================================================================
+HRESULT CObjectCharacter::Init(void)
+{
 	if (m_pShadow == nullptr && m_bUseShadow)
 	{// 影生成
 		m_pShadow = CShadow::Create(m_pos, D3DXVECTOR3(SHADOW_SIZE, 0.0f, SHADOW_SIZE));

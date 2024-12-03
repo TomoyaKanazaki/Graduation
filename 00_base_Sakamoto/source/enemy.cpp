@@ -175,8 +175,12 @@ HRESULT CEnemy::Init(void)
 	//種類設定
 	SetType(CObject::TYPE_ENEMY3D);
 
-	//マップとのマトリックスの掛け合わせをオンにする
-	SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
+	// キャラクタークラスの初期化（継承）
+	if (FAILED(CObjectCharacter::Init())) { assert(false); }
+
+	// マトリックス設定
+	SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());	// マップマトリックスと掛け合わせ
+	SetUseStencil(true);	// ステンシル
 
 	// スローの生成(配属、タグの設定)
 	m_pSlow = CSlowManager::Create(m_pSlow->CAMP_ENEMY, m_pSlow->TAG_ENEMY);
@@ -341,12 +345,8 @@ bool CEnemy::Hit(int nLife)
 HRESULT CEnemy::InitModel(const char* pFilename)
 {
 	// キャラクターテキスト読み込み処理
-	CObjectCharacter::Init(pFilename);
-
-	// マトリックス設定
-	CObjectCharacter::SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
-	CObjectCharacter::SetUseStencil(true);
-
+	CObjectCharacter::SetTxtCharacter(pFilename);
+	
 	return S_OK;
 }
 

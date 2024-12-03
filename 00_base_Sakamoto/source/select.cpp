@@ -1,3 +1,4 @@
+
 //============================================
 //
 //	‘I‘ð‰æ–Ê [select.cpp]
@@ -214,6 +215,7 @@ void CSelect::Uninit(void)
 
 	if (m_pSelect != nullptr)
 	{
+		delete m_pSelect;
 		m_pSelect = nullptr;
 	}
 }

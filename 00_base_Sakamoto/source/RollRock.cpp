@@ -237,8 +237,8 @@ void CRollRock::GameUpdate(void)
 
 	Move();
 
-	// 移動量を位置に反映
-	m_pos.x += m_move.x;
+	//// 移動量を位置に反映
+	//m_pos.x += m_move.x;
 
 	// X軸の当たり判定
 	CollisionWall(useful::COLLISION_X);
@@ -246,8 +246,8 @@ void CRollRock::GameUpdate(void)
 	// 移動した分だけ回転
 	m_rot.z -= (m_pos.x - m_posOld.x) * D3DX_PI * 0.01f;
 
-	// 移動量を位置に反映
-	m_pos.z += m_move.z;
+	//// 移動量を位置に反映
+	//m_pos.z += m_move.z;
 
 	// Z軸の当たり判定
 	CollisionWall(useful::COLLISION_Z);
@@ -302,6 +302,36 @@ void CRollRock::Move(void)
 	//自分の立っているグリットの中心位置を求める
 	D3DXVECTOR3 MyGritPos = m_Grid.ToWorld();
 	float MapGritSize = CMapSystem::GetInstance()->GetGritSize();
+
+	if (useful::CollisionCircle(MyGritPos, D3DXVECTOR3(m_pos.x, MyGritPos.y, m_pos.z), 5.0f) == true)
+	{// ブロックの中心にある時に上下か左右のどちらかになるまでに移動する
+
+		m_pos.x += m_move.x;
+		m_pos.z += m_move.z;
+	}
+	else
+	{// ブロックの中心にないとき
+
+		//上下移動
+		if (MyGritPos.x - m_pos.x >= -5.0f && MyGritPos.x - m_pos.x <= 5.0f)
+		{
+			m_pos.z += m_move.z;
+		}
+		else
+		{
+			m_pos.z = MyGritPos.z;
+		}
+
+		//左右移動
+		if (MyGritPos.z - m_pos.z >= -5.0f && MyGritPos.z - m_pos.z <= 5.0f)
+		{
+			m_pos.x += m_move.x;
+		}
+		else
+		{
+			m_pos.x = MyGritPos.x;
+		}
+	}
 
 	if (m_pos.x <= MyGritPos.x + ((MapGritSize * 0.5f) - (GRIT_OK * m_OKR)) &&	//左
 		m_pos.x >= MyGritPos.x - ((MapGritSize * 0.5f) - (GRIT_OK * m_OKL)) &&	//右
@@ -367,19 +397,35 @@ void CRollRock::Move(void)
 
 	if (!m_OKR && m_move.x > 0.0f)
 	{
-		m_move.x = 0.0f;
+		if (m_pos.x > MyGritPos.x)
+		{
+			m_pos.x = MyGritPos.x;
+			m_move.x = 0.0f;
+		}
 	}
 	if (!m_OKL && m_move.x < 0.0f)
 	{
-		m_move.x = 0.0f;
+		if (m_pos.x < MyGritPos.x)
+		{
+			m_pos.x = MyGritPos.x;
+			m_move.x = 0.0f;
+		}
 	}
 	if (!m_OKU && m_move.z > 0.0f)
 	{
-		m_move.z = 0.0f;
+		if (m_pos.z > MyGritPos.z)
+		{
+			m_pos.z = MyGritPos.z;
+			m_move.z = 0.0f;
+		}
 	}
 	if (!m_OKD && m_move.z < 0.0f)
 	{
-		m_move.z = 0.0f;
+		if (m_pos.z < MyGritPos.z)
+		{
+			m_pos.z = MyGritPos.z;
+			m_move.z = 0.0f;
+		}
 	}
 
 	// エフェクトの生成

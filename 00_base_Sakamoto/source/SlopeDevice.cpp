@@ -40,6 +40,8 @@ CSlopeDevice::CSlopeDevice(int nPriority) : CObjectCharacter(nPriority)
 {
 	m_State = STATE(0);
 	m_nStateCount = 0;
+
+	m_LocateWorldType = LOCATE_WORLD_TYPE(0);
 }
 
 //====================================================================
@@ -80,20 +82,11 @@ HRESULT CSlopeDevice::Init(void)
 {
 	SetType(CObject::TYPE_DEVILHOLE);
 
-	//モードごとに初期値を設定出来る
-	switch (CScene::GetMode())
-	{
-	case CScene::MODE_TITLE:
-		break;
+	// 影を不使用に設定
+	SetShadow(false);
 
-	case CScene::MODE_GAME:
-	case CScene::MODE_TUTORIAL:
-
-		break;
-
-	case CScene::MODE_RESULT:
-		break;
-	}
+	// キャラクタークラスの初期化（継承）
+	if (FAILED(CObjectCharacter::Init())) { assert(false); }
 
 	if (m_pList == nullptr)
 	{// リストマネージャー生成
@@ -171,16 +164,16 @@ void CSlopeDevice::SetState(STATE state, CScrollArrow::Arrow stateArrow)
 	{
 	case CScrollArrow::STATE_UP:
 
-		if (m_LocateWorldType == LOCATE_WORLD_TYPE_TOP_LEFT ||
-			m_LocateWorldType == LOCATE_WORLD_TYPE_TOP_RIGHT)
+		if (m_LocateWorldType == LOCATE_WORLD_TYPE_BOTTOM_LEFT ||
+			m_LocateWorldType == LOCATE_WORLD_TYPE_BOTTOM_RIGHT)
 		{
 			m_State = state;
 		}
 		break;
 	case CScrollArrow::STATE_DOWN:
 
-		if (m_LocateWorldType == LOCATE_WORLD_TYPE_BOTTOM_LEFT ||
-			m_LocateWorldType == LOCATE_WORLD_TYPE_BOTTOM_RIGHT)
+		if (m_LocateWorldType == LOCATE_WORLD_TYPE_TOP_LEFT ||
+			m_LocateWorldType == LOCATE_WORLD_TYPE_TOP_RIGHT)
 		{
 			m_State = state;
 		}
@@ -295,7 +288,6 @@ void CSlopeDevice::Descent(int nNldxModel, D3DXVECTOR3 descent, D3DXVECTOR3 desc
 	// モデルの位置更新
 	pModel->SetStartPos(pos);
 }
-
 
 //====================================================================
 //リスト取得

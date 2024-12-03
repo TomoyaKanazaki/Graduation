@@ -141,9 +141,12 @@ HRESULT CDevil::Init(void)
 	// 影を不使用に設定
 	SetShadow(false);
 
-	// キャラクターテキストの設定処理
-	CObjectCharacter::Init("data\\TXT\\MOTION\\01_enemy\\motion_devil.txt");
-	
+	// キャラクタークラスの初期化（継承）
+	if (FAILED(CObjectCharacter::Init())) { assert(false); }
+
+	// キャラクターテキスト読み込み処理
+	SetTxtCharacter("data\\TXT\\MOTION\\01_enemy\\motion_devil.txt");
+
 	switch (CScene::GetMode())
 	{
 	case CScene::MODE_TITLE:
@@ -223,6 +226,10 @@ void CDevil::Uninit(void)
 //====================================================================
 void CDevil::Update(void)
 {
+#ifdef _DEBUG
+	//m_ScrollType = SCROLL_TYPE_MAX;
+#endif // _DEBUG
+
 	// 値を取得
 	D3DXVECTOR3 posMy = GetPos();			// 位置
 	D3DXVECTOR3 posOldMy = GetPosOld();		// 前回の位置
@@ -927,7 +934,7 @@ void CDevil::StateManager(void)
 					// 傾き装置のリストの中身を確認する
 					for (CSlopeDevice* pSlopeDevice : list)
 					{
-						// 方向の傾き装置を上昇状態に変更
+						// 方向の傾き装置を下降状態に変更
 						pSlopeDevice->SetState(CSlopeDevice::STATE_DESCENT, (CScrollArrow::Arrow)m_SlopwArrowOld);
 					}
 				}
