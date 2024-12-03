@@ -282,7 +282,7 @@ void CEnemy::Update(void)
 	UpdatePos(posMy,posOldMy,sizeMy);
 
 	// 追跡状態にする
-	m_pMoveState->ControlAStar(this);
+	//m_pMoveState->ControlAStar(this);
 
 	// プレイヤーへの最短経路探索
 	Coordinate();
