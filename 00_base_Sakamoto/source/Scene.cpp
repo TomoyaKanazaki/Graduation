@@ -126,8 +126,6 @@ void CScene::SetMode(MODE mode)
 	{
 		//ƒV[ƒ“‚ÌI—¹ˆ—
 		pScene->Uninit();
-
-		delete pScene;
 		pScene = nullptr;
 	}
 

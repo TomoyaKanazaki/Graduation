@@ -87,7 +87,7 @@ private:
 	static CGame* m_pGame;
 
 	//インゲーム用変数
-	std::vector<CPlayer*> m_pPlayer;						//プレイヤーのポインタ
+	std::vector<CPlayer*> m_pPlayer;		//プレイヤーのポインタ
 	CDevil* m_pDevil;						//デビルのポインタ
 
 	int m_nNumBowabowa;						//ボワボワの数
