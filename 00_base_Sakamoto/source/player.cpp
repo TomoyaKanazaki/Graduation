@@ -53,7 +53,6 @@ namespace
 	const int INVINCIBLE_TIME = 120;			//無敵時間(後で消す)
 
 	const float GRIT_OK = 45.0f;			//移動可能なグリットの範囲内
-	const float PLAYER_SPEED = 5.0f;		//プレイヤーの移動速度
 	const float OBJDISTANCE = 10000.0f;		// オブジェクトの距離
 
 	const D3DXVECTOR3 COLLISION_SIZE = D3DXVECTOR3(35.0f, 40.0f, 35.0f);		//横の当たり判定
@@ -81,8 +80,6 @@ CListManager<CPlayer>* CPlayer::m_pList = nullptr; // オブジェクトリスト
 //コンストラクタ
 //====================================================================
 CPlayer::CPlayer(int nPriority) : CObjectCharacter(nPriority),
-m_move(INITVECTOR3),
-m_Objmove(INITVECTOR3),
 m_AutoMoveRot(INITVECTOR3),
 m_bJump(false),
 m_nActionCount(0),
@@ -96,7 +93,6 @@ m_bInput(false),
 m_pLifeUi(nullptr),
 m_nLife(0),
 m_eItemType(TYPE_NONE),
-m_MoveState(MOVE_STATE_NONE),
 m_Grid(0, 0),
 m_bGritCenter(true),
 m_bPressObj(false),
@@ -210,9 +206,6 @@ HRESULT CPlayer::Init(int PlayNumber)
 	// 体力の設定
 	m_nLife = LIFE_MAX;
 
-	// 状態の設定
-	m_MoveState = MOVE_STATE_WAIT;
-
 	//所持するUIの生成
 	UI_Create();
 
@@ -233,6 +226,9 @@ HRESULT CPlayer::Init(int PlayNumber)
 
 	// 操作状態にする
 	m_pMoveState->ControlStop(this);
+
+	// 向き状態の設定
+	m_pMoveState->SetRotState(CMoveState::ROTSTATE_WAIT);
 
 	// リストマネージャーの生成
 	if (m_pList == nullptr)
@@ -326,10 +322,10 @@ void CPlayer::Update(void)
 			//m_pMoveState->ControlStop(this);
 
 			// 移動処理
-			//m_pMoveState->Move(this, posThis, rotThis);
+			m_pMoveState->Move(this, posThis, rotThis);
 
 			// 移動処理
-			Move(posThis,rotThis);
+			//Move(posThis,rotThis);
 		}
 
 		// 向き移動処理
@@ -546,7 +542,7 @@ void CPlayer::UI_Init(void)
 	}
 }
 
-#if 1
+#if 0
 //====================================================================
 //移動処理
 //====================================================================
@@ -624,8 +620,6 @@ void CPlayer::Move(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis)
 		m_State = STATE_WALK;
 	}
 }
-
-#endif
 
 //====================================================================
 //移動入力キーボード
@@ -787,6 +781,8 @@ D3DXVECTOR3 CPlayer::MoveInputPadKey(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis,
 
 	return Move;
 }
+
+#endif
 
 //====================================================================
 //移動方向処理
@@ -1059,7 +1055,8 @@ void CPlayer::CollisionWall(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D3DXV
 		{
 			//待機状態にする
 			m_State = STATE_WAIT;
-			m_MoveState = MOVE_STATE_WAIT;
+			// 向き状態の設定
+			m_pMoveState->SetRotState(CMoveState::ROTSTATE_WAIT);
 			posThis = m_Grid.ToWorld();
 		}
 	}
@@ -1124,7 +1121,9 @@ void CPlayer::CollisionWaitRailBlock(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldTh
 		{
 			//待機状態にする
 			m_State = STATE_WAIT;
-			m_MoveState = MOVE_STATE_WAIT;
+
+			// 向き状態の設定
+			m_pMoveState->SetRotState(CMoveState::ROTSTATE_WAIT);
 			posThis = m_Grid.ToWorld();
 		}
 	}
@@ -1214,7 +1213,8 @@ void CPlayer::CollisionWaitRock(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D
 		{
 			//待機状態にする
 			m_State = STATE_WAIT;
-			m_MoveState = MOVE_STATE_WAIT;
+			// 向き状態の設定
+			m_pMoveState->SetRotState(CMoveState::ROTSTATE_WAIT);
 			posThis = m_Grid.ToWorld();
 		}
 	}
@@ -1343,7 +1343,8 @@ void CPlayer::CollisionDevilHole(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, 
 		{
 			//待機状態にする
 			m_State = STATE_WAIT;
-			m_MoveState = MOVE_STATE_WAIT;
+			// 向き状態の設定
+			m_pMoveState->SetRotState(CMoveState::ROTSTATE_WAIT);
 			posThis = m_Grid.ToWorld();
 		}
 	}
@@ -1361,6 +1362,11 @@ void CPlayer::CollisionEnemy(D3DXVECTOR3& posThis)
 	// 敵のリストの中身を確認する
 	for (CEnemy* pEnemy : list)
 	{
+		if (pEnemy->GetHitState() != CEnemy::HIT_STATE_NORMAL)
+		{
+			continue;
+		}
+
 		D3DXVECTOR3 pos = pEnemy->GetPos();
 		D3DXVECTOR3 posOld = pEnemy->GetPosOld();
 		D3DXVECTOR3 Size = pEnemy->GetSize();
@@ -1924,38 +1930,10 @@ void CPlayer::SetPartsDisp(int nParts, bool Set)
 	}
 }
 
-//====================================================================
-// プレイヤーの指定モデル消去
-//====================================================================
-void CPlayer::SetModelColor(CModel::COLORTYPE Type, D3DXCOLOR Col)
-{
-	// モデル数の取得
-	int nNumModel = GetNumModel();
-
-	for (int nCnt = 0; nCnt < nNumModel; nCnt++)
-	{
-		// モデルの取得
-		CModel* pModel = GetModel(nCnt);
-
-		if (pModel != nullptr)
-		{
-			pModel->SetColorType(Type);
-			pModel->SetColor(Col);
-		}
-	}
-}
 //==========================================
 //  リストの取得
 //==========================================
 CListManager<CPlayer>* CPlayer::GetList(void)
 {
 	return m_pList;
-}
-
-//==========================================
-// プレイヤーの移動速度取得
-//==========================================
-float CPlayer::GetSpeed(void)
-{
-	return PLAYER_SPEED;
 }

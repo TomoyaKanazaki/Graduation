@@ -106,8 +106,6 @@ CSelect* CSelect::GetInstance(void)
 //====================================================================
 HRESULT CSelect::Init(void)
 {
-	//CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_BGM_TITLE);
-
 	CTexture* pTexture = CManager::GetInstance()->GetTexture();
 
 	for (int nCnt = 0; nCnt < NUM_STAGE; nCnt++)

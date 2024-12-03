@@ -15,7 +15,7 @@
 //==========================================
 namespace
 {
-	const float DELET_TIME = 10.0f;	// 消滅時間
+	const float DELET_TIME = 1000000000000.0f;	// 消滅時間
 	const char* MODEL_PASS = "data\\MODEL\\02_Item\\friedegg.x"; // モデルパス
 }
 
@@ -182,6 +182,8 @@ CFriedEgg* CFriedEgg::Create(const CEnemy::ENEMY_TYPE eType, const CMapSystem::G
 //==========================================
 void CFriedEgg::Move(D3DXVECTOR3& pos)
 {
+	pos.y = 50.0f;
+
 	// TODO : ランダム歩行でも何でも仕様を用意する
 }
 

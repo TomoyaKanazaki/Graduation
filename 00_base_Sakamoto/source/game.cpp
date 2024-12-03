@@ -232,7 +232,7 @@ void CGame::Uninit(void)
 		m_pPlayer.pop_back();
 	}
 
-	CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_BGM_STAGE2);
+	CManager::GetInstance()->GetSound()->Stop();
 
 	// ƒXƒ[î•ñ‚Ì‘Síœ
 	CSlowManager::ReleaseAll();

@@ -21,7 +21,20 @@ class CPlayer;                  // プレイヤー情報
 class CMoveState
 {
 public:
-    CMoveState() {};
+
+    // 移動方向
+    enum ROTSTATE
+    {
+        ROTSTATE_WAIT = 0,	// 待機
+        ROTSTATE_LEFT,		// 左方向
+        ROTSTATE_RIGHT,		// 右方向
+        ROTSTATE_UP,		// 上方向
+        ROTSTATE_DOWN,		// 下方向
+        ROTSTATE_MAX,		// 最大
+        ROTSTATE_NONE
+    };
+
+    CMoveState();
     virtual ~CMoveState() {};
 
     // 操作
@@ -42,6 +55,10 @@ public:
 
     CMoveState* GetMoveState(CObjectCharacter* pCharacter);             // 移動状態の情報取得
 
+    // 設定・取得
+    void SetRotState(ROTSTATE RotState) { m_RotState = RotState; }      // 移動方向の状態を取得
+    ROTSTATE GetRotState() { return m_RotState; }                       // 移動方向の状態を取得
+
 protected:
     // メンバ関数
     void Control(CObjectCharacter* pCharacter);             // 操作処理
@@ -51,10 +68,15 @@ protected:
     void AStar();               // 追跡
     void Stop();                // 停止
 
+    // メンバ変数
+    bool m_bInput;					//入力を行ったかどうか
+
 private:
     // メンバ関数
     D3DXVECTOR3 InputKey(CObjectCharacter* pCharacter, D3DXVECTOR3& posMy, D3DXVECTOR3& rotMy, D3DXVECTOR3 Move, float fSpeed);		//移動入力キーボード
 
+    // メンバ変数
+    ROTSTATE m_RotState;        // 移動方向の状態
 };
 
 //============================================
@@ -63,7 +85,7 @@ private:
 class CStateControl : public CMoveState
 {
 public:
-    CStateControl(){}
+    CStateControl();
     ~CStateControl(){}
 
     // 切り替え処理
@@ -71,8 +93,14 @@ public:
     void ControlAStar(CObjectCharacter* pCharacter) override;       // 追跡に切り替え
     void ControlStop(CObjectCharacter* pCharacter) override;        // 停止に切り替え
 
-    void Move(CObjectCharacter* pCharacter) override;      // 移動処理
+    //void Move(CObjectCharacter* pCharacter) override;      // 移動処理
     void Move(CPlayer* pPlayer, D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis) override;                  // プレイヤーの移動処理
+
+private:
+
+    // メンバ変数
+    //bool m_bInput;					//入力を行ったかどうか
+
 
 };
 
