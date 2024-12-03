@@ -47,7 +47,7 @@ namespace
 {
 	int SCROOL_TIME = 300;						// スクロール時間
 
-	int SCROOL_MOVEGRID_01 = 3;					// スクロールの移動マス幅
+	int SCROOL_MOVEGRID_01 = 15;					// スクロールの移動マス幅
 	float SCROOL_SPEED_01 = (CMapSystem::GetGritSize() * SCROOL_MOVEGRID_01 / SCROOL_TIME);				// スクロールの移動速度
 
 	int SCROOL_COUNT_02 = 12;					// スクロールの移動回数
@@ -1241,49 +1241,7 @@ void CDevil::CrossScroll(D3DXVECTOR3 Move, float GritSize)
 	// 十字架のリストの中身を確認する
 	for (CCross* pCross : list)
 	{
-		// マップ変数
-		D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
-		
-		// オブジェ変数
-		D3DXVECTOR3 pos = pCross->GetPos();
-		D3DXVECTOR3 Size = pCross->GetSize();
-
-		// 移動	
-		pos += Move;
-
-		// x座標判定
-		if (Move.x > 0.0f)
-		{// 移動量がプラス
-			if (m_DevilPos.x + MapSize.x < pos.x - GritSize)
-			{
-				pos.x = -MapSize.x + m_DevilPos.x - GritSize + Move.x;
-			}
-		}
-		if (Move.x < 0.0f)
-		{
-			if (m_DevilPos.x - MapSize.x > pos.x + GritSize)
-			{
-				pos.x = MapSize.x + m_DevilPos.x + GritSize + Move.x;
-			}
-		}
-
-		// z座標判定
-		if (Move.z > 0.0f)
-		{// 移動量がプラス
-			if (m_DevilPos.z + MapSize.z < pos.z - GritSize)
-			{
-				pos.z = -MapSize.z + m_DevilPos.z - GritSize + Move.z;
-			}
-		}
-		if (Move.z < 0.0f)
-		{
-			if (m_DevilPos.z - MapSize.z > pos.z + GritSize)
-			{
-				pos.z = MapSize.z + m_DevilPos.z + GritSize + Move.z;
-			}
-		}
-
-		// 位置設定
+		D3DXVECTOR3 pos = CMapSystem::GetInstance()->GetGritPos(pCross->GetGrid());
 		pCross->SetPos(pos);
 	}
 }
@@ -1300,41 +1258,7 @@ void CDevil::BowabowaScroll(D3DXVECTOR3 Move, float GritSize)
 	// ボワボワのリストの中身を確認する
 	for (CBowabowa* pBowabowa : list)
 	{
-		D3DXVECTOR3 pos = pBowabowa->GetPos();
-		D3DXVECTOR3 Size = pBowabowa->GetSize();
-		D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
-
-		pos += Move;
-
-		if (Move.x > 0.0f)
-		{
-			if (MapSize.x < pos.x)
-			{
-				pos.x = -MapSize.x + Move.x - 100.0f;
-			}
-		}
-		if (Move.x < 0.0f)
-		{
-			if (-MapSize.x > pos.x)
-			{
-				pos.x = MapSize.x + Move.x + 100.0f;
-			}
-		}
-		if (Move.z > 0.0f)
-		{
-			if (MapSize.z < pos.z)
-			{
-				pos.z = -MapSize.z + Move.z - 100.0f;
-			}
-		}
-		if (Move.z < 0.0f)
-		{
-			if (-MapSize.z > pos.z)
-			{
-				pos.z = MapSize.z + Move.z + 100.0f;
-			}
-		}
-
+		D3DXVECTOR3 pos = CMapSystem::GetInstance()->GetGritPos(pBowabowa->GetGrid());
 		pBowabowa->SetPos(pos);
 	}
 }
