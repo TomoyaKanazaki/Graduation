@@ -996,8 +996,8 @@ void CPlayer::StateManager(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis)
 				break;
 
 			case 1:
-				m_pUpEgg = CObjectX::Create("data\\MODEL\\00_Player\\1P\\upper_egg.x");
-				m_pUpEgg->SetMatColor(D3DXCOLOR(0.263529f, 0.570980f, 0.238431f, 1.0f));
+				m_pUpEgg = CObjectX::Create("data\\MODEL\\00_Player\\2P\\upperegg.x");
+				m_pUpEgg->SetMatColor(D3DXCOLOR(0.235294f, 0.715294f, 0.800000f, 1.0f));
 
 				m_pUpEgg->SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
 				break;
@@ -1017,8 +1017,8 @@ void CPlayer::StateManager(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis)
 				break;
 
 			case 1:
-				m_pDownEgg = CObjectX::Create("data\\MODEL\\00_Player\\1P\\downer_egg.x");
-				m_pDownEgg->SetMatColor(D3DXCOLOR(0.263529f, 0.570980f, 0.238431f, 1.0f));
+				m_pDownEgg = CObjectX::Create("data\\MODEL\\00_Player\\2P\\downeregg.x");
+				m_pDownEgg->SetMatColor(D3DXCOLOR(0.235294f, 0.715294f, 0.800000f, 1.0f));
 
 				m_pDownEgg->SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
 				break;
