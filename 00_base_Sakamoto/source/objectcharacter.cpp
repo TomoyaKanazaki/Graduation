@@ -57,6 +57,14 @@ m_bUseShadow(true)
 	m_bUseShadowMtx = false;
 
 	m_pMoveState = nullptr;
+
+	// êiçsãñâ¬èÛãµ
+	m_Progress.bOKD = true;
+	m_Progress.bOKL = true;
+	m_Progress.bOKR = true;
+	m_Progress.bOKU = true;
+
+	m_bGritCenter = true;
 }
 
 //====================================================================

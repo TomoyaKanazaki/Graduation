@@ -51,18 +51,6 @@ public:
 		STATE_NONE
 	};
 
-	// プレイヤーの移動方向
-	enum MOVE_STATE
-	{
-		MOVE_STATE_WAIT = 0,	// 待機
-		MOVE_STATE_LEFT,		// 左方向
-		MOVE_STATE_RIGHT,		// 右方向
-		MOVE_STATE_UP,			// 上方向
-		MOVE_STATE_DOWN,		// 下方向
-		MOVE_STATE_MAX,			// 最大
-		MOVE_STATE_NONE
-	};
-
 	// アイテムの種類
 	enum ITEM_TYPE
 	{
@@ -70,15 +58,6 @@ public:
 		TYPE_CROSS,			// 十字架
 		TYPE_BIBLE,			// 聖書
 		TYPE_MAX
-	};
-
-	// 移動の進行状況を管理する構造体
-	struct PROGGRESS
-	{
-		bool bOKL;		//左への進行が許されるかどうか
-		bool bOKR;		//右への進行が許されるかどうか
-		bool bOKU;		//上への進行が許されるかどうか
-		bool bOKD;		//下への進行が許されるかどうか
 	};
 
 	static CPlayer* Create(int PlayNumber);
@@ -127,10 +106,6 @@ public:
 	// 移動状態クラス用
 	void SetEggMove(D3DXVECTOR3 EggMove) { m_EggMove = EggMove; }	// 卵の移動量設定
 	D3DXVECTOR3 GetEggMove() { return m_EggMove; }			// 卵の移動量取得
-	float GetSpeed();		// プレイヤーの移動速度取得
-	MOVE_STATE GetMoveState() { return m_MoveState; }		// プレイヤーの移動方向の状態
-	void SetInput(bool bInput) { m_bInput = bInput; }		// 入力判定の設定
-	bool IsInput() { return m_bInput; }		// プレイヤーの入力判定
 	void SetInvincible(bool bInvincible) { m_bInvincible = bInvincible; }		// 無敵かどうか
 	void SetInvincibleCount(int nInvincibleCount) { m_nInvincibleCount = nInvincibleCount; }		// 無敵時間
 
@@ -198,15 +173,12 @@ private:
 	bool m_bJump;					//ジャンプをしたかどうか
 	int m_nActionCount;				//行動のカウント
 	STATE m_State;					//状態
-	MOVE_STATE m_MoveState;			//移動方向
 	int m_nStateCount;				//状態管理用カウント
 
 	float m_CollisionRot;			//当たり判定用の向き
 
 	CMapSystem::GRID m_Grid;		//グリット番号
 	bool m_bGritCenter;				//グリットの中心位置にいるかどうか
-
-	PROGGRESS m_Progress;			// 移動の進行状況
 
 	int m_nLife;					//ライフ
 	int m_nTime;
