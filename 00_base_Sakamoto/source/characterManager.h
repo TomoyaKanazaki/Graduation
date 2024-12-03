@@ -85,7 +85,8 @@ private:
 		char acFileName[MAX_CHARACTER];		// ファイル名
 	};
 
-	void LoadModel(const char* pFilename, int nNumCharacter);
+	void LoadModel(const char* pFileName, int nNumCharacter);
+	void LoadMotion(const char* pFileName, int nNumCharacter);
 
 	CharacterInfo m_aCharacterInfo[MAX_CHARACTER];
 	int m_nNumAll;						// キャラクターの使用数
