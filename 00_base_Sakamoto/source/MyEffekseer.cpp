@@ -223,8 +223,6 @@ void CMyEffekseer::Update(void)
 	if (CEffekseer::GetList() == nullptr) { return; }
 	std::list<CEffekseer*> list = CEffekseer::GetList()->GetList();    // リストを取得
 
-	DebugProc::Print(DebugProc::POINT_CENTER, "エフェクト数 : %d\n", list.size());
-
 	for(CEffekseer* effect : list)
 	{
 		// エフェクト情報を取得
