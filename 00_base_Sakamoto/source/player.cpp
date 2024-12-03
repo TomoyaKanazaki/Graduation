@@ -160,32 +160,8 @@ HRESULT CPlayer::Init(int PlayNumber)
 	D3DXVECTOR3 rotThis = GetRot();			// 向き
 	D3DXVECTOR3 sizeThis = GetSize();		// 大きさ
 
-	CMapSystem* pMapSystem = CMapSystem::GetInstance();		// マップシステムの情報
-
+	// プレイヤー番号を設定
 	m_nPlayNumber = PlayNumber;
-
-	// プレイヤーの位置取得
-	posThis = pMapSystem->GetPlayerPos(PlayNumber);
-
-	// サイズの設定
-	sizeThis = COLLISION_SIZE;
-
-	// 向きの設定
-	rotThis = D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f);
-	m_AutoMoveRot = D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f);
-
-	// アクションの設定
-	m_Action = ACTION_EGG;
-	m_AtkAction = ACTION_EGG;
-
-	//種類設定
-	SetType(CObject::TYPE_PLAYER3D);
-
-	// 体力の設定
-	m_nLife = LIFE_MAX;
-
-	// 状態の設定
-	m_MoveState = MOVE_STATE_WAIT;
 
 	// キャラクタークラスの初期化（継承）
 	if (FAILED(CObjectCharacter::Init())) { assert(false); }
@@ -210,6 +186,31 @@ HRESULT CPlayer::Init(int PlayNumber)
 	CObjectCharacter::SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
 	CObjectCharacter::SetUseStencil(true);
 	CObjectCharacter::SetUseShadowMtx(true);
+
+	CMapSystem* pMapSystem = CMapSystem::GetInstance();		// マップシステムの情報
+
+	// プレイヤーの位置取得
+	posThis = pMapSystem->GetPlayerPos(PlayNumber);
+
+	// サイズの設定
+	sizeThis = COLLISION_SIZE;
+
+	// 向きの設定
+	rotThis = D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f);
+	m_AutoMoveRot = D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f);
+
+	// アクションの設定
+	m_Action = ACTION_EGG;
+	m_AtkAction = ACTION_EGG;
+
+	//種類設定
+	SetType(CObject::TYPE_PLAYER3D);
+
+	// 体力の設定
+	m_nLife = LIFE_MAX;
+
+	// 状態の設定
+	m_MoveState = MOVE_STATE_WAIT;
 
 	//所持するUIの生成
 	UI_Create();
