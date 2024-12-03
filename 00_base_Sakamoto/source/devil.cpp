@@ -1228,6 +1228,9 @@ void CDevil::ObjectScroll(D3DXVECTOR3 Move)
 
 	// 壁のスクロール
 	WallScroll(Move, m_GritSize);
+
+	// 目玉焼きのスクロール
+	FriedEggScroll(Move, m_GritSize);
 }
 
 //====================================================================
