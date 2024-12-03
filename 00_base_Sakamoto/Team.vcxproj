@@ -24,6 +24,7 @@
     <ClCompile Include="source\bible.cpp" />
     <ClCompile Include="source\bowabowa.cpp" />
     <ClCompile Include="source\camera.cpp" />
+    <ClCompile Include="source\characterManager.cpp" />
     <ClCompile Include="source\effect.cpp" />
     <ClCompile Include="source\move.cpp" />
     <ClCompile Include="source\objectcharacter.cpp" />
@@ -106,6 +107,7 @@
     <ClInclude Include="source\bible.h" />
     <ClInclude Include="source\bowabowa.h" />
     <ClInclude Include="source\camera.h" />
+    <ClInclude Include="source\characterManager.h" />
     <ClInclude Include="source\effect.h" />
     <ClInclude Include="source\move.h" />
     <ClInclude Include="source\objectcharacter.h" />
