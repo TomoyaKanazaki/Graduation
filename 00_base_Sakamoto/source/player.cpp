@@ -187,18 +187,22 @@ HRESULT CPlayer::Init(int PlayNumber)
 	// 状態の設定
 	m_MoveState = MOVE_STATE_WAIT;
 
-	//マップとのマトリックスの掛け合わせをオンにする
-	SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
+	// キャラクタークラスの初期化（継承）
+	if (FAILED(CObjectCharacter::Init())) { assert(false); }
 
 	// キャラクターテキスト読み込み処理
 	switch (m_nPlayNumber)
 	{
 	case 0:
-		if (FAILED(CObjectCharacter::Init("data\\TXT\\motion_tamagon1P.txt"))) { assert(false); }
+
+		CObjectCharacter::SetTxtCharacter("data\\TXT\\motion_tamagon1P.txt");
+
 		break;
 
 	case 1:
-		if (FAILED(CObjectCharacter::Init("data\\TXT\\motion_tamagon2P.txt"))) { assert(false); }
+
+		CObjectCharacter::SetTxtCharacter("data\\TXT\\motion_tamagon2P.txt");
+
 		break;
 	}
 
@@ -378,7 +382,7 @@ void CPlayer::Update(void)
 	m_Grid.z = CMapSystem::GetInstance()->CMapSystem::CalcGridZ(posThis.z);
 
 	//状態の管理
-	StateManager(posThis);
+	StateManager(posThis, rotThis);
 
 	if (m_nInvincibleCount > 0)
 	{
@@ -620,11 +624,6 @@ D3DXVECTOR3 CPlayer::MoveInputKey(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis, D3
 	if ((pInputKeyboard->GetPress(DIK_W) && m_OKU && m_bGritCenter) ||
 		(pInputKeyboard->GetPress(DIK_W) && m_MoveState == MOVE_STATE_DOWN))
 	{
-		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
-		D3DXMATRIX mat = *GetUseMultiMatrix();
-		D3DXVECTOR3 ef = useful::CalcMatrix(posThis, rotThis, mat);
-		MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, rotThis);
-
 		Move.z += 1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 		Move.x += 1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 
@@ -635,11 +634,6 @@ D3DXVECTOR3 CPlayer::MoveInputKey(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis, D3
 		(pInputKeyboard->GetPress(DIK_S) && m_MoveState == MOVE_STATE_UP)) &&
 		pInputKeyboard->GetPress(DIK_W) == false)
 	{
-		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
-		D3DXMATRIX mat = *GetUseMultiMatrix();
-		D3DXVECTOR3 ef = useful::CalcMatrix(posThis, rotThis, mat);
-		MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, rotThis);
-
 		Move.z += -1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 		Move.x += -1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 
@@ -649,11 +643,6 @@ D3DXVECTOR3 CPlayer::MoveInputKey(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis, D3
 	else if ((pInputKeyboard->GetPress(DIK_A) && m_OKL && m_bGritCenter) ||
 		(pInputKeyboard->GetPress(DIK_A) && m_MoveState == MOVE_STATE_RIGHT))
 	{
-		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
-		D3DXMATRIX mat = *GetUseMultiMatrix();
-		D3DXVECTOR3 ef = useful::CalcMatrix(posThis, rotThis, mat);
-		MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, rotThis);
-
 		Move.x += -1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 		Move.z -= -1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 
@@ -664,11 +653,6 @@ D3DXVECTOR3 CPlayer::MoveInputKey(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis, D3
 		(pInputKeyboard->GetPress(DIK_D) && m_MoveState == MOVE_STATE_LEFT)) &&
 		pInputKeyboard->GetPress(DIK_A) == false)
 	{
-		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
-		D3DXMATRIX mat = *GetUseMultiMatrix();
-		D3DXVECTOR3 ef = useful::CalcMatrix(posThis, rotThis, mat);
-		MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, rotThis);
-
 		Move.x += 1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 		Move.z -= 1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 
@@ -694,11 +678,6 @@ D3DXVECTOR3 CPlayer::MoveInputPadStick(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThi
 			if ((pInputJoypad->Get_Stick_Left(nCnt).y > 0.0f && m_OKU && m_bGritCenter) ||
 				(pInputJoypad->Get_Stick_Left(nCnt).y > 0.0f && m_MoveState == MOVE_STATE_DOWN))
 			{
-				CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
-				D3DXMATRIX mat = *GetUseMultiMatrix();
-				D3DXVECTOR3 ef = useful::CalcMatrix(posThis, rotThis, mat);
-				MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, rotThis);
-
 				Move.z += 1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 				Move.x += 1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 
@@ -708,11 +687,6 @@ D3DXVECTOR3 CPlayer::MoveInputPadStick(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThi
 			else if ((pInputJoypad->Get_Stick_Left(nCnt).y < 0.0f && m_OKD && m_bGritCenter) ||
 				(pInputJoypad->Get_Stick_Left(nCnt).y < 0.0f && m_MoveState == MOVE_STATE_UP))
 			{
-				CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
-				D3DXMATRIX mat = *GetUseMultiMatrix();
-				D3DXVECTOR3 ef = useful::CalcMatrix(posThis, rotThis, mat);
-				MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, rotThis);
-
 				Move.z += -1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 				Move.x += -1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 
@@ -722,11 +696,6 @@ D3DXVECTOR3 CPlayer::MoveInputPadStick(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThi
 			else if ((pInputJoypad->Get_Stick_Left(nCnt).x < 0.0f && m_OKL && m_bGritCenter) ||
 				(pInputJoypad->Get_Stick_Left(nCnt).x < 0.0f && m_MoveState == MOVE_STATE_RIGHT))
 			{
-				CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
-				D3DXMATRIX mat = *GetUseMultiMatrix();
-				D3DXVECTOR3 ef = useful::CalcMatrix(posThis, rotThis, mat);
-				MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, rotThis);
-
 				Move.x += -1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 				Move.z -= -1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 
@@ -736,11 +705,6 @@ D3DXVECTOR3 CPlayer::MoveInputPadStick(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThi
 			else if ((pInputJoypad->Get_Stick_Left(nCnt).x > 0.0f && m_OKR && m_bGritCenter) ||
 				(pInputJoypad->Get_Stick_Left(nCnt).x > 0.0f && m_MoveState == MOVE_STATE_LEFT))
 			{
-				CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
-				D3DXMATRIX mat = *GetUseMultiMatrix();
-				D3DXVECTOR3 ef = useful::CalcMatrix(posThis, rotThis, mat);
-				MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, rotThis);
-
 				Move.x += 1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 				Move.z -= 1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 
@@ -768,10 +732,6 @@ D3DXVECTOR3 CPlayer::MoveInputPadKey(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis,
 			if ((pInputJoypad->GetPress(CInputJoypad::BUTTON_UP, nCnt) && m_OKU && m_bGritCenter) ||
 				(pInputJoypad->GetPress(CInputJoypad::BUTTON_UP, nCnt) && m_MoveState == MOVE_STATE_DOWN))
 			{
-				D3DXMATRIX mat = *GetUseMultiMatrix();
-				D3DXVECTOR3 ef = useful::CalcMatrix(posThis, rotThis, mat);
-				MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, rotThis);
-
 				Move.z += 1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 				Move.x += 1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 
@@ -782,10 +742,6 @@ D3DXVECTOR3 CPlayer::MoveInputPadKey(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis,
 				(pInputJoypad->GetPress(CInputJoypad::BUTTON_DOWN, nCnt) && m_MoveState == MOVE_STATE_UP)) &&
 				pInputJoypad->GetPress(CInputJoypad::BUTTON_UP, nCnt) == false)
 			{
-				D3DXMATRIX mat = *GetUseMultiMatrix();
-				D3DXVECTOR3 ef = useful::CalcMatrix(posThis, rotThis, mat);
-				MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, rotThis);
-
 				Move.z += -1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 				Move.x += -1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 
@@ -795,10 +751,6 @@ D3DXVECTOR3 CPlayer::MoveInputPadKey(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis,
 			else if ((pInputJoypad->GetPress(CInputJoypad::BUTTON_LEFT, nCnt) && m_OKL && m_bGritCenter) ||
 				(pInputJoypad->GetPress(CInputJoypad::BUTTON_LEFT, nCnt) && m_MoveState == MOVE_STATE_RIGHT))
 			{
-				D3DXMATRIX mat = *GetUseMultiMatrix();
-				D3DXVECTOR3 ef = useful::CalcMatrix(posThis, rotThis, mat);
-				MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, rotThis);
-
 				Move.x += -1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 				Move.z -= -1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 
@@ -809,10 +761,6 @@ D3DXVECTOR3 CPlayer::MoveInputPadKey(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis,
 				(pInputJoypad->GetPress(CInputJoypad::BUTTON_RIGHT, nCnt) && m_MoveState == MOVE_STATE_LEFT)) &&
 				pInputJoypad->GetPress(CInputJoypad::BUTTON_LEFT, nCnt) == false)
 			{
-				D3DXMATRIX mat = *GetUseMultiMatrix();
-				D3DXVECTOR3 ef = useful::CalcMatrix(posThis, rotThis, mat);
-				MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, rotThis);
-
 				Move.x += 1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 				Move.z -= 1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
 
@@ -935,7 +883,7 @@ void CPlayer::ActionState(void)
 //====================================================================
 //状態管理
 //====================================================================
-void CPlayer::StateManager(D3DXVECTOR3& posThis)
+void CPlayer::StateManager(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis)
 {
 	switch (m_State)
 	{
@@ -952,6 +900,9 @@ void CPlayer::StateManager(D3DXVECTOR3& posThis)
 		{
 			// サウンドの再生
 			CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
+			D3DXMATRIX mat = *GetUseMultiMatrix();
+			D3DXVECTOR3 ef = useful::CalcMatrix(posThis, rotThis, mat);
+			MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, rotThis);
 
 			m_nTime = 0;
 		}

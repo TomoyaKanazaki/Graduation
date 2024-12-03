@@ -63,6 +63,8 @@ private:
 	STATE m_State;					//状態
 	int m_nStateCount;				//状態管理用変数
 
+	CObjectCharacter* m_pObjectCharacter;	// オブジェクトキャラクターのポインタ
+
 	// 静的メンバ変数
 	static CListManager<CScrollDevice>* m_pList; // オブジェクトリスト
 

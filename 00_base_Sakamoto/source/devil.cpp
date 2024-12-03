@@ -58,7 +58,7 @@ namespace
 	int SLOPE_RAND = 25;						// 傾き発生確率
 	float STAGE_ROT_LIMIT = D3DX_PI * 0.15f;	// 傾きの角度制限
 
-	float SLOPE_SPEED01 = 0.0075f;				// 傾きの移動速度
+	float SLOPE_SPEED01 = 0.00075f;				// 傾きの移動速度
 
 	float SLOPE_SPEED02 = 0.0125f;				// 傾きの移動速度
 }
@@ -141,9 +141,12 @@ HRESULT CDevil::Init(void)
 	// 影を不使用に設定
 	SetShadow(false);
 
-	// キャラクターテキストの設定処理
-	CObjectCharacter::Init("data\\TXT\\MOTION\\01_enemy\\motion_devil.txt");
-	
+	// キャラクタークラスの初期化（継承）
+	if (FAILED(CObjectCharacter::Init())) { assert(false); }
+
+	// キャラクターテキスト読み込み処理
+	SetTxtCharacter("data\\TXT\\MOTION\\01_enemy\\motion_devil.txt");
+
 	switch (CScene::GetMode())
 	{
 	case CScene::MODE_TITLE:
@@ -223,7 +226,9 @@ void CDevil::Uninit(void)
 //====================================================================
 void CDevil::Update(void)
 {
-	m_ScrollType = SCROLL_TYPE_MAX;
+#ifdef _DEBUG
+	//m_ScrollType = SCROLL_TYPE_MAX;
+#endif // _DEBUG
 
 	// 値を取得
 	D3DXVECTOR3 posMy = GetPos();			// 位置
@@ -929,7 +934,7 @@ void CDevil::StateManager(void)
 					// 傾き装置のリストの中身を確認する
 					for (CSlopeDevice* pSlopeDevice : list)
 					{
-						// 方向の傾き装置を上昇状態に変更
+						// 方向の傾き装置を下降状態に変更
 						pSlopeDevice->SetState(CSlopeDevice::STATE_DESCENT, (CScrollArrow::Arrow)m_SlopwArrowOld);
 					}
 				}
