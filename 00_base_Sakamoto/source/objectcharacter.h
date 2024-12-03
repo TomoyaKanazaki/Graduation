@@ -24,9 +24,10 @@ public:
 	CObjectCharacter(int nPriority = 3);
 	~CObjectCharacter();
 
-	virtual HRESULT Init(void) { return S_OK; };
+	static CObjectCharacter* Create(void);
+
+	virtual HRESULT Init(void);
 	virtual HRESULT Init(int PlayNumber) { return S_OK; };
-	HRESULT Init(const char* pModelName);
 
 	void Uninit(void);
 	void Update(void);
