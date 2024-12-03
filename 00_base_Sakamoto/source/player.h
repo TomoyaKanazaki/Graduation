@@ -72,6 +72,15 @@ public:
 		TYPE_MAX
 	};
 
+	// 移動の進行状況を管理する構造体
+	struct PROGGRESS
+	{
+		bool bOKL;		//左への進行が許されるかどうか
+		bool bOKR;		//右への進行が許されるかどうか
+		bool bOKU;		//上への進行が許されるかどうか
+		bool bOKD;		//下への進行が許されるかどうか
+	};
+
 	static CPlayer* Create(int PlayNumber);
 	HRESULT Init(int PlayNumber) override;
 	void Uninit(void);
@@ -114,6 +123,16 @@ public:
 	bool GetbUseItem() { return m_UseItem; }
 
 	bool GetGritCenter() { return m_bGritCenter; }
+
+	// 移動状態クラス用
+	void SetEggMove(D3DXVECTOR3 EggMove) { m_EggMove = EggMove; }	// 卵の移動量設定
+	D3DXVECTOR3 GetEggMove() { return m_EggMove; }			// 卵の移動量取得
+	float GetSpeed();		// プレイヤーの移動速度取得
+	MOVE_STATE GetMoveState() { return m_MoveState; }		// プレイヤーの移動方向の状態
+	void SetInput(bool bInput) { m_bInput = bInput; }		// 入力判定の設定
+	bool IsInput() { return m_bInput; }		// プレイヤーの入力判定
+	void SetInvincible(bool bInvincible) { m_bInvincible = bInvincible; }		// 無敵かどうか
+	void SetInvincibleCount(int nInvincibleCount) { m_nInvincibleCount = nInvincibleCount; }		// 無敵時間
 
 	// マップ番号の設定
 	virtual void SetGrid(const CMapSystem::GRID& pos) { m_Grid = pos; }
@@ -187,12 +206,11 @@ private:
 	CMapSystem::GRID m_Grid;		//グリット番号
 	bool m_bGritCenter;				//グリットの中心位置にいるかどうか
 
+	PROGGRESS m_Progress;			// 移動の進行状況
+
 	int m_nLife;					//ライフ
 	int m_nTime;
-	bool m_OKL;						//左への進行が許されるかどうか
-	bool m_OKR;						//右への進行が許されるかどうか
-	bool m_OKU;						//上への進行が許されるかどうか
-	bool m_OKD;						//下への進行が許されるかどうか
+	
 	bool m_bInput;					//入力を行ったかどうか
 	bool m_bPressObj;				//オブジェクトに押されているかどうか
 	bool m_bInvincible;				//無敵かどうか

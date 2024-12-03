@@ -17,7 +17,8 @@
 //====================================================================
 //コンストラクタ
 //====================================================================
-CObjectX::CObjectX(int nPriority) :CObject(nPriority)
+CObjectX::CObjectX(int nPriority) :CObject(nPriority),
+m_bDisp(true)
 {
 	m_IdxModelNumber = 0;
 
@@ -146,6 +147,9 @@ void CObjectX::Update(void)
 //====================================================================
 void CObjectX::Draw(void)
 {
+	// 描画フラグがオフの場合関数を抜ける
+	if (!m_bDisp) { return; }
+
 	//デバイスの取得
 	LPDIRECT3DDEVICE9 m_pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
 
