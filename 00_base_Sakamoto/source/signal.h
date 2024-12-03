@@ -41,7 +41,7 @@ public:
 
 	// 静的メンバ関数
 	static CListManager<CSignal>* GetList(void); // リスト取得
-	static CSignal* Create(const char* pModelNameSignal,D3DXVECTOR3 pos);
+	static CSignal* Create(const char* pModelNameSignal);
 
 	//大きさ設定・取得
 	void SetScaling(const float& Scaling) { m_Scaling = Scaling; }
@@ -59,8 +59,6 @@ private:
 	bool m_UseItem;			//アイテムが使用可能かどうか
 
 	D3DXVECTOR3 m_rot;		//回転量
-
-	//CDevil* m_pDevil;
 
 	// 静的メンバ変数
 	static CListManager<CSignal>* m_pList; // オブジェクトリスト

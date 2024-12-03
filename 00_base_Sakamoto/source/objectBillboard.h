@@ -48,6 +48,9 @@ public:
 	void SetDigit(int Digit) { m_Digit = Digit; }
 	void SetAddDraw(bool Set) { m_AddDarw = Set; }
 
+	void SetUseMultiMatrix(D3DXMATRIX* Set) { m_UseMultiMatrix = Set; }
+	D3DXMATRIX* GetUseMultiMatrix(void) { return m_UseMultiMatrix; }
+
 	void SetNULL(void);
 
 protected:
@@ -65,5 +68,6 @@ private:
 	D3DXCOLOR m_Color;						//色
 	int m_Digit;							//表示する数字の桁数
 	bool m_AddDarw;							//加算合成をするかどうか
+	D3DXMATRIX* m_UseMultiMatrix;			//掛け合わせるマトリックス
 };
 #endif

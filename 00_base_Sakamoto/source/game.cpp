@@ -77,10 +77,6 @@ CGame::CGame()
 	m_pMeshDomeUp = nullptr;
 	m_pMapField = nullptr;
 	m_pCubeBlock = nullptr;
-	for (int nCnt = 0; nCnt < NUM_PLAYER; nCnt++)
-	{
-		m_pPlayer[nCnt] = nullptr;
-	}
 	m_pDevil = nullptr;
 	m_pMask = nullptr;
 
@@ -113,7 +109,6 @@ CGame::CGame()
 //====================================================================
 CGame::~CGame()
 {
-
 }
 
 //====================================================================
@@ -168,7 +163,7 @@ HRESULT CGame::Init(void)
 
 	// マップの生成
 	CMapSystem::GetInstance()->Init();
-	CMapSystem::Load("data\\TXT\\STAGE\\map01.csv");
+	CMapSystem::Load("data\\TXT\\STAGE\\map03.csv");
 
 	// 下床の生成
 	auto grid = FIELD_GRID;
@@ -180,15 +175,14 @@ HRESULT CGame::Init(void)
 	//レールブロックの生成
 	//LoadStageRailBlock("data\\TXT\\STAGE\\RailBlock.txt");
 
+	// 矢印モデル生成
+	//CSignal::Create("data\\MODEL\\signal.x", D3DXVECTOR3(-100.0f, 100.0f, 300.0f));
+	//CSignal::Create("data\\MODEL\\signal.x", D3DXVECTOR3(100.0f, 100.0f, 300.0f));
+
 	//ステージの読み込み
 	switch (CManager::GetInstance()->GetStage())
 	{
 	case 0:
-
-		// 矢印モデル生成
-		CSignal::Create("data\\MODEL\\signal.x",D3DXVECTOR3(-100.0f,100.0f,300.0f));
-		CSignal::Create("data\\MODEL\\signal.x", D3DXVECTOR3(100.0f, 100.0f, 300.0f));
-
 		// ソフトクリームの生成
 		CItem::Create(CItem::TYPE_SOFTCREAM, CMapSystem::GetInstance()->GetCenter());
 
@@ -205,23 +199,10 @@ HRESULT CGame::Init(void)
 		break;
 	}
 
-	if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_SINGLE)
+	// プレイヤーを生成する
+	for (int i = 0; i < CManager::GetInstance()->GetGameMode(); ++i)
 	{
-		//プレイヤーの生成
-		m_pPlayer[0] = CGamePlayer::Create(0);
-	}
-	else if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
-	{
-		//プレイヤーの生成
-		for (int nCnt = 0; nCnt < NUM_PLAYER; nCnt++)
-		{
-			m_pPlayer[nCnt] = CGamePlayer::Create(nCnt);
-		}
-	}
-	else
-	{
-		//プレイヤーの生成
-		m_pPlayer[0] = CGamePlayer::Create(0);
+		m_pPlayer.push_back(CGamePlayer::Create(i));
 	}
 
 	return S_OK;
@@ -239,6 +220,13 @@ void CGame::Uninit(void)
 		m_pPause = nullptr;
 	}
 
+	// プレイヤーの解放
+	while(1)
+	{
+		if (m_pPlayer.size() <= 0) { m_pPlayer.clear(); break; }
+		m_pPlayer.back()->SetDeathFlag(true);
+		m_pPlayer.pop_back();
+	}
 
 	CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_BGM_STAGE2);
 
@@ -252,6 +240,7 @@ void CGame::Uninit(void)
 
 	if (m_pGame != nullptr)
 	{
+		delete m_pGame;
 		m_pGame = nullptr;
 	}
 }
@@ -362,11 +351,11 @@ void CGame::Update(void)
 
 				int EndScore = 0;
 
-				for (int nCnt = 0; nCnt < NUM_PLAYER; nCnt++)
+				for (unsigned int nCnt = 0; nCnt < m_pPlayer.size(); nCnt++)
 				{
-					if (m_pPlayer[nCnt] != nullptr)
+					if (m_pPlayer.at(nCnt) != nullptr)
 					{
-						EndScore += m_pPlayer[nCnt]->GetScore()->GetScore();
+						EndScore += m_pPlayer.at(nCnt)->GetScore()->GetScore();
 					}
 				}
 
@@ -374,8 +363,8 @@ void CGame::Update(void)
 
 				if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
 				{
-					CManager::GetInstance()->SetEnd1PScore(m_pPlayer[0]->GetScore()->GetScore());
-					CManager::GetInstance()->SetEnd2PScore(m_pPlayer[1]->GetScore()->GetScore());
+					CManager::GetInstance()->SetEnd1PScore(m_pPlayer.at(0)->GetScore()->GetScore());
+					CManager::GetInstance()->SetEnd2PScore(m_pPlayer.at(1)->GetScore()->GetScore());
 				}
 			}
 		}
@@ -426,11 +415,11 @@ void CGame::StageClear(int Stage)
 
 		int EndScore = 0;
 
-		for (int nCnt = 0; nCnt < NUM_PLAYER; nCnt++)
+		for (unsigned int nCnt = 0; nCnt < m_pPlayer.size(); nCnt++)
 		{
-			if (m_pPlayer[nCnt] != nullptr)
+			if (m_pPlayer.at(nCnt) != nullptr)
 			{
-				EndScore += m_pPlayer[nCnt]->GetScore()->GetScore();
+				EndScore += m_pPlayer.at(nCnt)->GetScore()->GetScore();
 			}
 		}
 
@@ -438,8 +427,8 @@ void CGame::StageClear(int Stage)
 
 		if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
 		{
-			CManager::GetInstance()->SetEnd1PScore(m_pPlayer[0]->GetScore()->GetScore());
-			CManager::GetInstance()->SetEnd2PScore(m_pPlayer[1]->GetScore()->GetScore());
+			CManager::GetInstance()->SetEnd1PScore(m_pPlayer.at(0)->GetScore()->GetScore());
+			CManager::GetInstance()->SetEnd2PScore(m_pPlayer.at(1)->GetScore()->GetScore());
 		}
 	}
 	else
@@ -451,11 +440,11 @@ void CGame::StageClear(int Stage)
 
 		int EndScore = 0;
 
-		for (int nCnt = 0; nCnt < NUM_PLAYER; nCnt++)
+		for (unsigned int nCnt = 0; nCnt < m_pPlayer.size(); nCnt++)
 		{
-			if (m_pPlayer[nCnt] != nullptr)
+			if (m_pPlayer.at(nCnt) != nullptr)
 			{
-				EndScore += m_pPlayer[nCnt]->GetScore()->GetScore();
+				EndScore += m_pPlayer.at(nCnt)->GetScore()->GetScore();
 			}
 		}
 
@@ -463,8 +452,8 @@ void CGame::StageClear(int Stage)
 
 		if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
 		{
-			CManager::GetInstance()->SetEnd1PScore(m_pPlayer[0]->GetScore()->GetScore());
-			CManager::GetInstance()->SetEnd2PScore(m_pPlayer[1]->GetScore()->GetScore());
+			CManager::GetInstance()->SetEnd1PScore(m_pPlayer.at(0)->GetScore()->GetScore());
+			CManager::GetInstance()->SetEnd2PScore(m_pPlayer.at(1)->GetScore()->GetScore());
 		}
 	}
 }
@@ -732,24 +721,24 @@ void CGame::SetBgObjTest(void)
 
 	// ジャッキ
 	{
-		//CObjectX* pJack = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\jack.x");
-		//pJack->SetPos(D3DXVECTOR3(1300.0f, BOTTOM_FIELD_POS.y, 2750.0f));
-		//pJack->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
-		//CObjectX* pPost = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\post.x");
-		//pPost->SetPos(D3DXVECTOR3(900.0f, BOTTOM_FIELD_POS.y, 2750.0f));
-
-		//pJack = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\jack.x");
-		//pJack->SetPos(D3DXVECTOR3(-1300.0f, BOTTOM_FIELD_POS.y, 2750.0f));
-		//pJack->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
-		//pPost = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\post.x");
-		//pPost->SetPos(D3DXVECTOR3(-900.0f, BOTTOM_FIELD_POS.y, 2750.0f));
-
 		CSlopeDevice* pSlopeDevice = CSlopeDevice::Create(SLOPE_DEVICE_MODEL, SLOPE_DEVICE_MODEL);
-		pSlopeDevice->SetPos(D3DXVECTOR3(900.0f, BOTTOM_FIELD_POS.y, 2750.0f));
+		pSlopeDevice->SetPos(D3DXVECTOR3(900.0f, BOTTOM_FIELD_POS.y, 3500.0f));
 		pSlopeDevice->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
+		pSlopeDevice->SetLocateWorldType(CSlopeDevice::LOCATE_WORLD_TYPE_TOP_LEFT);
 
 		pSlopeDevice = CSlopeDevice::Create(SLOPE_DEVICE_MODEL, SLOPE_DEVICE_MODEL);
 		pSlopeDevice->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
-		pSlopeDevice->SetPos(D3DXVECTOR3(-900.0f, BOTTOM_FIELD_POS.y, 2750.0f));
+		pSlopeDevice->SetPos(D3DXVECTOR3(-900.0f, BOTTOM_FIELD_POS.y, 3500.0f));
+		pSlopeDevice->SetLocateWorldType(CSlopeDevice::LOCATE_WORLD_TYPE_TOP_RIGHT);
+
+		pSlopeDevice = CSlopeDevice::Create(SLOPE_DEVICE_MODEL, SLOPE_DEVICE_MODEL);
+		pSlopeDevice->SetPos(D3DXVECTOR3(900.0f, BOTTOM_FIELD_POS.y, 3000.0f));
+		pSlopeDevice->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
+		pSlopeDevice->SetLocateWorldType(CSlopeDevice::LOCATE_WORLD_TYPE_BOTTOM_LEFT);
+
+		pSlopeDevice = CSlopeDevice::Create(SLOPE_DEVICE_MODEL, SLOPE_DEVICE_MODEL);
+		pSlopeDevice->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
+		pSlopeDevice->SetPos(D3DXVECTOR3(-900.0f, BOTTOM_FIELD_POS.y, 3000.0f));
+		pSlopeDevice->SetLocateWorldType(CSlopeDevice::LOCATE_WORLD_TYPE_BOTTOM_RIGHT);
 	}
 }

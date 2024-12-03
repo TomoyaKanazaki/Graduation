@@ -19,6 +19,7 @@ class CObjectX;
 class CScore;
 class CObjmeshField;
 class CDevil;
+class CObjectBillboard;
 
 //オブジェクトプレイヤークラス
 class CPlayer : public CObjectCharacter
@@ -131,7 +132,7 @@ public:
 private:
 
 	void ActionState(void);							//モーションと状態の管理
-	void StateManager(D3DXVECTOR3& posMy);			//状態管理
+	void StateManager(D3DXVECTOR3& posMy, D3DXVECTOR3& rotThis);			//状態管理
 	void Move(D3DXVECTOR3& posMy, D3DXVECTOR3& rotMy);								//移動処理
 	D3DXVECTOR3 MoveInputKey(D3DXVECTOR3& posMy, D3DXVECTOR3& rotMy,D3DXVECTOR3 Move);		//移動入力キーボード
 	D3DXVECTOR3 MoveInputPadStick(D3DXVECTOR3& posMy, D3DXVECTOR3& rotMy, D3DXVECTOR3 Move);//移動入力パッドスティック
@@ -157,59 +158,64 @@ private:
 	void RotUpdate(D3DXVECTOR3& rotMy);		//向き更新処理
 	void EggMove(D3DXVECTOR3& posMy, D3DXVECTOR3& rotMy);			//卵の動き
 
-	void ControlEffect(CEffekseer* pTarget); // エフェクトの操作
+	void UI_Create(void);			//所持するUIの生成
+	void UI_Init(void);				//所持するUIの初期化
 
-	void DebugKey(void);		//デバッグキー
+	void ControlEffect(CEffekseer* pTarget, const D3DXVECTOR3* pPos = nullptr); // エフェクトの操作
+	void RotationEffect(CEffekseer* pTarget); // エフェクトの操作
+	void MoveEffect(CEffekseer* pTarget, const D3DXVECTOR3* pPos = nullptr); // エフェクトの操作
 
-	int m_nPlayNumber;			//プレイ用番号
+	void DebugKey(void);			//デバッグキー
+
+	int m_nPlayNumber;				//プレイ用番号
 	ACTION_TYPE m_Action;
-	ACTION_TYPE m_AtkAction;	//攻撃状態記録用変数
-	D3DXVECTOR3 m_move;			//移動量
-	D3DXVECTOR3 m_Objmove;		//オブジェクトから影響される移動量
-	D3DXVECTOR3 m_rotDest;		//向きの目的地
-	D3DXVECTOR3 m_AutoMoveRot;	//自動移動の移動方向
-	D3DXVECTOR3 m_AtkPos;		//攻撃位置
-	D3DXVECTOR3 m_CameraPos;	//カメラ位置位置
-	bool m_bJump;				//ジャンプをしたかどうか
-	int m_nActionCount;			//行動のカウント
-	STATE m_State;				//状態
-	MOVE_STATE m_MoveState;		//移動方向
-	int m_nStateCount;			//状態管理用カウント
+	ACTION_TYPE m_AtkAction;		//攻撃状態記録用変数
+	D3DXVECTOR3 m_move;				//移動量
+	D3DXVECTOR3 m_Objmove;			//オブジェクトから影響される移動量
+	D3DXVECTOR3 m_rotDest;			//向きの目的地
+	D3DXVECTOR3 m_AutoMoveRot;		//自動移動の移動方向
+	D3DXVECTOR3 m_AtkPos;			//攻撃位置
+	D3DXVECTOR3 m_CameraPos;		//カメラ位置位置
+	bool m_bJump;					//ジャンプをしたかどうか
+	int m_nActionCount;				//行動のカウント
+	STATE m_State;					//状態
+	MOVE_STATE m_MoveState;			//移動方向
+	int m_nStateCount;				//状態管理用カウント
 
-	float m_CollisionRot;		//当たり判定用の向き
+	float m_CollisionRot;			//当たり判定用の向き
 
-	CMapSystem::GRID m_Grid;	//グリット番号
-	bool m_bGritCenter;			//グリットの中心位置にいるかどうか
+	CMapSystem::GRID m_Grid;		//グリット番号
+	bool m_bGritCenter;				//グリットの中心位置にいるかどうか
 
-	int m_nLife;				//ライフ
+	int m_nLife;					//ライフ
 	int m_nTime;
-	bool m_OKL;					//左への進行が許されるかどうか
-	bool m_OKR;					//右への進行が許されるかどうか
-	bool m_OKU;					//上への進行が許されるかどうか
-	bool m_OKD;					//下への進行が許されるかどうか
-	bool m_bInput;				//入力を行ったかどうか
-	bool m_bPressObj;			//オブジェクトに押されているかどうか
-	bool m_bInvincible;			//無敵かどうか
-	int m_nInvincibleCount;		//無敵時間
+	bool m_OKL;						//左への進行が許されるかどうか
+	bool m_OKR;						//右への進行が許されるかどうか
+	bool m_OKU;						//上への進行が許されるかどうか
+	bool m_OKD;						//下への進行が許されるかどうか
+	bool m_bInput;					//入力を行ったかどうか
+	bool m_bPressObj;				//オブジェクトに押されているかどうか
+	bool m_bInvincible;				//無敵かどうか
+	int m_nInvincibleCount;			//無敵時間
 
-	bool m_UseItem;				//アイテムが使用可能かどうか
+	bool m_UseItem;					//アイテムが使用可能かどうか
 
-	CSlowManager* m_pSlow;		// スロー
+	CSlowManager* m_pSlow;			// スロー
 
-	ITEM_TYPE m_eItemType;		// 持ってるアイテムの種類
-	CScore* m_pScore;			// スコアのポインタ
+	ITEM_TYPE m_eItemType;			// 持ってるアイテムの種類
+	CScore* m_pScore;				// スコアのポインタ
 
-	CObjectX* m_pUpEgg;			//卵モデルの上
-	CObjectX* m_pDownEgg;		//卵モデルの下
-	D3DXVECTOR3 m_EggMove;		//卵の動き
+	CObjectX* m_pUpEgg;				//卵モデルの上
+	CObjectX* m_pDownEgg;			//卵モデルの下
+	D3DXVECTOR3 m_EggMove;			//卵の動き
 
-	CLifeUi* m_pLifeUi;
+	CLifeUi* m_pLifeUi;				//体力UI
+	CObjectBillboard* m_pP_NumUI;	//プレイヤー番号UI		
 
-	CShadow* m_pShadow;
-
-	CEffekseer* m_pEffectEgg; // 卵のエフェクト
-	CEffekseer* m_pEffectSpeed; // 加減速のエフェクト
+	CEffekseer* m_pEffectEgg;		// 卵のエフェクト
+	CEffekseer* m_pEffectSpeed;		// 加減速のエフェクト
 	CEffekseer* m_pEffectGuide; // 復活位置のエフェクト
+	CEffekseer* m_pEffectItem; // アイテム所持エフェクト
 
 	// 静的メンバ変数
 	static CListManager<CPlayer>* m_pList; // オブジェクトリスト

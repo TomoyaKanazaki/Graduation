@@ -38,6 +38,8 @@ CScrollDevice::CScrollDevice(int nPriority) : CObjectCharacter(nPriority)
 {
 	m_State = STATE(0);
 	m_nStateCount = 0;
+
+	m_pObjectCharacter = nullptr;
 }
 
 //====================================================================
@@ -167,6 +169,7 @@ HRESULT CScrollDevice::InitModel(const char* pModelNameScrollDevice, const char*
 {
 	CObjectCharacter::SetTxtCharacter(pModelNameScrollDevice);
 
+
 	return S_OK;
 }
 
@@ -209,14 +212,15 @@ void CScrollDevice::Rotate(D3DXVECTOR3& rotMy,int nNldxModel,D3DXVECTOR3 rotate)
 	// ƒ‚ƒfƒ‹‚Ì‰ñ“]Ž²‚ðŽæ“¾
 	D3DXVECTOR3 rot = pModel->GetStartRot();
 	
+	// –{‘Ì‚ÌŒü‚«”»’è
 	if (rotMy.y == 0.0f)
 	{
-		// ‰ñ“]—ÊŒ¸ŽZ
+		// ‰ñ“]—Ê‰ÁŽZ
 		rot += rotate;
 	}
 	else if (rotMy.y == D3DX_PI)
 	{
-		// ‰ñ“]—Ê‰ÁŽZ
+		// ‰ñ“]—ÊŒ¸ŽZ
 		rot -= rotate;
 	}
 

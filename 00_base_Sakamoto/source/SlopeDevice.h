@@ -10,6 +10,8 @@
 
 #include "objectcharacter.h"
 
+#include "scrollarrow.h"
+
 // 傾き装置クラス
 class CSlopeDevice : public CObjectCharacter
 {
@@ -18,11 +20,22 @@ public:
 	CSlopeDevice(int nPriority = 3);
 	~CSlopeDevice();
 
+	// 世界からの設置場所
+	enum LOCATE_WORLD_TYPE
+	{
+		LOCATE_WORLD_TYPE_TOP_LEFT = 0,		// 左上
+		LOCATE_WORLD_TYPE_TOP_RIGHT,		// 右上
+		LOCATE_WORLD_TYPE_BOTTOM_LEFT,		// 左下
+		LOCATE_WORLD_TYPE_BOTTOM_RIGHT,		// 右下
+		LOCATE_WORLD_TYPE_MAX
+	};
+
 	// 状態
 	enum STATE
 	{
 		STATE_NORMAL = 0,	// 通常
-		STATE_ROTATE,		// 回転
+		STATE_ASCENT,		// 上昇
+		STATE_DESCENT,		// 下降
 		STATE_MAX,
 	};
 
@@ -37,9 +50,11 @@ public:
 	enum SETUP_TYPE
 	{
 		SETUP_TYPE_FOUNDATION = 0,	// 土台
-		SETUP_TYPE_MAWASIGURMA,		// 回し車
-		SETUP_TYPE_ROLLRE,			// ローラー
-		SETUP_TYPE_HEAD,			// 先っぽ
+		SETUP_TYPE_EDGE,			// 外縁
+		SETUP_TYPE_ELEVATING_PART,	// 昇降部位
+		SETUP_TYPE_JACK,			// ジャッキ本体
+		SETUP_TYPE_INJECTION_PART,	// 注入部位
+		SETUP_TYPE_LIVER,			// レバー
 		SETUP_TYPE_MAX,				// 最大
 	};
 
@@ -51,6 +66,9 @@ public:
 	void Draw(void);
 
 	void SetState(STATE state) { m_State = state; }
+	void SetState(STATE state, CScrollArrow::Arrow stateArrow);
+	
+	void SetLocateWorldType(LOCATE_WORLD_TYPE LocateWorldType) { m_LocateWorldType = LocateWorldType ;}
 
 	// 静的メンバ関数
 	static CListManager<CSlopeDevice>* GetList(void); // リスト取得
@@ -58,10 +76,14 @@ public:
 private:
 	HRESULT InitModel(const char* pModelNameSlopeDevice, const char* pModelNameEnemy);
 
-	void StateManager(D3DXVECTOR3& rotMy);
+	void StateManager(void);
 
-	STATE m_State;					//状態
-	int m_nStateCount;				//状態管理用変数
+	void Ascent(int nNldxModel, D3DXVECTOR3 ascent, D3DXVECTOR3 ascentMax);
+	void Descent(int nNldxModel, D3DXVECTOR3 descent, D3DXVECTOR3 descentPosMin);
+
+	STATE m_State;							// 状態
+	int m_nStateCount;						// 状態管理用変数
+	LOCATE_WORLD_TYPE m_LocateWorldType;	// 世界からの設置位置
 
 	// 静的メンバ変数
 	static CListManager<CSlopeDevice>* m_pList; // オブジェクトリスト

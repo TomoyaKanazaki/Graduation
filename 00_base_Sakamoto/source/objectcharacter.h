@@ -12,6 +12,7 @@
 class CModel;
 class CMotion;
 class CShadow;
+class CMoveState;		// 移動の状態
 
 #define MODEL_NUM		(64)	// モデルの数
 #define FILE_NAME_SIZE	(128)	// ファイル名の最大文字数
@@ -23,9 +24,10 @@ public:
 	CObjectCharacter(int nPriority = 3);
 	~CObjectCharacter();
 
-	virtual HRESULT Init(void) { return S_OK; };
+	static CObjectCharacter* Create(void);
+
+	virtual HRESULT Init(void);
 	virtual HRESULT Init(int PlayNumber) { return S_OK; };
-	HRESULT Init(const char* pModelName);
 
 	void Uninit(void);
 	void Update(void);
@@ -57,6 +59,15 @@ public:
 
 	void SetTxtCharacter(const char* pFilename);
 
+	// 移動状態
+	void ChangeMoveState(CMoveState* pMoveState);   // 状態変更
+protected:
+
+	CShadow* m_pShadow;
+
+
+	CMoveState* m_pMoveState;		// 移動状態
+
 private:
 
 	void LoadModel(const char* pFilename);
@@ -75,7 +86,6 @@ private:
 	D3DXMATRIX m_mtxWorld;			// ワールドマトリックス
 	D3DXMATRIX* m_UseMultiMatrix;	// 掛け合わせるマトリックス
 
-	CShadow* m_pShadow;
 	bool m_bUseStencil;				// ステンシルバッファの使用の有無
 	bool m_bUseShadowMtx;			// シャドウマトリックスの使用の有無
 	bool m_bUseShadow;				// 影の使用フラグ
