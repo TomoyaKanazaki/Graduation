@@ -257,7 +257,7 @@ void CObjectCharacter::Draw(void)
 }
 
 //==========================================
-// ó‘Ô•ÏXˆ—
+// ˆÚ“®ó‘Ô•ÏXˆ—
 //==========================================
 void CObjectCharacter::ChangeMoveState(CMoveState* pMoveState)
 {

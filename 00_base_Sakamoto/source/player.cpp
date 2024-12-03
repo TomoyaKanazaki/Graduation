@@ -37,6 +37,7 @@
 #include "mask.h"
 #include "wall.h"
 #include "objectBillboard.h"
+#include "move.h"
 
 #include "MyEffekseer.h"
 
@@ -49,7 +50,7 @@ namespace
 	const int FIRE_STOPTIME = 30;	//攻撃時の移動停止時間
 	const D3DXVECTOR3 RESPAWN_POS = D3DXVECTOR3(-100.0f, 2000.0f, 100.0f); // 復活位置
 	const float RESPAWN_GRAVITY = 0.03f;			//卵の重力
-	const int INVINCIBLE_TIME = 120;			//無敵時間
+	const int INVINCIBLE_TIME = 120;			//無敵時間(後で消す)
 
 	const float GRIT_OK = 45.0f;			//移動可能なグリットの範囲内
 	const float PLAYER_SPEED = 5.0f;		//プレイヤーの移動速度
@@ -63,7 +64,7 @@ namespace
 	const float CROSS_TIME = 10.0f; // 十字架を所持していられる時間
 
 	const float EGG_GRAVITY = 0.98f;	 //移動量の減衰速度
-	const D3DXVECTOR3 EGG_MOVE = D3DXVECTOR3(10.0f, 10.0f, 10.0f);	 //移動量の減衰速度
+	const D3DXVECTOR3 EGG_MOVE = D3DXVECTOR3(10.0f, 10.0f, 10.0f);	 //移動量の減衰速度(後で消す)
 	const float EGG_ROT = D3DX_PI * 0.006f;		//回転速度
 	const float EGG_MOVE_DEL = 0.9f;			//移動量の減衰速度
 	const float EGG_COLOR_DEL_A = 0.01f;		//不透明度の減衰速度
@@ -225,6 +226,9 @@ HRESULT CPlayer::Init(int PlayNumber)
 	SetRot(rotThis);			// 向き
 	SetSize(sizeThis);		// 大きさ
 
+	// 操作状態にする
+	m_pMoveState->ControlStop(this);
+
 	// リストマネージャーの生成
 	if (m_pList == nullptr)
 	{
@@ -302,6 +306,13 @@ void CPlayer::Update(void)
 				m_bGritCenter == true && posThis.y <= 0.0f)
 			)
 		{// ステージ内にいる かつ ブロックの無いグリッド上の時
+
+			// 操作状態
+			//m_pMoveState->ControlStop(this);
+
+			// 移動処理
+			//m_pMoveState->Move(this, posThis, rotThis);
+
 			// 移動処理
 			Move(posThis,rotThis);
 		}
@@ -520,6 +531,7 @@ void CPlayer::UI_Init(void)
 	}
 }
 
+#if 1
 //====================================================================
 //移動処理
 //====================================================================
@@ -594,6 +606,8 @@ void CPlayer::Move(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis)
 		m_State = STATE_WALK;
 	}
 }
+
+#endif
 
 //====================================================================
 //移動入力キーボード
@@ -1971,4 +1985,12 @@ void CPlayer::SetModelColor(CModel::COLORTYPE Type, D3DXCOLOR Col)
 CListManager<CPlayer>* CPlayer::GetList(void)
 {
 	return m_pList;
+}
+
+//==========================================
+// プレイヤーの移動速度取得
+//==========================================
+float CPlayer::GetSpeed(void)
+{
+	return PLAYER_SPEED;
 }

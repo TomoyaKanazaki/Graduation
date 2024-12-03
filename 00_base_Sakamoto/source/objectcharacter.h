@@ -59,11 +59,12 @@ public:
 	void SetTxtCharacter(const char* pFilename);
 
 	// ˆÚ“®ó‘Ô
-	void ChangeMoveState(CMoveState* pMoveState);   // ó‘Ô•ÏX
+	void ChangeMoveState(CMoveState* pMoveState);   // ˆÚ“®ó‘Ô•ÏX
+	CMoveState* GetMoveState() { return m_pMoveState; }	// ˆÚ“®ó‘Ô‚Ìî•ñæ“¾
+
 protected:
 
 	CShadow* m_pShadow;
-
 
 	CMoveState* m_pMoveState;		// ˆÚ“®ó‘Ô
 
