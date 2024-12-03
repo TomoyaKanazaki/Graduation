@@ -231,6 +231,7 @@ void CTutorial::Uninit(void)
 
 	if (m_pTutorial != nullptr)
 	{
+		delete m_pTutorial;
 		m_pTutorial = nullptr;
 	}
 }
