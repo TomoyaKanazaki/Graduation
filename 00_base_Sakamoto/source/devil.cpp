@@ -161,25 +161,12 @@ HRESULT CDevil::Init(void)
 		break;
 	}
 
-	if (m_ScrollArrow[0] == nullptr)
-	{
-		m_ScrollArrow[0] = CScrollArrow::Create();
-		m_ScrollArrow[0]->SetPos((D3DXVECTOR3(80.0f, 120.0f, 0.0f)));
-	}
-
-	if (m_ScrollArrow[1] == nullptr)
-	{
-		m_ScrollArrow[1] = CScrollArrow::Create();
-		m_ScrollArrow[1]->SetPos((D3DXVECTOR3(1200.0f, 120.0f, 0.0f)));
-	}
-
 	// –îˆó¶¬
 	if (m_pSignal[0] == nullptr)
 	{
 		m_pSignal[0] = CSignal::Create("data\\MODEL\\signal.x");
 		m_pSignal[0]->SetPos(D3DXVECTOR3(-1000.0f,200.0f,500.0f));
 	}
-
 	if (m_pSignal[1] == nullptr)
 	{
 		m_pSignal[1] = CSignal::Create("data\\MODEL\\signal.x");
