@@ -80,8 +80,6 @@ CListManager<CPlayer>* CPlayer::m_pList = nullptr; // オブジェクトリスト
 //コンストラクタ
 //====================================================================
 CPlayer::CPlayer(int nPriority) : CObjectCharacter(nPriority),
-m_move(INITVECTOR3),
-m_Objmove(INITVECTOR3),
 m_AutoMoveRot(INITVECTOR3),
 m_bJump(false),
 m_nActionCount(0),
