@@ -9,7 +9,6 @@
 
 #include "objectcharacter.h"
 #include "useful.h"
-#include "Model.h"
 #include "MapSystem.h"
 
 //ëOï˚êÈåæ
@@ -97,7 +96,6 @@ public:
 	ACTION_TYPE GetAction(void) { return m_Action; }
 	void SetModelDisp(bool Sst);
 	void SetPartsDisp(int nParts, bool Set);
-	void SetModelColor(CModel::COLORTYPE Type, D3DXCOLOR Col);
 	void SetPressObj(bool Set) { m_bPressObj = Set; }
 	bool GetPressObj(void) { return m_bPressObj; }
 	CScore* GetScore(void) { return m_pScore; }

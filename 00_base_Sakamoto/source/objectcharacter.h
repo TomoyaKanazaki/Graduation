@@ -8,6 +8,7 @@
 #define _CHARACTER_H_
 
 #include "object.h"
+#include "Model.h"
 
 class CModel;
 class CMotion;
@@ -32,6 +33,7 @@ public:
 	void Update(void);
 	void Draw(void);
 
+	void SetModelColor(CModel::COLORTYPE Type, D3DXCOLOR Col);
 	CModel* GetModel(int nCnt);
 	CMotion* GetMotion(void);
 	int GetNumModel(void) { return m_nNumModel; }

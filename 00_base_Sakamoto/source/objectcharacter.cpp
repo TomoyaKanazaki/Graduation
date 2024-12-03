@@ -455,3 +455,24 @@ void CObjectCharacter::LoadModel(const char* pFilename)
 		printf("***ファイルを開けませんでした***\n");
 	}
 }
+
+//====================================================================
+// 指定モデルカラー変更
+//====================================================================
+void CObjectCharacter::SetModelColor(CModel::COLORTYPE Type, D3DXCOLOR Col)
+{
+	// モデル数の取得
+	int nNumModel = GetNumModel();
+
+	for (int nCnt = 0; nCnt < nNumModel; nCnt++)
+	{
+		// モデルの取得
+		CModel* pModel = GetModel(nCnt);
+
+		if (pModel != nullptr)
+		{
+			pModel->SetColorType(Type);
+			pModel->SetColor(Col);
+		}
+	}
+}
