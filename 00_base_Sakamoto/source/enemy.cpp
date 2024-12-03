@@ -94,7 +94,6 @@ m_pEffect(nullptr)
 	m_EnemyType = ENEMY_MEDAMAN;
 	m_MoveState = MOVE_STATE_WAIT;
 	m_pSlow = nullptr;
-	m_SelectMove = SELECT_MOVE_MAX;
 
 	m_HitState = HIT_STATE_NORMAL;
 	m_nHitStateCount = 0;
@@ -187,6 +186,9 @@ HRESULT CEnemy::Init(void)
 
 	// スローの生成(配属、タグの設定)
 	m_pSlow = CSlowManager::Create(m_pSlow->CAMP_ENEMY, m_pSlow->TAG_ENEMY);
+
+	// 移動向きの状態を設定
+	m_pMoveState->SetRotState(CMoveState::ROTSTATE_MAX);
 
 	// 移動状態設定
 	if (m_pMoveState == nullptr)
@@ -633,23 +635,25 @@ void CEnemy::MoveSelect()
 {
 	float OKRot[4];
 	int RotNumber = 0;
-
-	if (m_Progress.bOKL && m_SelectMove != SELECT_MOVE_RIGHT)
+	CMoveState::ROTSTATE RotState = m_pMoveState->GetRotState();	// 移動方向の状態
+	
+	
+	if (m_Progress.bOKL && RotState != CMoveState::ROTSTATE_RIGHT)
 	{
 		OKRot[RotNumber] = D3DX_PI * -0.5f;
 		RotNumber++;
 	}
-	if (m_Progress.bOKR && m_SelectMove != SELECT_MOVE_LEFT)
+	if (m_Progress.bOKR && RotState != CMoveState::ROTSTATE_LEFT)
 	{
 		OKRot[RotNumber] = D3DX_PI * 0.5f;
 		RotNumber++;
 	}
-	if (m_Progress.bOKU && m_SelectMove != SELECT_MOVE_DOWN)
+	if (m_Progress.bOKU && RotState != CMoveState::ROTSTATE_DOWN)
 	{
 		OKRot[RotNumber] = D3DX_PI * 0.0f;
 		RotNumber++;
 	}
-	if (m_Progress.bOKD && m_SelectMove != SELECT_MOVE_UP)
+	if (m_Progress.bOKD && RotState != CMoveState::ROTSTATE_UP)
 	{
 		OKRot[RotNumber] = D3DX_PI * 1.0f;
 		RotNumber++;
@@ -664,19 +668,19 @@ void CEnemy::MoveSelect()
 
 		if (m_move.x >= 3.0f)
 		{
-			m_SelectMove = SELECT_MOVE_RIGHT;
+			RotState = CMoveState::ROTSTATE_RIGHT;
 		}
 		else if (m_move.x <= -3.0f)
 		{
-			m_SelectMove = SELECT_MOVE_LEFT;
+			RotState = CMoveState::ROTSTATE_LEFT;
 		}
 		else if (m_move.z >= 3.0f)
 		{
-			m_SelectMove = SELECT_MOVE_UP;
+			RotState = CMoveState::ROTSTATE_UP;
 		}
 		else if (m_move.z <= -3.0f)
 		{
-			m_SelectMove = SELECT_MOVE_DOWN;
+			RotState = CMoveState::ROTSTATE_DOWN;
 		}
 
 		m_SelectGrid = m_Grid;

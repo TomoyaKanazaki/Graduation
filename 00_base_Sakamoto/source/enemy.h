@@ -53,16 +53,6 @@ public:
 		HIT_STATE_MAX,			//最大
 	};
 
-	//現在の移動方向
-	enum SELECT_MOVE
-	{
-		SELECT_MOVE_RIGHT = 0,	//右
-		SELECT_MOVE_LEFT,		//左
-		SELECT_MOVE_UP,			//上
-		SELECT_MOVE_DOWN,		//下
-		SELECT_MOVE_MAX,		//最大
-	};
-
 	static CEnemy* Create(const ENEMY_TYPE eType, const CMapSystem::GRID& grid);
 	HRESULT Init(void);
 	virtual void Uninit(void);
@@ -122,7 +112,7 @@ private:
 
 	MOVE_STATE m_MoveState;		//状態
 	int m_nMoveStateCount;		//状態管理用カウント
-	SELECT_MOVE m_SelectMove;	//移動方向
+	//SELECT_MOVE m_SelectMove;	//移動方向
 
 	HIT_STATE m_HitState;		//状態
 	int m_nHitStateCount;		//状態管理用カウント
