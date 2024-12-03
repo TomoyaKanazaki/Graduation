@@ -133,6 +133,9 @@ HRESULT CTitle::Init(void)
 			case 2:
 				m_pModeSelect[nCnt]->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\tutorial.png"));
 				break;
+			case 3:
+				m_pModeSelect[nCnt]->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\ranking.png"));
+				break;
 			}
 
 			if (m_nSelect == nCnt)
@@ -178,6 +181,7 @@ void CTitle::Uninit(void)
 
 	if (m_pTitle != nullptr)
 	{
+		delete m_pTitle;
 		m_pTitle = nullptr;
 	}
 }
@@ -330,12 +334,14 @@ void CTitle::Button(void)
 			break;
 		case 2:
 			// ƒ`ƒ…[ƒgƒŠƒAƒ‹‘JˆÚ
+			CManager::GetInstance()->GetSound()->Stop();
 			CFade::SetFade(CScene::MODE_TUTORIAL);
 			CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_SINGLE);
 			CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_BGM_TITLE);
 			break;
 		case 3:
 			// ƒŠƒUƒ‹ƒg‘JˆÚ
+			CManager::GetInstance()->GetSound()->Stop();
 			CFade::SetFade(CScene::MODE_RESULT);
 			CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_NONE);
 			CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_BGM_TITLE);
@@ -358,6 +364,7 @@ void CTitle::AutoFade()
 	// ‹K’èŽžŠÔ‚ð’´‚¦‚½ê‡ƒ‰ƒ“ƒLƒ“ƒO‚É‘JˆÚ‚·‚é
 	if (m_fTimer >= FADE_TIME)
 	{
+		CManager::GetInstance()->GetSound()->Stop();
 		CFade::SetFade(CScene::MODE_RESULT);
 		CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_NONE);
 	}

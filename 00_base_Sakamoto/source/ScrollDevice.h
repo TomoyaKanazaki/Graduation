@@ -49,7 +49,7 @@ public:
 	void Update(void);
 	void Draw(void);
 
-	void SetState(STATE state) { m_State = state; }
+	void SetState(STATE state);
 
 	// 静的メンバ関数
 	static CListManager<CScrollDevice>* GetList(void); // リスト取得
@@ -62,6 +62,8 @@ private:
 
 	STATE m_State;					//状態
 	int m_nStateCount;				//状態管理用変数
+
+	CObjectCharacter* m_pObjectCharacter;	// オブジェクトキャラクターのポインタ
 
 	// 静的メンバ変数
 	static CListManager<CScrollDevice>* m_pList; // オブジェクトリスト

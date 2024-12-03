@@ -141,9 +141,12 @@ HRESULT CDevil::Init(void)
 	// 影を不使用に設定
 	SetShadow(false);
 
-	// キャラクターテキストの設定処理
-	CObjectCharacter::Init("data\\TXT\\MOTION\\01_enemy\\motion_devil.txt");
-	
+	// キャラクタークラスの初期化（継承）
+	if (FAILED(CObjectCharacter::Init())) { assert(false); }
+
+	// キャラクターテキスト読み込み処理
+	SetTxtCharacter("data\\TXT\\MOTION\\01_enemy\\motion_devil.txt");
+
 	switch (CScene::GetMode())
 	{
 	case CScene::MODE_TITLE:
@@ -158,25 +161,12 @@ HRESULT CDevil::Init(void)
 		break;
 	}
 
-	if (m_ScrollArrow[0] == nullptr)
-	{
-		m_ScrollArrow[0] = CScrollArrow::Create();
-		m_ScrollArrow[0]->SetPos((D3DXVECTOR3(80.0f, 120.0f, 0.0f)));
-	}
-
-	if (m_ScrollArrow[1] == nullptr)
-	{
-		m_ScrollArrow[1] = CScrollArrow::Create();
-		m_ScrollArrow[1]->SetPos((D3DXVECTOR3(1200.0f, 120.0f, 0.0f)));
-	}
-
 	// 矢印生成
 	if (m_pSignal[0] == nullptr)
 	{
 		m_pSignal[0] = CSignal::Create("data\\MODEL\\signal.x");
 		m_pSignal[0]->SetPos(D3DXVECTOR3(-1000.0f,200.0f,500.0f));
 	}
-
 	if (m_pSignal[1] == nullptr)
 	{
 		m_pSignal[1] = CSignal::Create("data\\MODEL\\signal.x");

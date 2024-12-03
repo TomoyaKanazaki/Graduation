@@ -40,6 +40,10 @@ CSlopeDevice::CSlopeDevice(int nPriority) : CObjectCharacter(nPriority)
 {
 	m_State = STATE(0);
 	m_nStateCount = 0;
+
+	m_LocateWorldType = LOCATE_WORLD_TYPE(0);
+
+	m_pObjectCharacter = nullptr;
 }
 
 //====================================================================
@@ -80,19 +84,16 @@ HRESULT CSlopeDevice::Init(void)
 {
 	SetType(CObject::TYPE_DEVILHOLE);
 
-	//モードごとに初期値を設定出来る
-	switch (CScene::GetMode())
+	// 影を不使用に設定
+	SetShadow(false);
+
+	// キャラクタークラスの初期化（継承）
+	if (FAILED(CObjectCharacter::Init())) { assert(false); }
+
+	if (m_pObjectCharacter == nullptr)
 	{
-	case CScene::MODE_TITLE:
-		break;
-
-	case CScene::MODE_GAME:
-	case CScene::MODE_TUTORIAL:
-
-		break;
-
-	case CScene::MODE_RESULT:
-		break;
+		// キャラクター（メダマン用）の生成処理
+		m_pObjectCharacter = CObjectCharacter::Create(false);
 	}
 
 	if (m_pList == nullptr)
@@ -212,6 +213,25 @@ HRESULT CSlopeDevice::InitModel(const char* pModelNameSlopeDevice, const char* p
 {
 	CObjectCharacter::SetTxtCharacter(pModelNameSlopeDevice);
 
+	if (m_pObjectCharacter != nullptr)
+	{
+		// キャラクターテキスト読み込み処理（メダマン）
+		m_pObjectCharacter->SetTxtCharacter(pModelNameEnemy);
+
+		// メダマンの親を土台に変更
+		m_pObjectCharacter->GetModel(0)->SetParent(GetModel(SETUP_TYPE_JACK));
+
+		// メダマンの位置を取得
+		D3DXVECTOR3 pos = m_pObjectCharacter->GetModel(0)->GetStartPos();
+		D3DXVECTOR3 rot = m_pObjectCharacter->GetModel(0)->GetStartRot();
+		D3DXVECTOR3 posAdd = D3DXVECTOR3(0.0f, 0.0f, 400.0f);
+		D3DXVECTOR3 rotAdd = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
+		// メダマンを上に
+		m_pObjectCharacter->GetModel(0)->SetStartPos(pos + posAdd);
+		m_pObjectCharacter->GetModel(0)->SetStartRot(rot + rotAdd);
+	}
+
 	return S_OK;
 }
 
@@ -295,7 +315,6 @@ void CSlopeDevice::Descent(int nNldxModel, D3DXVECTOR3 descent, D3DXVECTOR3 desc
 	// モデルの位置更新
 	pModel->SetStartPos(pos);
 }
-
 
 //====================================================================
 //リスト取得

@@ -25,9 +25,10 @@ public:
 	CObjectCharacter(int nPriority = 3);
 	~CObjectCharacter();
 
-	virtual HRESULT Init(void) { return S_OK; };
+	static CObjectCharacter* Create(bool bShadow);
+
+	virtual HRESULT Init(void);
 	virtual HRESULT Init(int PlayNumber) { return S_OK; };
-	HRESULT Init(const char* pModelName);
 
 	void Uninit(void);
 	void Update(void);
@@ -61,11 +62,12 @@ public:
 	void SetTxtCharacter(const char* pFilename);
 
 	// ˆÚ“®ó‘Ô
-	void ChangeMoveState(CMoveState* pMoveState);   // ó‘Ô•ÏX
+	void ChangeMoveState(CMoveState* pMoveState);   // ˆÚ“®ó‘Ô•ÏX
+	CMoveState* GetMoveState() { return m_pMoveState; }	// ˆÚ“®ó‘Ô‚Ìî•ñæ“¾
+
 protected:
 
 	CShadow* m_pShadow;
-
 
 	CMoveState* m_pMoveState;		// ˆÚ“®ó‘Ô
 

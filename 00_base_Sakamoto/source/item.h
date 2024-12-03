@@ -73,7 +73,8 @@ public:
 	D3DXVECTOR3 GetBase() { return m_posBase; } // 移動の中心位置を取得
 	float GetMoveTime() { return m_fMoveTime; } // 移動時間の取得
 	void SetMoveTime(const float time) { m_fMoveTime = time; } // 移動時間の取得
-	void Effect(CEffekseer* pEffect) { if (m_pEffect == nullptr)m_pEffect = pEffect; }
+	void Effect(CEffekseer* pEffect) { m_pEffect = pEffect; }
+	CEffekseer* GetEffect() { return m_pEffect; }
 
 	// 静的メンバ関数
 	static CListManager<CItem>* GetList(void); // リスト取得
@@ -82,7 +83,7 @@ public:
 private:
 
 	// メンバ関数
-	virtual void Move(D3DXVECTOR3& pos) { } // 移動処理
+	virtual void Move(D3DXVECTOR3& pos); // 移動処理
 	virtual void SetEffect() {};
 
 	// メンバ変数

@@ -29,7 +29,6 @@ CListManager<CFriedEgg>* CFriedEgg::m_pList = nullptr; // オブジェクトリスト
 //====================================================================
 CFriedEgg::CFriedEgg(int nPriority) : CItem(nPriority),
 m_fDeleteTimer(0.0f),
-m_bMove(true),
 m_eCreateType(CEnemy::ENEMY_NONE)
 {
 }
@@ -127,18 +126,22 @@ void CFriedEgg::Draw(void)
 //====================================================================
 bool CFriedEgg::Hit(CPlayer* pPlayer)
 {
-	// 移動フラグがfalseの場合falseを返す
-	if (!m_bMove) { return false; }
+	// 描画フラグがfalseの場合falseを返す
+	if (!GetDisp()) { return false; }
 
-	// 移動フラグをfalseにする
-	m_bMove = false;
+	// 描画をオフ
+	SetDisp(false);
 
+	// 効果音の再生
 	CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_EAT);
 
 	// エフェクトを生成する
 	D3DXVECTOR3 pos = GetPos();
 	D3DXVECTOR3 rot = GetRot();
 	MyEffekseer::EffectCreate(CMyEffekseer::TYPE_EAT, false, useful::CalcMatrix(pos, rot, *GetUseMultiMatrix()), rot);
+
+	// エフェクトを変更する
+	ChangeEffect();
 
 	return true;
 }
@@ -168,6 +171,9 @@ CFriedEgg* CFriedEgg::Create(const CEnemy::ENEMY_TYPE eType, const CMapSystem::G
 	// タイプの設定
 	pItem->SetEnemy(eType);
 
+	// エフェクトを生成
+	pItem->SetEffect();
+
 	return pItem;
 }
 
@@ -176,8 +182,49 @@ CFriedEgg* CFriedEgg::Create(const CEnemy::ENEMY_TYPE eType, const CMapSystem::G
 //==========================================
 void CFriedEgg::Move(D3DXVECTOR3& pos)
 {
-	// 移動フラグがfalseの場合関数を抜ける
-	if (!m_bMove) { return; }
-
 	// TODO : ランダム歩行でも何でも仕様を用意する
+}
+
+//==========================================
+//  エフェクトを生成
+//==========================================
+void CFriedEgg::SetEffect()
+{
+	// 自身の情報を取得する
+	D3DXVECTOR3 pos = GetPos();
+	pos.y = 0.0f;
+	D3DXVECTOR3 rot = GetRot();
+
+	Effect(MyEffekseer::EffectCreate(CMyEffekseer::TYPE_STEAM, true, useful::CalcMatrix(pos, rot, *GetUseMultiMatrix()), rot, D3DXVECTOR3(20.0f, 20.0f, 20.0f)));
+}
+
+//==========================================
+//  エフェクトを変更
+//==========================================
+void CFriedEgg::ChangeEffect()
+{
+	// 現在のエフェクトを終了
+	GetEffect()->SetDeath();
+
+	// 自身の情報を取得する
+	D3DXVECTOR3 pos = GetPos();
+	pos.y = 0.0f;
+	D3DXVECTOR3 rot = GetRot();
+
+	// 新しいエフェクトを生成
+	switch (m_eCreateType)
+	{
+	case CEnemy::ENEMY_MEDAMAN:
+		Effect(MyEffekseer::EffectCreate(CMyEffekseer::TYPE_REVIVE_MEDAMAN, true, useful::CalcMatrix(pos, rot, *GetUseMultiMatrix()), rot));
+		break;
+	case CEnemy::ENEMY_BONBON:
+		Effect(MyEffekseer::EffectCreate(CMyEffekseer::TYPE_REVIVE_BONBON, true, useful::CalcMatrix(pos, rot, *GetUseMultiMatrix()), rot));
+		break;
+	case CEnemy::ENEMY_LITTLEDEVIL:
+		Effect(MyEffekseer::EffectCreate(CMyEffekseer::TYPE_REVIVE_SMALLDEVIL, true, useful::CalcMatrix(pos, rot, *GetUseMultiMatrix()), rot));
+		break;
+	default:
+		assert(false);
+		break;
+	}
 }

@@ -330,13 +330,14 @@ HRESULT CResult::Init(void)
 //====================================================================
 void CResult::Uninit(void)
 {
-	CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_BGM_RESULT);
+	CManager::GetInstance()->GetSound()->Stop();
 
 	//全てのオブジェクトの破棄
 	CObject::ReleaseAll();
 
 	if (m_pResult != nullptr)
 	{
+		delete m_pResult;
 		m_pResult = nullptr;
 	}
 }

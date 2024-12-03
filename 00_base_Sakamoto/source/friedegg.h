@@ -36,6 +36,8 @@ private:
 
 	// メンバ関数
 	void Move(D3DXVECTOR3& pos) override;
+	void SetEffect() override;
+	void ChangeEffect();
 
 	// 静的メンバ変数
 	static CListManager<CFriedEgg>* m_pList; // オブジェクトリスト
@@ -43,7 +45,6 @@ private:
 	// メンバ変数
 	CListManager<CFriedEgg>::AIterator m_iterator; // イテレーター
 	float m_fDeleteTimer; // 自動消滅タイマー
-	bool m_bMove; // 移動可能フラグ
 	CEnemy::ENEMY_TYPE m_eCreateType; // 消滅した時に生成する敵の種類
 
 };

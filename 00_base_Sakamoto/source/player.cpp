@@ -37,6 +37,7 @@
 #include "mask.h"
 #include "wall.h"
 #include "objectBillboard.h"
+#include "move.h"
 
 #include "MyEffekseer.h"
 
@@ -49,7 +50,7 @@ namespace
 	const int FIRE_STOPTIME = 30;	//攻撃時の移動停止時間
 	const D3DXVECTOR3 RESPAWN_POS = D3DXVECTOR3(-100.0f, 2000.0f, 100.0f); // 復活位置
 	const float RESPAWN_GRAVITY = 0.03f;			//卵の重力
-	const int INVINCIBLE_TIME = 120;			//無敵時間
+	const int INVINCIBLE_TIME = 120;			//無敵時間(後で消す)
 
 	const float GRIT_OK = 45.0f;			//移動可能なグリットの範囲内
 	const float PLAYER_SPEED = 5.0f;		//プレイヤーの移動速度
@@ -63,7 +64,7 @@ namespace
 	const float CROSS_TIME = 10.0f; // 十字架を所持していられる時間
 
 	const float EGG_GRAVITY = 0.98f;	 //移動量の減衰速度
-	const D3DXVECTOR3 EGG_MOVE = D3DXVECTOR3(10.0f, 10.0f, 10.0f);	 //移動量の減衰速度
+	const D3DXVECTOR3 EGG_MOVE = D3DXVECTOR3(10.0f, 10.0f, 10.0f);	 //移動量の減衰速度(後で消す)
 	const float EGG_ROT = D3DX_PI * 0.006f;		//回転速度
 	const float EGG_MOVE_DEL = 0.9f;			//移動量の減衰速度
 	const float EGG_COLOR_DEL_A = 0.01f;		//不透明度の減衰速度
@@ -91,10 +92,6 @@ m_State(STATE_EGG),
 m_nStateCount(0),
 m_AtkPos(INITVECTOR3),
 m_CollisionRot(0.0f),
-m_OKL(true),
-m_OKR(true),
-m_OKU(true),
-m_OKD(true),
 m_bInput(false),
 m_pLifeUi(nullptr),
 m_nLife(0),
@@ -117,7 +114,11 @@ m_pP_NumUI(nullptr),
 m_pEffectGuide(nullptr),
 m_pEffectItem(nullptr)
 {
-
+	// 移動の進行状況
+	m_Progress.bOKD = true;
+	m_Progress.bOKL = true;
+	m_Progress.bOKR = true;
+	m_Progress.bOKU = true;
 }
 
 //====================================================================
@@ -160,9 +161,34 @@ HRESULT CPlayer::Init(int PlayNumber)
 	D3DXVECTOR3 rotThis = GetRot();			// 向き
 	D3DXVECTOR3 sizeThis = GetSize();		// 大きさ
 
-	CMapSystem* pMapSystem = CMapSystem::GetInstance();		// マップシステムの情報
-
+	// プレイヤー番号を設定
 	m_nPlayNumber = PlayNumber;
+
+	// キャラクタークラスの初期化（継承）
+	if (FAILED(CObjectCharacter::Init())) { assert(false); }
+
+	// キャラクターテキスト読み込み処理
+	switch (m_nPlayNumber)
+	{
+	case 0:
+
+		CObjectCharacter::SetTxtCharacter("data\\TXT\\motion_tamagon1P.txt");
+
+		break;
+
+	case 1:
+
+		CObjectCharacter::SetTxtCharacter("data\\TXT\\motion_tamagon2P.txt");
+
+		break;
+	}
+
+	// キャラクターのマトリックス設定
+	CObjectCharacter::SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
+	CObjectCharacter::SetUseStencil(true);
+	CObjectCharacter::SetUseShadowMtx(true);
+
+	CMapSystem* pMapSystem = CMapSystem::GetInstance();		// マップシステムの情報
 
 	// プレイヤーの位置取得
 	posThis = pMapSystem->GetPlayerPos(PlayNumber);
@@ -187,26 +213,6 @@ HRESULT CPlayer::Init(int PlayNumber)
 	// 状態の設定
 	m_MoveState = MOVE_STATE_WAIT;
 
-	//マップとのマトリックスの掛け合わせをオンにする
-	SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
-
-	// キャラクターテキスト読み込み処理
-	switch (m_nPlayNumber)
-	{
-	case 0:
-		if (FAILED(CObjectCharacter::Init("data\\TXT\\motion_tamagon1P.txt"))) { assert(false); }
-		break;
-
-	case 1:
-		if (FAILED(CObjectCharacter::Init("data\\TXT\\motion_tamagon2P.txt"))) { assert(false); }
-		break;
-	}
-
-	// キャラクターのマトリックス設定
-	CObjectCharacter::SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
-	CObjectCharacter::SetUseStencil(true);
-	CObjectCharacter::SetUseShadowMtx(true);
-
 	//所持するUIの生成
 	UI_Create();
 
@@ -224,6 +230,9 @@ HRESULT CPlayer::Init(int PlayNumber)
 	SetPosOld(posOldThis);	// 前回の位置
 	SetRot(rotThis);			// 向き
 	SetSize(sizeThis);		// 大きさ
+
+	// 操作状態にする
+	m_pMoveState->ControlStop(this);
 
 	// リストマネージャーの生成
 	if (m_pList == nullptr)
@@ -312,6 +321,13 @@ void CPlayer::Update(void)
 				m_bGritCenter == true && posThis.y <= 0.0f)
 			)
 		{// ステージ内にいる かつ ブロックの無いグリッド上の時
+
+			// 操作状態
+			//m_pMoveState->ControlStop(this);
+
+			// 移動処理
+			//m_pMoveState->Move(this, posThis, rotThis);
+
 			// 移動処理
 			Move(posThis,rotThis);
 		}
@@ -530,6 +546,7 @@ void CPlayer::UI_Init(void)
 	}
 }
 
+#if 1
 //====================================================================
 //移動処理
 //====================================================================
@@ -608,6 +625,8 @@ void CPlayer::Move(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis)
 	}
 }
 
+#endif
+
 //====================================================================
 //移動入力キーボード
 //====================================================================
@@ -617,7 +636,7 @@ D3DXVECTOR3 CPlayer::MoveInputKey(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis, D3
 	CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
 
 	//キーボードの移動処理
-	if ((pInputKeyboard->GetPress(DIK_W) && m_OKU && m_bGritCenter) ||
+	if ((pInputKeyboard->GetPress(DIK_W) && m_Progress.bOKU && m_bGritCenter) ||
 		(pInputKeyboard->GetPress(DIK_W) && m_MoveState == MOVE_STATE_DOWN))
 	{
 		Move.z += 1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
@@ -626,7 +645,7 @@ D3DXVECTOR3 CPlayer::MoveInputKey(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis, D3
 		m_bInput = true;
 		m_MoveState = MOVE_STATE_UP;
 	}
-	else if (((pInputKeyboard->GetPress(DIK_S) && m_OKD && m_bGritCenter) ||
+	else if (((pInputKeyboard->GetPress(DIK_S) && m_Progress.bOKD && m_bGritCenter) ||
 		(pInputKeyboard->GetPress(DIK_S) && m_MoveState == MOVE_STATE_UP)) &&
 		pInputKeyboard->GetPress(DIK_W) == false)
 	{
@@ -636,7 +655,7 @@ D3DXVECTOR3 CPlayer::MoveInputKey(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis, D3
 		m_bInput = true;
 		m_MoveState = MOVE_STATE_DOWN;
 	}
-	else if ((pInputKeyboard->GetPress(DIK_A) && m_OKL && m_bGritCenter) ||
+	else if ((pInputKeyboard->GetPress(DIK_A) && m_Progress.bOKL && m_bGritCenter) ||
 		(pInputKeyboard->GetPress(DIK_A) && m_MoveState == MOVE_STATE_RIGHT))
 	{
 		Move.x += -1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
@@ -645,7 +664,7 @@ D3DXVECTOR3 CPlayer::MoveInputKey(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis, D3
 		m_bInput = true;
 		m_MoveState = MOVE_STATE_LEFT;
 	}
-	else if (((pInputKeyboard->GetPress(DIK_D) && m_OKR && m_bGritCenter) ||
+	else if (((pInputKeyboard->GetPress(DIK_D) && m_Progress.bOKR && m_bGritCenter) ||
 		(pInputKeyboard->GetPress(DIK_D) && m_MoveState == MOVE_STATE_LEFT)) &&
 		pInputKeyboard->GetPress(DIK_A) == false)
 	{
@@ -671,7 +690,7 @@ D3DXVECTOR3 CPlayer::MoveInputPadStick(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThi
 		if (nCnt == m_nPlayNumber)
 		{
 			//スティックの移動処理
-			if ((pInputJoypad->Get_Stick_Left(nCnt).y > 0.0f && m_OKU && m_bGritCenter) ||
+			if ((pInputJoypad->Get_Stick_Left(nCnt).y > 0.0f && m_Progress.bOKU && m_bGritCenter) ||
 				(pInputJoypad->Get_Stick_Left(nCnt).y > 0.0f && m_MoveState == MOVE_STATE_DOWN))
 			{
 				Move.z += 1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
@@ -680,7 +699,7 @@ D3DXVECTOR3 CPlayer::MoveInputPadStick(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThi
 				m_bInput = true;
 				m_MoveState = MOVE_STATE_UP;
 			}
-			else if ((pInputJoypad->Get_Stick_Left(nCnt).y < 0.0f && m_OKD && m_bGritCenter) ||
+			else if ((pInputJoypad->Get_Stick_Left(nCnt).y < 0.0f && m_Progress.bOKD && m_bGritCenter) ||
 				(pInputJoypad->Get_Stick_Left(nCnt).y < 0.0f && m_MoveState == MOVE_STATE_UP))
 			{
 				Move.z += -1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
@@ -689,7 +708,7 @@ D3DXVECTOR3 CPlayer::MoveInputPadStick(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThi
 				m_bInput = true;
 				m_MoveState = MOVE_STATE_DOWN;
 			}
-			else if ((pInputJoypad->Get_Stick_Left(nCnt).x < 0.0f && m_OKL && m_bGritCenter) ||
+			else if ((pInputJoypad->Get_Stick_Left(nCnt).x < 0.0f && m_Progress.bOKL && m_bGritCenter) ||
 				(pInputJoypad->Get_Stick_Left(nCnt).x < 0.0f && m_MoveState == MOVE_STATE_RIGHT))
 			{
 				Move.x += -1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
@@ -698,7 +717,7 @@ D3DXVECTOR3 CPlayer::MoveInputPadStick(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThi
 				m_bInput = true;
 				m_MoveState = MOVE_STATE_LEFT;
 			}
-			else if ((pInputJoypad->Get_Stick_Left(nCnt).x > 0.0f && m_OKR && m_bGritCenter) ||
+			else if ((pInputJoypad->Get_Stick_Left(nCnt).x > 0.0f && m_Progress.bOKR && m_bGritCenter) ||
 				(pInputJoypad->Get_Stick_Left(nCnt).x > 0.0f && m_MoveState == MOVE_STATE_LEFT))
 			{
 				Move.x += 1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
@@ -725,7 +744,7 @@ D3DXVECTOR3 CPlayer::MoveInputPadKey(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis,
 		if (nCnt == m_nPlayNumber)
 		{
 			//キーボードの移動処理
-			if ((pInputJoypad->GetPress(CInputJoypad::BUTTON_UP, nCnt) && m_OKU && m_bGritCenter) ||
+			if ((pInputJoypad->GetPress(CInputJoypad::BUTTON_UP, nCnt) && m_Progress.bOKU && m_bGritCenter) ||
 				(pInputJoypad->GetPress(CInputJoypad::BUTTON_UP, nCnt) && m_MoveState == MOVE_STATE_DOWN))
 			{
 				Move.z += 1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
@@ -734,7 +753,7 @@ D3DXVECTOR3 CPlayer::MoveInputPadKey(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis,
 				m_bInput = true;
 				m_MoveState = MOVE_STATE_UP;
 			}
-			else if (((pInputJoypad->GetPress(CInputJoypad::BUTTON_DOWN, nCnt) && m_OKD && m_bGritCenter) ||
+			else if (((pInputJoypad->GetPress(CInputJoypad::BUTTON_DOWN, nCnt) && m_Progress.bOKD && m_bGritCenter) ||
 				(pInputJoypad->GetPress(CInputJoypad::BUTTON_DOWN, nCnt) && m_MoveState == MOVE_STATE_UP)) &&
 				pInputJoypad->GetPress(CInputJoypad::BUTTON_UP, nCnt) == false)
 			{
@@ -744,7 +763,7 @@ D3DXVECTOR3 CPlayer::MoveInputPadKey(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis,
 				m_bInput = true;
 				m_MoveState = MOVE_STATE_DOWN;
 			}
-			else if ((pInputJoypad->GetPress(CInputJoypad::BUTTON_LEFT, nCnt) && m_OKL && m_bGritCenter) ||
+			else if ((pInputJoypad->GetPress(CInputJoypad::BUTTON_LEFT, nCnt) && m_Progress.bOKL && m_bGritCenter) ||
 				(pInputJoypad->GetPress(CInputJoypad::BUTTON_LEFT, nCnt) && m_MoveState == MOVE_STATE_RIGHT))
 			{
 				Move.x += -1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
@@ -753,7 +772,7 @@ D3DXVECTOR3 CPlayer::MoveInputPadKey(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis,
 				m_bInput = true;
 				m_MoveState = MOVE_STATE_LEFT;
 			}
-			else if (((pInputJoypad->GetPress(CInputJoypad::BUTTON_RIGHT, nCnt) && m_OKR && m_bGritCenter) ||
+			else if (((pInputJoypad->GetPress(CInputJoypad::BUTTON_RIGHT, nCnt) && m_Progress.bOKR && m_bGritCenter) ||
 				(pInputJoypad->GetPress(CInputJoypad::BUTTON_RIGHT, nCnt) && m_MoveState == MOVE_STATE_LEFT)) &&
 				pInputJoypad->GetPress(CInputJoypad::BUTTON_LEFT, nCnt) == false)
 			{
@@ -1285,19 +1304,19 @@ void CPlayer::SearchWall(D3DXVECTOR3& posThis)
 		posThis.z >= MyGritPos.z - ((MapGritSize * 0.5f) - GRIT_OK)) ||
 		m_State == STATE_WAIT)
 	{// グリットの中心位置に立っているなら操作を受け付ける
-		m_OKR = OKR;	//右
-		m_OKL = OKL;	//左
-		m_OKU = OKU;	//上
-		m_OKD = OKD;	//下
+		m_Progress.bOKR = OKR;	//右
+		m_Progress.bOKL = OKL;	//左
+		m_Progress.bOKU = OKU;	//上
+		m_Progress.bOKD = OKD;	//下
 
 		m_bGritCenter = true;
 	}
 	else
 	{
-		m_OKR = false;	//右
-		m_OKL = false;	//左
-		m_OKU = false;	//上
-		m_OKD = false;	//下
+		m_Progress.bOKR = false;	//右
+		m_Progress.bOKL = false;	//左
+		m_Progress.bOKU = false;	//上
+		m_Progress.bOKD = false;	//下
 
 		m_bGritCenter = false;
 	}
@@ -1911,4 +1930,12 @@ void CPlayer::SetPartsDisp(int nParts, bool Set)
 CListManager<CPlayer>* CPlayer::GetList(void)
 {
 	return m_pList;
+}
+
+//==========================================
+// プレイヤーの移動速度取得
+//==========================================
+float CPlayer::GetSpeed(void)
+{
+	return PLAYER_SPEED;
 }

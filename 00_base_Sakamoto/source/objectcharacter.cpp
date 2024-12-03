@@ -68,29 +68,30 @@ CObjectCharacter::~CObjectCharacter()
 }
 
 //====================================================================
-// 初期化処理（継承以外での初期化処理）
+// 生成処理
 //====================================================================
-HRESULT CObjectCharacter::Init(const char* pModelName)
+CObjectCharacter* CObjectCharacter::Create(bool bShadow)
 {
-	strcpy(&m_aModelName[0], pModelName);
+	// オブジェクトの生成処理
+	CObjectCharacter* pInstance = new CObjectCharacter();
 
-	//モデルの生成
-	LoadModel(pModelName);
+	// シャドウの有無
+	pInstance->SetShadow(bShadow);
 
-	//モーションの生成
-	if (m_pMotion == nullptr)
-	{
-		//モーションの生成
-		m_pMotion = new CMotion;
+	// オブジェクトの初期化処理
+	if (FAILED(pInstance->Init()))
+	{// 初期化処理が失敗した場合
+		return nullptr;
 	}
 
-	//初期化処理
-	if (m_pMotion != nullptr)
-	{
-		m_pMotion->SetModel(&m_apModel[0], m_nNumModel);
-		m_pMotion->LoadData(pModelName);
-	}
+	return pInstance;
+}
 
+//====================================================================
+// 初期化処理
+//====================================================================
+HRESULT CObjectCharacter::Init(void)
+{
 	if (m_pShadow == nullptr && m_bUseShadow)
 	{// 影生成
 		m_pShadow = CShadow::Create(m_pos, D3DXVECTOR3(SHADOW_SIZE, 0.0f, SHADOW_SIZE));
@@ -257,7 +258,7 @@ void CObjectCharacter::Draw(void)
 }
 
 //==========================================
-// 状態変更処理
+// 移動状態変更処理
 //==========================================
 void CObjectCharacter::ChangeMoveState(CMoveState* pMoveState)
 {

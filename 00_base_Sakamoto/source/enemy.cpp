@@ -178,18 +178,22 @@ HRESULT CEnemy::Init(void)
 	//種類設定
 	SetType(CObject::TYPE_ENEMY3D);
 
-	//マップとのマトリックスの掛け合わせをオンにする
-	SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
+	// キャラクタークラスの初期化（継承）
+	if (FAILED(CObjectCharacter::Init())) { assert(false); }
+
+	// マトリックス設定
+	SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());	// マップマトリックスと掛け合わせ
+	SetUseStencil(true);	// ステンシル
 
 	// スローの生成(配属、タグの設定)
 	m_pSlow = CSlowManager::Create(m_pSlow->CAMP_ENEMY, m_pSlow->TAG_ENEMY);
 
 	// 移動状態設定
-	//if (m_pMoveState == nullptr)
-	//{ // 移動状態設定
-	//	m_pMoveState = new CStateStop();		// 停止状態
-	//	m_pMoveState->RandomStop(this);			// ランダム歩行状態
-	//}
+	if (m_pMoveState == nullptr)
+	{ // 移動状態設定
+		m_pMoveState = new CStateStop();		// 停止状態
+		m_pMoveState->ControlStop(this);		// 操作できる状態
+	}
 
 	// リストマネージャーの生成
 	if (m_pList == nullptr)
@@ -230,11 +234,11 @@ void CEnemy::Uninit(void)
 	}
 
 	// 移動状態の破棄
-	/*if (m_pMoveState != nullptr)
+	if (m_pMoveState != nullptr)
 	{
 		delete m_pMoveState;
 		m_pMoveState = nullptr;
-	}*/
+	}
 
 	// キャラクタークラスの終了（継承）
 	CObjectCharacter::Uninit();
@@ -273,7 +277,7 @@ void CEnemy::Update(void)
 	UpdatePos(posMy,posOldMy,sizeMy);
 
 	// 追跡状態にする
-	//m_pMoveState->RandomAStar(this);
+	m_pMoveState->ControlAStar(this);
 
 	// プレイヤーへの最短経路探索
 	Coordinate();
@@ -339,12 +343,8 @@ bool CEnemy::Hit(void)
 HRESULT CEnemy::InitModel(const char* pFilename)
 {
 	// キャラクターテキスト読み込み処理
-	CObjectCharacter::Init(pFilename);
-
-	// マトリックス設定
-	CObjectCharacter::SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
-	CObjectCharacter::SetUseStencil(true);
-
+	CObjectCharacter::SetTxtCharacter(pFilename);
+	
 	return S_OK;
 }
 

@@ -250,7 +250,6 @@ void CManager::Uninit(void)
 		//ƒV[ƒ“‚ÌI—¹ˆ—
 		m_pScene->Uninit();
 
-		delete m_pScene;
 		m_pScene = nullptr;
 	}
 
