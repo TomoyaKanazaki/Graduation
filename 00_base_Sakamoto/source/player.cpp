@@ -1361,6 +1361,11 @@ void CPlayer::CollisionEnemy(D3DXVECTOR3& posThis)
 	// 敵のリストの中身を確認する
 	for (CEnemy* pEnemy : list)
 	{
+		if (pEnemy->GetHitState() != CEnemy::HIT_STATE_NORMAL)
+		{
+			continue;
+		}
+
 		D3DXVECTOR3 pos = pEnemy->GetPos();
 		D3DXVECTOR3 posOld = pEnemy->GetPosOld();
 		D3DXVECTOR3 Size = pEnemy->GetSize();

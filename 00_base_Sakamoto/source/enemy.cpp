@@ -270,6 +270,11 @@ void CEnemy::Update(void)
 	// ó‘Ô‚ÌXV
 	HitStateManager(posMy);
 
+	if (m_MoveState == MOVE_STATE_DEATH)
+	{
+		return;
+	}
+
 	// ˆÚ“®•ûŒüˆ—
 	Rot(rotMy);
 
@@ -524,6 +529,8 @@ void CEnemy::Death(void)
 
 	// –Ú‹ÊÄ‚«‚ğ¶¬
 	CFriedEgg::Create(m_EnemyType, m_Grid);
+
+	m_MoveState = MOVE_STATE_DEATH;
 }
 
 //====================================================================

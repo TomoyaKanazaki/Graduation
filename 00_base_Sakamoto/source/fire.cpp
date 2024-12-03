@@ -217,6 +217,11 @@ void CFire::CollisionEnemy()
 	// キューブブロックリストの中身を確認する
 	for (CEnemy* pEnemy : list)
 	{
+		if (pEnemy->GetHitState() != CEnemy::HIT_STATE_NORMAL)
+		{
+			continue;
+		}
+
 		// 円の当たり判定
 		if (m_Grid == pEnemy->GetGrid())
 		{// 弾が当たった
