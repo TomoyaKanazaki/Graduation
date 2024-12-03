@@ -85,6 +85,8 @@ private:
 	int m_nStateCount;						// 状態管理用変数
 	LOCATE_WORLD_TYPE m_LocateWorldType;	// 世界からの設置位置
 
+	CObjectCharacter* m_pObjectCharacter;	// オブジェクトキャラクターのポインタ
+
 	// 静的メンバ変数
 	static CListManager<CSlopeDevice>* m_pList; // オブジェクトリスト
 
