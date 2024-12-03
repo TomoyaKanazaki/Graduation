@@ -80,20 +80,11 @@ HRESULT CScrollDevice::Init(void)
 {
 	SetType(CObject::TYPE_DEVILHOLE);
 
-	//モードごとに初期値を設定出来る
-	switch (CScene::GetMode())
-	{
-	case CScene::MODE_TITLE:
-		break;
+	// 影を不使用に設定
+	SetShadow(false);
 
-	case CScene::MODE_GAME:
-	case CScene::MODE_TUTORIAL:
-
-		break;
-
-	case CScene::MODE_RESULT:
-		break;
-	}
+	// キャラクタークラスの初期化（継承）
+	if (FAILED(CObjectCharacter::Init())) { assert(false); }
 
 	if (m_pList == nullptr)
 	{// リストマネージャー生成
