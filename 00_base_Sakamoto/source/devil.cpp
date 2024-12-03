@@ -52,7 +52,7 @@ namespace
 
 	int SCROOL_COUNT_02 = 12;					// スクロールの移動回数
 	int SCROOL_MOVEGRID_02 = 3;					// スクロールの移動マス幅
-	float SCROOL_SPEED_02 = (CMapSystem::GetGritSize() * SCROOL_MOVEGRID_02) / SCROOL_COUNT_02;				// スクロールの移動速度
+	float SCROOL_SPEED_02 = (CMapSystem::GetGritSize() * SCROOL_MOVEGRID_02) / SCROOL_COUNT_02;			// スクロールの移動速度
 
 	int SLOPE_TIME = 300;						// 傾き操作時間
 	int SLOPE_RAND = 25;						// 傾き発生確率
@@ -707,7 +707,7 @@ void CDevil::CollisionOut()
 
 		//m_MinGrid.x = CMapSystem::GetInstance()->CalcGridX(m_DevilPos.x - MapSize.x - GritSize);	//左
 		//m_MaxGrid.x = CMapSystem::GetInstance()->CalcGridX(m_DevilPos.x + MapSize.x - GritSize);	//右
-		//m_MinGrid.z = CMapSystem::GetInstance()->CalcGridZ(m_DevilPos.z + MapSize.z + GritSize - 1.0f);	//上
+		//m_MinGrid.z = CMapSystem::GetInstance()->CalcGridZ(m_DevilPos.z + MapSize.z + GritSize);	//上
 		//m_MaxGrid.z = CMapSystem::GetInstance()->CalcGridZ(m_DevilPos.z - MapSize.z + GritSize);	//下
 
 		//if (EnemyGrid.x == m_MinGrid.x)		//左
@@ -1017,7 +1017,7 @@ void CDevil::StateManager(void)
 			break;
 		}
 
-		if (m_nStateCount <= 0)
+		if (m_nStateCount <= 1)
 		{
 			m_State = STATE_WAIT;
 			m_nStateCount = 120;
