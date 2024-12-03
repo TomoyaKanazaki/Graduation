@@ -8,6 +8,7 @@
 #define _CHARACTER_H_
 
 #include "object.h"
+#include "Model.h"
 
 class CModel;
 class CMotion;
@@ -34,7 +35,7 @@ public:
 	CObjectCharacter(int nPriority = 3);
 	~CObjectCharacter();
 
-	static CObjectCharacter* Create(void);
+	static CObjectCharacter* Create(bool bShadow);
 
 	virtual HRESULT Init(void);
 	virtual HRESULT Init(int PlayNumber) { return S_OK; };
@@ -43,6 +44,7 @@ public:
 	void Update(void);
 	void Draw(void);
 
+	void SetModelColor(CModel::COLORTYPE Type, D3DXCOLOR Col);
 	CModel* GetModel(int nCnt);
 	CMotion* GetMotion(void);
 	int GetNumModel(void) { return m_nNumModel; }

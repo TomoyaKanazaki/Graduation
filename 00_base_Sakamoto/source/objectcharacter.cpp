@@ -78,10 +78,21 @@ CObjectCharacter::~CObjectCharacter()
 //====================================================================
 // 生成処理
 //====================================================================
-CObjectCharacter* CObjectCharacter::Create(void)
+CObjectCharacter* CObjectCharacter::Create(bool bShadow)
 {
+	// オブジェクトの生成処理
+	CObjectCharacter* pInstance = new CObjectCharacter();
 
-	return nullptr;
+	// シャドウの有無
+	pInstance->SetShadow(bShadow);
+
+	// オブジェクトの初期化処理
+	if (FAILED(pInstance->Init()))
+	{// 初期化処理が失敗した場合
+		return nullptr;
+	}
+
+	return pInstance;
 }
 
 //====================================================================
@@ -451,5 +462,26 @@ void CObjectCharacter::LoadModel(const char* pFilename)
 	else
 	{//ファイルが開けなかった場合
 		printf("***ファイルを開けませんでした***\n");
+	}
+}
+
+//====================================================================
+// 指定モデルカラー変更
+//====================================================================
+void CObjectCharacter::SetModelColor(CModel::COLORTYPE Type, D3DXCOLOR Col)
+{
+	// モデル数の取得
+	int nNumModel = GetNumModel();
+
+	for (int nCnt = 0; nCnt < nNumModel; nCnt++)
+	{
+		// モデルの取得
+		CModel* pModel = GetModel(nCnt);
+
+		if (pModel != nullptr)
+		{
+			pModel->SetColorType(Type);
+			pModel->SetColor(Col);
+		}
 	}
 }

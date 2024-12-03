@@ -125,7 +125,9 @@ void CObject::UpdateAll(void)
 				}
 				else if(CManager::GetInstance()->GetEdit() == true)
 				{
-					if (pObject->m_type != TYPE_PLAYER3D && pObject->m_type != TYPE_DEVIL)
+					if (pObject->m_type != TYPE_PLAYER3D && 
+						pObject->m_type != TYPE_DEVIL &&
+						pObject->m_type != TYPE_ENEMY3D)
 					{
 						//XVˆ—
 						pObject->Update();

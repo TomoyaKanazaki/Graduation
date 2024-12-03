@@ -220,7 +220,7 @@ void CFire::CollisionEnemy()
 		// 円の当たり判定
 		if (m_Grid == pEnemy->GetGrid())
 		{// 弾が当たった
-			pEnemy->Hit(1);
+			pEnemy->Hit();
 
 			// エフェクトを生成
 			D3DXVECTOR3 pos = pEnemy->GetPos();

@@ -39,7 +39,11 @@ namespace
 	const int BIBLE_OUTGRIT = 3;	// 聖書がマップの外側から何マス内側にいるか
 
 	const char* SCROLL_DEVICE_MODEL = "data\\TXT\\MOTION\\02_staging\\00_ScrollDevice\\motion_scrolldevice.txt";
+	const char* SCROLL_DEVICE_ENEMY_MODEL = "data\\TXT\\MOTION\\01_enemy\\motion_medaman.txt";
+
 	const char* SLOPE_DEVICE_MODEL = "data\\TXT\\MOTION\\02_staging\\01_SlopeDevice\\motion_slopedevice.txt";
+	const char* SLOPE_DEVICE_ENEMY_MODEL = "data\\TXT\\MOTION\\01_enemy\\motion_medaman.txt";
+
 }
 
 //静的メンバ変数宣言
@@ -163,7 +167,7 @@ HRESULT CGame::Init(void)
 
 	// マップの生成
 	CMapSystem::GetInstance()->Init();
-	CMapSystem::Load("data\\TXT\\STAGE\\map03.csv");
+	CMapSystem::Load("data\\TXT\\STAGE\\map04.csv");
 
 	// 下床の生成
 	auto grid = FIELD_GRID;
@@ -228,7 +232,7 @@ void CGame::Uninit(void)
 		m_pPlayer.pop_back();
 	}
 
-	CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_BGM_STAGE2);
+	CManager::GetInstance()->GetSound()->Stop();
 
 	// スロー情報の全削除
 	CSlowManager::ReleaseAll();
@@ -685,60 +689,33 @@ void CGame::SetBgObjTest(void)
 {
 	// マップ移動装置
 	{
-		CScrollDevice* pScrollDevice = CScrollDevice::Create(SCROLL_DEVICE_MODEL, SCROLL_DEVICE_MODEL);
-		pScrollDevice->SetPos(D3DXVECTOR3(2300.0f, BOTTOM_FIELD_POS.y, 200.0f));
+		//CScrollDevice* pScrollDevice = CScrollDevice::Create(SCROLL_DEVICE_MODEL, SCROLL_DEVICE_ENEMY_MODEL);
+		//pScrollDevice->SetPos(D3DXVECTOR3(2000.0f, BOTTOM_FIELD_POS.y, 200.0f));
 
-		pScrollDevice = CScrollDevice::Create(SCROLL_DEVICE_MODEL, SCROLL_DEVICE_MODEL);
-		pScrollDevice->SetPos(D3DXVECTOR3(-2300.0f, BOTTOM_FIELD_POS.y, 200.0f));
+		//pScrollDevice = CScrollDevice::Create(SCROLL_DEVICE_MODEL, SCROLL_DEVICE_ENEMY_MODEL);
+		//pScrollDevice->SetPos(D3DXVECTOR3(-2000.0f, BOTTOM_FIELD_POS.y, 200.0f));
 	}
 
 	// ジャッキ
 	{
-		//CObjectX* pJack = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\jack.x");
-		//pJack->SetPos(D3DXVECTOR3(1300.0f, BOTTOM_FIELD_POS.y, 500.0f));
-		//pJack->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
-		//CObjectX* pPost = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\post.x");
-		//pPost->SetPos(D3DXVECTOR3(900.0f, BOTTOM_FIELD_POS.y, 500.0f));
+		//CSlopeDevice* pSlopeDevice = CSlopeDevice::Create(SLOPE_DEVICE_MODEL, SLOPE_DEVICE_ENEMY_MODEL);
+		//pSlopeDevice->SetPos(D3DXVECTOR3(900.0f, BOTTOM_FIELD_POS.y, 3500.0f));
+		//pSlopeDevice->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
+		//pSlopeDevice->SetLocateWorldType(CSlopeDevice::LOCATE_WORLD_TYPE_TOP_LEFT);
 
-		//pJack = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\jack.x");
-		//pJack->SetPos(D3DXVECTOR3(1300.0f, BOTTOM_FIELD_POS.y, -500.0f));
-		//pJack->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
-		//pPost = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\post.x");
-		//pPost->SetPos(D3DXVECTOR3(900.0f, BOTTOM_FIELD_POS.y, -500.0f));
+		//pSlopeDevice = CSlopeDevice::Create(SLOPE_DEVICE_MODEL, SLOPE_DEVICE_ENEMY_MODEL);
+		//pSlopeDevice->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
+		//pSlopeDevice->SetPos(D3DXVECTOR3(-900.0f, BOTTOM_FIELD_POS.y, 3500.0f));
+		//pSlopeDevice->SetLocateWorldType(CSlopeDevice::LOCATE_WORLD_TYPE_TOP_RIGHT);
 
-		//pJack = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\jack.x");
-		//pJack->SetPos(D3DXVECTOR3(-1300.0f, BOTTOM_FIELD_POS.y, 500.0f));
-		//pJack->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
-		//pPost = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\post.x");
-		//pPost->SetPos(D3DXVECTOR3(-900.0f, BOTTOM_FIELD_POS.y, 500.0f));
+		//pSlopeDevice = CSlopeDevice::Create(SLOPE_DEVICE_MODEL, SLOPE_DEVICE_ENEMY_MODEL);
+		//pSlopeDevice->SetPos(D3DXVECTOR3(900.0f, BOTTOM_FIELD_POS.y, 3000.0f));
+		//pSlopeDevice->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
+		//pSlopeDevice->SetLocateWorldType(CSlopeDevice::LOCATE_WORLD_TYPE_BOTTOM_LEFT);
 
-		//pJack = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\jack.x");
-		//pJack->SetPos(D3DXVECTOR3(-1300.0f, BOTTOM_FIELD_POS.y, -500.0f));
-		//pJack->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
-		//pPost = CObjectX::Create("data\\MODEL\\03_staging\\01_Jack\\post.x");
-		//pPost->SetPos(D3DXVECTOR3(-900.0f, BOTTOM_FIELD_POS.y, -500.0f));
-	}
-
-	// ジャッキ
-	{
-		CSlopeDevice* pSlopeDevice = CSlopeDevice::Create(SLOPE_DEVICE_MODEL, SLOPE_DEVICE_MODEL);
-		pSlopeDevice->SetPos(D3DXVECTOR3(900.0f, BOTTOM_FIELD_POS.y, 3500.0f));
-		pSlopeDevice->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
-		pSlopeDevice->SetLocateWorldType(CSlopeDevice::LOCATE_WORLD_TYPE_TOP_LEFT);
-
-		pSlopeDevice = CSlopeDevice::Create(SLOPE_DEVICE_MODEL, SLOPE_DEVICE_MODEL);
-		pSlopeDevice->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
-		pSlopeDevice->SetPos(D3DXVECTOR3(-900.0f, BOTTOM_FIELD_POS.y, 3500.0f));
-		pSlopeDevice->SetLocateWorldType(CSlopeDevice::LOCATE_WORLD_TYPE_TOP_RIGHT);
-
-		pSlopeDevice = CSlopeDevice::Create(SLOPE_DEVICE_MODEL, SLOPE_DEVICE_MODEL);
-		pSlopeDevice->SetPos(D3DXVECTOR3(900.0f, BOTTOM_FIELD_POS.y, 3000.0f));
-		pSlopeDevice->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
-		pSlopeDevice->SetLocateWorldType(CSlopeDevice::LOCATE_WORLD_TYPE_BOTTOM_LEFT);
-
-		pSlopeDevice = CSlopeDevice::Create(SLOPE_DEVICE_MODEL, SLOPE_DEVICE_MODEL);
-		pSlopeDevice->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
-		pSlopeDevice->SetPos(D3DXVECTOR3(-900.0f, BOTTOM_FIELD_POS.y, 3000.0f));
-		pSlopeDevice->SetLocateWorldType(CSlopeDevice::LOCATE_WORLD_TYPE_BOTTOM_RIGHT);
+		//pSlopeDevice = CSlopeDevice::Create(SLOPE_DEVICE_MODEL, SLOPE_DEVICE_ENEMY_MODEL);
+		//pSlopeDevice->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
+		//pSlopeDevice->SetPos(D3DXVECTOR3(-900.0f, BOTTOM_FIELD_POS.y, 3000.0f));
+		//pSlopeDevice->SetLocateWorldType(CSlopeDevice::LOCATE_WORLD_TYPE_BOTTOM_RIGHT);
 	}
 }

@@ -86,6 +86,12 @@ HRESULT CScrollDevice::Init(void)
 	// キャラクタークラスの初期化（継承）
 	if (FAILED(CObjectCharacter::Init())) { assert(false); }
 
+	if (m_pObjectCharacter == nullptr)
+	{
+		// キャラクター（メダマン用）の生成処理
+		m_pObjectCharacter = CObjectCharacter::Create(false);
+	}
+
 	if (m_pList == nullptr)
 	{// リストマネージャー生成
 		m_pList = CListManager<CScrollDevice>::Create();
@@ -154,12 +160,63 @@ void CScrollDevice::Draw(void)
 }
 
 //====================================================================
+// 状態設定処理
+//====================================================================
+void CScrollDevice::SetState(STATE state)
+{
+	// 状態設定
+	m_State = state;
+
+	switch (m_State)
+	{
+	case CScrollDevice::STATE_NORMAL:
+
+		if (m_pObjectCharacter != nullptr)
+		{
+			// モーション設定処理
+			m_pObjectCharacter->GetMotion()->Set(0, 5);
+		}
+
+		break;
+	case CScrollDevice::STATE_ROTATE:
+
+		if (m_pObjectCharacter != nullptr)
+		{
+			// モーション設定処理
+			m_pObjectCharacter->GetMotion()->Set(1, 5);
+		}
+
+		break;
+	}
+
+
+}
+
+//====================================================================
 // モデル関連の初期化処理
 //====================================================================
 HRESULT CScrollDevice::InitModel(const char* pModelNameScrollDevice, const char* pModelNameEnemy)
 {
 	CObjectCharacter::SetTxtCharacter(pModelNameScrollDevice);
 
+	if (m_pObjectCharacter != nullptr)
+	{
+		// キャラクターテキスト読み込み処理（メダマン）
+		m_pObjectCharacter->SetTxtCharacter(pModelNameEnemy);
+
+		// メダマンの親を土台に変更
+		m_pObjectCharacter->GetModel(0)->SetParent(GetModel(SETUP_TYPE_FOUNDATION));
+
+		// メダマンの位置を取得
+		D3DXVECTOR3 pos = m_pObjectCharacter->GetModel(0)->GetStartPos();
+		D3DXVECTOR3 rot = m_pObjectCharacter->GetModel(0)->GetStartRot();
+		D3DXVECTOR3 posAdd = D3DXVECTOR3(0.0f, 300.0f, -200.0f);
+		D3DXVECTOR3 rotAdd = D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f);
+
+		// メダマンを上に
+		m_pObjectCharacter->GetModel(0)->SetStartPos(pos + posAdd);
+		m_pObjectCharacter->GetModel(0)->SetStartRot(rot + rotAdd);
+	}
 
 	return S_OK;
 }
