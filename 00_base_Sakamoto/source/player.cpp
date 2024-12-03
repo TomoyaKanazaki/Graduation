@@ -187,18 +187,22 @@ HRESULT CPlayer::Init(int PlayNumber)
 	// 状態の設定
 	m_MoveState = MOVE_STATE_WAIT;
 
-	//マップとのマトリックスの掛け合わせをオンにする
-	SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
+	// キャラクタークラスの初期化（継承）
+	if (FAILED(CObjectCharacter::Init())) { assert(false); }
 
 	// キャラクターテキスト読み込み処理
 	switch (m_nPlayNumber)
 	{
 	case 0:
-		if (FAILED(CObjectCharacter::Init("data\\TXT\\motion_tamagon1P.txt"))) { assert(false); }
+
+		CObjectCharacter::SetTxtCharacter("data\\TXT\\motion_tamagon1P.txt");
+
 		break;
 
 	case 1:
-		if (FAILED(CObjectCharacter::Init("data\\TXT\\motion_tamagon2P.txt"))) { assert(false); }
+
+		CObjectCharacter::SetTxtCharacter("data\\TXT\\motion_tamagon2P.txt");
+
 		break;
 	}
 

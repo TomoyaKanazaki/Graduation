@@ -38,6 +38,8 @@ CScrollDevice::CScrollDevice(int nPriority) : CObjectCharacter(nPriority)
 {
 	m_State = STATE(0);
 	m_nStateCount = 0;
+
+	m_pObjectCharacter = nullptr;
 }
 
 //====================================================================
@@ -166,6 +168,7 @@ void CScrollDevice::Draw(void)
 HRESULT CScrollDevice::InitModel(const char* pModelNameScrollDevice, const char* pModelNameEnemy)
 {
 	CObjectCharacter::SetTxtCharacter(pModelNameScrollDevice);
+
 
 	return S_OK;
 }

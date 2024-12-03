@@ -40,6 +40,8 @@ CSlopeDevice::CSlopeDevice(int nPriority) : CObjectCharacter(nPriority)
 {
 	m_State = STATE(0);
 	m_nStateCount = 0;
+
+	m_LocateWorldType = LOCATE_WORLD_TYPE(0);
 }
 
 //====================================================================
@@ -295,7 +297,6 @@ void CSlopeDevice::Descent(int nNldxModel, D3DXVECTOR3 descent, D3DXVECTOR3 desc
 	// モデルの位置更新
 	pModel->SetStartPos(pos);
 }
-
 
 //====================================================================
 //リスト取得
