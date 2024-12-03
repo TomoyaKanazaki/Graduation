@@ -171,16 +171,16 @@ void CSlopeDevice::SetState(STATE state, CScrollArrow::Arrow stateArrow)
 	{
 	case CScrollArrow::STATE_UP:
 
-		if (m_LocateWorldType == LOCATE_WORLD_TYPE_TOP_LEFT ||
-			m_LocateWorldType == LOCATE_WORLD_TYPE_TOP_RIGHT)
+		if (m_LocateWorldType == LOCATE_WORLD_TYPE_BOTTOM_LEFT ||
+			m_LocateWorldType == LOCATE_WORLD_TYPE_BOTTOM_RIGHT)
 		{
 			m_State = state;
 		}
 		break;
 	case CScrollArrow::STATE_DOWN:
 
-		if (m_LocateWorldType == LOCATE_WORLD_TYPE_BOTTOM_LEFT ||
-			m_LocateWorldType == LOCATE_WORLD_TYPE_BOTTOM_RIGHT)
+		if (m_LocateWorldType == LOCATE_WORLD_TYPE_TOP_LEFT ||
+			m_LocateWorldType == LOCATE_WORLD_TYPE_TOP_RIGHT)
 		{
 			m_State = state;
 		}
