@@ -49,7 +49,7 @@ public:
 	void Update(void);
 	void Draw(void);
 
-	void SetState(STATE state) { m_State = state; }
+	void SetState(STATE state);
 
 	// 静的メンバ関数
 	static CListManager<CScrollDevice>* GetList(void); // リスト取得

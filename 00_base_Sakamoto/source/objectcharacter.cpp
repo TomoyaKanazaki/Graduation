@@ -70,10 +70,21 @@ CObjectCharacter::~CObjectCharacter()
 //====================================================================
 // 生成処理
 //====================================================================
-CObjectCharacter* CObjectCharacter::Create(void)
+CObjectCharacter* CObjectCharacter::Create(bool bShadow)
 {
+	// オブジェクトの生成処理
+	CObjectCharacter* pInstance = new CObjectCharacter();
 
-	return nullptr;
+	// シャドウの有無
+	pInstance->SetShadow(bShadow);
+
+	// オブジェクトの初期化処理
+	if (FAILED(pInstance->Init()))
+	{// 初期化処理が失敗した場合
+		return nullptr;
+	}
+
+	return pInstance;
 }
 
 //====================================================================
