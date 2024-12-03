@@ -167,7 +167,7 @@ HRESULT CGame::Init(void)
 
 	// É}ÉbÉvÇÃê∂ê¨
 	CMapSystem::GetInstance()->Init();
-	CMapSystem::Load("data\\TXT\\STAGE\\map03.csv");
+	CMapSystem::Load("data\\TXT\\STAGE\\map04.csv");
 
 	// â∫è∞ÇÃê∂ê¨
 	auto grid = FIELD_GRID;

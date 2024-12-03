@@ -133,6 +133,9 @@ HRESULT CTitle::Init(void)
 			case 2:
 				m_pModeSelect[nCnt]->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\tutorial.png"));
 				break;
+			case 3:
+				m_pModeSelect[nCnt]->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\ranking.png"));
+				break;
 			}
 
 			if (m_nSelect == nCnt)

@@ -82,9 +82,9 @@ HRESULT CPause::Init(void)
 			m_pPauseUI[nCnt]->SetAppear(false);
 		}
 	}
-	//m_pPauseUI[0]->SetTexture("data\\TEXTURE\\pause\\pause_00.png");
-	//m_pPauseUI[1]->SetTexture("data\\TEXTURE\\pause\\pause_01.png");
-	//m_pPauseUI[2]->SetTexture("data\\TEXTURE\\pause\\pause_02.png");
+	m_pPauseUI[0]->SetTexture("data\\TEXTURE\\UI\\pause_game.png");
+	m_pPauseUI[1]->SetTexture("data\\TEXTURE\\UI\\pause_restart.png");
+	m_pPauseUI[2]->SetTexture("data\\TEXTURE\\UI\\pause_title.png");
 
 	m_Appear = false;
 	CManager::GetInstance()->SetPause(false);

@@ -32,6 +32,9 @@ public:
 
 private:
 
+	// メンバ関数
+	void SetEffect() override;
+
 	// メンバ変数
 	CListManager<CSoftCream>::AIterator m_iterator; // イテレーター
 

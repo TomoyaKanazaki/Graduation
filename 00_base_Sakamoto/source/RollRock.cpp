@@ -105,7 +105,7 @@ CRollRock* CRollRock::Create(CMapSystem::GRID gridCenter)
 	}
 
 	//オブジェクトの初期化処理
-	if (FAILED(pSample->Init("data\\MODEL\\BlockTest.x")))
+	if (FAILED(pSample->Init("data\\MODEL\\rock.x")))
 	{//初期化処理が失敗した場合
 		return nullptr;
 	}
