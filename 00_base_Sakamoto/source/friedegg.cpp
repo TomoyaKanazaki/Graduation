@@ -15,7 +15,7 @@
 //==========================================
 namespace
 {
-	const float DELET_TIME = 10.0f;	// 消滅時間
+	const float DELETE_TIME = 15.0f;	// 消滅時間
 	const char* MODEL_PASS = "data\\MODEL\\02_Item\\friedegg.x"; // モデルパス
 }
 
@@ -96,7 +96,7 @@ void CFriedEgg::Update(void)
 	m_fDeleteTimer += DeltaTime::Get();
 
 	// 消滅条件を満たした場合
-	if (m_fDeleteTimer >= DELET_TIME)
+	if (m_fDeleteTimer >= DELETE_TIME)
 	{
 		// 敵を生成する
 		CEnemy::Create(m_eCreateType, GetGrid());
@@ -108,8 +108,6 @@ void CFriedEgg::Update(void)
 
 	// 親クラスの更新処理
 	CItem::Update();
-
-	DebugProc::Print(DebugProc::POINT_CENTER, "目玉焼き : %f, %f\n", GetPos().x, GetPos().z);
 }
 
 //====================================================================
@@ -182,6 +180,8 @@ CFriedEgg* CFriedEgg::Create(const CEnemy::ENEMY_TYPE eType, const CMapSystem::G
 //==========================================
 void CFriedEgg::Move(D3DXVECTOR3& pos)
 {
+	pos.y = 50.0f;
+
 	// TODO : ランダム歩行でも何でも仕様を用意する
 }
 

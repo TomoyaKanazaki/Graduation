@@ -53,16 +53,6 @@ public:
 		HIT_STATE_MAX,			//最大
 	};
 
-	//現在の移動方向
-	enum SELECT_MOVE
-	{
-		SELECT_MOVE_RIGHT = 0,	//右
-		SELECT_MOVE_LEFT,		//左
-		SELECT_MOVE_UP,			//上
-		SELECT_MOVE_DOWN,		//下
-		SELECT_MOVE_MAX,		//最大
-	};
-
 	static CEnemy* Create(const ENEMY_TYPE eType, const CMapSystem::GRID& grid);
 	HRESULT Init(void);
 	virtual void Uninit(void);
@@ -70,9 +60,6 @@ public:
 	void Draw(void);
 
 	virtual bool Hit(void);
-
-	//void SetMove(D3DXVECTOR3 move) { m_move = move; }
-	//D3DXVECTOR3 GetMove(void) { return m_move; }
 
 	void SetEnemyType(ENEMY_TYPE Type) { m_EnemyType = Type; }
 	ENEMY_TYPE GetEnemyType(void) { return m_EnemyType; }
@@ -113,8 +100,6 @@ private:
 	CMapSystem::GRID m_Grid;		//グリット番号
 	CMapSystem::GRID m_SelectGrid;	//方向転換を行った時のグリッド番号
 
-	//D3DXVECTOR3 m_move;			//移動量
-	//D3DXVECTOR3 m_Objmove;		//オブジェクトから影響される移動量
 	int m_nActionCount;			//行動のカウント
 	ENEMY_TYPE m_EnemyType;		//敵の種類
 
@@ -122,15 +107,9 @@ private:
 
 	MOVE_STATE m_MoveState;		//状態
 	int m_nMoveStateCount;		//状態管理用カウント
-	SELECT_MOVE m_SelectMove;	//移動方向
 
 	HIT_STATE m_HitState;		//状態
 	int m_nHitStateCount;		//状態管理用カウント
-
-	//bool m_OKL;					//左への進行が許されるかどうか
-	//bool m_OKR;					//右への進行が許されるかどうか
-	//bool m_OKU;					//上への進行が許されるかどうか
-	//bool m_OKD;					//下への進行が許されるかどうか
 
 	int m_nBugCounter;			//敵がスタックした時間
 
