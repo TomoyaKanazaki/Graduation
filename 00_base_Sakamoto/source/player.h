@@ -72,10 +72,13 @@ public:
 		TYPE_MAX
 	};
 
-	// 進行状況を管理する構造体
+	// 移動の進行状況を管理する構造体
 	struct PROGGRESS
 	{
-
+		bool bOKL;		//左への進行が許されるかどうか
+		bool bOKR;		//右への進行が許されるかどうか
+		bool bOKU;		//上への進行が許されるかどうか
+		bool bOKD;		//下への進行が許されるかどうか
 	};
 
 	static CPlayer* Create(int PlayNumber);
@@ -203,12 +206,11 @@ private:
 	CMapSystem::GRID m_Grid;		//グリット番号
 	bool m_bGritCenter;				//グリットの中心位置にいるかどうか
 
+	PROGGRESS m_Progress;			// 移動の進行状況
+
 	int m_nLife;					//ライフ
 	int m_nTime;
-	bool m_OKL;						//左への進行が許されるかどうか
-	bool m_OKR;						//右への進行が許されるかどうか
-	bool m_OKU;						//上への進行が許されるかどうか
-	bool m_OKD;						//下への進行が許されるかどうか
+	
 	bool m_bInput;					//入力を行ったかどうか
 	bool m_bPressObj;				//オブジェクトに押されているかどうか
 	bool m_bInvincible;				//無敵かどうか
