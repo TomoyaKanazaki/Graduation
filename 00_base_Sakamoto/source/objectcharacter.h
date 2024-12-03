@@ -8,6 +8,7 @@
 #define _CHARACTER_H_
 
 #include "object.h"
+#include "Model.h"
 
 class CModel;
 class CMotion;
@@ -21,6 +22,16 @@ class CMoveState;		// 移動の状態
 class CObjectCharacter : public CObject
 {
 public:
+
+	// 移動の進行状況を管理する構造体
+	struct PROGGRESS
+	{
+		bool bOKL;		//左への進行が許されるかどうか
+		bool bOKR;		//右への進行が許されるかどうか
+		bool bOKU;		//上への進行が許されるかどうか
+		bool bOKD;		//下への進行が許されるかどうか
+	};
+
 	CObjectCharacter(int nPriority = 3);
 	~CObjectCharacter();
 
@@ -33,6 +44,7 @@ public:
 	void Update(void);
 	void Draw(void);
 
+	void SetModelColor(CModel::COLORTYPE Type, D3DXCOLOR Col);
 	CModel* GetModel(int nCnt);
 	CMotion* GetMotion(void);
 	int GetNumModel(void) { return m_nNumModel; }
@@ -63,11 +75,16 @@ public:
 	void ChangeMoveState(CMoveState* pMoveState);   // 移動状態変更
 	CMoveState* GetMoveState() { return m_pMoveState; }	// 移動状態の情報取得
 
+	PROGGRESS GetProgress() { return m_Progress; }		// 移動の進行許可状況取得
+	bool GetGritCenter() { return m_bGritCenter; }		// グリッドの中心にいるか取得
+
 protected:
 
 	CShadow* m_pShadow;
-
 	CMoveState* m_pMoveState;		// 移動状態
+	PROGGRESS m_Progress;			// 移動の進行許可状況
+
+	bool m_bGritCenter;				//グリットの中心位置にいるかどうか
 
 private:
 

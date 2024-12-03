@@ -177,14 +177,11 @@ void CEnemyYoungDevil::Draw(void)
 //====================================================================
 // ÚGƒ_ƒ[ƒWˆ—
 //====================================================================
-void CEnemyYoungDevil::HitDamage(float fDamage)
+bool CEnemyYoungDevil::Hit(void)
 {
-	CEnemy::HitDamage(fDamage);
+	CEnemy::Hit();
 
-	if (m_Action != ACTION_TEST)
-	{
-		m_nStateCount = 1000;
-	}
+	return true;
 }
 
 //====================================================================

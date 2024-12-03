@@ -34,14 +34,23 @@ public:
 	};
 
 	//敵の状態
-	enum E_STATE
+	enum MOVE_STATE
 	{
-		E_STATE_WAIT = 0,	//待機
-		E_STATE_TRUN,		//方向転換
-		E_STATE_WALK,		//歩行
-		E_STATE_EGG,		//目玉焼き
-		E_STATE_DEATH,		//死亡
-		E_STATE_MAX,		//最大
+		MOVE_STATE_WAIT = 0,	//待機
+		MOVE_STATE_TRUN,		//方向転換
+		MOVE_STATE_WALK,		//歩行
+		MOVE_STATE_DEATH,		//死亡
+		MOVE_STATE_MAX,			//最大
+	};
+
+	//敵の状態
+	enum HIT_STATE
+	{
+		HIT_STATE_NORMAL = 0,	//通常
+		HIT_STATE_DAMAGE,		//ダメージ
+		HIT_STATE_INVINCIBLE,	//無敵
+		E_STATE_EGG,			//たまごやき
+		HIT_STATE_MAX,			//最大
 	};
 
 	//現在の移動方向
@@ -60,7 +69,7 @@ public:
 	void Update(void);
 	void Draw(void);
 
-	virtual bool Hit(int nLife);
+	virtual bool Hit(void);
 
 	void SetMove(D3DXVECTOR3 move) { m_move = move; }
 	D3DXVECTOR3 GetMove(void) { return m_move; }
@@ -68,11 +77,14 @@ public:
 	void SetEnemyType(ENEMY_TYPE Type) { m_EnemyType = Type; }
 	ENEMY_TYPE GetEnemyType(void) { return m_EnemyType; }
 
+	void SetHitState(HIT_STATE State) { m_HitState = State; }
+	HIT_STATE GetHitState(void) { return m_HitState; }
+	void SetHitStateCount(int Cnt) { m_nHitStateCount = Cnt; }
+	int GetHitStateCount(void) { return m_nHitStateCount; }
+
 	// マップ番号の設定
 	virtual void SetGrid(const CMapSystem::GRID& pos) { m_Grid = pos; }
 	CMapSystem::GRID GetGrid(void) { return m_Grid; }
-
-	void HitDamage(float fDamage) {};
 
 	// 静的メンバ関数
 	static CListManager<CEnemy>* GetList(void); // リスト取得
@@ -83,7 +95,8 @@ protected:
 
 private:
 
-	void StateManager(D3DXVECTOR3& posMy);				//状態更新
+	void MoveStateManager(D3DXVECTOR3& posMy);				//状態更新
+	void HitStateManager(D3DXVECTOR3& posMy);				//状態更新
 	void CollisionWall(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR3& size,useful::COLLISION XYZ);			//壁との当たり判定
 	void CollisionDevilHole(useful::COLLISION XYZ);		//デビルホールとの当たり判定
 	void CollisionOut(D3DXVECTOR3& posMy);				//ステージ外との当たり判定
@@ -100,8 +113,6 @@ private:
 	CMapSystem::GRID m_Grid;		//グリット番号
 	CMapSystem::GRID m_SelectGrid;	//方向転換を行った時のグリッド番号
 
-	int m_nLife;				// 体力
-
 	D3DXVECTOR3 m_move;			//移動量
 	D3DXVECTOR3 m_Objmove;		//オブジェクトから影響される移動量
 	int m_nActionCount;			//行動のカウント
@@ -109,9 +120,12 @@ private:
 
 	float m_ColorA;				//不透明度
 
-	E_STATE m_State;			//状態
-	int m_nStateCount;			//状態管理用カウント
+	MOVE_STATE m_MoveState;		//状態
+	int m_nMoveStateCount;		//状態管理用カウント
 	SELECT_MOVE m_SelectMove;	//移動方向
+
+	HIT_STATE m_HitState;		//状態
+	int m_nHitStateCount;		//状態管理用カウント
 
 	bool m_OKL;					//左への進行が許されるかどうか
 	bool m_OKR;					//右への進行が許されるかどうか

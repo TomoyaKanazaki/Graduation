@@ -177,14 +177,12 @@ void CEnemyBonbon::Draw(void)
 //====================================================================
 // ê⁄êGÉ_ÉÅÅ[ÉWèàóù
 //====================================================================
-void CEnemyBonbon::HitDamage(float fDamage)
+bool CEnemyBonbon::Hit(void)
 {
-	CEnemy::HitDamage(fDamage);
+	SetHitState(CEnemy::HIT_STATE_DAMAGE);
+	SetHitStateCount(100);
 
-	if (m_Action != ACTION_TEST)
-	{
-		m_nStateCount = 1000;
-	}
+	return true;
 }
 
 //====================================================================

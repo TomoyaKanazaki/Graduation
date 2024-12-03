@@ -57,6 +57,14 @@ m_bUseShadow(true)
 	m_bUseShadowMtx = false;
 
 	m_pMoveState = nullptr;
+
+	// 進行許可状況
+	m_Progress.bOKD = true;
+	m_Progress.bOKL = true;
+	m_Progress.bOKR = true;
+	m_Progress.bOKU = true;
+
+	m_bGritCenter = true;
 }
 
 //====================================================================
@@ -454,5 +462,26 @@ void CObjectCharacter::LoadModel(const char* pFilename)
 	else
 	{//ファイルが開けなかった場合
 		printf("***ファイルを開けませんでした***\n");
+	}
+}
+
+//====================================================================
+// 指定モデルカラー変更
+//====================================================================
+void CObjectCharacter::SetModelColor(CModel::COLORTYPE Type, D3DXCOLOR Col)
+{
+	// モデル数の取得
+	int nNumModel = GetNumModel();
+
+	for (int nCnt = 0; nCnt < nNumModel; nCnt++)
+	{
+		// モデルの取得
+		CModel* pModel = GetModel(nCnt);
+
+		if (pModel != nullptr)
+		{
+			pModel->SetColorType(Type);
+			pModel->SetColor(Col);
+		}
 	}
 }
