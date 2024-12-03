@@ -144,6 +144,20 @@ CItem* CItem::Create(const TYPE eType, const CMapSystem::GRID& pos)
 	return pItem;
 }
 
+//==========================================
+//  移動処理
+//==========================================
+void CItem::Move(D3DXVECTOR3& pos)
+{
+	if (m_bMapScroll)
+	{
+		// グリッドに沿った座標を取得、設定
+		D3DXVECTOR3 posGrid = m_Grid.ToWorld();
+		pos.x = posGrid.x;
+		pos.z = posGrid.z;
+	}
+}
+
 //====================================================================
 // 初期化
 //====================================================================
@@ -218,14 +232,6 @@ void CItem::Update()
 	// 自身の情報を取得する
 	D3DXVECTOR3 pos = GetPos();
 	D3DXVECTOR3 rot = GetRot();
-
-	if (m_bMapScroll)
-	{
-		// グリッドに沿った座標を取得、設定
-		D3DXVECTOR3 posGrid = m_Grid.ToWorld();
-		pos.x = posGrid.x;
-		pos.z = posGrid.z;
-	}
 
 	// 移動処理
 	Move(pos);

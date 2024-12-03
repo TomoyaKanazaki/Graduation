@@ -60,10 +60,15 @@ public:
 	void SetUseMultiMatrix(D3DXMATRIX* Set);
 	D3DXMATRIX* GetUseMultiMatrix(void) { return m_UseMultiMatrix; }
 
+	void SetDisp(bool frag) { m_bDisp = frag; }
+	bool GetDisp() { return m_bDisp; }
+
 protected:
 	D3DXMATRIX m_mtxWorld;					//ワールドマトリックス
 
 private:
+
+	bool m_bDisp;							// 描画フラグ
 	int m_IdxModelNumber;					//モデルの番号
 	int m_IdxTextureNumber[128];			//テクスチャの番号
 	LPDIRECT3DTEXTURE9 *m_pTexture;			//テクスチャへのポインタ
