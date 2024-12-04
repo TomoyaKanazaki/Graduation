@@ -19,6 +19,7 @@ namespace
 	const D3DXVECTOR3 EGG_MOVE = D3DXVECTOR3(10.0f, 10.0f, 10.0f);	 //移動量の減衰速度(卵)
 	const int INVINCIBLE_TIME = 120;			//無敵時間
 	const float PLAYER_SPEED = 5.0f;		//プレイヤーの移動速度
+	const float ENEMY_SPEED = 3.0f;			//敵の移動速度
 
 }
 
@@ -30,171 +31,7 @@ namespace
 //==========================================
 CMoveState::CMoveState()
 {
-	m_RotState = ROTSTATE_NONE;		// 移動方向の状態
-	m_bInput = false;				// 入力判定
-}
- 
-//==========================================
-// 操作処理
-//==========================================
-void CMoveState::Control(CObjectCharacter* pCharacter)
-{
-
-}
-
-//==========================================
-// 操作処理(プレイヤー)
-//==========================================
-void CMoveState::Control(CPlayer* pPlayer, D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis)
-{
-	CPlayer::STATE state = pPlayer->GetState();		// プレイヤーの状態
-	D3DXVECTOR3 EggMove = pPlayer->GetEggMove();	// プレイヤーの卵移動量
-	D3DXVECTOR3 CameraRot = CManager::GetInstance()->GetCamera()->GetRot();
-	D3DXVECTOR3 NormarizeMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-
-	// 入力してない状態にする
-	m_bInput = false;
-
-	//入力処理
-	NormarizeMove = InputKey(pPlayer, posThis, rotThis, NormarizeMove, PLAYER_SPEED);
-
-	/*NormarizeMove = MoveInputPadStick(posThis, rotThis, NormarizeMove);
-
-	NormarizeMove = MoveInputPadKey(posThis, rotThis, NormarizeMove);*/
-
-	if (m_bInput && state != CPlayer::STATE_ATTACK)
-	{
-		D3DXVec3Normalize(&NormarizeMove, &NormarizeMove);
-
-		NormarizeMove.x *= PLAYER_SPEED;
-		NormarizeMove.z *= PLAYER_SPEED;
-
-		//移動量を代入
-		pPlayer->SetMove(NormarizeMove);
-
-		if (state == CPlayer::STATE_EGG)
-		{
-			// モデル数の取得
-			int nNumModel = pPlayer->GetNumModel();
-
-			for (int nCnt = 0; nCnt < nNumModel; nCnt++)
-			{
-				// モデルの取得
-				CModel* pModel = pPlayer->GetModel(nCnt);
-
-				if (pModel != nullptr)
-				{
-					pModel->SetDisp(true);
-				}
-			}
-
-			EggMove.y = EGG_MOVE.y;
-
-			switch (m_RotState)
-			{
-			case CMoveState::ROTSTATE_LEFT:
-				EggMove.x = EGG_MOVE.x;
-				EggMove.z = 0.0f;
-				break;
-			case CMoveState::ROTSTATE_RIGHT:
-				EggMove.x = -EGG_MOVE.x;
-				EggMove.z = 0.0f;
-				break;
-			case CMoveState::ROTSTATE_UP:
-				EggMove.x = 0.0f;
-				EggMove.z = -EGG_MOVE.z;
-				break;
-			case CMoveState::ROTSTATE_DOWN:
-				EggMove.x = 0.0f;
-				EggMove.z = EGG_MOVE.z;
-				break;
-			}
-
-			// 卵の移動量設定
-			pPlayer->SetEggMove(EggMove);
-
-			//無敵状態の設定
-			pPlayer->SetInvincible(true);
-			pPlayer->SetInvincibleCount(INVINCIBLE_TIME);
-		}
-		//移動状態にする
-		pPlayer->SetState(CPlayer::STATE_WALK);
-	}
-}
-
-//====================================================================
-//移動入力キーボード(キャラクター)
-//====================================================================
-D3DXVECTOR3 CMoveState::InputKey(CObjectCharacter* pCharacter, D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis, D3DXVECTOR3 Move, float fSpeed)
-{
-	//キーボードの取得
-	CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
-
-	// 移動の進行許可状況
-	CObjectCharacter::PROGGRESS progress = pCharacter->GetProgress();
-	bool bGridCenter = pCharacter->GetGritCenter();		// グリッド座標の中心にいるか
-
-	//キーボードの移動処理
-	if ((pInputKeyboard->GetPress(DIK_W) && progress.bOKU && bGridCenter) ||
-		(pInputKeyboard->GetPress(DIK_W) && m_RotState == ROTSTATE_DOWN))
-	{
-		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
-		D3DXMATRIX mat = *pCharacter->GetUseMultiMatrix();
-		D3DXVECTOR3 ef = useful::CalcMatrix(posThis, rotThis, mat);
-		MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, rotThis);
-
-		Move.z += 1.0f * cosf(D3DX_PI * 0.0f) * fSpeed;
-		Move.x += 1.0f * sinf(D3DX_PI * 0.0f) * fSpeed;
-
-		m_bInput = true;
-		m_RotState = ROTSTATE_UP;
-	}
-	else if (((pInputKeyboard->GetPress(DIK_S) && progress.bOKD && bGridCenter) ||
-		(pInputKeyboard->GetPress(DIK_S) && m_RotState == ROTSTATE_UP)) &&
-		pInputKeyboard->GetPress(DIK_W) == false)
-	{
-		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
-		D3DXMATRIX mat = *pCharacter->GetUseMultiMatrix();
-		D3DXVECTOR3 ef = useful::CalcMatrix(posThis, rotThis, mat);
-		MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, rotThis);
-
-		Move.z += -1.0f * cosf(D3DX_PI * 0.0f) * fSpeed;
-		Move.x += -1.0f * sinf(D3DX_PI * 0.0f) * fSpeed;
-
-		m_bInput = true;
-		m_RotState = ROTSTATE_DOWN;
-	}
-	else if ((pInputKeyboard->GetPress(DIK_A) && progress.bOKL && bGridCenter) ||
-		(pInputKeyboard->GetPress(DIK_A) && m_RotState == ROTSTATE_RIGHT))
-	{
-		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
-		D3DXMATRIX mat = *pCharacter->GetUseMultiMatrix();
-		D3DXVECTOR3 ef = useful::CalcMatrix(posThis, rotThis, mat);
-		MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, rotThis);
-
-		Move.x += -1.0f * cosf(D3DX_PI * 0.0f) * fSpeed;
-		Move.z -= -1.0f * sinf(D3DX_PI * 0.0f) * fSpeed;
-
-		m_bInput = true;
-		m_RotState = ROTSTATE_LEFT;
-	}
-	else if (((pInputKeyboard->GetPress(DIK_D) && progress.bOKR && bGridCenter) ||
-		(pInputKeyboard->GetPress(DIK_D) && m_RotState == ROTSTATE_LEFT)) &&
-		pInputKeyboard->GetPress(DIK_A) == false)
-	{
-		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
-		D3DXMATRIX mat = *pCharacter->GetUseMultiMatrix();
-		D3DXVECTOR3 ef = useful::CalcMatrix(posThis, rotThis, mat);
-		MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, rotThis);
-
-		Move.x += 1.0f * cosf(D3DX_PI * 0.0f) * fSpeed;
-		Move.z -= 1.0f * sinf(D3DX_PI * 0.0f) * fSpeed;
-
-		m_bInput = true;
-		m_RotState = ROTSTATE_RIGHT;
-	}
-
-	return Move;
+	
 }
 
 //**********************************************************************
@@ -205,7 +42,8 @@ D3DXVECTOR3 CMoveState::InputKey(CObjectCharacter* pCharacter, D3DXVECTOR3& posT
 //==========================================
 CStateControl::CStateControl()
 {
-	m_bInput = false;			//入力を行ったかどうか
+	m_bInput = false;				//入力を行ったかどうか
+	m_RotState = ROTSTATE_NONE;		// 移動方向の状態
 }
 
 //==========================================
@@ -238,19 +76,188 @@ void CStateControl::ControlStop(CObjectCharacter* pCharacter)
 //==========================================
 // 移動処理
 //==========================================
-//void CStateControl::Move(CObjectCharacter* pCharacter)
-//{
-//	// 操作できる処理
-//	Control(pCharacter);
-//}
+void CStateControl::Move(CObjectCharacter* pCharacter, D3DXVECTOR3& pos, D3DXVECTOR3& rot)
+{
+	D3DXVECTOR3 NormarizeMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_bInput = false;			// 入力してない状態にする
+
+	// 入力処理
+	switch (pCharacter->GetType())
+	{
+	case CObject::TYPE_PLAYER3D:		// プレイヤー
+		NormarizeMove = InputKey(pCharacter, pos, rot, NormarizeMove, PLAYER_SPEED);
+		UpdateMovePlayer(pCharacter, NormarizeMove);		// 移動更新
+
+		break;
+
+	case CObject::TYPE_ENEMY3D:			// 敵
+		NormarizeMove = InputKey(pCharacter, pos, rot, NormarizeMove, ENEMY_SPEED);
+		UpdateMoveEnemy(pCharacter, NormarizeMove);			// 移動更新
+		break;
+
+	default:
+		break;
+	}
+}
 
 //==========================================
-// 移動処理(プレイヤー)
+// プレイヤーの状態更新処理
 //==========================================
-void CStateControl::Move(CPlayer* pPlayer, D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis)
+void CStateControl::UpdateMovePlayer(CObjectCharacter* pCharacter, D3DXVECTOR3 NormarizeMove)
 {
-	// 操作できる処理
-	Control(pPlayer, posThis, rotThis);
+	CPlayer::STATE state = pCharacter->GetState();		// プレイヤーの状態
+	D3DXVECTOR3 EggMove = pCharacter->GetEggMove();	// プレイヤーの卵移動量
+
+	if (m_bInput && state != CPlayer::STATE_ATTACK)
+	{
+		D3DXVec3Normalize(&NormarizeMove, &NormarizeMove);
+
+		NormarizeMove.x *= PLAYER_SPEED;
+		NormarizeMove.z *= PLAYER_SPEED;
+
+		//移動量を代入
+		pCharacter->SetMove(NormarizeMove);
+
+		if (state == CPlayer::STATE_EGG)
+		{
+			// モデル数の取得
+			int nNumModel = pCharacter->GetNumModel();
+
+			for (int nCnt = 0; nCnt < nNumModel; nCnt++)
+			{
+				// モデルの取得
+				CModel* pModel = pCharacter->GetModel(nCnt);
+
+				if (pModel != nullptr)
+				{
+					pModel->SetDisp(true);
+				}
+			}
+
+			EggMove.y = EGG_MOVE.y;
+
+			switch (m_RotState)
+			{
+			case CMoveState::ROTSTATE_LEFT:
+				EggMove.x = EGG_MOVE.x;
+				EggMove.z = 0.0f;
+				break;
+			case CMoveState::ROTSTATE_RIGHT:
+				EggMove.x = -EGG_MOVE.x;
+				EggMove.z = 0.0f;
+				break;
+			case CMoveState::ROTSTATE_UP:
+				EggMove.x = 0.0f;
+				EggMove.z = -EGG_MOVE.z;
+				break;
+			case CMoveState::ROTSTATE_DOWN:
+				EggMove.x = 0.0f;
+				EggMove.z = EGG_MOVE.z;
+				break;
+			}
+
+			// 卵の移動量設定
+			pCharacter->SetEggMove(EggMove);
+
+			//無敵状態の設定
+			pCharacter->SetInvincible(true);
+			pCharacter->SetInvincibleCount(INVINCIBLE_TIME);
+		}
+		//移動状態にする
+		pCharacter->SetState(CObjectCharacter::STATE_WALK);
+	}
+}
+
+//==========================================
+// 敵の状態更新処理
+//==========================================
+void CStateControl::UpdateMoveEnemy(CObjectCharacter* pCharacter, D3DXVECTOR3 NormarizeMove)
+{
+	D3DXVec3Normalize(&NormarizeMove, &NormarizeMove);
+
+	NormarizeMove.x *= ENEMY_SPEED;
+	NormarizeMove.z *= ENEMY_SPEED;
+
+	//移動量を代入
+	pCharacter->SetMove(NormarizeMove);
+
+	//移動状態にする
+	pCharacter->SetState(CObjectCharacter::STATE_WALK);
+}
+
+//====================================================================
+//移動入力キーボード(キャラクター)
+//====================================================================
+D3DXVECTOR3 CStateControl::InputKey(CObjectCharacter* pCharacter, D3DXVECTOR3& pos, D3DXVECTOR3& rot, D3DXVECTOR3 Move, float fSpeed)
+{
+	//キーボードの取得
+	CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
+
+	// 移動の進行許可状況
+	CObjectCharacter::PROGGRESS progress = pCharacter->GetProgress();
+	bool bGridCenter = pCharacter->GetGritCenter();		// グリッド座標の中心にいるか
+
+	//キーボードの移動処理
+	if ((pInputKeyboard->GetPress(DIK_W) && progress.bOKU && bGridCenter) ||
+		(pInputKeyboard->GetPress(DIK_W) && m_RotState == ROTSTATE_DOWN))
+	{
+		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
+		D3DXMATRIX mat = *pCharacter->GetUseMultiMatrix();
+		D3DXVECTOR3 ef = useful::CalcMatrix(pos, rot, mat);
+		MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, rot);
+
+		Move.z += 1.0f * cosf(D3DX_PI * 0.0f) * fSpeed;
+		Move.x += 1.0f * sinf(D3DX_PI * 0.0f) * fSpeed;
+
+		m_bInput = true;
+		m_RotState = ROTSTATE_UP;
+	}
+	else if (((pInputKeyboard->GetPress(DIK_S) && progress.bOKD && bGridCenter) ||
+		(pInputKeyboard->GetPress(DIK_S) && m_RotState == ROTSTATE_UP)) &&
+		pInputKeyboard->GetPress(DIK_W) == false)
+	{
+		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
+		D3DXMATRIX mat = *pCharacter->GetUseMultiMatrix();
+		D3DXVECTOR3 ef = useful::CalcMatrix(pos, rot, mat);
+		MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, rot);
+
+		Move.z += -1.0f * cosf(D3DX_PI * 0.0f) * fSpeed;
+		Move.x += -1.0f * sinf(D3DX_PI * 0.0f) * fSpeed;
+
+		m_bInput = true;
+		m_RotState = ROTSTATE_DOWN;
+	}
+	else if ((pInputKeyboard->GetPress(DIK_A) && progress.bOKL && bGridCenter) ||
+		(pInputKeyboard->GetPress(DIK_A) && m_RotState == ROTSTATE_RIGHT))
+	{
+		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
+		D3DXMATRIX mat = *pCharacter->GetUseMultiMatrix();
+		D3DXVECTOR3 ef = useful::CalcMatrix(pos, rot, mat);
+		MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, rot);
+
+		Move.x += -1.0f * cosf(D3DX_PI * 0.0f) * fSpeed;
+		Move.z -= -1.0f * sinf(D3DX_PI * 0.0f) * fSpeed;
+
+		m_bInput = true;
+		m_RotState = ROTSTATE_LEFT;
+	}
+	else if (((pInputKeyboard->GetPress(DIK_D) && progress.bOKR && bGridCenter) ||
+		(pInputKeyboard->GetPress(DIK_D) && m_RotState == ROTSTATE_LEFT)) &&
+		pInputKeyboard->GetPress(DIK_A) == false)
+	{
+		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
+		D3DXMATRIX mat = *pCharacter->GetUseMultiMatrix();
+		D3DXVECTOR3 ef = useful::CalcMatrix(pos, rot, mat);
+		MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, rot);
+
+		Move.x += 1.0f * cosf(D3DX_PI * 0.0f) * fSpeed;
+		Move.z -= 1.0f * sinf(D3DX_PI * 0.0f) * fSpeed;
+
+		m_bInput = true;
+		m_RotState = ROTSTATE_RIGHT;
+	}
+
+	return Move;
 }
 
 //**********************************************************************
