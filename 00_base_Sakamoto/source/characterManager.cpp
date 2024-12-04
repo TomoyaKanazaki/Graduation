@@ -52,8 +52,6 @@ int CCharacterManager::Regist(CObjectCharacter* pObjCharacter, const char* pFile
 	// 読み込み割当処理
 	if (m_nNumAll < MAX_CHARACTER)
 	{
-		m_nNumAll++;
-
 		// モデル読み込み
 		if (LoadModel(pFilename, m_nNumAll))
 		{
@@ -77,6 +75,8 @@ int CCharacterManager::Regist(CObjectCharacter* pObjCharacter, const char* pFile
 			// 失敗
 			assert(("モーション読み込み失敗", false));
 		}
+
+		m_nNumAll++;
 	}
 	else
 	{
@@ -295,7 +295,7 @@ bool CCharacterManager::LoadModel(const char* pFileName, int nNumCharacter)
 				for (int nCnt = 0; nCnt < nCntModel; nCnt++)
 				{
 					// モデル管理にパーツ情報代入
-					m_aCharacterInfo[nNumCharacter].ModelManager.aModelParts[nCnt] = ModelParts[nCntModel];
+					m_aCharacterInfo[nNumCharacter].ModelManager.aModelParts[nCnt] = ModelParts[nCnt];
 				}
 
 				break;

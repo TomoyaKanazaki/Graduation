@@ -10,6 +10,7 @@
 #include "light.h"
 #include "texture.h"
 #include "XModel.h"
+#include "characterManager.h"
 #include "fade.h"
 #include "sound.h"
 #include "MapSystem.h"
@@ -54,6 +55,7 @@ CManager::CManager() :
 	m_pLight = nullptr;
 	m_pTexture = nullptr;
 	m_pXModel = nullptr;
+	m_pCharacterManager = nullptr;
 	m_pScene = nullptr;
 	m_LevelUP = nullptr;
 	m_pFade = nullptr;
@@ -199,7 +201,6 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 		return E_FAIL;
 	}
 
-
 	if (m_pXModel == nullptr)
 	{
 		//Xモデルの生成
@@ -210,6 +211,12 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	if (FAILED(m_pXModel->Load()))
 	{//読み込みが失敗した場合
 		return E_FAIL;
+	}
+
+	if (m_pCharacterManager == nullptr)
+	{
+		// キャラクター管理の生成
+		m_pCharacterManager = new CCharacterManager;
 	}
 
 	if (m_pFade == nullptr)
@@ -274,6 +281,13 @@ void CManager::Uninit(void)
 
 		delete m_pXModel;
 		m_pXModel = nullptr;
+	}
+
+	if (m_pCharacterManager != nullptr)
+	{
+		// キャラクター管理の破棄処理
+		delete m_pCharacterManager;
+		m_pCharacterManager = nullptr;
 	}
 
 	if (m_pLight != nullptr)
