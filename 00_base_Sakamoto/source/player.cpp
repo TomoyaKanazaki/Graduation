@@ -275,6 +275,13 @@ void CPlayer::Uninit(void)
 		m_pScore = nullptr;
 	}
 
+	// 移動状態の破棄
+	if (m_pMoveState != nullptr)
+	{
+		delete m_pMoveState;
+		m_pMoveState = nullptr;
+	}
+
 	// エフェクトの削除
 	if (m_pEffectEgg != nullptr)
 	{
@@ -309,6 +316,7 @@ void CPlayer::Update(void)
 	D3DXVECTOR3 rotThis = GetRot();			// 向き
 	D3DXVECTOR3 sizeThis = GetSize();			// 大きさ
 	STATE state = GetState();				// 状態
+	STATE oldstate = GetOldState();			// 状態
 
 	// 過去の位置に代入
 	posOldThis = posThis;
@@ -333,6 +341,12 @@ void CPlayer::Update(void)
 
 			// 移動処理
 			m_pMoveState->Move(this, posThis, rotThis);
+
+			// モデルを描画する
+			if (GetState() != STATE_EGG && oldstate == STATE_EGG)
+			{
+				SetItemType(TYPE_NONE);
+			}
 
 			// 移動処理
 			//Move(posThis,rotThis);
