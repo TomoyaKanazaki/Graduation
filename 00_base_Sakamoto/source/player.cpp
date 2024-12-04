@@ -278,6 +278,7 @@ void CPlayer::Uninit(void)
 	// ˆÚ“®ó‘Ô‚Ì”jŠü
 	if (m_pMoveState != nullptr)
 	{
+		m_pMoveState->Release();
 		delete m_pMoveState;
 		m_pMoveState = nullptr;
 	}
