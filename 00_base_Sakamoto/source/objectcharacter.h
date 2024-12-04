@@ -37,15 +37,6 @@ public:
 		STATE_NONE
 	};
 
-	//enum MOVE_STATE
-	//{
-	//	//MOVE_STATE_WAIT = 0,	//待機
-	//	//MOVE_STATE_TRUN,		//方向転換
-	//	//MOVE_STATE_WALK,		//歩行
-	//	//MOVE_STATE_DEATH,		//死亡
-	//	MOVE_STATE_MAX,			//最大
-	//};
-
 	// 移動の進行状況を管理する構造体
 	struct PROGGRESS
 	{

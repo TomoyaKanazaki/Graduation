@@ -92,7 +92,6 @@ m_pEffect(nullptr)
 	m_ColorA = 1.0f;
 
 	m_EnemyType = ENEMY_MEDAMAN;
-	//m_MoveState = MOVE_STATE_WAIT;
 	m_pSlow = nullptr;
 
 	m_HitState = HIT_STATE_NORMAL;

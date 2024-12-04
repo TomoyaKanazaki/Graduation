@@ -38,18 +38,6 @@ public:
 		ACTION_NONE
 	};
 
-	//プレイヤーの状態
-	//enum STATE
-	//{
-	//	STATE_WAIT = 0,		//待機
-	//	STATE_WALK,			//歩き
-	//	STATE_DEATH,		//死亡
-	//	STATE_EGG,			//卵
-	//	STATE_ATTACK,		//攻撃
-	//	STATE_MAX,			//最大
-	//	STATE_NONE
-	//};
-
 	// アイテムの種類
 	enum ITEM_TYPE
 	{
@@ -68,8 +56,6 @@ public:
 	void SetPlayNumber(int Number) { m_nPlayNumber = Number; }
 	int GetPlayNumber(void) { return m_nPlayNumber; }
 
-	/*void SetState(STATE State) { m_State = State; }
-	STATE GetState(void) { return m_State; }*/
 	bool GetJump(void) { return m_bJump; }
 	void SetCameraPos(D3DXVECTOR3 pos) { m_CameraPos = pos; }
 	D3DXVECTOR3 GetCameraPos(void) { return m_CameraPos; }
@@ -156,7 +142,6 @@ private:
 	D3DXVECTOR3 m_CameraPos;		//カメラ位置位置
 	bool m_bJump;					//ジャンプをしたかどうか
 	int m_nActionCount;				//行動のカウント
-	//STATE m_State;					//状態
 	int m_nStateCount;				//状態管理用カウント
 
 	float m_CollisionRot;			//当たり判定用の向き

@@ -34,16 +34,6 @@ public:
 	};
 
 	//敵の状態
-	//enum MOVE_STATE
-	//{
-	//	MOVE_STATE_WAIT = 0,	//待機
-	//	MOVE_STATE_TRUN,		//方向転換
-	//	MOVE_STATE_WALK,		//歩行
-	//	MOVE_STATE_DEATH,		//死亡
-	//	MOVE_STATE_MAX,			//最大
-	//};
-
-	//敵の状態
 	enum HIT_STATE
 	{
 		HIT_STATE_NORMAL = 0,	//通常
@@ -102,7 +92,6 @@ private:
 
 	float m_ColorA;				//不透明度
 
-	//MOVE_STATE m_MoveState;		//状態
 	int m_nMoveStateCount;		//状態管理用カウント
 
 	HIT_STATE m_HitState;		//状態
