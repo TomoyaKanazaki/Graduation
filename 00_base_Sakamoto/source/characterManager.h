@@ -23,7 +23,7 @@ public:
 	CCharacterManager();
 	~CCharacterManager();
 
-	int Regist(const char* pFilename);
+	int Regist(CObjectCharacter* pObjCharacter, const char* pFilename);
 	const char* GetCharacterName(int Idx) { return &m_aCharacterInfo[Idx].acFileName[0]; }
 
 private:
@@ -31,13 +31,13 @@ private:
 	// モデルパーツ情報
 	struct ModelParts
 	{
+		char acModelFileName[MAX_LENGTH_TXT];	// ファイル名
+
 		int nIndex;			// インデックス
 		int nParent;		// 親の番号
 
 		D3DXVECTOR3 pos;	// 位置
 		D3DXVECTOR3 rot;	// 向き
-
-		char acModelFileName[MAX_LENGTH_TXT];	// ファイル名
 	};
 
 	// モデル管理情報
@@ -72,8 +72,8 @@ private:
 	// モーション管理情報
 	struct MotionManager
 	{
-		int nNumMotion;					// モーション数
-		MotionInfo aMotion[MAX_MOTION];	// モーション情報
+		int nNumMotion;						// モーション数
+		MotionInfo aMotionInfo[MAX_MOTION];	// モーション情報
 	};
 
 	// キャラクター情報
@@ -85,8 +85,11 @@ private:
 		char acFileName[MAX_CHARACTER];		// ファイル名
 	};
 
-	void LoadModel(const char* pFileName, int nNumCharacter);
-	void LoadMotion(const char* pFileName, int nNumCharacter);
+	void SetModelData(CObjectCharacter* pObjCharacter, int nNumCharacter);
+	void SetMotionData(CObjectCharacter* pObjCharacter, int nNumCharacter);
+
+	bool LoadModel(const char* pFileName, int nNumCharacter);
+	bool LoadMotion(const char* pFileName, int nNumCharacter);
 
 	CharacterInfo m_aCharacterInfo[MAX_CHARACTER];
 	int m_nNumAll;						// キャラクターの使用数

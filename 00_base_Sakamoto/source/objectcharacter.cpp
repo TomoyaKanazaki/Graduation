@@ -35,7 +35,9 @@ namespace
 //====================================================================
 CObjectCharacter::CObjectCharacter(int nPriority) : CObject(nPriority),
 m_pShadow(nullptr),
-m_bUseShadow(true)
+m_bUseShadow(true),
+m_State(STATE_WAIT),
+m_OldState(STATE_WAIT)
 {
 	for (int nCnt = 0; nCnt < MODEL_NUM; nCnt++)
 	{
@@ -59,6 +61,9 @@ m_bUseShadow(true)
 	m_bUseShadowMtx = false;
 
 	m_pMoveState = nullptr;
+
+	m_Grid.x = 0;
+	m_Grid.z = 0;
 
 	// 進行許可状況
 	m_Progress.bOKD = true;
@@ -173,6 +178,9 @@ void CObjectCharacter::Update(void)
 		m_pShadow->SetPos(D3DXVECTOR3(m_pos.x, 1.0f, m_pos.z));
 		m_pShadow->SetBaseHeight(pos.y);
 	}
+
+	// 状態の保存
+	m_OldState = m_State;
 }
 
 //====================================================================
@@ -304,6 +312,21 @@ void CObjectCharacter::SetTxtCharacter(const char* pFilename)
 		m_pMotion->SetModel(&m_apModel[0], m_nNumModel);
 		m_pMotion->LoadData(pFilename);
 	}
+}
+
+//====================================================================
+// モデル設定処理
+//====================================================================
+void CObjectCharacter::SetModel(CModel* pModel, int nCnt)
+{
+	if (m_apModel[nCnt] == nullptr)
+	{
+		m_apModel[nCnt] = pModel;
+	}
+
+	assert(("モデル上書き生成", false));
+
+	return;
 }
 
 //====================================================================

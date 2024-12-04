@@ -805,7 +805,7 @@ void CDevil::ActionState(void)
 		}
 	}
 	// 下モーション
-	if (m_DevilArrow == 1)
+	else if (m_DevilArrow == 1)
 	{
 		if (m_Action != ACTION_SIGNAL_DOWN)
 		{
@@ -815,7 +815,7 @@ void CDevil::ActionState(void)
 		}
 	}
 	// 左モーション
-	if (m_DevilArrow == 2)
+	else if (m_DevilArrow == 2)
 	{
 		if (m_Action != ACTION_SIGNAL_LEFT)
 		{
@@ -825,7 +825,7 @@ void CDevil::ActionState(void)
 		}
 	}
 	// 右モーション
-	if (m_DevilArrow == 3)
+	else if (m_DevilArrow == 3)
 	{
 		if (m_Action != ACTION_SIGNAL_RIGHT)
 		{

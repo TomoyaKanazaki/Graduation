@@ -86,10 +86,10 @@ HRESULT CObject3D::Init(void)
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
 	//頂点座標の設定
-	pVtx[0].pos = D3DXVECTOR3(-m_size.x * 0.5f, m_size.z * 0.5f, 0.0f);
-	pVtx[1].pos = D3DXVECTOR3(m_size.x * 0.5f, m_size.z * 0.5f, 0.0f);
-	pVtx[2].pos = D3DXVECTOR3(-m_size.x * 0.5f, -m_size.z * 0.5f, 0.0f);
-	pVtx[3].pos = D3DXVECTOR3(m_size.x * 0.5f, -m_size.z * 0.5f, 0.0f);
+	pVtx[0].pos = D3DXVECTOR3(-m_size.x * 0.5f, m_size.y * 0.5f, m_size.z * 0.5f);
+	pVtx[1].pos = D3DXVECTOR3(m_size.x * 0.5f, m_size.y * 0.5f, m_size.z * 0.5f);
+	pVtx[2].pos = D3DXVECTOR3(-m_size.x * 0.5f, -m_size.y * 0.5f, -m_size.z * 0.5f);
+	pVtx[3].pos = D3DXVECTOR3(m_size.x * 0.5f, -m_size.y * 0.5f, -m_size.z * 0.5f);
 
 	//法線ベクトルの設定
 	pVtx[0].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
@@ -265,10 +265,10 @@ void CObject3D::SetVerTex(void)
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
 	//頂点座標の設定
-	pVtx[0].pos = D3DXVECTOR3(-m_size.x * 0.5f, m_size.z * 0.5f, 0.0f);
-	pVtx[1].pos = D3DXVECTOR3(m_size.x * 0.5f, m_size.z * 0.5f, 0.0f);
-	pVtx[2].pos = D3DXVECTOR3(-m_size.x * 0.5f, -m_size.z * 0.5f, 0.0f);
-	pVtx[3].pos = D3DXVECTOR3(m_size.x * 0.5f, -m_size.z * 0.5f, 0.0f);
+	pVtx[0].pos = D3DXVECTOR3(-m_size.x * 0.5f, m_size.y * 0.5f, m_size.z * 0.5f);
+	pVtx[1].pos = D3DXVECTOR3(m_size.x * 0.5f, m_size.y * 0.5f, m_size.z * 0.5f);
+	pVtx[2].pos = D3DXVECTOR3(-m_size.x * 0.5f, -m_size.y * 0.5f, -m_size.z * 0.5f);
+	pVtx[3].pos = D3DXVECTOR3(m_size.x * 0.5f, -m_size.y * 0.5f, -m_size.z * 0.5f);
 
 	//頂点バッファをアンロックする
 	m_pVtxBuff->Unlock();
@@ -359,10 +359,10 @@ void CObject3D::SetVtx(const D3DXVECTOR3& size)
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
 	//頂点座標の設定
-	pVtx[0].pos = D3DXVECTOR3(-m_size.x * 0.5f, m_size.z * 0.5f, 0.0f);
-	pVtx[1].pos = D3DXVECTOR3(m_size.x * 0.5f, m_size.z * 0.5f, 0.0f);
-	pVtx[2].pos = D3DXVECTOR3(-m_size.x * 0.5f, -m_size.z * 0.5f, 0.0f);
-	pVtx[3].pos = D3DXVECTOR3(m_size.x * 0.5f, -m_size.z * 0.5f, 0.0f);
+	pVtx[0].pos = D3DXVECTOR3(-m_size.x * 0.5f, m_size.y * 0.5f, m_size.z * 0.5f);
+	pVtx[1].pos = D3DXVECTOR3(m_size.x * 0.5f, m_size.y * 0.5f, m_size.z * 0.5f);
+	pVtx[2].pos = D3DXVECTOR3(-m_size.x * 0.5f, -m_size.y * 0.5f, -m_size.z * 0.5f);
+	pVtx[3].pos = D3DXVECTOR3(m_size.x * 0.5f, -m_size.y * 0.5f, -m_size.z * 0.5f);
 
 	//法線ベクトルの設定
 	pVtx[0].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);

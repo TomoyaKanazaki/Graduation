@@ -19,6 +19,7 @@ namespace
 	const D3DXVECTOR3 EGG_MOVE = D3DXVECTOR3(10.0f, 10.0f, 10.0f);	 //移動量の減衰速度(卵)
 	const int INVINCIBLE_TIME = 120;			//無敵時間
 	const float PLAYER_SPEED = 5.0f;		//プレイヤーの移動速度
+	const float ENEMY_SPEED = 3.0f;			//敵の移動速度
 
 }
 
@@ -30,37 +31,82 @@ namespace
 //==========================================
 CMoveState::CMoveState()
 {
+	
+}
+
+//**********************************************************************
+// 操作できる状態
+//**********************************************************************
+//==========================================
+// コンストラクタ
+//==========================================
+CStateControl::CStateControl()
+{
+	m_bInput = false;				//入力を行ったかどうか
 	m_RotState = ROTSTATE_NONE;		// 移動方向の状態
-	m_bInput = false;				// 入力判定
-}
- 
-//==========================================
-// 操作処理
-//==========================================
-void CMoveState::Control(CObjectCharacter* pCharacter)
-{
-
 }
 
 //==========================================
-// 操作処理(プレイヤー)
+// 操作からランダム歩行に切り替え
 //==========================================
-void CMoveState::Control(CPlayer* pPlayer, D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis)
+void CStateControl::ControlRandom(CObjectCharacter* pCharacter)
 {
-	CPlayer::STATE state = pPlayer->GetState();		// プレイヤーの状態
-	D3DXVECTOR3 EggMove = pPlayer->GetEggMove();	// プレイヤーの卵移動量
-	D3DXVECTOR3 CameraRot = CManager::GetInstance()->GetCamera()->GetRot();
+	// ランダム歩行状態にする
+	pCharacter->ChangeMoveState(new CStateRandom);
+}
+
+//==========================================
+// 操作から追跡に切り替え
+//==========================================
+void CStateControl::ControlAStar(CObjectCharacter* pCharacter)
+{
+	// 追跡状態にする
+	pCharacter->ChangeMoveState(new CStateAStar);
+}
+
+//==========================================
+// 操作から停止に切り替え
+//==========================================
+void CStateControl::ControlStop(CObjectCharacter* pCharacter)
+{
+	// 停止状態にする
+	pCharacter->ChangeMoveState(new CStateStop);
+}
+
+//==========================================
+// 移動処理
+//==========================================
+void CStateControl::Move(CObjectCharacter* pCharacter, D3DXVECTOR3& pos, D3DXVECTOR3& rot)
+{
 	D3DXVECTOR3 NormarizeMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_bInput = false;			// 入力してない状態にする
 
-	// 入力してない状態にする
-	m_bInput = false;
+	// 入力処理
+	switch (pCharacter->GetType())
+	{
+	case CObject::TYPE_PLAYER3D:		// プレイヤー
+		NormarizeMove = InputKey(pCharacter, pos, rot, NormarizeMove, PLAYER_SPEED);
+		UpdateMovePlayer(pCharacter, NormarizeMove);		// 移動更新
 
-	//入力処理
-	NormarizeMove = InputKey(pPlayer, posThis, rotThis, NormarizeMove, PLAYER_SPEED);
+		break;
 
-	/*NormarizeMove = MoveInputPadStick(posThis, rotThis, NormarizeMove);
+	case CObject::TYPE_ENEMY3D:			// 敵
+		NormarizeMove = InputKey(pCharacter, pos, rot, NormarizeMove, ENEMY_SPEED);
+		UpdateMoveEnemy(pCharacter, NormarizeMove);			// 移動更新
+		break;
 
-	NormarizeMove = MoveInputPadKey(posThis, rotThis, NormarizeMove);*/
+	default:
+		break;
+	}
+}
+
+//==========================================
+// プレイヤーの状態更新処理
+//==========================================
+void CStateControl::UpdateMovePlayer(CObjectCharacter* pCharacter, D3DXVECTOR3 NormarizeMove)
+{
+	CPlayer::STATE state = pCharacter->GetState();		// プレイヤーの状態
+	D3DXVECTOR3 EggMove = pCharacter->GetEggMove();	// プレイヤーの卵移動量
 
 	if (m_bInput && state != CPlayer::STATE_ATTACK)
 	{
@@ -70,17 +116,17 @@ void CMoveState::Control(CPlayer* pPlayer, D3DXVECTOR3& posThis, D3DXVECTOR3& ro
 		NormarizeMove.z *= PLAYER_SPEED;
 
 		//移動量を代入
-		pPlayer->SetMove(NormarizeMove);
+		pCharacter->SetMove(NormarizeMove);
 
 		if (state == CPlayer::STATE_EGG)
 		{
 			// モデル数の取得
-			int nNumModel = pPlayer->GetNumModel();
+			int nNumModel = pCharacter->GetNumModel();
 
 			for (int nCnt = 0; nCnt < nNumModel; nCnt++)
 			{
 				// モデルの取得
-				CModel* pModel = pPlayer->GetModel(nCnt);
+				CModel* pModel = pCharacter->GetModel(nCnt);
 
 				if (pModel != nullptr)
 				{
@@ -111,21 +157,38 @@ void CMoveState::Control(CPlayer* pPlayer, D3DXVECTOR3& posThis, D3DXVECTOR3& ro
 			}
 
 			// 卵の移動量設定
-			pPlayer->SetEggMove(EggMove);
+			pCharacter->SetEggMove(EggMove);
 
 			//無敵状態の設定
-			pPlayer->SetInvincible(true);
-			pPlayer->SetInvincibleCount(INVINCIBLE_TIME);
+			pCharacter->SetInvincible(true);
+			pCharacter->SetInvincibleCount(INVINCIBLE_TIME);
 		}
 		//移動状態にする
-		pPlayer->SetState(CPlayer::STATE_WALK);
+		pCharacter->SetState(CObjectCharacter::STATE_WALK);
 	}
+}
+
+//==========================================
+// 敵の状態更新処理
+//==========================================
+void CStateControl::UpdateMoveEnemy(CObjectCharacter* pCharacter, D3DXVECTOR3 NormarizeMove)
+{
+	D3DXVec3Normalize(&NormarizeMove, &NormarizeMove);
+
+	NormarizeMove.x *= ENEMY_SPEED;
+	NormarizeMove.z *= ENEMY_SPEED;
+
+	//移動量を代入
+	pCharacter->SetMove(NormarizeMove);
+
+	//移動状態にする
+	pCharacter->SetState(CObjectCharacter::STATE_WALK);
 }
 
 //====================================================================
 //移動入力キーボード(キャラクター)
 //====================================================================
-D3DXVECTOR3 CMoveState::InputKey(CObjectCharacter* pCharacter, D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis, D3DXVECTOR3 Move, float fSpeed)
+D3DXVECTOR3 CStateControl::InputKey(CObjectCharacter* pCharacter, D3DXVECTOR3& pos, D3DXVECTOR3& rot, D3DXVECTOR3 Move, float fSpeed)
 {
 	//キーボードの取得
 	CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
@@ -175,62 +238,6 @@ D3DXVECTOR3 CMoveState::InputKey(CObjectCharacter* pCharacter, D3DXVECTOR3& posT
 	}
 
 	return Move;
-}
-
-//**********************************************************************
-// 操作できる状態
-//**********************************************************************
-//==========================================
-// コンストラクタ
-//==========================================
-CStateControl::CStateControl()
-{
-	m_bInput = false;			//入力を行ったかどうか
-}
-
-//==========================================
-// 操作からランダム歩行に切り替え
-//==========================================
-void CStateControl::ControlRandom(CObjectCharacter* pCharacter)
-{
-	// ランダム歩行状態にする
-	pCharacter->ChangeMoveState(new CStateRandom);
-}
-
-//==========================================
-// 操作から追跡に切り替え
-//==========================================
-void CStateControl::ControlAStar(CObjectCharacter* pCharacter)
-{
-	// 追跡状態にする
-	pCharacter->ChangeMoveState(new CStateAStar);
-}
-
-//==========================================
-// 操作から停止に切り替え
-//==========================================
-void CStateControl::ControlStop(CObjectCharacter* pCharacter)
-{
-	// 停止状態にする
-	pCharacter->ChangeMoveState(new CStateStop);
-}
-
-//==========================================
-// 移動処理
-//==========================================
-//void CStateControl::Move(CObjectCharacter* pCharacter)
-//{
-//	// 操作できる処理
-//	Control(pCharacter);
-//}
-
-//==========================================
-// 移動処理(プレイヤー)
-//==========================================
-void CStateControl::Move(CPlayer* pPlayer, D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis)
-{
-	// 操作できる処理
-	Control(pPlayer, posThis, rotThis);
 }
 
 //**********************************************************************

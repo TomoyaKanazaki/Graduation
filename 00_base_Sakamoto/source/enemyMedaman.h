@@ -23,7 +23,9 @@ public:
 	{
 		ACTION_NEUTRAL = 0,	// 待機状態
 		ACTION_MOVE,		// 移動状態
-		ACTION_TEST,		// テスト用状態
+		ACTION_PAUSE,		// 決めポーズ状態
+		ACTION_DAMAGE,		// ダメージ状態
+		ACTION_DEATH,		// 死亡状態
 		ACTION_MAX,			// 最大
 	};
 
