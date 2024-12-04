@@ -315,6 +315,21 @@ void CObjectCharacter::SetTxtCharacter(const char* pFilename)
 }
 
 //====================================================================
+// ƒ‚ƒfƒ‹İ’èˆ—
+//====================================================================
+void CObjectCharacter::SetModel(CModel* pModel, int nCnt)
+{
+	if (m_apModel[nCnt] == nullptr)
+	{
+		m_apModel[nCnt] = pModel;
+	}
+
+	assert(("ƒ‚ƒfƒ‹ã‘‚«¶¬", false));
+
+	return;
+}
+
+//====================================================================
 // ƒ‚ƒfƒ‹æ“¾ˆ—
 //====================================================================
 CModel* CObjectCharacter::GetModel(int nCnt)

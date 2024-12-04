@@ -58,9 +58,15 @@ public:
 	void Update(void);
 	void Draw(void);
 
+	void SetTxtCharacter(const char* pFilename);
+
 	void SetModelColor(CModel::COLORTYPE Type, D3DXCOLOR Col);
+
+	void SetModel(CModel* pModel, int nCnt);
 	CModel* GetModel(int nCnt);
 	CMotion* GetMotion(void);
+
+	void SetNumModel(int nNumModel) { m_nNumModel = nNumModel; }
 	int GetNumModel(void) { return m_nNumModel; }
 
 	void SetUseMultiMatrix(D3DXMATRIX* Set) { m_UseMultiMatrix = Set; }
@@ -89,9 +95,6 @@ public:
 	STATE GetState(void) { return m_State; }
 	void SetOldState(STATE State) { m_OldState = State; }
 	STATE GetOldState(void) { return m_OldState; }
-
-
-	void SetTxtCharacter(const char* pFilename);
 
 	// ˆÚ“®ó‘ÔƒNƒ‰ƒX—p
 	void SetEggMove(D3DXVECTOR3 EggMove) { m_EggMove = EggMove; }	// —‘‚ÌˆÚ“®—Êİ’è
