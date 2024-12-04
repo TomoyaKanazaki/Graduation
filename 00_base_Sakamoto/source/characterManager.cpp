@@ -438,11 +438,8 @@ bool CCharacterManager::LoadMotion(const char* pFileName, int nNumCharacter)
 					}
 					else if (strcmp(&aMessage[0], "END_SCRIPT") == 0)
 					{
-						// エラー回避用（すぐ消す）
-						int nNumMotion = 0;
-
 						// モデル管理にモーション数代入
-						m_aCharacterInfo[nNumCharacter].MotionManager.nNumMotion = nNumMotion;
+						m_aCharacterInfo[nNumCharacter].MotionManager.nNumMotion = nCntMotion;
 
 						for (int nCnt = 0; nCnt < nCntMotion; nCnt++)
 						{
