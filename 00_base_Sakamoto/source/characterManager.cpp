@@ -46,10 +46,10 @@ int CCharacterManager::Regist(const char* pFilename)
 //====================================================================
 // モデルロード処理
 //====================================================================
-void CCharacterManager::LoadModel(const char* pFilename , int nNumCharacter)
+void CCharacterManager::LoadModel(const char* pFileName, int nNumCharacter)
 {
 	//ファイルを開く
-	FILE* pFile = fopen(pFilename, "r");
+	FILE* pFile = fopen(pFileName, "r");
 
 	if (pFile != nullptr)
 	{//ファイルが開けた場合
@@ -157,6 +157,149 @@ void CCharacterManager::LoadModel(const char* pFilename , int nNumCharacter)
 					m_aCharacterInfo[nNumCharacter].ModelManager.aModelParts[nCnt] = ModelParts[nCntModel];
 				}
 
+				break;
+			}
+		}
+		fclose(pFile);
+	}
+	else
+	{//ファイルが開けなかった場合
+		printf("***ファイルを開けませんでした***\n");
+	}
+}
+
+//====================================================================
+// モーションのロード処理
+//====================================================================
+void CCharacterManager::LoadMotion(const char* pFileName, int nNumCharacter)
+{
+	FILE* pFile; //ファイルポインタを宣言
+
+	//ファイルを開く
+	pFile = fopen(pFileName, "r");
+
+	if (pFile != nullptr)
+	{//ファイルが開けた場合
+
+		int nCntMotion = 0;
+		int nCntKeyInfo = 0;
+		int nCntKey = 0;
+
+		int nNumMotion = 0;
+		MotionInfo MotionInfo[MAX_MOTION] = {};
+
+		char aString[128] = {};			//ゴミ箱
+		char aMessage[128] = {};		//スタートメッセージ
+		char aBool[128] = {};			//bool変換用メッセージ
+
+		// 読み込み開始-----------------------------------------------------
+		while (1)
+		{//「SCRIPT」を探す
+			fscanf(pFile, "%s", &aMessage[0]);
+			if (strcmp(&aMessage[0], "SCRIPT") == 0)
+			{
+				// モーション情報読み込み-----------------------------------------------------
+				while (1)
+				{//「MOTIONSET」を探す
+					fscanf(pFile, "%s", &aMessage[0]);
+					if (strcmp(&aMessage[0], "MOTIONSET") == 0)
+					{
+						while (1)
+						{//各種変数を探す
+							fscanf(pFile, "%s", &aMessage[0]);
+							if (strcmp(&aMessage[0], "LOOP") == 0)
+							{
+								fscanf(pFile, "%s", &aString[0]);
+								fscanf(pFile, "%s", &aBool[0]);	//ループするかどうかを設定
+
+								MotionInfo[nCntMotion].bLoop = (strcmp(&aBool[0], "1") == 0 ? true : false);			//bool型の書き方
+							}
+							if (strcmp(&aMessage[0], "NUM_KEY") == 0)
+							{
+								fscanf(pFile, "%s", &aString[0]);
+								fscanf(pFile, "%d", &MotionInfo[nCntMotion].nNumKey);	//キーの総数を設定
+								break;
+							}
+						}
+
+						// キー情報読み込み-----------------------------------------------------
+						while (1)
+						{//「KEYSET」を探す
+							fscanf(pFile, "%s", &aMessage[0]);
+							if (strcmp(&aMessage[0], "KEYSET") == 0)
+							{
+								while (1)
+								{//「FRAME」を探す
+									fscanf(pFile, "%s", &aMessage[0]);
+									if (strcmp(&aMessage[0], "FRAME") == 0)
+									{
+										fscanf(pFile, "%s", &aString[0]);
+										fscanf(pFile, "%d", &MotionInfo[nCntMotion].aKeyInfo[nCntKeyInfo].nFrame);	//キーフレームを設定
+										break;
+									}
+								}
+
+								while (1)
+								{//「KEY」を探す
+									fscanf(pFile, "%s", &aMessage[0]);
+									if (strcmp(&aMessage[0], "KEY") == 0)
+									{
+										while (1)
+										{//各種変数を探す
+											fscanf(pFile, "%s", &aMessage[0]);
+											if (strcmp(&aMessage[0], "POS") == 0)
+											{
+												fscanf(pFile, "%s", &aString[0]);
+												fscanf(pFile, "%f", &MotionInfo[nCntMotion].aKeyInfo[nCntKey].aKey[nCntKey].pos.x);	//位置を設定
+												fscanf(pFile, "%f", &MotionInfo[nCntMotion].aKeyInfo[nCntKey].aKey[nCntKey].pos.y);	//位置を設定
+												fscanf(pFile, "%f", &MotionInfo[nCntMotion].aKeyInfo[nCntKey].aKey[nCntKey].pos.z);	//位置を設定
+											}
+											if (strcmp(&aMessage[0], "ROT") == 0)
+											{
+												fscanf(pFile, "%s", &aString[0]);
+												fscanf(pFile, "%f", &MotionInfo[nCntMotion].aKeyInfo[nCntKey].aKey[nCntKey].rot.x);	//向きを設定
+												fscanf(pFile, "%f", &MotionInfo[nCntMotion].aKeyInfo[nCntKey].aKey[nCntKey].rot.y);	//向きを設定
+												fscanf(pFile, "%f", &MotionInfo[nCntMotion].aKeyInfo[nCntKey].aKey[nCntKey].rot.z);	//向きを設定
+												break;
+											}
+										}
+									}
+									if (strcmp(&aMessage[0], "END_KEY") == 0)
+									{
+										nCntKey++;
+
+										if (nCntKey >= nCntMotion)
+										{
+											break;
+										}
+									}
+								}
+							}
+							if (strcmp(&aMessage[0], "END_KEYSET") == 0)
+							{
+								nCntKey = 0;
+								nCntKeyInfo++;
+
+								if (nCntKeyInfo >= MotionInfo[nCntMotion].nNumKey)
+								{
+									break;
+								}
+							}
+						}
+					}
+					if (strcmp(&aMessage[0], "END_MOTIONSET") == 0)
+					{
+						nCntKeyInfo = 0;
+						nCntMotion++;
+					}
+					else if (strcmp(&aMessage[0], "END_SCRIPT") == 0)
+					{
+						break;
+					}
+				}
+			}
+			if (strcmp(&aMessage[0], "END_SCRIPT") == 0)
+			{
 				break;
 			}
 		}
