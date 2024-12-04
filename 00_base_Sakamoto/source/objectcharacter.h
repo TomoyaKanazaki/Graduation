@@ -9,6 +9,7 @@
 
 #include "object.h"
 #include "Model.h"
+#include "MapSystem.h"
 
 class CModel;
 class CMotion;
@@ -22,6 +23,19 @@ class CMoveState;		// 移動の状態
 class CObjectCharacter : public CObject
 {
 public:
+	//状態
+	enum STATE
+	{
+		STATE_WAIT = 0,		//待機
+		STATE_WALK,			//歩き
+		STATE_DEATH,		//死亡
+		STATE_EGG,			//卵
+		STATE_ATTACK,		//攻撃
+		STATE_TRUN,			//方向転換
+
+		STATE_MAX,			//最大
+		STATE_NONE
+	};
 
 	// 移動の進行状況を管理する構造体
 	struct PROGGRESS
@@ -77,9 +91,21 @@ public:
 	void SetObjMoveX(float move) { m_Objmove.x = move; }
 	void SetObjMoveZ(float move) { m_Objmove.z = move; }
 	D3DXVECTOR3 GetObjMove(void) { return m_Objmove; }
+	void SetState(STATE State) { m_State = State; }
+	STATE GetState(void) { return m_State; }
+
+	// 移動状態クラス用
+	void SetEggMove(D3DXVECTOR3 EggMove) { m_EggMove = EggMove; }	// 卵の移動量設定
+	virtual D3DXVECTOR3 GetEggMove() { return m_EggMove; }			// 卵の移動量取得
+	void SetInvincible(bool bInvincible) { m_bInvincible = bInvincible; }		// 無敵かどうか
+	void SetInvincibleCount(int nInvincibleCount) { m_nInvincibleCount = nInvincibleCount; }		// 無敵時間
+
+	// マップ番号の設定
+	virtual void SetGrid(const CMapSystem::GRID& pos) { m_Grid = pos; }
+	CMapSystem::GRID GetGrid(void) { return m_Grid; }
 
 	// 移動状態
-	void ChangeMoveState(CMoveState* pMoveState);   // 移動状態変更
+	virtual void ChangeMoveState(CMoveState* pMoveState);   // 移動状態変更
 	CMoveState* GetMoveState() { return m_pMoveState; }	// 移動状態の情報取得
 
 	PROGGRESS GetProgress() { return m_Progress; }		// 移動の進行許可状況取得
@@ -88,8 +114,8 @@ public:
 protected:
 
 	CShadow* m_pShadow;
-	CMoveState* m_pMoveState;		// 移動状態
 	PROGGRESS m_Progress;			// 移動の進行許可状況
+	CMapSystem::GRID m_Grid;		//グリット番号
 
 	D3DXVECTOR3 m_move;				//移動量
 	D3DXVECTOR3 m_Objmove;			//オブジェクトから影響される移動量
@@ -117,6 +143,14 @@ private:
 	bool m_bUseStencil;				// ステンシルバッファの使用の有無
 	bool m_bUseShadowMtx;			// シャドウマトリックスの使用の有無
 	bool m_bUseShadow;				// 影の使用フラグ
+
+	STATE m_State;					//状態
+	D3DXVECTOR3 m_EggMove;			//卵の動き
+	bool m_bInvincible;				//無敵かどうか
+	int m_nInvincibleCount;			//無敵時間
+
+	CMoveState* m_pMoveState;		// 移動状態
+
 };
 
 #endif
