@@ -329,7 +329,6 @@ bool CCharacterManager::LoadMotion(const char* pFileName, int nNumCharacter)
 		int nCntKeyInfo = 0;
 		int nCntKey = 0;
 
-		int nNumMotion = 0;
 		MotionInfo MotionInfo[MAX_MOTION] = {};
 
 		char aString[128] = {};			//ÉSÉ~î†

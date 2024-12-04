@@ -274,6 +274,9 @@
     <ClCompile Include="source\characterManager.cpp">
       <Filter>ソース ファイル\00_System</Filter>
     </ClCompile>
+    <ClCompile Include="source\footprint.cpp">
+      <Filter>ソース ファイル\08_player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\debugproc.h">
@@ -512,6 +515,9 @@
     </ClInclude>
     <ClInclude Include="source\characterManager.h">
       <Filter>ソース ファイル\00_System</Filter>
+    </ClInclude>
+    <ClInclude Include="source\footprint.h">
+      <Filter>ソース ファイル\08_player</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -40,6 +40,7 @@
 #include "move.h"
 
 #include "MyEffekseer.h"
+#include "footprint.h"
 
 //===========================================
 // 定数定義
@@ -93,6 +94,7 @@ m_bInput(false),
 m_pLifeUi(nullptr),
 m_nLife(0),
 m_eItemType(TYPE_NONE),
+m_OldGrid(0, 0),
 m_bGritCenter(true),
 m_bPressObj(false),
 m_fCrossTimer(0.0f),
@@ -310,6 +312,7 @@ void CPlayer::Update(void)
 
 	// 過去の位置に代入
 	posOldThis = posThis;
+	m_OldGrid = m_Grid;
 
 	if (state != STATE_DEATH)
 	{
@@ -452,6 +455,7 @@ void CPlayer::Update(void)
 	{
 		ControlEffect(m_pEffectGuide, &m_pShadow->GetPos()); // 復活位置のガイドエフェクト
 	}
+	PrintFoot(rotThis);
 }
 
 //====================================================================
@@ -1753,6 +1757,20 @@ void CPlayer::EggMove(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis)
 			}
 		}
 	}
+}
+
+//==========================================
+//  足跡の設置
+//==========================================
+void CPlayer::PrintFoot(const D3DXVECTOR3& rotThis)
+{
+	// 前回グリッドと現在のグリッドが一致していた場合関数を抜ける
+	if (m_Grid == m_OldGrid) { return; }
+
+	// 足跡を設定
+	D3DXVECTOR3 rot = rotThis;
+	rot.y += D3DX_PI;
+	CFootPrint::Create(m_OldGrid, rot);
 }
 
 //==========================================
