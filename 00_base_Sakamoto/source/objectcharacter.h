@@ -44,9 +44,15 @@ public:
 	void Update(void);
 	void Draw(void);
 
+	void SetTxtCharacter(const char* pFilename);
+
 	void SetModelColor(CModel::COLORTYPE Type, D3DXCOLOR Col);
+
+	void SetModel(CModel* pModel, int nCnt);
 	CModel* GetModel(int nCnt);
 	CMotion* GetMotion(void);
+
+	void SetNumModel(int nNumModel) { m_nNumModel = nNumModel; }
 	int GetNumModel(void) { return m_nNumModel; }
 
 	void SetUseMultiMatrix(D3DXMATRIX* Set) { m_UseMultiMatrix = Set; }
@@ -71,9 +77,6 @@ public:
 	void SetObjMoveX(float move) { m_Objmove.x = move; }
 	void SetObjMoveZ(float move) { m_Objmove.z = move; }
 	D3DXVECTOR3 GetObjMove(void) { return m_Objmove; }
-
-
-	void SetTxtCharacter(const char* pFilename);
 
 	// ˆÚ“®ó‘Ô
 	void ChangeMoveState(CMoveState* pMoveState);   // ˆÚ“®ó‘Ô•ÏX
