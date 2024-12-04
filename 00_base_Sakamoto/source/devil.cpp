@@ -39,6 +39,7 @@
 #include "SlopeDevice.h"
 #include "effect.h"
 #include "signal.h"
+#include "friedegg.h"
 
 //===========================================
 // 定数定義
@@ -52,7 +53,7 @@ namespace
 
 	int SCROOL_COUNT_02 = 12;					// スクロールの移動回数
 	int SCROOL_MOVEGRID_02 = 3;					// スクロールの移動マス幅
-	float SCROOL_SPEED_02 = (CMapSystem::GetGritSize() * SCROOL_MOVEGRID_02) / SCROOL_COUNT_02;				// スクロールの移動速度
+	float SCROOL_SPEED_02 = (CMapSystem::GetGritSize() * SCROOL_MOVEGRID_02) / SCROOL_COUNT_02;			// スクロールの移動速度
 
 	int SLOPE_TIME = 300;						// 傾き操作時間
 	int SLOPE_RAND = 25;						// 傾き発生確率
@@ -707,7 +708,7 @@ void CDevil::CollisionOut()
 
 		//m_MinGrid.x = CMapSystem::GetInstance()->CalcGridX(m_DevilPos.x - MapSize.x - GritSize);	//左
 		//m_MaxGrid.x = CMapSystem::GetInstance()->CalcGridX(m_DevilPos.x + MapSize.x - GritSize);	//右
-		//m_MinGrid.z = CMapSystem::GetInstance()->CalcGridZ(m_DevilPos.z + MapSize.z + GritSize - 1.0f);	//上
+		//m_MinGrid.z = CMapSystem::GetInstance()->CalcGridZ(m_DevilPos.z + MapSize.z + GritSize);	//上
 		//m_MaxGrid.z = CMapSystem::GetInstance()->CalcGridZ(m_DevilPos.z - MapSize.z + GritSize);	//下
 
 		//if (EnemyGrid.x == m_MinGrid.x)		//左
@@ -1017,7 +1018,7 @@ void CDevil::StateManager(void)
 			break;
 		}
 
-		if (m_nStateCount <= 0)
+		if (m_nStateCount <= 1)
 		{
 			m_State = STATE_WAIT;
 			m_nStateCount = 120;
@@ -1227,6 +1228,9 @@ void CDevil::ObjectScroll(D3DXVECTOR3 Move)
 
 	// 壁のスクロール
 	WallScroll(Move, m_GritSize);
+
+	// 目玉焼きのスクロール
+	FriedEggScroll(Move, m_GritSize);
 }
 
 //====================================================================
@@ -1366,11 +1370,11 @@ void CDevil::TileScroll(D3DXVECTOR3 Move, float GritSize)
 //====================================================================
 void CDevil::WallScroll(D3DXVECTOR3 Move, float GritSize)
 {
-	// 十字架のリスト構造が無ければ抜ける
+	// 壁のリスト構造が無ければ抜ける
 	if (CWall::GetList() == nullptr) { return; }
 	std::list<CWall*> list = CWall::GetList()->GetList();    // リストを取得
 
-	// キューブブロックのリストの中身を確認する
+	// 壁のリストの中身を確認する
 	for (CWall* pWall : list)
 	{
 		// 縦横のナンバーと高さを設定する
@@ -1384,6 +1388,27 @@ void CDevil::WallScroll(D3DXVECTOR3 Move, float GritSize)
 	}
 }
 
+//==========================================
+//  目玉焼きのスクロール
+//==========================================
+void CDevil::FriedEggScroll(D3DXVECTOR3 Move, float GritSize)
+{
+	// 目玉焼きのリスト構造が無ければ抜ける
+	if (CFriedEgg::GetList() == nullptr) { return; }
+	std::list<CFriedEgg*> list = CFriedEgg::GetList()->GetList();    // リストを取得
+
+	// 目玉焼きのリストの中身を確認する
+	for (CFriedEgg* pEgg : list)
+	{
+		// 縦横のナンバーと高さを設定する
+		D3DXVECTOR3 pos = INITVECTOR3;
+
+		//グリット番号を位置に変換
+		pos = pEgg->GetGrid().ToWorld();
+
+		pEgg->SetPos(pos);
+	}
+}
 
 //====================================================================
 // プレイヤーのスクロール

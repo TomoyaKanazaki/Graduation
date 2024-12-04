@@ -56,8 +56,6 @@ private:
 	float m_fColorA;		//不透明度
 	float m_Scaling;		//大きさ
 
-	bool m_UseItem;			//アイテムが使用可能かどうか
-
 	D3DXVECTOR3 m_rot;		//回転量
 
 	// 静的メンバ変数

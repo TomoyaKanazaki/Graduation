@@ -10,20 +10,13 @@
 #include "manager.h"
 #include "Xmodel.h"
 
-//静的メンバ変数宣言
-int CCharacterManager::m_NumAll = 0;
-
-char CCharacterManager::c_apTexturename[MAX_CHARACTER][128] = {};
-
 //====================================================================
 //コンストラクタ
 //====================================================================
 CCharacterManager::CCharacterManager()
 {
-	for (int nCntTex = 0; nCntTex < MAX_CHARACTER; nCntTex++)
-	{
-		m_apTexture[nCntTex] = nullptr;
-	}
+	ZeroMemory(&m_aCharacterInfo[0], sizeof(m_aCharacterInfo));
+	m_nNumAll = 0;
 }
 
 //====================================================================
@@ -35,85 +28,15 @@ CCharacterManager::~CCharacterManager()
 }
 
 //====================================================================
-//読み込み
-//====================================================================
-HRESULT CCharacterManager::Load(void)
-{
-	////デバイスの取得
-	//LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
-
-	//for (int nCntTex = 0; nCntTex < MAX_TEXTURE; nCntTex++)
-	//{
-	//	//テクスチャの読み込み
-	//	if (FAILED(D3DXCreateTextureFromFile(pDevice,
-	//		c_apTexturename[nCntTex],
-	//		&m_apTexture[nCntTex])))
-	//	{
-	//		if (c_apTexturename[nCntTex] == nullptr)
-	//		{
-	//			m_NumAll = nCntTex;
-	//			return S_OK;
-	//		}
-	//		else
-	//		{
-	//			return E_FAIL;
-	//		}
-	//	}
-	//	else
-	//	{
-	//		int a = 0;
-	//	}
-	//}
-
-	return S_OK;
-}
-
-//====================================================================
-//破棄
-//====================================================================
-void CCharacterManager::Unload(void)
-{
-	for (int nCntTex = 0; nCntTex < m_NumAll; nCntTex++)
-	{
-		//テクスチャの破棄
-		if (m_apTexture[nCntTex] != nullptr)
-		{
-			m_apTexture[nCntTex]->Release();
-			m_apTexture[nCntTex] = nullptr;
-		}
-	}
-}
-
-//====================================================================
-//テクスチャの番号指定
+// テクスチャの番号指定
 //====================================================================
 int CCharacterManager::Regist(const char* pFilename)
 {
-	for (int nCntTex = 0; nCntTex < m_NumAll; nCntTex++)
+	for (int nCntCharacter = 0; nCntCharacter < m_nNumAll; nCntCharacter++)
 	{
-		if (strcmp(&c_apTexturename[nCntTex][0], pFilename) == 0)
+		if (strcmp(&m_aCharacterInfo[nCntCharacter].acFileName[0], pFilename) == 0)
 		{
-			return nCntTex;
-		}
-	}
-
-	//デバイスの取得
-	LPDIRECT3DDEVICE9 m_pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
-
-	//テクスチャの読み込み
-	if (SUCCEEDED(D3DXCreateTextureFromFile(m_pDevice,
-		pFilename,
-		&m_apTexture[m_NumAll])))
-	{
-		if (strcmp(&c_apTexturename[m_NumAll][0], "") == 0)
-		{
-			strcpy(&c_apTexturename[m_NumAll][0], pFilename);
-			m_NumAll++;
-			return m_NumAll - 1;
-		}
-		else
-		{
-			return -1;
+			return nCntCharacter;
 		}
 	}
 
@@ -121,61 +44,269 @@ int CCharacterManager::Regist(const char* pFilename)
 }
 
 //====================================================================
-//テクスチャの番号指定
+// モデルロード処理
 //====================================================================
-void CCharacterManager::XModelRegist(int* nTexIdx, int nXModelIdx)
+void CCharacterManager::LoadModel(const char* pFileName, int nNumCharacter)
 {
-	int nCheck = -1;
+	//ファイルを開く
+	FILE* pFile = fopen(pFileName, "r");
 
-	//デバイスの取得
-	LPDIRECT3DDEVICE9 m_pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
-	D3DXMATERIAL* pMat;	//マテリアルへのポインタ
+	if (pFile != nullptr)
+	{//ファイルが開けた場合
 
-	//Xモデルの取得
-	CXModel::XModel* pXmodel = CManager::GetInstance()->GetXModel()->GetXModel(nXModelIdx);
+		int nCntModel = 0;
 
-	//マテリアル情報に対するポインタを所得
-	pMat = (D3DXMATERIAL*)pXmodel->m_pBuffMat->GetBufferPointer();
+		int nNumModel = 0;
+		ModelParts ModelParts[MAX_MODEL_PARTS] = {};
 
-	for (int nCntMat = 0; nCntMat < (int)pXmodel->m_dwNumMat; nCntMat++)
-	{
-		nCheck = -1;
-		if (pMat[nCntMat].pTextureFilename != nullptr)
-		{
-			for (int nCntTex = 0; nCntTex < m_NumAll; nCntTex++)
+		char aString[128] = {};				//ゴミ箱
+		char aMessage[128] = {};			//スタートとエンドのメッセージ
+
+		// 読み込み開始-----------------------------------------------------
+		while (1)
+		{//「SCRIPT」を探す
+			fscanf(pFile, "%s", &aMessage[0]);
+			if (strcmp(&aMessage[0], "SCRIPT") == 0)
 			{
-				if (strcmp(&c_apTexturename[nCntTex][0], pMat[nCntMat].pTextureFilename) == 0)
-				{
-					nTexIdx[nCntMat] = nCntTex;
-					nCheck = nCntTex;
+				// モデル数読み込み-----------------------------------------------------
+				while (1)
+				{//「NUM_MODEL」を探す
+					fscanf(pFile, "%s", &aMessage[0]);
+					if (strcmp(&aMessage[0], "NUM_MODEL") == 0)
+					{
+						fscanf(pFile, "%s", &aString[0]);
+						fscanf(pFile, "%d", &nNumModel);		//モデル数の設定
+						break;
+					}
+				}
+
+				//モデルファイルの読み込み
+				while (1)
+				{//「MODEL_FILENAME」を探す
+					fscanf(pFile, "%s", &aMessage[0]);
+					if (strcmp(&aMessage[0], "MODEL_FILENAME") == 0)
+					{
+						fscanf(pFile, "%s", &aString[0]);
+						fscanf(pFile, "%s", &ModelParts[nCntModel].acModelFileName[0]);		//読み込むモデルのパスを取得
+
+						nCntModel++;
+					}
+					if (nCntModel >= nNumModel)
+					{
+						nCntModel = 0;
+						break;
+					}
+				}
+
+				// キャラクター情報読み込み-----------------------------------------------------
+				while (1)
+				{//「PARTSSET」を探す
+					fscanf(pFile, "%s", &aMessage[0]);
+					if (strcmp(&aMessage[0], "PARTSSET") == 0)
+					{
+						while (1)
+						{//各種変数を探す
+							fscanf(pFile, "%s", &aMessage[0]);
+							if (strcmp(&aMessage[0], "INDEX") == 0)
+							{
+								fscanf(pFile, "%s", &aString[0]);
+								fscanf(pFile, "%d", &ModelParts[nCntModel].nIndex);		//インデックスを設定
+								nCntModel = ModelParts[nCntModel].nIndex;
+							}
+							if (strcmp(&aMessage[0], "PARENT") == 0)
+							{
+								fscanf(pFile, "%s", &aString[0]);
+								fscanf(pFile, "%d", &ModelParts[nCntModel].nParent);	//親モデルのインデックスを設定
+							}
+							if (strcmp(&aMessage[0], "POS") == 0)
+							{
+								fscanf(pFile, "%s", &aString[0]);
+								fscanf(pFile, "%f", &ModelParts[nCntModel].pos.x);	// 位置(オフセット)の初期設定
+								fscanf(pFile, "%f", &ModelParts[nCntModel].pos.y);	// 位置(オフセット)の初期設定
+								fscanf(pFile, "%f", &ModelParts[nCntModel].pos.z);	// 位置(オフセット)の初期設定
+							}
+							if (strcmp(&aMessage[0], "ROT") == 0)
+							{
+								fscanf(pFile, "%s", &aString[0]);
+								fscanf(pFile, "%f", &ModelParts[nCntModel].rot.x);	// 向き（オフセット）の初期設定
+								fscanf(pFile, "%f", &ModelParts[nCntModel].rot.y);	// 向き（オフセット）の初期設定
+								fscanf(pFile, "%f", &ModelParts[nCntModel].rot.z);	// 向き（オフセット）の初期設定
+							}
+
+							if (strcmp(&aMessage[0], "END_PARTSSET") == 0)
+							{
+								break;
+							}
+						}
+
+						nCntModel++;
+
+						if (nCntModel >= nNumModel)
+						{
+							break;
+						}
+					}
 				}
 			}
-
-			if (nTexIdx[nCntMat] != nCheck)
+			if (strcmp(&aMessage[0], "END_SCRIPT") == 0)
 			{
-				//テクスチャの読み込み
-				if (SUCCEEDED(D3DXCreateTextureFromFile(m_pDevice,
-					pMat[nCntMat].pTextureFilename,
-					&m_apTexture[m_NumAll])))
+				m_aCharacterInfo[nNumCharacter].ModelManager.nNumModel = nNumModel;
+
+				for (int nCnt = 0; nCnt < nCntModel; nCnt++)
 				{
-					strcpy(&c_apTexturename[m_NumAll][0], pMat[nCntMat].pTextureFilename);
-					m_NumAll++;
-					nTexIdx[nCntMat] = m_NumAll - 1;
+					m_aCharacterInfo[nNumCharacter].ModelManager.aModelParts[nCnt] = ModelParts[nCntModel];
 				}
+
+				break;
 			}
 		}
-		else
-		{
-			m_apTexture[m_NumAll] = nullptr;
-			nTexIdx[nCntMat] = -1;
-		}
+		fclose(pFile);
+	}
+	else
+	{//ファイルが開けなかった場合
+		printf("***ファイルを開けませんでした***\n");
 	}
 }
 
 //====================================================================
-//指定のテクスチャを返す
+// モーションのロード処理
 //====================================================================
-LPDIRECT3DTEXTURE9 CCharacterManager::GetAddress(int nIdx)
+void CCharacterManager::LoadMotion(const char* pFileName, int nNumCharacter)
 {
-	return m_apTexture[nIdx];
+	FILE* pFile; //ファイルポインタを宣言
+
+	//ファイルを開く
+	pFile = fopen(pFileName, "r");
+
+	if (pFile != nullptr)
+	{//ファイルが開けた場合
+
+		int nCntMotion = 0;
+		int nCntKeyInfo = 0;
+		int nCntKey = 0;
+
+		int nNumMotion = 0;
+		MotionInfo MotionInfo[MAX_MOTION] = {};
+
+		char aString[128] = {};			//ゴミ箱
+		char aMessage[128] = {};		//スタートメッセージ
+		char aBool[128] = {};			//bool変換用メッセージ
+
+		// 読み込み開始-----------------------------------------------------
+		while (1)
+		{//「SCRIPT」を探す
+			fscanf(pFile, "%s", &aMessage[0]);
+			if (strcmp(&aMessage[0], "SCRIPT") == 0)
+			{
+				// モーション情報読み込み-----------------------------------------------------
+				while (1)
+				{//「MOTIONSET」を探す
+					fscanf(pFile, "%s", &aMessage[0]);
+					if (strcmp(&aMessage[0], "MOTIONSET") == 0)
+					{
+						while (1)
+						{//各種変数を探す
+							fscanf(pFile, "%s", &aMessage[0]);
+							if (strcmp(&aMessage[0], "LOOP") == 0)
+							{
+								fscanf(pFile, "%s", &aString[0]);
+								fscanf(pFile, "%s", &aBool[0]);	//ループするかどうかを設定
+
+								MotionInfo[nCntMotion].bLoop = (strcmp(&aBool[0], "1") == 0 ? true : false);			//bool型の書き方
+							}
+							if (strcmp(&aMessage[0], "NUM_KEY") == 0)
+							{
+								fscanf(pFile, "%s", &aString[0]);
+								fscanf(pFile, "%d", &MotionInfo[nCntMotion].nNumKey);	//キーの総数を設定
+								break;
+							}
+						}
+
+						// キー情報読み込み-----------------------------------------------------
+						while (1)
+						{//「KEYSET」を探す
+							fscanf(pFile, "%s", &aMessage[0]);
+							if (strcmp(&aMessage[0], "KEYSET") == 0)
+							{
+								while (1)
+								{//「FRAME」を探す
+									fscanf(pFile, "%s", &aMessage[0]);
+									if (strcmp(&aMessage[0], "FRAME") == 0)
+									{
+										fscanf(pFile, "%s", &aString[0]);
+										fscanf(pFile, "%d", &MotionInfo[nCntMotion].aKeyInfo[nCntKeyInfo].nFrame);	//キーフレームを設定
+										break;
+									}
+								}
+
+								while (1)
+								{//「KEY」を探す
+									fscanf(pFile, "%s", &aMessage[0]);
+									if (strcmp(&aMessage[0], "KEY") == 0)
+									{
+										while (1)
+										{//各種変数を探す
+											fscanf(pFile, "%s", &aMessage[0]);
+											if (strcmp(&aMessage[0], "POS") == 0)
+											{
+												fscanf(pFile, "%s", &aString[0]);
+												fscanf(pFile, "%f", &MotionInfo[nCntMotion].aKeyInfo[nCntKey].aKey[nCntKey].pos.x);	//位置を設定
+												fscanf(pFile, "%f", &MotionInfo[nCntMotion].aKeyInfo[nCntKey].aKey[nCntKey].pos.y);	//位置を設定
+												fscanf(pFile, "%f", &MotionInfo[nCntMotion].aKeyInfo[nCntKey].aKey[nCntKey].pos.z);	//位置を設定
+											}
+											if (strcmp(&aMessage[0], "ROT") == 0)
+											{
+												fscanf(pFile, "%s", &aString[0]);
+												fscanf(pFile, "%f", &MotionInfo[nCntMotion].aKeyInfo[nCntKey].aKey[nCntKey].rot.x);	//向きを設定
+												fscanf(pFile, "%f", &MotionInfo[nCntMotion].aKeyInfo[nCntKey].aKey[nCntKey].rot.y);	//向きを設定
+												fscanf(pFile, "%f", &MotionInfo[nCntMotion].aKeyInfo[nCntKey].aKey[nCntKey].rot.z);	//向きを設定
+												break;
+											}
+										}
+									}
+									if (strcmp(&aMessage[0], "END_KEY") == 0)
+									{
+										nCntKey++;
+
+										if (nCntKey >= nCntMotion)
+										{
+											break;
+										}
+									}
+								}
+							}
+							if (strcmp(&aMessage[0], "END_KEYSET") == 0)
+							{
+								nCntKey = 0;
+								nCntKeyInfo++;
+
+								if (nCntKeyInfo >= MotionInfo[nCntMotion].nNumKey)
+								{
+									break;
+								}
+							}
+						}
+					}
+					if (strcmp(&aMessage[0], "END_MOTIONSET") == 0)
+					{
+						nCntKeyInfo = 0;
+						nCntMotion++;
+					}
+					else if (strcmp(&aMessage[0], "END_SCRIPT") == 0)
+					{
+						break;
+					}
+				}
+			}
+			if (strcmp(&aMessage[0], "END_SCRIPT") == 0)
+			{
+				break;
+			}
+		}
+		fclose(pFile);
+	}
+	else
+	{//ファイルが開けなかった場合
+		printf("***ファイルを開けませんでした***\n");
+	}
 }
