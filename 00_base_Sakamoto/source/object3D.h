@@ -32,17 +32,18 @@ public:
 	void SetAnim(D3DXVECTOR2 Tex);															//テクスチャ座標の設定
 	void SetColor(D3DXCOLOR col);															//頂点カラーの設定
 	void SetAlpha(float A) { m_Color.a = A; SetColor(m_Color); }							//頂点不透明度の設定
+	float GetAlpha() { return m_Color.a; }							//頂点不透明度の設定
 	void SetTexture(const char *name);
 
 	void SetVtx(const D3DXVECTOR3& size);
 
-	void SetPos(D3DXVECTOR3 pos) { m_pos = pos; }
+	virtual void SetPos(const D3DXVECTOR3& pos) { m_pos = pos; }
 	D3DXVECTOR3 GetPos(void) { return m_pos; }
-	void SetPosOld(D3DXVECTOR3 pos) { m_posOld = pos; }
+	void SetPosOld(const D3DXVECTOR3& pos) { m_posOld = pos; }
 	D3DXVECTOR3 GetPosOld(void) { return m_posOld; }
-	void SetRot(D3DXVECTOR3 rot) { m_rot = rot; }
+	void SetRot(const D3DXVECTOR3& rot) { m_rot = rot; }
 	D3DXVECTOR3 GetRot(void) { return m_rot; }
-	void SetSize(D3DXVECTOR3 size) { m_size = size; }
+	void SetSize(const D3DXVECTOR3& size) { m_size = size; }
 	D3DXVECTOR3 GetSize(void) { return m_size; }
 	void SetAddDorw(bool Set) { m_AddDarw = Set; }
 	bool GetAddDorw(void) { return m_AddDarw; }

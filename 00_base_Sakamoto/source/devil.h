@@ -38,10 +38,12 @@ public:
 	enum ACTION_TYPE
 	{
 		ACTION_NEUTRAL = 0,			// 待機
-		ACTION_SIGNAL_UP,			// 傾き信号「上」
+		ACTION_GOMI00,				// ゴミデータ00
 		ACTION_SIGNAL_DOWN,			// 傾き信号「下」
 		ACTION_SIGNAL_LEFT,			// 傾き信号「左」
 		ACTION_SIGNAL_RIGHT,		// 傾き信号「右」
+		ACTION_SIGNAL_UP,			// 傾き信号「上」
+		ACTION_RUN,					// 逃げる
 		ACTION_KING,				// 玉座
 		ACTION_MAX,					// 最大
 	};
@@ -113,6 +115,7 @@ private:
 	void WallScroll(D3DXVECTOR3 Move, float GritSize);	// 壁のスクロール
 	void FriedEggScroll(D3DXVECTOR3 Move, float GritSize);	// 目玉焼きのスクロール
 	void SignalScroll(void);
+	void SignalSlope(int Num);
 
 	void GritScroll(D3DXVECTOR3 Move);		//グリットのスクロール
 	void CollisionPressPlayer(CPlayer* pPlayer, D3DXVECTOR3 pos, D3DXVECTOR3 Size);	//プレイヤーが潰される時の処理
@@ -136,7 +139,7 @@ private:
 	CMapSystem::GRID m_MinGrid;		//マップで一番左上にあるブロックの番号
 	CMapSystem::GRID m_MaxGrid;		//マップで一番右下にあるブロックの番号
 
-	CSignal* m_pSignal[2];				//矢印モデルのポインタ
+	CSignal* m_pSignal[4];				//矢印モデルのポインタ
 
 	float m_CollisionRot;			//当たり判定用の向き
 
@@ -145,8 +148,9 @@ private:
 	int m_DevilArrow;				// デビルパワーの方向
 	int m_ScrollArrowOld;			// 過去のスクロールの方向
 	int m_SlopwArrowOld;			// 過去の傾きの方向
-	CScrollArrow* m_ScrollArrow[2];	// スクロール方向のUI 
+	CScrollArrow* m_ScrollArrow[2];	// スクロール方向のUI
 	SCROLL_TYPE m_ScrollType;		// スクロールの種類
+	int m_SlopeType;			// スロープの種類
 
 	// 静的メンバ変数
 	static CListManager<CDevil>* m_pList; // オブジェクトリスト

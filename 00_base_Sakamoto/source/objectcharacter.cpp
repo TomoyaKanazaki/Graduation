@@ -7,6 +7,8 @@
 
 #include "objectcharacter.h"
 
+#include "characterManager.h"
+
 #include "manager.h"
 #include "renderer.h"
 
@@ -36,7 +38,8 @@ namespace
 CObjectCharacter::CObjectCharacter(int nPriority) : CObject(nPriority),
 m_pShadow(nullptr),
 m_bUseShadow(true),
-m_State(STATE_WAIT)
+m_State(STATE_WAIT),
+m_OldState(STATE_WAIT)
 {
 	for (int nCnt = 0; nCnt < MODEL_NUM; nCnt++)
 	{
@@ -177,6 +180,9 @@ void CObjectCharacter::Update(void)
 		m_pShadow->SetPos(D3DXVECTOR3(m_pos.x, 1.0f, m_pos.z));
 		m_pShadow->SetBaseHeight(pos.y);
 	}
+
+	// 状態の保存
+	m_OldState = m_State;
 }
 
 //====================================================================
@@ -290,6 +296,18 @@ void CObjectCharacter::ChangeMoveState(CMoveState* pMoveState)
 //====================================================================
 void CObjectCharacter::SetTxtCharacter(const char* pFilename)
 {
+	//strcpy(&m_aModelName[0], pFilename);
+
+	//CCharacterManager* pCharacterManager = CManager::GetInstance()->GetCharacterManager();
+
+	//if (pCharacterManager == nullptr)
+	//{
+	//	assert(("キャラクター管理クラスがない", false));
+	//	return;
+	//}
+
+	//int nNum = pCharacterManager->Regist(this,pFilename);
+
 	strcpy(&m_aModelName[0], pFilename);
 
 	//モデルの生成
@@ -307,6 +325,22 @@ void CObjectCharacter::SetTxtCharacter(const char* pFilename)
 	{
 		m_pMotion->SetModel(&m_apModel[0], m_nNumModel);
 		m_pMotion->LoadData(pFilename);
+	}
+}
+
+//====================================================================
+// モデル設定処理
+//====================================================================
+void CObjectCharacter::SetModel(CModel* pModel, int nCnt)
+{
+	if (m_apModel[nCnt] == nullptr)
+	{
+		m_apModel[nCnt] = pModel;
+	}
+	else
+	{
+		assert(("モデル上書き生成", false));
+		return;
 	}
 }
 

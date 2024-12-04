@@ -41,7 +41,7 @@ public:
 
 	// 静的メンバ関数
 	static CListManager<CSignal>* GetList(void); // リスト取得
-	static CSignal* Create(const char* pModelNameSignal);
+	static CSignal* Create(int nType);
 
 	//大きさ設定・取得
 	void SetScaling(const float& Scaling) { m_Scaling = Scaling; }

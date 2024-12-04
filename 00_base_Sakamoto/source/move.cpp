@@ -225,12 +225,6 @@ D3DXVECTOR3 CStateControl::InputKey(CObjectCharacter* pCharacter, D3DXVECTOR3& p
 	if ((pInputKeyboard->GetPress(DIK_W) && progress.bOKU && bGridCenter) ||
 		(pInputKeyboard->GetPress(DIK_W) && m_RotState == ROTSTATE_DOWN))
 	{
-	
-		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
-		D3DXMATRIX mat = *pCharacter->GetUseMultiMatrix();
-		D3DXVECTOR3 ef = useful::CalcMatrix(pos, rot, mat);
-		MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, rot);
-
 		Move.z += 1.0f * cosf(D3DX_PI * 0.0f) * fSpeed;
 		Move.x += 1.0f * sinf(D3DX_PI * 0.0f) * fSpeed;
 
@@ -241,11 +235,6 @@ D3DXVECTOR3 CStateControl::InputKey(CObjectCharacter* pCharacter, D3DXVECTOR3& p
 		(pInputKeyboard->GetPress(DIK_S) && m_RotState == ROTSTATE_UP)) &&
 		pInputKeyboard->GetPress(DIK_W) == false)
 	{
-		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
-		D3DXMATRIX mat = *pCharacter->GetUseMultiMatrix();
-		D3DXVECTOR3 ef = useful::CalcMatrix(pos, rot, mat);
-		MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, rot);
-
 		Move.z += -1.0f * cosf(D3DX_PI * 0.0f) * fSpeed;
 		Move.x += -1.0f * sinf(D3DX_PI * 0.0f) * fSpeed;
 
@@ -255,12 +244,6 @@ D3DXVECTOR3 CStateControl::InputKey(CObjectCharacter* pCharacter, D3DXVECTOR3& p
 	else if ((pInputKeyboard->GetPress(DIK_A) && progress.bOKL && bGridCenter) ||
 		(pInputKeyboard->GetPress(DIK_A) && m_RotState == ROTSTATE_RIGHT))
 	{
-
-		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
-		D3DXMATRIX mat = *pCharacter->GetUseMultiMatrix();
-		D3DXVECTOR3 ef = useful::CalcMatrix(pos, rot, mat);
-		MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, rot);
-
 		Move.x += -1.0f * cosf(D3DX_PI * 0.0f) * fSpeed;
 		Move.z -= -1.0f * sinf(D3DX_PI * 0.0f) * fSpeed;
 
@@ -271,12 +254,6 @@ D3DXVECTOR3 CStateControl::InputKey(CObjectCharacter* pCharacter, D3DXVECTOR3& p
 		(pInputKeyboard->GetPress(DIK_D) && m_RotState == ROTSTATE_LEFT)) &&
 		pInputKeyboard->GetPress(DIK_A) == false)
 	{
-
-		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
-		D3DXMATRIX mat = *pCharacter->GetUseMultiMatrix();
-		D3DXVECTOR3 ef = useful::CalcMatrix(pos, rot, mat);
-		MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, rot);
-
 		Move.x += 1.0f * cosf(D3DX_PI * 0.0f) * fSpeed;
 		Move.z -= 1.0f * sinf(D3DX_PI * 0.0f) * fSpeed;
 
