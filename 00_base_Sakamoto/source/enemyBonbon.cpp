@@ -138,6 +138,15 @@ void CEnemyBonbon::ActionState(void)
 			pMotion->Set(ACTION_MOVE, MOTION_BLEND_NEUTRAL);
 		}
 	}
+	// ダメージモーション
+	else if (GetHitState() == CEnemy::HIT_STATE_DAMAGE)
+	{
+		if (m_Action != ACTION_DEATH)
+		{
+			m_Action = ACTION_DEATH;
+			pMotion->Set(ACTION_DEATH, MOTION_BLEND_MOVE);
+		}
+	}
 	// ニュートラルモーション
 	else
 	{

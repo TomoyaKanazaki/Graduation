@@ -622,7 +622,7 @@ void CEnemy::HitStateManager(D3DXVECTOR3& posMy)
 		SetModelColor(CModel::COLORTYPE_TRUE_ALL, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 		break;
 
-	case CEnemy::E_STATE_EGG:
+	case CEnemy::HIT_STATE_EGG:
 		SetModelColor(CModel::COLORTYPE_TRUE_ALL, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f));
 		break;
 	}
