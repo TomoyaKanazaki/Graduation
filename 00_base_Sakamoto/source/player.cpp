@@ -84,9 +84,9 @@ CPlayer::CPlayer(int nPriority) : CObjectCharacter(nPriority),
 m_AutoMoveRot(INITVECTOR3),
 m_bJump(false),
 m_nActionCount(0),
-m_Action(ACTION_NONE),
-m_AtkAction(ACTION_NONE),
-m_State(STATE_EGG),
+m_Action(ACTION_WAIT),
+m_AtkAction(ACTION_WAIT),
+//state(STATE_EGG),
 m_nStateCount(0),
 m_AtkPos(INITVECTOR3),
 m_CollisionRot(0.0f),
@@ -94,7 +94,6 @@ m_bInput(false),
 m_pLifeUi(nullptr),
 m_nLife(0),
 m_eItemType(TYPE_NONE),
-m_Grid(0, 0),
 m_OldGrid(0, 0),
 m_bGritCenter(true),
 m_bPressObj(false),
@@ -110,7 +109,8 @@ m_pEffectEgg(nullptr),
 m_pEffectSpeed(nullptr),
 m_pP_NumUI(nullptr),
 m_pEffectGuide(nullptr),
-m_pEffectItem(nullptr)
+m_pEffectItem(nullptr),
+m_pMoveState(nullptr)
 {
 	// 移動の進行状況
 	m_Progress.bOKD = true;
@@ -199,8 +199,8 @@ HRESULT CPlayer::Init(int PlayNumber)
 	m_AutoMoveRot = D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f);
 
 	// アクションの設定
-	m_Action = ACTION_EGG;
-	m_AtkAction = ACTION_EGG;
+	m_Action = ACTION_WAIT;
+	m_AtkAction = ACTION_WAIT;
 
 	//種類設定
 	SetType(CObject::TYPE_PLAYER3D);
@@ -226,9 +226,15 @@ HRESULT CPlayer::Init(int PlayNumber)
 	SetRot(rotThis);			// 向き
 	SetSize(sizeThis);		// 大きさ
 
-	// 操作状態にする
-	m_pMoveState->ControlStop(this);
+	// 状態の設定
+	SetState(STATE_EGG);
 
+	// 移動状態の設定
+	if (m_pMoveState == nullptr)
+	{
+		m_pMoveState = new CStateStop();	// 停止状態
+		m_pMoveState->ControlStop(this);	// 操作状態にする
+	}
 	// 向き状態の設定
 	m_pMoveState->SetRotState(CMoveState::ROTSTATE_WAIT);
 
@@ -302,20 +308,21 @@ void CPlayer::Update(void)
 	D3DXVECTOR3 posOldThis = GetPosOld();		// 前回の位置
 	D3DXVECTOR3 rotThis = GetRot();			// 向き
 	D3DXVECTOR3 sizeThis = GetSize();			// 大きさ
+	STATE state = GetState();				// 状態
 
 	// 過去の位置に代入
 	posOldThis = posThis;
 	m_OldGrid = m_Grid;
 
-	if (m_State != STATE_DEATH)
+	if (state != STATE_DEATH)
 	{
 		//壁があるか判断
 		SearchWall(posThis);
 
 		if (
-			(m_State != STATE_EGG && CollisionStageIn(posThis) == true &&
+			(state != STATE_EGG && CollisionStageIn(posThis) == true &&
 				CMapSystem::GetInstance()->GetGritBool(m_Grid.x, m_Grid.z) == false) ||
-			(m_State == STATE_EGG && CollisionStageIn(posThis) == true &&
+			(state == STATE_EGG && CollisionStageIn(posThis) == true &&
 				CMapSystem::GetInstance()->GetGritBool(m_Grid.x, m_Grid.z) == false &&
 				m_bGritCenter == true && posThis.y <= 0.0f)
 			)
@@ -360,7 +367,7 @@ void CPlayer::Update(void)
 		// カメラ更新処理
 		CameraPosUpdate(posThis);
 
-		if (m_State == STATE_WALK)
+		if (state == STATE_WALK)
 		{
 			// 位置更新処理
 			PosUpdate(posThis,posOldThis,sizeThis);
@@ -368,7 +375,7 @@ void CPlayer::Update(void)
 
 		ObjPosUpdate(posThis,posOldThis,sizeThis);
 
-		if (m_State != STATE_EGG && m_State != STATE_DEATH)
+		if (state != STATE_EGG && state != STATE_DEATH)
 		{
 			//画面外判定
 			CollisionStageOut(posThis);
@@ -430,7 +437,7 @@ void CPlayer::Update(void)
 	DebugProc::Print(DebugProc::POINT_LEFT, "[自分]向き %f : %f : %f\n", rotThis.x, rotThis.y, rotThis.z);
 	DebugProc::Print(DebugProc::POINT_LEFT, "[自分]横 %d : 縦 %d\n", m_Grid.x, m_Grid.z);
 	DebugProc::Print(DebugProc::POINT_LEFT, "[自分]状態 : ");
-	auto str = magic_enum::enum_name(m_State);
+	auto str = magic_enum::enum_name(state);
 	DebugProc::Print(DebugProc::POINT_LEFT, str.data());
 	DebugProc::Print(DebugProc::POINT_LEFT, "\n");
 
@@ -794,13 +801,14 @@ D3DXVECTOR3 CPlayer::MoveInputPadKey(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis,
 void CPlayer::Rot(D3DXVECTOR3& rotThis)
 {
 	D3DXVECTOR3 CameraRot = CManager::GetInstance()->GetCamera()->GetRot();
+	STATE state = GetState();		// 状態
 
 	//移動方向に向きを合わせる処理
 	float fRotMove, fRotDest;
 	fRotMove = rotThis.y;
 	fRotDest = CManager::GetInstance()->GetCamera()->GetRot().y;
 
-	if (m_State == STATE_WALK)
+	if (state == STATE_WALK)
 	{
 		rotThis.y = atan2f(-m_move.x, -m_move.z);
 	}
@@ -813,7 +821,9 @@ void CPlayer::Rot(D3DXVECTOR3& rotThis)
 //====================================================================
 void CPlayer::Attack(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis)
 {
-	if (m_State == STATE_WALK)
+	STATE state = GetState();		// 状態
+
+	if (state == STATE_WALK)
 	{
 		//キーボードの取得
 		CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
@@ -829,7 +839,7 @@ void CPlayer::Attack(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis)
 			MyEffekseer::EffectCreate(CMyEffekseer::TYPE_SMOKE, false, ef, rotThis);
 
 			CFire::Create("data\\model\\fireball.x", posThis, rotThis);
-			m_State = STATE_ATTACK;
+			SetState(STATE_ATTACK);
 			m_nStateCount = FIRE_STOPTIME;
 		}
 	}
@@ -842,6 +852,7 @@ void CPlayer::ActionState(void)
 {
 	// モーションの取得
 	CMotion* pMotion = GetMotion();
+	STATE state = GetState();
 
 	if (pMotion == nullptr)
 	{
@@ -849,25 +860,25 @@ void CPlayer::ActionState(void)
 	}
 
 	//移動モーション
-	if (m_State == STATE_DEATH)
+	if (state == STATE_DEATH)
 	{
-		if (m_Action != ACTION_DEATH)
+		if (m_Action != ACTION_ENEMYDEATH)
 		{
-			m_Action = ACTION_DEATH;
-			pMotion->Set(ACTION_DEATH, 5);
+			m_Action = ACTION_ENEMYDEATH;
+			pMotion->Set(ACTION_ENEMYDEATH, 5);
 		}
 	}
 	//卵モーション
-	else if (m_State == STATE_EGG)
+	else if (state == STATE_EGG)
 	{
-		if (m_Action != ACTION_EGG)
+		if (m_Action != ACTION_WAIT)
 		{
-			m_Action = ACTION_EGG;
-			pMotion->Set(ACTION_EGG, 5);
+			m_Action = ACTION_WAIT;
+			pMotion->Set(ACTION_WAIT, 5);
 		}
 	}
 	//移動モーション
-	else if (m_State == STATE_ATTACK)
+	else if (state == STATE_ATTACK)
 	{
 		if (m_Action != ACTION_WAIT)
 		{
@@ -900,7 +911,9 @@ void CPlayer::ActionState(void)
 //====================================================================
 void CPlayer::StateManager(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis)
 {
-	switch (m_State)
+	STATE state = GetState();
+
+	switch (state)
 	{
 	case STATE_WAIT:
 		//	スローをdefaultへ
@@ -927,7 +940,7 @@ void CPlayer::StateManager(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis)
 
 		if (m_nStateCount == 0)
 		{
-			m_State = STATE_WALK;
+			SetState(STATE_WALK);
 		}
 
 		break;
@@ -961,7 +974,7 @@ void CPlayer::StateManager(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis)
 						SetGrid(CMapSystem::GRID(nSetW, nSetH));
 						posThis = CMapSystem::GRID(nSetW, nSetH).ToWorld();
 						posThis.y = RESPAWN_POS.y;
-						m_State = STATE_EGG;
+						SetState(STATE_EGG);
 						return;
 					}
 
@@ -1058,7 +1071,7 @@ void CPlayer::CollisionWall(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D3DXV
 		if (useful::CollisionBlock(pos, pos, Move, Size, &posThis, posOldThis, &m_move, &m_Objmove, sizeThis, &m_bJump, XYZ) == true)
 		{
 			//待機状態にする
-			m_State = STATE_WAIT;
+			SetState(STATE_WAIT);
 			// 向き状態の設定
 			m_pMoveState->SetRotState(CMoveState::ROTSTATE_WAIT);
 			posThis = m_Grid.ToWorld();
@@ -1124,7 +1137,7 @@ void CPlayer::CollisionWaitRailBlock(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldTh
 		if (useful::CollisionBlock(pos, pos, Move, Size, &posThis, posOldThis, &m_move, &m_Objmove, sizeThis, &m_bJump, XYZ) == true)
 		{
 			//待機状態にする
-			m_State = STATE_WAIT;
+			SetState(STATE_WAIT);
 
 			// 向き状態の設定
 			m_pMoveState->SetRotState(CMoveState::ROTSTATE_WAIT);
@@ -1216,7 +1229,7 @@ void CPlayer::CollisionWaitRock(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D
 		if (useful::CollisionBlock(pos, pos, Move, Size, &posThis, posOldThis, &m_move, &m_Objmove, sizeThis, &m_bJump, XYZ) == true)
 		{
 			//待機状態にする
-			m_State = STATE_WAIT;
+			SetState(STATE_WAIT);
 			// 向き状態の設定
 			m_pMoveState->SetRotState(CMoveState::ROTSTATE_WAIT);
 			posThis = m_Grid.ToWorld();
@@ -1271,6 +1284,8 @@ void CPlayer::CollisionMoveRock(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D
 //====================================================================
 void CPlayer::SearchWall(D3DXVECTOR3& posThis)
 {
+	STATE state = GetState();
+
 	bool OKR = true;	//右
 	bool OKL = true;	//左
 	bool OKU = true;	//上
@@ -1306,7 +1321,7 @@ void CPlayer::SearchWall(D3DXVECTOR3& posThis)
 		posThis.x >= MyGritPos.x - ((MapGritSize * 0.5f) - GRIT_OK) &&
 		posThis.z <= MyGritPos.z + ((MapGritSize * 0.5f) - GRIT_OK) &&
 		posThis.z >= MyGritPos.z - ((MapGritSize * 0.5f) - GRIT_OK)) ||
-		m_State == STATE_WAIT)
+		state == STATE_WAIT)
 	{// グリットの中心位置に立っているなら操作を受け付ける
 		m_Progress.bOKR = OKR;	//右
 		m_Progress.bOKL = OKL;	//左
@@ -1346,7 +1361,7 @@ void CPlayer::CollisionDevilHole(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, 
 		if (useful::CollisionBlock(pos, pos, INITVECTOR3, Size, &posThis, posOldThis, &m_move, &m_Objmove, sizeThis, &m_bJump, XYZ) == true)
 		{
 			//待機状態にする
-			m_State = STATE_WAIT;
+			SetState(STATE_WAIT);
 			// 向き状態の設定
 			m_pMoveState->SetRotState(CMoveState::ROTSTATE_WAIT);
 			posThis = m_Grid.ToWorld();
@@ -1398,25 +1413,25 @@ void CPlayer::CollisionStageOut(D3DXVECTOR3& posThis)
 	if (posThis.x + G_Size > D_pos.x + MapSize.x)	// 右
 	{
 		posThis.x = D_pos.x + MapSize.x - G_Size;
-		m_State = STATE_WAIT;
+		SetState(STATE_WAIT);
 		m_move.x = 0.0f;
 	}
 	if (posThis.x - G_Size < D_pos.x - MapSize.x)	// 左
 	{
 		posThis.x = D_pos.x - MapSize.x + G_Size;
-		m_State = STATE_WAIT;
+		SetState(STATE_WAIT);
 		m_move.x = 0.0f;
 	}
 	if (posThis.z + G_Size > D_pos.z + MapSize.z)	// 上
 	{
 		posThis.z = D_pos.z + MapSize.z - G_Size;
-		m_State = STATE_WAIT;
+		SetState(STATE_WAIT);
 		m_move.z = 0.0f;
 	}
 	if (posThis.z - G_Size < D_pos.z - MapSize.z)	// 下
 	{
 		posThis.z = D_pos.z - MapSize.z + G_Size;
-		m_State = STATE_WAIT;
+		SetState(STATE_WAIT);
 		m_move.z = 0.0f;
 	}
 }
@@ -1622,7 +1637,9 @@ void CPlayer::RotUpdate(D3DXVECTOR3& rotThis)
 //====================================================================
 void CPlayer::EggMove(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis)
 {
-	if (m_State == STATE_EGG)
+	STATE state = GetState();
+
+	if (state == STATE_EGG)
 	{
 		if (posThis.y > 0.0f)
 		{
@@ -1932,6 +1949,20 @@ void CPlayer::SetItemType(ITEM_TYPE eType)
 
 		break;
 	}
+}
+
+//==========================================
+// 移動状態変更処理
+//==========================================
+void CPlayer::ChangeMoveState(CMoveState* pMoveState)
+{
+	if (m_pMoveState != nullptr)
+	{
+		delete m_pMoveState;
+		m_pMoveState = nullptr;
+	}
+
+	m_pMoveState = pMoveState;
 }
 
 //====================================================================

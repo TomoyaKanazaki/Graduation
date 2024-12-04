@@ -32,22 +32,13 @@ public:
 	{
 		ACTION_WAIT = 0,		// 待機
 		ACTION_MOVE,			// 移動
-		ACTION_EGG,				// 卵状態(未完成００
-		ACTION_DEATH,			// 死亡状態(未完成０２
+		ACTION_ENEMYDEATH,		// 倒れる死亡状態
+		ACTION_JUMPEAT,			// ジャンプして食べる
+		ACTION_EAT,				// ジャンプせず食べる
+		ACTION_ATTACK,			// 炎で攻撃
+		ACTION_GETITEM,			// アイテムを持ち上げる
+		ACTION_PRESSDEATH,		// バタバタ死亡モーション
 		ACTION_MAX,				// 最大
-		ACTION_NONE
-	};
-
-	//プレイヤーの状態
-	enum STATE
-	{
-		STATE_WAIT = 0,		//待機
-		STATE_WALK,			//歩き
-		STATE_DEATH,		//死亡
-		STATE_EGG,			//卵
-		STATE_ATTACK,		//攻撃
-		STATE_MAX,			//最大
-		STATE_NONE
 	};
 
 	// アイテムの種類
@@ -68,8 +59,6 @@ public:
 	void SetPlayNumber(int Number) { m_nPlayNumber = Number; }
 	int GetPlayNumber(void) { return m_nPlayNumber; }
 
-	void SetState(STATE State) { m_State = State; }
-	STATE GetState(void) { return m_State; }
 	bool GetJump(void) { return m_bJump; }
 	void SetCameraPos(D3DXVECTOR3 pos) { m_CameraPos = pos; }
 	D3DXVECTOR3 GetCameraPos(void) { return m_CameraPos; }
@@ -94,15 +83,10 @@ public:
 
 	bool GetGritCenter() { return m_bGritCenter; }
 
-	// 移動状態クラス用
-	void SetEggMove(D3DXVECTOR3 EggMove) { m_EggMove = EggMove; }	// 卵の移動量設定
-	D3DXVECTOR3 GetEggMove() { return m_EggMove; }			// 卵の移動量取得
-	void SetInvincible(bool bInvincible) { m_bInvincible = bInvincible; }		// 無敵かどうか
-	void SetInvincibleCount(int nInvincibleCount) { m_nInvincibleCount = nInvincibleCount; }		// 無敵時間
+	
+	void ChangeMoveState(CMoveState* pMoveState) override;		// 移動状態変更
+	D3DXVECTOR3 GetEggMove() override { return m_EggMove; }		// 卵の移動量取得
 
-	// マップ番号の設定
-	virtual void SetGrid(const CMapSystem::GRID& pos) { m_Grid = pos; }
-	CMapSystem::GRID GetGrid(void) { return m_Grid; }
 
 	virtual void Death(void);
 
@@ -162,12 +146,10 @@ private:
 	D3DXVECTOR3 m_CameraPos;		//カメラ位置位置
 	bool m_bJump;					//ジャンプをしたかどうか
 	int m_nActionCount;				//行動のカウント
-	STATE m_State;					//状態
 	int m_nStateCount;				//状態管理用カウント
 
 	float m_CollisionRot;			//当たり判定用の向き
 
-	CMapSystem::GRID m_Grid;		//グリット番号
 	CMapSystem::GRID m_OldGrid;		//グリット番号
 	bool m_bGritCenter;				//グリットの中心位置にいるかどうか
 
@@ -192,6 +174,8 @@ private:
 
 	CLifeUi* m_pLifeUi;				//体力UI
 	CObjectBillboard* m_pP_NumUI;	//プレイヤー番号UI		
+
+	CMoveState* m_pMoveState;		// 移動状態
 
 	CEffekseer* m_pEffectEgg;		// 卵のエフェクト
 	CEffekseer* m_pEffectSpeed;		// 加減速のエフェクト

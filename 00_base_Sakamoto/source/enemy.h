@@ -34,16 +34,6 @@ public:
 	};
 
 	//敵の状態
-	enum MOVE_STATE
-	{
-		MOVE_STATE_WAIT = 0,	//待機
-		MOVE_STATE_TRUN,		//方向転換
-		MOVE_STATE_WALK,		//歩行
-		MOVE_STATE_DEATH,		//死亡
-		MOVE_STATE_MAX,			//最大
-	};
-
-	//敵の状態
 	enum HIT_STATE
 	{
 		HIT_STATE_NORMAL = 0,	//通常
@@ -69,9 +59,7 @@ public:
 	void SetHitStateCount(int Cnt) { m_nHitStateCount = Cnt; }
 	int GetHitStateCount(void) { return m_nHitStateCount; }
 
-	// マップ番号の設定
-	virtual void SetGrid(const CMapSystem::GRID& pos) { m_Grid = pos; }
-	CMapSystem::GRID GetGrid(void) { return m_Grid; }
+	void ChangeMoveState(CMoveState* pMoveState) override;   // 移動状態変更
 
 	// 静的メンバ関数
 	static CListManager<CEnemy>* GetList(void); // リスト取得
@@ -97,7 +85,6 @@ private:
 	void Route();	// 最短経路をたどる
 	void Effect(); // エフェクトを生成
 
-	CMapSystem::GRID m_Grid;		//グリット番号
 	CMapSystem::GRID m_SelectGrid;	//方向転換を行った時のグリッド番号
 
 	int m_nActionCount;			//行動のカウント
@@ -105,7 +92,6 @@ private:
 
 	float m_ColorA;				//不透明度
 
-	MOVE_STATE m_MoveState;		//状態
 	int m_nMoveStateCount;		//状態管理用カウント
 
 	HIT_STATE m_HitState;		//状態
@@ -116,6 +102,7 @@ private:
 	CSlowManager* m_pSlow;		// スロー情報
 
 	CEffekseer* m_pEffect; // エフェクト
+	CMoveState* m_pMoveState;		// 移動状態
 
 	// 静的メンバ変数
 	static CListManager<CEnemy>* m_pList; // オブジェクトリスト
