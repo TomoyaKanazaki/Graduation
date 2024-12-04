@@ -237,14 +237,13 @@ void CMyEffekseer::Update(void)
 		m_EfkManager->SetScale(Handle, scale.X, scale.Y, scale.Z);
 
 #if 0 // 金崎のデバッグ用
-		if (effect->GetEfkType() == TYPE_ACENTION)
+		if (effect->GetEfkType() == TYPE_FOOTPRINT)
 		{
 			DebugProc::Print(DebugProc::POINT_CENTER, "エフェクトの種類 : ");
 			auto str = magic_enum::enum_name(effect->GetEfkType());
 			DebugProc::Print(DebugProc::POINT_CENTER, str.data());
 			DebugProc::Print(DebugProc::POINT_CENTER, ": %f, %f", pos.X, pos.Z);
 			DebugProc::Print(DebugProc::POINT_CENTER, "\n");
-
 		}
 #endif
 		// エフェクトの再生が終了していない場合次に進む

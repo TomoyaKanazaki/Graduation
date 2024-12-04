@@ -142,6 +142,7 @@ private:
 	void ObjPosUpdate(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR3& sizeMy);	//オブジェクトによる位置更新処理
 	void RotUpdate(D3DXVECTOR3& rotMy);		//向き更新処理
 	void EggMove(D3DXVECTOR3& posMy, D3DXVECTOR3& rotMy);			//卵の動き
+	void PrintFoot(const D3DXVECTOR3& rotThis);			// 足跡の設置
 
 	void UI_Create(void);			//所持するUIの生成
 	void UI_Init(void);				//所持するUIの初期化
@@ -167,6 +168,7 @@ private:
 	float m_CollisionRot;			//当たり判定用の向き
 
 	CMapSystem::GRID m_Grid;		//グリット番号
+	CMapSystem::GRID m_OldGrid;		//グリット番号
 	bool m_bGritCenter;				//グリットの中心位置にいるかどうか
 
 	int m_nLife;					//ライフ
