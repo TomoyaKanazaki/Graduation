@@ -219,9 +219,9 @@ HRESULT CPlayer::Init(int PlayNumber)
 	m_pSlow = CSlowManager::Create(CSlowManager::CAMP_PLAYER, CSlowManager::TAG_PLAYER);
 
 	// 値更新
-	SetPos(posThis);			// 位置
+	SetPos(posThis);		// 位置
 	SetPosOld(posOldThis);	// 前回の位置
-	SetRot(rotThis);			// 向き
+	SetRot(rotThis);		// 向き
 	SetSize(sizeThis);		// 大きさ
 
 	// 状態の設定

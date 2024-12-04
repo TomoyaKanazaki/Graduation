@@ -56,7 +56,7 @@ namespace
 	float SCROOL_SPEED_02 = (CMapSystem::GetGritSize() * SCROOL_MOVEGRID_02) / SCROOL_COUNT_02;			// ƒXƒNƒ[ƒ‹‚ÌˆÚ“®‘¬“x
 
 	int SLOPE_TIME = 300;						// ŒX‚«‘€ìŽžŠÔ
-	int SLOPE_RAND = 25;						// ŒX‚«”­¶Šm—¦
+	int SLOPE_RAND = 100;						// ŒX‚«”­¶Šm—¦
 	float STAGE_ROT_LIMIT = D3DX_PI * 0.15f;	// ŒX‚«‚ÌŠp“x§ŒÀ
 
 	float SLOPE_SPEED01 = 0.00075f;				// ŒX‚«‚ÌˆÚ“®‘¬“x
@@ -429,21 +429,45 @@ void CDevil::BackSlope(void)
 		if (MapRot.x > 0.0f)
 		{
 			MapRot.x -= D3DX_PI * SLOPE_SPEED01;
+
+			if (MapRot.x <= 0.0f)
+			{
+				MapRot.x = 0.0f;
+				bBackOK = true;
+			}
 		}
 
 		if (MapRot.x < 0.0f)
 		{
 			MapRot.x += D3DX_PI * SLOPE_SPEED01;
+
+			if (MapRot.x >= 0.0f)
+			{
+				MapRot.x = 0.0f;
+				bBackOK = true;
+			}
 		}
 
 		if (MapRot.z > 0.0f)
 		{
 			MapRot.z -= D3DX_PI * SLOPE_SPEED01;
+
+			if (MapRot.z <= 0.0f)
+			{
+				MapRot.z = 0.0f;
+				bBackOK = true;
+			}
 		}
 
 		if (MapRot.z < 0.0f)
 		{
 			MapRot.z += D3DX_PI * SLOPE_SPEED01;
+
+			if (MapRot.z >= 0.0f)
+			{
+				MapRot.z = 0.0f;
+				bBackOK = true;
+			}
 		}
 
 		break;
@@ -456,6 +480,7 @@ void CDevil::BackSlope(void)
 
 			if (MapRot.x <= 0.0f)
 			{
+				MapRot.x = 0.0f;
 				bBackOK = true;
 			}
 		}
@@ -466,6 +491,7 @@ void CDevil::BackSlope(void)
 
 			if (MapRot.x >= 0.0f)
 			{
+				MapRot.x = 0.0f;
 				bBackOK = true;
 			}
 		}
@@ -476,6 +502,7 @@ void CDevil::BackSlope(void)
 
 			if (MapRot.z <= 0.0f)
 			{
+				MapRot.z = 0.0f;
 				bBackOK = true;
 			}
 		}
@@ -486,6 +513,7 @@ void CDevil::BackSlope(void)
 
 			if (MapRot.z >= 0.0f)
 			{
+				MapRot.z = 0.0f;
 				bBackOK = true;
 			}
 		}
@@ -520,7 +548,7 @@ void CDevil::BackSlope(void)
 	if (bBackOK)
 	{
 		STATE_WAIT;
-		m_nStateCount = 120;
+		m_nStateCount = 60;
 		MapRot.x = 0.0f;
 		MapRot.z = 0.0f;
 	}

@@ -129,13 +129,22 @@ void CEnemyMedaman::ActionState(void)
 	// 情報取得
 	D3DXVECTOR3 move = GetMove();	// 移動量
 
-		//移動モーション
+	//移動モーション
 	if (move.x > MOTION_MOVE || move.x < -MOTION_MOVE || move.z > MOTION_MOVE || move.z < -MOTION_MOVE)
 	{
 		if (m_Action != ACTION_MOVE)
 		{
 			m_Action = ACTION_MOVE;
-			pMotion->Set(ACTION_MOVE, MOTION_BLEND_NEUTRAL);
+			pMotion->Set(ACTION_MOVE, MOTION_BLEND_MOVE);
+		}
+	}
+	// ダメージモーション
+	else if (GetHitState() == CEnemy::HIT_STATE_DAMAGE)
+	{
+		if (m_Action != ACTION_DEATH)
+		{
+			m_Action = ACTION_DEATH;
+			pMotion->Set(ACTION_DEATH, MOTION_BLEND_MOVE);
 		}
 	}
 	//ニュートラルモーション
@@ -144,7 +153,7 @@ void CEnemyMedaman::ActionState(void)
 		if (m_Action != ACTION_NEUTRAL)
 		{
 			m_Action = ACTION_NEUTRAL;
-			pMotion->Set(ACTION_NEUTRAL, MOTION_BLEND_MOVE);
+			pMotion->Set(ACTION_NEUTRAL, MOTION_BLEND_NEUTRAL);
 		}
 	}
 }
