@@ -50,33 +50,18 @@ public:
     virtual void AStarStop(CObjectCharacter* pCharacter) {}             // 追跡と停止切り替え
 
     // 移動処理
-    virtual void Move(CObjectCharacter* pCharacter){}                   // 移動処理
-    virtual void Move(CPlayer* pPlayer, D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis) {}                   // プレイヤー移動処理
+    virtual void Move(CObjectCharacter* pCharacter, D3DXVECTOR3& pos, D3DXVECTOR3& rot){}           // 移動処理(キャラクター)
 
     CMoveState* GetMoveState(CObjectCharacter* pCharacter);             // 移動状態の情報取得
 
     // 設定・取得
-    void SetRotState(ROTSTATE RotState) { m_RotState = RotState; }      // 移動方向の状態を取得
-    ROTSTATE GetRotState() { return m_RotState; }                       // 移動方向の状態を取得
-
-protected:
-    // メンバ関数
-    void Control(CObjectCharacter* pCharacter);             // 操作処理
-    void Control(CPlayer* pPlayer, D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis);                         // プレイヤーの操作処理
-
-    void Random();              // ランダム歩行
-    void AStar();               // 追跡
-    void Stop();                // 停止
-
-    // メンバ変数
-    bool m_bInput;					//入力を行ったかどうか
+    virtual void SetRotState(ROTSTATE RotState) {}      // 移動方向の状態を取得
+    virtual ROTSTATE GetRotState() { return ROTSTATE_NONE; }                       // 移動方向の状態を取得
 
 private:
-    // メンバ関数
-    D3DXVECTOR3 InputKey(CObjectCharacter* pCharacter, D3DXVECTOR3& posMy, D3DXVECTOR3& rotMy, D3DXVECTOR3 Move, float fSpeed);		//移動入力キーボード
+    
 
-    // メンバ変数
-    ROTSTATE m_RotState;        // 移動方向の状態
+   
 };
 
 //============================================
@@ -93,14 +78,23 @@ public:
     void ControlAStar(CObjectCharacter* pCharacter) override;       // 追跡に切り替え
     void ControlStop(CObjectCharacter* pCharacter) override;        // 停止に切り替え
 
-    //void Move(CObjectCharacter* pCharacter) override;      // 移動処理
-    void Move(CPlayer* pPlayer, D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis) override;                  // プレイヤーの移動処理
+    void Move(CObjectCharacter* pCharacter, D3DXVECTOR3& pos, D3DXVECTOR3& rot) override;      // キャラクターの移動処理
+
+    // 設定・取得
+    void SetRotState(ROTSTATE RotState) override { m_RotState = RotState; }      // 移動方向の状態を取得
+    ROTSTATE GetRotState() override { return m_RotState; }                       // 移動方向の状態を取得
 
 private:
 
-    // メンバ変数
-    //bool m_bInput;					//入力を行ったかどうか
+    // メンバ関数
+    D3DXVECTOR3 InputKey(CObjectCharacter* pCharacter, D3DXVECTOR3& posMy, D3DXVECTOR3& rotMy, D3DXVECTOR3 Move, float fSpeed);		//移動入力キーボード
 
+    void UpdateMovePlayer(CObjectCharacter* pCharacter, D3DXVECTOR3 NormarizeMove);        // プレイヤーの移動更新処理
+    void UpdateMoveEnemy(CObjectCharacter* pCharacter, D3DXVECTOR3 NormarizeMove);         // 敵の移動更新処理
+
+    // メンバ変数
+    bool m_bInput;				//入力を行ったかどうか
+    ROTSTATE m_RotState;        // 移動方向の状態
 
 };
 

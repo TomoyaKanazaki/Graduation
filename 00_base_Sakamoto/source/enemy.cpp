@@ -92,7 +92,6 @@ m_pEffect(nullptr)
 	m_ColorA = 1.0f;
 
 	m_EnemyType = ENEMY_MEDAMAN;
-	m_MoveState = MOVE_STATE_WAIT;
 	m_pSlow = nullptr;
 
 	m_HitState = HIT_STATE_NORMAL;
@@ -187,14 +186,12 @@ HRESULT CEnemy::Init(void)
 	// スローの生成(配属、タグの設定)
 	m_pSlow = CSlowManager::Create(m_pSlow->CAMP_ENEMY, m_pSlow->TAG_ENEMY);
 
-	// 移動向きの状態を設定
-	m_pMoveState->SetRotState(CMoveState::ROTSTATE_MAX);
-
 	// 移動状態設定
 	if (m_pMoveState == nullptr)
 	{ // 移動状態設定
 		m_pMoveState = new CStateStop();		// 停止状態
 		m_pMoveState->ControlStop(this);		// 操作できる状態
+		m_pMoveState->SetRotState(CMoveState::ROTSTATE_MAX);		// 移動向きの状態を設定
 	}
 
 	// リストマネージャーの生成
@@ -256,6 +253,7 @@ void CEnemy::Update(void)
 	D3DXVECTOR3 posOldMy = GetPosOld();		// 前回の位置
 	D3DXVECTOR3 rotMy = GetRot();			// 向き
 	D3DXVECTOR3 sizeMy = GetSize();			// 大きさ
+	STATE state = GetState();				// 状態
 
 	// 過去の位置を記録
 	posOldMy = posMy;
@@ -272,7 +270,7 @@ void CEnemy::Update(void)
 	// 状態の更新
 	HitStateManager(posMy);
 
-	if (m_MoveState == MOVE_STATE_DEATH)
+	if (state == STATE_DEATH)
 	{
 		return;
 	}
@@ -283,6 +281,11 @@ void CEnemy::Update(void)
 	// 位置更新処理
 	UpdatePos(posMy,posOldMy,sizeMy);
 
+	// 移動処理
+	m_pMoveState->Move(this, posMy, rotMy);
+
+	//m_pMoveState->ControlStop(this);
+
 	// 追跡状態にする
 	//m_pMoveState->ControlAStar(this);
 
@@ -290,7 +293,7 @@ void CEnemy::Update(void)
 	Coordinate();
 
 	//// 最短経路をたどる
-	Route();
+	//Route();
 
 	// 自分の番号を設定
 	m_Grid = CMapSystem::GetInstance()->CMapSystem::CalcGrid(posMy);
@@ -453,7 +456,7 @@ void CEnemy::CollisionWall(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR
 		if (useful::CollisionBlock(pos, posOld, Move, Size, &posMy, posOldMy, &m_move, &m_Objmove, size, &bNullJump, XYZ) == true)
 		{
 			//待機状態にする
-			m_MoveState = MOVE_STATE_WAIT;
+			SetState(STATE_WAIT);
 
 			posMy = m_Grid.ToWorld();
 		}
@@ -532,7 +535,7 @@ void CEnemy::Death(void)
 	// 目玉焼きを生成
 	CFriedEgg::Create(m_EnemyType, m_Grid);
 
-	m_MoveState = MOVE_STATE_DEATH;
+	SetState(STATE_DEATH);
 }
 
 //====================================================================
@@ -540,23 +543,25 @@ void CEnemy::Death(void)
 //====================================================================
 void CEnemy::MoveStateManager(D3DXVECTOR3& posMy)
 {
-	//状態の管理
-	switch (m_MoveState)
-	{
-	case CEnemy::MOVE_STATE_WAIT:
+	STATE state = GetState();
 
-		m_MoveState = MOVE_STATE_WALK;
+	//状態の管理
+	switch (state)
+	{
+	case CObjectCharacter::STATE_WAIT:
+
+		SetState(STATE_WALK);
 
 		break;
 
-	case CEnemy::MOVE_STATE_TRUN:
+	case CObjectCharacter::STATE_TRUN:
 
 		m_move.x = m_move.x * -1.0f;
 		m_move.z = m_move.z * -1.0f;
 
 		break;
 
-	case CEnemy::MOVE_STATE_WALK:
+	case CObjectCharacter::STATE_WALK:
 
 		if (abs(m_move.x) < 0.01f && abs(m_move.z) < 0.01f)
 		{
@@ -571,7 +576,7 @@ void CEnemy::MoveStateManager(D3DXVECTOR3& posMy)
 
 		break;
 
-	case CEnemy::MOVE_STATE_DEATH:
+	case CObjectCharacter::STATE_DEATH:
 
 		m_move.x = 0.0f;
 		m_move.z = 0.0f;
@@ -732,19 +737,19 @@ void CEnemy::SearchWall(D3DXVECTOR3& posMy)
 
 		if (!m_Progress.bOKR && OKR)
 		{
-			m_MoveState = MOVE_STATE_WAIT;
+			SetState(STATE_WAIT);
 		}
 		if (!m_Progress.bOKL && OKL)
 		{
-			m_MoveState = MOVE_STATE_WAIT;
+			SetState(STATE_WAIT);
 		}
 		if (!m_Progress.bOKU && OKU)
 		{
-			m_MoveState = MOVE_STATE_WAIT;
+			SetState(STATE_WAIT);
 		}
 		if (!m_Progress.bOKD && OKD)
 		{
-			m_MoveState = MOVE_STATE_WAIT;
+			SetState(STATE_WAIT);
 		}
 
 		m_Progress.bOKR = OKR;	//右
@@ -865,6 +870,20 @@ void CEnemy::Effect()
 
 	// エフェクトを生成
 	m_pEffect = MyEffekseer::EffectCreate(EFFECT_TYPE[m_EnemyType], false, pos, rot, D3DXVECTOR3(10.0f, 10.0f, 10.0f));
+}
+
+//==========================================
+// 移動状態変更処理
+//==========================================
+void CEnemy::ChangeMoveState(CMoveState* pMoveState)
+{
+	if (m_pMoveState != nullptr)
+	{
+		delete m_pMoveState;
+		m_pMoveState = nullptr;
+	}
+
+	m_pMoveState = pMoveState;
 }
 
 //====================================================================

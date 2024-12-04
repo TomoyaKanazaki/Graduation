@@ -35,7 +35,8 @@ namespace
 //====================================================================
 CObjectCharacter::CObjectCharacter(int nPriority) : CObject(nPriority),
 m_pShadow(nullptr),
-m_bUseShadow(true)
+m_bUseShadow(true),
+m_State(STATE_WAIT)
 {
 	for (int nCnt = 0; nCnt < MODEL_NUM; nCnt++)
 	{
@@ -59,6 +60,9 @@ m_bUseShadow(true)
 	m_bUseShadowMtx = false;
 
 	m_pMoveState = nullptr;
+
+	m_Grid.x = 0;
+	m_Grid.z = 0;
 
 	// is‹–‰Âó‹µ
 	m_Progress.bOKD = true;
