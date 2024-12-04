@@ -26,6 +26,7 @@
     <ClCompile Include="source\camera.cpp" />
     <ClCompile Include="source\characterManager.cpp" />
     <ClCompile Include="source\effect.cpp" />
+    <ClCompile Include="source\footprint.cpp" />
     <ClCompile Include="source\move.cpp" />
     <ClCompile Include="source\objectcharacter.cpp" />
     <ClCompile Include="source\cross.cpp" />
@@ -109,6 +110,7 @@
     <ClInclude Include="source\camera.h" />
     <ClInclude Include="source\characterManager.h" />
     <ClInclude Include="source\effect.h" />
+    <ClInclude Include="source\footprint.h" />
     <ClInclude Include="source\move.h" />
     <ClInclude Include="source\objectcharacter.h" />
     <ClInclude Include="source\cross.h" />

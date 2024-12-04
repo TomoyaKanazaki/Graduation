@@ -40,6 +40,7 @@
 #include "move.h"
 
 #include "MyEffekseer.h"
+#include "footprint.h"
 
 //===========================================
 // 定数定義
@@ -93,6 +94,7 @@ m_bInput(false),
 m_pLifeUi(nullptr),
 m_nLife(0),
 m_eItemType(TYPE_NONE),
+m_OldGrid(0, 0),
 m_bGritCenter(true),
 m_bPressObj(false),
 m_fCrossTimer(0.0f),
@@ -273,6 +275,13 @@ void CPlayer::Uninit(void)
 		m_pScore = nullptr;
 	}
 
+	// 移動状態の破棄
+	if (m_pMoveState != nullptr)
+	{
+		delete m_pMoveState;
+		m_pMoveState = nullptr;
+	}
+
 	// エフェクトの削除
 	if (m_pEffectEgg != nullptr)
 	{
@@ -307,9 +316,11 @@ void CPlayer::Update(void)
 	D3DXVECTOR3 rotThis = GetRot();			// 向き
 	D3DXVECTOR3 sizeThis = GetSize();			// 大きさ
 	STATE state = GetState();				// 状態
+	STATE oldstate = GetOldState();			// 状態
 
 	// 過去の位置に代入
 	posOldThis = posThis;
+	m_OldGrid = m_Grid;
 
 	if (state != STATE_DEATH)
 	{
@@ -330,6 +341,12 @@ void CPlayer::Update(void)
 
 			// 移動処理
 			m_pMoveState->Move(this, posThis, rotThis);
+
+			// モデルを描画する
+			if (GetState() != STATE_EGG && oldstate == STATE_EGG)
+			{
+				SetItemType(TYPE_NONE);
+			}
 
 			// 移動処理
 			//Move(posThis,rotThis);
@@ -452,6 +469,7 @@ void CPlayer::Update(void)
 	{
 		ControlEffect(m_pEffectGuide, &m_pShadow->GetPos()); // 復活位置のガイドエフェクト
 	}
+	PrintFoot(rotThis);
 }
 
 //====================================================================
@@ -1753,6 +1771,20 @@ void CPlayer::EggMove(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis)
 			}
 		}
 	}
+}
+
+//==========================================
+//  足跡の設置
+//==========================================
+void CPlayer::PrintFoot(const D3DXVECTOR3& rotThis)
+{
+	// 前回グリッドと現在のグリッドが一致していた場合関数を抜ける
+	if (m_Grid == m_OldGrid) { return; }
+
+	// 足跡を設定
+	D3DXVECTOR3 rot = rotThis;
+	rot.y += D3DX_PI;
+	CFootPrint::Create(m_OldGrid, rot);
 }
 
 //==========================================

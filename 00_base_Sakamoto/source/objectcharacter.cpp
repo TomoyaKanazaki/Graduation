@@ -36,7 +36,8 @@ namespace
 CObjectCharacter::CObjectCharacter(int nPriority) : CObject(nPriority),
 m_pShadow(nullptr),
 m_bUseShadow(true),
-m_State(STATE_WAIT)
+m_State(STATE_WAIT),
+m_OldState(STATE_WAIT)
 {
 	for (int nCnt = 0; nCnt < MODEL_NUM; nCnt++)
 	{
@@ -177,6 +178,9 @@ void CObjectCharacter::Update(void)
 		m_pShadow->SetPos(D3DXVECTOR3(m_pos.x, 1.0f, m_pos.z));
 		m_pShadow->SetBaseHeight(pos.y);
 	}
+
+	// ó‘Ô‚Ì•Û‘¶
+	m_OldState = m_State;
 }
 
 //====================================================================
@@ -308,6 +312,21 @@ void CObjectCharacter::SetTxtCharacter(const char* pFilename)
 		m_pMotion->SetModel(&m_apModel[0], m_nNumModel);
 		m_pMotion->LoadData(pFilename);
 	}
+}
+
+//====================================================================
+// ƒ‚ƒfƒ‹İ’èˆ—
+//====================================================================
+void CObjectCharacter::SetModel(CModel* pModel, int nCnt)
+{
+	if (m_apModel[nCnt] == nullptr)
+	{
+		m_apModel[nCnt] = pModel;
+	}
+
+	assert(("ƒ‚ƒfƒ‹ã‘‚«¶¬", false));
+
+	return;
 }
 
 //====================================================================
