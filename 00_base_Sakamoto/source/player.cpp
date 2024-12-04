@@ -83,8 +83,8 @@ CPlayer::CPlayer(int nPriority) : CObjectCharacter(nPriority),
 m_AutoMoveRot(INITVECTOR3),
 m_bJump(false),
 m_nActionCount(0),
-m_Action(ACTION_NONE),
-m_AtkAction(ACTION_NONE),
+m_Action(ACTION_WAIT),
+m_AtkAction(ACTION_WAIT),
 m_State(STATE_EGG),
 m_nStateCount(0),
 m_AtkPos(INITVECTOR3),
@@ -197,8 +197,8 @@ HRESULT CPlayer::Init(int PlayNumber)
 	m_AutoMoveRot = D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f);
 
 	// アクションの設定
-	m_Action = ACTION_EGG;
-	m_AtkAction = ACTION_EGG;
+	m_Action = ACTION_WAIT;
+	m_AtkAction = ACTION_WAIT;
 
 	//種類設定
 	SetType(CObject::TYPE_PLAYER3D);
@@ -847,19 +847,19 @@ void CPlayer::ActionState(void)
 	//移動モーション
 	if (m_State == STATE_DEATH)
 	{
-		if (m_Action != ACTION_DEATH)
+		if (m_Action != ACTION_ENEMYDEATH)
 		{
-			m_Action = ACTION_DEATH;
-			pMotion->Set(ACTION_DEATH, 5);
+			m_Action = ACTION_ENEMYDEATH;
+			pMotion->Set(ACTION_ENEMYDEATH, 5);
 		}
 	}
 	//卵モーション
 	else if (m_State == STATE_EGG)
 	{
-		if (m_Action != ACTION_EGG)
+		if (m_Action != ACTION_WAIT)
 		{
-			m_Action = ACTION_EGG;
-			pMotion->Set(ACTION_EGG, 5);
+			m_Action = ACTION_WAIT;
+			pMotion->Set(ACTION_WAIT, 5);
 		}
 	}
 	//移動モーション

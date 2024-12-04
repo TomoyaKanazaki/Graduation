@@ -32,10 +32,13 @@ public:
 	{
 		ACTION_WAIT = 0,		// 待機
 		ACTION_MOVE,			// 移動
-		ACTION_EGG,				// 卵状態(未完成００
-		ACTION_DEATH,			// 死亡状態(未完成０２
+		ACTION_ENEMYDEATH,		// 倒れる死亡状態
+		ACTION_JUMPEAT,			// ジャンプして食べる
+		ACTION_EAT,				// ジャンプせず食べる
+		ACTION_ATTACK,			// 炎で攻撃
+		ACTION_GETITEM,			// アイテムを持ち上げる
+		ACTION_PRESSDEATH,		// バタバタ死亡モーション
 		ACTION_MAX,				// 最大
-		ACTION_NONE
 	};
 
 	//プレイヤーの状態
