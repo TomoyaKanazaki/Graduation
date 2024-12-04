@@ -31,37 +31,37 @@ namespace MyEffekseer
 	// エフェクトの名前
 	const char* EFFECT_PATH[] =
 	{
-		"data\\EFFEKSEER\\Effect\\fireball.efkefc",				// ファイアボール
-		"data\\EFFEKSEER\\Effect\\charge.efkefc",				// チャージ
-		"data\\EFFEKSEER\\Effect\\smoke.efkefc",				// スモーク
-		"data\\EFFEKSEER\\Effect\\hit.efkefc",					// ヒット
-		"data\\EFFEKSEER\\Effect\\get_items.efkefc",			// アイテム取得
-		"data\\EFFEKSEER\\Effect\\eat.efkefc",					// 捕食
-		"data\\EFFEKSEER\\Effect\\medaman_respawn.efkefc",		// メダマンのリスポーン
-		"data\\EFFEKSEER\\Effect\\bonbon_respawn.efkefc",		// ボンボンのリスポーン
-		"data\\EFFEKSEER\\Effect\\smalldevil_respawn.efkefc",	// コデビルのリスポーン
-		"data\\EFFEKSEER\\Effect\\boaboa.efkefc",				// ボアボア
-		"data\\EFFEKSEER\\Effect\\cross.efkefc",				// 十字架
-		"data\\EFFEKSEER\\Effect\\bible.efkefc",				// 聖書
-		"data\\EFFEKSEER\\Effect\\dustcloud.efkefc",			// 歩いた時の砂埃
-		"data\\EFFEKSEER\\Effect\\fall_smoke.efkefc",			// 落下の土煙
-		"data\\EFFEKSEER\\Effect\\born_player00.efkefc",		// プレイヤー１の卵落下
-		"data\\EFFEKSEER\\Effect\\born_player01.efkefc",		// プレイヤー2の卵落下
-		"data\\EFFEKSEER\\Effect\\drop.efkefc",					// タマゴンの汗
-		"data\\EFFEKSEER\\Effect\\speedup.efkefc",				// 加速
-		"data\\EFFEKSEER\\Effect\\roll.efkefc",					// 石が転がる
-		"data\\EFFEKSEER\\Effect\\fire_hit_thewall.efkefc",		// 壁に火が当たる
-		"data\\EFFEKSEER\\Effect\\suprise.efkefc",				// 小デビルが当たる
-		"data\\EFFEKSEER\\Effect\\steam.efkefc",				// 卵から出る湯気
-		"data\\EFFEKSEER\\Effect\\bornguid00.efkefc",			// 生成ガイド player1
-		"data\\EFFEKSEER\\Effect\\bornguid01.efkefc",			// 生成ガイド player2
-		"data\\EFFEKSEER\\Effect\\got_theitem.efkefc",			// アイテムを持っているとき
-		"data\\EFFEKSEER\\Effect\\ascention.efkefc",			// 死んだとき
-		"data\\EFFEKSEER\\Effect\\revive_medaman.efkefc",		// メダマンの復活ガイド
-		"data\\EFFEKSEER\\Effect\\revive_bonbon.efkefc",		// ボンボンの復活ガイド
-		"data\\EFFEKSEER\\Effect\\revive_smalldevil.efkefc",	// 小デビルの復活ガイド
-		"data\\EFFEKSEER\\Effect\\get_thesoft.efkefc",			// ソフトクリーム取得
-		"data\\EFFEKSEER\\Effect\\softcream.efkefc",			// ソフトクリームオーラ
+		"data\\EFFEKSEER\\Effect\\00_fireball.efkefc",				// ファイアボール
+		"data\\EFFEKSEER\\Effect\\01_charge.efkefc",				// チャージ
+		"data\\EFFEKSEER\\Effect\\02_smoke.efkefc",					// スモーク
+		"data\\EFFEKSEER\\Effect\\03_hit.efkefc",					// ヒット
+		"data\\EFFEKSEER\\Effect\\04_get_item.efkefc",				// アイテム取得
+		"data\\EFFEKSEER\\Effect\\05_eat.efkefc",					// 捕食
+		"data\\EFFEKSEER\\Effect\\06_respawn_medaman.efkefc",		// メダマンのリスポーン
+		"data\\EFFEKSEER\\Effect\\07_respawn_bonbon.efkefc",		// ボンボンのリスポーン
+		"data\\EFFEKSEER\\Effect\\08_respawnsmalldevil.efkefc",		// コデビルのリスポーン
+		"data\\EFFEKSEER\\Effect\\09_bowabowa.efkefc",				// ボアボア
+		"data\\EFFEKSEER\\Effect\\10_cross.efkefc",					// 十字架
+		"data\\EFFEKSEER\\Effect\\11_bible.efkefc",					// 聖書
+		"data\\EFFEKSEER\\Effect\\12_smoke_walk.efkefc",			// 歩いた時の砂埃
+		"data\\EFFEKSEER\\Effect\\13_smoke_fall.efkefc",			// 落下の土煙
+		"data\\EFFEKSEER\\Effect\\14_born_player00.efkefc",			// プレイヤー１の卵落下
+		"data\\EFFEKSEER\\Effect\\15_born_player01.efkefc",			// プレイヤー2の卵落下
+		"data\\EFFEKSEER\\Effect\\16_drop_sweat.efkefc",			// タマゴンの汗
+		"data\\EFFEKSEER\\Effect\\17_acceleration.efkefc",			// 加速
+		"data\\EFFEKSEER\\Effect\\18_roll_stone.efkefc",			// 石が転がる
+		"data\\EFFEKSEER\\Effect\\19_wall_on_fire.efkefc",			// 壁に火が当たる
+		"data\\EFFEKSEER\\Effect\\20_hit_smalldevil.efkefc",		// 小デビルが当たる
+		"data\\EFFEKSEER\\Effect\\21_steam_egg.efkefc",				// 卵から出る湯気
+		"data\\EFFEKSEER\\Effect\\22_bornguid00.efkefc",			// 生成ガイド player1
+		"data\\EFFEKSEER\\Effect\\23_bornguid01.efkefc",			// 生成ガイド player2
+		"data\\EFFEKSEER\\Effect\\24_take_item.efkefc",				// アイテムを持っているとき
+		"data\\EFFEKSEER\\Effect\\25_ascention.efkefc",				// 死んだとき
+		"data\\EFFEKSEER\\Effect\\26_revive_medaman.efkefc",		// メダマンの復活ガイド
+		"data\\EFFEKSEER\\Effect\\27_revive_bonbon.efkefc",			// ボンボンの復活ガイド
+		"data\\EFFEKSEER\\Effect\\28_revive_smalldevil.efkefc",		// 小デビルの復活ガイド
+		"data\\EFFEKSEER\\Effect\\29_get_softcream.efkefc",			// ソフトクリーム取得
+		"data\\EFFEKSEER\\Effect\\30_aura_softcream.efkefc",		// ソフトクリームオーラ
 	};
 
 	//============================================
@@ -222,8 +222,6 @@ void CMyEffekseer::Update(void)
 	// エフェクトリストを取得
 	if (CEffekseer::GetList() == nullptr) { return; }
 	std::list<CEffekseer*> list = CEffekseer::GetList()->GetList();    // リストを取得
-
-	DebugProc::Print(DebugProc::POINT_CENTER, "エフェクト数 : %d\n", list.size());
 
 	for(CEffekseer* effect : list)
 	{

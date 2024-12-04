@@ -111,6 +111,7 @@ private:
 	void FireScroll(D3DXVECTOR3 Move, float GritSize);	// ファイアボールのスクロール
 	void TileScroll(D3DXVECTOR3 Move, float GritSize);	// 床のスクロール
 	void WallScroll(D3DXVECTOR3 Move, float GritSize);	// 壁のスクロール
+	void FriedEggScroll(D3DXVECTOR3 Move, float GritSize);	// 目玉焼きのスクロール
 	void SignalScroll(void);
 
 	void GritScroll(D3DXVECTOR3 Move);		//グリットのスクロール

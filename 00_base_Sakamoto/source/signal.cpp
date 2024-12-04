@@ -9,7 +9,6 @@
 #include "MapSystem.h"
 #include "game.h"
 #include "renderer.h"
-#include "game.h"
 #include "tutorial.h"
 #include "objmeshField.h"
 #include "devil.h"
@@ -80,7 +79,6 @@ CSignal* CSignal::Create(const char* pModelNameSignal)
 //====================================================================
 HRESULT CSignal::Init(const char* pModelName)
 {
-	
 	D3DXVECTOR3 pos = GetPos();
 
 	// åpè≥ÉNÉâÉXÇÃèâä˙âª

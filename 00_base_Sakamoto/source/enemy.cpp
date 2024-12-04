@@ -87,19 +87,20 @@ m_pEffect(nullptr)
 	m_Objmove = INITVECTOR3;
 	m_nActionCount = 0;
 	SetSize(COLLISION_SIZE);
-	m_nStateCount = 0;
+	m_nMoveStateCount = 0;
 
 	m_ColorA = 1.0f;
 
 	m_EnemyType = ENEMY_MEDAMAN;
-	m_State = E_STATE_WAIT;
 	m_pSlow = nullptr;
-	m_SelectMove = SELECT_MOVE_MAX;
 
-	m_OKL = true;
-	m_OKR = true;
-	m_OKU = true;
-	m_OKD = true;
+	m_HitState = HIT_STATE_NORMAL;
+	m_nHitStateCount = 0;
+
+	m_Progress.bOKL = true;
+	m_Progress.bOKR = true;
+	m_Progress.bOKU = true;
+	m_Progress.bOKD = true;
 
 	m_Grid.x = 0;
 	m_Grid.z = 0;
@@ -186,11 +187,12 @@ HRESULT CEnemy::Init(void)
 	m_pSlow = CSlowManager::Create(m_pSlow->CAMP_ENEMY, m_pSlow->TAG_ENEMY);
 
 	// 移動状態設定
-	//if (m_pMoveState == nullptr)
-	//{ // 移動状態設定
-	//	m_pMoveState = new CStateStop();		// 停止状態
-	//	m_pMoveState->RandomStop(this);			// ランダム歩行状態
-	//}
+	if (m_pMoveState == nullptr)
+	{ // 移動状態設定
+		m_pMoveState = new CStateStop();		// 停止状態
+		m_pMoveState->ControlStop(this);		// 操作できる状態
+		m_pMoveState->SetRotState(CMoveState::ROTSTATE_MAX);		// 移動向きの状態を設定
+	}
 
 	// リストマネージャーの生成
 	if (m_pList == nullptr)
@@ -231,11 +233,11 @@ void CEnemy::Uninit(void)
 	}
 
 	// 移動状態の破棄
-	/*if (m_pMoveState != nullptr)
+	if (m_pMoveState != nullptr)
 	{
 		delete m_pMoveState;
 		m_pMoveState = nullptr;
-	}*/
+	}
 
 	// キャラクタークラスの終了（継承）
 	CObjectCharacter::Uninit();
@@ -251,6 +253,7 @@ void CEnemy::Update(void)
 	D3DXVECTOR3 posOldMy = GetPosOld();		// 前回の位置
 	D3DXVECTOR3 rotMy = GetRot();			// 向き
 	D3DXVECTOR3 sizeMy = GetSize();			// 大きさ
+	STATE state = GetState();				// 状態
 
 	// 過去の位置を記録
 	posOldMy = posMy;
@@ -262,7 +265,15 @@ void CEnemy::Update(void)
 	//MoveSelect();
 
 	// 状態の更新
-	StateManager(posMy);
+	MoveStateManager(posMy);
+
+	// 状態の更新
+	HitStateManager(posMy);
+
+	if (state == STATE_DEATH)
+	{
+		return;
+	}
 
 	// 移動方向処理
 	Rot(rotMy);
@@ -270,14 +281,19 @@ void CEnemy::Update(void)
 	// 位置更新処理
 	UpdatePos(posMy,posOldMy,sizeMy);
 
+	// 移動処理
+	m_pMoveState->Move(this, posMy, rotMy);
+
+	//m_pMoveState->ControlStop(this);
+
 	// 追跡状態にする
-	//m_pMoveState->RandomAStar(this);
+	//m_pMoveState->ControlAStar(this);
 
 	// プレイヤーへの最短経路探索
 	Coordinate();
 
 	//// 最短経路をたどる
-	Route();
+	//Route();
 
 	// 自分の番号を設定
 	m_Grid = CMapSystem::GetInstance()->CMapSystem::CalcGrid(posMy);
@@ -324,17 +340,9 @@ void CEnemy::Draw(void)
 //====================================================================
 // ヒット処理
 //====================================================================
-bool CEnemy::Hit(int nLife)
+bool CEnemy::Hit(void)
 {
-	m_nLife -= nLife;
-
-	if (m_nLife < 0)
-	{// 体力0以下
-		Uninit();
-
-		// 目玉焼きを生成
-		CFriedEgg::Create(m_EnemyType, m_Grid);
-	}
+	Death();
 
 	return true;
 }
@@ -355,28 +363,28 @@ HRESULT CEnemy::InitModel(const char* pFilename)
 //====================================================================
 void CEnemy::UpdatePos(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR3& sizeMy)
 {
-	// モーションの取得
-	CMotion* pMotion = GetMotion();
+	//// モーションの取得
+	//CMotion* pMotion = GetMotion();
 
-	if (pMotion == nullptr)
-	{
-		return;
-	}
+	//if (pMotion == nullptr)
+	//{
+	//	return;
+	//}
 
 	//重力
 	m_move.y -= 0.5f;
 
 	// 変数宣言
 	float fSpeed = 1.0f;	// スロー用 default1.0fで初期化
-	if (m_pSlow)
-	{
-		fSpeed = m_pSlow->GetValue();
+	//if (m_pSlow)
+	//{
+	//	fSpeed = m_pSlow->GetValue();
 
-		if (pMotion)
-		{
-			pMotion->SetSlowVaule(fSpeed);
-		}
-	}
+	//	if (pMotion)
+	//	{
+	//		pMotion->SetSlowVaule(fSpeed);
+	//	}
+	//}
 
 	CDevil* pDevil = CDevil::GetListTop();
 
@@ -448,7 +456,7 @@ void CEnemy::CollisionWall(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR
 		if (useful::CollisionBlock(pos, posOld, Move, Size, &posMy, posOldMy, &m_move, &m_Objmove, size, &bNullJump, XYZ) == true)
 		{
 			//待機状態にする
-			m_State = E_STATE_WAIT;
+			SetState(STATE_WAIT);
 
 			posMy = m_Grid.ToWorld();
 		}
@@ -476,7 +484,7 @@ void CEnemy::CollisionDevilHole(useful::COLLISION XYZ)
 	//	if (useful::CollisionBlock(pos, posOld, INITVECTOR3, Size, &m_pos, m_posOld, &m_move, &m_Objmove, m_size, &bNullJump, XYZ) == true)
 	//	{
 	//		//待機状態にする
-	//		m_State = E_STATE_WAIT;
+	//		m_MoveState = MOVE_STATE_WAIT;
 	//	}
 	//}
 }
@@ -522,48 +530,38 @@ void CEnemy::CollisionOut(D3DXVECTOR3& posMy)
 //====================================================================
 void CEnemy::Death(void)
 {
-	// モーションの取得
-	CMotion* pMotion = GetMotion();
+	Uninit();
 
-	if (pMotion == nullptr)
-	{
-		return;
-	}
+	// 目玉焼きを生成
+	CFriedEgg::Create(m_EnemyType, m_Grid);
 
-	if (pMotion->GetFinish() == true)
-	{
-		m_ColorA -= 0.005f;
-
-		if (m_ColorA <= 0.0f)
-		{
-			Uninit();
-		}
-	}
+	SetState(STATE_DEATH);
 }
 
 //====================================================================
 // 状態更新
 //====================================================================
-void CEnemy::StateManager(D3DXVECTOR3& posMy)
+void CEnemy::MoveStateManager(D3DXVECTOR3& posMy)
 {
-	//状態の管理
-	switch (m_State)
-	{
-	case CEnemy::E_STATE_WAIT:
+	STATE state = GetState();
 
-		MoveSelect();
-		m_State = E_STATE_WALK;
+	//状態の管理
+	switch (state)
+	{
+	case CObjectCharacter::STATE_WAIT:
+
+		SetState(STATE_WALK);
 
 		break;
 
-	case CEnemy::E_STATE_TRUN:
+	case CObjectCharacter::STATE_TRUN:
 
 		m_move.x = m_move.x * -1.0f;
 		m_move.z = m_move.z * -1.0f;
 
 		break;
 
-	case CEnemy::E_STATE_WALK:
+	case CObjectCharacter::STATE_WALK:
 
 		if (abs(m_move.x) < 0.01f && abs(m_move.z) < 0.01f)
 		{
@@ -578,10 +576,7 @@ void CEnemy::StateManager(D3DXVECTOR3& posMy)
 
 		break;
 
-	case CEnemy::E_STATE_EGG:
-		break;
-
-	case CEnemy::E_STATE_DEATH:
+	case CObjectCharacter::STATE_DEATH:
 
 		m_move.x = 0.0f;
 		m_move.z = 0.0f;
@@ -592,9 +587,49 @@ void CEnemy::StateManager(D3DXVECTOR3& posMy)
 		break;
 	}
 
-	if (m_nStateCount > 0)
+	if (m_nMoveStateCount > 0)
 	{
-		m_nStateCount--;
+		m_nMoveStateCount--;
+	}
+}
+
+//====================================================================
+// 状態更新
+//====================================================================
+void CEnemy::HitStateManager(D3DXVECTOR3& posMy)
+{
+	//状態の管理
+	switch (m_HitState)
+	{
+	case CEnemy::HIT_STATE_NORMAL:
+		SetModelColor(CModel::COLORTYPE_FALSE, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+		break;
+
+	case CEnemy::HIT_STATE_DAMAGE:
+
+		SetModelColor(CModel::COLORTYPE_TRUE_ALL, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+
+		m_move = INITVECTOR3;
+
+		if (m_nHitStateCount <= 0)
+		{
+			Death();
+		}
+
+		break;
+
+	case CEnemy::HIT_STATE_INVINCIBLE:
+		SetModelColor(CModel::COLORTYPE_TRUE_ALL, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+		break;
+
+	case CEnemy::E_STATE_EGG:
+		SetModelColor(CModel::COLORTYPE_TRUE_ALL, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f));
+		break;
+	}
+
+	if (m_nHitStateCount > 0)
+	{
+		m_nHitStateCount--;
 	}
 }
 
@@ -605,23 +640,25 @@ void CEnemy::MoveSelect()
 {
 	float OKRot[4];
 	int RotNumber = 0;
-
-	if (m_OKL && m_SelectMove != SELECT_MOVE_RIGHT)
+	CMoveState::ROTSTATE RotState = m_pMoveState->GetRotState();	// 移動方向の状態
+	
+	
+	if (m_Progress.bOKL && RotState != CMoveState::ROTSTATE_RIGHT)
 	{
 		OKRot[RotNumber] = D3DX_PI * -0.5f;
 		RotNumber++;
 	}
-	if (m_OKR && m_SelectMove != SELECT_MOVE_LEFT)
+	if (m_Progress.bOKR && RotState != CMoveState::ROTSTATE_LEFT)
 	{
 		OKRot[RotNumber] = D3DX_PI * 0.5f;
 		RotNumber++;
 	}
-	if (m_OKU && m_SelectMove != SELECT_MOVE_DOWN)
+	if (m_Progress.bOKU && RotState != CMoveState::ROTSTATE_DOWN)
 	{
 		OKRot[RotNumber] = D3DX_PI * 0.0f;
 		RotNumber++;
 	}
-	if (m_OKD && m_SelectMove != SELECT_MOVE_UP)
+	if (m_Progress.bOKD && RotState != CMoveState::ROTSTATE_UP)
 	{
 		OKRot[RotNumber] = D3DX_PI * 1.0f;
 		RotNumber++;
@@ -636,19 +673,19 @@ void CEnemy::MoveSelect()
 
 		if (m_move.x >= 3.0f)
 		{
-			m_SelectMove = SELECT_MOVE_RIGHT;
+			RotState = CMoveState::ROTSTATE_RIGHT;
 		}
 		else if (m_move.x <= -3.0f)
 		{
-			m_SelectMove = SELECT_MOVE_LEFT;
+			RotState = CMoveState::ROTSTATE_LEFT;
 		}
 		else if (m_move.z >= 3.0f)
 		{
-			m_SelectMove = SELECT_MOVE_UP;
+			RotState = CMoveState::ROTSTATE_UP;
 		}
 		else if (m_move.z <= -3.0f)
 		{
-			m_SelectMove = SELECT_MOVE_DOWN;
+			RotState = CMoveState::ROTSTATE_DOWN;
 		}
 
 		m_SelectGrid = m_Grid;
@@ -698,34 +735,34 @@ void CEnemy::SearchWall(D3DXVECTOR3& posMy)
 		(m_Grid.x != m_SelectGrid.x || m_Grid.z != m_SelectGrid.z))
 	{// グリットの中心位置に立っているなら操作を受け付ける
 
-		if (!m_OKR && OKR)
+		if (!m_Progress.bOKR && OKR)
 		{
-			m_State = E_STATE_WAIT;
+			SetState(STATE_WAIT);
 		}
-		if (!m_OKL && OKL)
+		if (!m_Progress.bOKL && OKL)
 		{
-			m_State = E_STATE_WAIT;
+			SetState(STATE_WAIT);
 		}
-		if (!m_OKU && OKU)
+		if (!m_Progress.bOKU && OKU)
 		{
-			m_State = E_STATE_WAIT;
+			SetState(STATE_WAIT);
 		}
-		if (!m_OKD && OKD)
+		if (!m_Progress.bOKD && OKD)
 		{
-			m_State = E_STATE_WAIT;
+			SetState(STATE_WAIT);
 		}
 
-		m_OKR = OKR;	//右
-		m_OKL = OKL;	//左
-		m_OKU = OKU;	//上
-		m_OKD = OKD;	//下
+		m_Progress.bOKR = OKR;	//右
+		m_Progress.bOKL = OKL;	//左
+		m_Progress.bOKU = OKU;	//上
+		m_Progress.bOKD = OKD;	//下
 	}
 	else
 	{
-		m_OKR = false;	//右
-		m_OKL = false;	//左
-		m_OKU = false;	//上
-		m_OKD = false;	//下
+		m_Progress.bOKR = false;	//右
+		m_Progress.bOKL = false;	//左
+		m_Progress.bOKU = false;	//上
+		m_Progress.bOKD = false;	//下
 	}
 }
 
@@ -833,6 +870,20 @@ void CEnemy::Effect()
 
 	// エフェクトを生成
 	m_pEffect = MyEffekseer::EffectCreate(EFFECT_TYPE[m_EnemyType], false, pos, rot, D3DXVECTOR3(10.0f, 10.0f, 10.0f));
+}
+
+//==========================================
+// 移動状態変更処理
+//==========================================
+void CEnemy::ChangeMoveState(CMoveState* pMoveState)
+{
+	if (m_pMoveState != nullptr)
+	{
+		delete m_pMoveState;
+		m_pMoveState = nullptr;
+	}
+
+	m_pMoveState = pMoveState;
 }
 
 //====================================================================

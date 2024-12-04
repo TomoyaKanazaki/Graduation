@@ -54,7 +54,6 @@ public:
 	~CManager();
 
 	static CManager *GetInstance();
-	static HRESULT Release(void);
 
 	HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow); 	//返り値がHRESULTなのは頂点バッファの生成などに失敗したとき確認のため
 	void Uninit(void);

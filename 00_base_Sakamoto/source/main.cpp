@@ -21,8 +21,8 @@
 //==========================================
 namespace
 {
-	const char* CLASS_NAME = "Pause.";				//ウインドウクラスの名前
-	const char* WINDOW_NAME = "　Pause.　";			//ウインドウの名前(キャプションに表示)
+	const char* CLASS_NAME = "でびりんす";				//ウインドウクラスの名前
+	const char* WINDOW_NAME = "　でびりんす　";			//ウインドウの名前(キャプションに表示)
 }
 
 //プロトタイプ宣言

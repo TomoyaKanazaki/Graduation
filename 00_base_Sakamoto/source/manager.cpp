@@ -383,6 +383,7 @@ void CManager::Update(void)
 			//ðŒH ˆ—‚PFˆ—‚Q;
 			m_bEdit = m_bEdit ? false : true;
 			CObject::DeleteBlock();
+			CManager::GetInstance()->GetCamera()->SetCameraMode(CCamera::CAMERAMODE_CONTROL);
 		}
 	}
 

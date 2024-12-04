@@ -217,10 +217,15 @@ void CFire::CollisionEnemy()
 	// キューブブロックリストの中身を確認する
 	for (CEnemy* pEnemy : list)
 	{
+		if (pEnemy->GetHitState() != CEnemy::HIT_STATE_NORMAL)
+		{
+			continue;
+		}
+
 		// 円の当たり判定
 		if (m_Grid == pEnemy->GetGrid())
 		{// 弾が当たった
-			pEnemy->Hit(1);
+			pEnemy->Hit();
 
 			// エフェクトを生成
 			D3DXVECTOR3 pos = pEnemy->GetPos();
@@ -261,9 +266,9 @@ void CFire::CollisionWall()
 	Uninit();
 }
 
-//====================================================================
+//==========================================
 //リスト取得
-//====================================================================
+//==========================================
 CListManager<CFire>* CFire::GetList(void)
 {
 	return m_pList;

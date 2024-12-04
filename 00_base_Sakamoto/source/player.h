@@ -9,7 +9,6 @@
 
 #include "objectcharacter.h"
 #include "useful.h"
-#include "Model.h"
 #include "MapSystem.h"
 
 //前方宣言
@@ -39,30 +38,6 @@ public:
 		ACTION_NONE
 	};
 
-	//プレイヤーの状態
-	enum STATE
-	{
-		STATE_WAIT = 0,		//待機
-		STATE_WALK,			//歩き
-		STATE_DEATH,		//死亡
-		STATE_EGG,			//卵
-		STATE_ATTACK,		//攻撃
-		STATE_MAX,			//最大
-		STATE_NONE
-	};
-
-	// プレイヤーの移動方向
-	enum MOVE_STATE
-	{
-		MOVE_STATE_WAIT = 0,	// 待機
-		MOVE_STATE_LEFT,		// 左方向
-		MOVE_STATE_RIGHT,		// 右方向
-		MOVE_STATE_UP,			// 上方向
-		MOVE_STATE_DOWN,		// 下方向
-		MOVE_STATE_MAX,			// 最大
-		MOVE_STATE_NONE
-	};
-
 	// アイテムの種類
 	enum ITEM_TYPE
 	{
@@ -81,15 +56,6 @@ public:
 	void SetPlayNumber(int Number) { m_nPlayNumber = Number; }
 	int GetPlayNumber(void) { return m_nPlayNumber; }
 
-	void SetMove(D3DXVECTOR3 move) { m_move = move; }
-	void SetMoveX(float moveX) { m_move.x = moveX; }
-	void SetMoveZ(float moveZ) { m_move.z = moveZ; }
-	D3DXVECTOR3 GetMove(void) { return m_move; }
-	void SetObjMoveX(float move) { m_Objmove.x = move; }
-	void SetObjMoveZ(float move) { m_Objmove.z = move; }
-	D3DXVECTOR3 GetObjMove(void) { return m_Objmove; }
-	void SetState(STATE State) { m_State = State; }
-	STATE GetState(void) { return m_State; }
 	bool GetJump(void) { return m_bJump; }
 	void SetCameraPos(D3DXVECTOR3 pos) { m_CameraPos = pos; }
 	D3DXVECTOR3 GetCameraPos(void) { return m_CameraPos; }
@@ -97,7 +63,6 @@ public:
 	ACTION_TYPE GetAction(void) { return m_Action; }
 	void SetModelDisp(bool Sst);
 	void SetPartsDisp(int nParts, bool Set);
-	void SetModelColor(CModel::COLORTYPE Type, D3DXCOLOR Col);
 	void SetPressObj(bool Set) { m_bPressObj = Set; }
 	bool GetPressObj(void) { return m_bPressObj; }
 	CScore* GetScore(void) { return m_pScore; }
@@ -115,9 +80,10 @@ public:
 
 	bool GetGritCenter() { return m_bGritCenter; }
 
-	// マップ番号の設定
-	virtual void SetGrid(const CMapSystem::GRID& pos) { m_Grid = pos; }
-	CMapSystem::GRID GetGrid(void) { return m_Grid; }
+	
+	void ChangeMoveState(CMoveState* pMoveState) override;		// 移動状態変更
+	D3DXVECTOR3 GetEggMove() override { return m_EggMove; }		// 卵の移動量取得
+
 
 	virtual void Death(void);
 
@@ -170,29 +136,21 @@ private:
 	int m_nPlayNumber;				//プレイ用番号
 	ACTION_TYPE m_Action;
 	ACTION_TYPE m_AtkAction;		//攻撃状態記録用変数
-	D3DXVECTOR3 m_move;				//移動量
-	D3DXVECTOR3 m_Objmove;			//オブジェクトから影響される移動量
 	D3DXVECTOR3 m_rotDest;			//向きの目的地
 	D3DXVECTOR3 m_AutoMoveRot;		//自動移動の移動方向
 	D3DXVECTOR3 m_AtkPos;			//攻撃位置
 	D3DXVECTOR3 m_CameraPos;		//カメラ位置位置
 	bool m_bJump;					//ジャンプをしたかどうか
 	int m_nActionCount;				//行動のカウント
-	STATE m_State;					//状態
-	MOVE_STATE m_MoveState;			//移動方向
 	int m_nStateCount;				//状態管理用カウント
 
 	float m_CollisionRot;			//当たり判定用の向き
 
-	CMapSystem::GRID m_Grid;		//グリット番号
 	bool m_bGritCenter;				//グリットの中心位置にいるかどうか
 
 	int m_nLife;					//ライフ
 	int m_nTime;
-	bool m_OKL;						//左への進行が許されるかどうか
-	bool m_OKR;						//右への進行が許されるかどうか
-	bool m_OKU;						//上への進行が許されるかどうか
-	bool m_OKD;						//下への進行が許されるかどうか
+	
 	bool m_bInput;					//入力を行ったかどうか
 	bool m_bPressObj;				//オブジェクトに押されているかどうか
 	bool m_bInvincible;				//無敵かどうか
@@ -211,6 +169,8 @@ private:
 
 	CLifeUi* m_pLifeUi;				//体力UI
 	CObjectBillboard* m_pP_NumUI;	//プレイヤー番号UI		
+
+	CMoveState* m_pMoveState;		// 移動状態
 
 	CEffekseer* m_pEffectEgg;		// 卵のエフェクト
 	CEffekseer* m_pEffectSpeed;		// 加減速のエフェクト

@@ -30,11 +30,9 @@ public:
 	HRESULT Init(void) override;
 	void Uninit(void);
 	void Update(void);
-	void TitleUpdate(void);
-	void GameUpdate(void);
 	void Draw(void);
 
-	void HitDamage(float fDamage);
+	bool Hit(void);
 
 	// 静的メンバ関数
 	static CListManager<CEnemyMedaman>* GetList(void); // リスト取得

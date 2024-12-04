@@ -37,6 +37,7 @@
 #include "mask.h"
 #include "wall.h"
 #include "objectBillboard.h"
+#include "move.h"
 
 #include "MyEffekseer.h"
 
@@ -49,10 +50,9 @@ namespace
 	const int FIRE_STOPTIME = 30;	//攻撃時の移動停止時間
 	const D3DXVECTOR3 RESPAWN_POS = D3DXVECTOR3(-100.0f, 2000.0f, 100.0f); // 復活位置
 	const float RESPAWN_GRAVITY = 0.03f;			//卵の重力
-	const int INVINCIBLE_TIME = 120;			//無敵時間
+	const int INVINCIBLE_TIME = 120;			//無敵時間(後で消す)
 
 	const float GRIT_OK = 45.0f;			//移動可能なグリットの範囲内
-	const float PLAYER_SPEED = 5.0f;		//プレイヤーの移動速度
 	const float OBJDISTANCE = 10000.0f;		// オブジェクトの距離
 
 	const D3DXVECTOR3 COLLISION_SIZE = D3DXVECTOR3(35.0f, 40.0f, 35.0f);		//横の当たり判定
@@ -63,7 +63,7 @@ namespace
 	const float CROSS_TIME = 10.0f; // 十字架を所持していられる時間
 
 	const float EGG_GRAVITY = 0.98f;	 //移動量の減衰速度
-	const D3DXVECTOR3 EGG_MOVE = D3DXVECTOR3(10.0f, 10.0f, 10.0f);	 //移動量の減衰速度
+	const D3DXVECTOR3 EGG_MOVE = D3DXVECTOR3(10.0f, 10.0f, 10.0f);	 //移動量の減衰速度(後で消す)
 	const float EGG_ROT = D3DX_PI * 0.006f;		//回転速度
 	const float EGG_MOVE_DEL = 0.9f;			//移動量の減衰速度
 	const float EGG_COLOR_DEL_A = 0.01f;		//不透明度の減衰速度
@@ -80,27 +80,19 @@ CListManager<CPlayer>* CPlayer::m_pList = nullptr; // オブジェクトリスト
 //コンストラクタ
 //====================================================================
 CPlayer::CPlayer(int nPriority) : CObjectCharacter(nPriority),
-m_move(INITVECTOR3),
-m_Objmove(INITVECTOR3),
 m_AutoMoveRot(INITVECTOR3),
 m_bJump(false),
 m_nActionCount(0),
 m_Action(ACTION_NONE),
 m_AtkAction(ACTION_NONE),
-m_State(STATE_EGG),
+//state(STATE_EGG),
 m_nStateCount(0),
 m_AtkPos(INITVECTOR3),
 m_CollisionRot(0.0f),
-m_OKL(true),
-m_OKR(true),
-m_OKU(true),
-m_OKD(true),
 m_bInput(false),
 m_pLifeUi(nullptr),
 m_nLife(0),
 m_eItemType(TYPE_NONE),
-m_MoveState(MOVE_STATE_NONE),
-m_Grid(0, 0),
 m_bGritCenter(true),
 m_bPressObj(false),
 m_fCrossTimer(0.0f),
@@ -115,9 +107,14 @@ m_pEffectEgg(nullptr),
 m_pEffectSpeed(nullptr),
 m_pP_NumUI(nullptr),
 m_pEffectGuide(nullptr),
-m_pEffectItem(nullptr)
+m_pEffectItem(nullptr),
+m_pMoveState(nullptr)
 {
-
+	// 移動の進行状況
+	m_Progress.bOKD = true;
+	m_Progress.bOKL = true;
+	m_Progress.bOKR = true;
+	m_Progress.bOKU = true;
 }
 
 //====================================================================
@@ -160,32 +157,8 @@ HRESULT CPlayer::Init(int PlayNumber)
 	D3DXVECTOR3 rotThis = GetRot();			// 向き
 	D3DXVECTOR3 sizeThis = GetSize();		// 大きさ
 
-	CMapSystem* pMapSystem = CMapSystem::GetInstance();		// マップシステムの情報
-
+	// プレイヤー番号を設定
 	m_nPlayNumber = PlayNumber;
-
-	// プレイヤーの位置取得
-	posThis = pMapSystem->GetPlayerPos(PlayNumber);
-
-	// サイズの設定
-	sizeThis = COLLISION_SIZE;
-
-	// 向きの設定
-	rotThis = D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f);
-	m_AutoMoveRot = D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f);
-
-	// アクションの設定
-	m_Action = ACTION_EGG;
-	m_AtkAction = ACTION_EGG;
-
-	//種類設定
-	SetType(CObject::TYPE_PLAYER3D);
-
-	// 体力の設定
-	m_nLife = LIFE_MAX;
-
-	// 状態の設定
-	m_MoveState = MOVE_STATE_WAIT;
 
 	// キャラクタークラスの初期化（継承）
 	if (FAILED(CObjectCharacter::Init())) { assert(false); }
@@ -211,6 +184,28 @@ HRESULT CPlayer::Init(int PlayNumber)
 	CObjectCharacter::SetUseStencil(true);
 	CObjectCharacter::SetUseShadowMtx(true);
 
+	CMapSystem* pMapSystem = CMapSystem::GetInstance();		// マップシステムの情報
+
+	// プレイヤーの位置取得
+	posThis = pMapSystem->GetPlayerPos(PlayNumber);
+
+	// サイズの設定
+	sizeThis = COLLISION_SIZE;
+
+	// 向きの設定
+	rotThis = D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f);
+	m_AutoMoveRot = D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f);
+
+	// アクションの設定
+	m_Action = ACTION_EGG;
+	m_AtkAction = ACTION_EGG;
+
+	//種類設定
+	SetType(CObject::TYPE_PLAYER3D);
+
+	// 体力の設定
+	m_nLife = LIFE_MAX;
+
 	//所持するUIの生成
 	UI_Create();
 
@@ -228,6 +223,18 @@ HRESULT CPlayer::Init(int PlayNumber)
 	SetPosOld(posOldThis);	// 前回の位置
 	SetRot(rotThis);			// 向き
 	SetSize(sizeThis);		// 大きさ
+
+	// 状態の設定
+	SetState(STATE_EGG);
+
+	// 移動状態の設定
+	if (m_pMoveState == nullptr)
+	{
+		m_pMoveState = new CStateStop();	// 停止状態
+		m_pMoveState->ControlStop(this);	// 操作状態にする
+	}
+	// 向き状態の設定
+	m_pMoveState->SetRotState(CMoveState::ROTSTATE_WAIT);
 
 	// リストマネージャーの生成
 	if (m_pList == nullptr)
@@ -299,25 +306,33 @@ void CPlayer::Update(void)
 	D3DXVECTOR3 posOldThis = GetPosOld();		// 前回の位置
 	D3DXVECTOR3 rotThis = GetRot();			// 向き
 	D3DXVECTOR3 sizeThis = GetSize();			// 大きさ
+	STATE state = GetState();				// 状態
 
 	// 過去の位置に代入
 	posOldThis = posThis;
 
-	if (m_State != STATE_DEATH)
+	if (state != STATE_DEATH)
 	{
 		//壁があるか判断
 		SearchWall(posThis);
 
 		if (
-			(m_State != STATE_EGG && CollisionStageIn(posThis) == true &&
+			(state != STATE_EGG && CollisionStageIn(posThis) == true &&
 				CMapSystem::GetInstance()->GetGritBool(m_Grid.x, m_Grid.z) == false) ||
-			(m_State == STATE_EGG && CollisionStageIn(posThis) == true &&
+			(state == STATE_EGG && CollisionStageIn(posThis) == true &&
 				CMapSystem::GetInstance()->GetGritBool(m_Grid.x, m_Grid.z) == false &&
 				m_bGritCenter == true && posThis.y <= 0.0f)
 			)
 		{// ステージ内にいる かつ ブロックの無いグリッド上の時
+
+			// 操作状態
+			//m_pMoveState->ControlStop(this);
+
 			// 移動処理
-			Move(posThis,rotThis);
+			m_pMoveState->Move(this, posThis, rotThis);
+
+			// 移動処理
+			//Move(posThis,rotThis);
 		}
 
 		// 向き移動処理
@@ -349,7 +364,7 @@ void CPlayer::Update(void)
 		// カメラ更新処理
 		CameraPosUpdate(posThis);
 
-		if (m_State == STATE_WALK)
+		if (state == STATE_WALK)
 		{
 			// 位置更新処理
 			PosUpdate(posThis,posOldThis,sizeThis);
@@ -357,7 +372,7 @@ void CPlayer::Update(void)
 
 		ObjPosUpdate(posThis,posOldThis,sizeThis);
 
-		if (m_State != STATE_EGG && m_State != STATE_DEATH)
+		if (state != STATE_EGG && state != STATE_DEATH)
 		{
 			//画面外判定
 			CollisionStageOut(posThis);
@@ -419,7 +434,7 @@ void CPlayer::Update(void)
 	DebugProc::Print(DebugProc::POINT_LEFT, "[自分]向き %f : %f : %f\n", rotThis.x, rotThis.y, rotThis.z);
 	DebugProc::Print(DebugProc::POINT_LEFT, "[自分]横 %d : 縦 %d\n", m_Grid.x, m_Grid.z);
 	DebugProc::Print(DebugProc::POINT_LEFT, "[自分]状態 : ");
-	auto str = magic_enum::enum_name(m_State);
+	auto str = magic_enum::enum_name(state);
 	DebugProc::Print(DebugProc::POINT_LEFT, str.data());
 	DebugProc::Print(DebugProc::POINT_LEFT, "\n");
 
@@ -534,6 +549,7 @@ void CPlayer::UI_Init(void)
 	}
 }
 
+#if 0
 //====================================================================
 //移動処理
 //====================================================================
@@ -621,7 +637,7 @@ D3DXVECTOR3 CPlayer::MoveInputKey(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis, D3
 	CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
 
 	//キーボードの移動処理
-	if ((pInputKeyboard->GetPress(DIK_W) && m_OKU && m_bGritCenter) ||
+	if ((pInputKeyboard->GetPress(DIK_W) && m_Progress.bOKU && m_bGritCenter) ||
 		(pInputKeyboard->GetPress(DIK_W) && m_MoveState == MOVE_STATE_DOWN))
 	{
 		Move.z += 1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
@@ -630,7 +646,7 @@ D3DXVECTOR3 CPlayer::MoveInputKey(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis, D3
 		m_bInput = true;
 		m_MoveState = MOVE_STATE_UP;
 	}
-	else if (((pInputKeyboard->GetPress(DIK_S) && m_OKD && m_bGritCenter) ||
+	else if (((pInputKeyboard->GetPress(DIK_S) && m_Progress.bOKD && m_bGritCenter) ||
 		(pInputKeyboard->GetPress(DIK_S) && m_MoveState == MOVE_STATE_UP)) &&
 		pInputKeyboard->GetPress(DIK_W) == false)
 	{
@@ -640,7 +656,7 @@ D3DXVECTOR3 CPlayer::MoveInputKey(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis, D3
 		m_bInput = true;
 		m_MoveState = MOVE_STATE_DOWN;
 	}
-	else if ((pInputKeyboard->GetPress(DIK_A) && m_OKL && m_bGritCenter) ||
+	else if ((pInputKeyboard->GetPress(DIK_A) && m_Progress.bOKL && m_bGritCenter) ||
 		(pInputKeyboard->GetPress(DIK_A) && m_MoveState == MOVE_STATE_RIGHT))
 	{
 		Move.x += -1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
@@ -649,7 +665,7 @@ D3DXVECTOR3 CPlayer::MoveInputKey(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis, D3
 		m_bInput = true;
 		m_MoveState = MOVE_STATE_LEFT;
 	}
-	else if (((pInputKeyboard->GetPress(DIK_D) && m_OKR && m_bGritCenter) ||
+	else if (((pInputKeyboard->GetPress(DIK_D) && m_Progress.bOKR && m_bGritCenter) ||
 		(pInputKeyboard->GetPress(DIK_D) && m_MoveState == MOVE_STATE_LEFT)) &&
 		pInputKeyboard->GetPress(DIK_A) == false)
 	{
@@ -675,7 +691,7 @@ D3DXVECTOR3 CPlayer::MoveInputPadStick(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThi
 		if (nCnt == m_nPlayNumber)
 		{
 			//スティックの移動処理
-			if ((pInputJoypad->Get_Stick_Left(nCnt).y > 0.0f && m_OKU && m_bGritCenter) ||
+			if ((pInputJoypad->Get_Stick_Left(nCnt).y > 0.0f && m_Progress.bOKU && m_bGritCenter) ||
 				(pInputJoypad->Get_Stick_Left(nCnt).y > 0.0f && m_MoveState == MOVE_STATE_DOWN))
 			{
 				Move.z += 1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
@@ -684,7 +700,7 @@ D3DXVECTOR3 CPlayer::MoveInputPadStick(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThi
 				m_bInput = true;
 				m_MoveState = MOVE_STATE_UP;
 			}
-			else if ((pInputJoypad->Get_Stick_Left(nCnt).y < 0.0f && m_OKD && m_bGritCenter) ||
+			else if ((pInputJoypad->Get_Stick_Left(nCnt).y < 0.0f && m_Progress.bOKD && m_bGritCenter) ||
 				(pInputJoypad->Get_Stick_Left(nCnt).y < 0.0f && m_MoveState == MOVE_STATE_UP))
 			{
 				Move.z += -1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
@@ -693,7 +709,7 @@ D3DXVECTOR3 CPlayer::MoveInputPadStick(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThi
 				m_bInput = true;
 				m_MoveState = MOVE_STATE_DOWN;
 			}
-			else if ((pInputJoypad->Get_Stick_Left(nCnt).x < 0.0f && m_OKL && m_bGritCenter) ||
+			else if ((pInputJoypad->Get_Stick_Left(nCnt).x < 0.0f && m_Progress.bOKL && m_bGritCenter) ||
 				(pInputJoypad->Get_Stick_Left(nCnt).x < 0.0f && m_MoveState == MOVE_STATE_RIGHT))
 			{
 				Move.x += -1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
@@ -702,7 +718,7 @@ D3DXVECTOR3 CPlayer::MoveInputPadStick(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThi
 				m_bInput = true;
 				m_MoveState = MOVE_STATE_LEFT;
 			}
-			else if ((pInputJoypad->Get_Stick_Left(nCnt).x > 0.0f && m_OKR && m_bGritCenter) ||
+			else if ((pInputJoypad->Get_Stick_Left(nCnt).x > 0.0f && m_Progress.bOKR && m_bGritCenter) ||
 				(pInputJoypad->Get_Stick_Left(nCnt).x > 0.0f && m_MoveState == MOVE_STATE_LEFT))
 			{
 				Move.x += 1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
@@ -729,7 +745,7 @@ D3DXVECTOR3 CPlayer::MoveInputPadKey(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis,
 		if (nCnt == m_nPlayNumber)
 		{
 			//キーボードの移動処理
-			if ((pInputJoypad->GetPress(CInputJoypad::BUTTON_UP, nCnt) && m_OKU && m_bGritCenter) ||
+			if ((pInputJoypad->GetPress(CInputJoypad::BUTTON_UP, nCnt) && m_Progress.bOKU && m_bGritCenter) ||
 				(pInputJoypad->GetPress(CInputJoypad::BUTTON_UP, nCnt) && m_MoveState == MOVE_STATE_DOWN))
 			{
 				Move.z += 1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
@@ -738,7 +754,7 @@ D3DXVECTOR3 CPlayer::MoveInputPadKey(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis,
 				m_bInput = true;
 				m_MoveState = MOVE_STATE_UP;
 			}
-			else if (((pInputJoypad->GetPress(CInputJoypad::BUTTON_DOWN, nCnt) && m_OKD && m_bGritCenter) ||
+			else if (((pInputJoypad->GetPress(CInputJoypad::BUTTON_DOWN, nCnt) && m_Progress.bOKD && m_bGritCenter) ||
 				(pInputJoypad->GetPress(CInputJoypad::BUTTON_DOWN, nCnt) && m_MoveState == MOVE_STATE_UP)) &&
 				pInputJoypad->GetPress(CInputJoypad::BUTTON_UP, nCnt) == false)
 			{
@@ -748,7 +764,7 @@ D3DXVECTOR3 CPlayer::MoveInputPadKey(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis,
 				m_bInput = true;
 				m_MoveState = MOVE_STATE_DOWN;
 			}
-			else if ((pInputJoypad->GetPress(CInputJoypad::BUTTON_LEFT, nCnt) && m_OKL && m_bGritCenter) ||
+			else if ((pInputJoypad->GetPress(CInputJoypad::BUTTON_LEFT, nCnt) && m_Progress.bOKL && m_bGritCenter) ||
 				(pInputJoypad->GetPress(CInputJoypad::BUTTON_LEFT, nCnt) && m_MoveState == MOVE_STATE_RIGHT))
 			{
 				Move.x += -1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
@@ -757,7 +773,7 @@ D3DXVECTOR3 CPlayer::MoveInputPadKey(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis,
 				m_bInput = true;
 				m_MoveState = MOVE_STATE_LEFT;
 			}
-			else if (((pInputJoypad->GetPress(CInputJoypad::BUTTON_RIGHT, nCnt) && m_OKR && m_bGritCenter) ||
+			else if (((pInputJoypad->GetPress(CInputJoypad::BUTTON_RIGHT, nCnt) && m_Progress.bOKR && m_bGritCenter) ||
 				(pInputJoypad->GetPress(CInputJoypad::BUTTON_RIGHT, nCnt) && m_MoveState == MOVE_STATE_LEFT)) &&
 				pInputJoypad->GetPress(CInputJoypad::BUTTON_LEFT, nCnt) == false)
 			{
@@ -773,19 +789,22 @@ D3DXVECTOR3 CPlayer::MoveInputPadKey(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis,
 	return Move;
 }
 
+#endif
+
 //====================================================================
 //移動方向処理
 //====================================================================
 void CPlayer::Rot(D3DXVECTOR3& rotThis)
 {
 	D3DXVECTOR3 CameraRot = CManager::GetInstance()->GetCamera()->GetRot();
+	STATE state = GetState();		// 状態
 
 	//移動方向に向きを合わせる処理
 	float fRotMove, fRotDest;
 	fRotMove = rotThis.y;
 	fRotDest = CManager::GetInstance()->GetCamera()->GetRot().y;
 
-	if (m_State == STATE_WALK)
+	if (state == STATE_WALK)
 	{
 		rotThis.y = atan2f(-m_move.x, -m_move.z);
 	}
@@ -798,7 +817,9 @@ void CPlayer::Rot(D3DXVECTOR3& rotThis)
 //====================================================================
 void CPlayer::Attack(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis)
 {
-	if (m_State == STATE_WALK)
+	STATE state = GetState();		// 状態
+
+	if (state == STATE_WALK)
 	{
 		//キーボードの取得
 		CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
@@ -814,7 +835,7 @@ void CPlayer::Attack(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis)
 			MyEffekseer::EffectCreate(CMyEffekseer::TYPE_SMOKE, false, ef, rotThis);
 
 			CFire::Create("data\\model\\fireball.x", posThis, rotThis);
-			m_State = STATE_ATTACK;
+			SetState(STATE_ATTACK);
 			m_nStateCount = FIRE_STOPTIME;
 		}
 	}
@@ -827,6 +848,7 @@ void CPlayer::ActionState(void)
 {
 	// モーションの取得
 	CMotion* pMotion = GetMotion();
+	STATE state = GetState();
 
 	if (pMotion == nullptr)
 	{
@@ -834,7 +856,7 @@ void CPlayer::ActionState(void)
 	}
 
 	//移動モーション
-	if (m_State == STATE_DEATH)
+	if (state == STATE_DEATH)
 	{
 		if (m_Action != ACTION_DEATH)
 		{
@@ -843,7 +865,7 @@ void CPlayer::ActionState(void)
 		}
 	}
 	//卵モーション
-	else if (m_State == STATE_EGG)
+	else if (state == STATE_EGG)
 	{
 		if (m_Action != ACTION_EGG)
 		{
@@ -852,7 +874,7 @@ void CPlayer::ActionState(void)
 		}
 	}
 	//移動モーション
-	else if (m_State == STATE_ATTACK)
+	else if (state == STATE_ATTACK)
 	{
 		if (m_Action != ACTION_WAIT)
 		{
@@ -885,7 +907,9 @@ void CPlayer::ActionState(void)
 //====================================================================
 void CPlayer::StateManager(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis)
 {
-	switch (m_State)
+	STATE state = GetState();
+
+	switch (state)
 	{
 	case STATE_WAIT:
 		//	スローをdefaultへ
@@ -912,7 +936,7 @@ void CPlayer::StateManager(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis)
 
 		if (m_nStateCount == 0)
 		{
-			m_State = STATE_WALK;
+			SetState(STATE_WALK);
 		}
 
 		break;
@@ -946,7 +970,7 @@ void CPlayer::StateManager(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis)
 						SetGrid(CMapSystem::GRID(nSetW, nSetH));
 						posThis = CMapSystem::GRID(nSetW, nSetH).ToWorld();
 						posThis.y = RESPAWN_POS.y;
-						m_State = STATE_EGG;
+						SetState(STATE_EGG);
 						return;
 					}
 
@@ -985,8 +1009,8 @@ void CPlayer::StateManager(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis)
 				break;
 
 			case 1:
-				m_pUpEgg = CObjectX::Create("data\\MODEL\\00_Player\\1P\\upper_egg.x");
-				m_pUpEgg->SetMatColor(D3DXCOLOR(0.263529f, 0.570980f, 0.238431f, 1.0f));
+				m_pUpEgg = CObjectX::Create("data\\MODEL\\00_Player\\2P\\upperegg.x");
+				m_pUpEgg->SetMatColor(D3DXCOLOR(0.235294f, 0.715294f, 0.800000f, 1.0f));
 
 				m_pUpEgg->SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
 				break;
@@ -1006,8 +1030,8 @@ void CPlayer::StateManager(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis)
 				break;
 
 			case 1:
-				m_pDownEgg = CObjectX::Create("data\\MODEL\\00_Player\\1P\\downer_egg.x");
-				m_pDownEgg->SetMatColor(D3DXCOLOR(0.263529f, 0.570980f, 0.238431f, 1.0f));
+				m_pDownEgg = CObjectX::Create("data\\MODEL\\00_Player\\2P\\downeregg.x");
+				m_pDownEgg->SetMatColor(D3DXCOLOR(0.235294f, 0.715294f, 0.800000f, 1.0f));
 
 				m_pDownEgg->SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
 				break;
@@ -1043,8 +1067,9 @@ void CPlayer::CollisionWall(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D3DXV
 		if (useful::CollisionBlock(pos, pos, Move, Size, &posThis, posOldThis, &m_move, &m_Objmove, sizeThis, &m_bJump, XYZ) == true)
 		{
 			//待機状態にする
-			m_State = STATE_WAIT;
-			m_MoveState = MOVE_STATE_WAIT;
+			SetState(STATE_WAIT);
+			// 向き状態の設定
+			m_pMoveState->SetRotState(CMoveState::ROTSTATE_WAIT);
 			posThis = m_Grid.ToWorld();
 		}
 	}
@@ -1108,8 +1133,10 @@ void CPlayer::CollisionWaitRailBlock(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldTh
 		if (useful::CollisionBlock(pos, pos, Move, Size, &posThis, posOldThis, &m_move, &m_Objmove, sizeThis, &m_bJump, XYZ) == true)
 		{
 			//待機状態にする
-			m_State = STATE_WAIT;
-			m_MoveState = MOVE_STATE_WAIT;
+			SetState(STATE_WAIT);
+
+			// 向き状態の設定
+			m_pMoveState->SetRotState(CMoveState::ROTSTATE_WAIT);
 			posThis = m_Grid.ToWorld();
 		}
 	}
@@ -1198,8 +1225,9 @@ void CPlayer::CollisionWaitRock(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D
 		if (useful::CollisionBlock(pos, pos, Move, Size, &posThis, posOldThis, &m_move, &m_Objmove, sizeThis, &m_bJump, XYZ) == true)
 		{
 			//待機状態にする
-			m_State = STATE_WAIT;
-			m_MoveState = MOVE_STATE_WAIT;
+			SetState(STATE_WAIT);
+			// 向き状態の設定
+			m_pMoveState->SetRotState(CMoveState::ROTSTATE_WAIT);
 			posThis = m_Grid.ToWorld();
 		}
 	}
@@ -1252,6 +1280,8 @@ void CPlayer::CollisionMoveRock(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D
 //====================================================================
 void CPlayer::SearchWall(D3DXVECTOR3& posThis)
 {
+	STATE state = GetState();
+
 	bool OKR = true;	//右
 	bool OKL = true;	//左
 	bool OKU = true;	//上
@@ -1287,21 +1317,21 @@ void CPlayer::SearchWall(D3DXVECTOR3& posThis)
 		posThis.x >= MyGritPos.x - ((MapGritSize * 0.5f) - GRIT_OK) &&
 		posThis.z <= MyGritPos.z + ((MapGritSize * 0.5f) - GRIT_OK) &&
 		posThis.z >= MyGritPos.z - ((MapGritSize * 0.5f) - GRIT_OK)) ||
-		m_State == STATE_WAIT)
+		state == STATE_WAIT)
 	{// グリットの中心位置に立っているなら操作を受け付ける
-		m_OKR = OKR;	//右
-		m_OKL = OKL;	//左
-		m_OKU = OKU;	//上
-		m_OKD = OKD;	//下
+		m_Progress.bOKR = OKR;	//右
+		m_Progress.bOKL = OKL;	//左
+		m_Progress.bOKU = OKU;	//上
+		m_Progress.bOKD = OKD;	//下
 
 		m_bGritCenter = true;
 	}
 	else
 	{
-		m_OKR = false;	//右
-		m_OKL = false;	//左
-		m_OKU = false;	//上
-		m_OKD = false;	//下
+		m_Progress.bOKR = false;	//右
+		m_Progress.bOKL = false;	//左
+		m_Progress.bOKU = false;	//上
+		m_Progress.bOKD = false;	//下
 
 		m_bGritCenter = false;
 	}
@@ -1327,8 +1357,9 @@ void CPlayer::CollisionDevilHole(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, 
 		if (useful::CollisionBlock(pos, pos, INITVECTOR3, Size, &posThis, posOldThis, &m_move, &m_Objmove, sizeThis, &m_bJump, XYZ) == true)
 		{
 			//待機状態にする
-			m_State = STATE_WAIT;
-			m_MoveState = MOVE_STATE_WAIT;
+			SetState(STATE_WAIT);
+			// 向き状態の設定
+			m_pMoveState->SetRotState(CMoveState::ROTSTATE_WAIT);
 			posThis = m_Grid.ToWorld();
 		}
 	}
@@ -1346,6 +1377,11 @@ void CPlayer::CollisionEnemy(D3DXVECTOR3& posThis)
 	// 敵のリストの中身を確認する
 	for (CEnemy* pEnemy : list)
 	{
+		if (pEnemy->GetHitState() != CEnemy::HIT_STATE_NORMAL)
+		{
+			continue;
+		}
+
 		D3DXVECTOR3 pos = pEnemy->GetPos();
 		D3DXVECTOR3 posOld = pEnemy->GetPosOld();
 		D3DXVECTOR3 Size = pEnemy->GetSize();
@@ -1373,25 +1409,25 @@ void CPlayer::CollisionStageOut(D3DXVECTOR3& posThis)
 	if (posThis.x + G_Size > D_pos.x + MapSize.x)	// 右
 	{
 		posThis.x = D_pos.x + MapSize.x - G_Size;
-		m_State = STATE_WAIT;
+		SetState(STATE_WAIT);
 		m_move.x = 0.0f;
 	}
 	if (posThis.x - G_Size < D_pos.x - MapSize.x)	// 左
 	{
 		posThis.x = D_pos.x - MapSize.x + G_Size;
-		m_State = STATE_WAIT;
+		SetState(STATE_WAIT);
 		m_move.x = 0.0f;
 	}
 	if (posThis.z + G_Size > D_pos.z + MapSize.z)	// 上
 	{
 		posThis.z = D_pos.z + MapSize.z - G_Size;
-		m_State = STATE_WAIT;
+		SetState(STATE_WAIT);
 		m_move.z = 0.0f;
 	}
 	if (posThis.z - G_Size < D_pos.z - MapSize.z)	// 下
 	{
 		posThis.z = D_pos.z - MapSize.z + G_Size;
-		m_State = STATE_WAIT;
+		SetState(STATE_WAIT);
 		m_move.z = 0.0f;
 	}
 }
@@ -1597,7 +1633,9 @@ void CPlayer::RotUpdate(D3DXVECTOR3& rotThis)
 //====================================================================
 void CPlayer::EggMove(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis)
 {
-	if (m_State == STATE_EGG)
+	STATE state = GetState();
+
+	if (state == STATE_EGG)
 	{
 		if (posThis.y > 0.0f)
 		{
@@ -1895,6 +1933,20 @@ void CPlayer::SetItemType(ITEM_TYPE eType)
 	}
 }
 
+//==========================================
+// 移動状態変更処理
+//==========================================
+void CPlayer::ChangeMoveState(CMoveState* pMoveState)
+{
+	if (m_pMoveState != nullptr)
+	{
+		delete m_pMoveState;
+		m_pMoveState = nullptr;
+	}
+
+	m_pMoveState = pMoveState;
+}
+
 //====================================================================
 // プレイヤーの指定モデル消去
 //====================================================================
@@ -1909,26 +1961,6 @@ void CPlayer::SetPartsDisp(int nParts, bool Set)
 	}
 }
 
-//====================================================================
-// プレイヤーの指定モデル消去
-//====================================================================
-void CPlayer::SetModelColor(CModel::COLORTYPE Type, D3DXCOLOR Col)
-{
-	// モデル数の取得
-	int nNumModel = GetNumModel();
-
-	for (int nCnt = 0; nCnt < nNumModel; nCnt++)
-	{
-		// モデルの取得
-		CModel* pModel = GetModel(nCnt);
-
-		if (pModel != nullptr)
-		{
-			pModel->SetColorType(Type);
-			pModel->SetColor(Col);
-		}
-	}
-}
 //==========================================
 //  リストの取得
 //==========================================

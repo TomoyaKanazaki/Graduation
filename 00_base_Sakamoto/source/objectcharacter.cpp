@@ -35,7 +35,8 @@ namespace
 //====================================================================
 CObjectCharacter::CObjectCharacter(int nPriority) : CObject(nPriority),
 m_pShadow(nullptr),
-m_bUseShadow(true)
+m_bUseShadow(true),
+m_State(STATE_WAIT)
 {
 	for (int nCnt = 0; nCnt < MODEL_NUM; nCnt++)
 	{
@@ -48,8 +49,10 @@ m_bUseShadow(true)
 
 	m_pos = INITVECTOR3;
 	m_posOld = INITVECTOR3;
-	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_move = INITVECTOR3;
+	m_rot = INITVECTOR3;
 	m_size = INITVECTOR3;
+	m_Objmove = INITVECTOR3;
 
 	m_UseMultiMatrix = nullptr;
 
@@ -57,6 +60,17 @@ m_bUseShadow(true)
 	m_bUseShadowMtx = false;
 
 	m_pMoveState = nullptr;
+
+	m_Grid.x = 0;
+	m_Grid.z = 0;
+
+	// 進行許可状況
+	m_Progress.bOKD = true;
+	m_Progress.bOKL = true;
+	m_Progress.bOKR = true;
+	m_Progress.bOKU = true;
+
+	m_bGritCenter = true;
 }
 
 //====================================================================
@@ -70,10 +84,21 @@ CObjectCharacter::~CObjectCharacter()
 //====================================================================
 // 生成処理
 //====================================================================
-CObjectCharacter* CObjectCharacter::Create(void)
+CObjectCharacter* CObjectCharacter::Create(bool bShadow)
 {
+	// オブジェクトの生成処理
+	CObjectCharacter* pInstance = new CObjectCharacter();
 
-	return nullptr;
+	// シャドウの有無
+	pInstance->SetShadow(bShadow);
+
+	// オブジェクトの初期化処理
+	if (FAILED(pInstance->Init()))
+	{// 初期化処理が失敗した場合
+		return nullptr;
+	}
+
+	return pInstance;
 }
 
 //====================================================================
@@ -247,7 +272,7 @@ void CObjectCharacter::Draw(void)
 }
 
 //==========================================
-// 状態変更処理
+// 移動状態変更処理
 //==========================================
 void CObjectCharacter::ChangeMoveState(CMoveState* pMoveState)
 {
@@ -443,5 +468,26 @@ void CObjectCharacter::LoadModel(const char* pFilename)
 	else
 	{//ファイルが開けなかった場合
 		printf("***ファイルを開けませんでした***\n");
+	}
+}
+
+//====================================================================
+// 指定モデルカラー変更
+//====================================================================
+void CObjectCharacter::SetModelColor(CModel::COLORTYPE Type, D3DXCOLOR Col)
+{
+	// モデル数の取得
+	int nNumModel = GetNumModel();
+
+	for (int nCnt = 0; nCnt < nNumModel; nCnt++)
+	{
+		// モデルの取得
+		CModel* pModel = GetModel(nCnt);
+
+		if (pModel != nullptr)
+		{
+			pModel->SetColorType(Type);
+			pModel->SetColor(Col);
+		}
 	}
 }

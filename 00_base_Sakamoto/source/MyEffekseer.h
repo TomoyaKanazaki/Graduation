@@ -26,39 +26,39 @@ public:
 	// 種類
 	enum TYPE
 	{
-		TYPE_FIRE = 0,	// ファイアボール
-		TYPE_CHARGE,	// 火炎放射チャージ
-		TYPE_SMOKE,		// スモーク
-		TYPE_HIT,		// ヒット
-		TYPE_GETITEM,	// 聖書、十字架取得
-		TYPE_EAT,		// 捕食
-		TYPE_RESPAWN_MEDAMAN,	// メダマンのリスポーン
-		TYPE_RESPAWN_BONBON,	// ボンボンのリスポーン
-		TYPE_RESPAWN_SMALLDEVIL, // コデビルのリスポーン
-		TYPE_BOABOA,		// ボアボアエフェクト
-		TYPE_CROSS,			// 十字架エフェクト
-		TYPE_BIBLE,			// 聖書
-		TYPE_DUSTCLOUD,		// 歩いた時の煙
-		TYPE_FALLSMOKE,		// 落下時の土煙
-		TYPE_BORN_PLAYER_00,	// 卵が落下00
-		TYPE_BORN_PLAYER_01,	// 卵が落下01
-		TYPE_DROP,				// タマゴンの汗
-		TYPE_ACCELE,			// タマゴンの加速
-		TYPE_ROLL,				// 石が転がる
-		TYPE_HITTHEWALL,		// 壁に火があたる
-		TYPE_HIT_SMALLDEVIL,	// 小デビル当たる
-		TYPE_STEAM,				// 卵から出る湯気
-		TYPE_BORNGUID1,			// 復活ガイド　プレイヤー1
-		TYPE_BORNGUID2,			// 復活ガイド　プレイヤー2
-		TYPE_GOT_THEITEM,		// アイテム持っているとき
-		TYPE_ACENTION,			// 昇天
-		TYPE_REVIVE_MEDAMAN,	// メダマンの復活ガイド
-		TYPE_REVIVE_BONBON,		// ボンボンの復活ガイド
-		TYPE_REVIVE_SMALLDEVIL, // 子デビルの復活ガイド
-		TYPE_GET_SOFTCREAM,		// ソフトクリーム取得
-		TYPE_SOFTCREAM,			// ソフトクリームのオーラ
+		TYPE_FIRE = 0,				// ファイアボール
+		TYPE_CHARGE,				// 火炎放射チャージ
+		TYPE_SMOKE,					// スモーク
+		TYPE_HIT,					// ヒット
+		TYPE_GETITEM,				// 聖書、十字架取得
+		TYPE_EAT,					// 捕食
+		TYPE_RESPAWN_MEDAMAN,		// メダマンのリスポーン
+		TYPE_RESPAWN_BONBON,		// ボンボンのリスポーン
+		TYPE_RESPAWN_SMALLDEVIL,	// コデビルのリスポーン
+		TYPE_BOABOA,				// ボアボアエフェクト
+		TYPE_CROSS,					// 十字架エフェクト
+		TYPE_BIBLE,					// 聖書
+		TYPE_DUSTCLOUD,				// 歩いた時の煙
+		TYPE_FALLSMOKE,				// 落下時の土煙
+		TYPE_BORN_PLAYER_00,		// 卵が落下00
+		TYPE_BORN_PLAYER_01,		// 卵が落下01
+		TYPE_DROP,					// タマゴンの汗
+		TYPE_ACCELE,				// タマゴンの加速
+		TYPE_ROLL,					// 石が転がる
+		TYPE_HITTHEWALL,			// 壁に火があたる
+		TYPE_HIT_SMALLDEVIL,		// 小デビル当たる
+		TYPE_STEAM,					// 卵から出る湯気
+		TYPE_BORNGUID1,				// 復活ガイド　プレイヤー1
+		TYPE_BORNGUID2,				// 復活ガイド　プレイヤー2
+		TYPE_GOT_THEITEM,			// アイテム持っているとき
+		TYPE_ACENTION,				// 昇天
+		TYPE_REVIVE_MEDAMAN,		// メダマンの復活ガイド
+		TYPE_REVIVE_BONBON,			// ボンボンの復活ガイド
+		TYPE_REVIVE_SMALLDEVIL,		// 子デビルの復活ガイド
+		TYPE_GET_SOFTCREAM,			// ソフトクリーム取得
+		TYPE_SOFTCREAM,				// ソフトクリームのオーラ
 		TYPE_MAX,
-		TYPE_NONE  // なんもない
+		TYPE_NONE					// なんもない
 	};
 
 	void Init(void);       // 初期化処理

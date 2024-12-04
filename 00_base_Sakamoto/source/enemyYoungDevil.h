@@ -30,20 +30,18 @@ public:
 	HRESULT Init(void) override;
 	void Uninit(void);
 	void Update(void);
-	void TitleUpdate(void);
-	void GameUpdate(void);
 	void Draw(void);
 
-	void HitDamage(float fDamage);
+	bool Hit(void);
 
 	// 静的メンバ関数
 	static CListManager<CEnemyYoungDevil>* GetList(void); // リスト取得
 
 private:
 
-	void ActionState(void);								//モーションと状態の管理
-	void StateManager(void);							//状態管理
-	void SetDamage(float Damage);						//ダメージの判定
+	void ActionState(void);			//モーションと状態の管理
+	void StateManager(void);		//状態管理
+	void SetDamage(float Damage);	//ダメージの判定
 
 	ACTION_TYPE m_Action;			// モーション
 	ACTION_TYPE m_AtkAction;		// 攻撃状態記録用変数

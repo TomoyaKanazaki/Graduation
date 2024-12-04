@@ -177,14 +177,12 @@ void CEnemyMedaman::Draw(void)
 //====================================================================
 // ê⁄êGÉ_ÉÅÅ[ÉWèàóù
 //====================================================================
-void CEnemyMedaman::HitDamage(float fDamage)
+bool CEnemyMedaman::Hit(void)
 {
-	CEnemy::HitDamage(fDamage);
+	SetHitState(CEnemy::HIT_STATE_DAMAGE);
+	SetHitStateCount(100);
 
-	if (m_Action != ACTION_TEST)
-	{
-		m_nStateCount = 1000;
-	}
+	return true;
 }
 
 //====================================================================
