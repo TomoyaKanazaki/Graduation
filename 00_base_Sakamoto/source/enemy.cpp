@@ -45,14 +45,14 @@ namespace
 	const float DISTANCE_RECEDE = 200.0f;	//近づく距離
 	const float DISTANCE_APPROACH = 100.0f;	//遠ざかる距離
 
-	const float COORDDINATE_RATE[] = // 経路探索を行う間隔
-	{
-		5.0f,
-		3.0f,
-		1.0f
-	};
-	const float TARGET_DIFF = 10.0f; // 許容範囲
-	const float MOVE_ASTAR = 150.0f; // 追跡時の移動速度
+	//const float COORDDINATE_RATE[] = // 経路探索を行う間隔
+	//{
+	//	5.0f,
+	//	3.0f,
+	//	1.0f
+	//};
+	//const float TARGET_DIFF = 10.0f; // 許容範囲
+	//const float MOVE_ASTAR = 150.0f; // 追跡時の移動速度
 
 	const CMyEffekseer::TYPE EFFECT_TYPE[] = // 経路探索を行う間隔
 	{
@@ -65,7 +65,7 @@ namespace
 //==========================================
 //  静的警告処理
 //==========================================
-static_assert(NUM_ARRAY(COORDDINATE_RATE) == CEnemy::ENEMY_MAX, "ERROR : Type Count Missmatch");
+//static_assert(NUM_ARRAY(COORDDINATE_RATE) == CEnemy::ENEMY_MAX, "ERROR : Type Count Missmatch");
 static_assert(NUM_ARRAY(EFFECT_TYPE) == CEnemy::ENEMY_MAX, "ERROR : Type Count Missmatch");
 
 //===========================================
@@ -77,10 +77,10 @@ CListManager<CEnemy>* CEnemy::m_pList = nullptr; // オブジェクトリスト
 //コンストラクタ
 //====================================================================
 CEnemy::CEnemy(int nPriority) :CObjectCharacter(nPriority),
-m_pPath(nullptr),
-m_fCoordinateTimer(0.0f),
-m_nTargetIndex(0),
-m_nNumCoordinate(0),
+//m_pPath(nullptr),
+//m_fCoordinateTimer(0.0f),
+//m_nTargetIndex(0),
+//m_nNumCoordinate(0),
 m_pEffect(nullptr)
 {
 	m_move = INITVECTOR3;
@@ -192,6 +192,7 @@ HRESULT CEnemy::Init(void)
 		m_pMoveState = new CStateStop();		// 停止状態
 		m_pMoveState->ControlStop(this);		// 操作できる状態
 		m_pMoveState->SetRotState(CMoveState::ROTSTATE_MAX);		// 移動向きの状態を設定
+		m_pMoveState->SetEnemyType(m_EnemyType);					// 敵の種類を設定
 	}
 
 	// リストマネージャーの生成
@@ -213,7 +214,7 @@ HRESULT CEnemy::Init(void)
 void CEnemy::Uninit(void)
 {
 	// メモリを削除
-	if (m_pPath != nullptr) { delete[] m_pPath; };
+	//if (m_pPath != nullptr) { delete[] m_pPath; };
 
 	// リストから自身のオブジェクトを削除
 	m_pList->DelList(m_iterator);
@@ -235,6 +236,7 @@ void CEnemy::Uninit(void)
 	// 移動状態の破棄
 	if (m_pMoveState != nullptr)
 	{
+		m_pMoveState->Release();		// 破棄
 		delete m_pMoveState;
 		m_pMoveState = nullptr;
 	}
@@ -248,6 +250,9 @@ void CEnemy::Uninit(void)
 //====================================================================
 void CEnemy::Update(void)
 {
+	//キーボードの取得
+	CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
+
 	// 値を取得
 	D3DXVECTOR3 posMy = GetPos();			// 位置
 	D3DXVECTOR3 posOldMy = GetPosOld();		// 前回の位置
@@ -284,16 +289,23 @@ void CEnemy::Update(void)
 	// 移動処理
 	m_pMoveState->Move(this, posMy, rotMy);
 
-	//m_pMoveState->ControlStop(this);
+	// Bキー
+	if (pInputKeyboard->GetTrigger(DIK_B))
+	{
+		m_pMoveState->ControlStop(this);			// 停止 or 操作
+	}
+	// Nキー
+	else if (pInputKeyboard->GetTrigger(DIK_N))
+	{
+		m_pMoveState->ControlAStar(this);			// 追跡 or 操作
+		m_pMoveState->SetEnemyType(m_EnemyType);	// 敵の種類設定
 
-	// 追跡状態にする
-	//m_pMoveState->ControlAStar(this);
-
-	// プレイヤーへの最短経路探索
-	Coordinate();
-
-	//// 最短経路をたどる
-	//Route();
+	}
+	// Mキー
+	else if (pInputKeyboard->GetTrigger(DIK_M))
+	{
+		//m_pMoveState->RandomAStar(this);		// ランダム or 追跡(まだランダム作ってない)
+	}
 
 	// 自分の番号を設定
 	m_Grid = CMapSystem::GetInstance()->CMapSystem::CalcGrid(posMy);
@@ -622,7 +634,7 @@ void CEnemy::HitStateManager(D3DXVECTOR3& posMy)
 		SetModelColor(CModel::COLORTYPE_TRUE_ALL, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 		break;
 
-	case CEnemy::E_STATE_EGG:
+	case CEnemy::HIT_STATE_EGG:
 		SetModelColor(CModel::COLORTYPE_TRUE_ALL, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f));
 		break;
 	}
@@ -766,6 +778,7 @@ void CEnemy::SearchWall(D3DXVECTOR3& posMy)
 	}
 }
 
+#if 0
 //==========================================
 //  最短経路探索
 //==========================================
@@ -855,6 +868,8 @@ void CEnemy::Route()
 	SetRot(rot);
 }
 
+#endif
+
 //==========================================
 //  エフェクトの生成
 //==========================================
@@ -879,6 +894,7 @@ void CEnemy::ChangeMoveState(CMoveState* pMoveState)
 {
 	if (m_pMoveState != nullptr)
 	{
+		m_pMoveState->Release();
 		delete m_pMoveState;
 		m_pMoveState = nullptr;
 	}

@@ -8,12 +8,14 @@
 #define _MOVE_H_
 
 #include "main.h"
+#include "enemy.h"
 
 //============================================
 // 前方宣言
 //============================================
 class CObjectCharacter;         // キャラクター情報
 class CPlayer;                  // プレイヤー情報
+class CEnemy;                   // 敵情報
 
 //============================================
 // 移動状態のインターフェースクラス
@@ -37,6 +39,8 @@ public:
     CMoveState();
     virtual ~CMoveState() {};
 
+    virtual void Release() {};      // 破棄
+
     // 操作
     virtual void ControlRandom(CObjectCharacter* pCharacter) {}        // 操作とランダム切り替え
     virtual void ControlAStar(CObjectCharacter* pCharacter) {}         // 操作と追跡切り替え
@@ -58,6 +62,8 @@ public:
     virtual void SetRotState(ROTSTATE RotState) {}      // 移動方向の状態を取得
     virtual ROTSTATE GetRotState() { return ROTSTATE_NONE; }                       // 移動方向の状態を取得
 
+    virtual void SetEnemyType(CEnemy::ENEMY_TYPE Type) {}             // 敵の種類設定
+
 private:
     
 
@@ -72,6 +78,8 @@ class CStateControl : public CMoveState
 public:
     CStateControl();
     ~CStateControl(){}
+
+    void Release() override;      // 破棄
 
     // 切り替え処理
     void ControlRandom(CObjectCharacter* pCharacter) override;      // ランダムに切り替え
@@ -89,8 +97,8 @@ private:
     // メンバ関数
     D3DXVECTOR3 InputKey(CObjectCharacter* pCharacter, D3DXVECTOR3& posMy, D3DXVECTOR3& rotMy, D3DXVECTOR3 Move, float fSpeed);		//移動入力キーボード
 
-    void UpdateMovePlayer(CObjectCharacter* pCharacter, D3DXVECTOR3 NormarizeMove);        // プレイヤーの移動更新処理
-    void UpdateMoveEnemy(CObjectCharacter* pCharacter, D3DXVECTOR3 NormarizeMove);         // 敵の移動更新処理
+    void UpdateMovePlayer(CObjectCharacter* pCharacter, D3DXVECTOR3& NormarizeMove);        // プレイヤーの移動更新処理
+    void UpdateMoveEnemy(CObjectCharacter* pCharacter, D3DXVECTOR3& NormarizeMove);         // 敵の移動更新処理
 
     // メンバ変数
     bool m_bInput;				//入力を行ったかどうか
@@ -107,10 +115,15 @@ public:
     CStateRandom(){}
     ~CStateRandom() {}
 
+    void Release() override;      // 破棄
+
     // 切り替え処理
     void ControlRandom(CObjectCharacter* pCharacter) override;      // 操作に切り替え
     void RandomAStar(CObjectCharacter* pCharacter) override;        // 追跡に切り替え
     void RandomStop(CObjectCharacter* pCharacter) override;         // 停止に切り替え
+
+    void Move(CObjectCharacter* pCharacter, D3DXVECTOR3& pos, D3DXVECTOR3& rot) override;      // キャラクターの移動処理
+
 };
 
 //============================================
@@ -119,13 +132,34 @@ public:
 class CStateAStar : public CMoveState
 {
 public:
-    CStateAStar(){}
+    CStateAStar();
     ~CStateAStar() {}
+
+    void Release() override;      // 破棄
 
     // 切り替え処理
     void ControlAStar(CObjectCharacter* pCharacter) override;       // 操作に切り替え
     void RandomAStar(CObjectCharacter* pCharacter) override;        // ランダム歩行に切り替え
     void AStarStop(CObjectCharacter* pCharacter) override;          // 停止に切り替え
+
+    void Move(CObjectCharacter* pCharacter, D3DXVECTOR3& pos, D3DXVECTOR3& rot) override;      // キャラクターの移動処理
+
+    // 設定
+    void SetEnemyType(CEnemy::ENEMY_TYPE Type) { m_EnemyType = Type; }             // 敵の種類設定
+
+private:
+
+    // メンバ関数
+    void Coordinate(CObjectCharacter* pCharacter); // 最短経路探索
+    void Route(CObjectCharacter* pCharacter);	// 最短経路をたどる
+
+    // メンバ変数
+    CMapSystem::GRID* m_pPath;          // プレイヤーへの最短経路
+    CEnemy::ENEMY_TYPE m_EnemyType;		//敵の種類
+
+    int m_nNumCoordinate;       // 最短経路の要素数
+    int m_nTargetIndex;         // 次に向かうべきグリッドのインデックス
+    float m_fCoordinateTimer;   // 経路探索間隔
 
 };
 
@@ -138,11 +172,14 @@ public:
     CStateStop(){}
     ~CStateStop() {}
 
+    void Release() override;      // 破棄
+
     // 切り替え処理
     void ControlStop(CObjectCharacter* pCharacter) override;        // 操作に切り替え
     void RandomStop(CObjectCharacter* pCharacter) override;         // ランダム歩行に切り替え
     void AStarStop(CObjectCharacter* pCharacter) override;          // 追跡に切り替え
 
+    void Move(CObjectCharacter* pCharacter, D3DXVECTOR3& pos, D3DXVECTOR3& rot) override;      // キャラクターの移動処理
 };
 
 #endif

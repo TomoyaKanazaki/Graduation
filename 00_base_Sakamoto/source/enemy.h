@@ -39,7 +39,7 @@ public:
 		HIT_STATE_NORMAL = 0,	//通常
 		HIT_STATE_DAMAGE,		//ダメージ
 		HIT_STATE_INVINCIBLE,	//無敵
-		E_STATE_EGG,			//たまごやき
+		HIT_STATE_EGG,			//たまごやき
 		HIT_STATE_MAX,			//最大
 	};
 
@@ -81,8 +81,8 @@ private:
 	virtual void Death(void);							// 死亡処理
 	void MoveSelect(void);								// 移動方向の選択
 	void SearchWall(D3DXVECTOR3& posMy);				// 壁のサーチ判定
-	void Coordinate(); // 最短経路探索
-	void Route();	// 最短経路をたどる
+	//void Coordinate(); // 最短経路探索
+	//void Route();	// 最短経路をたどる
 	void Effect(); // エフェクトを生成
 
 	CMapSystem::GRID m_SelectGrid;	//方向転換を行った時のグリッド番号
@@ -109,10 +109,10 @@ private:
 
 	// メンバ変数
 	CListManager<CEnemy>::AIterator m_iterator; // イテレーター
-	CMapSystem::GRID* m_pPath; // プレイヤーへの最短経路
-	float m_fCoordinateTimer; // 経路探索間隔
-	int m_nNumCoordinate; // 最短経路の要素数
-	int m_nTargetIndex; // 次に向かうべきグリッドのインデックス
+	//CMapSystem::GRID* m_pPath; // プレイヤーへの最短経路
+	//float m_fCoordinateTimer; // 経路探索間隔
+	//int m_nNumCoordinate; // 最短経路の要素数
+	//int m_nTargetIndex; // 次に向かうべきグリッドのインデックス
 };
 
 #endif

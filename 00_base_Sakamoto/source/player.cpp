@@ -221,9 +221,9 @@ HRESULT CPlayer::Init(int PlayNumber)
 	m_pSlow = CSlowManager::Create(CSlowManager::CAMP_PLAYER, CSlowManager::TAG_PLAYER);
 
 	// 値更新
-	SetPos(posThis);			// 位置
+	SetPos(posThis);		// 位置
 	SetPosOld(posOldThis);	// 前回の位置
-	SetRot(rotThis);			// 向き
+	SetRot(rotThis);		// 向き
 	SetSize(sizeThis);		// 大きさ
 
 	// 状態の設定
@@ -278,6 +278,7 @@ void CPlayer::Uninit(void)
 	// 移動状態の破棄
 	if (m_pMoveState != nullptr)
 	{
+		m_pMoveState->Release();
 		delete m_pMoveState;
 		m_pMoveState = nullptr;
 	}
@@ -1972,6 +1973,7 @@ void CPlayer::ChangeMoveState(CMoveState* pMoveState)
 {
 	if (m_pMoveState != nullptr)
 	{
+		m_pMoveState->Release();
 		delete m_pMoveState;
 		m_pMoveState = nullptr;
 	}
