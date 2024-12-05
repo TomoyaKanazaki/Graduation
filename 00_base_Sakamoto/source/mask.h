@@ -16,7 +16,7 @@
 class CMask : public CObject2D
 {
 public:
-	CMask(int nPriority = 6);	//コンストラクタ
+	CMask(int nPriority = 7);	//コンストラクタ
 	~CMask();	//デストラクタ
 
 	static CMask* Create();
