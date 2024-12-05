@@ -52,7 +52,7 @@ static_assert(NUM_ARRAY(COORDDINATE_RATE) == CEnemy::ENEMY_MAX, "ERROR : Type Co
 //==========================================
 CMoveState::CMoveState()
 {
-	state = STATE_NONE;
+	m_state = STATE_NONE;
 }
 
 //==========================================
@@ -69,7 +69,7 @@ CMoveState* CMoveState::GetMoveState(CObjectCharacter* pCharacter)
 void CMoveState::Debug(void)
 {
 	DebugProc::Print(DebugProc::POINT_LEFT, "ˆÚ“®ó‘Ô : ");
-	auto str = magic_enum::enum_name(state);
+	auto str = magic_enum::enum_name(m_state);
 	DebugProc::Print(DebugProc::POINT_LEFT, str.data());
 	DebugProc::Print(DebugProc::POINT_LEFT, "\n");
 
@@ -144,7 +144,7 @@ CStateControl::CStateControl()
 {
 	m_bInput = false;				// “ü—Í‚ğs‚Á‚½‚©‚Ç‚¤‚©
 	m_RotState = ROTSTATE_NONE;		// ˆÚ“®•ûŒü‚Ìó‘Ô
-	state = STATE_CONTROL;			// ‘€ìó‘Ô
+	m_state = STATE_CONTROL;			// ‘€ìó‘Ô
 }
 
 //==========================================
@@ -418,7 +418,7 @@ CStateAStar::CStateAStar()
 	m_fCoordinateTimer = 0.0f;
 	m_nNumCoordinate = 0;
 	m_nTargetIndex = 0;
-	state = STATE_ASTAR;			// ‘€ìó‘Ô
+	m_state = STATE_ASTAR;			// ‘€ìó‘Ô
 
 }
 

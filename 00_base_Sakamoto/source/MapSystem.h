@@ -83,7 +83,7 @@ public:
 	void SetMapPos(D3DXVECTOR3 pos) { m_MapPos = pos; }
 	D3DXVECTOR3 GetMapPos(void) { return m_MapPos; }
 	D3DXVECTOR3 GetInitPos(void) { return m_InitPos; }
-	D3DXVECTOR3 GetPlayerPos(int PlayNumber);			// プレイヤーの位置取得
+	D3DXVECTOR3 GetPlayerPos(unsigned int PlayNumber);			// プレイヤーの位置取得
 
 	int GetWightMax(void) { return m_WightMax; }
 	int GetHeightMax(void) { return m_HeightMax; }

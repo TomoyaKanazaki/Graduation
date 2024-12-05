@@ -85,7 +85,7 @@ protected:
     void UpdatePos(CObjectCharacter* pCharacter, D3DXVECTOR3& pos);	// 位置更新処理
 
     // メンバ変数
-    STATE state;        // デバッグ用状態
+    STATE m_state;        // デバッグ用状態
 
 private:
    
@@ -133,7 +133,7 @@ private:
 class CStateRandom : public CMoveState
 {
 public:
-    CStateRandom(){ state = STATE_RANDOM; }
+    CStateRandom(){ m_state = STATE_RANDOM; }
     ~CStateRandom() {}
 
     void Release() override;      // 破棄
@@ -195,7 +195,7 @@ private:
 class CStateStop : public CMoveState
 {
 public:
-    CStateStop(){ state = STATE_STOP; }
+    CStateStop(){ m_state = STATE_STOP; }
     ~CStateStop() {}
 
     void Release() override;      // 破棄
