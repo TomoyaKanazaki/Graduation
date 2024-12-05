@@ -7,19 +7,13 @@
 #ifndef _CHARACTER_MANAGER_H_
 #define _CHARACTER_MANAGER_H_
 
-// マクロ定義
-#define MAX_LENGTH_TXT	(128)	// テキストの最大文字数
-#define MAX_CHARACTER	(1024)	// キャラクターの最大数
-#define MAX_MODEL_PARTS	(64)	// モデルパーツ数の最大数
-#define MAX_MOTION		(64)	// モーション数の最大数
-#define MAX_KEY			(16)	// キー数の最大数
-
 #include "objectcharacter.h"
 
 // キャラクター管理クラス
 class CCharacterManager
 {
 public:
+
 	CCharacterManager();
 	~CCharacterManager();
 
@@ -27,6 +21,13 @@ public:
 	const char* GetCharacterName(int Idx) { return &m_aCharacterInfo[Idx].acFileName[0]; }
 
 private:
+
+	// マクロ定義
+#define MAX_LENGTH_TXT	(128)	// テキストの最大文字数
+#define MAX_CHARACTER	(128)	// キャラクターの最大数
+#define MAX_MODEL_PARTS	(32)	// モデルパーツ数の最大数
+#define MAX_MOTION		(32)	// モーション数の最大数
+#define MAX_KEY			(16)	// キー数の最大数
 
 	// モデルパーツ情報
 	struct ModelParts

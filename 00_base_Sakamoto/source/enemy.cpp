@@ -45,14 +45,14 @@ namespace
 	const float DISTANCE_RECEDE = 200.0f;	//近づく距離
 	const float DISTANCE_APPROACH = 100.0f;	//遠ざかる距離
 
-	const float COORDDINATE_RATE[] = // 経路探索を行う間隔
-	{
-		5.0f,
-		3.0f,
-		1.0f
-	};
-	const float TARGET_DIFF = 10.0f; // 許容範囲
-	const float MOVE_ASTAR = 150.0f; // 追跡時の移動速度
+	//const float COORDDINATE_RATE[] = // 経路探索を行う間隔
+	//{
+	//	5.0f,
+	//	3.0f,
+	//	1.0f
+	//};
+	//const float TARGET_DIFF = 10.0f; // 許容範囲
+	//const float MOVE_ASTAR = 150.0f; // 追跡時の移動速度
 
 	const CMyEffekseer::TYPE EFFECT_TYPE[] = // 経路探索を行う間隔
 	{
@@ -65,7 +65,7 @@ namespace
 //==========================================
 //  静的警告処理
 //==========================================
-static_assert(NUM_ARRAY(COORDDINATE_RATE) == CEnemy::ENEMY_MAX, "ERROR : Type Count Missmatch");
+//static_assert(NUM_ARRAY(COORDDINATE_RATE) == CEnemy::ENEMY_MAX, "ERROR : Type Count Missmatch");
 static_assert(NUM_ARRAY(EFFECT_TYPE) == CEnemy::ENEMY_MAX, "ERROR : Type Count Missmatch");
 
 //===========================================
@@ -77,10 +77,6 @@ CListManager<CEnemy>* CEnemy::m_pList = nullptr; // オブジェクトリスト
 //コンストラクタ
 //====================================================================
 CEnemy::CEnemy(int nPriority) :CObjectCharacter(nPriority),
-m_pPath(nullptr),
-m_fCoordinateTimer(0.0f),
-m_nTargetIndex(0),
-m_nNumCoordinate(0),
 m_pEffect(nullptr)
 {
 	m_move = INITVECTOR3;
@@ -192,6 +188,7 @@ HRESULT CEnemy::Init(void)
 		m_pMoveState = new CStateStop();		// 停止状態
 		m_pMoveState->ControlStop(this);		// 操作できる状態
 		m_pMoveState->SetRotState(CMoveState::ROTSTATE_MAX);		// 移動向きの状態を設定
+		m_pMoveState->SetEnemyType(m_EnemyType);					// 敵の種類を設定
 	}
 
 	// リストマネージャーの生成
@@ -212,9 +209,6 @@ HRESULT CEnemy::Init(void)
 //====================================================================
 void CEnemy::Uninit(void)
 {
-	// メモリを削除
-	if (m_pPath != nullptr) { delete[] m_pPath; };
-
 	// リストから自身のオブジェクトを削除
 	m_pList->DelList(m_iterator);
 
@@ -235,6 +229,7 @@ void CEnemy::Uninit(void)
 	// 移動状態の破棄
 	if (m_pMoveState != nullptr)
 	{
+		m_pMoveState->Release();		// 破棄
 		delete m_pMoveState;
 		m_pMoveState = nullptr;
 	}
@@ -248,6 +243,9 @@ void CEnemy::Uninit(void)
 //====================================================================
 void CEnemy::Update(void)
 {
+	//キーボードの取得
+	CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
+
 	// 値を取得
 	D3DXVECTOR3 posMy = GetPos();			// 位置
 	D3DXVECTOR3 posOldMy = GetPosOld();		// 前回の位置
@@ -270,30 +268,34 @@ void CEnemy::Update(void)
 	// 状態の更新
 	HitStateManager(posMy);
 
-	if (state == STATE_DEATH)
+	if (m_HitState == HIT_STATE_DEATH)
 	{
 		return;
 	}
 
-	// 移動方向処理
-	Rot(rotMy);
-
-	// 位置更新処理
-	UpdatePos(posMy,posOldMy,sizeMy);
-
 	// 移動処理
 	m_pMoveState->Move(this, posMy, rotMy);
 
-	//m_pMoveState->ControlStop(this);
+	// Bキー
+	if (pInputKeyboard->GetTrigger(DIK_B))
+	{
+		m_pMoveState->ControlStop(this);			// 停止 or 操作
+	}
+	// Nキー
+	else if (pInputKeyboard->GetTrigger(DIK_N))
+	{
+		m_pMoveState->ControlAStar(this);			// 追跡 or 操作
+		m_pMoveState->SetEnemyType(m_EnemyType);	// 敵の種類設定
 
-	// 追跡状態にする
-	//m_pMoveState->ControlAStar(this);
+	}
+	// Mキー
+	else if (pInputKeyboard->GetTrigger(DIK_M))
+	{
+		m_pMoveState->RandomAStar(this);			// ランダム or 追跡(まだランダム作ってない)
+		m_pMoveState->SetEnemyType(m_EnemyType);	// 敵の種類設定
 
-	// プレイヤーへの最短経路探索
-	Coordinate();
 
-	//// 最短経路をたどる
-	//Route();
+	}
 
 	// 自分の番号を設定
 	m_Grid = CMapSystem::GetInstance()->CMapSystem::CalcGrid(posMy);
@@ -320,6 +322,7 @@ void CEnemy::Update(void)
 
 	// デバッグ表示
 	DebugProc::Print(DebugProc::POINT_LEFT, "[敵]横 %d : 縦 %d\n", m_Grid.x, m_Grid.z);
+	m_pMoveState->Debug();		// 現在の移動状態
 
 	// 値更新
 	SetPos(posMy);			// 位置
@@ -356,82 +359,6 @@ HRESULT CEnemy::InitModel(const char* pFilename)
 	CObjectCharacter::SetTxtCharacter(pFilename);
 	
 	return S_OK;
-}
-
-//====================================================================
-// 位置更新処理
-//====================================================================
-void CEnemy::UpdatePos(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR3& sizeMy)
-{
-	//// モーションの取得
-	//CMotion* pMotion = GetMotion();
-
-	//if (pMotion == nullptr)
-	//{
-	//	return;
-	//}
-
-	//重力
-	m_move.y -= 0.5f;
-
-	// 変数宣言
-	float fSpeed = 1.0f;	// スロー用 default1.0fで初期化
-	//if (m_pSlow)
-	//{
-	//	fSpeed = m_pSlow->GetValue();
-
-	//	if (pMotion)
-	//	{
-	//		pMotion->SetSlowVaule(fSpeed);
-	//	}
-	//}
-
-	CDevil* pDevil = CDevil::GetListTop();
-
-	//Y軸の位置更新
-	posMy.y += m_move.y * CManager::GetInstance()->GetGameSpeed() * fSpeed;
-	posMy.y += m_Objmove.y * CManager::GetInstance()->GetGameSpeed() * fSpeed;
-
-	// 壁との当たり判定
-	//CollisionWall(posMy,posOldMy,sizeMy,useful::COLLISION_Y);
-	CollisionDevilHole(useful::COLLISION_Y);
-
-	//X軸の位置更新
-	posMy.x += m_move.x * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeX(m_move.x);
-	posMy.x += m_Objmove.x * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeX(m_move.x);
-
-	// 壁との当たり判定
-	//CollisionWall(posMy, posOldMy, sizeMy, useful::COLLISION_X);
-	CollisionDevilHole(useful::COLLISION_X);
-
-	//Z軸の位置更新
-	posMy.z += m_move.z * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeZ(m_move.z);
-	posMy.z += m_Objmove.z * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeZ(m_move.z);
-
-	// 壁との当たり判定
-	//CollisionWall(posMy, posOldMy, sizeMy, useful::COLLISION_Z);
-	CollisionDevilHole(useful::COLLISION_Z);
-
-	//ステージ外との当たり判定
-	CollisionOut(posMy);
-}
-
-//====================================================================
-//移動方向処理
-//====================================================================
-void CEnemy::Rot(D3DXVECTOR3& rotMy)
-{
-	//キーボードの取得
-	D3DXVECTOR3 CameraRot = CManager::GetInstance()->GetCamera()->GetRot();
-
-	//移動方向に向きを合わせる処理
-	float fRotMove, fRotDest;
-	fRotMove = rotMy.y;
-	fRotDest = CManager::GetInstance()->GetCamera()->GetRot().y;
-
-	rotMy.y = atan2f(-m_move.x, -m_move.z);
-
-	useful::NormalizeAngle(&rotMy);
 }
 
 //====================================================================
@@ -613,8 +540,13 @@ void CEnemy::HitStateManager(D3DXVECTOR3& posMy)
 
 		if (m_nHitStateCount <= 0)
 		{
+			m_HitState = HIT_STATE_DEATH;
 			Death();
 		}
+
+		break;
+
+	case CEnemy::HIT_STATE_DEATH:
 
 		break;
 
@@ -622,7 +554,7 @@ void CEnemy::HitStateManager(D3DXVECTOR3& posMy)
 		SetModelColor(CModel::COLORTYPE_TRUE_ALL, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 		break;
 
-	case CEnemy::E_STATE_EGG:
+	case CEnemy::HIT_STATE_EGG:
 		SetModelColor(CModel::COLORTYPE_TRUE_ALL, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f));
 		break;
 	}
@@ -766,6 +698,7 @@ void CEnemy::SearchWall(D3DXVECTOR3& posMy)
 	}
 }
 
+#if 0
 //==========================================
 //  最短経路探索
 //==========================================
@@ -855,6 +788,8 @@ void CEnemy::Route()
 	SetRot(rot);
 }
 
+#endif
+
 //==========================================
 //  エフェクトの生成
 //==========================================
@@ -879,6 +814,7 @@ void CEnemy::ChangeMoveState(CMoveState* pMoveState)
 {
 	if (m_pMoveState != nullptr)
 	{
+		m_pMoveState->Release();
 		delete m_pMoveState;
 		m_pMoveState = nullptr;
 	}

@@ -240,7 +240,7 @@ void CSelect::Update(void)
 		m_nTime = 0;
 	}
 
-	if (CManager::GetInstance()->GetFade()->GetFade() != CFade::FADE_OUT)
+	if (CManager::GetInstance()->GetFade()->GetFade() == CFade::FADE_NONE)
 	{
 		if (m_nStep == 0)
 		{

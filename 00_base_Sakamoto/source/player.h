@@ -50,7 +50,6 @@ public:
 		TYPE_MAX
 	};
 
-	static CPlayer* Create(int PlayNumber);
 	HRESULT Init(int PlayNumber) override;
 	void Uninit(void);
 	void Update(void);
@@ -82,11 +81,9 @@ public:
 	bool GetbUseItem() { return m_UseItem; }
 
 	bool GetGritCenter() { return m_bGritCenter; }
-
 	
 	void ChangeMoveState(CMoveState* pMoveState) override;		// ˆÚ“®ó‘Ô•ÏX
 	D3DXVECTOR3 GetEggMove() override { return m_EggMove; }		// —‘‚ÌˆÚ“®—Êæ“¾
-
 
 	virtual void Death(void);
 

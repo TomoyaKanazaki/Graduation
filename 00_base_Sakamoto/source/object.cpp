@@ -8,6 +8,8 @@
 #include "manager.h"
 #include "renderer.h"
 #include "camera.h"
+#include "Scene.h"
+#include "game.h"
 
 //==========================================
 //  定数定義
@@ -29,7 +31,8 @@ bool CObject::m_bLevelStop = false;			//オブジェクト総数
 //====================================================================
 //コンストラクタ
 //====================================================================
-CObject::CObject(int nPriority)
+CObject::CObject(int nPriority) :
+	m_bDisp(true)
 {
 	if (m_pTop[nPriority] == nullptr)
 	{//他のオブジェクトがひとつもない時
@@ -123,6 +126,24 @@ void CObject::UpdateAll(void)
 						pObject->Update();
 					}
 				}
+				else if (CScene::GetMode() == CScene::MODE_GAME)
+				{
+					if (CGame::GetInstance()->GetEvent() == true)
+					{
+						if (pObject->m_type != TYPE_PLAYER3D &&
+							pObject->m_type != TYPE_ENEMY3D &&
+							pObject->m_type != TYPE_SOFTCREAM)
+						{
+							//更新処理
+							pObject->Update();
+						}
+					}
+					else if (pObject->m_Appear == true)
+					{
+						//更新処理
+						pObject->Update();
+					}
+				}
 				else if(CManager::GetInstance()->GetEdit() == true)
 				{
 					if (pObject->m_type != TYPE_PLAYER3D && 
@@ -184,7 +205,7 @@ void CObject::DrawAll(int nCnt)
 			{
 				CObject* pObjectNext = pObject->m_pNext;	//次のオブジェクトを保存
 
-				if (pObject->m_Appear == true)
+				if (pObject->m_Appear == true && pObject->m_bDisp == true)
 				{
 					//描画処理
 					pObject->Draw();

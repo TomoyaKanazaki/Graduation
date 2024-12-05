@@ -19,6 +19,7 @@ class CMiniMapCamera;
 class CLight;
 class CTexture;
 class CXModel;
+class CCharacterManager;
 class CLevelUP;
 class CFade;
 class CSound;
@@ -71,6 +72,7 @@ public:
 	CMiniMapCamera* GetMiniMapCamera(void) { return m_pMiniMapCamera; }
 	CTexture *GetTexture(void) { return m_pTexture; }
 	CXModel *GetXModel(void) { return m_pXModel; }
+	CCharacterManager* GetCharacterManager(void) { return m_pCharacterManager; }
 	CFade *GetFade(void) { return m_pFade; }
 	CSound *GetSound(void) { return m_pSound; }
 	CRanking* GetRanking(void) { return m_pRanking; }
@@ -131,11 +133,11 @@ private:
 	D3DXMATRIX m_GamemtxProjection;		//プロジェクションマトリックス
 	D3DVIEWPORT9 m_GameViewport;		//ゲーム画面のビューポート
 
-	int m_nStage;							//現在のステージ
+	int m_nStage;						//現在のステージ
 	float GameSpeed;					//ゲームスピード
 	int m_EndScore;						//最終的なスコア
-	int m_End1PScore;						//最終的なスコア
-	int m_End2PScore;						//最終的なスコア
+	int m_End1PScore;					//最終的なスコア
+	int m_End2PScore;					//最終的なスコア
 	int m_EndTime;						//最終的なタイム
 	bool m_bGameClear;					//ゲームクリア状態か
 	bool m_SetTutorial;					//エディットモードかどうか
@@ -147,18 +149,19 @@ private:
 	bool m_PauseOK;						//ポーズを押しても大丈夫か
 	bool m_bPad;						//ジョイパッドを使用しているかどうか
 	bool m_bState;
-	CRenderer *m_pRenderer;				//レンダラーのポインタ
-	CInputKeyboard *m_pInputKeyboard;	//キーボードのポインタ
-	CInputJoypad* m_pInputJoyPad;		//ジョイパッドのポインタ
-	CInputMouse*m_pInputMouse;			//マウスのポインタ
-	CCamera *m_pCamera;					//カメラのポインタ
-	CMiniMapCamera* m_pMiniMapCamera;	//ミニマップカメラのポインタ
-	CLight *m_pLight;					//ライトのポインタ
-	CTexture *m_pTexture;				//テクスチャのポインタ
-	CXModel *m_pXModel;					//Xモデルのポインタ
-	CLevelUP *m_LevelUP;				//レベルアップのポインタ
-	CFade *m_pFade;						//フェードのポインタ
-	CSound *m_pSound;					//サウンドのポインタ
+	CRenderer *m_pRenderer;					//レンダラーのポインタ
+	CInputKeyboard *m_pInputKeyboard;		//キーボードのポインタ
+	CInputJoypad* m_pInputJoyPad;			//ジョイパッドのポインタ
+	CInputMouse*m_pInputMouse;				//マウスのポインタ
+	CCamera *m_pCamera;						//カメラのポインタ
+	CMiniMapCamera* m_pMiniMapCamera;		//ミニマップカメラのポインタ
+	CLight *m_pLight;						//ライトのポインタ
+	CTexture *m_pTexture;					//テクスチャのポインタ
+	CXModel *m_pXModel;						//Xモデルのポインタ
+	CCharacterManager* m_pCharacterManager; //キャラクター管理のポインタ
+	CLevelUP *m_LevelUP;					//レベルアップのポインタ
+	CFade *m_pFade;							//フェードのポインタ
+	CSound *m_pSound;						//サウンドのポインタ
 	CRanking* m_pRanking;
 	CBlockManager* m_pBlockManager;
 	CMyEffekseer* m_pEffect;

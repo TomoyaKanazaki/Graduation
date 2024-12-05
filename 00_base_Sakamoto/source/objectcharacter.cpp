@@ -7,6 +7,8 @@
 
 #include "objectcharacter.h"
 
+#include "characterManager.h"
+
 #include "manager.h"
 #include "renderer.h"
 
@@ -294,6 +296,18 @@ void CObjectCharacter::ChangeMoveState(CMoveState* pMoveState)
 //====================================================================
 void CObjectCharacter::SetTxtCharacter(const char* pFilename)
 {
+	//strcpy(&m_aModelName[0], pFilename);
+
+	//CCharacterManager* pCharacterManager = CManager::GetInstance()->GetCharacterManager();
+
+	//if (pCharacterManager == nullptr)
+	//{
+	//	assert(("キャラクター管理クラスがない", false));
+	//	return;
+	//}
+
+	//int nNum = pCharacterManager->Regist(this,pFilename);
+
 	strcpy(&m_aModelName[0], pFilename);
 
 	//モデルの生成
@@ -323,10 +337,11 @@ void CObjectCharacter::SetModel(CModel* pModel, int nCnt)
 	{
 		m_apModel[nCnt] = pModel;
 	}
-
-	assert(("モデル上書き生成", false));
-
-	return;
+	else
+	{
+		assert(("モデル上書き生成", false));
+		return;
+	}
 }
 
 //====================================================================

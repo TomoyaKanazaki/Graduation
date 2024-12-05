@@ -52,6 +52,9 @@ HRESULT CFootPrint::Init()
 		return E_FAIL;
 	}
 
+	// 不透明度を1で設定する
+	SetAlpha(1.0f);
+
 	//マップとのマトリックスの掛け合わせをオンにする
 	SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
 

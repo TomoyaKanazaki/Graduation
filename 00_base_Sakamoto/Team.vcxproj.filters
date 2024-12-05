@@ -277,8 +277,8 @@
     <ClCompile Include="source\footprint.cpp">
       <Filter>ソース ファイル\08_player</Filter>
     </ClCompile>
-    <ClCompile Include="source\signalmanager.cpp">
-      <Filter>ソース ファイル\06_UI_3D</Filter>
+    <ClCompile Include="source\EventMovie.cpp">
+      <Filter>ソース ファイル\03_Direction</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -522,8 +522,8 @@
     <ClInclude Include="source\footprint.h">
       <Filter>ソース ファイル\08_player</Filter>
     </ClInclude>
-    <ClInclude Include="source\signalmanager.h">
-      <Filter>ソース ファイル\06_UI_3D</Filter>
+    <ClInclude Include="source\EventMovie.h">
+      <Filter>ソース ファイル\03_Direction</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

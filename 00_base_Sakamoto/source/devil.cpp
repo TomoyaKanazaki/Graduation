@@ -417,21 +417,45 @@ void CDevil::BackSlope(void)
 		if (MapRot.x > 0.0f)
 		{
 			MapRot.x -= D3DX_PI * SLOPE_SPEED01;
+
+			if (MapRot.x <= 0.0f)
+			{
+				MapRot.x = 0.0f;
+				bBackOK = true;
+			}
 		}
 
 		if (MapRot.x < 0.0f)
 		{
 			MapRot.x += D3DX_PI * SLOPE_SPEED01;
+
+			if (MapRot.x >= 0.0f)
+			{
+				MapRot.x = 0.0f;
+				bBackOK = true;
+			}
 		}
 
 		if (MapRot.z > 0.0f)
 		{
 			MapRot.z -= D3DX_PI * SLOPE_SPEED01;
+
+			if (MapRot.z <= 0.0f)
+			{
+				MapRot.z = 0.0f;
+				bBackOK = true;
+			}
 		}
 
 		if (MapRot.z < 0.0f)
 		{
 			MapRot.z += D3DX_PI * SLOPE_SPEED01;
+
+			if (MapRot.z >= 0.0f)
+			{
+				MapRot.z = 0.0f;
+				bBackOK = true;
+			}
 		}
 
 		break;
@@ -444,6 +468,7 @@ void CDevil::BackSlope(void)
 
 			if (MapRot.x <= 0.0f)
 			{
+				MapRot.x = 0.0f;
 				bBackOK = true;
 			}
 		}
@@ -454,6 +479,7 @@ void CDevil::BackSlope(void)
 
 			if (MapRot.x >= 0.0f)
 			{
+				MapRot.x = 0.0f;
 				bBackOK = true;
 			}
 		}
@@ -464,6 +490,7 @@ void CDevil::BackSlope(void)
 
 			if (MapRot.z <= 0.0f)
 			{
+				MapRot.z = 0.0f;
 				bBackOK = true;
 			}
 		}
@@ -474,6 +501,7 @@ void CDevil::BackSlope(void)
 
 			if (MapRot.z >= 0.0f)
 			{
+				MapRot.z = 0.0f;
 				bBackOK = true;
 			}
 		}
@@ -508,7 +536,7 @@ void CDevil::BackSlope(void)
 	if (bBackOK)
 	{
 		STATE_WAIT;
-		m_nStateCount = 120;
+		m_nStateCount = 60;
 		MapRot.x = 0.0f;
 		MapRot.z = 0.0f;
 	}
@@ -1225,6 +1253,7 @@ void CDevil::CrossScroll(D3DXVECTOR3 Move, float GritSize)
 	for (CCross* pCross : list)
 	{
 		D3DXVECTOR3 pos = CMapSystem::GetInstance()->GetGritPos(pCross->GetGrid());
+		pos.y = pCross->GetPos().y;
 		pCross->SetPos(pos);
 	}
 }
