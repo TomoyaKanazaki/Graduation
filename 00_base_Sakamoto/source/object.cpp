@@ -31,7 +31,8 @@ bool CObject::m_bLevelStop = false;			//オブジェクト総数
 //====================================================================
 //コンストラクタ
 //====================================================================
-CObject::CObject(int nPriority)
+CObject::CObject(int nPriority) :
+	m_bDisp(true)
 {
 	if (m_pTop[nPriority] == nullptr)
 	{//他のオブジェクトがひとつもない時
@@ -204,7 +205,7 @@ void CObject::DrawAll(int nCnt)
 			{
 				CObject* pObjectNext = pObject->m_pNext;	//次のオブジェクトを保存
 
-				if (pObject->m_Appear == true)
+				if (pObject->m_Appear == true && pObject->m_bDisp == true)
 				{
 					//描画処理
 					pObject->Draw();
