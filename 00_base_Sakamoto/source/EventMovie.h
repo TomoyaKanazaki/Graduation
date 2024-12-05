@@ -31,5 +31,7 @@ public:
 	void Update(void);
 	void Draw(void);
 private:
+
+	STATE m_State;
 };
 #endif

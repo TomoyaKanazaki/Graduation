@@ -56,7 +56,7 @@ namespace
 	float SCROOL_SPEED_02 = (CMapSystem::GetGritSize() * SCROOL_MOVEGRID_02) / SCROOL_COUNT_02;			// ƒXƒNƒ[ƒ‹‚ÌˆÚ“®‘¬“x
 
 	int SLOPE_TIME = 300;						// ŒX‚«‘€ìŽžŠÔ
-	int SLOPE_RAND = 100;						// ŒX‚«”­¶Šm—¦
+	int SLOPE_RAND = 25;						// ŒX‚«”­¶Šm—¦
 	float STAGE_ROT_LIMIT = D3DX_PI * 0.15f;	// ŒX‚«‚ÌŠp“x§ŒÀ
 
 	float SLOPE_SPEED01 = 0.00075f;				// ŒX‚«‚ÌˆÚ“®‘¬“x
@@ -1279,6 +1279,7 @@ void CDevil::CrossScroll(D3DXVECTOR3 Move, float GritSize)
 	for (CCross* pCross : list)
 	{
 		D3DXVECTOR3 pos = CMapSystem::GetInstance()->GetGritPos(pCross->GetGrid());
+		pos.y = pCross->GetPos().y;
 		pCross->SetPos(pos);
 	}
 }

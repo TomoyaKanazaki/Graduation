@@ -278,7 +278,7 @@
       <Filter>ソース ファイル\08_player</Filter>
     </ClCompile>
     <ClCompile Include="source\EventMovie.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\03_Direction</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -522,6 +522,8 @@
     <ClInclude Include="source\footprint.h">
       <Filter>ソース ファイル\08_player</Filter>
     </ClInclude>
-    <ClInclude Include="source\EventMovie.h" />
+    <ClInclude Include="source\EventMovie.h">
+      <Filter>ソース ファイル\03_Direction</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
