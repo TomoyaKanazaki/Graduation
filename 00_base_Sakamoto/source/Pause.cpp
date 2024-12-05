@@ -12,6 +12,11 @@
 //静的メンバ変数宣言
 bool CPause::m_bColor = false;
 
+namespace
+{
+	const D3DXVECTOR3 PAUSE_SIZE = { 400.0f , 150.0f ,0.0f};
+}
+
 //====================================================================
 //コンストラクタ
 //====================================================================
@@ -77,7 +82,7 @@ HRESULT CPause::Init(void)
 		{
 			m_pPauseUI[nCnt] = CObject2D::Create();
 			m_pPauseUI[nCnt]->SetPos(D3DXVECTOR3(640.0f, 200.0f + nCnt * 200.0f, 0.0f));
-			m_pPauseUI[nCnt]->SetSize(D3DXVECTOR3(150.0f, 50.0f, 0.0f));
+			m_pPauseUI[nCnt]->SetSize(PAUSE_SIZE);
 			m_pPauseUI[nCnt]->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f));
 			m_pPauseUI[nCnt]->SetType(CObject::TYPE_TUTORIALUI);
 			m_pPauseUI[nCnt]->SetAppear(false);
@@ -157,7 +162,7 @@ void CPause::Update(void)
 			{
 				m_pPauseUI[nCnt]->SetAppear(true);
 				m_pPauseUI[nCnt]->SetPos(D3DXVECTOR3(640.0f, 200.0f + nCnt * 200.0f, 0.0f));
-				m_pPauseUI[nCnt]->SetSize(D3DXVECTOR3(150.0f, 50.0f, 0.0f));
+				//m_pPauseUI[nCnt]->SetSize(D3DXVECTOR3(150.0f, 50.0f, 0.0f));
 
 				if (nCnt == m_PauseSelect)
 				{
