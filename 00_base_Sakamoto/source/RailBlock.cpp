@@ -77,7 +77,7 @@ CRailBlock* CRailBlock::Create(CMapSystem::GRID gridCenter)
 	}
 
 	//オブジェクトの初期化処理
-	if (FAILED(pObjectBlock->Init("data\\MODEL\\railblock.x")))
+	if (FAILED(pObjectBlock->Init("data\\MODEL\\00_railblock.x")))
 	{//初期化処理が失敗した場合
 		return nullptr;
 	}
