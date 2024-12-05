@@ -21,6 +21,7 @@ namespace
 {
 	const D3DXVECTOR3 SAMPLE_SIZE = D3DXVECTOR3(50.0f, 0.0f, 50.0f);		//当たり判定
 	const int DIRECTION = 4;	// デビルホールの最大方向
+	const float MODEL_SET_DISTANCE = 130.0f;	// デビルホールを埋めたときのモデル生成位置
 }
 
 //====================================================================
@@ -110,7 +111,7 @@ CDevilHole* CDevilHole::Create(CMapSystem::GRID gridCenter)
 	}
 
 	//オブジェクトの初期化処理
-	if (FAILED(pSample->Init("data\\MODEL\\hamsterwheel\\hamsterwheel.x")))
+	if (FAILED(pSample->Init("data\\MODEL\\04_devilhole\\devil_hole_base.x")))
 	{//初期化処理が失敗した場合
 		return nullptr;
 	}
@@ -236,19 +237,19 @@ void CDevilHole::GameUpdate(void)
 			switch (nCnt)
 			{
 			case 0:	//上
-				m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(m_pos.x, m_pos.y, m_pos.z + 20.0f));
+				m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(m_pos.x, m_pos.y, m_pos.z + MODEL_SET_DISTANCE));
 				break;
 
 			case 1:	//下
-				m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(m_pos.x, m_pos.y, m_pos.z - 20.0f));
+				m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(m_pos.x, m_pos.y, m_pos.z - MODEL_SET_DISTANCE));
 				break;
 
 			case 2:	//右
-				m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(m_pos.x + 20.0f, m_pos.y, m_pos.z));
+				m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(m_pos.x + MODEL_SET_DISTANCE, m_pos.y, m_pos.z));
 				break;
 
 			case 3:	//左
-				m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(m_pos.x - 20.0f, m_pos.y, m_pos.z));
+				m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(m_pos.x - MODEL_SET_DISTANCE, m_pos.y, m_pos.z));
 				break;
 			}
 		}
@@ -342,26 +343,30 @@ void CDevilHole::CollisionOpen(void)
 			if (useful::PointSquareXZ(playerPos, pos, ObjXSize) == true &&
 				m_bSet[nCnt] == false)
 			{
-				m_pHoleKey[nCnt] = CObjectX::Create("data\\MODEL\\DevilKey.x");
+				m_pHoleKey[nCnt] = CObjectX::Create("data\\MODEL\\04_devilhole\\devil_hole_fence.x");
 				m_pHoleKey[nCnt]->SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
 				//m_pHoleKey[nCnt]->SetMultiMatrix(true);
 
 				switch (nCnt)
 				{
 				case 0:	//上
-					m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(m_pos.x, m_pos.y, m_pos.z + 20.0f));
+					m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(m_pos.x, m_pos.y, m_pos.z + MODEL_SET_DISTANCE));
+					m_pHoleKey[nCnt]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 1.0f, 0.0f));
 					break;
 
 				case 1:	//下
-					m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(m_pos.x, m_pos.y, m_pos.z - 20.0f));
+					m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(m_pos.x, m_pos.y, m_pos.z - MODEL_SET_DISTANCE));
+					m_pHoleKey[nCnt]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.0f, 0.0f));
 					break;
 
 				case 2:	//右
-					m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(m_pos.x + 20.0f, m_pos.y, m_pos.z));
+					m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(m_pos.x + MODEL_SET_DISTANCE, m_pos.y, m_pos.z));
+					m_pHoleKey[nCnt]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
 					break;
 
 				case 3:	//左
-					m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(m_pos.x - 20.0f, m_pos.y, m_pos.z));
+					m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(m_pos.x - MODEL_SET_DISTANCE, m_pos.y, m_pos.z));
+					m_pHoleKey[nCnt]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
 					break;
 				}
 
