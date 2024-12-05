@@ -72,7 +72,9 @@ CMoveState* CMoveState::GetMoveState(CObjectCharacter* pCharacter)
 void CMoveState::Debug(void)
 {
 	DebugProc::Print(DebugProc::POINT_LEFT, "ˆÚ“®ó‘Ô : ");
+
 	auto str = magic_enum::enum_name(State);
+
 	DebugProc::Print(DebugProc::POINT_LEFT, str.data());
 	DebugProc::Print(DebugProc::POINT_LEFT, "\n");
 
@@ -149,7 +151,9 @@ CStateControl::CStateControl()
 {
 	m_bInput = false;				// “ü—Í‚ğs‚Á‚½‚©‚Ç‚¤‚©
 	m_RotState = ROTSTATE_NONE;		// ˆÚ“®•ûŒü‚Ìó‘Ô
+
 	State = STATE_CONTROL;			// ‘€ìó‘Ô
+
 }
 
 //==========================================
@@ -585,7 +589,9 @@ CStateAStar::CStateAStar()
 	m_fCoordinateTimer = 0.0f;
 	m_nNumCoordinate = 0;
 	m_nTargetIndex = 0;
+
 	State = STATE_ASTAR;			// ‘€ìó‘Ô
+
 
 }
 

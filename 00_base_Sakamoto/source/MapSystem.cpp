@@ -261,7 +261,7 @@ float CMapSystem::GetGritSize(void)
 //==========================================
 // プレイヤーの位置取得
 //==========================================
-D3DXVECTOR3 CMapSystem::GetPlayerPos(int PlayNumber)
+D3DXVECTOR3 CMapSystem::GetPlayerPos(unsigned int PlayNumber)
 {
 	D3DXVECTOR3 pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		// 位置
 
@@ -349,7 +349,7 @@ void CMapSystem::Load(const char* pFilename)
 					map = CTutorial::GetInstance()->GetMapField();
 				}
 				map->SetPos(INITVECTOR3);
-				map->SetAppear(true); // 描画をオフ
+				map->SetAlpha(0.0f); // 描画をオフ
 
 				// 経路探索用情報の設定
 				generator->setWorldSize(MaxGrid.ToAStar()); // 世界の大きさ

@@ -32,6 +32,10 @@ public:
 	void Draw(void);
 private:
 
+	void StartMovie(void);
+
 	STATE m_State;
+	int m_nWave;
+	int m_nCount;
 };
 #endif

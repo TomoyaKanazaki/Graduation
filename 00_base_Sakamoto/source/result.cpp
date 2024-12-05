@@ -217,7 +217,6 @@ HRESULT CResult::Init(void)
 		m_p1PTex = CObject2D::Create();
 		m_p1PTex->SetPos(MULTI_1P_TEX_POS);
 		m_p1PTex->SetSize(MULTI_PLAYER_TEX_SIZE);
-		//m_p1PTex->SetTexture("data\\TEXTURE\\result_score.png");
 
 		//今回のスコア
 		for (int nCntObject = 0; nCntObject < 6; nCntObject++)
@@ -240,7 +239,6 @@ HRESULT CResult::Init(void)
 		m_p2PTex = CObject2D::Create();
 		m_p2PTex->SetPos(MULTI_2P_TEX_POS);
 		m_p2PTex->SetSize(MULTI_PLAYER_TEX_SIZE);
-		//m_p2PTex->SetTexture("data\\TEXTURE\\result_score.png");
 
 		//今回のスコア
 		for (int nCntObject = 0; nCntObject < 6; nCntObject++)

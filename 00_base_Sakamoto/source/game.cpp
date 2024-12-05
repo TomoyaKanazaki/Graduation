@@ -58,13 +58,8 @@ CGame::CGame()
 	m_bEvent = false;
 	m_bEventEnd = false;
 	m_bDevilHoleFinish = false;
-	m_EventHeight = 0.0f;
 	m_BGColorA = 1.0f;
-	m_nEventCount = 0;
-	m_fEvectFinish = 0.0f;
-	m_fEventAngle = 0.0f;
 	m_nTutorialWave = 0;
-	m_nEventNumber = 0;
 	m_nNumBowabowa = 0;
 	CManager::GetInstance()->GetCamera()->SetBib(false);
 	CManager::GetInstance()->GetCamera()->SetCameraMode(CCamera::CAMERAMODE_DOWNVIEW);
@@ -84,28 +79,20 @@ CGame::CGame()
 	m_pDevil = nullptr;
 	m_pMask = nullptr;
 
-	m_bGameEnd = false;
 	m_bGameClear = false;
-	m_bEvent = false;
-	m_bEventEnd = false;
 	m_Wireframe = false;
 	m_Slow = false;
 	m_bDevilHoleFinish = false;
 
 	m_nTutorialWave = 0;
-	m_nEventCount = 0;
-	m_nEventWave = 0;
-	m_nEventNumber = 0;
 	m_nNumBowabowa = 0;
 
-	m_fEvectFinish = 0.0f;
-	m_fEventAngle = 0.0f;
-	m_EventHeight = 0.0f;
-	m_NameColorA = 0.0f;
 	m_BGColorA = 1.0f;
 
-	m_EventPos = D3DXVECTOR3(0.0f, 300.0f, 0.0f);
 	m_BGRot = INITVECTOR3;
+
+	LetterBox[0] = nullptr;
+	LetterBox[1] = nullptr;
 }
 
 //====================================================================
@@ -167,7 +154,16 @@ HRESULT CGame::Init(void)
 
 	// マップの生成
 	CMapSystem::GetInstance()->Init();
-	CMapSystem::Load("data\\TXT\\STAGE\\map04.csv");
+	CMapSystem::Load("data\\TXT\\STAGE\\map06.csv");
+
+	for (int nCnt = 0; nCnt < 2; nCnt++)
+	{
+		LetterBox[nCnt] = CObject2D::Create();
+		LetterBox[nCnt]->SetPos(D3DXVECTOR3(640.0f, nCnt * 720.0f, 0.0f));
+		LetterBox[nCnt]->SetSize(D3DXVECTOR3(1280.0f, 0.0f, 0.0f));
+		LetterBox[nCnt]->SetColor(D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
+		LetterBox[nCnt]->SetTexture("data\\TEXTURE\\Test.jpg");
+	}
 
 	// 下床の生成
 	auto grid = FIELD_GRID;
@@ -183,6 +179,10 @@ HRESULT CGame::Init(void)
 	switch (CManager::GetInstance()->GetStage())
 	{
 	case 0:
+
+		//m_bEvent = true;
+		//CManager::GetInstance()->SetEvent();
+
 		// ソフトクリームの生成
 		CItem::Create(CItem::TYPE_SOFTCREAM, CMapSystem::GetInstance()->GetCenter());
 
@@ -312,8 +312,7 @@ void CGame::Update(void)
 
 	if (m_bEvent == true)
 	{
-		//イベントの更新
-		EventUpdate();
+
 	}
 
 	if (CManager::GetInstance()->GetFade()->GetFade() == CFade::FADE_NONE)
@@ -369,6 +368,10 @@ void CGame::Update(void)
 			}
 		}
 
+		//レターボックスの更新
+		UpdateLetterBox();
+
+		//ポーズの更新処理
 		if (m_pPause != nullptr)
 		{
 			m_pPause->Update();
@@ -459,31 +462,37 @@ void CGame::StageClear(int Stage)
 }
 
 //====================================================================
-//イベントの更新
+//描画処理
 //====================================================================
-void CGame::EventUpdate(void)
+void CGame::UpdateLetterBox(void)
 {
-	if (m_nEventNumber == 0) //=====================================================================
+	if (m_bEvent)
 	{
-		switch (m_nEventWave)
+		for (int nCnt = 0; nCnt < 2; nCnt++)
 		{
-		case 0:		//ボスを瀕死モーションにする
-			m_nEventWave++;
-			m_nEventCount = 150;
-			break;
+			D3DXVECTOR3 Height = LetterBox[nCnt]->GetSize();
 
-		default:
-			m_bEvent = false;
-			m_nEventWave = 0;
-			m_nEventNumber++;
-			break;
+			if (Height.y < 200.0f)
+			{
+				Height.y += 2.0f;
+			}
+
+			LetterBox[nCnt]->SetSize(Height);
 		}
 	}
-
-	//イベントカウント
-	if (m_nEventCount > 0)
+	else
 	{
-		m_nEventCount--;
+		for (int nCnt = 0; nCnt < 2; nCnt++)
+		{
+			D3DXVECTOR3 Height = LetterBox[nCnt]->GetSize();
+
+			if (Height.y > 0.0f)
+			{
+				Height.y -= 2.0f;
+			}
+
+			LetterBox[nCnt]->SetSize(Height);
+		}
 	}
 }
 

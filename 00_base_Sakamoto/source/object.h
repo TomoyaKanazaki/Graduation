@@ -79,6 +79,8 @@ public:
 	OBJECT_TYPE GetType(void) { return m_type; }
 	void SetAppear(bool Set) { m_Appear = Set; }
 	bool GetAppear(void) { return m_Appear; }
+	void SetDisp(bool Set) { m_bDisp = Set; }
+	bool GetDisp(void) { return m_bDisp; }
 
 protected:
 	void Release(void);
@@ -95,6 +97,7 @@ private:
 	static bool m_bLevelStop;				//レベルアップ時のポーズ
 	bool m_bLevelUI;						//レベルアップ時のUI
 	bool m_Appear;							//表示状態かどうか
+	bool m_bDisp;							//表示状態かどうか
 	OBJECT_TYPE m_type;						//オブジェクトの種類
 };
 
