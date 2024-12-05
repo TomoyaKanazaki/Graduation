@@ -88,9 +88,9 @@ public:
 	void SetMoveX(float moveX) { m_move.x = moveX; }	// ˆÚ“®‚Ìİ’èX
 	void SetMoveZ(float moveZ) { m_move.z = moveZ; }	// ˆÚ“®‚Ìİ’èY
 	D3DXVECTOR3 GetMove(void) { return m_move; }		// ˆÚ“®‚Ìæ“¾
+	D3DXVECTOR3 GetObjMove(void) { return m_Objmove; }
 	void SetObjMoveX(float move) { m_Objmove.x = move; }
 	void SetObjMoveZ(float move) { m_Objmove.z = move; }
-	D3DXVECTOR3 GetObjMove(void) { return m_Objmove; }
 	void SetState(STATE State) { m_State = State; }
 	STATE GetState(void) { return m_State; }
 	void SetOldState(STATE State) { m_OldState = State; }
