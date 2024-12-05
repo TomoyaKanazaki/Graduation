@@ -58,6 +58,7 @@ public:
 		TYPE_GET_SOFTCREAM,			// ソフトクリーム取得
 		TYPE_SOFTCREAM,				// ソフトクリームのオーラ
 		TYPE_CRASH_CROSS,			// 十字架を失う時
+		TYPE_SPAWN_DEVIL,			// デビルの出現
 		TYPE_MAX,
 		TYPE_NONE					// なんもない
 	};
