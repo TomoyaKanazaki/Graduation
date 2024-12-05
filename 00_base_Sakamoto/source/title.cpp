@@ -191,7 +191,7 @@ void CTitle::Uninit(void)
 //====================================================================
 void CTitle::Update(void)
 {	
-	if (CManager::GetInstance()->GetFade()->GetFade() != CFade::FADE_OUT)
+	if (CManager::GetInstance()->GetFade()->GetFade() == CFade::FADE_NONE)
 	{
 		// ‘I‘ğˆ—
 		Select();
