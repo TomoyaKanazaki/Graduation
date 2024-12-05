@@ -8,6 +8,8 @@
 #include "manager.h"
 #include "renderer.h"
 #include "camera.h"
+#include "Scene.h"
+#include "game.h"
 
 //==========================================
 //  定数定義
@@ -118,6 +120,24 @@ void CObject::UpdateAll(void)
 				if (CManager::GetInstance()->GetPause() == true)
 				{
 					if (pObject->m_type == TYPE_TUTORIALUI)
+					{
+						//更新処理
+						pObject->Update();
+					}
+				}
+				else if (CScene::GetMode() == CScene::MODE_GAME)
+				{
+					if (CGame::GetInstance()->GetEvent() == true)
+					{
+						if (pObject->m_type != TYPE_PLAYER3D &&
+							pObject->m_type != TYPE_ENEMY3D &&
+							pObject->m_type != TYPE_SOFTCREAM)
+						{
+							//更新処理
+							pObject->Update();
+						}
+					}
+					else if (pObject->m_Appear == true)
 					{
 						//更新処理
 						pObject->Update();

@@ -133,11 +133,11 @@ private:
 	D3DXMATRIX m_GamemtxProjection;		//プロジェクションマトリックス
 	D3DVIEWPORT9 m_GameViewport;		//ゲーム画面のビューポート
 
-	int m_nStage;							//現在のステージ
+	int m_nStage;						//現在のステージ
 	float GameSpeed;					//ゲームスピード
 	int m_EndScore;						//最終的なスコア
-	int m_End1PScore;						//最終的なスコア
-	int m_End2PScore;						//最終的なスコア
+	int m_End1PScore;					//最終的なスコア
+	int m_End2PScore;					//最終的なスコア
 	int m_EndTime;						//最終的なタイム
 	bool m_bGameClear;					//ゲームクリア状態か
 	bool m_SetTutorial;					//エディットモードかどうか

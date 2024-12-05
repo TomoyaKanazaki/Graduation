@@ -57,7 +57,6 @@ public:
 	void SetEvent(bool Set) { m_bEvent = Set; }
 	bool GetEvent(void) { return m_bEvent; }
 	bool GetEventEnd(void) { return m_bEventEnd; }
-	D3DXVECTOR3 GetEventPos(void) { return m_EventPos; }
 	float GetBGColorA(void) { return m_BGColorA; }
 	void AddBGColorA(float Add) { m_BGColorA += Add; }
 	void SetGameEnd(bool Set) { m_bGameEnd = Set; }
@@ -75,11 +74,10 @@ public:
 	bool GetSlow(void) { return m_Slow; }
 
 private:
+	void UpdateLetterBox(void);
 	void StageClear(int Stage);
 	void LoadStageRailBlock(const char* pFilename);
 	void LoadStageMapModel(const char* pFilename);
-
-	void EventUpdate(void);
 
 	void SetBgObjTest(void);
 
@@ -98,14 +96,6 @@ private:
 	//イベント用変数
 	bool m_bEvent;							//イベント状態かどうか
 	bool m_bEventEnd;						//イベントが終わったかどうか
-	int m_nEventCount;						//イベント時間
-	int m_nEventWave;						//イベント段階
-	int m_nEventNumber;						//イベント番号
-	float m_fEvectFinish;					//鍔迫り合いのカウント
-	float m_fEventAngle;					//イベント用の角度
-	float m_EventHeight;					//イベント用ポリゴンの高さ
-	float m_NameColorA;						//イベント用の名前表示の不透明度
-	D3DXVECTOR3 m_EventPos;					//イベント開始座標
 
 	int m_nTutorialWave;					//チュートリアルの段階
 	float m_BGColorA;						//ゲーム背景の不透明度
@@ -118,6 +108,8 @@ private:
 	CCubeBlock* m_pCubeBlock;				//キューブブロック
 	bool m_Wireframe;						//ワイヤーフレームのオンオフ
 	bool m_Slow;							//スロー演出のオンオフ
+
+	CObject2D* LetterBox[2];				//イベント時の背景表示
 
 	CObject2D* m_p2DSample;					//2Dポリゴンのサンプル
 	CObject3D* m_p3DSample;					//3Dポリゴンのサンプル
