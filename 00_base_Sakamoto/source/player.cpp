@@ -353,6 +353,11 @@ void CPlayer::Update(void)
 				// 所持時間タイマーをリセット
 				m_fCrossTimer = 0.0f;
 
+				// エフェクトを生成
+				D3DXMATRIX mat = *GetUseMultiMatrix();
+				D3DXVECTOR3 ef = useful::CalcMatrix(posThis, rotThis, mat);
+				MyEffekseer::EffectCreate(CMyEffekseer::TYPE_CRASH_CROSS, false, ef, rotThis);
+
 				// アイテムを所持していない状態にする
 				SetItemType(TYPE_NONE);
 			}

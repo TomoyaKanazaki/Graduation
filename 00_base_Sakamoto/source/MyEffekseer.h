@@ -57,6 +57,7 @@ public:
 		TYPE_REVIVE_SMALLDEVIL,		// 子デビルの復活ガイド
 		TYPE_GET_SOFTCREAM,			// ソフトクリーム取得
 		TYPE_SOFTCREAM,				// ソフトクリームのオーラ
+		TYPE_CRASH_CROSS,			// 十字架を失う時
 		TYPE_MAX,
 		TYPE_NONE					// なんもない
 	};

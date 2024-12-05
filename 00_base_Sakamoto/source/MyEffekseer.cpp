@@ -62,6 +62,7 @@ namespace MyEffekseer
 		"data\\EFFEKSEER\\Effect\\28_revive_smalldevil.efkefc",		// 小デビルの復活ガイド
 		"data\\EFFEKSEER\\Effect\\29_get_softcream.efkefc",			// ソフトクリーム取得
 		"data\\EFFEKSEER\\Effect\\30_aura_softcream.efkefc",		// ソフトクリームオーラ
+		"data\\EFFEKSEER\\Effect\\31_clash_cross.efkefc",		// 十字架を失う時
 	};
 
 	//============================================
