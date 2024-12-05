@@ -98,7 +98,10 @@ CDevil::CDevil(int nPriority) : CObjectCharacter(nPriority)
 	m_ScrollType = SCROLL_TYPE_NORMAL;
 	m_pSignal[0] = nullptr;
 	m_pSignal[1] = nullptr;
+	m_pSignal[2] = nullptr;
+	m_pSignal[3] = nullptr;
 	m_nStateNum = 0;
+	m_SlopeType = 0;
 }
 
 //====================================================================
@@ -165,13 +168,25 @@ HRESULT CDevil::Init(void)
 	// 矢印生成
 	if (m_pSignal[0] == nullptr)
 	{
-		m_pSignal[0] = CSignal::Create("data\\MODEL\\signal.x");
+		m_pSignal[0] = CSignal::Create(0);
 		m_pSignal[0]->SetPos(D3DXVECTOR3(-1000.0f,200.0f,500.0f));
 	}
 	if (m_pSignal[1] == nullptr)
 	{
-		m_pSignal[1] = CSignal::Create("data\\MODEL\\signal.x");
+		m_pSignal[1] = CSignal::Create(0);
 		m_pSignal[1]->SetPos(D3DXVECTOR3(1000.0f, 200.0f, 500.0f));
+	}
+
+	// スロープ用矢印
+	if (m_pSignal[2] == nullptr)
+	{
+		m_pSignal[2] = CSignal::Create(1);
+		m_pSignal[2]->SetPos(D3DXVECTOR3(-1000.0f, 200.0f, 0.0f));
+	}
+	if (m_pSignal[3] == nullptr)
+	{
+		m_pSignal[3] = CSignal::Create(1);
+		m_pSignal[3]->SetPos(D3DXVECTOR3(1000.0f, 200.0f, 0.0f));
 	}
 
 	// スローの生成
@@ -246,31 +261,6 @@ void CDevil::Update(void)
 	CObjectCharacter::Update();
 
 	D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
-
-	//for (int nCnt = 0; nCnt < 4; nCnt++)
-	//{
-	//	pTestEffect = CEffect::Create();
-	//
-	//	switch (nCnt)
-	//	{
-	//	case 0:
-	//		pTestEffect->SetPos(D3DXVECTOR3(m_DevilPos.x + MapSize.x, m_DevilPos.y, m_DevilPos.z + MapSize.z));
-	//		break;
-	//	case 1:
-	//		pTestEffect->SetPos(D3DXVECTOR3(m_DevilPos.x - MapSize.x, m_DevilPos.y, m_DevilPos.z + MapSize.z));
-	//		break;
-	//	case 2:
-	//		pTestEffect->SetPos(D3DXVECTOR3(m_DevilPos.x + MapSize.x, m_DevilPos.y, m_DevilPos.z - MapSize.z));
-	//		break;
-	//	case 3:
-	//		pTestEffect->SetPos(D3DXVECTOR3(m_DevilPos.x - MapSize.x, m_DevilPos.y, m_DevilPos.z - MapSize.z));
-	//		break;
-	//	}
-	//
-	//	pTestEffect->SetLife(20);
-	//	pTestEffect->SetRadius(20.0f);
-	//	pTestEffect->SetColor(D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
-	//}
 
 	//モーションの管理
 	ActionState();
@@ -429,21 +419,45 @@ void CDevil::BackSlope(void)
 		if (MapRot.x > 0.0f)
 		{
 			MapRot.x -= D3DX_PI * SLOPE_SPEED01;
+
+			if (MapRot.x <= 0.0f)
+			{
+				MapRot.x = 0.0f;
+				bBackOK = true;
+			}
 		}
 
 		if (MapRot.x < 0.0f)
 		{
 			MapRot.x += D3DX_PI * SLOPE_SPEED01;
+
+			if (MapRot.x >= 0.0f)
+			{
+				MapRot.x = 0.0f;
+				bBackOK = true;
+			}
 		}
 
 		if (MapRot.z > 0.0f)
 		{
 			MapRot.z -= D3DX_PI * SLOPE_SPEED01;
+
+			if (MapRot.z <= 0.0f)
+			{
+				MapRot.z = 0.0f;
+				bBackOK = true;
+			}
 		}
 
 		if (MapRot.z < 0.0f)
 		{
 			MapRot.z += D3DX_PI * SLOPE_SPEED01;
+
+			if (MapRot.z >= 0.0f)
+			{
+				MapRot.z = 0.0f;
+				bBackOK = true;
+			}
 		}
 
 		break;
@@ -456,6 +470,7 @@ void CDevil::BackSlope(void)
 
 			if (MapRot.x <= 0.0f)
 			{
+				MapRot.x = 0.0f;
 				bBackOK = true;
 			}
 		}
@@ -466,6 +481,7 @@ void CDevil::BackSlope(void)
 
 			if (MapRot.x >= 0.0f)
 			{
+				MapRot.x = 0.0f;
 				bBackOK = true;
 			}
 		}
@@ -476,6 +492,7 @@ void CDevil::BackSlope(void)
 
 			if (MapRot.z <= 0.0f)
 			{
+				MapRot.z = 0.0f;
 				bBackOK = true;
 			}
 		}
@@ -486,6 +503,7 @@ void CDevil::BackSlope(void)
 
 			if (MapRot.z >= 0.0f)
 			{
+				MapRot.z = 0.0f;
 				bBackOK = true;
 			}
 		}
@@ -520,7 +538,7 @@ void CDevil::BackSlope(void)
 	if (bBackOK)
 	{
 		STATE_WAIT;
-		m_nStateCount = 120;
+		m_nStateCount = 60;
 		MapRot.x = 0.0f;
 		MapRot.z = 0.0f;
 	}
@@ -544,7 +562,7 @@ void CDevil::Slope(int Arroow)
 
 		switch (Arroow)
 		{
-		case 0:
+		case 0: 
 
 			MapRot.x += D3DX_PI * SLOPE_SPEED01;
 
@@ -552,6 +570,8 @@ void CDevil::Slope(int Arroow)
 			{
 				MapRot.x = STAGE_ROT_LIMIT;
 			}
+			// 右側
+			m_SlopeType = 0;
 
 			break;
 		case 1:
@@ -562,6 +582,8 @@ void CDevil::Slope(int Arroow)
 			{
 				MapRot.x = -STAGE_ROT_LIMIT;
 			}
+			// 左側
+			m_SlopeType = 1;
 
 			break;
 		case 2:
@@ -572,6 +594,8 @@ void CDevil::Slope(int Arroow)
 			{
 				MapRot.z = STAGE_ROT_LIMIT;
 			}
+			// 奥側
+			m_SlopeType = 2;
 
 			break;
 		case 3:
@@ -582,6 +606,8 @@ void CDevil::Slope(int Arroow)
 			{
 				MapRot.z = -STAGE_ROT_LIMIT;
 			}
+			// 手前側
+			m_SlopeType = 3;
 
 			break;
 		}
@@ -807,7 +833,7 @@ void CDevil::ActionState(void)
 		}
 	}
 	// 下モーション
-	if (m_DevilArrow == 1)
+	else if (m_DevilArrow == 1)
 	{
 		if (m_Action != ACTION_SIGNAL_DOWN)
 		{
@@ -817,7 +843,7 @@ void CDevil::ActionState(void)
 		}
 	}
 	// 左モーション
-	if (m_DevilArrow == 2)
+	else if (m_DevilArrow == 2)
 	{
 		if (m_Action != ACTION_SIGNAL_LEFT)
 		{
@@ -827,7 +853,7 @@ void CDevil::ActionState(void)
 		}
 	}
 	// 右モーション
-	if (m_DevilArrow == 3)
+	else if (m_DevilArrow == 3)
 	{
 		if (m_Action != ACTION_SIGNAL_RIGHT)
 		{
@@ -1046,6 +1072,9 @@ void CDevil::StateManager(void)
 			if (m_bSlope)
 			{
 				Slope(m_DevilArrow);
+
+				// 矢印傾き
+				SignalSlope(m_DevilArrow);
 			}
 			else
 			{
@@ -1134,18 +1163,22 @@ void CDevil::DebugKey(void)
 	if (pInputKeyboard->GetPress(DIK_6))
 	{
 		Slope(0);
+		SignalSlope(0);
 	}
 	if (pInputKeyboard->GetPress(DIK_7))
 	{
 		Slope(1);
+		SignalSlope(1);
 	}
 	if (pInputKeyboard->GetPress(DIK_8))
 	{
 		Slope(2);
+		SignalSlope(2);
 	}
 	if (pInputKeyboard->GetPress(DIK_9))
 	{
 		Slope(3);
+		SignalSlope(3);
 	}
 #endif // !_DEBUG
 }
@@ -1246,6 +1279,7 @@ void CDevil::CrossScroll(D3DXVECTOR3 Move, float GritSize)
 	for (CCross* pCross : list)
 	{
 		D3DXVECTOR3 pos = CMapSystem::GetInstance()->GetGritPos(pCross->GetGrid());
+		pos.y = pCross->GetPos().y;
 		pCross->SetPos(pos);
 	}
 }
@@ -1592,6 +1626,36 @@ void CDevil::SignalScroll(void)
 	case ACTION_SIGNAL_LEFT:
 		m_pSignal[0]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
 		m_pSignal[1]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f)); 
+		break;
+	}
+}
+
+//====================================================================
+// 矢印が傾く向き
+//====================================================================
+void CDevil::SignalSlope(int Num)
+{
+	switch (Num)
+	{
+	case 0:
+		m_pSignal[2]->SetRot(D3DXVECTOR3(-0.5f, D3DX_PI, 0.0f));
+		m_pSignal[3]->SetRot(D3DXVECTOR3(-0.5f, D3DX_PI, 0.0f));
+		break;
+
+	case 1:
+		m_pSignal[2]->SetRot(D3DXVECTOR3(-0.5f, 0.0f, 0.0f));
+		m_pSignal[3]->SetRot(D3DXVECTOR3(-0.5f, 0.0f, 0.0f));
+		break;
+
+	case 2:
+		m_pSignal[2]->SetRot(D3DXVECTOR3(D3DX_PI * -0.25f, D3DX_PI * 0.5f, 0.0f));
+		m_pSignal[3]->SetRot(D3DXVECTOR3(D3DX_PI * -0.25f, D3DX_PI * 0.5f, 0.0f));
+
+		break;
+
+	case 3:
+		m_pSignal[2]->SetRot(D3DXVECTOR3(-0.75f, D3DX_PI * -0.5f, 0.0f));
+		m_pSignal[3]->SetRot(D3DXVECTOR3(-0.75f, D3DX_PI * -0.5f, 0.0f));
 		break;
 	}
 }

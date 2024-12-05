@@ -14,17 +14,17 @@ NUM_MODEL = 11
 #------------------------------------------------------------------------------
 # モデルファイル名
 #------------------------------------------------------------------------------
-MODEL_FILENAME = data/MODEL/00_player/1P/00_body.x	# [0]腰
-MODEL_FILENAME = data/MODEL/00_player/1P/01_tale.x	# [1]体
-MODEL_FILENAME = data/MODEL/00_player/1P/02_lower_jaw.x	# [2]頭
-MODEL_FILENAME = data/MODEL/00_player/1P/03_R_thighs.x	# [2]頭
-MODEL_FILENAME = data/MODEL/00_player/1P/04_L_thighs.x	# [2]頭
-MODEL_FILENAME = data/MODEL/00_player/1P/05_R_foot.x	# [2]頭
-MODEL_FILENAME = data/MODEL/00_player/1P/06_L_foot.x	# [2]頭
-MODEL_FILENAME = data/MODEL/00_player/1P/07_R_feather.x	# [2]頭
-MODEL_FILENAME = data/MODEL/00_player/1P/08_L_feather.x	# [2]頭
-MODEL_FILENAME = data/MODEL/00_player/1P/09_cross.x	# [2]頭
-MODEL_FILENAME = data/MODEL/00_player/1P/10_book.x	# [2]頭
+MODEL_FILENAME = data/MODEL/00_tamagon/00_body.x	# [0]腰
+MODEL_FILENAME = data/MODEL/00_tamagon/01_tale.x	# [1]体
+MODEL_FILENAME = data/MODEL/00_tamagon/02_lower_jaw.x	# [2]頭
+MODEL_FILENAME = data/MODEL/00_tamagon/03_R_thighs.x	# [3]頭
+MODEL_FILENAME = data/MODEL/00_tamagon/04_L_thighs.x	# [4]頭
+MODEL_FILENAME = data/MODEL/00_tamagon/05_R_foot.x	# [5]頭
+MODEL_FILENAME = data/MODEL/00_tamagon/06_L_foot.x	# [6]頭
+MODEL_FILENAME = data/MODEL/00_tamagon/07_R_feather.x	# [7]頭
+MODEL_FILENAME = data/MODEL/00_tamagon/08_L_feather.x	# [8]頭
+MODEL_FILENAME = data/MODEL/00_tamagon/09_cross.x	# [9]頭
+MODEL_FILENAME = data/MODEL/00_tamagon/10_book.x	# [10]頭
 
 #------------------------------------------------------------------------------
 # キャラクター情報
@@ -482,7 +482,7 @@ END_MOTIONSET
 # [2] 死亡
 #---------------------------------------
 MOTIONSET
-	LOOP = 0		# ループするかどうか[0:ループしない / 1:ループする]
+	LOOP = 1		# ループするかどうか[0:ループしない / 1:ループする]
 	NUM_KEY = 4		# キー数
 
 	KEYSET			# --- << KEY : 0 / 4 >> ---

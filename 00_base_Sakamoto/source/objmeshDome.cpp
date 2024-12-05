@@ -74,8 +74,6 @@ HRESULT CObjmeshDome::Init(void)
 	//デバイスの取得
 	LPDIRECT3DDEVICE9 m_pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
 
-	SetTexture("data\\TEXTURE\\Wood002.png");
-
 	SetType(TYPE_NONE);
 
 	//頂点バッファの生成

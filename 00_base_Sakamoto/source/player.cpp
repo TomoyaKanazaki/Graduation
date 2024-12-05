@@ -40,6 +40,7 @@
 #include "move.h"
 
 #include "MyEffekseer.h"
+#include "footprint.h"
 
 //===========================================
 // 定数定義
@@ -83,8 +84,8 @@ CPlayer::CPlayer(int nPriority) : CObjectCharacter(nPriority),
 m_AutoMoveRot(INITVECTOR3),
 m_bJump(false),
 m_nActionCount(0),
-m_Action(ACTION_NONE),
-m_AtkAction(ACTION_NONE),
+m_Action(ACTION_WAIT),
+m_AtkAction(ACTION_WAIT),
 //state(STATE_EGG),
 m_nStateCount(0),
 m_AtkPos(INITVECTOR3),
@@ -93,6 +94,7 @@ m_bInput(false),
 m_pLifeUi(nullptr),
 m_nLife(0),
 m_eItemType(TYPE_NONE),
+m_OldGrid(0, 0),
 m_bGritCenter(true),
 m_bPressObj(false),
 m_fCrossTimer(0.0f),
@@ -123,27 +125,6 @@ m_pMoveState(nullptr)
 CPlayer::~CPlayer()
 {
 
-}
-
-//====================================================================
-//生成処理
-//====================================================================
-CPlayer* CPlayer::Create(int PlayNumber)
-{
-	CPlayer* pPlayer = new CPlayer();
-
-	// メモリの確保に失敗した場合nullを返す
-	if (pPlayer == nullptr) { assert(false); return nullptr; }
-
-	// 初期化処理に失敗した場合nullを返す
-	if (FAILED(pPlayer->Init(PlayNumber)))
-	{
-		assert(false);
-		delete pPlayer;
-		return nullptr;
-	}
-
-	return pPlayer;
 }
 
 //====================================================================
@@ -197,8 +178,8 @@ HRESULT CPlayer::Init(int PlayNumber)
 	m_AutoMoveRot = D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f);
 
 	// アクションの設定
-	m_Action = ACTION_EGG;
-	m_AtkAction = ACTION_EGG;
+	m_Action = ACTION_WAIT;
+	m_AtkAction = ACTION_WAIT;
 
 	//種類設定
 	SetType(CObject::TYPE_PLAYER3D);
@@ -219,9 +200,9 @@ HRESULT CPlayer::Init(int PlayNumber)
 	m_pSlow = CSlowManager::Create(CSlowManager::CAMP_PLAYER, CSlowManager::TAG_PLAYER);
 
 	// 値更新
-	SetPos(posThis);			// 位置
+	SetPos(posThis);		// 位置
 	SetPosOld(posOldThis);	// 前回の位置
-	SetRot(rotThis);			// 向き
+	SetRot(rotThis);		// 向き
 	SetSize(sizeThis);		// 大きさ
 
 	// 状態の設定
@@ -273,6 +254,14 @@ void CPlayer::Uninit(void)
 		m_pScore = nullptr;
 	}
 
+	// 移動状態の破棄
+	if (m_pMoveState != nullptr)
+	{
+		m_pMoveState->Release();
+		delete m_pMoveState;
+		m_pMoveState = nullptr;
+	}
+
 	// エフェクトの削除
 	if (m_pEffectEgg != nullptr)
 	{
@@ -307,9 +296,11 @@ void CPlayer::Update(void)
 	D3DXVECTOR3 rotThis = GetRot();			// 向き
 	D3DXVECTOR3 sizeThis = GetSize();			// 大きさ
 	STATE state = GetState();				// 状態
+	STATE oldstate = GetOldState();			// 状態
 
 	// 過去の位置に代入
 	posOldThis = posThis;
+	m_OldGrid = m_Grid;
 
 	if (state != STATE_DEATH)
 	{
@@ -330,6 +321,12 @@ void CPlayer::Update(void)
 
 			// 移動処理
 			m_pMoveState->Move(this, posThis, rotThis);
+
+			// モデルを描画する
+			if (GetState() != STATE_EGG && oldstate == STATE_EGG)
+			{
+				SetItemType(TYPE_NONE);
+			}
 
 			// 移動処理
 			//Move(posThis,rotThis);
@@ -452,6 +449,7 @@ void CPlayer::Update(void)
 	{
 		ControlEffect(m_pEffectGuide, &m_pShadow->GetPos()); // 復活位置のガイドエフェクト
 	}
+	PrintFoot(rotThis);
 }
 
 //====================================================================
@@ -858,19 +856,19 @@ void CPlayer::ActionState(void)
 	//移動モーション
 	if (state == STATE_DEATH)
 	{
-		if (m_Action != ACTION_DEATH)
+		if (m_Action != ACTION_ENEMYDEATH)
 		{
-			m_Action = ACTION_DEATH;
-			pMotion->Set(ACTION_DEATH, 5);
+			m_Action = ACTION_ENEMYDEATH;
+			pMotion->Set(ACTION_ENEMYDEATH, 5);
 		}
 	}
 	//卵モーション
 	else if (state == STATE_EGG)
 	{
-		if (m_Action != ACTION_EGG)
+		if (m_Action != ACTION_WAIT)
 		{
-			m_Action = ACTION_EGG;
-			pMotion->Set(ACTION_EGG, 5);
+			m_Action = ACTION_WAIT;
+			pMotion->Set(ACTION_WAIT, 5);
 		}
 	}
 	//移動モーション
@@ -1756,6 +1754,20 @@ void CPlayer::EggMove(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis)
 }
 
 //==========================================
+//  足跡の設置
+//==========================================
+void CPlayer::PrintFoot(const D3DXVECTOR3& rotThis)
+{
+	// 前回グリッドと現在のグリッドが一致していた場合関数を抜ける
+	if (m_Grid == m_OldGrid) { return; }
+
+	// 足跡を設定
+	D3DXVECTOR3 rot = rotThis;
+	rot.y += D3DX_PI;
+	CFootPrint::Create(m_OldGrid, rot);
+}
+
+//==========================================
 //  エフェクトの移動
 //==========================================
 void CPlayer::ControlEffect(CEffekseer* pTarget, const D3DXVECTOR3* pPos)
@@ -1940,6 +1952,7 @@ void CPlayer::ChangeMoveState(CMoveState* pMoveState)
 {
 	if (m_pMoveState != nullptr)
 	{
+		m_pMoveState->Release();
 		delete m_pMoveState;
 		m_pMoveState = nullptr;
 	}

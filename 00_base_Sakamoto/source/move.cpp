@@ -8,8 +8,15 @@
 #include "objectcharacter.h"
 #include "manager.h"
 #include "sound.h"
+#include "debugproc.h"
 #include "player.h"
+#include "enemy.h"
+#include "devil.h"
+#include "DevilHole.h"
+
 #include "camera.h"
+#include "MapSystem.h"
+#include "useful.h"
 
 //==========================================
 // 定数定義
@@ -17,33 +24,135 @@
 namespace
 {
 	const D3DXVECTOR3 EGG_MOVE = D3DXVECTOR3(10.0f, 10.0f, 10.0f);	 //移動量の減衰速度(卵)
-	const int INVINCIBLE_TIME = 120;			//無敵時間
+	const int INVINCIBLE_TIME = 120;		//無敵時間
 	const float PLAYER_SPEED = 5.0f;		//プレイヤーの移動速度
 	const float ENEMY_SPEED = 3.0f;			//敵の移動速度
 
+	const float COORDDINATE_RATE[] =		// 経路探索を行う間隔
+	{
+		5.0f,
+		3.0f,
+		1.0f
+	};
+
+	const float TARGET_DIFF = 10.0f;		// 許容範囲
+	const float MOVE_ASTAR = 150.0f;		// 追跡時の移動速度
 }
 
-//**********************************************************************
+//==========================================
+//  静的警告処理
+//==========================================
+static_assert(NUM_ARRAY(COORDDINATE_RATE) == CEnemy::ENEMY_MAX, "ERROR : Type Count Missmatch");
+
+//**********************************************************************************************************
 // 移動状態のインターフェース
-//**********************************************************************
+//**********************************************************************************************************
 //==========================================
 // コンストラクタ
 //==========================================
 CMoveState::CMoveState()
 {
-	
+	state = STATE_NONE;
 }
 
-//**********************************************************************
+//==========================================
+// 移動状態の情報取得
+//==========================================
+CMoveState* CMoveState::GetMoveState(CObjectCharacter* pCharacter)
+{
+	return pCharacter->GetMoveState();		// 現在のキャラクター状態の情報を返す
+}
+
+//==========================================
+// デバッグ表示用
+//==========================================
+void CMoveState::Debug(void)
+{
+	DebugProc::Print(DebugProc::POINT_LEFT, "移動状態 : ");
+	auto str = magic_enum::enum_name(state);
+	DebugProc::Print(DebugProc::POINT_LEFT, str.data());
+	DebugProc::Print(DebugProc::POINT_LEFT, "\n");
+
+}
+
+//====================================================================
+// 移動方向処理
+//====================================================================
+void CMoveState::Rot(CObjectCharacter* pCharacter, D3DXVECTOR3& rotMy)
+{
+	//キーボードの取得
+	D3DXVECTOR3 CameraRot = CManager::GetInstance()->GetCamera()->GetRot();
+	D3DXVECTOR3 move = pCharacter->GetMove();
+
+	//移動方向に向きを合わせる処理
+	float fRotMove, fRotDest;
+	fRotMove = rotMy.y;
+	fRotDest = CManager::GetInstance()->GetCamera()->GetRot().y;
+
+	rotMy.y = atan2f(-move.x, -move.z);
+
+	useful::NormalizeAngle(&rotMy);
+}
+
+//====================================================================
+// 位置更新処理
+//====================================================================
+void CMoveState::UpdatePos(CObjectCharacter* pCharacter, D3DXVECTOR3& pos)
+{
+	// 変数宣言
+	CDevil* pDevil = CDevil::GetListTop();
+	D3DXVECTOR3 move = pCharacter->GetMove();		// 移動量
+	D3DXVECTOR3 objMove = pCharacter->GetObjMove();
+
+	float fSpeed = 1.0f;	// スロー用 default1.0fで初期化
+
+	//重力
+	move.y -= 0.5f;
+
+	//Y軸の位置更新
+	pos.y += move.y * CManager::GetInstance()->GetGameSpeed() * fSpeed;
+	pos.y += objMove.y * CManager::GetInstance()->GetGameSpeed() * fSpeed;
+
+	// 壁との当たり判定
+	//CollisionWall(pos,posOldMy,sizeMy,useful::COLLISION_Y);
+	//CollisionDevilHole(useful::COLLISION_Y);
+
+	//X軸の位置更新
+	pos.x += move.x * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeX(move.x);
+	pos.x += objMove.x * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeX(move.x);
+
+	// 壁との当たり判定
+	//CollisionWall(pos, posOldMy, sizeMy, useful::COLLISION_X);
+	//CollisionDevilHole(useful::COLLISION_X);
+
+	//Z軸の位置更新
+	pos.z += move.z * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeZ(move.z);
+	pos.z += objMove.z * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeZ(move.z);
+
+	// 壁との当たり判定
+	//CollisionWall(pos, posOldMy, sizeMy, useful::COLLISION_Z);
+	//CollisionDevilHole(useful::COLLISION_Z);
+}
+
+//**********************************************************************************************************
 // 操作できる状態
-//**********************************************************************
+//**********************************************************************************************************
 //==========================================
 // コンストラクタ
 //==========================================
 CStateControl::CStateControl()
 {
-	m_bInput = false;				//入力を行ったかどうか
+	m_bInput = false;				// 入力を行ったかどうか
 	m_RotState = ROTSTATE_NONE;		// 移動方向の状態
+	state = STATE_CONTROL;			// 操作状態
+}
+
+//==========================================
+// 破棄
+//==========================================
+void CStateControl::Release()
+{
+
 }
 
 //==========================================
@@ -93,22 +202,31 @@ void CStateControl::Move(CObjectCharacter* pCharacter, D3DXVECTOR3& pos, D3DXVEC
 	case CObject::TYPE_ENEMY3D:			// 敵
 		NormarizeMove = InputKey(pCharacter, pos, rot, NormarizeMove, ENEMY_SPEED);
 		UpdateMoveEnemy(pCharacter, NormarizeMove);			// 移動更新
+
+		// 移動方向処理
+		Rot(pCharacter, rot);
+
+		// 位置更新処理
+		UpdatePos(pCharacter, pos);
+
 		break;
 
 	default:
 		break;
 	}
+
+	
 }
 
 //==========================================
-// プレイヤーの状態更新処理
+// プレイヤーの移動更新処理
 //==========================================
-void CStateControl::UpdateMovePlayer(CObjectCharacter* pCharacter, D3DXVECTOR3 NormarizeMove)
+void CStateControl::UpdateMovePlayer(CObjectCharacter* pCharacter, D3DXVECTOR3& NormarizeMove)
 {
-	CPlayer::STATE state = pCharacter->GetState();		// プレイヤーの状態
+	CObjectCharacter::STATE state = pCharacter->GetState();
 	D3DXVECTOR3 EggMove = pCharacter->GetEggMove();	// プレイヤーの卵移動量
 
-	if (m_bInput && state != CPlayer::STATE_ATTACK)
+	if (m_bInput && state != CObjectCharacter::STATE_ATTACK)
 	{
 		D3DXVec3Normalize(&NormarizeMove, &NormarizeMove);
 
@@ -118,7 +236,7 @@ void CStateControl::UpdateMovePlayer(CObjectCharacter* pCharacter, D3DXVECTOR3 N
 		//移動量を代入
 		pCharacter->SetMove(NormarizeMove);
 
-		if (state == CPlayer::STATE_EGG)
+		if (state == CObjectCharacter::STATE_EGG)
 		{
 			// モデル数の取得
 			int nNumModel = pCharacter->GetNumModel();
@@ -169,9 +287,9 @@ void CStateControl::UpdateMovePlayer(CObjectCharacter* pCharacter, D3DXVECTOR3 N
 }
 
 //==========================================
-// 敵の状態更新処理
+// 敵の移動更新処理
 //==========================================
-void CStateControl::UpdateMoveEnemy(CObjectCharacter* pCharacter, D3DXVECTOR3 NormarizeMove)
+void CStateControl::UpdateMoveEnemy(CObjectCharacter* pCharacter, D3DXVECTOR3& NormarizeMove)
 {
 	D3DXVec3Normalize(&NormarizeMove, &NormarizeMove);
 
@@ -185,9 +303,9 @@ void CStateControl::UpdateMoveEnemy(CObjectCharacter* pCharacter, D3DXVECTOR3 No
 	pCharacter->SetState(CObjectCharacter::STATE_WALK);
 }
 
-//====================================================================
-//移動入力キーボード(キャラクター)
-//====================================================================
+//==========================================
+// 移動入力キーボード(キャラクター)
+//==========================================
 D3DXVECTOR3 CStateControl::InputKey(CObjectCharacter* pCharacter, D3DXVECTOR3& pos, D3DXVECTOR3& rot, D3DXVECTOR3 Move, float fSpeed)
 {
 	//キーボードの取得
@@ -201,12 +319,6 @@ D3DXVECTOR3 CStateControl::InputKey(CObjectCharacter* pCharacter, D3DXVECTOR3& p
 	if ((pInputKeyboard->GetPress(DIK_W) && progress.bOKU && bGridCenter) ||
 		(pInputKeyboard->GetPress(DIK_W) && m_RotState == ROTSTATE_DOWN))
 	{
-	
-		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
-		D3DXMATRIX mat = *pCharacter->GetUseMultiMatrix();
-		D3DXVECTOR3 ef = useful::CalcMatrix(pos, rot, mat);
-		MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, rot);
-
 		Move.z += 1.0f * cosf(D3DX_PI * 0.0f) * fSpeed;
 		Move.x += 1.0f * sinf(D3DX_PI * 0.0f) * fSpeed;
 
@@ -217,11 +329,6 @@ D3DXVECTOR3 CStateControl::InputKey(CObjectCharacter* pCharacter, D3DXVECTOR3& p
 		(pInputKeyboard->GetPress(DIK_S) && m_RotState == ROTSTATE_UP)) &&
 		pInputKeyboard->GetPress(DIK_W) == false)
 	{
-		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
-		D3DXMATRIX mat = *pCharacter->GetUseMultiMatrix();
-		D3DXVECTOR3 ef = useful::CalcMatrix(pos, rot, mat);
-		MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, rot);
-
 		Move.z += -1.0f * cosf(D3DX_PI * 0.0f) * fSpeed;
 		Move.x += -1.0f * sinf(D3DX_PI * 0.0f) * fSpeed;
 
@@ -231,12 +338,6 @@ D3DXVECTOR3 CStateControl::InputKey(CObjectCharacter* pCharacter, D3DXVECTOR3& p
 	else if ((pInputKeyboard->GetPress(DIK_A) && progress.bOKL && bGridCenter) ||
 		(pInputKeyboard->GetPress(DIK_A) && m_RotState == ROTSTATE_RIGHT))
 	{
-
-		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
-		D3DXMATRIX mat = *pCharacter->GetUseMultiMatrix();
-		D3DXVECTOR3 ef = useful::CalcMatrix(pos, rot, mat);
-		MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, rot);
-
 		Move.x += -1.0f * cosf(D3DX_PI * 0.0f) * fSpeed;
 		Move.z -= -1.0f * sinf(D3DX_PI * 0.0f) * fSpeed;
 
@@ -247,12 +348,6 @@ D3DXVECTOR3 CStateControl::InputKey(CObjectCharacter* pCharacter, D3DXVECTOR3& p
 		(pInputKeyboard->GetPress(DIK_D) && m_RotState == ROTSTATE_LEFT)) &&
 		pInputKeyboard->GetPress(DIK_A) == false)
 	{
-
-		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_WALK);
-		D3DXMATRIX mat = *pCharacter->GetUseMultiMatrix();
-		D3DXVECTOR3 ef = useful::CalcMatrix(pos, rot, mat);
-		MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DUSTCLOUD, false, ef, rot);
-
 		Move.x += 1.0f * cosf(D3DX_PI * 0.0f) * fSpeed;
 		Move.z -= 1.0f * sinf(D3DX_PI * 0.0f) * fSpeed;
 
@@ -263,9 +358,17 @@ D3DXVECTOR3 CStateControl::InputKey(CObjectCharacter* pCharacter, D3DXVECTOR3& p
 	return Move;
 }
 
-//**********************************************************************
+//**********************************************************************************************************
 // ランダム歩行状態
-//**********************************************************************
+//**********************************************************************************************************
+//==========================================
+// 破棄
+//==========================================
+void CStateRandom::Release()
+{
+
+}
+
 //==========================================
 // ランダム歩行から操作に切り替え
 //==========================================
@@ -293,9 +396,51 @@ void CStateRandom::RandomStop(CObjectCharacter* pCharacter)
 	pCharacter->ChangeMoveState(new CStateStop);
 }
 
-//**********************************************************************
+//==========================================
+// キャラクターの移動処理
+//==========================================
+void CStateRandom::Move(CObjectCharacter* pCharacter, D3DXVECTOR3& pos, D3DXVECTOR3& rot)
+{
+	// 位置更新処理
+	UpdatePos(pCharacter, pos);
+}
+
+//**********************************************************************************************************
 // 追跡状態
-//**********************************************************************
+//**********************************************************************************************************
+//==========================================
+// コンストラクタ
+//==========================================
+CStateAStar::CStateAStar()
+{
+	m_pPath = nullptr;
+	m_EnemyType = CEnemy::ENEMY_NONE;
+	m_fCoordinateTimer = 0.0f;
+	m_nNumCoordinate = 0;
+	m_nTargetIndex = 0;
+	state = STATE_ASTAR;			// 操作状態
+
+}
+
+//==========================================
+// 初期化処理
+//==========================================
+void CStateAStar::Init()
+{
+	m_fCoordinateTimer = 0.0f;
+	m_nNumCoordinate = 0;
+	m_nTargetIndex = 0;
+}
+
+//==========================================
+// 破棄
+//==========================================
+void CStateAStar::Release()
+{
+	// メモリを削除
+	if (m_pPath != nullptr) { delete[] m_pPath; };
+}
+
 //==========================================
 // 追跡から操作に切り替え
 //==========================================
@@ -310,6 +455,8 @@ void CStateAStar::ControlAStar(CObjectCharacter* pCharacter)
 //==========================================
 void CStateAStar::RandomAStar(CObjectCharacter* pCharacter)
 {
+	Init();
+
 	// ランダム歩行状態にする
 	pCharacter->ChangeMoveState(new CStateRandom);
 }
@@ -323,9 +470,120 @@ void CStateAStar::AStarStop(CObjectCharacter* pCharacter)
 	pCharacter->ChangeMoveState(new CStateStop);
 }
 
-//**********************************************************************
+//==========================================
+// キャラクターの移動処理
+//==========================================
+void CStateAStar::Move(CObjectCharacter* pCharacter, D3DXVECTOR3& pos, D3DXVECTOR3& rot)
+{
+	Coordinate(pCharacter);	// 最短経路探索
+	Route(pCharacter);		// 最短経路をたどる
+
+	// 位置更新処理
+	UpdatePos(pCharacter, pos);
+}
+
+//==========================================
+//  最短経路探索
+//==========================================
+void CStateAStar::Coordinate(CObjectCharacter* pCharacter)
+{
+	CMapSystem::GRID grid = pCharacter->GetGrid();
+
+	// 探索タイマーを加算
+	m_fCoordinateTimer += DeltaTime::Get();
+
+	// 探索のタイミングでない場合関数を抜ける
+	if (m_fCoordinateTimer < COORDDINATE_RATE[m_EnemyType]) { return; }
+
+	// 最短経路の次の目標をリセット
+	m_nTargetIndex = 1;
+
+	// タイマーのリセット
+	m_fCoordinateTimer -= COORDDINATE_RATE[m_EnemyType];
+
+	// 最短経路を取得
+	AStar::CoordinateList Path = AStar::Generator::GetInstance()->FindPlayer({ grid.x, grid.z });
+	m_nNumCoordinate = Path.size();
+
+	// メモリを削除
+	if (m_pPath != nullptr) { delete[] m_pPath; };
+
+	// 最短経路に必要なグリッド数分メモリを確保
+	m_pPath = new CMapSystem::GRID[m_nNumCoordinate];
+
+	// 確保したメモリに最短経路のグリッドを格納
+	for (int i = 0; i < m_nNumCoordinate; ++i)
+	{
+		m_pPath[i] = Path.at(i);
+	}
+}
+
+//==========================================
+// 最短経路をたどる
+//==========================================
+void CStateAStar::Route(CObjectCharacter* pCharacter)
+{
+	// 自身の位置・移動量取得
+	D3DXVECTOR3 pos = pCharacter->GetPos();
+	D3DXVECTOR3 move = pCharacter->GetMove();
+	D3DXVECTOR3 rot = pCharacter->GetRot();
+
+	// 最短経路が無いとき
+	if (m_pPath == nullptr)
+	{
+		return;
+	}
+
+	// 目標地点の座標を求める
+	D3DXVECTOR3 path = m_pPath[m_nTargetIndex].ToWorld();
+
+	// 次に向かうグリッドに重なったらその次の目標を設定
+	if (fabsf(path.x - pos.x) <= TARGET_DIFF &&
+		fabsf(path.z - pos.z) <= TARGET_DIFF) // 一定範囲内であれば
+	{
+		// インデックス番号を加算
+		m_nTargetIndex++;
+		path = m_pPath[m_nTargetIndex].ToWorld();
+	}
+
+	// 次の目標が存在しなかったら関数を抜ける
+	if (m_nTargetIndex >= m_nNumCoordinate)
+	{
+		return;
+	}
+
+	// 次の目標位置との角度
+	float RotDest = atan2f(path.z - pos.z, path.x - pos.x);
+
+	// 次の目標位置に移動
+	move = path - pos;
+	D3DXVec3Normalize(&move, &move);
+	move *= DeltaTime::Get() * MOVE_ASTAR;
+
+	// 位置更新
+	pos += move;
+
+	//目的の向き
+	float DiffRot = (RotDest - rot.y) * 0.1f;
+	rot.y += DiffRot;
+
+	// 位置・移動量設定
+	pCharacter->SetPos(pos);
+	pCharacter->SetMove(move);
+	pCharacter->SetRot(rot);
+}
+
+//**********************************************************************************************************
 // 停止状態
-//**********************************************************************
+//**********************************************************************************************************
+//==========================================
+// 破棄
+//==========================================
+void CStateStop::Release()
+{
+	
+}
+
 //==========================================
 // 停止から操作に切り替え
 //==========================================
@@ -333,8 +591,6 @@ void CStateStop::ControlStop(CObjectCharacter* pCharacter)
 {
 	// 操作状態にする
 	pCharacter->ChangeMoveState(new CStateControl);
-
-	////
 }
 
 //==========================================
@@ -356,9 +612,9 @@ void CStateStop::AStarStop(CObjectCharacter* pCharacter)
 }
 
 //==========================================
-// 移動状態の情報取得
+// キャラクターの移動処理
 //==========================================
-CMoveState* CMoveState::GetMoveState(CObjectCharacter* pCharacter)
+void CStateStop::Move(CObjectCharacter* pCharacter, D3DXVECTOR3& pos, D3DXVECTOR3& rot)
 {
-	return pCharacter->GetMoveState();		// 現在のキャラクター状態の情報を返す
+
 }

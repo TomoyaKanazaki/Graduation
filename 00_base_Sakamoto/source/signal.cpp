@@ -59,16 +59,31 @@ CListManager<CSignal>* CSignal::GetList(void)
 //====================================================================
 // 生成
 //====================================================================
-CSignal* CSignal::Create(const char* pModelNameSignal)
+CSignal* CSignal::Create(int nType)
 {
 	// インスタンス生成
 	CSignal* pSignal = new CSignal();
 
-	// オブジェクトの初期化処理
-	if (FAILED(pSignal->Init(pModelNameSignal)))
-	{// 初期化処理が失敗した場合
+	switch (nType)
+	{
+	case 0:
+		// オブジェクトの初期化処理
+		if (FAILED(pSignal->Init("data\\MODEL\\00_signal.x")))
+		{// 初期化処理が失敗した場合
 
-		return nullptr;
+			return nullptr;
+		}
+		break;
+
+	case 1:
+		// オブジェクトの初期化処理
+		if (FAILED(pSignal->Init("data\\MODEL\\00_signal_slope.x")))
+		{// 初期化処理が失敗した場合
+
+			return nullptr;
+		}
+		break;
+
 	}
 
 	return pSignal;

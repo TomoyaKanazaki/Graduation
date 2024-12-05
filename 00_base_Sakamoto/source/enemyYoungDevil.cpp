@@ -179,8 +179,6 @@ void CEnemyYoungDevil::Draw(void)
 //====================================================================
 bool CEnemyYoungDevil::Hit(void)
 {
-	CEnemy::Hit();
-
 	return true;
 }
 
