@@ -128,27 +128,6 @@ CPlayer::~CPlayer()
 }
 
 //====================================================================
-//¶¬ˆ—
-//====================================================================
-CPlayer* CPlayer::Create(int PlayNumber)
-{
-	CPlayer* pPlayer = new CPlayer();
-
-	// ƒƒ‚ƒŠ‚ÌŠm•Û‚É¸”s‚µ‚½ê‡null‚ğ•Ô‚·
-	if (pPlayer == nullptr) { assert(false); return nullptr; }
-
-	// ‰Šú‰»ˆ—‚É¸”s‚µ‚½ê‡null‚ğ•Ô‚·
-	if (FAILED(pPlayer->Init(PlayNumber)))
-	{
-		assert(false);
-		delete pPlayer;
-		return nullptr;
-	}
-
-	return pPlayer;
-}
-
-//====================================================================
 //‰Šú‰»ˆ—
 //====================================================================
 HRESULT CPlayer::Init(int PlayNumber)
