@@ -77,13 +77,9 @@ private:
 	void CollisionDevilHole(useful::COLLISION XYZ);		//デビルホールとの当たり判定
 	void CollisionOut(D3DXVECTOR3& posMy);				//ステージ外との当たり判定
 
-	void UpdatePos(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR3& sizeMy);	// 位置更新処理
-	void Rot(D3DXVECTOR3& rotMy);						//移動方向処理
 	virtual void Death(void);							// 死亡処理
 	void MoveSelect(void);								// 移動方向の選択
 	void SearchWall(D3DXVECTOR3& posMy);				// 壁のサーチ判定
-	//void Coordinate(); // 最短経路探索
-	//void Route();	// 最短経路をたどる
 	void Effect(); // エフェクトを生成
 
 	CMapSystem::GRID m_SelectGrid;	//方向転換を行った時のグリッド番号
@@ -110,10 +106,6 @@ private:
 
 	// メンバ変数
 	CListManager<CEnemy>::AIterator m_iterator; // イテレーター
-	//CMapSystem::GRID* m_pPath; // プレイヤーへの最短経路
-	//float m_fCoordinateTimer; // 経路探索間隔
-	//int m_nNumCoordinate; // 最短経路の要素数
-	//int m_nTargetIndex; // 次に向かうべきグリッドのインデックス
 };
 
 #endif

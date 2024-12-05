@@ -77,10 +77,6 @@ CListManager<CEnemy>* CEnemy::m_pList = nullptr; // オブジェクトリスト
 //コンストラクタ
 //====================================================================
 CEnemy::CEnemy(int nPriority) :CObjectCharacter(nPriority),
-//m_pPath(nullptr),
-//m_fCoordinateTimer(0.0f),
-//m_nTargetIndex(0),
-//m_nNumCoordinate(0),
 m_pEffect(nullptr)
 {
 	m_move = INITVECTOR3;
@@ -213,9 +209,6 @@ HRESULT CEnemy::Init(void)
 //====================================================================
 void CEnemy::Uninit(void)
 {
-	// メモリを削除
-	//if (m_pPath != nullptr) { delete[] m_pPath; };
-
 	// リストから自身のオブジェクトを削除
 	m_pList->DelList(m_iterator);
 
@@ -280,12 +273,6 @@ void CEnemy::Update(void)
 		return;
 	}
 
-	// 移動方向処理
-	Rot(rotMy);
-
-	// 位置更新処理
-	UpdatePos(posMy,posOldMy,sizeMy);
-
 	// 移動処理
 	m_pMoveState->Move(this, posMy, rotMy);
 
@@ -304,7 +291,10 @@ void CEnemy::Update(void)
 	// Mキー
 	else if (pInputKeyboard->GetTrigger(DIK_M))
 	{
-		//m_pMoveState->RandomAStar(this);		// ランダム or 追跡(まだランダム作ってない)
+		m_pMoveState->RandomAStar(this);			// ランダム or 追跡(まだランダム作ってない)
+		m_pMoveState->SetEnemyType(m_EnemyType);	// 敵の種類設定
+
+
 	}
 
 	// 自分の番号を設定
@@ -332,6 +322,7 @@ void CEnemy::Update(void)
 
 	// デバッグ表示
 	DebugProc::Print(DebugProc::POINT_LEFT, "[敵]横 %d : 縦 %d\n", m_Grid.x, m_Grid.z);
+	m_pMoveState->Debug();		// 現在の移動状態
 
 	// 値更新
 	SetPos(posMy);			// 位置
@@ -368,82 +359,6 @@ HRESULT CEnemy::InitModel(const char* pFilename)
 	CObjectCharacter::SetTxtCharacter(pFilename);
 	
 	return S_OK;
-}
-
-//====================================================================
-// 位置更新処理
-//====================================================================
-void CEnemy::UpdatePos(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR3& sizeMy)
-{
-	//// モーションの取得
-	//CMotion* pMotion = GetMotion();
-
-	//if (pMotion == nullptr)
-	//{
-	//	return;
-	//}
-
-	//重力
-	m_move.y -= 0.5f;
-
-	// 変数宣言
-	float fSpeed = 1.0f;	// スロー用 default1.0fで初期化
-	//if (m_pSlow)
-	//{
-	//	fSpeed = m_pSlow->GetValue();
-
-	//	if (pMotion)
-	//	{
-	//		pMotion->SetSlowVaule(fSpeed);
-	//	}
-	//}
-
-	CDevil* pDevil = CDevil::GetListTop();
-
-	//Y軸の位置更新
-	posMy.y += m_move.y * CManager::GetInstance()->GetGameSpeed() * fSpeed;
-	posMy.y += m_Objmove.y * CManager::GetInstance()->GetGameSpeed() * fSpeed;
-
-	// 壁との当たり判定
-	//CollisionWall(posMy,posOldMy,sizeMy,useful::COLLISION_Y);
-	CollisionDevilHole(useful::COLLISION_Y);
-
-	//X軸の位置更新
-	posMy.x += m_move.x * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeX(m_move.x);
-	posMy.x += m_Objmove.x * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeX(m_move.x);
-
-	// 壁との当たり判定
-	//CollisionWall(posMy, posOldMy, sizeMy, useful::COLLISION_X);
-	CollisionDevilHole(useful::COLLISION_X);
-
-	//Z軸の位置更新
-	posMy.z += m_move.z * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeZ(m_move.z);
-	posMy.z += m_Objmove.z * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeZ(m_move.z);
-
-	// 壁との当たり判定
-	//CollisionWall(posMy, posOldMy, sizeMy, useful::COLLISION_Z);
-	CollisionDevilHole(useful::COLLISION_Z);
-
-	//ステージ外との当たり判定
-	CollisionOut(posMy);
-}
-
-//====================================================================
-//移動方向処理
-//====================================================================
-void CEnemy::Rot(D3DXVECTOR3& rotMy)
-{
-	//キーボードの取得
-	D3DXVECTOR3 CameraRot = CManager::GetInstance()->GetCamera()->GetRot();
-
-	//移動方向に向きを合わせる処理
-	float fRotMove, fRotDest;
-	fRotMove = rotMy.y;
-	fRotDest = CManager::GetInstance()->GetCamera()->GetRot().y;
-
-	rotMy.y = atan2f(-m_move.x, -m_move.z);
-
-	useful::NormalizeAngle(&rotMy);
 }
 
 //====================================================================
