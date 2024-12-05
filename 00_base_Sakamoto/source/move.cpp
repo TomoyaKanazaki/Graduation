@@ -39,6 +39,7 @@ namespace
 	const float MOVE_ASTAR = 150.0f;		// 追跡時の移動速度
 
 	const float GRIT_OK = 45.0f;			//移動可能なグリットの範囲内
+	const int NUM_RAND_SELECT = 60;			// 移動方向選択するまでのカウント数
 
 }
 
@@ -378,6 +379,7 @@ CStateRandom::CStateRandom()
 	m_State = STATE_RANDOM;
 	m_SelectGrid.x = 0;
 	m_SelectGrid.z = 0;
+	m_nSelectCounter = 0;           // 移動方向変更カウンター
 }
 
 
@@ -421,11 +423,20 @@ void CStateRandom::RandomStop(CObjectCharacter* pCharacter)
 //==========================================
 void CStateRandom::Move(CObjectCharacter* pCharacter, D3DXVECTOR3& pos, D3DXVECTOR3& rot)
 {
-	// 壁の索敵判定
-	SearchWall(pCharacter, pos);
+	if (m_nSelectCounter >= NUM_RAND_SELECT)
+	{ // 移動方向切り替える時間になったら
 
-	// 移動方向の選択
-	MoveSelect(pCharacter);
+		// 壁の索敵判定
+		SearchWall(pCharacter, pos);
+
+		// 移動方向の選択
+		MoveSelect(pCharacter);
+		m_nSelectCounter = 0;
+	}
+	else
+	{
+		m_nSelectCounter++;
+	}
 
 	// 移動方向処理
 	Rot(pCharacter, rot);
@@ -544,7 +555,7 @@ void CStateRandom::MoveSelect(CObjectCharacter* pCharacter)
 		RotNumber++;
 	}
 
-	// 進行できる方向を決定
+	// 進行する方向を決定
 	if (RotNumber != 0)
 	{
 		int nRand = rand() % RotNumber;

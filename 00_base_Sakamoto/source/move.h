@@ -137,7 +137,6 @@ class CStateRandom : public CMoveState
 public:
 
     CStateRandom();
-
     ~CStateRandom() {}
 
     void Release() override;      // 破棄
@@ -158,6 +157,7 @@ private:
     // メンバ変数
     CMapSystem::GRID m_SelectGrid;	// 方向転換を行った時のグリッド番号
     ROTSTATE m_RotState;            // 移動方向の状態
+    int m_nSelectCounter;           // 移動方向変更カウンター
 
 };
 

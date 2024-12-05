@@ -284,8 +284,6 @@ void CEnemy::Update(void)
 	{
 		m_pMoveState->RandomAStar(this);			// ƒ‰ƒ“ƒ_ƒ€ or ’ÇÕ(‚Ü‚¾ƒ‰ƒ“ƒ_ƒ€ì‚Á‚Ä‚È‚¢)
 		m_pMoveState->SetEnemyType(m_EnemyType);	// “G‚Ìí—Şİ’è
-
-
 	}
 
 	// ©•ª‚Ì”Ô†‚ğİ’è
