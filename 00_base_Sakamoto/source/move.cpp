@@ -37,6 +37,9 @@ namespace
 
 	const float TARGET_DIFF = 10.0f;		// 許容範囲
 	const float MOVE_ASTAR = 150.0f;		// 追跡時の移動速度
+
+	const float GRIT_OK = 45.0f;			//移動可能なグリットの範囲内
+
 }
 
 //==========================================
@@ -52,7 +55,7 @@ static_assert(NUM_ARRAY(COORDDINATE_RATE) == CEnemy::ENEMY_MAX, "ERROR : Type Co
 //==========================================
 CMoveState::CMoveState()
 {
-	state = STATE_NONE;
+	State = STATE_NONE;
 }
 
 //==========================================
@@ -69,7 +72,7 @@ CMoveState* CMoveState::GetMoveState(CObjectCharacter* pCharacter)
 void CMoveState::Debug(void)
 {
 	DebugProc::Print(DebugProc::POINT_LEFT, "移動状態 : ");
-	auto str = magic_enum::enum_name(state);
+	auto str = magic_enum::enum_name(State);
 	DebugProc::Print(DebugProc::POINT_LEFT, str.data());
 	DebugProc::Print(DebugProc::POINT_LEFT, "\n");
 
@@ -78,20 +81,20 @@ void CMoveState::Debug(void)
 //====================================================================
 // 移動方向処理
 //====================================================================
-void CMoveState::Rot(CObjectCharacter* pCharacter, D3DXVECTOR3& rotMy)
+void CMoveState::Rot(CObjectCharacter* pCharacter, D3DXVECTOR3& rot)
 {
 	//キーボードの取得
 	D3DXVECTOR3 CameraRot = CManager::GetInstance()->GetCamera()->GetRot();
 	D3DXVECTOR3 move = pCharacter->GetMove();
 
 	//移動方向に向きを合わせる処理
-	float fRotMove, fRotDest;
-	fRotMove = rotMy.y;
-	fRotDest = CManager::GetInstance()->GetCamera()->GetRot().y;
+	/*float fRotMove, fRotDest;
+	fRotMove = rot.y;
+	fRotDest = CManager::GetInstance()->GetCamera()->GetRot().y;*/
 
-	rotMy.y = atan2f(-move.x, -move.z);
+	rot.y = atan2f(-move.x, -move.z);
 
-	useful::NormalizeAngle(&rotMy);
+	useful::NormalizeAngle(&rot);
 }
 
 //====================================================================
@@ -108,6 +111,7 @@ void CMoveState::UpdatePos(CObjectCharacter* pCharacter, D3DXVECTOR3& pos)
 
 	//重力
 	move.y -= 0.5f;
+	pCharacter->SetMove(move);		// 移動量
 
 	//Y軸の位置更新
 	pos.y += move.y * CManager::GetInstance()->GetGameSpeed() * fSpeed;
@@ -132,6 +136,7 @@ void CMoveState::UpdatePos(CObjectCharacter* pCharacter, D3DXVECTOR3& pos)
 	// 壁との当たり判定
 	//CollisionWall(pos, posOldMy, sizeMy, useful::COLLISION_Z);
 	//CollisionDevilHole(useful::COLLISION_Z);
+
 }
 
 //**********************************************************************************************************
@@ -144,7 +149,7 @@ CStateControl::CStateControl()
 {
 	m_bInput = false;				// 入力を行ったかどうか
 	m_RotState = ROTSTATE_NONE;		// 移動方向の状態
-	state = STATE_CONTROL;			// 操作状態
+	State = STATE_CONTROL;			// 操作状態
 }
 
 //==========================================
@@ -362,6 +367,17 @@ D3DXVECTOR3 CStateControl::InputKey(CObjectCharacter* pCharacter, D3DXVECTOR3& p
 // ランダム歩行状態
 //**********************************************************************************************************
 //==========================================
+// コンストラクタ
+//==========================================
+CStateRandom::CStateRandom()
+{
+	State = STATE_RANDOM;
+	m_SelectGrid.x = 0;
+	m_SelectGrid.z = 0;
+}
+
+
+//==========================================
 // 破棄
 //==========================================
 void CStateRandom::Release()
@@ -401,8 +417,159 @@ void CStateRandom::RandomStop(CObjectCharacter* pCharacter)
 //==========================================
 void CStateRandom::Move(CObjectCharacter* pCharacter, D3DXVECTOR3& pos, D3DXVECTOR3& rot)
 {
+	// 壁の索敵判定
+	SearchWall(pCharacter, pos);
+
+	// 移動方向の選択
+	MoveSelect(pCharacter);
+
+	// 移動方向処理
+	Rot(pCharacter, rot);
+
 	// 位置更新処理
 	UpdatePos(pCharacter, pos);
+}
+
+//====================================================================
+// 壁の索敵判定(移動選択の準備)
+//====================================================================
+void CStateRandom::SearchWall(CObjectCharacter* pCharacter, D3DXVECTOR3& pos)
+{
+	CMapSystem::GRID grid = pCharacter->GetGrid();
+	CObjectCharacter::PROGGRESS progress = pCharacter->GetProgress();	// 移動の進行許可状況
+
+	bool OKR = true;	//右
+	bool OKL = true;	//左
+	bool OKU = true;	//上
+	bool OKD = true;	//下
+
+	CMapSystem* pMapSystem = CMapSystem::GetInstance();
+	int nMapWightMax = pMapSystem->GetWightMax();
+	int nMapHeightMax = pMapSystem->GetHeightMax();
+	D3DXVECTOR3 MapSystemPos = pMapSystem->GetMapPos();
+
+	int nRNumber = grid.x + 1;
+	int nLNumber = grid.x - 1;
+	int nUNumber = grid.z - 1;
+	int nDNumber = grid.z + 1;
+
+	nRNumber = useful::RangeNumber(nMapWightMax, 0, nRNumber);
+	nLNumber = useful::RangeNumber(nMapWightMax, 0, nLNumber);
+	nUNumber = useful::RangeNumber(nMapHeightMax, 0, nUNumber);
+	nDNumber = useful::RangeNumber(nMapHeightMax, 0, nDNumber);
+
+	OKR = !pMapSystem->GetGritBool(nRNumber, grid.z);
+	OKL = !pMapSystem->GetGritBool(nLNumber, grid.z);
+	OKU = !pMapSystem->GetGritBool(grid.x, nUNumber);
+	OKD = !pMapSystem->GetGritBool(grid.x, nDNumber);
+
+	//自分の立っているグリットの中心位置を求める
+	D3DXVECTOR3 MyGritPos = grid.ToWorld();
+	float MapGritSize = pMapSystem->GetGritSize();
+
+	DebugProc::Print(DebugProc::POINT_LEFT, "敵の位置 %f %f %f\n", MyGritPos.x, MyGritPos.y, MyGritPos.z);
+
+	if ((pos.x <= MyGritPos.x + ((MapGritSize * 0.5f) - GRIT_OK) &&
+		pos.x >= MyGritPos.x - ((MapGritSize * 0.5f) - GRIT_OK) &&
+		pos.z <= MyGritPos.z + ((MapGritSize * 0.5f) - GRIT_OK) &&
+		pos.z >= MyGritPos.z - ((MapGritSize * 0.5f) - GRIT_OK)) &&
+		(grid.x != m_SelectGrid.x || grid.z != m_SelectGrid.z))
+	{// グリットの中心位置に立っているなら操作を受け付ける
+
+		if (!progress.bOKR && OKR)
+		{
+			pCharacter->SetState(CObjectCharacter::STATE_WAIT);
+		}
+		if (!progress.bOKL && OKL)
+		{
+			pCharacter->SetState(CObjectCharacter::STATE_WAIT);
+		}
+		if (!progress.bOKU && OKU)
+		{
+			pCharacter->SetState(CObjectCharacter::STATE_WAIT);
+		}
+		if (!progress.bOKD && OKD)
+		{
+			pCharacter->SetState(CObjectCharacter::STATE_WAIT);
+		}
+
+		progress.bOKR = OKR;	//右
+		progress.bOKL = OKL;	//左
+		progress.bOKU = OKU;	//上
+		progress.bOKD = OKD;	//下
+	}
+	else
+	{
+		progress.bOKR = false;	//右
+		progress.bOKL = false;	//左
+		progress.bOKU = false;	//上
+		progress.bOKD = false;	//下
+	}
+}
+
+//====================================================================
+// 移動方向の選択
+//====================================================================
+void CStateRandom::MoveSelect(CObjectCharacter* pCharacter)
+{
+	float OKRot[4];
+	int RotNumber = 0;
+	CObjectCharacter::PROGGRESS progress = pCharacter->GetProgress();	// 移動の進行許可状況
+	D3DXVECTOR3 move = pCharacter->GetMove();		// 移動量
+	m_RotState = GetRotState();						// 移動方向の状態
+
+	// 進行できる方向を確認
+	if (progress.bOKL && m_RotState != CMoveState::ROTSTATE_RIGHT)
+	{
+		OKRot[RotNumber] = D3DX_PI * -0.5f;
+		RotNumber++;
+	}
+	if (progress.bOKR && m_RotState != CMoveState::ROTSTATE_LEFT)
+	{
+		OKRot[RotNumber] = D3DX_PI * 0.5f;
+		RotNumber++;
+	}
+	if (progress.bOKU && m_RotState != CMoveState::ROTSTATE_DOWN)
+	{
+		OKRot[RotNumber] = D3DX_PI * 0.0f;
+		RotNumber++;
+	}
+	if (progress.bOKD && m_RotState != CMoveState::ROTSTATE_UP)
+	{
+		OKRot[RotNumber] = D3DX_PI * 1.0f;
+		RotNumber++;
+	}
+
+	// 進行できる方向を決定
+	if (RotNumber != 0)
+	{
+		int nRand = rand() % RotNumber;
+
+		move.x = sinf(OKRot[nRand]) * 3.0f;
+		move.z = cosf(OKRot[nRand]) * 3.0f;
+
+		if (move.x >= 3.0f)
+		{
+			m_RotState = CMoveState::ROTSTATE_RIGHT;
+		}
+		else if (move.x <= -3.0f)
+		{
+			m_RotState = CMoveState::ROTSTATE_LEFT;
+		}
+		else if (move.z >= 3.0f)
+		{
+			m_RotState = CMoveState::ROTSTATE_UP;
+		}
+		else if (move.z <= -3.0f)
+		{
+			m_RotState = CMoveState::ROTSTATE_DOWN;
+		}
+
+		m_SelectGrid = pCharacter->GetGrid();
+	}
+
+	// 移動量設定
+	pCharacter->SetMove(move);
 }
 
 //**********************************************************************************************************
@@ -418,7 +585,7 @@ CStateAStar::CStateAStar()
 	m_fCoordinateTimer = 0.0f;
 	m_nNumCoordinate = 0;
 	m_nTargetIndex = 0;
-	state = STATE_ASTAR;			// 操作状態
+	State = STATE_ASTAR;			// 操作状態
 
 }
 
@@ -475,8 +642,14 @@ void CStateAStar::AStarStop(CObjectCharacter* pCharacter)
 //==========================================
 void CStateAStar::Move(CObjectCharacter* pCharacter, D3DXVECTOR3& pos, D3DXVECTOR3& rot)
 {
-	Coordinate(pCharacter);	// 最短経路探索
-	Route(pCharacter);		// 最短経路をたどる
+	// 最短経路探索
+	Coordinate(pCharacter);
+
+	// 最短経路をたどる
+	Route(pCharacter);
+
+	// 移動方向処理
+	Rot(pCharacter, rot);
 
 	// 位置更新処理
 	UpdatePos(pCharacter, pos);

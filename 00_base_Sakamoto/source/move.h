@@ -85,7 +85,7 @@ protected:
     void UpdatePos(CObjectCharacter* pCharacter, D3DXVECTOR3& pos);	// 位置更新処理
 
     // メンバ変数
-    STATE state;        // デバッグ用状態
+    STATE State;        // デバッグ用状態
 
 private:
    
@@ -133,7 +133,7 @@ private:
 class CStateRandom : public CMoveState
 {
 public:
-    CStateRandom(){ state = STATE_RANDOM; }
+    CStateRandom();
     ~CStateRandom() {}
 
     void Release() override;      // 破棄
@@ -147,6 +147,13 @@ public:
 
 private:
 
+    // メンバ関数
+    void SearchWall(CObjectCharacter* pCharacter, D3DXVECTOR3& pos);				// 壁のサーチ判定(移動方向の選択処理の準備)
+    void MoveSelect(CObjectCharacter* pCharacter);		// 移動方向の選択
+
+    // メンバ変数
+    CMapSystem::GRID m_SelectGrid;	// 方向転換を行った時のグリッド番号
+    ROTSTATE m_RotState;            // 移動方向の状態
 
 };
 
@@ -195,7 +202,7 @@ private:
 class CStateStop : public CMoveState
 {
 public:
-    CStateStop(){ state = STATE_STOP; }
+    CStateStop(){ State = STATE_STOP; }
     ~CStateStop() {}
 
     void Release() override;      // 破棄

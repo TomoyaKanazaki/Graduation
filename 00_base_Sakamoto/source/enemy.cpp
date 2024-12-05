@@ -101,9 +101,6 @@ m_pEffect(nullptr)
 	m_Grid.x = 0;
 	m_Grid.z = 0;
 
-	m_SelectGrid.x = 0;
-	m_SelectGrid.z = 0;
-
 	m_nBugCounter = 0;
 
 	m_pMoveState = nullptr;
@@ -256,12 +253,6 @@ void CEnemy::Update(void)
 	// 過去の位置を記録
 	posOldMy = posMy;
 
-	////壁の索敵判定
-	//SearchWall(posMy);
-
-	//// ランダム移動
-	//MoveSelect();
-
 	// 状態の更新
 	MoveStateManager(posMy);
 
@@ -322,6 +313,8 @@ void CEnemy::Update(void)
 
 	// デバッグ表示
 	DebugProc::Print(DebugProc::POINT_LEFT, "[敵]横 %d : 縦 %d\n", m_Grid.x, m_Grid.z);
+	DebugProc::Print(DebugProc::POINT_LEFT, "[敵]向き %f\n", rotMy.y);
+
 	m_pMoveState->Debug();		// 現在の移動状態
 
 	// 値更新
@@ -564,231 +557,6 @@ void CEnemy::HitStateManager(D3DXVECTOR3& posMy)
 		m_nHitStateCount--;
 	}
 }
-
-//====================================================================
-// 移動方向の選択
-//====================================================================
-void CEnemy::MoveSelect()
-{
-	float OKRot[4];
-	int RotNumber = 0;
-	CMoveState::ROTSTATE RotState = m_pMoveState->GetRotState();	// 移動方向の状態
-	
-	
-	if (m_Progress.bOKL && RotState != CMoveState::ROTSTATE_RIGHT)
-	{
-		OKRot[RotNumber] = D3DX_PI * -0.5f;
-		RotNumber++;
-	}
-	if (m_Progress.bOKR && RotState != CMoveState::ROTSTATE_LEFT)
-	{
-		OKRot[RotNumber] = D3DX_PI * 0.5f;
-		RotNumber++;
-	}
-	if (m_Progress.bOKU && RotState != CMoveState::ROTSTATE_DOWN)
-	{
-		OKRot[RotNumber] = D3DX_PI * 0.0f;
-		RotNumber++;
-	}
-	if (m_Progress.bOKD && RotState != CMoveState::ROTSTATE_UP)
-	{
-		OKRot[RotNumber] = D3DX_PI * 1.0f;
-		RotNumber++;
-	}
-
-	if (RotNumber != 0)
-	{
-		int nRand = rand() % RotNumber;
-
-		m_move.x = sinf(OKRot[nRand]) * 3.0f;
-		m_move.z = cosf(OKRot[nRand]) * 3.0f;
-
-		if (m_move.x >= 3.0f)
-		{
-			RotState = CMoveState::ROTSTATE_RIGHT;
-		}
-		else if (m_move.x <= -3.0f)
-		{
-			RotState = CMoveState::ROTSTATE_LEFT;
-		}
-		else if (m_move.z >= 3.0f)
-		{
-			RotState = CMoveState::ROTSTATE_UP;
-		}
-		else if (m_move.z <= -3.0f)
-		{
-			RotState = CMoveState::ROTSTATE_DOWN;
-		}
-
-		m_SelectGrid = m_Grid;
-	}
-}
-
-//====================================================================
-// 壁の索敵判定
-//====================================================================
-void CEnemy::SearchWall(D3DXVECTOR3& posMy)
-{
-	bool OKR = true;	//右
-	bool OKL = true;	//左
-	bool OKU = true;	//上
-	bool OKD = true;	//下
-
-	CMapSystem* pMapSystem = CMapSystem::GetInstance();
-	int nMapWightMax = pMapSystem->GetWightMax();
-	int nMapHeightMax = pMapSystem->GetHeightMax();
-	D3DXVECTOR3 MapSystemPos = pMapSystem->GetMapPos();
-
-	int nRNumber = m_Grid.x + 1;
-	int nLNumber = m_Grid.x - 1;
-	int nUNumber = m_Grid.z - 1;
-	int nDNumber = m_Grid.z + 1;
-
-	nRNumber = useful::RangeNumber(nMapWightMax, 0, nRNumber);
-	nLNumber = useful::RangeNumber(nMapWightMax, 0, nLNumber);
-	nUNumber = useful::RangeNumber(nMapHeightMax, 0, nUNumber);
-	nDNumber = useful::RangeNumber(nMapHeightMax, 0, nDNumber);
-
-	OKR = !pMapSystem->GetGritBool(nRNumber, m_Grid.z);
-	OKL = !pMapSystem->GetGritBool(nLNumber, m_Grid.z);
-	OKU = !pMapSystem->GetGritBool(m_Grid.x, nUNumber);
-	OKD = !pMapSystem->GetGritBool(m_Grid.x, nDNumber);
-
-	//自分の立っているグリットの中心位置を求める
-	D3DXVECTOR3 MyGritPos = m_Grid.ToWorld();
-	float MapGritSize = pMapSystem->GetGritSize();
-
-	DebugProc::Print(DebugProc::POINT_LEFT, "敵の位置 %f %f %f\n", MyGritPos.x, MyGritPos.y, MyGritPos.z);
-
-	if ((posMy.x <= MyGritPos.x + ((MapGritSize * 0.5f) - GRIT_OK) &&
-		posMy.x >= MyGritPos.x - ((MapGritSize * 0.5f) - GRIT_OK) &&
-		posMy.z <= MyGritPos.z + ((MapGritSize * 0.5f) - GRIT_OK) &&
-		posMy.z >= MyGritPos.z - ((MapGritSize * 0.5f) - GRIT_OK)) &&
-		(m_Grid.x != m_SelectGrid.x || m_Grid.z != m_SelectGrid.z))
-	{// グリットの中心位置に立っているなら操作を受け付ける
-
-		if (!m_Progress.bOKR && OKR)
-		{
-			SetState(STATE_WAIT);
-		}
-		if (!m_Progress.bOKL && OKL)
-		{
-			SetState(STATE_WAIT);
-		}
-		if (!m_Progress.bOKU && OKU)
-		{
-			SetState(STATE_WAIT);
-		}
-		if (!m_Progress.bOKD && OKD)
-		{
-			SetState(STATE_WAIT);
-		}
-
-		m_Progress.bOKR = OKR;	//右
-		m_Progress.bOKL = OKL;	//左
-		m_Progress.bOKU = OKU;	//上
-		m_Progress.bOKD = OKD;	//下
-	}
-	else
-	{
-		m_Progress.bOKR = false;	//右
-		m_Progress.bOKL = false;	//左
-		m_Progress.bOKU = false;	//上
-		m_Progress.bOKD = false;	//下
-	}
-}
-
-#if 0
-//==========================================
-//  最短経路探索
-//==========================================
-void CEnemy::Coordinate()
-{
-	// 探索タイマーを加算
-	m_fCoordinateTimer += DeltaTime::Get();
-
-	// 探索のタイミングでない場合関数を抜ける
-	if (m_fCoordinateTimer < COORDDINATE_RATE[m_EnemyType]) { return; }
-
-	// 最短経路の次の目標をリセット
-	m_nTargetIndex = 1;
-
-	// タイマーのリセット
-	m_fCoordinateTimer -= COORDDINATE_RATE[m_EnemyType];
-
-	// 最短経路を取得
-	AStar::CoordinateList Path = AStar::Generator::GetInstance()->FindPlayer({ m_Grid.x, m_Grid.z });
-	m_nNumCoordinate = Path.size();
-
-	// メモリを削除
-	if (m_pPath != nullptr) { delete[] m_pPath; };
-
-	// 最短経路に必要なグリッド数分メモリを確保
-	m_pPath = new CMapSystem::GRID[m_nNumCoordinate];
-
-	// 確保したメモリに最短経路のグリッドを格納
-	for (int i = 0; i < m_nNumCoordinate; ++i)
-	{
-		m_pPath[i] = Path.at(i);
-	}
-}
-
-//==========================================
-// 最短経路をたどる
-//==========================================
-void CEnemy::Route()
-{
-	// 自身の位置・移動量取得
-	D3DXVECTOR3 pos = GetPos();
-	D3DXVECTOR3 move = GetMove();
-	D3DXVECTOR3 rot = GetRot();
-
-	// 最短経路が無いとき
-	if (m_pPath == nullptr)
-	{
-		return;
-	}
-
-	// 目標地点の座標を求める
-	D3DXVECTOR3 path = m_pPath[m_nTargetIndex].ToWorld();
-
-	// 次に向かうグリッドに重なったらその次の目標を設定
-	if (fabsf(path.x - pos.x) <= TARGET_DIFF &&
-		fabsf(path.z - pos.z) <= TARGET_DIFF) // 一定範囲内であれば
-	{
-		// インデックス番号を加算
-		m_nTargetIndex++;
-		path = m_pPath[m_nTargetIndex].ToWorld();
-	}
-
-	// 次の目標が存在しなかったら関数を抜ける
-	if (m_nTargetIndex >= m_nNumCoordinate)
-	{
-		return;
-	}
-
-	// 次の目標位置との角度
-	float RotDest = atan2f(path.z - pos.z, path.x - pos.x);
-
-	// 次の目標位置に移動
-	move = path - pos;
-	D3DXVec3Normalize(&move, &move);
-	move *= DeltaTime::Get() * MOVE_ASTAR;
-
-	// 位置更新
-	pos += move;
-
-	//目的の向き
-	float DiffRot = (RotDest - rot.y) * 0.1f;
-	rot.y += DiffRot;
-
-	// 位置・移動量設定
-	SetPos(pos);
-	SetMove(move);
-	SetRot(rot);
-}
-
-#endif
 
 //==========================================
 //  エフェクトの生成
