@@ -24,6 +24,17 @@ class CMoveState
 {
 public:
 
+    // デバッグ用移動状態
+    enum STATE
+    {
+        STATE_NONE = 0,     // 何もなし
+        STATE_CONTROL,      // 操作
+        STATE_ASTAR,        // 追跡
+        STATE_RANDOM,       // ランダム
+        STATE_STOP,         // 停止
+        STATE_MAX
+    };
+
     // 移動方向
     enum ROTSTATE
     {
@@ -37,9 +48,9 @@ public:
     };
 
     CMoveState();
-    virtual ~CMoveState() {};
+    virtual ~CMoveState() {}
 
-    virtual void Release() {};      // 破棄
+    virtual void Release() {}      // 破棄
 
     // 操作
     virtual void ControlRandom(CObjectCharacter* pCharacter) {}        // 操作とランダム切り替え
@@ -54,7 +65,7 @@ public:
     virtual void AStarStop(CObjectCharacter* pCharacter) {}             // 追跡と停止切り替え
 
     // 移動処理
-    virtual void Move(CObjectCharacter* pCharacter, D3DXVECTOR3& pos, D3DXVECTOR3& rot){}           // 移動処理(キャラクター)
+    virtual void Move(CObjectCharacter* pCharacter, D3DXVECTOR3& pos, D3DXVECTOR3& rot) {}           // 移動処理(キャラクター)
 
     CMoveState* GetMoveState(CObjectCharacter* pCharacter);             // 移動状態の情報取得
 
@@ -64,9 +75,19 @@ public:
 
     virtual void SetEnemyType(CEnemy::ENEMY_TYPE Type) {}             // 敵の種類設定
 
-private:
-    
+    void Debug(void);       // デバッグ表示用
 
+protected:
+
+    // メンバ関数
+    virtual void Init() {}          // 初期化
+    void Rot(CObjectCharacter* pCharacter, D3DXVECTOR3& rotMy);						//移動方向処理
+    void UpdatePos(CObjectCharacter* pCharacter, D3DXVECTOR3& pos);	// 位置更新処理
+
+    // メンバ変数
+    STATE state;        // デバッグ用状態
+
+private:
    
 };
 
@@ -112,7 +133,7 @@ private:
 class CStateRandom : public CMoveState
 {
 public:
-    CStateRandom(){}
+    CStateRandom(){ state = STATE_RANDOM; }
     ~CStateRandom() {}
 
     void Release() override;      // 破棄
@@ -123,6 +144,9 @@ public:
     void RandomStop(CObjectCharacter* pCharacter) override;         // 停止に切り替え
 
     void Move(CObjectCharacter* pCharacter, D3DXVECTOR3& pos, D3DXVECTOR3& rot) override;      // キャラクターの移動処理
+
+private:
+
 
 };
 
@@ -150,6 +174,8 @@ public:
 private:
 
     // メンバ関数
+    void Init() override;         // 初期化
+
     void Coordinate(CObjectCharacter* pCharacter); // 最短経路探索
     void Route(CObjectCharacter* pCharacter);	// 最短経路をたどる
 
@@ -169,7 +195,7 @@ private:
 class CStateStop : public CMoveState
 {
 public:
-    CStateStop(){}
+    CStateStop(){ state = STATE_STOP; }
     ~CStateStop() {}
 
     void Release() override;      // 破棄
