@@ -16,7 +16,7 @@ class CWall : public CObjectX
 {
 public:
 
-	CWall(int nPriority = 3);
+	CWall(int nPriority = 2);
 	CWall(int nPriority, CMapSystem::GRID gridCenter);
 	~CWall();
 

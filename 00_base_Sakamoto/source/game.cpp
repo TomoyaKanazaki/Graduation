@@ -179,8 +179,6 @@ HRESULT CGame::Init(void)
 	//レールブロックの生成
 	//LoadStageRailBlock("data\\TXT\\STAGE\\RailBlock.txt");
 
-	CEnemy* pEnemy = CEnemy::Create(CEnemy::ENEMY_BONBON, CMapSystem::GRID(11, 13));
-
 	//ステージの読み込み
 	switch (CManager::GetInstance()->GetStage())
 	{

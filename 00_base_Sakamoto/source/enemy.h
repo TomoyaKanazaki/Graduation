@@ -38,6 +38,7 @@ public:
 	{
 		HIT_STATE_NORMAL = 0,	//’Êí
 		HIT_STATE_DAMAGE,		//ƒ_ƒ[ƒW
+		HIT_STATE_DEATH,		//Ž€–S
 		HIT_STATE_INVINCIBLE,	//–³“G
 		HIT_STATE_EGG,			//‚½‚Ü‚²‚â‚«
 		HIT_STATE_MAX,			//Å‘å

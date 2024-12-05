@@ -268,7 +268,7 @@ void CEnemy::Update(void)
 	// ó‘Ô‚ÌXV
 	HitStateManager(posMy);
 
-	if (state == STATE_DEATH)
+	if (m_HitState == HIT_STATE_DEATH)
 	{
 		return;
 	}
@@ -540,8 +540,13 @@ void CEnemy::HitStateManager(D3DXVECTOR3& posMy)
 
 		if (m_nHitStateCount <= 0)
 		{
+			m_HitState = HIT_STATE_DEATH;
 			Death();
 		}
+
+		break;
+
+	case CEnemy::HIT_STATE_DEATH:
 
 		break;
 

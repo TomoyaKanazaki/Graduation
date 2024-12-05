@@ -68,7 +68,7 @@ CSignal* CSignal::Create(int nType)
 	{
 	case 0:
 		// オブジェクトの初期化処理
-		if (FAILED(pSignal->Init("data\\MODEL\\signal.x")))
+		if (FAILED(pSignal->Init("data\\MODEL\\00_signal.x")))
 		{// 初期化処理が失敗した場合
 
 			return nullptr;
@@ -77,7 +77,7 @@ CSignal* CSignal::Create(int nType)
 
 	case 1:
 		// オブジェクトの初期化処理
-		if (FAILED(pSignal->Init("data\\MODEL\\signal_slope.x")))
+		if (FAILED(pSignal->Init("data\\MODEL\\00_signal_slope.x")))
 		{// 初期化処理が失敗した場合
 
 			return nullptr;
