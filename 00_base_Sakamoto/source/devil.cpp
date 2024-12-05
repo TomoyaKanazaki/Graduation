@@ -56,7 +56,7 @@ namespace
 	float SCROOL_SPEED_02 = (CMapSystem::GetGritSize() * SCROOL_MOVEGRID_02) / SCROOL_COUNT_02;			// スクロールの移動速度
 
 	int SLOPE_TIME = 300;						// 傾き操作時間
-	int SLOPE_RAND = 25;						// 傾き発生確率
+	int SLOPE_RAND = 75;						// 傾き発生確率
 	float STAGE_ROT_LIMIT = D3DX_PI * 0.15f;	// 傾きの角度制限
 
 	float SLOPE_SPEED01 = 0.00075f;				// 傾きの移動速度
@@ -176,17 +176,15 @@ HRESULT CDevil::Init(void)
 		m_pSignal[1] = CSignal::Create(0);
 		m_pSignal[1]->SetPos(D3DXVECTOR3(1000.0f, 200.0f, 500.0f));
 	}
-
-	// スロープ用矢印
 	if (m_pSignal[2] == nullptr)
 	{
-		m_pSignal[2] = CSignal::Create(1);
-		m_pSignal[2]->SetPos(D3DXVECTOR3(-1000.0f, 200.0f, 0.0f));
+		m_pSignal[2] = CSignal::Create(0);
+		m_pSignal[2]->SetPos(D3DXVECTOR3(-1000.0f, 200.0f, -500.0f));
 	}
 	if (m_pSignal[3] == nullptr)
 	{
-		m_pSignal[3] = CSignal::Create(1);
-		m_pSignal[3]->SetPos(D3DXVECTOR3(1000.0f, 200.0f, 0.0f));
+		m_pSignal[3] = CSignal::Create(0);
+		m_pSignal[3]->SetPos(D3DXVECTOR3(1000.0f, 200.0f, -500.0f));
 	}
 
 	// スローの生成
@@ -246,7 +244,7 @@ void CDevil::Update(void)
 	m_DevilRot = CObjmeshField::GetListTop()->GetRot();
 
 	// 矢印の回転
-	SignalScroll();
+	SignalManager();
 
 	//状態の管理
 	StateManager();
@@ -704,45 +702,6 @@ void CDevil::CollisionOut()
 		D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
 		float GritSize = CMapSystem::GetInstance()->GetGritSize() * 0.5f;
 
-		//m_MinGrid.x = CMapSystem::GetInstance()->CalcGridX(m_DevilPos.x - MapSize.x - GritSize);	//左
-		//m_MaxGrid.x = CMapSystem::GetInstance()->CalcGridX(m_DevilPos.x + MapSize.x - GritSize);	//右
-		//m_MinGrid.z = CMapSystem::GetInstance()->CalcGridZ(m_DevilPos.z + MapSize.z + GritSize);	//上
-		//m_MaxGrid.z = CMapSystem::GetInstance()->CalcGridZ(m_DevilPos.z - MapSize.z + GritSize);	//下
-
-		//if (EnemyGrid.x == m_MinGrid.x)		//左
-		//{
-		//	if (EnemyMove.x < 0.0f || m_DevilArrow == 3)
-		//	{
-		//		EnemyPos = CMapSystem::GRID(m_MaxGrid.x, pEnemy->GetGrid().z).ToWorld();
-		//		EnemyPos.x += GritSize * 2;
-		//	}
-		//}
-		//if (EnemyGrid.x == m_MaxGrid.x)		//右
-		//{
-		//	if (EnemyMove.x > 0.0f || m_DevilArrow == 2)
-		//	{
-		//		EnemyPos = CMapSystem::GRID(m_MinGrid.x, pEnemy->GetGrid().z).ToWorld();
-		//		EnemyPos.x -= GritSize * 2;
-		//	}
-		//}
-
-		//if (EnemyGrid.z == m_MinGrid.z)		//上
-		//{
-		//	if (EnemyMove.z > 0.0f || m_DevilArrow == 0)
-		//	{
-		//		EnemyPos = CMapSystem::GRID(pEnemy->GetGrid().x, m_MaxGrid.z).ToWorld();
-		//		EnemyPos.z -= GritSize * 2;
-		//	}
-		//}
-		//if (EnemyGrid.z == m_MaxGrid.z)		//下
-		//{
-		//	if (EnemyMove.z < 0.0f || m_DevilArrow == 1)
-		//	{
-		//		EnemyPos = CMapSystem::GRID(pEnemy->GetGrid().x, m_MinGrid.z).ToWorld();
-		//		EnemyPos.z += GritSize * 2;
-		//	}
-		//}
-
 		m_MinGrid.x = CMapSystem::GetInstance()->CalcGridX(m_DevilPos.x - MapSize.x - GritSize);	//左
 		m_MinGrid.z = CMapSystem::GetInstance()->CalcGridZ(m_DevilPos.z + MapSize.z + GritSize);	//上
 		m_MaxGrid.x = CMapSystem::GetInstance()->CalcGridX(m_DevilPos.x + MapSize.x - GritSize);	//右
@@ -750,12 +709,10 @@ void CDevil::CollisionOut()
 
 		CEffect *Effect = CEffect::Create();
 		Effect->SetPos(CMapSystem::GetInstance()->GetGritPos(m_MinGrid));
-		//Effect->SetPos(D3DXVECTOR3(m_DevilPos.x - MapSize.x - GritSize, 0.0f, m_DevilPos.z + MapSize.z + GritSize));
 		Effect->SetRadius(50.0f);
 
 		Effect = CEffect::Create();
 		Effect->SetPos(CMapSystem::GetInstance()->GetGritPos(m_MaxGrid));
-		//Effect->SetPos(D3DXVECTOR3(m_DevilPos.x + MapSize.x - GritSize, 0.0f, m_DevilPos.z - MapSize.z + GritSize));
 		Effect->SetRadius(50.0f);
 
 		if (EnemyGrid.x == -1)
@@ -965,7 +922,7 @@ void CDevil::StateManager(void)
 				}
 			}
 
-			for (int nCnt = 0; nCnt < 2; nCnt++)
+			for (int nCnt = 0; nCnt < 4; nCnt++)
 			{
 				if (m_ScrollArrow[nCnt] != nullptr)
 				{
@@ -1046,7 +1003,7 @@ void CDevil::StateManager(void)
 				Slope(m_DevilArrow);
 
 				// 矢印傾き
-				SignalSlope(m_DevilArrow);
+				SignalManager();
 			}
 			else
 			{
@@ -1134,23 +1091,40 @@ void CDevil::DebugKey(void)
 
 	if (pInputKeyboard->GetPress(DIK_6))
 	{
+		m_pSignal[0]->SetRot(D3DXVECTOR3(-1.75f, 0.0f, 0.0f));
+		m_pSignal[1]->SetRot(D3DXVECTOR3(-1.75f, 0.0f, 0.0f));
+		m_pSignal[2]->SetRot(D3DXVECTOR3(1.75f, 0.0f, 0.0f));
+		m_pSignal[3]->SetRot(D3DXVECTOR3(1.75f, 0.0f, 0.0f));
+
 		Slope(0);
-		SignalSlope(0);
 	}
 	if (pInputKeyboard->GetPress(DIK_7))
 	{
+		m_pSignal[0]->SetRot(D3DXVECTOR3(1.75f, 0.0f, 0.0f));
+		m_pSignal[1]->SetRot(D3DXVECTOR3(1.75f, 0.0f, 0.0f));
+		m_pSignal[2]->SetRot(D3DXVECTOR3(-1.75f, 0.0f, 0.0f));
+		m_pSignal[3]->SetRot(D3DXVECTOR3(-1.75f, 0.0f, 0.0f));
+
 		Slope(1);
-		SignalSlope(1);
 	}
 	if (pInputKeyboard->GetPress(DIK_8))
 	{
+		m_pSignal[0]->SetRot(D3DXVECTOR3(-1.75f, D3DX_PI * 0.5f, 0.0f));
+		m_pSignal[1]->SetRot(D3DXVECTOR3(1.75f, D3DX_PI * 0.5f, 0.0f));
+		m_pSignal[2]->SetRot(D3DXVECTOR3(-1.75f, D3DX_PI * 0.5f, 0.0f));
+		m_pSignal[3]->SetRot(D3DXVECTOR3(1.75f, D3DX_PI * 0.5f, 0.0f));
+
 		Slope(2);
-		SignalSlope(2);
 	}
 	if (pInputKeyboard->GetPress(DIK_9))
 	{
+		m_pSignal[0]->SetRot(D3DXVECTOR3(1.75f, D3DX_PI * 0.5f, 0.0f));
+		m_pSignal[1]->SetRot(D3DXVECTOR3(-1.75f, D3DX_PI * 0.5f, 0.0f));
+		m_pSignal[2]->SetRot(D3DXVECTOR3(1.75f, D3DX_PI * 0.5f, 0.0f));
+		m_pSignal[3]->SetRot(D3DXVECTOR3(-1.75f, D3DX_PI * 0.5f, 0.0f));
+
+
 		Slope(3);
-		SignalSlope(3);
 	}
 #endif // !_DEBUG
 }
@@ -1573,61 +1547,77 @@ void CDevil::GritScroll(D3DXVECTOR3 Move)
 }
 
 //====================================================================
-// 矢印が回転する処理
+// 矢印がマネージャー
 //====================================================================
-void CDevil::SignalScroll(void)
+void CDevil::SignalManager(void)
 {
-	switch (m_nStateNum)
+	if (m_State == STATE_SCROLL)
 	{
-	case ACTION_SIGNAL_UP:
-		m_pSignal[0]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI,0.0f));
-		m_pSignal[1]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
-		break;
+		switch (m_nStateNum)
+		{
+		case ACTION_SIGNAL_UP:
+			m_pSignal[0]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
+			m_pSignal[1]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
+			m_pSignal[2]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
+			m_pSignal[3]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
+			break;
 
-	case ACTION_SIGNAL_DOWN:
-		m_pSignal[0]->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-		m_pSignal[1]->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f)); 
-		break;
+		case ACTION_SIGNAL_DOWN:
+			m_pSignal[0]->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+			m_pSignal[1]->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+			m_pSignal[2]->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+			m_pSignal[3]->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+			break;
 
-	case ACTION_SIGNAL_RIGHT:
-		m_pSignal[0]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
-		m_pSignal[1]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
-		break;
+		case ACTION_SIGNAL_RIGHT:
+			m_pSignal[0]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
+			m_pSignal[1]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
+			m_pSignal[2]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
+			m_pSignal[3]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
+			break;
 
-	case ACTION_SIGNAL_LEFT:
-		m_pSignal[0]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
-		m_pSignal[1]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f)); 
-		break;
+		case ACTION_SIGNAL_LEFT:
+			m_pSignal[0]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
+			m_pSignal[1]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
+			m_pSignal[2]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
+			m_pSignal[3]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
+			break;
+		}
 	}
-}
 
-//====================================================================
-// 矢印が傾く向き
-//====================================================================
-void CDevil::SignalSlope(int Num)
-{
-	switch (Num)
+	if (m_State == STATE_SLOPE)
 	{
-	case 0:
-		m_pSignal[2]->SetRot(D3DXVECTOR3(-0.5f, D3DX_PI, 0.0f));
-		m_pSignal[3]->SetRot(D3DXVECTOR3(-0.5f, D3DX_PI, 0.0f));
-		break;
+		switch (m_DevilArrow)
+		{
+		case SLOPE_TYPE_FRONT:
+			m_pSignal[0]->SetRot(D3DXVECTOR3(-1.75f, 0.0f, 0.0f));
+			m_pSignal[1]->SetRot(D3DXVECTOR3(-1.75f, 0.0f, 0.0f));
+			m_pSignal[2]->SetRot(D3DXVECTOR3(1.75f, 0.0f, 0.0f));
+			m_pSignal[3]->SetRot(D3DXVECTOR3(1.75f, 0.0f, 0.0f));
+			break;
 
-	case 1:
-		m_pSignal[2]->SetRot(D3DXVECTOR3(-0.5f, 0.0f, 0.0f));
-		m_pSignal[3]->SetRot(D3DXVECTOR3(-0.5f, 0.0f, 0.0f));
-		break;
+		case SLOPE_TYPE_BACK:
+			m_pSignal[0]->SetRot(D3DXVECTOR3(1.75f, 0.0f, 0.0f));
+			m_pSignal[1]->SetRot(D3DXVECTOR3(1.75f, 0.0f, 0.0f));
+			m_pSignal[2]->SetRot(D3DXVECTOR3(-1.75f, 0.0f, 0.0f));
+			m_pSignal[3]->SetRot(D3DXVECTOR3(-1.75f, 0.0f, 0.0f));
+			break;
 
-	case 2:
-		m_pSignal[2]->SetRot(D3DXVECTOR3(D3DX_PI * -0.25f, D3DX_PI * 0.5f, 0.0f));
-		m_pSignal[3]->SetRot(D3DXVECTOR3(D3DX_PI * -0.25f, D3DX_PI * 0.5f, 0.0f));
+		case SLOPE_TYPE_LEFT:
+			m_pSignal[0]->SetRot(D3DXVECTOR3(-1.75f, D3DX_PI * 0.5f, 0.0f));
+			m_pSignal[1]->SetRot(D3DXVECTOR3(1.75f, D3DX_PI * 0.5f, 0.0f));
+			m_pSignal[2]->SetRot(D3DXVECTOR3(-1.75f, D3DX_PI * 0.5f, 0.0f));
+			m_pSignal[3]->SetRot(D3DXVECTOR3(1.75f, D3DX_PI * 0.5f, 0.0f));
 
-		break;
+			break;
 
-	case 3:
-		m_pSignal[2]->SetRot(D3DXVECTOR3(-0.75f, D3DX_PI * -0.5f, 0.0f));
-		m_pSignal[3]->SetRot(D3DXVECTOR3(-0.75f, D3DX_PI * -0.5f, 0.0f));
-		break;
+		case SLOPE_TYPE_RIGHT:
+			m_pSignal[0]->SetRot(D3DXVECTOR3(1.75f, D3DX_PI * 0.5f, 0.0f));
+			m_pSignal[1]->SetRot(D3DXVECTOR3(-1.75f, D3DX_PI * 0.5f, 0.0f));
+			m_pSignal[2]->SetRot(D3DXVECTOR3(1.75f, D3DX_PI * 0.5f, 0.0f));
+			m_pSignal[3]->SetRot(D3DXVECTOR3(-1.75f, D3DX_PI * 0.5f, 0.0f));
+			break;
+		}
 	}
 }
 

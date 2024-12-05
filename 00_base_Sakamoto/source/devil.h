@@ -26,6 +26,7 @@ class CSignal;
 class CEnemy;
 class CBoss;
 class CPlayer;
+class CSignalManager;
 
 //オブジェクトプレイヤークラス
 class CDevil : public CObjectCharacter
@@ -46,6 +47,15 @@ public:
 		ACTION_RUN,					// 逃げる
 		ACTION_KING,				// 玉座
 		ACTION_MAX,					// 最大
+	};
+
+	enum SLOPE_TYPE
+	{
+		SLOPE_TYPE_FRONT = 0,
+		SLOPE_TYPE_BACK,
+		SLOPE_TYPE_RIGHT,
+		SLOPE_TYPE_LEFT,
+		SLOPE_TYPE_MAX,
 	};
 
 	// モーション
@@ -114,8 +124,7 @@ private:
 	void TileScroll(D3DXVECTOR3 Move, float GritSize);	// 床のスクロール
 	void WallScroll(D3DXVECTOR3 Move, float GritSize);	// 壁のスクロール
 	void FriedEggScroll(D3DXVECTOR3 Move, float GritSize);	// 目玉焼きのスクロール
-	void SignalScroll(void);
-	void SignalSlope(int Num);
+	void SignalManager(void);
 
 	void GritScroll(D3DXVECTOR3 Move);		//グリットのスクロール
 	void CollisionPressPlayer(CPlayer* pPlayer, D3DXVECTOR3 pos, D3DXVECTOR3 Size);	//プレイヤーが潰される時の処理
@@ -144,6 +153,7 @@ private:
 	float m_CollisionRot;			//当たり判定用の向き
 
 	CSlowManager* m_pSlow;			// スロー
+	CSignalManager* m_pSignalManager;	// シグナルマネージャー
 	D3DXVECTOR3 m_DevilRot;			// デビルパワーによって傾く値
 	int m_DevilArrow;				// デビルパワーの方向
 	int m_ScrollArrowOld;			// 過去のスクロールの方向

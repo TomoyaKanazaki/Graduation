@@ -277,6 +277,9 @@
     <ClCompile Include="source\footprint.cpp">
       <Filter>ソース ファイル\08_player</Filter>
     </ClCompile>
+    <ClCompile Include="source\signalmanager.cpp">
+      <Filter>ソース ファイル\06_UI_3D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\debugproc.h">
@@ -518,6 +521,9 @@
     </ClInclude>
     <ClInclude Include="source\footprint.h">
       <Filter>ソース ファイル\08_player</Filter>
+    </ClInclude>
+    <ClInclude Include="source\signalmanager.h">
+      <Filter>ソース ファイル\06_UI_3D</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
