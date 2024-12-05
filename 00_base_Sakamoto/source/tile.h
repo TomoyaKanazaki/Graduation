@@ -22,7 +22,7 @@ public:
 
 	static CTile* Create(CMapSystem::GRID gridCenter);
 
-	HRESULT Init(char* pModelName);
+	HRESULT Init(const char* pModelName);
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);

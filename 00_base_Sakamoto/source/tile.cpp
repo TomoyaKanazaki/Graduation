@@ -15,7 +15,7 @@
 //==========================================
 namespace
 {
-	
+	const char* FILE_PASS = "data\\MODEL\\00_floor.x"; // ƒ‚ƒfƒ‹ƒpƒX
 }
 
 //====================================================================
@@ -67,7 +67,7 @@ CTile* CTile::Create(CMapSystem::GRID gridCenter)
 	}
 
 	// °‚Ì‰Šú‰»ˆ—
-	if (FAILED(pSample->Init("data\\MODEL\\floor.x")))
+	if (FAILED(pSample->Init(FILE_PASS)))
 	{//‰Šú‰»ˆ—‚ª¸”s‚µ‚½ê‡
 		return nullptr;
 	}
@@ -78,7 +78,7 @@ CTile* CTile::Create(CMapSystem::GRID gridCenter)
 //====================================================================
 //‰Šú‰»ˆ—
 //====================================================================
-HRESULT CTile::Init(char* pModelName)
+HRESULT CTile::Init(const char* pModelName)
 {
 	SetType(CObject::TYPE_TILE);
 

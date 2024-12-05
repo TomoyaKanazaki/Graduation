@@ -110,7 +110,7 @@ CDevilHole* CDevilHole::Create(CMapSystem::GRID gridCenter)
 	}
 
 	//オブジェクトの初期化処理
-	if (FAILED(pSample->Init("data\\MODEL\\devilhole\\devil_hole_base.x")))
+	if (FAILED(pSample->Init("data\\MODEL\\hamsterwheel\\hamsterwheel.x")))
 	{//初期化処理が失敗した場合
 		return nullptr;
 	}
