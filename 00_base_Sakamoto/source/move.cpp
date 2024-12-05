@@ -55,7 +55,7 @@ static_assert(NUM_ARRAY(COORDDINATE_RATE) == CEnemy::ENEMY_MAX, "ERROR : Type Co
 //==========================================
 CMoveState::CMoveState()
 {
-	State = STATE_NONE;
+	m_State = STATE_NONE;
 }
 
 //==========================================
@@ -73,7 +73,7 @@ void CMoveState::Debug(void)
 {
 	DebugProc::Print(DebugProc::POINT_LEFT, "ˆÚ“®ó‘Ô : ");
 
-	auto str = magic_enum::enum_name(State);
+	auto str = magic_enum::enum_name(m_State);
 
 	DebugProc::Print(DebugProc::POINT_LEFT, str.data());
 	DebugProc::Print(DebugProc::POINT_LEFT, "\n");
@@ -152,7 +152,7 @@ CStateControl::CStateControl()
 	m_bInput = false;				// “ü—Í‚ğs‚Á‚½‚©‚Ç‚¤‚©
 	m_RotState = ROTSTATE_NONE;		// ˆÚ“®•ûŒü‚Ìó‘Ô
 
-	State = STATE_CONTROL;			// ‘€ìó‘Ô
+	m_State = STATE_CONTROL;			// ‘€ìó‘Ô
 
 }
 
@@ -375,7 +375,7 @@ D3DXVECTOR3 CStateControl::InputKey(CObjectCharacter* pCharacter, D3DXVECTOR3& p
 //==========================================
 CStateRandom::CStateRandom()
 {
-	State = STATE_RANDOM;
+	m_State = STATE_RANDOM;
 	m_SelectGrid.x = 0;
 	m_SelectGrid.z = 0;
 }
@@ -590,7 +590,7 @@ CStateAStar::CStateAStar()
 	m_nNumCoordinate = 0;
 	m_nTargetIndex = 0;
 
-	State = STATE_ASTAR;			// ‘€ìó‘Ô
+	m_State = STATE_ASTAR;			// ‘€ìó‘Ô
 
 
 }

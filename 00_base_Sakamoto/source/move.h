@@ -86,7 +86,7 @@ protected:
 
     // メンバ変数
 
-    STATE State;        // デバッグ用状態
+    STATE m_State;        // デバッグ用状態
 
 
 private:
@@ -207,8 +207,7 @@ class CStateStop : public CMoveState
 {
 public:
 
-    CStateStop(){ State = STATE_STOP; }
-
+    CStateStop(){ m_State = STATE_STOP; }
     ~CStateStop() {}
 
     void Release() override;      // 破棄
