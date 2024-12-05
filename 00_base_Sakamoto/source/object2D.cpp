@@ -191,8 +191,16 @@ void CObject2D::Draw(void)
 	}
 	else
 	{
-		//テクスチャの設定
-		m_pDevice->SetTexture(0, pTexture->GetAddress(GetIdx()));
+		if (GetIdx() != -1)
+		{
+			//テクスチャの設定
+			m_pDevice->SetTexture(0, pTexture->GetAddress(GetIdx()));
+		}
+		else
+		{
+			//テクスチャの設定
+			m_pDevice->SetTexture(0, nullptr);
+		}
 	}
 
 	//ポリゴンの描画
