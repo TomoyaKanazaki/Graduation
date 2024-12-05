@@ -12,7 +12,8 @@
 //====================================================================
 //コンストラクタ
 //====================================================================
-CObject2D::CObject2D(int nPriority) :CObject(nPriority)
+CObject2D::CObject2D(int nPriority) :CObject(nPriority),
+	m_nIdxTexture(-1)
 {
 	m_pTexture = nullptr;
 	m_pTargetTexture = nullptr;
@@ -61,8 +62,6 @@ HRESULT CObject2D::Init(void)
 {
 	//デバイスの取得
 	LPDIRECT3DDEVICE9 m_pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
-
-	SetTexture("data\\TEXTURE\\Test.jpg");
 
 	SetType(TYPE_OBJECT2D);
 
