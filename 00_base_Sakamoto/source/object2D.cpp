@@ -191,14 +191,13 @@ void CObject2D::Draw(void)
 	else
 	{
 		//テクスチャの設定
-		int nIdx = GetIdx();
-		if (nIdx == -1)
+		if (GetIdx() != -1)
 		{
-			m_pDevice->SetTexture(0, nullptr);
+			m_pDevice->SetTexture(0, pTexture->GetAddress(GetIdx()));
 		}
 		else
 		{
-			m_pDevice->SetTexture(0, pTexture->GetAddress(nIdx));
+			m_pDevice->SetTexture(0, nullptr);
 		}
 	}
 
