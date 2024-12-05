@@ -154,7 +154,7 @@ HRESULT CGame::Init(void)
 
 	// ƒ}ƒbƒv‚Ì¶¬
 	CMapSystem::GetInstance()->Init();
-	CMapSystem::Load("data\\TXT\\STAGE\\map04.csv");
+	CMapSystem::Load("data\\TXT\\STAGE\\map06.csv");
 
 	for (int nCnt = 0; nCnt < 2; nCnt++)
 	{
