@@ -70,6 +70,8 @@ namespace
 	const float EGG_COLOR_DEL_A = 0.01f;		//•s“§–¾“x‚ÌŒ¸Š‘¬“x
 
 	const float SHADOW_SIZE = 50.0f;			// ŠÛ‰e‚Ì‘å‚«‚³
+
+	const D3DXVECTOR2 NUMBER_SIZE = { 280.0f , 170.0f };
 }
 
 //===========================================
@@ -511,8 +513,8 @@ void CPlayer::UI_Init(void)
 		if (m_pP_NumUI != nullptr)
 		{
 			m_pP_NumUI->SetPos(GetPos());
-			m_pP_NumUI->SetWidth(50.0f);
-			m_pP_NumUI->SetHeight(50.0f);
+			m_pP_NumUI->SetWidth(NUMBER_SIZE.x);
+			m_pP_NumUI->SetHeight(NUMBER_SIZE.y);
 			m_pP_NumUI->SetTexture("data\\TEXTURE\\UI\\1p.png");
 		}
 
@@ -538,8 +540,9 @@ void CPlayer::UI_Init(void)
 		if (m_pP_NumUI != nullptr)
 		{
 			m_pP_NumUI->SetPos(GetPos());
-			m_pP_NumUI->SetWidth(50.0f);
-			m_pP_NumUI->SetHeight(50.0f);
+			m_pP_NumUI->SetPos(GetPos());
+			m_pP_NumUI->SetWidth(NUMBER_SIZE.x);
+			m_pP_NumUI->SetHeight(NUMBER_SIZE.y);
 			m_pP_NumUI->SetTexture("data\\TEXTURE\\UI\\2p.png");
 		}
 
