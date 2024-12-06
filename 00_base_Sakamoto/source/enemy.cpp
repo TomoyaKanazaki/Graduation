@@ -252,6 +252,7 @@ void CEnemy::Update(void)
 
 	// 過去の位置を記録
 	posOldMy = posMy;
+	SetGridOld(m_Grid);		// グリッド
 
 	// 状態の更新
 	MoveStateManager(posMy);
@@ -282,7 +283,7 @@ void CEnemy::Update(void)
 	// Mキー
 	else if (pInputKeyboard->GetTrigger(DIK_M))
 	{
-		m_pMoveState->RandomAStar(this);			// ランダム or 追跡(まだランダム作ってない)
+		m_pMoveState->RandomAStar(this);			// ランダム or 追跡
 		m_pMoveState->SetEnemyType(m_EnemyType);	// 敵の種類設定
 	}
 

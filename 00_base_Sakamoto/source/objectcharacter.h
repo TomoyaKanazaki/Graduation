@@ -105,11 +105,14 @@ public:
 	// マップ番号の設定
 	virtual void SetGrid(const CMapSystem::GRID& pos) { m_Grid = pos; }
 	CMapSystem::GRID GetGrid(void) { return m_Grid; }
+	virtual void SetGridOld(const CMapSystem::GRID& posOld) { m_GridOld = posOld; }
+	CMapSystem::GRID GetGridOld(void) { return m_GridOld; }
 
 	// 移動状態
 	virtual void ChangeMoveState(CMoveState* pMoveState);   // 移動状態変更
 	CMoveState* GetMoveState() { return m_pMoveState; }	// 移動状態の情報取得
 
+	void SetProgress(PROGGRESS progress) { m_Progress = progress; }		// 移動の進行許可状況設定
 	PROGGRESS GetProgress() { return m_Progress; }		// 移動の進行許可状況取得
 	bool GetGritCenter() { return m_bGritCenter; }		// グリッドの中心にいるか取得
 
@@ -118,6 +121,7 @@ protected:
 	CShadow* m_pShadow;
 	PROGGRESS m_Progress;			// 移動の進行許可状況
 	CMapSystem::GRID m_Grid;		//グリット番号
+	CMapSystem::GRID m_GridOld;		// 前回のグリット番号
 
 	D3DXVECTOR3 m_move;				//移動量
 	D3DXVECTOR3 m_Objmove;			//オブジェクトから影響される移動量
