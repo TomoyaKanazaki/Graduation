@@ -212,6 +212,9 @@ void CMapMove::Draw(void)
 //====================================================================
 void CMapMove::Move(int Arroow)
 {
+	// マップを動かす
+	GritScroll();
+
 	switch (m_ScrollType)
 	{
 	case CMapMove::SCROLL_TYPE_NORMAL:
@@ -268,8 +271,6 @@ void CMapMove::Move(int Arroow)
 		}
 		break;
 	}
-
-	ObjectScroll(m_move);
 }
 
 //====================================================================
@@ -979,335 +980,33 @@ void CMapMove::DebugKey(void)
 }
 
 //====================================================================
-// オブジェクトのスクロール
-//====================================================================
-void CMapMove::ObjectScroll(D3DXVECTOR3 Move)
-{
-	// グリッドのスクロール
-	GritScroll(Move);
-
-	// グリッドのサイズ
-	float m_GritSize = CMapSystem::GetInstance()->GetGritSize();
-
-	// 十字架のスクロール
-	CrossScroll(Move, m_GritSize);
-
-	// ボワボワのスクロール
-	BowabowaScroll(Move, m_GritSize);
-
-	// 敵のスクロール
-	EnemyScroll(Move, m_GritSize);
-
-	// レールブロックのスクロール
-	RailBlockScroll(Move, m_GritSize);
-
-	// 転がる岩のスクロール
-	RollRockScroll(Move, m_GritSize);
-
-	// プレイヤーのスクロール
-	PlayerScroll(Move, m_GritSize);
-
-	// ファイアボールのスクロール
-	FireScroll(Move, m_GritSize);
-
-	// 床のスクロール
-	TileScroll(Move, m_GritSize);
-
-	// 壁のスクロール
-	WallScroll(Move, m_GritSize);
-
-	// 目玉焼きのスクロール
-	FriedEggScroll(Move, m_GritSize);
-}
-
-//====================================================================
-// 十字架のスクロール
-//====================================================================
-void CMapMove::CrossScroll(D3DXVECTOR3 Move, float GritSize)
-{
-	// 十字架のリスト構造が無ければ抜ける
-	if (CCross::GetList() == nullptr) { return; }
-	std::list<CCross*> list = CCross::GetList()->GetList();    // リストを取得
-
-	// 十字架のリストの中身を確認する
-	for (CCross* pCross : list)
-	{
-		D3DXVECTOR3 pos = CMapSystem::GetInstance()->GetGritPos(pCross->GetGrid());
-		pos.y = pCross->GetPos().y;
-		pCross->SetPos(pos);
-	}
-}
-
-//====================================================================
-// ボワボワのスクロール
-//====================================================================
-void CMapMove::BowabowaScroll(D3DXVECTOR3 Move, float GritSize)
-{
-	// ボワボワのリスト構造が無ければ抜ける
-	if (CBowabowa::GetList() == nullptr) { return; }
-	std::list<CBowabowa*> list = CBowabowa::GetList()->GetList();    // リストを取得
-
-	// ボワボワのリストの中身を確認する
-	for (CBowabowa* pBowabowa : list)
-	{
-		D3DXVECTOR3 pos = CMapSystem::GetInstance()->GetGritPos(pBowabowa->GetGrid());
-		pBowabowa->SetPos(pos);
-	}
-}
-
-//====================================================================
-// 敵のスクロール
-//====================================================================
-void CMapMove::EnemyScroll(D3DXVECTOR3 Move, float GritSize)
-{
-	// 敵のリスト構造が無ければ抜ける
-	if (CEnemy::GetList() == nullptr) { return; }
-	std::list<CEnemy*> list = CEnemy::GetList()->GetList();    // リストを取得
-
-	// 敵のリストの中身を確認する
-	for (CEnemy* pEnemy : list)
-	{
-		D3DXVECTOR3 pos = pEnemy->GetPos();
-		D3DXVECTOR3 Size = pEnemy->GetSize();
-
-		pos += Move;
-
-		pEnemy->SetPos(pos);
-	}
-}
-
-//====================================================================
-// レールブロックのスクロール
-//====================================================================
-void CMapMove::RailBlockScroll(D3DXVECTOR3 Move, float GritSize)
-{
-	// レールブロックのリスト構造が無ければ抜ける
-	if (CRailBlock::GetList() == nullptr) { return; }
-	std::list<CRailBlock*> list = CRailBlock::GetList()->GetList();    // リストを取得
-
-	// レールブロックのリストの中身を確認する
-	for (CRailBlock* pRailBlock : list)
-	{
-		D3DXVECTOR3 pos = pRailBlock->GetPos();
-		pos += Move;
-		pRailBlock->SetPos(pos);
-	}
-}
-
-//====================================================================
-// 転がる岩のスクロール
-//====================================================================
-void CMapMove::RollRockScroll(D3DXVECTOR3 Move, float GritSize)
-{
-	// レールブロックのリスト構造が無ければ抜ける
-	if (CRollRock::GetList() == nullptr) { return; }
-	std::list<CRollRock*> list = CRollRock::GetList()->GetList();    // リストを取得
-
-	// レールブロックのリストの中身を確認する
-	for (CRollRock* pRailBlock : list)
-	{
-		D3DXVECTOR3 pos = pRailBlock->GetPos();
-		pos += Move;
-		pRailBlock->SetPos(pos);
-	}
-}
-
-//==========================================
-//  ファイアボールのスクロール
-//==========================================
-void CMapMove::FireScroll(D3DXVECTOR3 Move, float GritSize)
-{
-	// ファイアボールのリストが無ければ抜ける
-	if (CFire::GetList() == nullptr) { return; }
-	std::list<CFire*> list = CFire::GetList()->GetList();    // リストを取得
-
-	// ファイアボールのリストの中身を確認する
-	for (CFire* fire : list)
-	{
-		D3DXVECTOR3 pos = fire->GetPos();
-		pos += Move;
-		fire->SetPos(pos);
-	}
-}
-
-//====================================================================
-// 床のスクロール
-//====================================================================
-void CMapMove::TileScroll(D3DXVECTOR3 Move, float GritSize)
-{
-	// 十字架のリスト構造が無ければ抜ける
-	if (CTile::GetList() == nullptr) { return; }
-	std::list<CTile*> list = CTile::GetList()->GetList();    // リストを取得
-
-	// キューブブロックのリストの中身を確認する
-	for (CTile* pTile : list)
-	{
-		// 縦横のナンバーと高さを設定する
-		D3DXVECTOR3 pos = INITVECTOR3;
-
-		//グリット番号を位置に変換
-		pos = pTile->GetGrid().ToWorld();
-		pos.y = 0.0f;
-
-		pTile->SetPos(pos);
-	}
-}
-
-//====================================================================
-// 壁のスクロール
-//====================================================================
-void CMapMove::WallScroll(D3DXVECTOR3 Move, float GritSize)
-{
-	// 壁のリスト構造が無ければ抜ける
-	if (CWall::GetList() == nullptr) { return; }
-	std::list<CWall*> list = CWall::GetList()->GetList();    // リストを取得
-
-	// 壁のリストの中身を確認する
-	for (CWall* pWall : list)
-	{
-		// 縦横のナンバーと高さを設定する
-		D3DXVECTOR3 pos = INITVECTOR3;
-
-		//グリット番号を位置に変換
-		pos = pWall->GetGrid().ToWorld();
-		pos.y = 0.0f;
-
-		pWall->SetPos(pos);
-	}
-}
-
-//==========================================
-//  目玉焼きのスクロール
-//==========================================
-void CMapMove::FriedEggScroll(D3DXVECTOR3 Move, float GritSize)
-{
-	// 目玉焼きのリスト構造が無ければ抜ける
-	if (CFriedEgg::GetList() == nullptr) { return; }
-	std::list<CFriedEgg*> list = CFriedEgg::GetList()->GetList();    // リストを取得
-
-	// 目玉焼きのリストの中身を確認する
-	for (CFriedEgg* pEgg : list)
-	{
-		// 縦横のナンバーと高さを設定する
-		D3DXVECTOR3 pos = INITVECTOR3;
-
-		//グリット番号を位置に変換
-		pos = pEgg->GetGrid().ToWorld();
-
-		pEgg->SetPos(pos);
-	}
-}
-
-//====================================================================
-// プレイヤーのスクロール
-//====================================================================
-void CMapMove::PlayerScroll(D3DXVECTOR3 Move, float GritSize)
-{
-	// プレイヤーのリスト構造が無ければ抜ける
-	if (CPlayer::GetList() == nullptr) { return; }
-	std::list<CPlayer*> list = CPlayer::GetList()->GetList();    // リストを取得
-
-	// プレイヤーのリストの中身を確認する
-	for (CPlayer* pPlayer : list)
-	{
-		if (pPlayer->GetState() != CPlayer::STATE_EGG)
-		{
-			D3DXVECTOR3 pos = pPlayer->GetPos();
-			D3DXVECTOR3 Size = pPlayer->GetSize();
-			D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
-			float G_Size = CMapSystem::GetInstance()->GetGritSize();
-
-			pos += Move;
-
-			if (Move.x > 0.0f)
-			{
-				if (pos.x + G_Size > m_DevilPos.x + MapSize.x)	// 右
-				{
-					pos.x = m_DevilPos.x + MapSize.x - G_Size;
-					CollisionPressPlayer(pPlayer, pos, Size);
-				}
-			}
-			if (Move.x < 0.0f)
-			{
-				if (pos.x - G_Size < m_DevilPos.x - MapSize.x)	// 左
-				{
-					pos.x = m_DevilPos.x - MapSize.x + G_Size;
-					CollisionPressPlayer(pPlayer, pos, Size);
-				}
-			}
-			if (Move.z > 0.0f)
-			{
-				if (pos.z + G_Size > m_DevilPos.z + MapSize.z)	// 上
-				{
-					pos.z = m_DevilPos.z + MapSize.z - G_Size;
-					CollisionPressPlayer(pPlayer, pos, Size);
-				}
-			}
-			if (Move.z < 0.0f)
-			{
-				if (pos.z - G_Size < m_DevilPos.z - MapSize.z)	// 下
-				{
-					pos.z = m_DevilPos.z - MapSize.z + G_Size;
-					CollisionPressPlayer(pPlayer, pos, Size);
-				}
-			}
-
-			pPlayer->SetPos(pos);
-		}
-		else
-		{// 卵状態の時、ブロックが存在しない位置にホーミングする
-
-			CMapSystem::GRID Grit = pPlayer->GetGrid();;
-			if (!CMapSystem::GetInstance()->GetGritBool(Grit))
-			{
-				D3DXVECTOR3 PlayerPos = pPlayer->GetPos();
-				D3DXVECTOR3 AnswerPos = INITVECTOR3;
-				AnswerPos = Grit.ToWorld();
-
-				if (pPlayer->GetGritCenter())
-				{
-					AnswerPos.y = PlayerPos.y;
-					pPlayer->SetPos(AnswerPos);
-				}
-				else
-				{
-					PlayerPos.x += (AnswerPos.x - PlayerPos.x);
-					PlayerPos.z += (AnswerPos.z - PlayerPos.z);
-					pPlayer->SetPos(PlayerPos);
-				}
-			}
-		}
-	}
-}
-
-//====================================================================
 // グリットのスクロール
 //====================================================================
-void CMapMove::GritScroll(D3DXVECTOR3 Move)
+void CMapMove::GritScroll()
 {
 	D3DXVECTOR3 InitPos = CMapSystem::GetInstance()->GetInitPos();
 	D3DXVECTOR3 MapPos = CMapSystem::GetInstance()->GetMapPos();
 	float MapGrit = CMapSystem::GetInstance()->GetGritSize();
-	MapPos += Move;
+	MapPos += m_move;
 	m_MapDifference = -(InitPos - MapPos);
 	D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
 
 	if ((InitPos.x - MapPos.x) > 0.0f)
 	{// 左範囲
-		MapPos.x = InitPos.x + (MapSize.x * 2.0f) + MapGrit + Move.x;
+		MapPos.x = InitPos.x + (MapSize.x * 2.0f) + MapGrit + m_move.x;
 	}
 	if ((InitPos.x - MapPos.x + MapGrit) < (-MapSize.x * 2.0f))
 	{// 右範囲
-		MapPos.x = InitPos.x + Move.x;
+		MapPos.x = InitPos.x + m_move.x;
 	}
 
 	if ((InitPos.z - MapPos.z) < 0.0f)
 	{// 上範囲
-		MapPos.z = InitPos.z + (-MapSize.z * 2.0f) - MapGrit + Move.z;
+		MapPos.z = InitPos.z + (-MapSize.z * 2.0f) - MapGrit + m_move.z;
 	}
 	if ((InitPos.z - MapPos.z - MapGrit) > (MapSize.z * 2.0f))
 	{// 下範囲
-		MapPos.z = InitPos.z + Move.z;
+		MapPos.z = InitPos.z + m_move.z;
 	}
 
 #ifdef _DEBUG
@@ -1320,10 +1019,10 @@ void CMapMove::GritScroll(D3DXVECTOR3 Move)
 			if (CMapSystem::GetInstance()->GetGritBool(nCntW, nCntH))
 			{// ブロックが存在するグリットのみエフェクトを表示
 
-				//CEffect* pEffect = CEffect::Create();
-				//pEffect->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(nCntW, nCntH)));
-				//pEffect->SetRadius(20.0f);
-				//pEffect->SetLife(10);
+				CEffect* pEffect = CEffect::Create();
+				pEffect->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(nCntW, nCntH)));
+				pEffect->SetRadius(20.0f);
+				pEffect->SetLife(10);
 			}
 		}
 	}
