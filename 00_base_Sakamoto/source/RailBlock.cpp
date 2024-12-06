@@ -32,12 +32,12 @@ CListManager<CRailBlock>* CRailBlock::m_pList = nullptr; // オブジェクトリスト
 //====================================================================
 //コンストラクタ
 //====================================================================
-CRailBlock::CRailBlock(int nPriority) :CObjectX(nPriority)
+CRailBlock::CRailBlock(int nPriority) :CObjectX(nPriority),
+m_Grid(0, 0),
+m_OldGrid(0, 0)
 {
 	m_pTop = nullptr;		// 先頭のレールへのポインタ
 	m_pCur = nullptr;		// 最後尾のレールへのポインタ
-	m_Grid.x = 0;
-	m_Grid.z = 0;
 
 	for (int nCnt = 0; nCnt < 4; nCnt++)
 	{
@@ -48,11 +48,10 @@ CRailBlock::CRailBlock(int nPriority) :CObjectX(nPriority)
 //====================================================================
 //コンストラクタ(オーバーロード)
 //====================================================================
-CRailBlock::CRailBlock(int nPriority, CMapSystem::GRID gridCenter) : CObjectX(nPriority)
+CRailBlock::CRailBlock(int nPriority, CMapSystem::GRID gridCenter) : CObjectX(nPriority),
+m_Grid(gridCenter),
+m_OldGrid(gridCenter)
 {
-	SetSize(INITVECTOR3);
-	SetPos(INITVECTOR3);
-	m_Grid = gridCenter;		// グリッド
 }
 
 //====================================================================
@@ -212,6 +211,9 @@ void CRailBlock::Draw(void)
 //====================================================================
 void CRailBlock::Move(D3DXVECTOR3* Pos)
 {
+	// グリッド情報を保存
+	m_OldGrid = m_Grid;
+
 	D3DXVECTOR3 TestPos = INITVECTOR3;
 
 	D3DXVECTOR3 SlopeMove = INITVECTOR3;
@@ -353,6 +355,12 @@ void CRailBlock::Move(D3DXVECTOR3* Pos)
 	//	}
 	//	Pos->z = GritPos.z;
 	//}
+
+	// グリッド情報を設定
+	m_Grid = CMapSystem::GetInstance()->CMapSystem::CalcGrid(*Pos);
+
+	// A*判定を設定
+	Coodinate();
 
 	DebugProc::Print(DebugProc::POINT_LEFT, "[レールブロック]位置 %f : %f : %f\n", Pos->x, Pos->y, Pos->z);
 	/*DebugProc::Print(DebugProc::POINT_LEFT, "[レールブロック]横番号 %d \n", GetWightNumber());
@@ -517,6 +525,29 @@ void CRailBlock::RailSet(int Max, int* nMove)
 	//	}
 	//	//=======================
 	//}
+}
+
+//==========================================
+//  A*ウェイトの変更処理
+//==========================================
+void CRailBlock::Coodinate()
+{
+	// 前回のグリッドと今回のグリッドが一致している場合関数を抜ける
+	if (m_Grid == m_OldGrid) { return; }
+
+	// 経路探索用の情報を取得
+	auto generator = AStar::Generator::GetInstance();
+	if (generator == nullptr)
+	{
+		assert(false);
+		generator = AStar::Generator::Create();
+	}
+
+	// 前回のグリッドを移動可能地点に設定
+	generator->removeCollision(m_OldGrid.ToAStar());
+
+	// 現在のグリッドを移動不可地点に設定
+	generator->addCollision(m_Grid.ToAStar());
 }
 
 //====================================================================
