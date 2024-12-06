@@ -66,12 +66,12 @@ public:
 	int GetInfoNumKey(int nMotion) { return m_aInfo[nMotion].NumKey; }
 	void SetInfoKeyFrame(int nFrame, int nMotion, int nKey) { m_aInfo[nMotion].aKeyInfo[nKey].nFrame = nFrame; }
 	int GetInfoKeyFrame(int nMotion, int nKey) { return m_aInfo[nMotion].aKeyInfo[nKey].nFrame; }
-	void SetInfoPartsPosX(D3DXVECTOR3 pos, int nMotion, int nKey, int nParts) { m_aInfo[nMotion].aKeyInfo[nKey].aKey[nParts].fPosX = pos.x; }
-	void SetInfoPartsPosY(D3DXVECTOR3 pos, int nMotion, int nKey, int nParts) { m_aInfo[nMotion].aKeyInfo[nKey].aKey[nParts].fPosY = pos.y; }
-	void SetInfoPartsPosZ(D3DXVECTOR3 pos, int nMotion, int nKey, int nParts) { m_aInfo[nMotion].aKeyInfo[nKey].aKey[nParts].fPosZ = pos.z; }
-	void SetInfoPartsRotX(D3DXVECTOR3 rot, int nMotion, int nKey, int nParts) { m_aInfo[nMotion].aKeyInfo[nKey].aKey[nParts].fRotX = rot.x; }
-	void SetInfoPartsRotY(D3DXVECTOR3 rot, int nMotion, int nKey, int nParts) { m_aInfo[nMotion].aKeyInfo[nKey].aKey[nParts].fRotY = rot.y; }
-	void SetInfoPartsRotZ(D3DXVECTOR3 rot, int nMotion, int nKey, int nParts) { m_aInfo[nMotion].aKeyInfo[nKey].aKey[nParts].fRotZ = rot.z; }
+	void SetInfoPartsPosX(float fPosX, int nMotion, int nKey, int nParts) { m_aInfo[nMotion].aKeyInfo[nKey].aKey[nParts].fPosX = fPosX; }
+	void SetInfoPartsPosY(float fPosY, int nMotion, int nKey, int nParts) { m_aInfo[nMotion].aKeyInfo[nKey].aKey[nParts].fPosY = fPosY; }
+	void SetInfoPartsPosZ(float fPosZ, int nMotion, int nKey, int nParts) { m_aInfo[nMotion].aKeyInfo[nKey].aKey[nParts].fPosZ = fPosZ; }
+	void SetInfoPartsRotX(float fRotX, int nMotion, int nKey, int nParts) { m_aInfo[nMotion].aKeyInfo[nKey].aKey[nParts].fRotX = fRotX; }
+	void SetInfoPartsRotY(float fRotY, int nMotion, int nKey, int nParts) { m_aInfo[nMotion].aKeyInfo[nKey].aKey[nParts].fRotY = fRotY; }
+	void SetInfoPartsRotZ(float fRotZ, int nMotion, int nKey, int nParts) { m_aInfo[nMotion].aKeyInfo[nKey].aKey[nParts].fRotZ = fRotZ; }
 
 	int GetFullFrame(int nIdx);
 
