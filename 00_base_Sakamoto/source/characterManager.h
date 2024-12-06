@@ -65,9 +65,9 @@ private:
 	// モーション情報
 	struct MotionInfo
 	{
-		bool bLoop;						// ループの有無
-		int nNumKey;					// キーの総数
-		KeyManager aKeyInfo[MAX_KEY];	// キー管理情報
+		bool bLoop;							// ループの有無
+		int nNumKey;						// キーの総数
+		KeyManager aKeyManager[MAX_KEY];	// キー管理情報
 	};
 
 	// モーション管理情報
@@ -90,7 +90,7 @@ private:
 	void SetMotionData(CObjectCharacter* pObjCharacter, int nNumCharacter);
 
 	bool LoadModel(const char* pFileName, int nNumCharacter);
-	bool LoadMotion(const char* pFileName, int nNumCharacter);
+	bool LoadMotion(const char* pFileName, int nNumModel, int nNumCharacter);
 
 	CharacterInfo m_aCharacterInfo[MAX_CHARACTER];
 	int m_nNumAll;						// キャラクターの使用数
