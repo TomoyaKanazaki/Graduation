@@ -147,7 +147,7 @@ AStar::Generator* AStar::Generator::Create()
 //===============================================================
 // 指定したスタートとゴールの間の経路を探索
 //===============================================================
-AStar::CoordinateList AStar::Generator::findPath(Vec2i source_, Vec2i target_)
+AStar::CoordinateList AStar::Generator::findPath(const Vec2i& source_, const Vec2i& target_)
 {
     Node *current = nullptr;
     NodeSet openSet;        // 探索対象のノード
@@ -229,7 +229,7 @@ AStar::CoordinateList AStar::Generator::findPath(Vec2i source_, Vec2i target_)
 //==========================================
 //  プレイヤーへの最短経路を求める
 //==========================================
-AStar::CoordinateList AStar::Generator::FindPlayer(Vec2i grid)
+AStar::CoordinateList AStar::Generator::FindPlayer(const Vec2i& grid)
 {
     // プレイヤーリストを取得
     if (CPlayer::GetList() == nullptr) { assert(false); }
@@ -269,6 +269,49 @@ AStar::CoordinateList AStar::Generator::FindPlayer(Vec2i grid)
     }
 
     return Min;
+}
+
+//==========================================
+//  指定距離内にプレイヤーが存在するかを返す
+//==========================================
+bool AStar::Generator::FindPlayer(CoordinateList& out, const Vec2i grid, const unsigned int nLimit)
+{
+    // プレイヤーリストを取得
+    if (CPlayer::GetList() == nullptr) { assert(false); }
+    std::list<CPlayer*> list = CPlayer::GetList()->GetList();    // リストを取得
+
+    // 最短経路の情報を保存する変数
+    std::vector<CoordinateList> root;
+
+    // 各プレイヤーに向けた最短経路を取得
+    for (CPlayer* player : list)
+    {
+        // プレイヤーの存在するグリッド番号を取得
+        CMapSystem::GRID playerGrid = player->GetGrid();
+
+        // 最短経路を取得
+        CoordinateList coordinate = findPath(playerGrid.ToAStar(), grid);
+
+        // 最短経路を記録する
+        root.push_back(coordinate);
+    }
+
+    // 複数存在した場合最も要素数の少ないものを採用する
+    CoordinateList Min = root.front();
+    for (CoordinateList temp : root)
+    {
+        // 要素数の比較
+        if (Min.size() > temp.size())
+        {
+            Min = temp;
+        }
+    }
+
+    // 最短距離に存在するプレイヤーまでの経路を設定
+    out = Min;
+
+    // 指定範囲内に存在していた場合trueを返す
+    return out.size() <= nLimit;
 }
 
 //===============================================================
