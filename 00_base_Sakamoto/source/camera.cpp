@@ -16,6 +16,7 @@
 #include "model.h"
 #include "Scene.h"
 #include "sound.h"
+#include "Devil.h"
 
 //==========================================
 //  定数定義
@@ -23,20 +24,24 @@
 namespace
 {
 	const float CAMERA_DISTANCE = 100.0f;							//視点と注視点の距離
-	const float CAMERA_DISTANCE_EVENT = 75.0f;						//イベント時の視点と注視点の距離
+	const float CAMERA_DISTANCE_EVENT = 350.0f;						//イベント時の視点と注視点の距離
+	const float CAMERA_HEIGHT_EVENT = 50.0f;						//イベント時の視点の高さ
+
 	const float MODEL_DISTANCE = 10.0f;								//モデルと注視点の距離
-	const float CAMERA_SPEED = 9.0f;									//カメラの移動スピード
+	const float CAMERA_SPEED = 9.0f;								//カメラの移動スピード
 	const float CAMERA_VR_SPEED = 0.015f;							//カメラの視点スピード
 	const float CAMERA_PAD_VR_SPEED = 0.015f;						//カメラのパッドの視点スピード
 	const float CAMERA_HOMING = 0.2f;								//カメラの追従スピード
 	const float POS_HOMING = 0.9f;									//位置への追従スピード
+
 	const D3DXVECTOR3 DOWNVIEW_POSV = D3DXVECTOR3(0.0f, 1700.0f, -1200.0f);	//見下ろしの視点
 	const D3DXVECTOR3 DOWNVIEW_POSR = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		//見下ろしの注視点
-	const D3DXVECTOR3 SIDEVIEW_POSV = D3DXVECTOR3(0.0f, 350.0f, -1000.0f);	//2Dの視点
+
+	const D3DXVECTOR3 SIDEVIEW_POSV = D3DXVECTOR3(0.0f, 350.0f, -100.0f);	//2Dの視点
 	const D3DXVECTOR3 SIDEVIEW_POSR = D3DXVECTOR3(0.0f, 300.0f, 0.0f);		//2Dの注視点
 
 	const float ULTIMATE_DISTANCE = 150.0f;							//術発動時の視点と注視点距離
-	const float ULTIMATE_DISTANCEu = 150.0f;							//術発動時の高さ
+	const float ULTIMATE_DISTANCEu = 150.0f;						//術発動時の高さ
 	const float ULTIMATE_ROT = 0.5f;								//術発動時の向き
 
 	const D3DXVECTOR3 TITLE_POS_V = D3DXVECTOR3(-1300.0f, 550.0f, 300.0f);	//タイトルカメラの位置(視点)
@@ -617,46 +622,39 @@ void CCamera::SideviewCamera(void)
 //====================================================================
 void CCamera::EventBossCamera(void)
 {
-	////ボスの取得
-	//CBoss* pBoss = CGame::GetBoss();
+	//ボスの取得
+	CDevil* pDevil = CDevil::GetListTop();
 
-	//m_posVDest.x = CGame::GetEventPos().x + sinf(m_rot.y) * MODEL_DISTANCE + sinf(m_rot.y) * -cosf(m_rot.x) * CAMERA_DISTANCE_EVENT;
-	//m_posVDest.z = CGame::GetEventPos().z + cosf(m_rot.y) * MODEL_DISTANCE + cosf(m_rot.y) * -cosf(m_rot.x) * CAMERA_DISTANCE_EVENT;
-	//m_posVDest.y = CGame::GetEventPos().y + sinf(-m_rot.x) * CAMERA_DISTANCE_EVENT + 50.0f;
+	m_posVDest.x = pDevil->GetPos().x + sinf(m_rot.y) * MODEL_DISTANCE + sinf(m_rot.y) * -cosf(m_rot.x) * CAMERA_DISTANCE_EVENT;
+	m_posVDest.z = pDevil->GetPos().z + cosf(m_rot.y) * MODEL_DISTANCE + cosf(m_rot.y) * -cosf(m_rot.x) * CAMERA_DISTANCE_EVENT;
+	m_posVDest.y = pDevil->GetPos().y + CAMERA_HEIGHT_EVENT + sinf(-m_rot.x) * CAMERA_DISTANCE_EVENT + 50.0f;
 
-	//m_posRDest.x = m_posVDest.x + sinf(m_rot.y) * cosf(m_rot.x) * CAMERA_DISTANCE_EVENT;
-	//m_posRDest.z = m_posVDest.z + cosf(m_rot.y) * cosf(m_rot.x) * CAMERA_DISTANCE_EVENT;
-	//m_posRDest.y = m_posVDest.y + sinf(m_rot.x) * CAMERA_DISTANCE_EVENT + 10.0f;
+	m_posRDest.x = m_posVDest.x + sinf(m_rot.y) * cosf(m_rot.x) * CAMERA_DISTANCE_EVENT;
+	m_posRDest.z = m_posVDest.z + cosf(m_rot.y) * cosf(m_rot.x) * CAMERA_DISTANCE_EVENT;
+	m_posRDest.y = m_posVDest.y + sinf(m_rot.x) * CAMERA_DISTANCE_EVENT + 10.0f;
 
-	//if (m_bBib == true)
-	//{
-	//	m_fBibPowor += 0.8f;
+	if (m_bBib == true)
+	{
+		m_fBibPowor += 0.8f;
 
-	//	//m_posR.y += (int)(sin(D3DX_PI * m_fBibPowor) * 10.0f);
+		m_posR.x += (m_posRDest.x - m_posR.x) * m_fHomingSpeed;
+		m_posR.y += (m_posRDest.y - m_posR.y) * m_fHomingSpeed * 5.0f;
+		m_posR.z += (m_posRDest.z - m_posR.z) * m_fHomingSpeed;
 
-	//	////視点の情報を出力する
-	//	//m_posV.x = m_posR.x + sinf(m_rot.y) * -cosf(m_rot.x) * m_CameraDistance;
-	//	//m_posV.y = m_posR.y + sinf(-m_rot.x) * m_CameraDistance + (int)(sin(D3DX_PI * m_fBibPowor) * 10.0f);
-	//	//m_posV.z = m_posR.z + cosf(m_rot.y) * -cosf(m_rot.x) * m_CameraDistance;
+		m_posV.x += (m_posVDest.x - m_posV.x) * m_fHomingSpeed * 5.0f + (int)(sin(D3DX_PI * m_fBibPowor) * 10.0f);
+		m_posV.y += (m_posVDest.y - m_posV.y) * m_fHomingSpeed * 5.0f + (int)(sin(D3DX_PI * m_fBibPowor) * 10.0f);
+		m_posV.z += (m_posVDest.z - m_posV.z) * m_fHomingSpeed * 5.0f + (int)(sin(D3DX_PI * m_fBibPowor) * 10.0f);
+	}
+	else
+	{
+		m_posR.x += (m_posRDest.x - m_posR.x) * m_fHomingSpeed;
+		m_posR.y += (m_posRDest.y - m_posR.y) * m_fHomingSpeed;
+		m_posR.z += (m_posRDest.z - m_posR.z) * m_fHomingSpeed;
 
-	//	m_posR.x += (m_posRDest.x - m_posR.x) * m_fHomingSpeed;
-	//	m_posR.y += (m_posRDest.y - m_posR.y) * m_fHomingSpeed * 5.0f;
-	//	m_posR.z += (m_posRDest.z - m_posR.z) * m_fHomingSpeed;
-
-	//	m_posV.x += (m_posVDest.x - m_posV.x) * m_fHomingSpeed * 5.0f + (int)(sin(D3DX_PI * m_fBibPowor) * 10.0f);
-	//	m_posV.y += (m_posVDest.y - m_posV.y) * m_fHomingSpeed * 5.0f + (int)(sin(D3DX_PI * m_fBibPowor) * 10.0f);
-	//	m_posV.z += (m_posVDest.z - m_posV.z) * m_fHomingSpeed * 5.0f + (int)(sin(D3DX_PI * m_fBibPowor) * 10.0f);
-	//}
-	//else
-	//{
-	//	m_posR.x += (m_posRDest.x - m_posR.x) * m_fHomingSpeed;
-	//	m_posR.y += (m_posRDest.y - m_posR.y) * m_fHomingSpeed;
-	//	m_posR.z += (m_posRDest.z - m_posR.z) * m_fHomingSpeed;
-
-	//	m_posV.x += (m_posVDest.x - m_posV.x) * m_fHomingSpeed;
-	//	m_posV.y += (m_posVDest.y - m_posV.y) * m_fHomingSpeed;
-	//	m_posV.z += (m_posVDest.z - m_posV.z) * m_fHomingSpeed;
-	//}
+		m_posV.x += (m_posVDest.x - m_posV.x) * m_fHomingSpeed;
+		m_posV.y += (m_posVDest.y - m_posV.y) * m_fHomingSpeed;
+		m_posV.z += (m_posVDest.z - m_posV.z) * m_fHomingSpeed;
+	}
 }
 
 //====================================================================
@@ -772,7 +770,7 @@ void CCamera::TitleCamera(void)
 }
 
 //====================================================================
-//モード切り替え時のシームレス(繋ぎ目のない)なカメラ
+//モード切り替え時のシームレス(繋ぎ目のない)カメラ
 //====================================================================
 void CCamera::SeamlessModeChangeCamera(void)
 {

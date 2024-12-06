@@ -64,6 +64,8 @@ public:
 
 	void SetModel(CModel* pModel, int nCnt);
 	CModel* GetModel(int nCnt);
+	CModel** GetModel(void);
+	void SetMotion(CMotion* pMotion);
 	CMotion* GetMotion(void);
 
 	void SetNumModel(int nNumModel) { m_nNumModel = nNumModel; }

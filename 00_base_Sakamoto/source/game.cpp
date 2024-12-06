@@ -25,6 +25,7 @@
 #include "mask.h"
 #include "signal.h"
 #include "pause.h"
+#include "EventMovie.h"
 
 #include "sound.h"
 #include "shadow.h"
@@ -55,6 +56,7 @@ CGame* CGame::m_pGame = nullptr;
 CGame::CGame()
 {
 	m_bGameEnd = false;
+	m_pEventMovie = nullptr;
 	m_bEvent = false;
 	m_bEventEnd = false;
 	m_bDevilHoleFinish = false;
@@ -150,7 +152,6 @@ HRESULT CGame::Init(void)
 	//デビルの生成
 	m_pDevil = CDevil::Create();
 	m_pDevil->SetPos(D3DXVECTOR3(0.0f, 100.0f, 500.0f));
-	m_pDevil->SetScrollType((CDevil::SCROLL_TYPE)(CManager::GetInstance()->GetScrollType()));
 
 	// マップの生成
 	CMapSystem::GetInstance()->Init();
@@ -181,6 +182,11 @@ HRESULT CGame::Init(void)
 	case 0:
 
 		//m_bEvent = true;
+
+		if (m_pEventMovie == nullptr)
+		{
+			m_pEventMovie = CEventMovie::Create();
+		}
 
 		// ソフトクリームの生成
 		CItem::Create(CItem::TYPE_SOFTCREAM, CMapSystem::GetInstance()->GetCenter());
@@ -217,6 +223,12 @@ void CGame::Uninit(void)
 		m_pPause->Uninit();
 		delete m_pPause;
 		m_pPause = nullptr;
+	}
+
+	if (m_pEventMovie != nullptr)
+	{
+		m_pEventMovie->Uninit();
+		m_pEventMovie = nullptr;
 	}
 
 	// プレイヤーの解放
@@ -311,7 +323,10 @@ void CGame::Update(void)
 
 	if (m_bEvent == true)
 	{
-
+		if (m_pEventMovie != nullptr)
+		{
+			m_pEventMovie->Update();
+		}
 	}
 
 	if (CManager::GetInstance()->GetFade()->GetFade() == CFade::FADE_NONE)
@@ -691,7 +706,7 @@ void CGame::LoadStageMapModel(const char* pFilename)
 //====================================================================
 void CGame::SetBgObjTest(void)
 {
-#if 0 // 酒井のデバッグ用（モデル読み込みクラスできるまで停止中）
+#if 1 // 酒井のデバッグ用（モデル読み込みクラスできるまで停止中）
 
 	// マップ移動装置
 	{

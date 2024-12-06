@@ -69,6 +69,10 @@ public:
 	void SetScrollType(SCROLL_TYPE Rot) { m_ScrollType = Rot; }
 	SCROLL_TYPE GetScrollType(void) { return m_ScrollType; }
 
+	// 静的メンバ関数
+	static CListManager<CMapMove>* GetList(void); // リスト取得
+	static CMapMove* GetListTop(void); // リスト取得
+
 private:
 
 	void StateManager(void);	//状態管理
@@ -78,6 +82,17 @@ private:
 	void CollisionOut();		//ステージ外にいるオブジェクトの処理
 
 	void ObjectScroll(D3DXVECTOR3 Move);	//オブジェクトのスクロール
+	//void CrossScroll(D3DXVECTOR3 Move, float GritSize);		// 十字架のスクロール
+	//void BowabowaScroll(D3DXVECTOR3 Move, float GritSize);	// ボワボワのスクロール
+	//void EnemyScroll(D3DXVECTOR3 Move, float GritSize);		// 敵のスクロール
+	//void RailBlockScroll(D3DXVECTOR3 Move, float GritSize);	// レールブロックのスクロール
+	//void RollRockScroll(D3DXVECTOR3 Move, float GritSize);	// 転がる岩のスクロール
+	//void PlayerScroll(D3DXVECTOR3 Move, float GritSize);	// プレイヤーのスクロール
+	//void FireScroll(D3DXVECTOR3 Move, float GritSize);	// ファイアボールのスクロール
+	//void TileScroll(D3DXVECTOR3 Move, float GritSize);	// 床のスクロール
+	//void WallScroll(D3DXVECTOR3 Move, float GritSize);	// 壁のスクロール
+	//void FriedEggScroll(D3DXVECTOR3 Move, float GritSize);	// 目玉焼きのスクロール
+
 	void CrossScroll(D3DXVECTOR3 Move, float GritSize);		// 十字架のスクロール
 	void BowabowaScroll(D3DXVECTOR3 Move, float GritSize);	// ボワボワのスクロール
 	void EnemyScroll(D3DXVECTOR3 Move, float GritSize);		// 敵のスクロール
@@ -88,6 +103,9 @@ private:
 	void TileScroll(D3DXVECTOR3 Move, float GritSize);	// 床のスクロール
 	void WallScroll(D3DXVECTOR3 Move, float GritSize);	// 壁のスクロール
 	void FriedEggScroll(D3DXVECTOR3 Move, float GritSize);	// 目玉焼きのスクロール
+
+	void FollowPos(D3DXVECTOR3 &Pos);
+	void SignalCreate(void);
 	void SignalManager(void);
 
 	void GritScroll(D3DXVECTOR3 Move);		//グリットのスクロール
@@ -103,6 +121,7 @@ private:
 	D3DXVECTOR3 m_MapDifference;	//マップを動かした時の差分
 	float m_fActionCount;			//行動のカウント
 	MOVE m_State;					//状態
+	MOVE m_SlopeOld;				//一個前の傾き状態
 	int m_nStateCount;				//状態管理用カウント
 	int m_nStateNum;				//状態カウント
 	bool m_bSlope;					//傾き状態かどうか
@@ -122,5 +141,10 @@ private:
 	SCROLL_TYPE m_ScrollType;		// スクロールの種類
 	int m_SlopeType;				// スロープの種類
 
+	// 静的メンバ変数
+	static CListManager<CMapMove>* m_pList; // オブジェクトリスト
+
+	// メンバ変数
+	CListManager<CMapMove>::AIterator m_iterator; // イテレーター
 };
 #endif

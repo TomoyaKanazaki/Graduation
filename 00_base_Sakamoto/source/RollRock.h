@@ -50,8 +50,10 @@ private:
 	void Move(void);
 	void CollisionWall(useful::COLLISION XYZ);		//壁との当たり判定
 	void CollisionOut();							//ステージ外との当たり判定
+	void Coodinate();
 
-	CMapSystem::GRID m_Grid;		//グリット番号
+	CMapSystem::GRID m_Grid;	//グリット番号
+	CMapSystem::GRID m_OldGrid;	//グリット番号
 	int m_nIdxXModel;				//Xモデルの番号
 	D3DXVECTOR3 m_CollisionPos;		//当たり判定用の座標
 	bool m_bCollision;				//当たり判定用の座標

@@ -298,17 +298,19 @@ void CObjectCharacter::ChangeMoveState(CMoveState* pMoveState)
 //====================================================================
 void CObjectCharacter::SetTxtCharacter(const char* pFilename)
 {
-	//strcpy(&m_aModelName[0], pFilename);
+	strcpy(&m_aModelName[0], pFilename);
 
-	//CCharacterManager* pCharacterManager = CManager::GetInstance()->GetCharacterManager();
+	CCharacterManager* pCharacterManager = CManager::GetInstance()->GetCharacterManager();
 
-	//if (pCharacterManager == nullptr)
-	//{
-	//	assert(("キャラクター管理クラスがない", false));
-	//	return;
-	//}
+	if (pCharacterManager == nullptr)
+	{
+		assert(("キャラクター管理クラスがない", false));
+		return;
+	}
 
-	//int nNum = pCharacterManager->Regist(this,pFilename);
+	int nNum = pCharacterManager->Regist(this,pFilename);
+
+#if 0 // 酒井のデバッグ用（モデル読み込みが正常かわかるまでコメントアウト）
 
 	strcpy(&m_aModelName[0], pFilename);
 
@@ -328,6 +330,9 @@ void CObjectCharacter::SetTxtCharacter(const char* pFilename)
 		m_pMotion->SetModel(&m_apModel[0], m_nNumModel);
 		m_pMotion->LoadData(pFilename);
 	}
+
+#endif
+
 }
 
 //====================================================================
@@ -359,6 +364,38 @@ CModel* CObjectCharacter::GetModel(int nCnt)
 	assert(("モデル取得失敗", false));
 
 	return nullptr;
+}
+
+//====================================================================
+// モデル取得処理
+//====================================================================
+CModel** CObjectCharacter::GetModel(void)
+{
+	if (m_apModel[0] != nullptr)
+	{
+		return &m_apModel[0];
+	}
+
+	assert(("モデル取得失敗", false));
+
+	return nullptr;
+}
+
+
+//====================================================================
+// モーション設定処理
+//====================================================================
+void CObjectCharacter::SetMotion(CMotion* pMotion)
+{
+	if (m_pMotion == nullptr)
+	{
+		m_pMotion = pMotion;
+	}
+	else
+	{
+		assert(("モーション上書き生成", false));
+		return;
+	}
 }
 
 //====================================================================
