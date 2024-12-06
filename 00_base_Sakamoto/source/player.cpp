@@ -38,6 +38,7 @@
 #include "wall.h"
 #include "objectBillboard.h"
 #include "move.h"
+#include "MapMove.h"
 
 #include "MyEffekseer.h"
 #include "footprint.h"
@@ -1544,7 +1545,7 @@ void CPlayer::PosUpdate(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D3DXVECTO
 		fSpeed = m_pSlow->GetValue();
 	}
 
-	CDevil* pDevil = CDevil::GetListTop();
+	CMapMove* pMapMove = CMapMove::GetListTop();
 
 	//Y軸の位置更新
 	posThis.y += m_move.y * CManager::GetInstance()->GetGameSpeed() * fSpeed;
@@ -1554,7 +1555,7 @@ void CPlayer::PosUpdate(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D3DXVECTO
 	CollisionDevilHole(posThis, posOldThis, sizeThis, useful::COLLISION_Y);
 
 	//X軸の位置更新
-	posThis.x += m_move.x * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeX(m_move.x);
+	posThis.x += m_move.x * CManager::GetInstance()->GetGameSpeed() * fSpeed * pMapMove->MoveSlopeX(m_move.x);
 
 	// 壁との当たり判定
 	CollisionWall(posThis, posOldThis, sizeThis, useful::COLLISION_X);
@@ -1563,7 +1564,7 @@ void CPlayer::PosUpdate(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D3DXVECTO
 	CollisionWaitRock(posThis, posOldThis, sizeThis, useful::COLLISION_X);
 
 	//Z軸の位置更新
-	posThis.z += m_move.z * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeZ(m_move.z);
+	posThis.z += m_move.z * CManager::GetInstance()->GetGameSpeed() * fSpeed * pMapMove->MoveSlopeZ(m_move.z);
 
 	// 壁との当たり判定
 	CollisionWall(posThis, posOldThis, sizeThis, useful::COLLISION_Z);

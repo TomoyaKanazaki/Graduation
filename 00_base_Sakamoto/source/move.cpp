@@ -12,6 +12,7 @@
 #include "player.h"
 #include "enemy.h"
 #include "devil.h"
+#include "MapMove.h"
 #include "DevilHole.h"
 
 #include "camera.h"
@@ -106,7 +107,7 @@ void CMoveState::Rot(CObjectCharacter* pCharacter, D3DXVECTOR3& rot)
 void CMoveState::UpdatePos(CObjectCharacter* pCharacter, D3DXVECTOR3& pos)
 {
 	// 変数宣言
-	CDevil* pDevil = CDevil::GetListTop();
+	CMapMove* pMapMove = CMapMove::GetListTop();
 	D3DXVECTOR3 move = pCharacter->GetMove();		// 移動量
 	D3DXVECTOR3 objMove = pCharacter->GetObjMove();
 
@@ -125,16 +126,16 @@ void CMoveState::UpdatePos(CObjectCharacter* pCharacter, D3DXVECTOR3& pos)
 	//CollisionDevilHole(useful::COLLISION_Y);
 
 	//X軸の位置更新
-	pos.x += move.x * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeX(move.x);
-	pos.x += objMove.x * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeX(move.x);
+	pos.x += move.x * CManager::GetInstance()->GetGameSpeed() * fSpeed * pMapMove->MoveSlopeX(move.x);
+	pos.x += objMove.x * CManager::GetInstance()->GetGameSpeed() * fSpeed * pMapMove->MoveSlopeX(move.x);
 
 	// 壁との当たり判定
 	//CollisionWall(pos, posOldMy, sizeMy, useful::COLLISION_X);
 	//CollisionDevilHole(useful::COLLISION_X);
 
 	//Z軸の位置更新
-	pos.z += move.z * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeZ(move.z);
-	pos.z += objMove.z * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeZ(move.z);
+	pos.z += move.z * CManager::GetInstance()->GetGameSpeed() * fSpeed * pMapMove->MoveSlopeZ(move.z);
+	pos.z += objMove.z * CManager::GetInstance()->GetGameSpeed() * fSpeed * pMapMove->MoveSlopeZ(move.z);
 
 	// 壁との当たり判定
 	//CollisionWall(pos, posOldMy, sizeMy, useful::COLLISION_Z);
