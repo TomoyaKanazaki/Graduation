@@ -26,8 +26,8 @@ public:
 	void Update(void);
 	void Draw(void);
 
-	void CollisionEnemy();
-	void CollisionWall();
+	bool CollisionEnemy();
+	bool CollisionWall();
 
 	void SetMove(D3DXVECTOR3 move) { m_move = move; }
 	D3DXVECTOR3 GetMove(void) { return m_move; }
