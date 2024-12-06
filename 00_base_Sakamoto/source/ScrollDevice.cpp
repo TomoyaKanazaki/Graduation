@@ -7,10 +7,6 @@
 #include "ScrollDevice.h"
 #include "renderer.h"
 #include "manager.h"
-#include "texture.h"
-#include "XModel.h"
-#include "player.h"
-#include "game.h"
 
 #include "objectcharacter.h"
 #include "model.h"
