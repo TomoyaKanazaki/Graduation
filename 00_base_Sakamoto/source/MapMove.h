@@ -1,62 +1,27 @@
 //============================================
 //
-//	デビルの処理(仮) [devil.h]
+//	マップの動き [MapMove.h]
 //	Author:sakamoto kai
 //
 //============================================
-#ifndef _DEVIL_H_
-#define _DEVIL_H_
+#ifndef _MAPMOVE_H_
+#define _MAPMOVE_H_
 
-#include "objectcharacter.h"
 #include "useful.h"
 #include "MapSystem.h"
 
 //前方宣言
-
 class CObject2D;
-class CObject3D;
-class CObjGauge2D;
-class CUltimate;
-class CSlowManager;
-class CObjectBillboard;
-class CNumber;
-class CScrollArrow;
-class CSignal;
-
-class CEnemy;
-class CBoss;
-class CPlayer;
 class CSignalManager;
+class CSignal;
+class CPlayer;
 
-//オブジェクトプレイヤークラス
-class CDevil : public CObjectCharacter
+//マップムーブクラス
+class CMapMove
 {
 public:
-	CDevil(int nPriority = 2);
-	~CDevil();
-
-	// モーション
-	enum ACTION_TYPE
-	{
-		ACTION_NEUTRAL = 0,			// 待機
-		ACTION_GOMI00,				// ゴミデータ00
-		ACTION_SIGNAL_DOWN,			// 傾き信号「下」
-		ACTION_SIGNAL_LEFT,			// 傾き信号「左」
-		ACTION_SIGNAL_RIGHT,		// 傾き信号「右」
-		ACTION_SIGNAL_UP,			// 傾き信号「上」
-		ACTION_RUN,					// 逃げる
-		ACTION_KING,				// 玉座
-		ACTION_MAX,					// 最大
-	};
-
-	enum SLOPE_TYPE
-	{
-		SLOPE_TYPE_FRONT = 0,
-		SLOPE_TYPE_BACK,
-		SLOPE_TYPE_RIGHT,
-		SLOPE_TYPE_LEFT,
-		SLOPE_TYPE_MAX,
-	};
+	CMapMove();
+	~CMapMove();
 
 	// モーション
 	enum SCROLL_TYPE
@@ -67,27 +32,33 @@ public:
 	};
 
 	//デビルの状態
-	enum STATE
+	enum MOVE
 	{
-		STATE_WAIT = 0,		//待機
-		STATE_SCROLL,		//スクロール状態
-		STATE_SLOPE,		//傾き状態
-		STATE_MAX,			//最大
+		MOVE_WAIT = 0,		//待機
+		MOVE_SCROLL_UP,		//スクロール[上]
+		MOVE_SCROLL_DOWN,	//スクロール[下]
+		MOVE_SCROLL_RIGHT,	//スクロール[右]
+		MOVE_SCROLL_LEFT,	//スクロール[左]
+		MOVE_SLOPE_UP,		//傾き状態[上]
+		MOVE_SLOPE_DOWN,	//傾き状態[下]
+		MOVE_SLOPE_RIGHT,	//傾き状態[右]
+		MOVE_SLOPE_LEFT,	//傾き状態[左]
+		MOVE_MAX,			//最大
 	};
 
-	static CDevil* Create();
-	HRESULT Init(void) override;
+	static CMapMove* Create();
+
+	HRESULT Init(void);
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);
 
-	//お引越し開始
 	float MoveSlopeX(float Move);		//傾き中の移動量変動
 	float MoveSlopeZ(float Move);		//傾き中の移動量変動
 
 	void SetMove(D3DXVECTOR3 move) { m_move = move; }
 	D3DXVECTOR3 GetMove(void) { return m_move; }
-	STATE GetState(void) { return m_State; }
+	MOVE GetState(void) { return m_State; }
 	void SetDevilPos(D3DXVECTOR3 size) { m_DevilPos = size; }
 	D3DXVECTOR3 GetDevilPos(void) { return m_DevilPos; }
 	void SetDifference(D3DXVECTOR3 size) { m_MapDifference = size; }
@@ -97,21 +68,9 @@ public:
 
 	void SetScrollType(SCROLL_TYPE Rot) { m_ScrollType = Rot; }
 	SCROLL_TYPE GetScrollType(void) { return m_ScrollType; }
-	//お引越し終了
-
-	void SetAction(ACTION_TYPE Action, float BlendTime);
-	ACTION_TYPE GetAction(void) { return m_Action; }
-
-	void SetModelDisp(bool Sst);
-
-	// 静的メンバ関数
-	static CListManager<CDevil>* GetList(void); // リスト取得
-	static CDevil* GetListTop(void); // リスト取得
 
 private:
-	void ActionState(void);		//モーションと状態の管理
 
-	//お引越し開始
 	void StateManager(void);	//状態管理
 	void Move(int Arroow);		//移動処理
 	void BackSlope(void);		//傾き処理
@@ -135,12 +94,7 @@ private:
 	void CollisionPressPlayer(CPlayer* pPlayer, D3DXVECTOR3 pos, D3DXVECTOR3 Size);	//プレイヤーが潰される時の処理
 
 	void DebugKey(void);		//デバッグキー
-	//お引越し終了
 
-	ACTION_TYPE m_Action;
-	ACTION_TYPE m_AtkAction;		//攻撃状態記録用変数
-
-	//お引越し開始
 	D3DXVECTOR3 m_move;				//移動量
 	D3DXVECTOR3 m_Objmove;			//オブジェクトから影響される移動量
 	D3DXVECTOR3 m_rotDest;			//向きの目的地
@@ -148,7 +102,7 @@ private:
 	D3DXVECTOR3 m_DevilPos;			//デビルパワーがマップのブロックにデビルスクロールする位置、テスト用
 	D3DXVECTOR3 m_MapDifference;	//マップを動かした時の差分
 	float m_fActionCount;			//行動のカウント
-	STATE m_State;					//状態
+	MOVE m_State;					//状態
 	int m_nStateCount;				//状態管理用カウント
 	int m_nStateNum;				//状態カウント
 	bool m_bSlope;					//傾き状態かどうか
@@ -160,22 +114,13 @@ private:
 
 	float m_CollisionRot;			//当たり判定用の向き
 
-	CSlowManager* m_pSlow;			// スロー
 	CSignalManager* m_pSignalManager;	// シグナルマネージャー
 	D3DXVECTOR3 m_DevilRot;			// デビルパワーによって傾く値
-	int m_DevilArrow;				// デビルパワーの方向
+	int m_DevilArrow;				// 方向[0:上][1:下][2:左][3:右]
 	int m_ScrollArrowOld;			// 過去のスクロールの方向
 	int m_SlopwArrowOld;			// 過去の傾きの方向
 	SCROLL_TYPE m_ScrollType;		// スクロールの種類
 	int m_SlopeType;				// スロープの種類
-	//お引越し終了
-
-	// 静的メンバ変数
-	static CListManager<CDevil>* m_pList; // オブジェクトリスト
-
-	// メンバ変数
-	CListManager<CDevil>::AIterator m_iterator; // イテレーター
 
 };
-
 #endif

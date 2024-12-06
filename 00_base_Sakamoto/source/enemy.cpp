@@ -248,7 +248,6 @@ void CEnemy::Update(void)
 	D3DXVECTOR3 posOldMy = GetPosOld();		// 前回の位置
 	D3DXVECTOR3 rotMy = GetRot();			// 向き
 	D3DXVECTOR3 sizeMy = GetSize();			// 大きさ
-	STATE state = GetState();				// 状態
 
 	// 過去の位置を記録
 	posOldMy = posMy;

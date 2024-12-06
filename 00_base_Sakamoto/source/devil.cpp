@@ -93,8 +93,6 @@ CDevil::CDevil(int nPriority) : CObjectCharacter(nPriority)
 	m_DevilArrow = 0;
 	m_ScrollArrowOld = 0;
 	m_SlopwArrowOld = 0;
-	m_ScrollArrow[0] = nullptr;
-	m_ScrollArrow[1] = nullptr;
 	m_ScrollType = SCROLL_TYPE_NORMAL;
 	m_pSignal[0] = nullptr;
 	m_pSignal[1] = nullptr;
@@ -291,6 +289,103 @@ void CDevil::Draw(void)
 {
 	// キャラクタークラスの描画（継承）
 	CObjectCharacter::Draw();
+}
+
+//====================================================================
+//モーションと状態の管理
+//====================================================================
+void CDevil::ActionState(void)
+{
+	// 上モーション
+	if (m_DevilArrow == 0)
+	{
+		if (m_Action != ACTION_SIGNAL_UP)
+		{
+			m_Action = ACTION_SIGNAL_UP;
+			m_nStateNum = ACTION_SIGNAL_UP;
+			GetMotion()->Set(ACTION_SIGNAL_UP, 5);
+		}
+	}
+	// 下モーション
+	else if (m_DevilArrow == 1)
+	{
+		if (m_Action != ACTION_SIGNAL_DOWN)
+		{
+			m_Action = ACTION_SIGNAL_DOWN;
+			m_nStateNum = ACTION_SIGNAL_DOWN;
+			GetMotion()->Set(ACTION_SIGNAL_DOWN, 5);
+		}
+	}
+	// 左モーション
+	else if (m_DevilArrow == 2)
+	{
+		if (m_Action != ACTION_SIGNAL_LEFT)
+		{
+			m_Action = ACTION_SIGNAL_LEFT;
+			m_nStateNum = ACTION_SIGNAL_LEFT;
+			GetMotion()->Set(ACTION_SIGNAL_LEFT, 5);
+		}
+	}
+	// 右モーション
+	else if (m_DevilArrow == 3)
+	{
+		if (m_Action != ACTION_SIGNAL_RIGHT)
+		{
+			m_Action = ACTION_SIGNAL_RIGHT;
+			m_nStateNum = ACTION_SIGNAL_RIGHT;
+			GetMotion()->Set(ACTION_SIGNAL_RIGHT, 5);
+		}
+	}
+	// ニュートラルモーション
+	else
+	{
+		if (m_Action != ACTION_NEUTRAL)
+		{
+			m_Action = ACTION_NEUTRAL;
+			GetMotion()->Set(ACTION_NEUTRAL, 5);
+		}
+	}
+}
+
+//====================================================================
+// モデルのモーション設定
+//====================================================================
+void CDevil::SetAction(ACTION_TYPE Action, float BlendTime)
+{
+	// モーションの取得処理
+	CMotion* pMotion = GetMotion();
+
+	if (pMotion == nullptr)
+	{
+		return;
+	}
+
+	if (m_Action != Action)
+	{
+		m_Action = Action;
+		pMotion->Set(Action, BlendTime);
+	}
+}
+
+//====================================================================
+// モデル表示の設定
+//====================================================================
+void CDevil::SetModelDisp(bool Sst)
+{
+	// モデル数を取得
+	int nNumModel = GetNumModel();
+
+	for (int nCnt = 0; nCnt < nNumModel; nCnt++)
+	{
+		// モデルの取得処理
+		CModel* pModel = GetModel(nCnt);
+
+		if (pModel != nullptr)
+		{
+			// 表示設定
+			pModel->SetDisp(Sst);
+		}
+	}
 }
 
 //====================================================================
@@ -775,62 +870,6 @@ void CDevil::CollisionOut()
 }
 
 //====================================================================
-//モーションと状態の管理
-//====================================================================
-void CDevil::ActionState(void)
-{
-	// 上モーション
-	if (m_DevilArrow == 0)
-	{
-		if (m_Action != ACTION_SIGNAL_UP)
-		{
-			m_Action = ACTION_SIGNAL_UP;
-			m_nStateNum = ACTION_SIGNAL_UP;
-			GetMotion()->Set(ACTION_SIGNAL_UP, 5);
-		}
-	}
-	// 下モーション
-	else if (m_DevilArrow == 1)
-	{
-		if (m_Action != ACTION_SIGNAL_DOWN)
-		{
-			m_Action = ACTION_SIGNAL_DOWN;
-			m_nStateNum = ACTION_SIGNAL_DOWN;
-			GetMotion()->Set(ACTION_SIGNAL_DOWN, 5);
-		}
-	}
-	// 左モーション
-	else if (m_DevilArrow == 2)
-	{
-		if (m_Action != ACTION_SIGNAL_LEFT)
-		{
-			m_Action = ACTION_SIGNAL_LEFT;
-			m_nStateNum = ACTION_SIGNAL_LEFT;
-			GetMotion()->Set(ACTION_SIGNAL_LEFT, 5);
-		}
-	}
-	// 右モーション
-	else if (m_DevilArrow == 3)
-	{
-		if (m_Action != ACTION_SIGNAL_RIGHT)
-		{
-			m_Action = ACTION_SIGNAL_RIGHT;
-			m_nStateNum = ACTION_SIGNAL_RIGHT;
-			GetMotion()->Set(ACTION_SIGNAL_RIGHT, 5);
-		}
-	}
-	// ニュートラルモーション
-	else
-	{
-		if (m_Action != ACTION_NEUTRAL)
-		{
-			m_Action = ACTION_NEUTRAL;
-			GetMotion()->Set(ACTION_NEUTRAL, 5);
-		}
-	}
-}
-
-//====================================================================
 //状態管理
 //====================================================================
 void CDevil::StateManager(void)
@@ -947,32 +986,6 @@ void CDevil::StateManager(void)
 				{
 					// 回転状態に変更
 					pScrollDevice->SetState(CScrollDevice::STATE_ROTATE);
-				}
-			}
-
-			for (int nCnt = 0; nCnt < 4; nCnt++)
-			{
-				if (m_ScrollArrow[nCnt] != nullptr)
-				{
-					switch (m_DevilArrow)
-					{
-					case 0:
-						m_ScrollArrow[nCnt]->SetState(CScrollArrow::Arrow::STATE_UP);
-
-						break;
-
-					case 1:
-						m_ScrollArrow[nCnt]->SetState(CScrollArrow::Arrow::STATE_DOWN);
-						break;
-
-					case 2:
-						m_ScrollArrow[nCnt]->SetState(CScrollArrow::Arrow::STATE_LEFT);
-						break;
-
-					case 3:
-						m_ScrollArrow[nCnt]->SetState(CScrollArrow::Arrow::STATE_RIGHT);
-						break;
-					}
 				}
 			}
 		}
@@ -1111,7 +1124,7 @@ void CDevil::DebugKey(void)
 
 	if (pInputKeyboard->GetPress(DIK_5))
 	{
-		CObjmeshField* pMapField = CGame::GetInstance()->GetMapField();
+		CObjmeshField* pMapField = CObjmeshField::GetListTop();
 		D3DXVECTOR3 MapRot = pMapField->GetRot();
 		MapRot = INITVECTOR3;
 		pMapField->SetRot(MapRot);
@@ -1155,47 +1168,6 @@ void CDevil::DebugKey(void)
 		Slope(3);
 	}
 #endif // !_DEBUG
-}
-
-//====================================================================
-// モデルのモーション設定
-//====================================================================
-void CDevil::SetAction(ACTION_TYPE Action, float BlendTime)
-{
-	// モーションの取得処理
-	CMotion* pMotion = GetMotion();
-
-	if (pMotion == nullptr)
-	{
-		return;
-	}
-
-	if (m_Action != Action)
-	{
-		m_Action = Action;
-		pMotion->Set(Action, BlendTime);
-	}
-}
-
-//====================================================================
-// モデル表示の設定
-//====================================================================
-void CDevil::SetModelDisp(bool Sst)
-{
-	// モデル数を取得
-	int nNumModel = GetNumModel();
-
-	for (int nCnt = 0; nCnt < nNumModel; nCnt++)
-	{
-		// モデルの取得処理
-		CModel* pModel = GetModel(nCnt);
-
-		if (pModel != nullptr)
-		{
-			// 表示設定
-			pModel->SetDisp(Sst);
-		}
-	}
 }
 
 //====================================================================

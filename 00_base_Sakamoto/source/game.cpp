@@ -181,7 +181,6 @@ HRESULT CGame::Init(void)
 	case 0:
 
 		//m_bEvent = true;
-		//CManager::GetInstance()->SetEvent();
 
 		// ソフトクリームの生成
 		CItem::Create(CItem::TYPE_SOFTCREAM, CMapSystem::GetInstance()->GetCenter());

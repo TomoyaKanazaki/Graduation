@@ -449,9 +449,9 @@ void CPlayer::Update(void)
 	SetSize(sizeThis);		// 大きさ
 
 	// エフェクトの操作
-	ControlEffect(m_pEffectEgg); // 卵のエフェクト
-	ControlEffect(m_pEffectSpeed); // 加減速のエフェクト
-	ControlEffect(m_pEffectItem); // アイテム所持エフェクト
+	ControlEffect(m_pEffectEgg);	// 卵のエフェクト
+	ControlEffect(m_pEffectSpeed);	// 加減速のエフェクト
+	ControlEffect(m_pEffectItem);	// アイテム所持エフェクト
 	if (m_pShadow != nullptr)
 	{
 		ControlEffect(m_pEffectGuide, &m_pShadow->GetPos()); // 復活位置のガイドエフェクト
