@@ -442,6 +442,7 @@ void CMapSystem::Load(const char* pFilename)
 								bGridSet = true;
 
 								// 経路探索用情報の設定
+								generator->addCollision(grid.ToAStar()); // 通過不可地点を追加
 							}
 							else if (str == "6")
 							{ // プレイヤー
@@ -478,6 +479,9 @@ void CMapSystem::Load(const char* pFilename)
 
 								// グリッド設定の判定
 								bGridSet = true;
+
+								// 経路探索用情報の設定
+								generator->addCollision(grid.ToAStar()); // 通過不可地点を追加
 							}
 							else
 							{ // ボワボワの生成
