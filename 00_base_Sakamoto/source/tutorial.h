@@ -135,5 +135,6 @@ private:
 	CObjmeshCylinder* m_pMeshCylinderSample;	//メッシュシリンダーのサンプル
 
 	CMask* m_pMask;	// 2Dマスク
+	CMask* m_pEnemyMask;
 };
 #endif

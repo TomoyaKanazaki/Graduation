@@ -80,6 +80,7 @@ CGame::CGame()
 	m_pCubeBlock = nullptr;
 	m_pDevil = nullptr;
 	m_pMask = nullptr;
+	m_pEnemyMask = nullptr;
 
 	m_bGameClear = false;
 	m_Wireframe = false;
@@ -132,7 +133,12 @@ HRESULT CGame::Init(void)
 
 	if (m_pMask == nullptr)
 	{// 2Dマスクの生成
-		m_pMask = CMask::Create();
+		m_pMask = CMask::Create(2, D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
+	}
+
+	if (m_pEnemyMask == nullptr)
+	{
+		m_pEnemyMask = CMask::Create(102, D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f));
 	}
 
 	//クリアフラグのデフォルトをオンにしておく
