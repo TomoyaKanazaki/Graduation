@@ -30,6 +30,7 @@ class CPlayer2D;
 class CGamePause;
 class CDevil;
 class CMask;
+class CEventMovie;
 
 class CAim;
 
@@ -94,6 +95,7 @@ private:
 	bool m_bGameClear;						//ゲームクリア状態かどうか
 
 	//イベント用変数
+	CEventMovie* m_pEventMovie;				//イベント演出
 	bool m_bEvent;							//イベント状態かどうか
 	bool m_bEventEnd;						//イベントが終わったかどうか
 

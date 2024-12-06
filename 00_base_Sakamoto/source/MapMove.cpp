@@ -737,10 +737,10 @@ void CMapMove::StateManager(void)
 						m_State = MOVE_SLOPE_DOWN;
 						break;
 					case 2:	   
-						m_State = MOVE_SLOPE_RIGHT;
+						m_State = MOVE_SLOPE_LEFT;
 						break;
 					case 3:	   
-						m_State = MOVE_SLOPE_LEFT;
+						m_State = MOVE_SLOPE_RIGHT;
 						break;
 					}
 

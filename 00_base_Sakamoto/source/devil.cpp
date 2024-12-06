@@ -139,28 +139,6 @@ HRESULT CDevil::Init(void)
 		m_pMapMove = CMapMove::Create();
 	}
 
-	//// 矢印生成
-	//if (m_pSignal[0] == nullptr)
-	//{
-	//	m_pSignal[0] = CSignal::Create(0);
-	//	m_pSignal[0]->SetPos(D3DXVECTOR3(-1000.0f,200.0f,500.0f));
-	//}
-	//if (m_pSignal[1] == nullptr)
-	//{
-	//	m_pSignal[1] = CSignal::Create(0);
-	//	m_pSignal[1]->SetPos(D3DXVECTOR3(1000.0f, 200.0f, 500.0f));
-	//}
-	//if (m_pSignal[2] == nullptr)
-	//{
-	//	m_pSignal[2] = CSignal::Create(0);
-	//	m_pSignal[2]->SetPos(D3DXVECTOR3(-1000.0f, 200.0f, -500.0f));
-	//}
-	//if (m_pSignal[3] == nullptr)
-	//{
-	//	m_pSignal[3] = CSignal::Create(0);
-	//	m_pSignal[3]->SetPos(D3DXVECTOR3(1000.0f, 200.0f, -500.0f));
-	//}
-
 	// スローの生成
 	m_pSlow = CSlowManager::Create(CSlowManager::CAMP_PLAYER, CSlowManager::TAG_PLAYER);
 
@@ -207,52 +185,33 @@ void CDevil::Uninit(void)
 //====================================================================
 void CDevil::Update(void)
 {
-#ifdef _DEBUG
-	//m_ScrollType = SCROLL_TYPE_MAX;
-#endif // _DEBUG
-
-	// 値を取得
-	D3DXVECTOR3 posMy = GetPos();			// 位置
-	D3DXVECTOR3 posOldMy = GetPosOld();		// 前回の位置
-	D3DXVECTOR3 rotMy = GetRot();			// 向き
-	D3DXVECTOR3 sizeMy = GetSize();			// 大きさ
-
-	// 過去の位置に代入
-	posOldMy = posMy;
-
-	if (m_pMapMove != nullptr)
+	if (CScene::GetMode() == CScene::MODE_GAME)
 	{
-		m_pMapMove->Update();
+		if (CGame::GetInstance()->GetEvent() == false &&
+			m_pMapMove != nullptr)
+		{
+			//マップの動き
+			m_pMapMove->Update();
+		}
 	}
-
-	//// 矢印の回転
-	//SignalManager();
-
-	////状態の管理
-	//StateManager();
-
-	////デバッグキーの処理と設定
-	//DebugKey();
-
-	////ステージ外にいるオブジェクトの処理
-	//CollisionOut();
 
 	// キャラクタークラスの更新（継承）
 	CObjectCharacter::Update();
 
-	D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
-
-	//モーションの管理
-	ActionState();
-
-	D3DXVECTOR3 InitPos = CMapSystem::GetInstance()->GetInitPos();
-	D3DXVECTOR3 MapPos = CMapSystem::GetInstance()->GetMapPos();
-
-	// 値更新
-	SetPos(posMy);			// 位置
-	SetPosOld(posOldMy);	// 前回の位置
-	SetRot(rotMy);			// 向き
-	SetSize(sizeMy);		// 大きさ
+	//イベントモーション
+	if (CScene::GetMode() == CScene::MODE_GAME)
+	{
+		if (CGame::GetInstance()->GetEvent() == false)
+		{
+			//モーションの管理
+			ActionState();
+		}
+	}
+	else
+	{
+		//モーションの管理
+		ActionState();
+	}
 }
 
 //====================================================================
@@ -269,53 +228,60 @@ void CDevil::Draw(void)
 //====================================================================
 void CDevil::ActionState(void)
 {
-	// 上モーション
-	if (m_DevilArrow == 0)
+	if (m_pMapMove != nullptr)
 	{
-		if (m_Action != ACTION_SIGNAL_UP)
+		// 上モーション
+		if (m_pMapMove->GetState() == CMapMove::MOVE_SCROLL_UP ||
+			m_pMapMove->GetState() == CMapMove::MOVE_SLOPE_UP)
 		{
-			m_Action = ACTION_SIGNAL_UP;
-			m_nStateNum = ACTION_SIGNAL_UP;
-			GetMotion()->Set(ACTION_SIGNAL_UP, 5);
+			if (m_Action != ACTION_SIGNAL_UP)
+			{
+				m_Action = ACTION_SIGNAL_UP;
+				m_nStateNum = ACTION_SIGNAL_UP;
+				GetMotion()->Set(ACTION_SIGNAL_UP, 5);
+			}
 		}
-	}
-	// 下モーション
-	else if (m_DevilArrow == 1)
-	{
-		if (m_Action != ACTION_SIGNAL_DOWN)
+		// 下モーション
+		else if (m_pMapMove->GetState() == CMapMove::MOVE_SCROLL_DOWN ||
+			m_pMapMove->GetState() == CMapMove::MOVE_SLOPE_DOWN)
 		{
-			m_Action = ACTION_SIGNAL_DOWN;
-			m_nStateNum = ACTION_SIGNAL_DOWN;
-			GetMotion()->Set(ACTION_SIGNAL_DOWN, 5);
+			if (m_Action != ACTION_SIGNAL_DOWN)
+			{
+				m_Action = ACTION_SIGNAL_DOWN;
+				m_nStateNum = ACTION_SIGNAL_DOWN;
+				GetMotion()->Set(ACTION_SIGNAL_DOWN, 5);
+			}
 		}
-	}
-	// 左モーション
-	else if (m_DevilArrow == 2)
-	{
-		if (m_Action != ACTION_SIGNAL_LEFT)
+		// 左モーション
+		else if (m_pMapMove->GetState() == CMapMove::MOVE_SCROLL_LEFT ||
+			m_pMapMove->GetState() == CMapMove::MOVE_SLOPE_LEFT)
 		{
-			m_Action = ACTION_SIGNAL_LEFT;
-			m_nStateNum = ACTION_SIGNAL_LEFT;
-			GetMotion()->Set(ACTION_SIGNAL_LEFT, 5);
+			if (m_Action != ACTION_SIGNAL_LEFT)
+			{
+				m_Action = ACTION_SIGNAL_LEFT;
+				m_nStateNum = ACTION_SIGNAL_LEFT;
+				GetMotion()->Set(ACTION_SIGNAL_LEFT, 5);
+			}
 		}
-	}
-	// 右モーション
-	else if (m_DevilArrow == 3)
-	{
-		if (m_Action != ACTION_SIGNAL_RIGHT)
+		// 右モーション
+		else if (m_pMapMove->GetState() == CMapMove::MOVE_SCROLL_RIGHT ||
+			m_pMapMove->GetState() == CMapMove::MOVE_SLOPE_RIGHT)
 		{
-			m_Action = ACTION_SIGNAL_RIGHT;
-			m_nStateNum = ACTION_SIGNAL_RIGHT;
-			GetMotion()->Set(ACTION_SIGNAL_RIGHT, 5);
+			if (m_Action != ACTION_SIGNAL_RIGHT)
+			{
+				m_Action = ACTION_SIGNAL_RIGHT;
+				m_nStateNum = ACTION_SIGNAL_RIGHT;
+				GetMotion()->Set(ACTION_SIGNAL_RIGHT, 5);
+			}
 		}
-	}
-	// ニュートラルモーション
-	else
-	{
-		if (m_Action != ACTION_NEUTRAL)
+		// ニュートラルモーション
+		else
 		{
-			m_Action = ACTION_NEUTRAL;
-			GetMotion()->Set(ACTION_NEUTRAL, 5);
+			if (m_Action != ACTION_NEUTRAL)
+			{
+				m_Action = ACTION_NEUTRAL;
+				GetMotion()->Set(ACTION_NEUTRAL, 5);
+			}
 		}
 	}
 }

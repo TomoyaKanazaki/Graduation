@@ -25,6 +25,7 @@
 #include "mask.h"
 #include "signal.h"
 #include "pause.h"
+#include "EventMovie.h"
 
 #include "sound.h"
 #include "shadow.h"
@@ -55,6 +56,7 @@ CGame* CGame::m_pGame = nullptr;
 CGame::CGame()
 {
 	m_bGameEnd = false;
+	m_pEventMovie = nullptr;
 	m_bEvent = false;
 	m_bEventEnd = false;
 	m_bDevilHoleFinish = false;
@@ -181,6 +183,11 @@ HRESULT CGame::Init(void)
 
 		//m_bEvent = true;
 
+		if (m_pEventMovie == nullptr)
+		{
+			m_pEventMovie = CEventMovie::Create();
+		}
+
 		// ソフトクリームの生成
 		CItem::Create(CItem::TYPE_SOFTCREAM, CMapSystem::GetInstance()->GetCenter());
 
@@ -216,6 +223,12 @@ void CGame::Uninit(void)
 		m_pPause->Uninit();
 		delete m_pPause;
 		m_pPause = nullptr;
+	}
+
+	if (m_pEventMovie != nullptr)
+	{
+		m_pEventMovie->Uninit();
+		m_pEventMovie = nullptr;
 	}
 
 	// プレイヤーの解放
@@ -310,7 +323,10 @@ void CGame::Update(void)
 
 	if (m_bEvent == true)
 	{
-
+		if (m_pEventMovie != nullptr)
+		{
+			m_pEventMovie->Update();
+		}
 	}
 
 	if (CManager::GetInstance()->GetFade()->GetFade() == CFade::FADE_NONE)
