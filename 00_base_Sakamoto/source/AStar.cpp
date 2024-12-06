@@ -245,7 +245,7 @@ AStar::CoordinateList AStar::Generator::FindPlayer(Vec2i grid)
         CMapSystem::GRID playerGrid = player->GetGrid();
 
         // Å’ZŒo˜H‚ğæ“¾
-        CoordinateList coordinate = findPath({ playerGrid.x, playerGrid.z }, { grid.x, grid.y });
+        CoordinateList coordinate = findPath(playerGrid.ToAStar(), grid);
 
         // Å’ZŒo˜H‚ğ‹L˜^‚·‚é
         root.push_back(coordinate);

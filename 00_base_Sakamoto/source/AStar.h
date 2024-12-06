@@ -66,7 +66,7 @@ namespace AStar
         void setDiagonalMovement(bool enable_);     // 斜め移動の許可を設定。trueだと8方向(斜め含む)に移動可能
         void setHeuristic(HeuristicFunction heuristic_);        // ヒューリスティック関数を設定
         CoordinateList findPath(Vec2i source_, Vec2i target_);  // 指定したスタート座標からゴール座標への最短経路を求める
-        CoordinateList FindPlayer(Vec2i grid);  // プレイヤーへの最短ルートを求める
+        CoordinateList FindPlayer(Vec2i grid);      // プレイヤーへの最短ルートを求める
         void addCollision(Vec2i coordinates_);      // 指定した座標に障害物を追加
         void removeCollision(Vec2i coordinates_);   // 指定した座標の障害物を削除
         void clearCollisions();     // すべての障害物を削除
