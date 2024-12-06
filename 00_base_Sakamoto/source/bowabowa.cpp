@@ -150,6 +150,9 @@ void CBowabowa::Move(D3DXVECTOR3& pos)
 
 	// 基準位置に移動量を加算する
 	pos.y = base.y + fScale;
+
+	// 親クラスの移動
+	CItem::Move(pos);
 }
 
 //==========================================
