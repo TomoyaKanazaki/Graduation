@@ -280,6 +280,12 @@
     <ClCompile Include="source\EventMovie.cpp">
       <Filter>ソース ファイル\03_Direction</Filter>
     </ClCompile>
+    <ClCompile Include="source\signalmanager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\MapMove.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\debugproc.h">
@@ -525,5 +531,7 @@
     <ClInclude Include="source\EventMovie.h">
       <Filter>ソース ファイル\03_Direction</Filter>
     </ClInclude>
+    <ClInclude Include="source\signalmanager.h" />
+    <ClInclude Include="source\MapMove.h" />
   </ItemGroup>
 </Project>
