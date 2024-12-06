@@ -70,6 +70,8 @@ namespace
 	const float EGG_COLOR_DEL_A = 0.01f;		//不透明度の減衰速度
 
 	const float SHADOW_SIZE = 50.0f;			// 丸影の大きさ
+
+	const D3DXVECTOR2 NUMBER_SIZE = { 280.0f , 170.0f };
 }
 
 //===========================================
@@ -353,6 +355,11 @@ void CPlayer::Update(void)
 				// 所持時間タイマーをリセット
 				m_fCrossTimer = 0.0f;
 
+				// エフェクトを生成
+				D3DXMATRIX mat = *GetUseMultiMatrix();
+				D3DXVECTOR3 ef = useful::CalcMatrix(posThis, rotThis, mat);
+				MyEffekseer::EffectCreate(CMyEffekseer::TYPE_CRASH_CROSS, false, ef, rotThis);
+
 				// アイテムを所持していない状態にする
 				SetItemType(TYPE_NONE);
 			}
@@ -511,8 +518,8 @@ void CPlayer::UI_Init(void)
 		if (m_pP_NumUI != nullptr)
 		{
 			m_pP_NumUI->SetPos(GetPos());
-			m_pP_NumUI->SetWidth(50.0f);
-			m_pP_NumUI->SetHeight(50.0f);
+			m_pP_NumUI->SetWidth(NUMBER_SIZE.x);
+			m_pP_NumUI->SetHeight(NUMBER_SIZE.y);
 			m_pP_NumUI->SetTexture("data\\TEXTURE\\UI\\1p.png");
 		}
 
@@ -538,8 +545,9 @@ void CPlayer::UI_Init(void)
 		if (m_pP_NumUI != nullptr)
 		{
 			m_pP_NumUI->SetPos(GetPos());
-			m_pP_NumUI->SetWidth(50.0f);
-			m_pP_NumUI->SetHeight(50.0f);
+			m_pP_NumUI->SetPos(GetPos());
+			m_pP_NumUI->SetWidth(NUMBER_SIZE.x);
+			m_pP_NumUI->SetHeight(NUMBER_SIZE.y);
 			m_pP_NumUI->SetTexture("data\\TEXTURE\\UI\\2p.png");
 		}
 

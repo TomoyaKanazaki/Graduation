@@ -78,11 +78,7 @@ private:
 	void CollisionOut(D3DXVECTOR3& posMy);				//ステージ外との当たり判定
 
 	virtual void Death(void);							// 死亡処理
-	void MoveSelect(void);								// 移動方向の選択
-	void SearchWall(D3DXVECTOR3& posMy);				// 壁のサーチ判定
 	void Effect(); // エフェクトを生成
-
-	CMapSystem::GRID m_SelectGrid;	//方向転換を行った時のグリッド番号
 
 	int m_nActionCount;			//行動のカウント
 	ENEMY_TYPE m_EnemyType;		//敵の種類
