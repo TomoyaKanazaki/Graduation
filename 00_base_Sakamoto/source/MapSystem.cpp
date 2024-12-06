@@ -298,7 +298,6 @@ void CMapSystem::Load(const char* pFilename)
 	D3DXVECTOR2 charOffset = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// グリッドのオフセット
 	D3DXVECTOR3 size = D3DXVECTOR3(fMapSystemGritSize, 0.0f, fMapSystemGritSize);		// グリッドサイズ
 	GRID MaxGrid;		// グリッドの最大数
-	int nNumPlayer = 0;	// プレイヤーの数
 
 	// グリッド設定の判定
 	bool bGridSet = false;
@@ -443,6 +442,7 @@ void CMapSystem::Load(const char* pFilename)
 								bGridSet = true;
 
 								// 経路探索用情報の設定
+								generator->addCollision(grid.ToAStar()); // 通過不可地点を追加
 							}
 							else if (str == "6")
 							{ // プレイヤー
@@ -476,6 +476,12 @@ void CMapSystem::Load(const char* pFilename)
 
 								// 転がる岩生成
 								CRollRock::Create(grid);
+
+								// グリッド設定の判定
+								bGridSet = true;
+
+								// 経路探索用情報の設定
+								generator->addCollision(grid.ToAStar()); // 通過不可地点を追加
 							}
 							else
 							{ // ボワボワの生成

@@ -53,10 +53,12 @@ private:
 	void RailCheck();
 	void RailAddWrite();
 	void RailSet(int Max, int* nMove);
+	void Coodinate();
 
 	//CMapSystem::GRID m_StartGrid;	//開始時のグリット番号
 
 	CMapSystem::GRID m_Grid;	//グリット番号
+	CMapSystem::GRID m_OldGrid;	//グリット番号
 
 	bool bMoveOK[4];
 	int m_nMax;

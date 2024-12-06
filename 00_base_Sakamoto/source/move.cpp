@@ -454,26 +454,37 @@ void CStateRandom::SearchWall(CObjectCharacter* pCharacter, D3DXVECTOR3& pos)
 	CMapSystem::GRID grid = pCharacter->GetGrid();
 	CObjectCharacter::PROGGRESS progress = pCharacter->GetProgress();	// 移動の進行許可状況
 
-	bool OKR = true;	//右
+	/* 配列にする */
+	/* proggressを使う */bool OKR = true;	//右
 	bool OKL = true;	//左
 	bool OKU = true;	//上
 	bool OKD = true;	//下
 
-	CMapSystem* pMapSystem = CMapSystem::GetInstance();
-	int nMapWightMax = pMapSystem->GetWightMax();
-	int nMapHeightMax = pMapSystem->GetHeightMax();
-	D3DXVECTOR3 MapSystemPos = pMapSystem->GetMapPos();
+	CMapSystem* pMapSystem = CMapSystem::GetInstance(); // マップシステムのインスタンスを取得
+	/* GRID 構造体にする*/
+	int nMapWightMax = pMapSystem->GetWightMax(); // マップの横幅
+	int nMapHeightMax = pMapSystem->GetHeightMax(); // マップの立幅
+	D3DXVECTOR3 MapSystemPos = pMapSystem->GetMapPos(); // スクロールでずれてる幅
 
+	/* 配列にする */
+	/* 自身の隣接４マスのグリッド */
 	int nRNumber = grid.x + 1;
 	int nLNumber = grid.x - 1;
 	int nUNumber = grid.z - 1;
 	int nDNumber = grid.z + 1;
 
+	/*
+	* useful::RangeNumber(int , int , int);
+	* 第三引数が第一、第二引数の範囲内に存在しない場合に丸め込みを行う関数
+	* 第一引数より大きければ第一引数の値が
+	* 第二引数より小さければ第二引数の値が返ってくる
+	*/
 	nRNumber = useful::RangeNumber(nMapWightMax, 0, nRNumber);
 	nLNumber = useful::RangeNumber(nMapWightMax, 0, nLNumber);
 	nUNumber = useful::RangeNumber(nMapHeightMax, 0, nUNumber);
 	nDNumber = useful::RangeNumber(nMapHeightMax, 0, nDNumber);
 
+	// 隣接４マスが移動可能か判断する
 	OKR = !pMapSystem->GetGritBool(nRNumber, grid.z);
 	OKL = !pMapSystem->GetGritBool(nLNumber, grid.z);
 	OKU = !pMapSystem->GetGritBool(grid.x, nUNumber);
@@ -485,11 +496,16 @@ void CStateRandom::SearchWall(CObjectCharacter* pCharacter, D3DXVECTOR3& pos)
 
 	DebugProc::Print(DebugProc::POINT_LEFT, "敵の位置 %f %f %f\n", MyGritPos.x, MyGritPos.y, MyGritPos.z);
 
-	if ((pos.x <= MyGritPos.x + ((MapGritSize * 0.5f) - GRIT_OK) &&
+	// 自身の座標とグリッドの中心が許容範囲よりも小さい場合
+	if (
+		(pos.x <= MyGritPos.x + ((MapGritSize * 0.5f) - GRIT_OK) && // 自身の座標 <= 自身が存在しているグリッドの中心 + グリッドサイズ * 0.5f - 許容範囲
 		pos.x >= MyGritPos.x - ((MapGritSize * 0.5f) - GRIT_OK) &&
+
 		pos.z <= MyGritPos.z + ((MapGritSize * 0.5f) - GRIT_OK) &&
 		pos.z >= MyGritPos.z - ((MapGritSize * 0.5f) - GRIT_OK)) &&
-		(grid.x != m_SelectGrid.x || grid.z != m_SelectGrid.z))
+
+		(grid.x != m_SelectGrid.x || grid.z != m_SelectGrid.z) // 多分いらん
+		)
 	{// グリットの中心位置に立っているなら操作を受け付ける
 
 		if (!progress.bOKR && OKR)
@@ -509,6 +525,7 @@ void CStateRandom::SearchWall(CObjectCharacter* pCharacter, D3DXVECTOR3& pos)
 			pCharacter->SetState(CObjectCharacter::STATE_WAIT);
 		}
 
+		// いらない
 		progress.bOKR = OKR;	//右
 		progress.bOKL = OKL;	//左
 		progress.bOKU = OKU;	//上
@@ -516,6 +533,7 @@ void CStateRandom::SearchWall(CObjectCharacter* pCharacter, D3DXVECTOR3& pos)
 	}
 	else
 	{
+		// いらない
 		progress.bOKR = false;	//右
 		progress.bOKL = false;	//左
 		progress.bOKU = false;	//上

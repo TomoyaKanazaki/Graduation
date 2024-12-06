@@ -181,18 +181,13 @@ void CFire::Update(void)
 		m_pEffect->SetPosition(ef);
 	}
 
-	// 敵との判定
-	CollisionEnemy();
-
-	// 壁の判定
-	CollisionWall();
-
-	// 減算
-	m_nLife--;
-
-	if (m_nLife < 0)
-	{// 体力0以下になった
-		//破棄する
+	// 消滅判定
+	if (
+		CollisionEnemy() ||
+		CollisionWall() ||
+		m_nLife < 0
+		)
+	{
 		Uninit();
 	}
 }
@@ -208,10 +203,10 @@ void CFire::Draw(void)
 //====================================================================
 // 敵との判定
 //====================================================================
-void CFire::CollisionEnemy()
+bool CFire::CollisionEnemy()
 {
-	// キューブブロックのリスト構造が無ければ抜ける
-	if (CEnemy::GetList() == nullptr) { return; }
+	// エネミーリスト構造が無ければ抜ける
+	if (CEnemy::GetList() == nullptr) { return false; }
 	std::list<CEnemy*> list = CEnemy::GetList()->GetList();    // リストを取得
 
 	// キューブブロックリストの中身を確認する
@@ -239,21 +234,20 @@ void CFire::CollisionEnemy()
 				MyEffekseer::EffectCreate(CMyEffekseer::TYPE_HIT, false, useful::CalcMatrix(pos, rot, *GetUseMultiMatrix()), rot);
 			}
 
-			// 削除
-			Uninit();
-
-			return;
+			return true;
 		}
 	}
+
+	return false;
 }
 
 //==========================================
 //  壁の判定
 //==========================================
-void CFire::CollisionWall()
+bool CFire::CollisionWall()
 {
 	// 自身のグリッド座標が移動可能な場合関数を抜ける
-	if (!CMapSystem::GetInstance()->GetGritBool(m_Grid)) { return; }
+	if (!CMapSystem::GetInstance()->GetGritBool(m_Grid)) { return false; }
 
 	// 自身の情報を取得
 	D3DXVECTOR3 pos = GetPos();
@@ -262,8 +256,7 @@ void CFire::CollisionWall()
 	// エフェクトを生成
 	MyEffekseer::EffectCreate(CMyEffekseer::TYPE_HITTHEWALL, false, useful::CalcMatrix(pos, rot, *GetUseMultiMatrix()), rot, D3DXVECTOR3(25.0f, 25.0f, 25.0f));
 
-	// 自身を削除
-	Uninit();
+	return true;
 }
 
 //==========================================

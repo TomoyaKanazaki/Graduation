@@ -61,7 +61,9 @@ m_pEffect(nullptr)
 //====================================================================
 //コンストラクタ(オーバーロード)
 //====================================================================
-CRollRock::CRollRock(int nPriority, CMapSystem::GRID gridCenter) : CObjectX(nPriority)
+CRollRock::CRollRock(int nPriority, CMapSystem::GRID gridCenter) : CObjectX(nPriority),
+m_Grid(gridCenter),
+m_OldGrid(gridCenter)
 {
 	SetSize(SAMPLE_SIZE);
 	SetPos(INITVECTOR3);
@@ -75,7 +77,6 @@ CRollRock::CRollRock(int nPriority, CMapSystem::GRID gridCenter) : CObjectX(nPri
 	m_posOld = INITVECTOR3;
 	m_move = INITVECTOR3;
 	m_rot = INITVECTOR3;
-	m_Grid = gridCenter;		// グリッド
 
 	m_OKL = false;
 	m_OKR = false;
@@ -233,6 +234,7 @@ void CRollRock::GameUpdate(void)
 {
 	//更新前の位置を過去の位置とする
 	m_posOld = m_pos;
+	m_OldGrid = m_Grid;
 	CObjectX::SetPosOld(m_pos);
 
 	Move();
@@ -269,7 +271,11 @@ void CRollRock::GameUpdate(void)
 	//	m_Grid = Grid;
 	//}
 
-	m_Grid = CMapSystem::GetInstance()->CalcGrid(m_pos);
+	// グリッド情報を設定
+	m_Grid = CMapSystem::GetInstance()->CMapSystem::CalcGrid(m_pos);
+
+	// A*判定を設定
+	Coodinate();
 
 	//位置更新
 	CObjectX::SetPos(m_pos);
@@ -532,6 +538,29 @@ void CRollRock::CollisionOut()
 			m_pos.z = Pos.z + MapSize.z + GritSize;
 		}
 	}
+}
+
+//==========================================
+//  A*ウェイトの変更処理
+//==========================================
+void CRollRock::Coodinate()
+{
+	// 前回のグリッドと今回のグリッドが一致している場合関数を抜ける
+	if (m_Grid == m_OldGrid) { return; }
+
+	// 経路探索用の情報を取得
+	auto generator = AStar::Generator::GetInstance();
+	if (generator == nullptr)
+	{
+		assert(false);
+		generator = AStar::Generator::Create();
+	}
+
+	// 前回のグリッドを移動可能地点に設定
+	generator->removeCollision(m_OldGrid.ToAStar());
+
+	// 現在のグリッドを移動不可地点に設定
+	generator->addCollision(m_Grid.ToAStar());
 }
 
 //====================================================================
