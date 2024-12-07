@@ -5,533 +5,543 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="ソース ファイル\00_System">
-      <UniqueIdentifier>{e5cf948b-ffa7-4026-82c9-c36bc4e1b053}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\01_Mode">
-      <UniqueIdentifier>{3637c6ca-f6fa-4c60-a9c6-8317476ee47e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\02_Object">
+    <Filter Include="ソース ファイル\Object">
       <UniqueIdentifier>{d1ffe7ec-b133-4789-902a-b37e22591c81}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\03_Direction">
-      <UniqueIdentifier>{2c170ff7-1664-4e8c-a9d6-2d7b42b5f0c9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\05_UI_2D">
-      <UniqueIdentifier>{e61929ba-15f9-448a-af70-f63266035893}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\07_Map">
-      <UniqueIdentifier>{68bbe91a-253a-4dca-badb-6f8ea7478361}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\08_player">
-      <UniqueIdentifier>{28d7f93e-b96e-4fe6-b540-eacce3e9398c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\09_enemy">
-      <UniqueIdentifier>{0005a56c-9488-4d8e-a9d2-cb05dd0f62e5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\10_item">
-      <UniqueIdentifier>{f013bb6e-aa95-4944-b258-fc2e3387c870}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\11_library">
+    <Filter Include="ソース ファイル\Library">
       <UniqueIdentifier>{d4c6cca2-cae9-4185-be80-e05a03b5868b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\06_UI_3D">
-      <UniqueIdentifier>{2827c4be-b2b3-44d2-bfb3-b65c8b2d90d1}</UniqueIdentifier>
+    <Filter Include="ソース ファイル\Character">
+      <UniqueIdentifier>{198b5405-4d4d-45e6-90dc-ab1c37631435}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Character\Enemy">
+      <UniqueIdentifier>{8957a4c0-4553-4e04-b523-5b7756288159}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Character\Player">
+      <UniqueIdentifier>{b637ce51-20f3-4c1f-bb6e-2722031693c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\System">
+      <UniqueIdentifier>{3edad014-1d96-4e3a-8ce3-7e656b6faaac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Item">
+      <UniqueIdentifier>{d5a11520-8191-4afb-8669-8766d18ba5ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Map">
+      <UniqueIdentifier>{129c2c67-b365-4450-9de6-024b32c163bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Map\System">
+      <UniqueIdentifier>{53cc7c3d-5193-4d2d-b90a-390839c5af5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Map\Object">
+      <UniqueIdentifier>{24f8b083-2d98-4c6e-bb36-f7ba3ccd7c28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scene">
+      <UniqueIdentifier>{c2f177b6-6128-41a7-9da1-272095a0828f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Ui">
+      <UniqueIdentifier>{519720da-03c7-4166-93dd-3cb822261ef9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scene\Event">
+      <UniqueIdentifier>{4559d834-7ef3-4b5e-b8a6-1f2921f59eee}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\object.cpp">
-      <Filter>ソース ファイル\02_Object</Filter>
+      <Filter>ソース ファイル\Object</Filter>
     </ClCompile>
     <ClCompile Include="source\object2D.cpp">
-      <Filter>ソース ファイル\02_Object</Filter>
+      <Filter>ソース ファイル\Object</Filter>
     </ClCompile>
     <ClCompile Include="source\object3D.cpp">
-      <Filter>ソース ファイル\02_Object</Filter>
+      <Filter>ソース ファイル\Object</Filter>
     </ClCompile>
     <ClCompile Include="source\objectBillboard.cpp">
-      <Filter>ソース ファイル\02_Object</Filter>
+      <Filter>ソース ファイル\Object</Filter>
     </ClCompile>
     <ClCompile Include="source\objectX.cpp">
-      <Filter>ソース ファイル\02_Object</Filter>
+      <Filter>ソース ファイル\Object</Filter>
     </ClCompile>
     <ClCompile Include="source\objmeshCube.cpp">
-      <Filter>ソース ファイル\02_Object</Filter>
+      <Filter>ソース ファイル\Object</Filter>
     </ClCompile>
     <ClCompile Include="source\objmeshCylinder.cpp">
-      <Filter>ソース ファイル\02_Object</Filter>
+      <Filter>ソース ファイル\Object</Filter>
     </ClCompile>
     <ClCompile Include="source\objmeshDome.cpp">
-      <Filter>ソース ファイル\02_Object</Filter>
+      <Filter>ソース ファイル\Object</Filter>
     </ClCompile>
     <ClCompile Include="source\objmeshField.cpp">
-      <Filter>ソース ファイル\02_Object</Filter>
+      <Filter>ソース ファイル\Object</Filter>
     </ClCompile>
     <ClCompile Include="source\objmeshRing.cpp">
-      <Filter>ソース ファイル\02_Object</Filter>
+      <Filter>ソース ファイル\Object</Filter>
     </ClCompile>
     <ClCompile Include="source\objmeshWall.cpp">
-      <Filter>ソース ファイル\02_Object</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Xmodel.cpp">
-      <Filter>ソース ファイル\00_System</Filter>
-    </ClCompile>
-    <ClCompile Include="source\useful.cpp">
-      <Filter>ソース ファイル\00_System</Filter>
-    </ClCompile>
-    <ClCompile Include="source\texture.cpp">
-      <Filter>ソース ファイル\00_System</Filter>
-    </ClCompile>
-    <ClCompile Include="source\main.cpp">
-      <Filter>ソース ファイル\00_System</Filter>
-    </ClCompile>
-    <ClCompile Include="source\game.cpp">
-      <Filter>ソース ファイル\01_Mode</Filter>
-    </ClCompile>
-    <ClCompile Include="source\result.cpp">
-      <Filter>ソース ファイル\01_Mode</Filter>
-    </ClCompile>
-    <ClCompile Include="source\title.cpp">
-      <Filter>ソース ファイル\01_Mode</Filter>
-    </ClCompile>
-    <ClCompile Include="source\tutorial.cpp">
-      <Filter>ソース ファイル\01_Mode</Filter>
-    </ClCompile>
-    <ClCompile Include="source\precompile.cpp">
-      <Filter>ソース ファイル\00_System</Filter>
-    </ClCompile>
-    <ClCompile Include="source\debugproc.cpp">
-      <Filter>ソース ファイル\00_System</Filter>
-    </ClCompile>
-    <ClCompile Include="source\camera.cpp">
-      <Filter>ソース ファイル\03_Direction</Filter>
-    </ClCompile>
-    <ClCompile Include="source\fade.cpp">
-      <Filter>ソース ファイル\03_Direction</Filter>
-    </ClCompile>
-    <ClCompile Include="source\light.cpp">
-      <Filter>ソース ファイル\03_Direction</Filter>
-    </ClCompile>
-    <ClCompile Include="source\sound.cpp">
-      <Filter>ソース ファイル\03_Direction</Filter>
-    </ClCompile>
-    <ClCompile Include="source\renderer.cpp">
-      <Filter>ソース ファイル\00_System</Filter>
-    </ClCompile>
-    <ClCompile Include="source\2DUI.cpp">
-      <Filter>ソース ファイル\05_UI_2D</Filter>
-    </ClCompile>
-    <ClCompile Include="source\input.cpp">
-      <Filter>ソース ファイル\00_System</Filter>
-    </ClCompile>
-    <ClCompile Include="source\ranking.cpp">
-      <Filter>ソース ファイル\05_UI_2D</Filter>
-    </ClCompile>
-    <ClCompile Include="source\score.cpp">
-      <Filter>ソース ファイル\05_UI_2D</Filter>
-    </ClCompile>
-    <ClCompile Include="source\number.cpp">
-      <Filter>ソース ファイル\05_UI_2D</Filter>
-    </ClCompile>
-    <ClCompile Include="source\timer.cpp">
-      <Filter>ソース ファイル\05_UI_2D</Filter>
-    </ClCompile>
-    <ClCompile Include="source\CubeBlock.cpp">
-      <Filter>ソース ファイル\07_Map</Filter>
-    </ClCompile>
-    <ClCompile Include="source\enemy.cpp">
-      <Filter>ソース ファイル\09_enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="source\enemyMedaman.cpp">
-      <Filter>ソース ファイル\09_enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="source\model.cpp">
-      <Filter>ソース ファイル\03_Direction</Filter>
-    </ClCompile>
-    <ClCompile Include="source\motion.cpp">
-      <Filter>ソース ファイル\03_Direction</Filter>
-    </ClCompile>
-    <ClCompile Include="source\MapModel.cpp">
-      <Filter>ソース ファイル\07_Map</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Pause.cpp">
-      <Filter>ソース ファイル\01_Mode</Filter>
-    </ClCompile>
-    <ClCompile Include="source\player.cpp">
-      <Filter>ソース ファイル\08_player</Filter>
-    </ClCompile>
-    <ClCompile Include="source\slowManager.cpp">
-      <Filter>ソース ファイル\00_System</Filter>
-    </ClCompile>
-    <ClCompile Include="source\devil.cpp">
-      <Filter>ソース ファイル\09_enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="source\LifeUi.cpp">
-      <Filter>ソース ファイル\05_UI_2D</Filter>
-    </ClCompile>
-    <ClCompile Include="source\MapSystem.cpp">
-      <Filter>ソース ファイル\07_Map</Filter>
-    </ClCompile>
-    <ClCompile Include="source\fire.cpp">
-      <Filter>ソース ファイル\08_player</Filter>
-    </ClCompile>
-    <ClCompile Include="source\item.cpp">
-      <Filter>ソース ファイル\10_item</Filter>
-    </ClCompile>
-    <ClCompile Include="source\bowabowa.cpp">
-      <Filter>ソース ファイル\10_item</Filter>
-    </ClCompile>
-    <ClCompile Include="source\cross.cpp">
-      <Filter>ソース ファイル\10_item</Filter>
-    </ClCompile>
-    <ClCompile Include="source\bible.cpp">
-      <Filter>ソース ファイル\10_item</Filter>
-    </ClCompile>
-    <ClCompile Include="source\listManager.cpp">
-      <Filter>ソース ファイル\00_System</Filter>
-    </ClCompile>
-    <ClCompile Include="source\DevilHole.cpp">
-      <Filter>ソース ファイル\07_Map</Filter>
-    </ClCompile>
-    <ClCompile Include="source\enemyBonbon.cpp">
-      <Filter>ソース ファイル\09_enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="source\enemyYoungDevil.cpp">
-      <Filter>ソース ファイル\09_enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Rail.cpp">
-      <Filter>ソース ファイル\07_Map</Filter>
-    </ClCompile>
-    <ClCompile Include="source\RailBlock.cpp">
-      <Filter>ソース ファイル\07_Map</Filter>
-    </ClCompile>
-    <ClCompile Include="source\scrollarrow.cpp">
-      <Filter>ソース ファイル\05_UI_2D</Filter>
-    </ClCompile>
-    <ClCompile Include="source\deltatime.cpp">
-      <Filter>ソース ファイル\00_System</Filter>
-    </ClCompile>
-    <ClCompile Include="source\softcream.cpp">
-      <Filter>ソース ファイル\10_item</Filter>
-    </ClCompile>
-    <ClCompile Include="source\friedegg.cpp">
-      <Filter>ソース ファイル\10_item</Filter>
+      <Filter>ソース ファイル\Object</Filter>
     </ClCompile>
     <ClCompile Include="source\AStar.cpp">
-      <Filter>ソース ファイル\11_library</Filter>
-    </ClCompile>
-    <ClCompile Include="source\RollRock.cpp">
-      <Filter>ソース ファイル\07_Map</Filter>
+      <Filter>ソース ファイル\Library</Filter>
     </ClCompile>
     <ClCompile Include="source\MyEffekseer.cpp">
-      <Filter>ソース ファイル\11_library</Filter>
-    </ClCompile>
-    <ClCompile Include="source\mask.cpp">
-      <Filter>ソース ファイル\00_System</Filter>
-    </ClCompile>
-    <ClCompile Include="source\shadow.cpp">
-      <Filter>ソース ファイル\03_Direction</Filter>
-    </ClCompile>
-    <ClCompile Include="source\manager.cpp">
-      <Filter>ソース ファイル\00_System</Filter>
-    </ClCompile>
-    <ClCompile Include="source\select.cpp">
-      <Filter>ソース ファイル\01_Mode</Filter>
-    </ClCompile>
-    <ClCompile Include="source\tile.cpp">
-      <Filter>ソース ファイル\07_Map</Filter>
-    </ClCompile>
-    <ClCompile Include="source\wall.cpp">
-      <Filter>ソース ファイル\07_Map</Filter>
-    </ClCompile>
-    <ClCompile Include="source\TutorialPlayer.cpp">
-      <Filter>ソース ファイル\08_player</Filter>
-    </ClCompile>
-    <ClCompile Include="source\GamePlayer.cpp">
-      <Filter>ソース ファイル\08_player</Filter>
+      <Filter>ソース ファイル\Library</Filter>
     </ClCompile>
     <ClCompile Include="source\objectcharacter.cpp">
-      <Filter>ソース ファイル\02_Object</Filter>
+      <Filter>ソース ファイル\Object</Filter>
     </ClCompile>
-    <ClCompile Include="source\Scene.cpp">
-      <Filter>ソース ファイル\01_Mode</Filter>
+    <ClCompile Include="source\bible.cpp">
+      <Filter>ソース ファイル\Item</Filter>
     </ClCompile>
-    <ClCompile Include="source\signal.cpp">
-      <Filter>ソース ファイル\06_UI_3D</Filter>
+    <ClCompile Include="source\bowabowa.cpp">
+      <Filter>ソース ファイル\Item</Filter>
     </ClCompile>
-    <ClCompile Include="source\ScrollDevice.cpp">
-      <Filter>ソース ファイル\07_Map</Filter>
+    <ClCompile Include="source\camera.cpp">
+      <Filter>ソース ファイル\System</Filter>
     </ClCompile>
-    <ClCompile Include="source\move.cpp">
-      <Filter>ソース ファイル\08_player</Filter>
-    </ClCompile>
-    <ClCompile Include="source\effect.cpp">
-      <Filter>ソース ファイル\03_Direction</Filter>
-    </ClCompile>
-    <ClCompile Include="source\SlopeDevice.cpp">
-      <Filter>ソース ファイル\07_Map</Filter>
+    <ClCompile Include="source\cross.cpp">
+      <Filter>ソース ファイル\Item</Filter>
     </ClCompile>
     <ClCompile Include="source\characterManager.cpp">
-      <Filter>ソース ファイル\00_System</Filter>
+      <Filter>ソース ファイル\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="source\CubeBlock.cpp">
+      <Filter>ソース ファイル\Map\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="source\debugproc.cpp">
+      <Filter>ソース ファイル\System</Filter>
+    </ClCompile>
+    <ClCompile Include="source\deltatime.cpp">
+      <Filter>ソース ファイル\System</Filter>
+    </ClCompile>
+    <ClCompile Include="source\devil.cpp">
+      <Filter>ソース ファイル\Map\System</Filter>
+    </ClCompile>
+    <ClCompile Include="source\DevilHole.cpp">
+      <Filter>ソース ファイル\Map\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="source\enemy.cpp">
+      <Filter>ソース ファイル\Character\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="source\enemyBonbon.cpp">
+      <Filter>ソース ファイル\Character\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="source\enemyMedaman.cpp">
+      <Filter>ソース ファイル\Character\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="source\enemyYoungDevil.cpp">
+      <Filter>ソース ファイル\Character\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="source\fade.cpp">
+      <Filter>ソース ファイル\System</Filter>
+    </ClCompile>
+    <ClCompile Include="source\fire.cpp">
+      <Filter>ソース ファイル\Character\Player</Filter>
     </ClCompile>
     <ClCompile Include="source\footprint.cpp">
-      <Filter>ソース ファイル\08_player</Filter>
+      <Filter>ソース ファイル\Character\Player</Filter>
     </ClCompile>
-    <ClCompile Include="source\EventMovie.cpp">
-      <Filter>ソース ファイル\03_Direction</Filter>
+    <ClCompile Include="source\friedegg.cpp">
+      <Filter>ソース ファイル\Item</Filter>
     </ClCompile>
-    <ClCompile Include="source\signalmanager.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="source\game.cpp">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="source\input.cpp">
+      <Filter>ソース ファイル\System</Filter>
+    </ClCompile>
+    <ClCompile Include="source\item.cpp">
+      <Filter>ソース ファイル\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="source\GamePlayer.cpp">
+      <Filter>ソース ファイル\Character\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="source\light.cpp">
+      <Filter>ソース ファイル\System</Filter>
+    </ClCompile>
+    <ClCompile Include="source\listManager.cpp">
+      <Filter>ソース ファイル\System</Filter>
+    </ClCompile>
+    <ClCompile Include="source\main.cpp">
+      <Filter>ソース ファイル\System</Filter>
+    </ClCompile>
+    <ClCompile Include="source\manager.cpp">
+      <Filter>ソース ファイル\System</Filter>
     </ClCompile>
     <ClCompile Include="source\MapMove.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Map\System</Filter>
+    </ClCompile>
+    <ClCompile Include="source\MapSystem.cpp">
+      <Filter>ソース ファイル\Map\System</Filter>
+    </ClCompile>
+    <ClCompile Include="source\MapModel.cpp">
+      <Filter>ソース ファイル\Map\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="source\model.cpp">
+      <Filter>ソース ファイル\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="source\motion.cpp">
+      <Filter>ソース ファイル\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="source\mask.cpp">
+      <Filter>ソース ファイル\System</Filter>
+    </ClCompile>
+    <ClCompile Include="source\move.cpp">
+      <Filter>ソース ファイル\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Pause.cpp">
+      <Filter>ソース ファイル\System</Filter>
+    </ClCompile>
+    <ClCompile Include="source\precompile.cpp">
+      <Filter>ソース ファイル\System</Filter>
+    </ClCompile>
+    <ClCompile Include="source\player.cpp">
+      <Filter>ソース ファイル\Character\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Rail.cpp">
+      <Filter>ソース ファイル\Map\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="source\RailBlock.cpp">
+      <Filter>ソース ファイル\Map\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="source\ranking.cpp">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="source\result.cpp">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="source\renderer.cpp">
+      <Filter>ソース ファイル\System</Filter>
+    </ClCompile>
+    <ClCompile Include="source\useful.cpp">
+      <Filter>ソース ファイル\System</Filter>
+    </ClCompile>
+    <ClCompile Include="source\texture.cpp">
+      <Filter>ソース ファイル\System</Filter>
+    </ClCompile>
+    <ClCompile Include="source\sound.cpp">
+      <Filter>ソース ファイル\System</Filter>
+    </ClCompile>
+    <ClCompile Include="source\slowManager.cpp">
+      <Filter>ソース ファイル\System</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Xmodel.cpp">
+      <Filter>ソース ファイル\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="source\RollRock.cpp">
+      <Filter>ソース ファイル\Map\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="source\scrollarrow.cpp">
+      <Filter>ソース ファイル\Map\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="source\ScrollDevice.cpp">
+      <Filter>ソース ファイル\Map\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="source\signal.cpp">
+      <Filter>ソース ファイル\Map\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="source\signalmanager.cpp">
+      <Filter>ソース ファイル\Map\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="source\SlopeDevice.cpp">
+      <Filter>ソース ファイル\Map\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="source\tile.cpp">
+      <Filter>ソース ファイル\Map\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="source\wall.cpp">
+      <Filter>ソース ファイル\Map\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="source\select.cpp">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Scene.cpp">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="source\tutorial.cpp">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="source\title.cpp">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="source\TutorialPlayer.cpp">
+      <Filter>ソース ファイル\Character\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="source\softcream.cpp">
+      <Filter>ソース ファイル\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="source\timer.cpp">
+      <Filter>ソース ファイル\Ui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\score.cpp">
+      <Filter>ソース ファイル\Ui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\number.cpp">
+      <Filter>ソース ファイル\Ui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\LifeUi.cpp">
+      <Filter>ソース ファイル\Ui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\effect.cpp">
+      <Filter>ソース ファイル\Ui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\2DUI.cpp">
+      <Filter>ソース ファイル\Ui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\shadow.cpp">
+      <Filter>ソース ファイル\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="source\EventMovie.cpp">
+      <Filter>ソース ファイル\Scene\Event</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\debugproc.h">
-      <Filter>ソース ファイル\00_System</Filter>
-    </ClInclude>
-    <ClInclude Include="source\input.h">
-      <Filter>ソース ファイル\00_System</Filter>
-    </ClInclude>
-    <ClInclude Include="source\listManager.h">
-      <Filter>ソース ファイル\00_System</Filter>
-    </ClInclude>
-    <ClInclude Include="source\main.h">
-      <Filter>ソース ファイル\00_System</Filter>
-    </ClInclude>
-    <ClInclude Include="source\precompile.h">
-      <Filter>ソース ファイル\00_System</Filter>
-    </ClInclude>
-    <ClInclude Include="source\renderer.h">
-      <Filter>ソース ファイル\00_System</Filter>
-    </ClInclude>
-    <ClInclude Include="source\slowManager.h">
-      <Filter>ソース ファイル\00_System</Filter>
-    </ClInclude>
-    <ClInclude Include="source\texture.h">
-      <Filter>ソース ファイル\00_System</Filter>
-    </ClInclude>
-    <ClInclude Include="source\useful.h">
-      <Filter>ソース ファイル\00_System</Filter>
-    </ClInclude>
-    <ClInclude Include="source\Xmodel.h">
-      <Filter>ソース ファイル\00_System</Filter>
-    </ClInclude>
-    <ClInclude Include="source\game.h">
-      <Filter>ソース ファイル\01_Mode</Filter>
-    </ClInclude>
-    <ClInclude Include="source\Pause.h">
-      <Filter>ソース ファイル\01_Mode</Filter>
-    </ClInclude>
-    <ClInclude Include="source\result.h">
-      <Filter>ソース ファイル\01_Mode</Filter>
-    </ClInclude>
-    <ClInclude Include="source\title.h">
-      <Filter>ソース ファイル\01_Mode</Filter>
-    </ClInclude>
-    <ClInclude Include="source\tutorial.h">
-      <Filter>ソース ファイル\01_Mode</Filter>
-    </ClInclude>
     <ClInclude Include="source\object.h">
-      <Filter>ソース ファイル\02_Object</Filter>
+      <Filter>ソース ファイル\Object</Filter>
     </ClInclude>
     <ClInclude Include="source\object2D.h">
-      <Filter>ソース ファイル\02_Object</Filter>
+      <Filter>ソース ファイル\Object</Filter>
     </ClInclude>
     <ClInclude Include="source\object3D.h">
-      <Filter>ソース ファイル\02_Object</Filter>
+      <Filter>ソース ファイル\Object</Filter>
     </ClInclude>
     <ClInclude Include="source\objectBillboard.h">
-      <Filter>ソース ファイル\02_Object</Filter>
+      <Filter>ソース ファイル\Object</Filter>
     </ClInclude>
     <ClInclude Include="source\objectX.h">
-      <Filter>ソース ファイル\02_Object</Filter>
+      <Filter>ソース ファイル\Object</Filter>
     </ClInclude>
     <ClInclude Include="source\objmeshCube.h">
-      <Filter>ソース ファイル\02_Object</Filter>
+      <Filter>ソース ファイル\Object</Filter>
     </ClInclude>
     <ClInclude Include="source\objmeshCylinder.h">
-      <Filter>ソース ファイル\02_Object</Filter>
+      <Filter>ソース ファイル\Object</Filter>
     </ClInclude>
     <ClInclude Include="source\objmeshDome.h">
-      <Filter>ソース ファイル\02_Object</Filter>
+      <Filter>ソース ファイル\Object</Filter>
     </ClInclude>
     <ClInclude Include="source\objmeshField.h">
-      <Filter>ソース ファイル\02_Object</Filter>
+      <Filter>ソース ファイル\Object</Filter>
     </ClInclude>
     <ClInclude Include="source\objmeshRing.h">
-      <Filter>ソース ファイル\02_Object</Filter>
+      <Filter>ソース ファイル\Object</Filter>
     </ClInclude>
     <ClInclude Include="source\objmeshWall.h">
-      <Filter>ソース ファイル\02_Object</Filter>
-    </ClInclude>
-    <ClInclude Include="source\camera.h">
-      <Filter>ソース ファイル\03_Direction</Filter>
-    </ClInclude>
-    <ClInclude Include="source\fade.h">
-      <Filter>ソース ファイル\03_Direction</Filter>
-    </ClInclude>
-    <ClInclude Include="source\light.h">
-      <Filter>ソース ファイル\03_Direction</Filter>
-    </ClInclude>
-    <ClInclude Include="source\model.h">
-      <Filter>ソース ファイル\03_Direction</Filter>
-    </ClInclude>
-    <ClInclude Include="source\motion.h">
-      <Filter>ソース ファイル\03_Direction</Filter>
-    </ClInclude>
-    <ClInclude Include="source\sound.h">
-      <Filter>ソース ファイル\03_Direction</Filter>
-    </ClInclude>
-    <ClInclude Include="source\2DUI.h">
-      <Filter>ソース ファイル\05_UI_2D</Filter>
-    </ClInclude>
-    <ClInclude Include="source\LifeUi.h">
-      <Filter>ソース ファイル\05_UI_2D</Filter>
-    </ClInclude>
-    <ClInclude Include="source\number.h">
-      <Filter>ソース ファイル\05_UI_2D</Filter>
-    </ClInclude>
-    <ClInclude Include="source\ranking.h">
-      <Filter>ソース ファイル\05_UI_2D</Filter>
-    </ClInclude>
-    <ClInclude Include="source\score.h">
-      <Filter>ソース ファイル\05_UI_2D</Filter>
-    </ClInclude>
-    <ClInclude Include="source\timer.h">
-      <Filter>ソース ファイル\05_UI_2D</Filter>
-    </ClInclude>
-    <ClInclude Include="source\CubeBlock.h">
-      <Filter>ソース ファイル\07_Map</Filter>
-    </ClInclude>
-    <ClInclude Include="source\MapModel.h">
-      <Filter>ソース ファイル\07_Map</Filter>
-    </ClInclude>
-    <ClInclude Include="source\MapSystem.h">
-      <Filter>ソース ファイル\07_Map</Filter>
-    </ClInclude>
-    <ClInclude Include="source\fire.h">
-      <Filter>ソース ファイル\08_player</Filter>
-    </ClInclude>
-    <ClInclude Include="source\player.h">
-      <Filter>ソース ファイル\08_player</Filter>
-    </ClInclude>
-    <ClInclude Include="source\devil.h">
-      <Filter>ソース ファイル\09_enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="source\enemy.h">
-      <Filter>ソース ファイル\09_enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="source\enemyMedaman.h">
-      <Filter>ソース ファイル\09_enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="source\bible.h">
-      <Filter>ソース ファイル\10_item</Filter>
-    </ClInclude>
-    <ClInclude Include="source\bowabowa.h">
-      <Filter>ソース ファイル\10_item</Filter>
-    </ClInclude>
-    <ClInclude Include="source\cross.h">
-      <Filter>ソース ファイル\10_item</Filter>
-    </ClInclude>
-    <ClInclude Include="source\item.h">
-      <Filter>ソース ファイル\10_item</Filter>
-    </ClInclude>
-    <ClInclude Include="source\DevilHole.h">
-      <Filter>ソース ファイル\07_Map</Filter>
-    </ClInclude>
-    <ClInclude Include="source\enemyBonbon.h">
-      <Filter>ソース ファイル\09_enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="source\enemyYoungDevil.h">
-      <Filter>ソース ファイル\09_enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="source\RailBlock.h">
-      <Filter>ソース ファイル\07_Map</Filter>
-    </ClInclude>
-    <ClInclude Include="source\Rail.h">
-      <Filter>ソース ファイル\07_Map</Filter>
-    </ClInclude>
-    <ClInclude Include="source\scrollarrow.h">
-      <Filter>ソース ファイル\05_UI_2D</Filter>
-    </ClInclude>
-    <ClInclude Include="source\deltatime.h">
-      <Filter>ソース ファイル\00_System</Filter>
-    </ClInclude>
-    <ClInclude Include="source\softcream.h">
-      <Filter>ソース ファイル\10_item</Filter>
-    </ClInclude>
-    <ClInclude Include="source\friedegg.h">
-      <Filter>ソース ファイル\10_item</Filter>
+      <Filter>ソース ファイル\Object</Filter>
     </ClInclude>
     <ClInclude Include="source\AStar.h">
-      <Filter>ソース ファイル\11_library</Filter>
-    </ClInclude>
-    <ClInclude Include="source\RollRock.h">
-      <Filter>ソース ファイル\07_Map</Filter>
-    </ClInclude>
-    <ClInclude Include="source\mask.h">
-      <Filter>ソース ファイル\00_System</Filter>
+      <Filter>ソース ファイル\Library</Filter>
     </ClInclude>
     <ClInclude Include="source\MyEffekseer.h">
-      <Filter>ソース ファイル\11_library</Filter>
+      <Filter>ソース ファイル\Library</Filter>
     </ClInclude>
     <ClInclude Include="source\lib\magic_enum.hpp">
-      <Filter>ソース ファイル\11_library</Filter>
-    </ClInclude>
-    <ClInclude Include="source\shadow.h">
-      <Filter>ソース ファイル\03_Direction</Filter>
-    </ClInclude>
-    <ClInclude Include="source\manager.h">
-      <Filter>ソース ファイル\00_System</Filter>
-    </ClInclude>
-    <ClInclude Include="source\select.h">
-      <Filter>ソース ファイル\01_Mode</Filter>
-    </ClInclude>
-    <ClInclude Include="source\tile.h">
-      <Filter>ソース ファイル\07_Map</Filter>
-    </ClInclude>
-    <ClInclude Include="source\wall.h">
-      <Filter>ソース ファイル\07_Map</Filter>
-    </ClInclude>
-    <ClInclude Include="source\TutorialPlayer.h">
-      <Filter>ソース ファイル\08_player</Filter>
-    </ClInclude>
-    <ClInclude Include="source\GamePlayer.h">
-      <Filter>ソース ファイル\08_player</Filter>
+      <Filter>ソース ファイル\Library</Filter>
     </ClInclude>
     <ClInclude Include="source\objectcharacter.h">
-      <Filter>ソース ファイル\02_Object</Filter>
+      <Filter>ソース ファイル\Object</Filter>
     </ClInclude>
-    <ClInclude Include="source\Scene.h">
-      <Filter>ソース ファイル\01_Mode</Filter>
+    <ClInclude Include="source\bowabowa.h">
+      <Filter>ソース ファイル\Item</Filter>
     </ClInclude>
-    <ClInclude Include="source\signal.h">
-      <Filter>ソース ファイル\06_UI_3D</Filter>
+    <ClInclude Include="source\bible.h">
+      <Filter>ソース ファイル\Item</Filter>
     </ClInclude>
-    <ClInclude Include="source\ScrollDevice.h">
-      <Filter>ソース ファイル\07_Map</Filter>
+    <ClInclude Include="source\camera.h">
+      <Filter>ソース ファイル\System</Filter>
     </ClInclude>
-    <ClInclude Include="source\move.h">
-      <Filter>ソース ファイル\08_player</Filter>
-    </ClInclude>
-    <ClInclude Include="source\effect.h">
-      <Filter>ソース ファイル\03_Direction</Filter>
-    </ClInclude>
-    <ClInclude Include="source\SlopeDevice.h">
-      <Filter>ソース ファイル\07_Map</Filter>
+    <ClInclude Include="source\cross.h">
+      <Filter>ソース ファイル\Item</Filter>
     </ClInclude>
     <ClInclude Include="source\characterManager.h">
-      <Filter>ソース ファイル\00_System</Filter>
+      <Filter>ソース ファイル\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="source\CubeBlock.h">
+      <Filter>ソース ファイル\Map\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="source\deltatime.h">
+      <Filter>ソース ファイル\System</Filter>
+    </ClInclude>
+    <ClInclude Include="source\debugproc.h">
+      <Filter>ソース ファイル\System</Filter>
+    </ClInclude>
+    <ClInclude Include="source\devil.h">
+      <Filter>ソース ファイル\Map\System</Filter>
+    </ClInclude>
+    <ClInclude Include="source\DevilHole.h">
+      <Filter>ソース ファイル\Map\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="source\enemy.h">
+      <Filter>ソース ファイル\Character\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="source\enemyBonbon.h">
+      <Filter>ソース ファイル\Character\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="source\enemyMedaman.h">
+      <Filter>ソース ファイル\Character\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="source\enemyYoungDevil.h">
+      <Filter>ソース ファイル\Character\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="source\fade.h">
+      <Filter>ソース ファイル\System</Filter>
+    </ClInclude>
+    <ClInclude Include="source\fire.h">
+      <Filter>ソース ファイル\Character\Player</Filter>
     </ClInclude>
     <ClInclude Include="source\footprint.h">
-      <Filter>ソース ファイル\08_player</Filter>
+      <Filter>ソース ファイル\Character\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="source\friedegg.h">
+      <Filter>ソース ファイル\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="source\game.h">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="source\input.h">
+      <Filter>ソース ファイル\System</Filter>
+    </ClInclude>
+    <ClInclude Include="source\item.h">
+      <Filter>ソース ファイル\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="source\GamePlayer.h">
+      <Filter>ソース ファイル\Character\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="source\light.h">
+      <Filter>ソース ファイル\System</Filter>
+    </ClInclude>
+    <ClInclude Include="source\manager.h">
+      <Filter>ソース ファイル\System</Filter>
+    </ClInclude>
+    <ClInclude Include="source\listManager.h">
+      <Filter>ソース ファイル\System</Filter>
+    </ClInclude>
+    <ClInclude Include="source\main.h">
+      <Filter>ソース ファイル\System</Filter>
+    </ClInclude>
+    <ClInclude Include="source\MapMove.h">
+      <Filter>ソース ファイル\Map\System</Filter>
+    </ClInclude>
+    <ClInclude Include="source\MapSystem.h">
+      <Filter>ソース ファイル\Map\System</Filter>
+    </ClInclude>
+    <ClInclude Include="source\MapModel.h">
+      <Filter>ソース ファイル\Map\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="source\motion.h">
+      <Filter>ソース ファイル\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="source\model.h">
+      <Filter>ソース ファイル\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="source\mask.h">
+      <Filter>ソース ファイル\System</Filter>
+    </ClInclude>
+    <ClInclude Include="source\move.h">
+      <Filter>ソース ファイル\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Pause.h">
+      <Filter>ソース ファイル\System</Filter>
+    </ClInclude>
+    <ClInclude Include="source\precompile.h">
+      <Filter>ソース ファイル\System</Filter>
+    </ClInclude>
+    <ClInclude Include="source\player.h">
+      <Filter>ソース ファイル\Character\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="source\RailBlock.h">
+      <Filter>ソース ファイル\Map\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Rail.h">
+      <Filter>ソース ファイル\Map\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="source\ranking.h">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="source\result.h">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="source\renderer.h">
+      <Filter>ソース ファイル\System</Filter>
+    </ClInclude>
+    <ClInclude Include="source\useful.h">
+      <Filter>ソース ファイル\System</Filter>
+    </ClInclude>
+    <ClInclude Include="source\texture.h">
+      <Filter>ソース ファイル\System</Filter>
+    </ClInclude>
+    <ClInclude Include="source\sound.h">
+      <Filter>ソース ファイル\System</Filter>
+    </ClInclude>
+    <ClInclude Include="source\slowManager.h">
+      <Filter>ソース ファイル\System</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Xmodel.h">
+      <Filter>ソース ファイル\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="source\RollRock.h">
+      <Filter>ソース ファイル\Map\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="source\scrollarrow.h">
+      <Filter>ソース ファイル\Map\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="source\ScrollDevice.h">
+      <Filter>ソース ファイル\Map\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="source\signal.h">
+      <Filter>ソース ファイル\Map\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="source\signalmanager.h">
+      <Filter>ソース ファイル\Map\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SlopeDevice.h">
+      <Filter>ソース ファイル\Map\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="source\tile.h">
+      <Filter>ソース ファイル\Map\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="source\wall.h">
+      <Filter>ソース ファイル\Map\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="source\select.h">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Scene.h">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="source\tutorial.h">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="source\title.h">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="source\TutorialPlayer.h">
+      <Filter>ソース ファイル\Character\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="source\softcream.h">
+      <Filter>ソース ファイル\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="source\timer.h">
+      <Filter>ソース ファイル\Ui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\score.h">
+      <Filter>ソース ファイル\Ui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\number.h">
+      <Filter>ソース ファイル\Ui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\LifeUi.h">
+      <Filter>ソース ファイル\Ui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\effect.h">
+      <Filter>ソース ファイル\Ui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\2DUI.h">
+      <Filter>ソース ファイル\Ui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\shadow.h">
+      <Filter>ソース ファイル\Character</Filter>
     </ClInclude>
     <ClInclude Include="source\EventMovie.h">
-      <Filter>ソース ファイル\03_Direction</Filter>
+      <Filter>ソース ファイル\Scene\Event</Filter>
     </ClInclude>
-    <ClInclude Include="source\signalmanager.h" />
-    <ClInclude Include="source\MapMove.h" />
   </ItemGroup>
 </Project>
