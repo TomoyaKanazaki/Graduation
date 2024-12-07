@@ -13,6 +13,7 @@
 #include "objmeshField.h"
 #include "light.h"
 #include "Devil.h"
+#include "MapMove.h"
 #include "sound.h"
 
 // ’è”’è‹`
@@ -412,11 +413,11 @@ void CSelect::ScrollButton(void)
 		switch (m_nSelect)
 		{
 		case 0:
-			CManager::GetInstance()->SetScrollType(CDevil::SCROLL_TYPE_NORMAL);
+			CManager::GetInstance()->SetScrollType(CMapMove::SCROLL_TYPE_NORMAL);
 			CFade::SetFade(CScene::MODE_GAME);
 			break;
 		case 1:
-			CManager::GetInstance()->SetScrollType(CDevil::SCROLL_TYPE_RETRO);
+			CManager::GetInstance()->SetScrollType(CMapMove::SCROLL_TYPE_RETRO);
 			CFade::SetFade(CScene::MODE_GAME);
 			break;
 		}

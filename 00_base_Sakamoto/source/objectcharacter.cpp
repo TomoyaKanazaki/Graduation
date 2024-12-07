@@ -66,6 +66,8 @@ m_OldState(STATE_WAIT)
 
 	m_Grid.x = 0;
 	m_Grid.z = 0;
+	m_GridOld.x = 0;
+	m_GridOld.z = 0;
 
 	// is‹–‰Âó‹µ
 	m_Progress.bOKD = true;

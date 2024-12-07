@@ -38,6 +38,7 @@
 #include "wall.h"
 #include "objectBillboard.h"
 #include "move.h"
+#include "MapMove.h"
 
 #include "MyEffekseer.h"
 #include "footprint.h"
@@ -464,8 +465,28 @@ void CPlayer::Update(void)
 //====================================================================
 void CPlayer::Draw(void)
 {
+	//デバイスの取得
+	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
+
 	// キャラクタークラスの描画（継承）
 	CObjectCharacter::Draw();
+
+	//ステンシルバッファ有効
+	pDevice->SetRenderState(D3DRS_STENCILENABLE, TRUE);
+
+	//ステンシルバッファと比較する参照値の設定 => ref
+	pDevice->SetRenderState(D3DRS_STENCILREF, 1);
+
+	//ステンシルバッファの値に対してのマスク設定 => 0xff(全て真)
+	pDevice->SetRenderState(D3DRS_STENCILMASK, 255);
+
+	//ステンシルバッファの比較方法 <= (参照値 <= ステンシルバッファの参照値)なら合格
+	pDevice->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_EQUAL);
+
+	//ステンシルテスト結果に対しての反映設定
+	pDevice->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_INCRSAT);	// Zテスト・ステンシルテスト成功
+	pDevice->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP);		// Zテスト・ステンシルテスト失敗
+	pDevice->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_KEEP);		// Zテスト失敗・ステンシルテスト成功
 }
 
 //====================================================================
@@ -1544,7 +1565,7 @@ void CPlayer::PosUpdate(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D3DXVECTO
 		fSpeed = m_pSlow->GetValue();
 	}
 
-	CDevil* pDevil = CDevil::GetListTop();
+	CMapMove* pMapMove = CMapMove::GetListTop();
 
 	//Y軸の位置更新
 	posThis.y += m_move.y * CManager::GetInstance()->GetGameSpeed() * fSpeed;
@@ -1554,7 +1575,7 @@ void CPlayer::PosUpdate(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D3DXVECTO
 	CollisionDevilHole(posThis, posOldThis, sizeThis, useful::COLLISION_Y);
 
 	//X軸の位置更新
-	posThis.x += m_move.x * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeX(m_move.x);
+	posThis.x += m_move.x * CManager::GetInstance()->GetGameSpeed() * fSpeed * pMapMove->MoveSlopeX(m_move.x);
 
 	// 壁との当たり判定
 	CollisionWall(posThis, posOldThis, sizeThis, useful::COLLISION_X);
@@ -1563,7 +1584,7 @@ void CPlayer::PosUpdate(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D3DXVECTO
 	CollisionWaitRock(posThis, posOldThis, sizeThis, useful::COLLISION_X);
 
 	//Z軸の位置更新
-	posThis.z += m_move.z * CManager::GetInstance()->GetGameSpeed() * fSpeed * pDevil->MoveSlopeZ(m_move.z);
+	posThis.z += m_move.z * CManager::GetInstance()->GetGameSpeed() * fSpeed * pMapMove->MoveSlopeZ(m_move.z);
 
 	// 壁との当たり判定
 	CollisionWall(posThis, posOldThis, sizeThis, useful::COLLISION_Z);

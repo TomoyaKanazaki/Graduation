@@ -89,7 +89,8 @@ HRESULT CTutorial::Init(void)
 	//CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_BGM_TUTORIAL);
 
 	// 2Dマスクの生成
-	m_pMask = CMask::Create();
+	m_pMask = CMask::Create(2, D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
+	m_pEnemyMask = CMask::Create(102, D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f));
 
 	//クリアフラグのデフォルトをオンにしておく
 	m_bGameClear = true;

@@ -9,6 +9,8 @@
 #define _MASK_H_	 //2連インクルード防止のマクロを定義する
 
 #include "object2d.h"
+#include "enemy.h"
+#include "item.h"
 
 //=======================================
 // マスククラス
@@ -19,17 +21,18 @@ public:
 	CMask(int nPriority = 7);	//コンストラクタ
 	~CMask();	//デストラクタ
 
-	static CMask* Create();
+	static CMask* Create(int nRefidx, D3DXCOLOR col);
 
 	HRESULT Init();
 	void Uninit();
 	void Update();
 	void Draw();
 
-	void SetColor(CObject::OBJECT_TYPE type, D3DXCOLOR col);	// 個別の色設定
+	void SetRefidx(int nRef) { m_nRefidx = nRef; }
 
 private:
 	//メンバ変数
+	int m_nRefidx;	// ステンシルの参照値
 };
 
 #endif

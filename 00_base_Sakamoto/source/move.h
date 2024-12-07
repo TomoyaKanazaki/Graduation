@@ -38,12 +38,12 @@ public:
     // 移動方向
     enum ROTSTATE
     {
-        ROTSTATE_WAIT = 0,	// 待機
-        ROTSTATE_LEFT,		// 左方向
+        ROTSTATE_LEFT = 0,	// 左方向
         ROTSTATE_RIGHT,		// 右方向
         ROTSTATE_UP,		// 上方向
         ROTSTATE_DOWN,		// 下方向
         ROTSTATE_MAX,		// 最大
+        ROTSTATE_WAIT,	    // 待機
         ROTSTATE_NONE
     };
 
@@ -155,7 +155,8 @@ private:
     void MoveSelect(CObjectCharacter* pCharacter);		// 移動方向の選択
 
     // メンバ変数
-    CMapSystem::GRID m_SelectGrid;	// 方向転換を行った時のグリッド番号
+    CObjectCharacter::PROGGRESS m_Progress;           // 進行許可情報
+    CObjectCharacter::PROGGRESS m_ProgressOld;        // 前回の進行許可情報
     ROTSTATE m_RotState;            // 移動方向の状態
     int m_nSelectCounter;           // 移動方向変更カウンター
 

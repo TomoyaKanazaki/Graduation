@@ -12,6 +12,8 @@
 #include "game.h"
 #include "Devil.h"
 #include "camera.h"
+#include "model.h"
+#include "motion.h"
 
 //静的メンバ変数宣言
 
@@ -107,12 +109,7 @@ void CEventMovie::StartMovie(void)
 {
 	CCamera* pCamera = CManager::GetInstance()->GetCamera();
 
-	D3DXVECTOR3 DevilPos;
-
-	if (CGame::GetInstance()->GetDevil())
-	{
-		DevilPos = CGame::GetInstance()->GetDevil()->GetPos();
-	}
+	CDevil* pDevil = CDevil::GetListTop();
 
 	//float fDistance = sqrtf((PlayerPos.x - DevilPos.x) * (PlayerPos.x - DevilPos.x) + (PlayerPos.z - DevilPos.z) * (PlayerPos.z - DevilPos.z));
 	//float fAngle = atan2f(PlayerPos.z - DevilPos.z, DevilPos.x - PlayerPos.x) + D3DX_PI * 0.5f;
@@ -122,24 +119,32 @@ void CEventMovie::StartMovie(void)
 
 	switch (m_nWave)
 	{
-	case 0:		//横から見てる視点にする
-		pCamera->SetCameraMode(CCamera::CAMERAMODE_SIDEVIEW);
+	case 0:		//初期の玉座モーション
+		pCamera->SetCameraMode(CCamera::CAMERAMODE_EVENTBOSS);
 		pCamera->SetHomingSpeed(0.2f);
+		
+		pDevil->SetModelColor(CModel::COLORTYPE_TRUE_A, D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f));
 
-		m_nWave++;
+		if (m_nCount >= 180)
+		{
+			pDevil->SetAction(CDevil::ACTION_KING, 0);
+			pDevil->SetModelColor(CModel::COLORTYPE_FALSE, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+			m_nWave++;
+		}
+
 		break;
 
 	case 1:		//プレイヤーが一定の距離まで歩く
 
-		//if (m_pPlayer->GetPos().x <= 450.0f)
-		//{//一定の距離に到達した場合に3人称視点に変更する
+		pCamera->SetCameraMode(CCamera::CAMERAMODE_EVENTBOSS);
+		pCamera->SetHomingSpeed(0.2f);
 
-		//	pCamera->SetCameraMode(CCamera::CAMERAMODE_FOLLOW);
-		//	pCamera->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
-		//	pCamera->SetHomingSpeed(0.02f);
-		//	m_nWave++;
+		if (pDevil->GetMotion()->GetFinish())
+		{
+			pDevil->SetAction(CDevil::ACTION_NEUTRAL, 120);
+			m_nWave++;
+		}
 
-		//}
 		break;
 
 	default:
@@ -152,4 +157,6 @@ void CEventMovie::StartMovie(void)
 		//m_nEventNumber++;
 		break;
 	}
+
+	m_nCount++;
 }

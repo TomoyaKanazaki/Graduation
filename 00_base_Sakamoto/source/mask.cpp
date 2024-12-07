@@ -10,6 +10,19 @@
 #include "renderer.h"
 
 //========================================
+// 定数定義
+//========================================
+namespace
+{
+	const D3DXCOLOR DEFAULT_COLOR = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);		// 通常のステンシルカラー
+	const D3DXCOLOR PLAYER_COLOR = D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f);		// タマゴンのステンシルカラー
+	const D3DXCOLOR MULTI_PLAYER_COLOR = D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f);	// 2Pタマゴンのステンシルカラー
+	const D3DXCOLOR MEDAMAN_COLOR = D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f);		// メダマンのステンシルカラー
+	const D3DXCOLOR BONBON_COLOR = D3DXCOLOR(1.0f, 0.5f, 0.0f, 1.0f);		// ボンンボンのステンシルカラー
+	const D3DXCOLOR YUNGDEVIL_COLOR = D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f);	// 子デビルのステンシルカラー
+}
+
+//========================================
 // コンストラクタ
 //========================================
 CMask::CMask(int nPriority) : CObject2D(nPriority)
@@ -26,7 +39,7 @@ CMask::~CMask()
 //========================================
 // 生成
 //========================================
-CMask* CMask::Create()
+CMask* CMask::Create(int nRefidx, D3DXCOLOR col)
 {
 	CMask* pMask = new CMask();
 
@@ -35,6 +48,12 @@ CMask* CMask::Create()
 	{//初期化処理が失敗した場合
 		return nullptr;
 	}
+
+	// 参照値
+	pMask->SetRefidx(nRefidx);
+
+	// カラー設定
+	pMask->SetColor(col);
 
 	return pMask;
 }
@@ -82,11 +101,33 @@ void CMask::Draw()
 	//デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
 
+	CObject2D::SetColor(PLAYER_COLOR);
+
 	//ステンシルバッファ有効
 	pDevice->SetRenderState(D3DRS_STENCILENABLE, TRUE);
 
 	//ステンシルバッファと比較する参照値の設定 => ref
-	pDevice->SetRenderState(D3DRS_STENCILREF, 2);
+	pDevice->SetRenderState(D3DRS_STENCILREF, m_nRefidx);
+
+	//ステンシルバッファの値に対してのマスク設定 => 0xff(全て真)
+	pDevice->SetRenderState(D3DRS_STENCILMASK, 255);
+
+	//ステンシルバッファの比較方法 <= (参照値 <= ステンシルバッファの参照値)なら合格
+	pDevice->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_LESSEQUAL);
+
+	//ステンシルテスト結果に対しての反映設定
+	pDevice->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_KEEP);		// Zテスト・ステンシルテスト成功
+	pDevice->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP);		// Zテスト・ステンシルテスト失敗
+	pDevice->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_KEEP);		// Zテスト失敗・ステンシルテスト成功
+
+	// 継承クラスの描画
+	CObject2D::Draw();
+
+	//ステンシルバッファ有効
+	pDevice->SetRenderState(D3DRS_STENCILENABLE, TRUE);
+
+	//ステンシルバッファと比較する参照値の設定 => ref
+	pDevice->SetRenderState(D3DRS_STENCILREF, m_nRefidx);
 
 	//ステンシルバッファの値に対してのマスク設定 => 0xff(全て真)
 	pDevice->SetRenderState(D3DRS_STENCILMASK, 255);
@@ -104,16 +145,4 @@ void CMask::Draw()
 
 	//ステンシルバッファ無効
 	pDevice->SetRenderState(D3DRS_STENCILENABLE, FALSE);
-}
-
-//========================================
-// 個別の色設定
-//========================================
-void CMask::SetColor(CObject::OBJECT_TYPE Type, D3DXCOLOR col)
-{
-	// オブジェクトの種類設定
-	SetType(Type);
-
-	// 色設定
-	CObject2D::SetColor(col);
 }

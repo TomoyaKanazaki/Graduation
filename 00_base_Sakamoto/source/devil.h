@@ -27,6 +27,7 @@ class CEnemy;
 class CBoss;
 class CPlayer;
 class CSignalManager;
+class CMapMove;
 
 //オブジェクトプレイヤークラス
 class CDevil : public CObjectCharacter
@@ -58,23 +59,6 @@ public:
 		SLOPE_TYPE_MAX,
 	};
 
-	// モーション
-	enum SCROLL_TYPE
-	{
-		SCROLL_TYPE_NORMAL = 0,	// スムーズにスクロールする
-		SCROLL_TYPE_RETRO,		// カクカクとスクロールする
-		SCROLL_TYPE_MAX,		// 最大
-	};
-
-	//デビルの状態
-	enum STATE
-	{
-		STATE_WAIT = 0,		//待機
-		STATE_SCROLL,		//スクロール状態
-		STATE_SLOPE,		//傾き状態
-		STATE_MAX,			//最大
-	};
-
 	static CDevil* Create();
 	HRESULT Init(void) override;
 	void Uninit(void);
@@ -82,12 +66,7 @@ public:
 	void Draw(void);
 
 	//お引越し開始
-	float MoveSlopeX(float Move);		//傾き中の移動量変動
-	float MoveSlopeZ(float Move);		//傾き中の移動量変動
 
-	void SetMove(D3DXVECTOR3 move) { m_move = move; }
-	D3DXVECTOR3 GetMove(void) { return m_move; }
-	STATE GetState(void) { return m_State; }
 	void SetDevilPos(D3DXVECTOR3 size) { m_DevilPos = size; }
 	D3DXVECTOR3 GetDevilPos(void) { return m_DevilPos; }
 	void SetDifference(D3DXVECTOR3 size) { m_MapDifference = size; }
@@ -95,8 +74,6 @@ public:
 	void SetDevilRot(D3DXVECTOR3 Rot) { m_DevilRot = Rot; }
 	D3DXVECTOR3 GetDevilRot(void) { return m_DevilRot; }
 
-	void SetScrollType(SCROLL_TYPE Rot) { m_ScrollType = Rot; }
-	SCROLL_TYPE GetScrollType(void) { return m_ScrollType; }
 	//お引越し終了
 
 	void SetAction(ACTION_TYPE Action, float BlendTime);
@@ -112,33 +89,13 @@ private:
 	void ActionState(void);		//モーションと状態の管理
 
 	//お引越し開始
-	void StateManager(void);	//状態管理
-	void Move(int Arroow);		//移動処理
-	void BackSlope(void);		//傾き処理
-	void Slope(int Arroow);		//傾き処理
-	void CollisionOut();		//ステージ外にいるオブジェクトの処理
 
-	void ObjectScroll(D3DXVECTOR3 Move);	//オブジェクトのスクロール
-	void CrossScroll(D3DXVECTOR3 Move, float GritSize);		// 十字架のスクロール
-	void BowabowaScroll(D3DXVECTOR3 Move, float GritSize);	// ボワボワのスクロール
-	void EnemyScroll(D3DXVECTOR3 Move, float GritSize);		// 敵のスクロール
-	void RailBlockScroll(D3DXVECTOR3 Move, float GritSize);	// レールブロックのスクロール
-	void RollRockScroll(D3DXVECTOR3 Move, float GritSize);	// 転がる岩のスクロール
-	void PlayerScroll(D3DXVECTOR3 Move, float GritSize);	// プレイヤーのスクロール
-	void FireScroll(D3DXVECTOR3 Move, float GritSize);	// ファイアボールのスクロール
-	void TileScroll(D3DXVECTOR3 Move, float GritSize);	// 床のスクロール
-	void WallScroll(D3DXVECTOR3 Move, float GritSize);	// 壁のスクロール
-	void FriedEggScroll(D3DXVECTOR3 Move, float GritSize);	// 目玉焼きのスクロール
-	void SignalManager(void);
-
-	void GritScroll(D3DXVECTOR3 Move);		//グリットのスクロール
 	void CollisionPressPlayer(CPlayer* pPlayer, D3DXVECTOR3 pos, D3DXVECTOR3 Size);	//プレイヤーが潰される時の処理
 
-	void DebugKey(void);		//デバッグキー
 	//お引越し終了
 
-	ACTION_TYPE m_Action;
 	ACTION_TYPE m_AtkAction;		//攻撃状態記録用変数
+	CMapMove* m_pMapMove;
 
 	//お引越し開始
 	D3DXVECTOR3 m_move;				//移動量
@@ -148,9 +105,6 @@ private:
 	D3DXVECTOR3 m_DevilPos;			//デビルパワーがマップのブロックにデビルスクロールする位置、テスト用
 	D3DXVECTOR3 m_MapDifference;	//マップを動かした時の差分
 	float m_fActionCount;			//行動のカウント
-	STATE m_State;					//状態
-	int m_nStateCount;				//状態管理用カウント
-	int m_nStateNum;				//状態カウント
 	bool m_bSlope;					//傾き状態かどうか
 
 	CMapSystem::GRID m_MinGrid;		//マップで一番左上にあるブロックの番号
@@ -160,15 +114,19 @@ private:
 
 	float m_CollisionRot;			//当たり判定用の向き
 
-	CSlowManager* m_pSlow;			// スロー
 	CSignalManager* m_pSignalManager;	// シグナルマネージャー
 	D3DXVECTOR3 m_DevilRot;			// デビルパワーによって傾く値
 	int m_DevilArrow;				// デビルパワーの方向
 	int m_ScrollArrowOld;			// 過去のスクロールの方向
 	int m_SlopwArrowOld;			// 過去の傾きの方向
-	SCROLL_TYPE m_ScrollType;		// スクロールの種類
 	int m_SlopeType;				// スロープの種類
 	//お引越し終了
+
+	ACTION_TYPE m_Action;
+	int m_nStateCount;				//状態管理用カウント
+	int m_nStateNum;				//状態カウント
+
+	CSlowManager* m_pSlow;			// スロー
 
 	// 静的メンバ変数
 	static CListManager<CDevil>* m_pList; // オブジェクトリスト
