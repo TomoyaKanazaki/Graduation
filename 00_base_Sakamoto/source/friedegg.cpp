@@ -192,10 +192,9 @@ void CFriedEgg::SetEffect()
 {
 	// ©g‚Ìî•ñ‚ğæ“¾‚·‚é
 	D3DXVECTOR3 pos = GetPos();
-	pos.y = 0.0f;
 	D3DXVECTOR3 rot = GetRot();
 
-	Effect(MyEffekseer::EffectCreate(CMyEffekseer::TYPE_STEAM, true, useful::CalcMatrix(pos, rot, *GetUseMultiMatrix()), rot, D3DXVECTOR3(20.0f, 20.0f, 20.0f)));
+	Effect(MyEffekseer::EffectCreate(CMyEffekseer::TYPE_STEAM, true, useful::CalcMatrix(pos, rot, *GetUseMultiMatrix()), rot));
 }
 
 //==========================================
