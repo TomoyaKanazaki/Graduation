@@ -137,7 +137,7 @@ CItem* CItem::Create(const TYPE eType, const CMapSystem::GRID& pos)
 	pItem->SetItem(eType);
 
 	// 位置の設定
-	pItem->SetGrid(pos);
+	pItem->SetGrid(pos, true);
 
 	// エフェクトを生成
 	pItem->SetEffect();
@@ -263,10 +263,6 @@ void CItem::Update()
 
 	// 親クラスの更新処理
 	CObjectX::Update();
-
-	auto str = magic_enum::enum_name(m_eType);
-	DebugProc::Print(DebugProc::POINT_CENTER, str.data());
-	DebugProc::Print(DebugProc::POINT_CENTER, " : ( %d, %d ) : ( %f, %f )\n", m_Grid.x, m_Grid.z, pos.x, pos.z);
 }
 
 //====================================================================
@@ -304,7 +300,7 @@ void CItem::Draw()
 //==========================================
 //  マップ番号の設定
 //==========================================
-void CItem::SetGrid(const CMapSystem::GRID& pos)
+void CItem::SetGrid(const CMapSystem::GRID& pos, bool bBase)
 {
 	// グリッド情報を保存する
 	m_Grid = pos;
@@ -312,11 +308,11 @@ void CItem::SetGrid(const CMapSystem::GRID& pos)
 	// グリッド情報から自身の座標を算出する
 	D3DXVECTOR3 calc = CMapSystem::GetInstance()->GetGritPos(pos);
 	calc.y = BASE_Y;
-	m_posBase = calc;
+	if (bBase) { m_posBase = calc; }
 
 	// 位置を設定
-	CItem::SetPos(m_posBase);
-	CObjectX::SetPos(m_posBase);
+	CItem::SetPos(calc);
+	CObjectX::SetPos(calc);
 }
 
 //====================================================================
