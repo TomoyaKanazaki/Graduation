@@ -9,15 +9,16 @@ SCRIPT			# この行は絶対消さないこと！
 #------------------------------------------------------------------------------
 # モデル数
 #------------------------------------------------------------------------------
-NUM_MODEL = 4
+NUM_MODEL = 5
 
 #------------------------------------------------------------------------------
 # モデルファイル名
 #------------------------------------------------------------------------------
-MODEL_FILENAME = data/MODEL/03_staging/00_ScrollDevice/00_foundation.x	# [0]土台
-MODEL_FILENAME = data/MODEL/03_staging/00_ScrollDevice/01_mawasiguruma.x	# [1]回し車
-MODEL_FILENAME = data/MODEL/03_staging/00_ScrollDevice/02_roller.x		# [2]ローラー
-MODEL_FILENAME = data/MODEL/03_staging/00_ScrollDevice/03_head.x			# [3]先っぽ
+MODEL_FILENAME = data/MODEL/03_staging/00_ScrollDevice/00_body.x			# [0]体（非表示）
+MODEL_FILENAME = data/MODEL/03_staging/00_ScrollDevice/01_roller.x			# [1]ローラー
+MODEL_FILENAME = data/MODEL/03_staging/00_ScrollDevice/02_mawasiguruma.x	# [2]回し車
+MODEL_FILENAME = data/MODEL/03_staging/00_ScrollDevice/03_head.x			# [3]先っぽ1
+MODEL_FILENAME = data/MODEL/03_staging/00_ScrollDevice/03_head.x			# [4]先っぽ2
 
 #------------------------------------------------------------------------------
 # キャラクター情報
@@ -26,36 +27,43 @@ CHARACTERSET
 	MOVE = 3.0					# 移動量
 	JUMP = 10.25				# ジャンプ量
 	RADIUS = 20.0				# 半径
-	NUM_PARTS = 4				# パーツ数
+	NUM_PARTS = 5				# パーツ数
 
 	PARTSSET
 		INDEX = 0
 		PARENT = -1
-		POS = 0.00 -1.5 0.00
+		POS = 0.00 0.00 0.00
 		ROT = 0.00 0.00 0.00
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 1
 		PARENT = 0
-		POS = -6.12 257.735 78.525
+		POS = 0.00 0.00 0.00
 		ROT = 0.00 0.00 0.00
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 2
 		PARENT = 0
-		POS = -5.13 257.735 600.425
+		POS = 0.00 0.00 0.00
 		ROT = 0.00 0.00 0.00
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 3
 		PARENT = 0
-		POS = 11.20 243.11 1199.47
+		POS = 0.00 0.00 550.00
 		ROT = 0.00 0.00 0.00
 	END_PARTSSET
 
+	PARTSSET
+		INDEX = 4
+		PARENT = 0
+		POS = 0.00 0.00 -550.00
+		ROT = 0.00 3.14 0.00
+	END_PARTSSET
+	
 END_CHARACTERSET
 #------------------------------------------------------------------------------
 # モーション情報
@@ -89,9 +97,13 @@ MOTIONSET
 			ROT = 0.00 0.00 0.00
 		END_KEY
 
+		KEY	# ----- [ 4 ] -----
+			POS = 0.00 0.00 0.00
+			ROT = 0.00 0.00 0.00
+		END_KEY
 	END_KEYSET
-	
-		KEYSET			# --- << KEY : 1 / 2 >> ---
+
+	KEYSET			# --- << KEY : 1 / 2 >> ---
 		FRAME = 50
 		KEY	# ----- [ 0 ] -----
 			POS = 0.00 0.00 0.00
@@ -113,6 +125,10 @@ MOTIONSET
 			ROT = 0.00 0.00 0.00
 		END_KEY
 
+		KEY	# ----- [ 4 ] -----
+			POS = 0.00 0.00 0.00
+			ROT = 0.00 0.00 0.00
+		END_KEY
 	END_KEYSET
 END_MOTIONSET
 
