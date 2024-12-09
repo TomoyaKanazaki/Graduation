@@ -9,6 +9,8 @@
 #include "manager.h"
 #include "objmeshField.h"
 #include "game.h"
+#include "devil.h"
+#include "MapMove.h"
 
 //==========================================
 //  定数定義
@@ -125,6 +127,11 @@ void CTile::Uninit(void)
 //====================================================================
 void CTile::Update(void)
 {
+	// グリッドに合わせて移動する
+	D3DXVECTOR3 pos = GetPos();
+	pos = m_Grid.ToWorld();
+	SetPos(pos);
+
 	//頂点情報の更新
 	CObjectX::Update();
 }

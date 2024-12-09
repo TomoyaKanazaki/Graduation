@@ -21,7 +21,6 @@
 #include "enemy.h"
 #include "slowManager.h"
 #include "Number.h"
-#include "MapModel.h"
 #include "bowabowa.h"
 #include "Cross.h"
 #include "objmeshField.h"

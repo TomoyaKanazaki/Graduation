@@ -19,7 +19,6 @@
 #include "enemy.h"
 #include "slowManager.h"
 #include "Number.h"
-#include "MapModel.h"
 #include "sound.h"
 #include "LifeUi.h"
 #include "cross.h"
@@ -432,6 +431,9 @@ void CPlayer::Update(void)
 
 	//デバッグキーの処理と設定
 	DebugKey();
+
+	// スクロールに合わせて移動する
+	CGame::GetInstance()->GetDevil()->GetMove()->FollowScroll(posThis);
 
 	//デバッグ表示
 	DebugProc::Print(DebugProc::POINT_LEFT, "[自分]位置 %f : %f : %f\n", posThis.x, posThis.y, posThis.z);
