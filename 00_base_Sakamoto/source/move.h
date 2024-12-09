@@ -50,6 +50,7 @@ public:
     CMoveState();
     virtual ~CMoveState() {}
 
+    virtual void Init() {}         // ‰Šú‰»
     virtual void Release() {}      // ”jŠü
 
     // ‘€ì
@@ -80,7 +81,6 @@ public:
 protected:
 
     // ƒƒ“ƒoŠÖ”
-    virtual void Init() {}          // ‰Šú‰»
     void Rot(CObjectCharacter* pCharacter, D3DXVECTOR3& rotMy);						//ˆÚ“®•ûŒüˆ—
     void UpdatePos(CObjectCharacter* pCharacter, D3DXVECTOR3& pos);	// ˆÊ’uXVˆ—
 
@@ -172,6 +172,7 @@ public:
     CStateAStar();
     ~CStateAStar() {}
 
+    void Init() override;         // ‰Šú‰»
     void Release() override;      // ”jŠü
 
     // Ø‚è‘Ö‚¦ˆ—
@@ -187,8 +188,6 @@ public:
 private:
 
     // ƒƒ“ƒoŠÖ”
-    void Init() override;         // ‰Šú‰»
-
     void Coordinate(CObjectCharacter* pCharacter); // Å’ZŒo˜H’Tõ
     void Route(CObjectCharacter* pCharacter);	// Å’ZŒo˜H‚ğ‚½‚Ç‚é
 

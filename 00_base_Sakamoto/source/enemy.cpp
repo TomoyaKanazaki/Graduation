@@ -276,14 +276,12 @@ void CEnemy::Update(void)
 	else if (pInputKeyboard->GetTrigger(DIK_N))
 	{
 		m_pMoveState->ControlAStar(this);			// 追跡 or 操作
-		m_pMoveState->SetEnemyType(m_EnemyType);	// 敵の種類設定
 
 	}
 	// Mキー
 	else if (pInputKeyboard->GetTrigger(DIK_M))
 	{
 		m_pMoveState->RandomAStar(this);			// ランダム or 追跡
-		m_pMoveState->SetEnemyType(m_EnemyType);	// 敵の種類設定
 	}
 
 	// 自分の番号を設定
@@ -347,10 +345,10 @@ bool CEnemy::Hit(void)
 //====================================================================
 // モデル関連の初期化処理
 //====================================================================
-HRESULT CEnemy::InitModel(const char* pFilename)
+HRESULT CEnemy::InitModel(const char* pFilename, int nRef)
 {
 	// キャラクターテキスト読み込み処理
-	CObjectCharacter::SetTxtCharacter(pFilename);
+	CObjectCharacter::SetTxtCharacter(pFilename, nRef);
 	
 	return S_OK;
 }
@@ -589,6 +587,8 @@ void CEnemy::ChangeMoveState(CMoveState* pMoveState)
 	}
 
 	m_pMoveState = pMoveState;
+	m_pMoveState->SetEnemyType(m_EnemyType);	// 敵の種類設定
+	m_pMoveState->Init();
 }
 
 //====================================================================

@@ -199,20 +199,20 @@ void CScrollDevice::SetState(STATE state)
 //====================================================================
 HRESULT CScrollDevice::InitModel(const char* pModelNameScrollDevice, const char* pModelNameEnemy)
 {
-	CObjectCharacter::SetTxtCharacter(pModelNameScrollDevice);
+	CObjectCharacter::SetTxtCharacter(pModelNameScrollDevice, 0);
 
 	if (m_pObjectCharacter != nullptr)
 	{
 		// キャラクターテキスト読み込み処理（メダマン）
-		m_pObjectCharacter->SetTxtCharacter(pModelNameEnemy);
+		m_pObjectCharacter->SetTxtCharacter(pModelNameEnemy, 0);
 
 		// メダマンの親を土台に変更
 		m_pObjectCharacter->GetModel(0)->SetParent(GetModel(SETUP_TYPE_FOUNDATION));
 
 		// メダマンの位置を取得
-		D3DXVECTOR3 pos = m_pObjectCharacter->GetModel(2)->GetStartPos();
-		D3DXVECTOR3 rot = m_pObjectCharacter->GetModel(2)->GetStartRot();
-		D3DXVECTOR3 posAdd = D3DXVECTOR3(-50.0f, 375.0f, 500.0f);
+		D3DXVECTOR3 pos = m_pObjectCharacter->GetModel(0)->GetStartPos();
+		D3DXVECTOR3 rot = m_pObjectCharacter->GetModel(0)->GetStartRot();
+		D3DXVECTOR3 posAdd = D3DXVECTOR3(0.0f, 200.0f, 0.0f);
 		D3DXVECTOR3 rotAdd = D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f);
 
 		// メダマンを上に

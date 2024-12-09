@@ -645,8 +645,6 @@ void CStateAStar::ControlAStar(CObjectCharacter* pCharacter)
 //==========================================
 void CStateAStar::RandomAStar(CObjectCharacter* pCharacter)
 {
-	Init();
-
 	// ランダム歩行状態にする
 	pCharacter->ChangeMoveState(new CStateRandom);
 }
@@ -745,6 +743,7 @@ void CStateAStar::Route(CObjectCharacter* pCharacter)
 	// 次の目標が存在しなかったら関数を抜ける
 	if (m_nTargetIndex >= m_nNumCoordinate)
 	{
+		pCharacter->ChangeMoveState(new CStateRandom);		// ランダム状態にする
 		return;
 	}
 
