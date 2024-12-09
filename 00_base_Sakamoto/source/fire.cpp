@@ -13,6 +13,8 @@
 #include "game.h"
 #include "tutorial.h"
 #include "objmeshField.h"
+#include "devil.h"
+#include "MapMove.h"
 
 //==========================================
 // 定数定義
@@ -166,6 +168,9 @@ void CFire::Update(void)
 
 	//位置更新
 	pos += m_move;
+
+	// スクロールに合わせて移動する
+	CGame::GetInstance()->GetDevil()->GetMove()->FollowScroll(pos);
 
 	// 位置・移動量設定
 	SetPos(pos);

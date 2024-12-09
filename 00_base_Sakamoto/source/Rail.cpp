@@ -20,17 +20,18 @@
 namespace
 {
 	const D3DXVECTOR3 SAMPLE_SIZE = D3DXVECTOR3(20.0f, 20.0f, 20.0f);		//当たり判定
+	const char* FILE_PASS = "data\\MODEL\\fireball.x"; // モデルパス
 }
 
 //====================================================================
 //静的メンバ変数宣言
 //====================================================================
-//CListManager<CRail>* CRail::m_pList = nullptr; // オブジェクトリスト
+CListManager<CRail>* CRail::m_pList = nullptr; // オブジェクトリスト
 
 //====================================================================
 //コンストラクタ
 //====================================================================
-CRail::CRail(int nPriority) : CObject(nPriority)
+CRail::CRail(int nPriority) : CObjectX(nPriority)
 {
 	m_pRailModel[0] = nullptr;
 	m_pRailModel[1] = nullptr;
@@ -79,31 +80,18 @@ CRail* CRail::Create()
 //====================================================================
 HRESULT CRail::Init()
 {
+	CObjectX::Init(FILE_PASS);
+
 	SetType(CObject::TYPE_RAIL);
 
-	//モードごとに初期値を設定出来る
-	switch (CScene::GetMode())
-	{
-	case CScene::MODE_TITLE:
-		break;
-
-	case CScene::MODE_GAME:
-	case CScene::MODE_TUTORIAL:
-
-		break;
-
-	case CScene::MODE_RESULT:
-		break;
+	if (m_pList == nullptr)
+	{// リストマネージャー生成
+		m_pList = CListManager<CRail>::Create();
+		if (m_pList == nullptr) { assert(false); return E_FAIL; }
 	}
 
-	//if (m_pList == nullptr)
-	//{// リストマネージャー生成
-	//	m_pList = CListManager<CRail>::Create();
-	//	if (m_pList == nullptr) { assert(false); return E_FAIL; }
-	//}
-
-	//// リストに自身のオブジェクトを追加・イテレーターを取得
-	//m_iterator = m_pList->AddList(this);
+	// リストに自身のオブジェクトを追加・イテレーターを取得
+	m_iterator = m_pList->AddList(this);
 
 	return S_OK;
 }
@@ -123,15 +111,17 @@ void CRail::Uninit(void)
 
 	SetDeathFlag(true);
 
-	//// リストから自身のオブジェクトを削除
-	//m_pList->DelList(m_iterator);
+	// リストから自身のオブジェクトを削除
+	m_pList->DelList(m_iterator);
 
-	//if (m_pList->GetNumAll() == 0)
-	//{ // オブジェクトが一つもない場合
+	if (m_pList->GetNumAll() == 0)
+	{ // オブジェクトが一つもない場合
 
-	//	// リストマネージャーの破棄
-	//	m_pList->Release(m_pList);
-	//}
+		// リストマネージャーの破棄
+		m_pList->Release(m_pList);
+	}
+
+	CObjectX::Uninit();
 }
 
 //====================================================================
@@ -152,36 +142,6 @@ void CRail::SetNULL(void)
 //更新処理
 //====================================================================
 void CRail::Update(void)
-{
-	switch (CScene::GetMode())
-	{
-	case CScene::MODE_TITLE:
-		TitleUpdate();
-		break;
-
-	case CScene::MODE_GAME:
-	case CScene::MODE_TUTORIAL:
-
-		GameUpdate();
-		break;
-
-	case CScene::MODE_RESULT:
-		break;
-	}
-}
-
-//====================================================================
-//タイトルでの更新処理
-//====================================================================
-void CRail::TitleUpdate(void)
-{
-
-}
-
-//====================================================================
-//ゲームでの更新処理
-//====================================================================
-void CRail::GameUpdate(void)
 {
 	for (int nCnt = 0; nCnt < 2; nCnt++)
 	{
@@ -302,6 +262,5 @@ void CRail::NextSet(RAIL_POS Set)
 //====================================================================
 CListManager<CRail>* CRail::GetList(void)
 {
-	return nullptr;
-	//return m_pList;
+	return m_pList;
 }

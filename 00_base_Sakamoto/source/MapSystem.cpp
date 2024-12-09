@@ -8,7 +8,7 @@
 #include "renderer.h"
 #include "game.h"
 #include "tutorial.h"
-#include "Devil.h"
+#include "devil.h"
 
 #include "AStar.h"
 #include "tile.h"
@@ -19,6 +19,7 @@
 #include "enemy.h"
 #include "RollRock.h"
 #include "objmeshField.h"
+#include "MapMove.h"
 
 // ’è”’è‹`
 namespace
@@ -126,7 +127,7 @@ void CMapSystem::Uninit(void)
 //====================================================================
 void CMapSystem::Update(void)
 {
-
+	CGame::GetInstance()->GetDevil()->GetMove()->FollowScroll(m_MapPos);
 }
 
 //====================================================================

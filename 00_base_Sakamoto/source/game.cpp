@@ -708,10 +708,10 @@ void CGame::SetBgObjTest(void)
 	// マップ移動装置
 	{
 		CScrollDevice* pScrollDevice = CScrollDevice::Create(SCROLL_DEVICE_MODEL, SCROLL_DEVICE_ENEMY_MODEL);
-		pScrollDevice->SetPos(D3DXVECTOR3(1500.0f, -300.0f, -500.0f));
+		pScrollDevice->SetPos(D3DXVECTOR3(1400.0f, -300.0f, -400.0f));
 
 		pScrollDevice = CScrollDevice::Create(SCROLL_DEVICE_MODEL, SCROLL_DEVICE_ENEMY_MODEL);
-		pScrollDevice->SetPos(D3DXVECTOR3(-1500.0f, -300.0f, -500.0f));
+		pScrollDevice->SetPos(D3DXVECTOR3(-1400.0f, -300.0f, -400.0f));
 	}
 
 	// ジャッキ
