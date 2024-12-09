@@ -32,7 +32,6 @@
     <ClCompile Include="source\move.cpp" />
     <ClCompile Include="source\objectcharacter.cpp" />
     <ClCompile Include="source\cross.cpp" />
-    <ClCompile Include="source\CubeBlock.cpp" />
     <ClCompile Include="source\debugproc.cpp" />
     <ClCompile Include="source\deltatime.cpp" />
     <ClCompile Include="source\devil.cpp" />
@@ -119,7 +118,6 @@
     <ClInclude Include="source\move.h" />
     <ClInclude Include="source\objectcharacter.h" />
     <ClInclude Include="source\cross.h" />
-    <ClInclude Include="source\CubeBlock.h" />
     <ClInclude Include="source\debugproc.h" />
     <ClInclude Include="source\deltatime.h" />
     <ClInclude Include="source\devil.h" />

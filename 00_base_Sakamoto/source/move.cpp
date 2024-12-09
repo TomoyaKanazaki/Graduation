@@ -451,10 +451,6 @@ void CStateRandom::SearchWall(CObjectCharacter* pCharacter, D3DXVECTOR3& pos)
 	CMapSystem::GRID grid = pCharacter->GetGrid();
 	m_ProgressOld = m_Progress;		// 現在の進行状況にする
 
-	//progress.bOKR = true;	//右
-	//progress.bOKL = true;	//左
-	//progress.bOKU = true;	//上
-	//progress.bOKD = true;	//下
 
 	CMapSystem* pMapSystem = CMapSystem::GetInstance(); // マップシステムのインスタンスを取得
 	/* GRID 構造体にする*/
@@ -492,6 +488,7 @@ void CStateRandom::SearchWall(CObjectCharacter* pCharacter, D3DXVECTOR3& pos)
 	float MapGritSize = pMapSystem->GetGritSize();
 
 	DebugProc::Print(DebugProc::POINT_LEFT, "敵の位置 %f %f %f\n", MyGritPos.x, MyGritPos.y, MyGritPos.z);
+	DebugProc::Print(DebugProc::POINT_LEFT, "敵の位置 : %d, %d\n", grid.x, grid.z);
 
 	// 自身の座標とグリッドの中心が許容範囲よりも小さい場合
 	if (
@@ -502,9 +499,8 @@ void CStateRandom::SearchWall(CObjectCharacter* pCharacter, D3DXVECTOR3& pos)
 		pos.z >= MyGritPos.z - ((MapGritSize * 0.5f) - GRIT_OK)))
 	{// グリットの中心位置に立っているなら操作を受け付ける
 
-		if (!m_Progress.bOKR || !m_Progress.bOKL || !m_Progress.bOKU || !m_Progress.bOKD)
+		if (!m_Progress.bOKR && !m_Progress.bOKL && !m_Progress.bOKU && !m_Progress.bOKD)
 		{ // いずれかの進行が許可されてないとき
-
 			// 待機状態にする
 			pCharacter->SetState(CObjectCharacter::STATE_WAIT);
 			m_RotState = ROTSTATE_WAIT;

@@ -71,13 +71,12 @@ public:
 	D3DXVECTOR3 GetDevilPos(void) { return m_DevilPos; }
 	void SetDifference(D3DXVECTOR3 size) { m_MapDifference = size; }
 	D3DXVECTOR3 GetDifference(void) { return m_MapDifference; }
-	void SetDevilRot(D3DXVECTOR3 Rot) { m_DevilRot = Rot; }
-	D3DXVECTOR3 GetDevilRot(void) { return m_DevilRot; }
 
 	//お引越し終了
 
 	void SetAction(ACTION_TYPE Action, float BlendTime);
 	ACTION_TYPE GetAction(void) { return m_Action; }
+	CMapMove* GetMove(void) { return m_pMapMove; }
 
 	void SetModelDisp(bool Sst);
 
@@ -115,7 +114,6 @@ private:
 	float m_CollisionRot;			//当たり判定用の向き
 
 	CSignalManager* m_pSignalManager;	// シグナルマネージャー
-	D3DXVECTOR3 m_DevilRot;			// デビルパワーによって傾く値
 	int m_DevilArrow;				// デビルパワーの方向
 	int m_ScrollArrowOld;			// 過去のスクロールの方向
 	int m_SlopwArrowOld;			// 過去の傾きの方向

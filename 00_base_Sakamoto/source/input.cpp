@@ -779,3 +779,13 @@ D3DXVECTOR3 CInputMouse::GetMouseMove(void)
 {
 	return D3DXVECTOR3(((float)m_MouseState.lX) * MOUSE_SENS, ((float)m_MouseState.lY) * MOUSE_SENS, 0.0f);
 }
+
+//==========================================
+//  ƒ}ƒEƒX‚ÌˆÚ“®—Ê
+//==========================================
+float CInputMouse::GetWheel(void)
+{
+	float fInput = (float)m_MouseState.lZ;
+
+	return fInput;
+}

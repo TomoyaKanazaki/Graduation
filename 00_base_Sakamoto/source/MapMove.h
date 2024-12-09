@@ -69,6 +69,8 @@ public:
 	void SetScrollType(SCROLL_TYPE Rot) { m_ScrollType = Rot; }
 	SCROLL_TYPE GetScrollType(void) { return m_ScrollType; }
 
+	void FollowScroll(D3DXVECTOR3& pos) { pos += m_move; }
+
 	// 静的メンバ関数
 	static CListManager<CMapMove>* GetList(void); // リスト取得
 	static CMapMove* GetListTop(void); // リスト取得
@@ -104,7 +106,6 @@ private:
 	void WallScroll(D3DXVECTOR3 Move, float GritSize);	// 壁のスクロール
 	void FriedEggScroll(D3DXVECTOR3 Move, float GritSize);	// 目玉焼きのスクロール
 
-	void FollowPos(D3DXVECTOR3 &Pos);
 	void SignalCreate(void);
 	void SignalManager(void);
 

@@ -68,13 +68,6 @@ CGame::CGame()
 
 	m_pPause = nullptr;
 	m_pTime = nullptr;
-	m_p2DSample = nullptr;
-	m_p3DSample = nullptr;
-	m_pBillboardSample = nullptr;
-	m_pXModelSample = nullptr;
-	m_pMeshFieldSample = nullptr;
-	m_pMeshWallSample = nullptr;
-	m_pMeshCylinderSample = nullptr;
 	m_pMeshDomeUp = nullptr;
 	m_pMapField = nullptr;
 	m_pCubeBlock = nullptr;
@@ -152,9 +145,6 @@ HRESULT CGame::Init(void)
 	m_pTime->SetStartTime(timeGetTime());
 	m_pTime->SetTime(0);
 
-	// 背景モデル設定処理（仮）
-	SetBgObjTest();
-
 	//デビルの生成
 	m_pDevil = CDevil::Create();
 	m_pDevil->SetPos(D3DXVECTOR3(0.0f, 100.0f, 500.0f));
@@ -179,8 +169,8 @@ HRESULT CGame::Init(void)
 	pBottonField->SetPos(BOTTOM_FIELD_POS);
 	m_bGameEnd = false;
 
-	//レールブロックの生成
-	//LoadStageRailBlock("data\\TXT\\STAGE\\RailBlock.txt");
+	// 背景モデル設定処理
+	SetBgObjTest();
 
 	//ステージの読み込み
 	switch (CManager::GetInstance()->GetStage())
@@ -209,6 +199,7 @@ HRESULT CGame::Init(void)
 
 		break;
 	}
+
 
 	// プレイヤーを生成する
 	for (int i = 0; i < CManager::GetInstance()->GetGameMode(); ++i)
@@ -717,10 +708,10 @@ void CGame::SetBgObjTest(void)
 	// マップ移動装置
 	{
 		CScrollDevice* pScrollDevice = CScrollDevice::Create(SCROLL_DEVICE_MODEL, SCROLL_DEVICE_ENEMY_MODEL);
-		pScrollDevice->SetPos(D3DXVECTOR3(2000.0f, BOTTOM_FIELD_POS.y, 200.0f));
+		pScrollDevice->SetPos(D3DXVECTOR3(1500.0f, -300.0f, -500.0f));
 
 		pScrollDevice = CScrollDevice::Create(SCROLL_DEVICE_MODEL, SCROLL_DEVICE_ENEMY_MODEL);
-		pScrollDevice->SetPos(D3DXVECTOR3(-2000.0f, BOTTOM_FIELD_POS.y, 200.0f));
+		pScrollDevice->SetPos(D3DXVECTOR3(-1500.0f, -300.0f, -500.0f));
 	}
 
 	// ジャッキ

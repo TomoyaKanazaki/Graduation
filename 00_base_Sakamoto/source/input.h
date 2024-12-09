@@ -153,6 +153,8 @@ public:
 		PUSH_WHEEL,
 		PUSH_SIDE_1,
 		PUSH_SIDE_2,
+		PUSH_UP,
+		PUSH_DOWN,
 		PUSH_MAX,
 	}MOUSE_PUSH;
 
@@ -166,6 +168,7 @@ public:
 	bool GetTrigger(MOUSE_PUSH nKey);
 	bool GetRerease(MOUSE_PUSH nKey);
 	D3DXVECTOR3 GetMouseMove(void);
+	float GetWheel(void);
 
 private:
 	LPDIRECTINPUTDEVICE8 m_pDevMouse = NULL;	//入力デバイスへのポインタ

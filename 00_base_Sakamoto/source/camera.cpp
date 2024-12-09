@@ -244,6 +244,7 @@ void CCamera::ControlCamera(void)
 {
 	//デバイスの取得
 	CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
+	CInputMouse* pInputMouse = CManager::GetInstance()->GetInputMouse();
 
 	if (m_rot.x <= D3DX_PI * 0.5f && m_rot.x >= -(D3DX_PI * 0.5f))
 	{//入力
@@ -288,17 +289,18 @@ void CCamera::ControlCamera(void)
 
 
 	//キーボード
-	//if (pInputKeyboard->GetPress(DIK_LSHIFT) == true)
-	//{
-	//	m_posV.y += CAMERA_SPEED;
-	//	m_posR.y += CAMERA_SPEED;
+	if (pInputKeyboard->GetPress(DIK_LSHIFT) == true)
+	{
+		m_posV.y += CAMERA_SPEED;
+		m_posR.y += CAMERA_SPEED;
 
-	//}
-	//if (pInputKeyboard->GetPress(DIK_LCONTROL) == true)
-	//{
-	//	m_posV.y -= CAMERA_SPEED;
-	//	m_posR.y -= CAMERA_SPEED;
-	//}
+	}
+	if (pInputKeyboard->GetPress(DIK_LCONTROL) == true)
+	{
+		m_posV.y -= CAMERA_SPEED;
+		m_posR.y -= CAMERA_SPEED;
+	}
+
 	if (pInputKeyboard->GetPress(DIK_RSHIFT) == true)
 	{
 		m_posV.y += CAMERA_SPEED;
@@ -311,17 +313,31 @@ void CCamera::ControlCamera(void)
 		m_posR.y -= CAMERA_SPEED;
 	}
 
-	//if (pInputKeyboard->GetTrigger(DIK_4) == true)
-	//{
-	//	m_CameraDistance -= 500.0f;
-	//}
+	//マウス
+	if (pInputMouse->GetPress(CInputMouse::PUSH_LEFT) == true)
+	{
+		m_rot.y += pInputMouse->GetMouseMove().x * 0.1f;
+		m_rot.x -= pInputMouse->GetMouseMove().y * 0.1f;
+	}
+	if (pInputMouse->GetPress(CInputMouse::PUSH_RIGHT) == true)
+	{
+		m_posR.z -= pInputMouse->GetMouseMove().y * (CAMERA_SPEED * cosf(m_rot.y));
+		m_posR.x += pInputMouse->GetMouseMove().x * (CAMERA_SPEED * sinf(m_rot.y));
 
-	//if (pInputKeyboard->GetTrigger(DIK_5) == true)
-	//{
-	//	m_CameraDistance += 500.0f;
-	//}
+		m_posV.z -= pInputMouse->GetMouseMove().y * (CAMERA_SPEED * cosf(m_rot.y));
+		m_posV.x += pInputMouse->GetMouseMove().x * (CAMERA_SPEED * sinf(m_rot.y));
+	}
+	if (pInputMouse->GetWheel() > 0.0f)
+	{
+		m_posV.y += CAMERA_SPEED * 3.0f;
+		m_posR.y += CAMERA_SPEED * 3.0f;
+	}
+	if (pInputMouse->GetWheel() < 0.0f)
+	{
+		m_posV.y -= CAMERA_SPEED * 3.0f;
+		m_posR.y -= CAMERA_SPEED * 3.0f;
+	}
 
-	//キーボード
 	if (pInputKeyboard->GetPress(DIK_T) == true)
 	{
 		m_posR.z += CAMERA_SPEED * cosf(m_rot.y);

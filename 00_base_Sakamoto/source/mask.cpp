@@ -39,7 +39,7 @@ CMask::~CMask()
 //========================================
 // 生成
 //========================================
-CMask* CMask::Create(int nRefidx, D3DXCOLOR col)
+CMask* CMask::Create(int nRefdx, D3DXCOLOR col)
 {
 	CMask* pMask = new CMask();
 
@@ -50,7 +50,7 @@ CMask* CMask::Create(int nRefidx, D3DXCOLOR col)
 	}
 
 	// 参照値
-	pMask->SetRefidx(nRefidx);
+	pMask->SetRefidx(nRefdx);
 
 	// カラー設定
 	pMask->SetColor(col);
@@ -71,6 +71,9 @@ HRESULT CMask::Init()
 
 	// 位置設定
 	SetPos(SCREEN_CENTER_F);
+
+	// カラー設定
+	SetColor(DEFAULT_COLOR);
 
 	return S_OK;
 }
@@ -100,8 +103,6 @@ void CMask::Draw()
 {
 	//デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
-
-	CObject2D::SetColor(PLAYER_COLOR);
 
 	//ステンシルバッファ有効
 	pDevice->SetRenderState(D3DRS_STENCILENABLE, TRUE);

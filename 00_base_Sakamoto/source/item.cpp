@@ -15,10 +15,11 @@
 #include "score.h"
 #include "softcream.h"
 #include "renderer.h"
-#include "game.h"
 #include "tutorial.h"
 #include "objmeshField.h"
 #include "shadow.h"
+#include "devil.h"
+#include "MapMove.h"
 
 //==========================================
 //  定数定義
@@ -235,6 +236,12 @@ void CItem::Update()
 
 	// 移動処理
 	Move(pos);
+
+	// スクロールに合わせて移動する
+	if (m_bMapScroll)
+	{
+		CGame::GetInstance()->GetDevil()->GetMove()->FollowScroll(pos);
+	}
 
 	// 経過時間を取得
 	m_fMoveTime += DeltaTime::Get();

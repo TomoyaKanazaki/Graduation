@@ -113,14 +113,6 @@ private:
 
 	CObject2D* LetterBox[2];				//イベント時の背景表示
 
-	CObject2D* m_p2DSample;					//2Dポリゴンのサンプル
-	CObject3D* m_p3DSample;					//3Dポリゴンのサンプル
-	CObjectBillboard* m_pBillboardSample;	//Billboardポリゴンのサンプル
-	CObjectX* m_pXModelSample;				//Xモデルのサンプル
-	CObjmeshField* m_pMeshFieldSample;		//メッシュフィールドのサンプル
-	CObjmeshWall* m_pMeshWallSample;		//メッシュウォールのサンプル
-	CObjmeshCylinder* m_pMeshCylinderSample;//メッシュシリンダーのサンプル
-
 	CMask* m_pMask;	// 2Dマスク
 	CMask* m_pEnemyMask;	// 2Dマスク
 };
