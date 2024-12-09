@@ -18,7 +18,6 @@
 #include "input.h"
 #include "player.h"
 #include "useful.h"
-#include "CubeBlock.h"
 #include "slowManager.h"
 #include "score.h"
 #include "devil.h"

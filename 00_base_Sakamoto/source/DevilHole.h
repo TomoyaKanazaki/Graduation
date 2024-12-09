@@ -42,8 +42,6 @@ public:
 
 	int GetIdx(void) { return m_nIdxTexture; }
 	int GetIdxXModel(void) { return -1; }
-	void SetPos(D3DXVECTOR3 pos) { m_pos = pos; }
-	D3DXVECTOR3 GetPos(void) { return m_pos; }
 
 	// マップ番号の設定
 	virtual void SetGrid(const CMapSystem::GRID& pos) { m_Grid = pos; }
@@ -54,7 +52,7 @@ public:
 
 private:
 	void StateManager(void);	//状態管理
-	void CollisionOpen(void);	//解除判定
+	void CollisionOpen(D3DXVECTOR3& pos);	//解除判定
 	void ClearJudge(void);		//クリア判定処理
 
 	CMapSystem::GRID m_Grid;	//グリット番号
@@ -66,10 +64,6 @@ private:
 	STATE m_State;					//状態
 	int m_nStateCount;				//状態管理用変数
 	float m_Scaling;				//大きさ
-	D3DXVECTOR3 m_pos;				//位置	
-	D3DXVECTOR3 m_posOld;			//過去の位置	
-	D3DXVECTOR3 m_move;				//移動量	
-	D3DXVECTOR3 m_rot;				//向き	
 	float m_fColorA;				//不透明度
 
 	bool m_bSet[4];					//上下左右の穴が埋まっているかどうか

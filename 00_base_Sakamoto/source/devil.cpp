@@ -19,7 +19,6 @@
 #include "camera.h"
 #include "input.h"
 #include "enemy.h"
-#include "CubeBlock.h"
 #include "slowManager.h"
 #include "Number.h"
 #include "MapModel.h"
@@ -71,7 +70,6 @@ CDevil::CDevil(int nPriority) : CObjectCharacter(nPriority)
 	m_CollisionRot = 0.0f;
 	m_DevilPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_MapDifference = INITVECTOR3;
-	m_DevilRot = INITVECTOR3;
 	m_bSlope = false;
 	m_MinGrid = CMapSystem::GRID(0, 0);
 	m_MaxGrid = CMapSystem::GRID(NUM_WIGHT - 1, NUM_HEIGHT - 1);
@@ -323,29 +321,6 @@ void CDevil::SetModelDisp(bool Sst)
 		{
 			// 表示設定
 			pModel->SetDisp(Sst);
-		}
-	}
-}
-
-//====================================================================
-// プレイヤーが潰される時の処理
-//====================================================================
-void CDevil::CollisionPressPlayer(CPlayer* pPlayer, D3DXVECTOR3 pos, D3DXVECTOR3 Size)
-{
-	// キューブブロックのリスト構造が無ければ抜ける
-	if (CCubeBlock::GetList() == nullptr) { return; }
-	std::list<CCubeBlock*> list = CCubeBlock::GetList()->GetList();    // リストを取得
-
-	// キューブブロックのリストの中身を確認する
-	for (CCubeBlock* pCubeBlock : list)
-	{
-		D3DXVECTOR3 Blockpos = pCubeBlock->GetPos();
-		D3DXVECTOR3 BlockSize = pCubeBlock->GetSize();
-
-		if (useful::CollisionRectangle2D(pos, Blockpos, Size, BlockSize, useful::COLLISION::COLLISION_ZX))
-		{
-			pPlayer->Death();
-			return;
 		}
 	}
 }
