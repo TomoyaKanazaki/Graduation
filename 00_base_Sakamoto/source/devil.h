@@ -78,6 +78,7 @@ public:
 
 	void SetAction(ACTION_TYPE Action, float BlendTime);
 	ACTION_TYPE GetAction(void) { return m_Action; }
+	CMapMove* GetMove(void) { return m_pMapMove; }
 
 	void SetModelDisp(bool Sst);
 

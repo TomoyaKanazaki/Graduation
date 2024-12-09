@@ -18,7 +18,6 @@
 #include "bowabowa.h"
 #include "Cross.h"
 #include "player.h"
-#include "enemy.h"
 #include "railblock.h"
 #include "RollRock.h"
 #include "tile.h"
