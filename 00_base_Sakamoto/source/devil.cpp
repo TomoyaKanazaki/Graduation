@@ -71,7 +71,6 @@ CDevil::CDevil(int nPriority) : CObjectCharacter(nPriority)
 	m_CollisionRot = 0.0f;
 	m_DevilPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_MapDifference = INITVECTOR3;
-	m_DevilRot = INITVECTOR3;
 	m_bSlope = false;
 	m_MinGrid = CMapSystem::GRID(0, 0);
 	m_MaxGrid = CMapSystem::GRID(NUM_WIGHT - 1, NUM_HEIGHT - 1);

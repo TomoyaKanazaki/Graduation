@@ -172,9 +172,6 @@ HRESULT CGame::Init(void)
 	pBottonField->SetPos(BOTTOM_FIELD_POS);
 	m_bGameEnd = false;
 
-	//レールブロックの生成
-	//LoadStageRailBlock("data\\TXT\\STAGE\\RailBlock.txt");
-
 	//ステージの読み込み
 	switch (CManager::GetInstance()->GetStage())
 	{
