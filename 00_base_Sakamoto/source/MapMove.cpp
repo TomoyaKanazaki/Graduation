@@ -207,107 +207,66 @@ void CMapMove::Draw(void)
 //====================================================================
 void CMapMove::Move(int Arroow)
 {
-	D3DXVECTOR3 NormarizeMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-
+	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
 	switch (m_ScrollType)
 	{
 	case CMapMove::SCROLL_TYPE_NORMAL:
-
 		switch (Arroow)
 		{
 		case 0:
-
-			ObjectScroll(D3DXVECTOR3(0.0f, 0.0f, SCROOL_SPEED_01));
 			m_move.z = SCROOL_SPEED_01;
-
 			break;
 		case 1:
-
-			ObjectScroll(D3DXVECTOR3(0.0f, 0.0f, -SCROOL_SPEED_01));
 			m_move.z = -SCROOL_SPEED_01;
-
 			break;
 		case 2:
-
-			ObjectScroll(D3DXVECTOR3(-SCROOL_SPEED_01, 0.0f, 0.0f));
 			m_move.x = -SCROOL_SPEED_01;
-
 			break;
 		case 3:
-
-			ObjectScroll(D3DXVECTOR3(SCROOL_SPEED_01, 0.0f, 0.0f));
 			m_move.x = SCROOL_SPEED_01;
-
 			break;
 		}
-
 		break;
 
 	case CMapMove::SCROLL_TYPE_RETRO:
-
 		switch (Arroow)
 		{
 		case 0:
-
-			ObjectScroll(D3DXVECTOR3(0.0f, 0.0f, SCROOL_SPEED_02));
 			m_move.z = SCROOL_SPEED_02;
-
 			break;
 		case 1:
-
-			ObjectScroll(D3DXVECTOR3(0.0f, 0.0f, -SCROOL_SPEED_02));
 			m_move.z = -SCROOL_SPEED_02;
-
 			break;
 		case 2:
-
-			ObjectScroll(D3DXVECTOR3(-SCROOL_SPEED_02, 0.0f, 0.0f));
 			m_move.x = -SCROOL_SPEED_02;
-
 			break;
 		case 3:
-
-			ObjectScroll(D3DXVECTOR3(SCROOL_SPEED_02, 0.0f, 0.0f));
 			m_move.x = SCROOL_SPEED_02;
-
 			break;
 		}
-
 		break;
 
 	default:
-
 		switch (Arroow)
 		{
 		case 0:
-
-			ObjectScroll(D3DXVECTOR3(0.0f, 0.0f, SCROOL_SPEED_01));
 			m_move.z = SCROOL_SPEED_01;
-
 			break;
 		case 1:
-
-			ObjectScroll(D3DXVECTOR3(0.0f, 0.0f, -SCROOL_SPEED_01));
 			m_move.z = -SCROOL_SPEED_01;
-
 			break;
 		case 2:
-
-			ObjectScroll(D3DXVECTOR3(-SCROOL_SPEED_01, 0.0f, 0.0f));
 			m_move.x = -SCROOL_SPEED_01;
-
 			break;
 		case 3:
-
-			ObjectScroll(D3DXVECTOR3(SCROOL_SPEED_01, 0.0f, 0.0f));
 			m_move.x = SCROOL_SPEED_01;
-
 			break;
 		}
-
 		break;
 	}
+
+	ObjectScroll(m_move);
 }
 
 //====================================================================
