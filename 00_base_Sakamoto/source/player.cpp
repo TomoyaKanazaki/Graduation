@@ -432,6 +432,9 @@ void CPlayer::Update(void)
 	//デバッグキーの処理と設定
 	DebugKey();
 
+	// スクロールに合わせて移動する
+	CGame::GetInstance()->GetDevil()->GetMove()->FollowScroll(posThis);
+
 	//デバッグ表示
 	DebugProc::Print(DebugProc::POINT_LEFT, "[自分]位置 %f : %f : %f\n", posThis.x, posThis.y, posThis.z);
 	DebugProc::Print(DebugProc::POINT_LEFT, "[自分]向き %f : %f : %f\n", rotThis.x, rotThis.y, rotThis.z);
