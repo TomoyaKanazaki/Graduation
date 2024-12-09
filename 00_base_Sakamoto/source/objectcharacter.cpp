@@ -291,6 +291,7 @@ void CObjectCharacter::ChangeMoveState(CMoveState* pMoveState)
 	}
 
 	m_pMoveState = pMoveState;
+	m_pMoveState->Init();
 }
 
 //====================================================================

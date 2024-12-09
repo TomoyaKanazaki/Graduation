@@ -276,14 +276,12 @@ void CEnemy::Update(void)
 	else if (pInputKeyboard->GetTrigger(DIK_N))
 	{
 		m_pMoveState->ControlAStar(this);			// ’ÇÕ or ‘€ì
-		m_pMoveState->SetEnemyType(m_EnemyType);	// “G‚ÌŽí—ÞÝ’è
 
 	}
 	// MƒL[
 	else if (pInputKeyboard->GetTrigger(DIK_M))
 	{
 		m_pMoveState->RandomAStar(this);			// ƒ‰ƒ“ƒ_ƒ€ or ’ÇÕ
-		m_pMoveState->SetEnemyType(m_EnemyType);	// “G‚ÌŽí—ÞÝ’è
 	}
 
 	// Ž©•ª‚Ì”Ô†‚ðÝ’è
@@ -589,6 +587,8 @@ void CEnemy::ChangeMoveState(CMoveState* pMoveState)
 	}
 
 	m_pMoveState = pMoveState;
+	m_pMoveState->SetEnemyType(m_EnemyType);	// “G‚ÌŽí—ÞÝ’è
+	m_pMoveState->Init();
 }
 
 //====================================================================
