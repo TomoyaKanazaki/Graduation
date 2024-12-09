@@ -130,8 +130,7 @@ void CObject::UpdateAll(void)
 				{
 					if (CGame::GetInstance()->GetEvent() == true)
 					{
-						if (pObject->m_type != TYPE_PLAYER3D &&
-							pObject->m_type != TYPE_ENEMY3D &&
+						if (pObject->m_type != TYPE_ENEMY3D &&
 							pObject->m_type != TYPE_SOFTCREAM)
 						{
 							//XVˆ—

@@ -26,6 +26,9 @@
 #include "signal.h"
 #include "pause.h"
 #include "EventMovie.h"
+#include "objmeshField.h"
+#include "Cross.h"
+#include "MapMove.h"
 
 #include "sound.h"
 #include "shadow.h"
@@ -390,6 +393,7 @@ void CGame::Update(void)
 
 		//ポーズの更新処理
 		if (m_pPause != nullptr)
+	
 		{
 			m_pPause->Update();
 		}
@@ -422,40 +426,77 @@ void CGame::Draw(void)
 }
 
 //====================================================================
+//ステージ進行処理
+//====================================================================
+void CGame::NextStage(void)
+{
+	//イベントフラグを立てる
+	m_bEvent = true;
+
+	// マップの生成
+	CMapMove::GetListTop()->Init();
+	CObjmeshField::GetListTop()->SetRot(INITVECTOR3);
+
+	if(m_pEventMovie != nullptr)
+	{
+		m_pEventMovie->SetEventType(CEventMovie::STATE_CHANGE);
+	}
+
+	//十字架の削除
+	DeleteCross();
+
+	// ソフトクリームの生成
+	CItem::Create(CItem::TYPE_SOFTCREAM, CMapSystem::GetInstance()->GetCenter());
+
+	//聖書の生成
+	CreateBible();
+
+	//ステージ情報を進める
+	CManager::GetInstance()->SetStage(1);
+
+	m_bGameEnd = false;
+}
+
+//====================================================================
+//十字架の削除
+//====================================================================
+void CGame::DeleteCross(void)
+{
+	// デビルホールのリスト構造が無ければ抜ける
+	if (CCross::GetList() == nullptr) { return; }
+	std::list<CCross*> list = CCross::GetList()->GetList();    // リストを取得
+
+	// デビルホールリストの中身を確認する
+	for (CCross* pCross : list)
+	{
+		pCross->Uninit();
+	}
+}
+
+//====================================================================
+//聖書の生成
+//====================================================================
+void CGame::CreateBible(void)
+{
+	// 聖書生成
+	CItem::Create(CItem::TYPE_BIBLE, CMapSystem::GRID(BIBLE_OUTGRIT - 1, BIBLE_OUTGRIT - 1));
+	CItem::Create(CItem::TYPE_BIBLE, CMapSystem::GRID(NUM_WIGHT - BIBLE_OUTGRIT, BIBLE_OUTGRIT - 1));
+	CItem::Create(CItem::TYPE_BIBLE, CMapSystem::GRID(BIBLE_OUTGRIT - 1, NUM_HEIGHT - BIBLE_OUTGRIT));
+	CItem::Create(CItem::TYPE_BIBLE, CMapSystem::GRID(NUM_WIGHT - BIBLE_OUTGRIT, NUM_HEIGHT - BIBLE_OUTGRIT));
+}
+
+//====================================================================
 //ステージクリア処理
 //====================================================================
 void CGame::StageClear(int Stage)
 {
-	if (Stage == 1)
+	if (Stage == 0)
 	{
-		CManager::GetInstance()->SetStage(0);
-
-		CFade::SetFade(CScene::MODE_RESULT);
-		m_pTime->SetStopTime(true);
-
-		int EndScore = 0;
-
-		for (unsigned int nCnt = 0; nCnt < m_pPlayer.size(); nCnt++)
-		{
-			if (m_pPlayer.at(nCnt) != nullptr)
-			{
-				EndScore += m_pPlayer.at(nCnt)->GetScore()->GetScore();
-			}
-		}
-
-		CManager::GetInstance()->SetEndScore(EndScore);
-
-		if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
-		{
-			CManager::GetInstance()->SetEnd1PScore(m_pPlayer.at(0)->GetScore()->GetScore());
-			CManager::GetInstance()->SetEnd2PScore(m_pPlayer.at(1)->GetScore()->GetScore());
-		}
+		NextStage();
 	}
 	else
 	{
-		CManager::GetInstance()->SetStage(Stage + 1);
-
-		CFade::SetFade(CScene::MODE_GAME);
+		CFade::SetFade(CScene::MODE_RESULT);
 		m_pTime->SetStopTime(true);
 
 		int EndScore = 0;

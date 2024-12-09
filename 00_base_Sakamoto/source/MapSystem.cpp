@@ -387,7 +387,7 @@ void CMapSystem::Load(const char* pFilename)
 								CWall::Create(grid);
 
 								// グリッド判定の設定
-								pMapSystem->SetGritBool(grid, true);
+								pMapSystem->SetGritBool(grid.x, grid.z, true);
 
 								// 経路探索用情報の設定
 								generator->addCollision(grid.ToAStar()); // 通過不可地点を追加

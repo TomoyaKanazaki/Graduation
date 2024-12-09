@@ -75,6 +75,10 @@ public:
 	bool GetSlow(void) { return m_Slow; }
 
 private:
+	void NextStage(void);
+	void DeleteCross(void);
+	void CreateBible(void);
+
 	void UpdateLetterBox(void);
 	void StageClear(int Stage);
 	void LoadStageRailBlock(const char* pFilename);
