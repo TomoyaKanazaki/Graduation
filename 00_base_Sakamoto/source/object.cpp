@@ -130,8 +130,7 @@ void CObject::UpdateAll(void)
 				{
 					if (CGame::GetInstance()->GetEvent() == true)
 					{
-						if (pObject->m_type != TYPE_PLAYER3D &&
-							pObject->m_type != TYPE_ENEMY3D &&
+						if (pObject->m_type != TYPE_ENEMY3D &&
 							pObject->m_type != TYPE_SOFTCREAM)
 						{
 							//更新処理
@@ -205,7 +204,7 @@ void CObject::DrawAll(int nCnt)
 			{
 				CObject* pObjectNext = pObject->m_pNext;	//次のオブジェクトを保存
 
-				if (pObject->m_Appear == true && pObject->m_bDisp == true)
+				if (pObject->m_Appear == true)
 				{
 					//描画処理
 					pObject->Draw();

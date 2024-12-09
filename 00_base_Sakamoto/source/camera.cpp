@@ -65,6 +65,8 @@ CCamera::CCamera()
 	m_move = D3DXVECTOR3(10.0f, 0.0f, 0.0f);
 	m_posV = INITVECTOR3;
 	m_posR = INITVECTOR3;
+	m_SetposV = INITVECTOR3;
+	m_SetposR = INITVECTOR3;
 	m_rot = INITVECTOR3;
 	m_PlayerPos = INITVECTOR3;
 	m_DelCameraPos = INITVECTOR3;
@@ -214,8 +216,8 @@ void CCamera::Update(void)
 		case CAMERAMODE_FPSCOMPLEMENT:		//一人称変更時の補完用カメラ
 			FPSComplementCamera();
 			break;
-		case CAMERAMODE_ULTIMATE:	//術発動中のプレイヤー見下ろし視点
-			UltimateCamera();
+		case CAMERAMODE_SETPOS:	//術発動中のプレイヤー見下ろし視点
+			SetPosCamera();
 			break;
 		case CAMERAMODE_SEAMLESS:
 			SeamlessModeChangeCamera();
@@ -733,45 +735,40 @@ void CCamera::FPSComplementCamera(void)
 }
 
 //====================================================================
-//術発動時のカメラ
+//指定した位置に動くカメラ
 //====================================================================
-void CCamera::UltimateCamera(void)
+void CCamera::SetPosCamera(void)
 {
-	//プレイヤーの取得
-	CPlayer* pPlayer = nullptr;
+	m_posVDest.x = m_SetposV.x;
+	m_posVDest.z = m_SetposV.z;
+	m_posVDest.y = m_SetposV.y;
 
-	pPlayer = CGame::GetInstance()->GetPlayer(0);
+	m_posRDest.x = m_SetposR.x;
+	m_posRDest.z = m_SetposR.z;
+	m_posRDest.y = m_SetposR.y;
 
-	if (pPlayer == nullptr)
+	if (m_bBib == true)
 	{
-		return;
+		m_fBibPowor += 0.8f;
+
+		m_posR.x += (m_posRDest.x - m_posR.x) * m_fHomingSpeed;
+		m_posR.y += (m_posRDest.y - m_posR.y) * m_fHomingSpeed * 5.0f;
+		m_posR.z += (m_posRDest.z - m_posR.z) * m_fHomingSpeed;
+
+		m_posV.x += (m_posVDest.x - m_posV.x) * m_fHomingSpeed * 5.0f + (int)(sin(D3DX_PI * m_fBibPowor) * 10.0f);
+		m_posV.y += (m_posVDest.y - m_posV.y) * m_fHomingSpeed * 5.0f + (int)(sin(D3DX_PI * m_fBibPowor) * 10.0f);
+		m_posV.z += (m_posVDest.z - m_posV.z) * m_fHomingSpeed * 5.0f + (int)(sin(D3DX_PI * m_fBibPowor) * 10.0f);
 	}
-
-	// 変数宣言
-	float fRotDest = 0.0f;	// 差分保存用
-	float fRotDiff = 0.0f;	// 差分保存用
-
-	// 差分を計算
-	fRotDest = (pPlayer->GetRot().y + D3DX_PI * ULTIMATE_ROT);
-	// 目標の角度までの差分を求める
-	fRotDiff = fRotDest - m_rot.y;
-
-	/*if (fRotDiff > D3DX_PI)
+	else
 	{
-		fRotDiff -= (D3DX_PI * 2);
+		m_posR.x += (m_posRDest.x - m_posR.x) * m_fHomingSpeed;
+		m_posR.y += (m_posRDest.y - m_posR.y) * m_fHomingSpeed;
+		m_posR.z += (m_posRDest.z - m_posR.z) * m_fHomingSpeed;
+
+		m_posV.x += (m_posVDest.x - m_posV.x) * m_fHomingSpeed;
+		m_posV.y += (m_posVDest.y - m_posV.y) * m_fHomingSpeed;
+		m_posV.z += (m_posVDest.z - m_posV.z) * m_fHomingSpeed;
 	}
-	if (fRotDiff < -D3DX_PI)
-	{
-		fRotDiff += (D3DX_PI * 2);
-	}*/
-
-	// 視点の設定
-	m_posV.x = m_posR.x + sinf(fRotDiff) * cosf(m_rot.x) * ULTIMATE_DISTANCE;
-	m_posV.z = m_posR.z + cosf(fRotDiff) * cosf(m_rot.x) * ULTIMATE_DISTANCE;
-	m_posV.y = pPlayer->GetPos().y + ULTIMATE_DISTANCEu;
-
-	// 注視点の設定
-	m_posR = pPlayer->GetPos();
 }
 
 //====================================================================
