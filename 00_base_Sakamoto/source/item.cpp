@@ -15,10 +15,11 @@
 #include "score.h"
 #include "softcream.h"
 #include "renderer.h"
-#include "game.h"
 #include "tutorial.h"
 #include "objmeshField.h"
 #include "shadow.h"
+#include "devil.h"
+#include "MapMove.h"
 
 //==========================================
 //  定数定義
@@ -58,7 +59,8 @@ CItem::CItem(int nPriority) : CObjectX(nPriority),
 m_posBase(INITVECTOR3),
 m_fMoveTime(0.0f),
 m_pShadow(nullptr),
-m_pEffect(nullptr)
+m_pEffect(nullptr),
+m_nRefIdx(0)
 {
 	m_eType = TYPE_NONE;		// 種類
 	m_nIdxXModel = 0;			// Xモデル番号
@@ -136,7 +138,7 @@ CItem* CItem::Create(const TYPE eType, const CMapSystem::GRID& pos)
 	pItem->SetItem(eType);
 
 	// 位置の設定
-	pItem->SetGrid(pos);
+	pItem->SetGrid(pos, true);
 
 	// エフェクトを生成
 	pItem->SetEffect();
@@ -161,12 +163,15 @@ void CItem::Move(D3DXVECTOR3& pos)
 //====================================================================
 // 初期化
 //====================================================================
-HRESULT CItem::Init(const char* pModelName)
+HRESULT CItem::Init(const char* pModelName, int ref)
 {
 	D3DXVECTOR3 pos = GetPos();
 
 	// 継承クラスの初期化
 	CObjectX::Init(pModelName);
+
+	// ステンシルの参照値設定
+	SetRefIdx(ref);
 
 	//マップとのマトリックスの掛け合わせをオンにする
 	SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
@@ -259,7 +264,6 @@ void CItem::Update()
 	// 情報の更新
 	SetPos(pos);
 	SetRot(rot);
-	m_Grid = CMapSystem::GetInstance()->CalcGrid(pos);
 
 	// 親クラスの更新処理
 	CObjectX::Update();
@@ -277,7 +281,7 @@ void CItem::Draw()
 	pDevice->SetRenderState(D3DRS_STENCILENABLE, TRUE);
 
 	//ステンシルバッファと比較する参照値の設定 => ref
-	pDevice->SetRenderState(D3DRS_STENCILREF, 1);
+	pDevice->SetRenderState(D3DRS_STENCILREF, m_nRefIdx);
 
 	//ステンシルバッファの値に対してのマスク設定 => 0xff(全て真)
 	pDevice->SetRenderState(D3DRS_STENCILMASK, 255);
@@ -300,7 +304,7 @@ void CItem::Draw()
 //==========================================
 //  マップ番号の設定
 //==========================================
-void CItem::SetGrid(const CMapSystem::GRID& pos)
+void CItem::SetGrid(const CMapSystem::GRID& pos, bool bBase)
 {
 	// グリッド情報を保存する
 	m_Grid = pos;
@@ -308,11 +312,11 @@ void CItem::SetGrid(const CMapSystem::GRID& pos)
 	// グリッド情報から自身の座標を算出する
 	D3DXVECTOR3 calc = CMapSystem::GetInstance()->GetGritPos(pos);
 	calc.y = BASE_Y;
-	m_posBase = calc;
+	if (bBase) { m_posBase = calc; }
 
 	// 位置を設定
-	CItem::SetPos(m_posBase);
-	CObjectX::SetPos(m_posBase);
+	CItem::SetPos(calc);
+	CObjectX::SetPos(calc);
 }
 
 //====================================================================

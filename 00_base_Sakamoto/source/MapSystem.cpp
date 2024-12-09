@@ -8,10 +8,9 @@
 #include "renderer.h"
 #include "game.h"
 #include "tutorial.h"
-#include "Devil.h"
+#include "devil.h"
 
 #include "AStar.h"
-#include "CubeBlock.h"
 #include "tile.h"
 #include "wall.h"
 #include "item.h"
@@ -20,13 +19,14 @@
 #include "enemy.h"
 #include "RollRock.h"
 #include "objmeshField.h"
+#include "MapMove.h"
 
 // 定数定義
 namespace
 {
 	float GRID_SIZE = 100.0f;	// グリッドのサイズ
 	D3DXVECTOR3 MAP_SIZE = D3DXVECTOR3(750.0f, 0.0f, 550.0f);		// 横の当たり判定
-	int BOWABOWA_RATE = 5; // ボワボワの生成率 ( 0以下でエラー )
+	int BOWABOWA_RATE = 2; // ボワボワの生成率 ( 0以下でエラー )
 }
 
 //静的メンバ変数宣言
@@ -127,7 +127,7 @@ void CMapSystem::Uninit(void)
 //====================================================================
 void CMapSystem::Update(void)
 {
-
+	CGame::GetInstance()->GetDevil()->GetMove()->FollowScroll(m_MapPos);
 }
 
 //====================================================================

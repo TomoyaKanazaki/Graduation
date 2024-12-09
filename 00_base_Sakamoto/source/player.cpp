@@ -17,10 +17,8 @@
 #include "camera.h"
 #include "input.h"
 #include "enemy.h"
-#include "CubeBlock.h"
 #include "slowManager.h"
 #include "Number.h"
-#include "MapModel.h"
 #include "sound.h"
 #include "LifeUi.h"
 #include "cross.h"
@@ -152,13 +150,13 @@ HRESULT CPlayer::Init(int PlayNumber)
 	{
 	case 0:
 
-		CObjectCharacter::SetTxtCharacter("data\\TXT\\motion_tamagon1P.txt");
+		CObjectCharacter::SetTxtCharacter("data\\TXT\\motion_tamagon1P.txt", 1);
 
 		break;
 
 	case 1:
 
-		CObjectCharacter::SetTxtCharacter("data\\TXT\\motion_tamagon2P.txt");
+		CObjectCharacter::SetTxtCharacter("data\\TXT\\motion_tamagon2P.txt", 1);
 
 		break;
 	}
@@ -434,6 +432,9 @@ void CPlayer::Update(void)
 	//デバッグキーの処理と設定
 	DebugKey();
 
+	// スクロールに合わせて移動する
+	CGame::GetInstance()->GetDevil()->GetMove()->FollowScroll(posThis);
+
 	//デバッグ表示
 	DebugProc::Print(DebugProc::POINT_LEFT, "[自分]位置 %f : %f : %f\n", posThis.x, posThis.y, posThis.z);
 	DebugProc::Print(DebugProc::POINT_LEFT, "[自分]向き %f : %f : %f\n", rotThis.x, rotThis.y, rotThis.z);
@@ -465,28 +466,8 @@ void CPlayer::Update(void)
 //====================================================================
 void CPlayer::Draw(void)
 {
-	//デバイスの取得
-	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
-
 	// キャラクタークラスの描画（継承）
 	CObjectCharacter::Draw();
-
-	//ステンシルバッファ有効
-	pDevice->SetRenderState(D3DRS_STENCILENABLE, TRUE);
-
-	//ステンシルバッファと比較する参照値の設定 => ref
-	pDevice->SetRenderState(D3DRS_STENCILREF, 1);
-
-	//ステンシルバッファの値に対してのマスク設定 => 0xff(全て真)
-	pDevice->SetRenderState(D3DRS_STENCILMASK, 255);
-
-	//ステンシルバッファの比較方法 <= (参照値 <= ステンシルバッファの参照値)なら合格
-	pDevice->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_EQUAL);
-
-	//ステンシルテスト結果に対しての反映設定
-	pDevice->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_INCRSAT);	// Zテスト・ステンシルテスト成功
-	pDevice->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP);		// Zテスト・ステンシルテスト失敗
-	pDevice->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_KEEP);		// Zテスト失敗・ステンシルテスト成功
 }
 
 //====================================================================
@@ -1987,6 +1968,7 @@ void CPlayer::ChangeMoveState(CMoveState* pMoveState)
 	}
 
 	m_pMoveState = pMoveState;
+	m_pMoveState->Init();
 }
 
 //====================================================================

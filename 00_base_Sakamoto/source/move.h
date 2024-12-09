@@ -50,6 +50,7 @@ public:
     CMoveState();
     virtual ~CMoveState() {}
 
+    virtual void Init() {}         // 初期化
     virtual void Release() {}      // 破棄
 
     // 操作
@@ -80,7 +81,6 @@ public:
 protected:
 
     // メンバ関数
-    virtual void Init() {}          // 初期化
     void Rot(CObjectCharacter* pCharacter, D3DXVECTOR3& rotMy);						//移動方向処理
     void UpdatePos(CObjectCharacter* pCharacter, D3DXVECTOR3& pos);	// 位置更新処理
 
@@ -159,6 +159,7 @@ private:
     CObjectCharacter::PROGGRESS m_ProgressOld;        // 前回の進行許可情報
     ROTSTATE m_RotState;            // 移動方向の状態
     int m_nSelectCounter;           // 移動方向変更カウンター
+    bool m_bSwitchMove;             // 移動方向を変えるか
 
 };
 
@@ -171,6 +172,7 @@ public:
     CStateAStar();
     ~CStateAStar() {}
 
+    void Init() override;         // 初期化
     void Release() override;      // 破棄
 
     // 切り替え処理
@@ -186,8 +188,6 @@ public:
 private:
 
     // メンバ関数
-    void Init() override;         // 初期化
-
     void Coordinate(CObjectCharacter* pCharacter); // 最短経路探索
     void Route(CObjectCharacter* pCharacter);	// 最短経路をたどる
 

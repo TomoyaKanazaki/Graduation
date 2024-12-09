@@ -18,7 +18,7 @@
 class CMask : public CObject2D
 {
 public:
-	CMask(int nPriority = 7);	//コンストラクタ
+	CMask(int nPriority = 5);	//コンストラクタ
 	~CMask();	//デストラクタ
 
 	static CMask* Create(int nRefidx, D3DXCOLOR col);
@@ -28,7 +28,9 @@ public:
 	void Update();
 	void Draw();
 
+	// ステンシルの参照値設定・取得
 	void SetRefidx(int nRef) { m_nRefidx = nRef; }
+	int GetRefIdx() { return m_nRefidx; }
 
 private:
 	//メンバ変数

@@ -14,7 +14,7 @@
 class CObjGauge2D;
 
 //オブジェクトプレイヤークラス
-class CRail : public CObject
+class CRail : public CObjectX
 {
 public:
 
@@ -36,8 +36,6 @@ public:
 	void Uninit(void);
 	void SetNULL(void);
 	void Update(void);
-	void TitleUpdate(void);
-	void GameUpdate(void);
 	void Draw(void);
 
 	void PrevSet(RAIL_POS Set);
@@ -72,11 +70,11 @@ private:
 	CRail* m_pPrev;		// 前のレールへのポインタ
 	CRail* m_pNext;		// 次のレールへのポインタ
 
-	//// 静的メンバ変数
-	//static CListManager<CRail>* m_pList; // オブジェクトリスト
+	// 静的メンバ変数
+	static CListManager<CRail>* m_pList; // オブジェクトリスト
 
-	//// メンバ変数
-	//CListManager<CRail>::AIterator m_iterator; // イテレーター
+	// メンバ変数
+	CListManager<CRail>::AIterator m_iterator; // イテレーター
 
 };
 #endif

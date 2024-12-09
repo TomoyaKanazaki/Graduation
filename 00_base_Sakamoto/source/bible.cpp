@@ -21,7 +21,7 @@ namespace
 {
 	const D3DXVECTOR3 SAMPLE_SIZE = D3DXVECTOR3(20.0f, 20.0f, 20.0f);		//当たり判定
 	const char* MODEL_PASS = "data\\MODEL\\02_item\\holybible.x"; // モデルパス
-	const float MOVE_SCALE = sqrtf(100.0f * 100.0f * 2.0f); // 移動幅
+	const float MOVE_SCALE = sqrtf(50.0f * 50.0f * 2.0f); // 移動幅
 }
 
 //===========================================
@@ -52,7 +52,7 @@ CBible::~CBible()
 HRESULT CBible::Init()
 {
 	// 親クラスの初期化
-	if (FAILED(CItem::Init(MODEL_PASS))) { assert(false); return E_FAIL; }
+	if (FAILED(CItem::Init(MODEL_PASS, 3))) { assert(false); return E_FAIL; }
 
 	// オブジェクトの種類を設定
 	SetType(CObject::TYPE_BIBLE);
@@ -139,6 +139,9 @@ void CBible::Move(D3DXVECTOR3& pos)
 	// 基準位置に移動量を加算する
 	pos.x = base.x + x;
 	pos.z = base.z + z;
+
+	// グリッドを設定
+	SetGrid(CMapSystem::GetInstance()->CalcGrid(pos));
 }
 
 //==========================================

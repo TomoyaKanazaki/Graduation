@@ -51,7 +51,7 @@ CBowabowa::~CBowabowa()
 HRESULT CBowabowa::Init()
 {
 	// 親クラスの初期化
-	if(FAILED(CItem::Init(MODEL_PASS))){ assert(false); return E_FAIL; }
+	if(FAILED(CItem::Init(MODEL_PASS, 3))){ assert(false); return E_FAIL; }
 
 	// オブジェクトの種類を設定
 	SetType(CObject::TYPE_BOWABOWA);
@@ -150,6 +150,9 @@ void CBowabowa::Move(D3DXVECTOR3& pos)
 
 	// 基準位置に移動量を加算する
 	pos.y = base.y + fScale;
+
+	// 親クラスの移動
+	CItem::Move(pos);
 }
 
 //==========================================

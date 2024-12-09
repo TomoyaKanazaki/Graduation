@@ -40,7 +40,6 @@ namespace
 	const float MOVE_ASTAR = 150.0f;		// 追跡時の移動速度
 
 	const float GRIT_OK = 45.0f;			//移動可能なグリットの範囲内
-	const int NUM_RAND_SELECT = 60;			// 移動方向選択するまでのカウント数
 
 }
 
@@ -380,17 +379,18 @@ CStateRandom::CStateRandom()
 	m_State = STATE_RANDOM;
 
 	// 進行許可情報
-	m_Progress.bOKR = true;	//右
-	m_Progress.bOKL = true;	//左
-	m_Progress.bOKU = true;	//上
-	m_Progress.bOKD = true;	//下 
+	m_Progress.bOKR = false;	//右
+	m_Progress.bOKL = false;	//左
+	m_Progress.bOKU = false;	//上
+	m_Progress.bOKD = false;	//下 
 
 	// 前回の進行許可情報
-	m_ProgressOld.bOKR = true;	//右
-	m_ProgressOld.bOKL = true;	//左
-	m_ProgressOld.bOKU = true;	//上
-	m_ProgressOld.bOKD = true;	//下 
+	m_ProgressOld.bOKR = false;	//右
+	m_ProgressOld.bOKL = false;	//左
+	m_ProgressOld.bOKU = false;	//上
+	m_ProgressOld.bOKD = false;	//下 
 
+	m_bSwitchMove = false;             // 移動方向を変えるか
 }
 
 //==========================================
@@ -449,6 +449,7 @@ void CStateRandom::Move(CObjectCharacter* pCharacter, D3DXVECTOR3& pos, D3DXVECT
 void CStateRandom::SearchWall(CObjectCharacter* pCharacter, D3DXVECTOR3& pos)
 {
 	CMapSystem::GRID grid = pCharacter->GetGrid();
+
 	m_ProgressOld = m_Progress;		// 現在の進行状況にする
 
 	CMapSystem* pMapSystem = CMapSystem::GetInstance(); // マップシステムのインスタンスを取得
@@ -482,6 +483,13 @@ void CStateRandom::SearchWall(CObjectCharacter* pCharacter, D3DXVECTOR3& pos)
 	m_Progress.bOKU = !pMapSystem->GetGritBool(grid.x, nNumber[ROTSTATE_UP]);
 	m_Progress.bOKD = !pMapSystem->GetGritBool(grid.x, nNumber[ROTSTATE_DOWN]);
 
+	if (m_Progress.bOKD != m_ProgressOld.bOKD || m_Progress.bOKL != m_ProgressOld.bOKL ||
+		m_Progress.bOKR != m_ProgressOld.bOKR || m_Progress.bOKU != m_ProgressOld.bOKU)
+	{ // 前回と進める方向が変わる場合
+
+		m_bSwitchMove = true;		// 向き選択する
+	}
+
 	//自分の立っているグリットの中心位置を求める
 	D3DXVECTOR3 MyGritPos = grid.ToWorld();
 	float MapGritSize = pMapSystem->GetGritSize();
@@ -500,15 +508,14 @@ void CStateRandom::SearchWall(CObjectCharacter* pCharacter, D3DXVECTOR3& pos)
 
 		if (!m_Progress.bOKR && !m_Progress.bOKL && !m_Progress.bOKU && !m_Progress.bOKD)
 		{ // いずれかの進行が許可されてないとき
+			// 待機状態にする
 			pCharacter->SetState(CObjectCharacter::STATE_WAIT);
+			m_RotState = ROTSTATE_WAIT;
 		}
 
 		// 移動方向の選択
 		MoveSelect(pCharacter);
 	}
-
-	// 進行許可状況を設定
-	pCharacter->SetProgress(m_Progress);
 }
 
 //====================================================================
@@ -516,70 +523,73 @@ void CStateRandom::SearchWall(CObjectCharacter* pCharacter, D3DXVECTOR3& pos)
 //====================================================================
 void CStateRandom::MoveSelect(CObjectCharacter* pCharacter)
 {
-	float OKRot[ROTSTATE_MAX];
-	int RotNumber = 0;		// randに使う用向き番号
-	D3DXVECTOR3 move = pCharacter->GetMove();		// 移動量
+	float fAngle = 0.0f;	// 向き
+	D3DXVECTOR3 moveSave = pCharacter->GetMove();		// 移動量
+	std::vector<D3DXVECTOR3> move = {};
+	
+	if (m_bSwitchMove == true)
+	{ // 方向変えられる場合
 
-	m_RotState = GetRotState();						// 移動方向の状態
+		// 進行できる方向を確認
+		if (m_Progress.bOKR && m_RotState != CMoveState::ROTSTATE_LEFT)
+		{ // 左
 
-	// 進行できる方向を確認
-	if (m_Progress.bOKR && m_RotState != CMoveState::ROTSTATE_LEFT)
-	{
-		OKRot[RotNumber] = D3DX_PI * 0.5f;
-		RotNumber++;
-	}
-	if (m_Progress.bOKL && m_RotState != CMoveState::ROTSTATE_RIGHT)
-	{
-		OKRot[RotNumber] = D3DX_PI * -0.5f;
-		RotNumber++;
-	}
-	if (m_Progress.bOKU && m_RotState != CMoveState::ROTSTATE_DOWN)
-	{
-		OKRot[RotNumber] = D3DX_PI * 0.0f;
-		RotNumber++;
-	}
-	if (m_Progress.bOKD && m_RotState != CMoveState::ROTSTATE_UP)
-	{
-		OKRot[RotNumber] = D3DX_PI * 1.0f;
-		RotNumber++;
+			// 移動方向設定
+			fAngle = D3DX_PI * 0.5f;
+			move.push_back(D3DXVECTOR3(sinf(fAngle) * ENEMY_SPEED, moveSave.y, cosf(fAngle) * ENEMY_SPEED));
+		}
+		if (m_Progress.bOKL && m_RotState != CMoveState::ROTSTATE_RIGHT)
+		{ // 右
+
+			// 移動方向設定
+			fAngle = D3DX_PI * -0.5f;
+			move.push_back(D3DXVECTOR3(sinf(fAngle) * ENEMY_SPEED, moveSave.y, cosf(fAngle) * ENEMY_SPEED));
+		}
+		if (m_Progress.bOKD && m_RotState != CMoveState::ROTSTATE_UP)
+		{ // 上
+
+			// 移動方向設定
+			fAngle = D3DX_PI * 1.0f;
+			move.push_back(D3DXVECTOR3(sinf(fAngle) * ENEMY_SPEED, moveSave.y, cosf(fAngle) * ENEMY_SPEED));
+		}
+		if (m_Progress.bOKU && m_RotState != CMoveState::ROTSTATE_DOWN)
+		{ // 下
+
+			// 移動方向設定
+			fAngle = D3DX_PI * 0.0f;
+			move.push_back(D3DXVECTOR3(sinf(fAngle) * ENEMY_SPEED, moveSave.y, cosf(fAngle) * ENEMY_SPEED));
+		}
+
+		m_bSwitchMove = false;
 	}
 
 	// 進行する方向を決定
-	if (RotNumber != 0)
-	{
-		int nRand = rand() % RotNumber;
+	if (move.size() >= 1)
+	{ // 進行できる方向が複数ある場合
 
-		move.x = sinf(OKRot[nRand]) * ENEMY_SPEED;
-		move.z = cosf(OKRot[nRand]) * ENEMY_SPEED;
+		int nRand = rand() % move.size();		// 進行方向決定
 
-		if (move.x >= 3.0f)
-		{ // 右
-			m_RotState = CMoveState::ROTSTATE_RIGHT;
-		}
-		else if (move.x <= -3.0f)
-		{ // 左
+		// 向きの状態設定
+		switch (nRand)
+		{
+		case CMoveState::ROTSTATE_LEFT:		// 左
 			m_RotState = CMoveState::ROTSTATE_LEFT;
-
-		}
-		else if (move.z >= 3.0f)
-		{ // 上
+			break;
+		case CMoveState::ROTSTATE_RIGHT:	// 右
+			m_RotState = CMoveState::ROTSTATE_RIGHT;
+			break;
+		case CMoveState::ROTSTATE_UP:		// 上
 			m_RotState = CMoveState::ROTSTATE_UP;
-
-		}
-		else if (move.z <= -3.0f)
-		{ // 下
+			break;
+		case CMoveState::ROTSTATE_DOWN:		// 下
 			m_RotState = CMoveState::ROTSTATE_DOWN;
-
+			break;
+		default:
+			break;
 		}
 
-		// 移動
-		if ((m_Progress.bOKD != m_ProgressOld.bOKD) || (m_Progress.bOKL != m_ProgressOld.bOKL) ||
-			(m_Progress.bOKR != m_ProgressOld.bOKR) || (m_Progress.bOKU != m_ProgressOld.bOKU))
-		{ // 進行状況が変わった時
-
-			// 移動量設定
-			pCharacter->SetMove(move);
-		}
+		// 移動量設定
+		pCharacter->SetMove(move[nRand]);
 	}
 }
 
@@ -593,7 +603,7 @@ CStateAStar::CStateAStar()
 {
 	m_pPath = nullptr;
 	m_EnemyType = CEnemy::ENEMY_NONE;
-	m_fCoordinateTimer = 0.0f;
+	m_fCoordinateTimer = COORDDINATE_RATE[m_EnemyType];
 	m_nNumCoordinate = 0;
 	m_nTargetIndex = 0;
 
@@ -607,7 +617,7 @@ CStateAStar::CStateAStar()
 //==========================================
 void CStateAStar::Init()
 {
-	m_fCoordinateTimer = 0.0f;
+	m_fCoordinateTimer = COORDDINATE_RATE[m_EnemyType];
 	m_nNumCoordinate = 0;
 	m_nTargetIndex = 0;
 }
@@ -635,8 +645,6 @@ void CStateAStar::ControlAStar(CObjectCharacter* pCharacter)
 //==========================================
 void CStateAStar::RandomAStar(CObjectCharacter* pCharacter)
 {
-	Init();
-
 	// ランダム歩行状態にする
 	pCharacter->ChangeMoveState(new CStateRandom);
 }
@@ -735,6 +743,7 @@ void CStateAStar::Route(CObjectCharacter* pCharacter)
 	// 次の目標が存在しなかったら関数を抜ける
 	if (m_nTargetIndex >= m_nNumCoordinate)
 	{
+		pCharacter->ChangeMoveState(new CStateRandom);		// ランダム状態にする
 		return;
 	}
 

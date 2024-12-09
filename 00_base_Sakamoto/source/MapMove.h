@@ -69,7 +69,7 @@ public:
 	void SetScrollType(SCROLL_TYPE Rot) { m_ScrollType = Rot; }
 	SCROLL_TYPE GetScrollType(void) { return m_ScrollType; }
 
-	void FollowScroll(D3DXVECTOR3& pos) { pos; }
+	void FollowScroll(D3DXVECTOR3& pos) { pos += m_move; }
 
 	// 静的メンバ関数
 	static CListManager<CMapMove>* GetList(void); // リスト取得
@@ -83,34 +83,10 @@ private:
 	void Slope(int Arroow);		//傾き処理
 	void CollisionOut();		//ステージ外にいるオブジェクトの処理
 
-	void ObjectScroll(D3DXVECTOR3 Move);	//オブジェクトのスクロール
-	//void CrossScroll(D3DXVECTOR3 Move, float GritSize);		// 十字架のスクロール
-	//void BowabowaScroll(D3DXVECTOR3 Move, float GritSize);	// ボワボワのスクロール
-	//void EnemyScroll(D3DXVECTOR3 Move, float GritSize);		// 敵のスクロール
-	//void RailBlockScroll(D3DXVECTOR3 Move, float GritSize);	// レールブロックのスクロール
-	//void RollRockScroll(D3DXVECTOR3 Move, float GritSize);	// 転がる岩のスクロール
-	//void PlayerScroll(D3DXVECTOR3 Move, float GritSize);	// プレイヤーのスクロール
-	//void FireScroll(D3DXVECTOR3 Move, float GritSize);	// ファイアボールのスクロール
-	//void TileScroll(D3DXVECTOR3 Move, float GritSize);	// 床のスクロール
-	//void WallScroll(D3DXVECTOR3 Move, float GritSize);	// 壁のスクロール
-	//void FriedEggScroll(D3DXVECTOR3 Move, float GritSize);	// 目玉焼きのスクロール
-
-	void CrossScroll(D3DXVECTOR3 Move, float GritSize);		// 十字架のスクロール
-	void BowabowaScroll(D3DXVECTOR3 Move, float GritSize);	// ボワボワのスクロール
-	void EnemyScroll(D3DXVECTOR3 Move, float GritSize);		// 敵のスクロール
-	void RailBlockScroll(D3DXVECTOR3 Move, float GritSize);	// レールブロックのスクロール
-	void RollRockScroll(D3DXVECTOR3 Move, float GritSize);	// 転がる岩のスクロール
-	void PlayerScroll(D3DXVECTOR3 Move, float GritSize);	// プレイヤーのスクロール
-	void FireScroll(D3DXVECTOR3 Move, float GritSize);	// ファイアボールのスクロール
-	void TileScroll(D3DXVECTOR3 Move, float GritSize);	// 床のスクロール
-	void WallScroll(D3DXVECTOR3 Move, float GritSize);	// 壁のスクロール
-	void FriedEggScroll(D3DXVECTOR3 Move, float GritSize);	// 目玉焼きのスクロール
-
-	void FollowPos(D3DXVECTOR3 &Pos);
 	void SignalCreate(void);
 	void SignalManager(void);
 
-	void GritScroll(D3DXVECTOR3 Move);		//グリットのスクロール
+	void GritScroll();		//グリットのスクロール
 	void CollisionPressPlayer(CPlayer* pPlayer, D3DXVECTOR3 pos, D3DXVECTOR3 Size);	//プレイヤーが潰される時の処理
 
 	void DebugKey(void);		//デバッグキー

@@ -56,7 +56,7 @@ CSoftCream::~CSoftCream()
 HRESULT CSoftCream::Init()
 {
 	// 親クラスの初期化
-	if (FAILED(CItem::Init(MODEL_PASS))) { assert(false); return E_FAIL; }
+	if (FAILED(CItem::Init(MODEL_PASS, 3))) { assert(false); return E_FAIL; }
 
 	// オブジェクトの種類を設定
 	SetType(CObject::TYPE_SOFTCREAM);
@@ -131,7 +131,8 @@ void CSoftCream::Move(D3DXVECTOR3& pos)
 	pos.x = base.x + x;
 	pos.z = base.z + z;
 
-	DebugProc::Print(DebugProc::POINT_CENTER, "ソフトクリーム : %f, %f\n", pos.x, pos.z);
+	// グリッドを設定
+	SetGrid(CMapSystem::GetInstance()->CalcGrid(pos));
 }
 
 //====================================================================

@@ -32,7 +32,6 @@
     <ClCompile Include="source\move.cpp" />
     <ClCompile Include="source\objectcharacter.cpp" />
     <ClCompile Include="source\cross.cpp" />
-    <ClCompile Include="source\CubeBlock.cpp" />
     <ClCompile Include="source\debugproc.cpp" />
     <ClCompile Include="source\deltatime.cpp" />
     <ClCompile Include="source\devil.cpp" />
@@ -53,7 +52,6 @@
     <ClCompile Include="source\listManager.cpp" />
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\manager.cpp" />
-    <ClCompile Include="source\MapModel.cpp" />
     <ClCompile Include="source\MapSystem.cpp" />
     <ClCompile Include="source\mask.cpp" />
     <ClCompile Include="source\model.cpp" />
@@ -119,7 +117,6 @@
     <ClInclude Include="source\move.h" />
     <ClInclude Include="source\objectcharacter.h" />
     <ClInclude Include="source\cross.h" />
-    <ClInclude Include="source\CubeBlock.h" />
     <ClInclude Include="source\debugproc.h" />
     <ClInclude Include="source\deltatime.h" />
     <ClInclude Include="source\devil.h" />
@@ -141,7 +138,6 @@
     <ClInclude Include="source\listManager.h" />
     <ClInclude Include="source\main.h" />
     <ClInclude Include="source\manager.h" />
-    <ClInclude Include="source\MapModel.h" />
     <ClInclude Include="source\MapSystem.h" />
     <ClInclude Include="source\mask.h" />
     <ClInclude Include="source\model.h" />

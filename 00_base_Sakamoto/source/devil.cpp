@@ -19,10 +19,8 @@
 #include "camera.h"
 #include "input.h"
 #include "enemy.h"
-#include "CubeBlock.h"
 #include "slowManager.h"
 #include "Number.h"
-#include "MapModel.h"
 #include "bowabowa.h"
 #include "Cross.h"
 #include "objmeshField.h"
@@ -131,7 +129,7 @@ HRESULT CDevil::Init(void)
 	if (FAILED(CObjectCharacter::Init())) { assert(false); }
 
 	// キャラクターテキスト読み込み処理
-	SetTxtCharacter("data\\TXT\\MOTION\\01_enemy\\motion_devil.txt");
+	SetTxtCharacter("data\\TXT\\MOTION\\01_enemy\\motion_devil.txt", 0);
 
 	if (m_pMapMove == nullptr)
 	{
@@ -322,29 +320,6 @@ void CDevil::SetModelDisp(bool Sst)
 		{
 			// 表示設定
 			pModel->SetDisp(Sst);
-		}
-	}
-}
-
-//====================================================================
-// プレイヤーが潰される時の処理
-//====================================================================
-void CDevil::CollisionPressPlayer(CPlayer* pPlayer, D3DXVECTOR3 pos, D3DXVECTOR3 Size)
-{
-	// キューブブロックのリスト構造が無ければ抜ける
-	if (CCubeBlock::GetList() == nullptr) { return; }
-	std::list<CCubeBlock*> list = CCubeBlock::GetList()->GetList();    // リストを取得
-
-	// キューブブロックのリストの中身を確認する
-	for (CCubeBlock* pCubeBlock : list)
-	{
-		D3DXVECTOR3 Blockpos = pCubeBlock->GetPos();
-		D3DXVECTOR3 BlockSize = pCubeBlock->GetSize();
-
-		if (useful::CollisionRectangle2D(pos, Blockpos, Size, BlockSize, useful::COLLISION::COLLISION_ZX))
-		{
-			pPlayer->Death();
-			return;
 		}
 	}
 }

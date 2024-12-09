@@ -47,7 +47,7 @@ CFriedEgg::~CFriedEgg()
 HRESULT CFriedEgg::Init()
 {
 	// 親クラスの初期化
-	if (FAILED(CItem::Init(MODEL_PASS))) { assert(false); return E_FAIL; }
+	if (FAILED(CItem::Init(MODEL_PASS, 3))) { assert(false); return E_FAIL; }
 
 	// オブジェクトの種類を設定
 	SetType(CObject::TYPE_FRIEDEGG);
@@ -181,6 +181,7 @@ CFriedEgg* CFriedEgg::Create(const CEnemy::ENEMY_TYPE eType, const CMapSystem::G
 void CFriedEgg::Move(D3DXVECTOR3& pos)
 {
 	pos.y = 50.0f;
+	SetGrid(CMapSystem::GetInstance()->CalcGrid(pos));
 
 	// TODO : ランダム歩行でも何でも仕様を用意する
 }

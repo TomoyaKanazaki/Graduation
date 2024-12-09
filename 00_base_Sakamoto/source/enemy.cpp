@@ -18,7 +18,6 @@
 #include "input.h"
 #include "player.h"
 #include "useful.h"
-#include "CubeBlock.h"
 #include "slowManager.h"
 #include "score.h"
 #include "devil.h"
@@ -32,6 +31,7 @@
 #include "enemyMedaman.h"
 #include "enemyYoungDevil.h"
 #include "friedegg.h"
+#include "MapMove.h"
 
 //===========================================
 // 定数定義
@@ -244,20 +244,20 @@ void CEnemy::Update(void)
 	CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
 
 	// 値を取得
-	D3DXVECTOR3 posMy = GetPos();			// 位置
-	D3DXVECTOR3 posOldMy = GetPosOld();		// 前回の位置
-	D3DXVECTOR3 rotMy = GetRot();			// 向き
-	D3DXVECTOR3 sizeMy = GetSize();			// 大きさ
+	D3DXVECTOR3 posThis = GetPos();			// 位置
+	D3DXVECTOR3 posOldThis = GetPosOld();		// 前回の位置
+	D3DXVECTOR3 rotThis = GetRot();			// 向き
+	D3DXVECTOR3 sizeThis = GetSize();			// 大きさ
 
 	// 過去の位置を記録
-	posOldMy = posMy;
+	posOldThis = posThis;
 	SetGridOld(m_Grid);		// グリッド
 
 	// 状態の更新
-	MoveStateManager(posMy);
+	MoveStateManager(posThis);
 
 	// 状態の更新
-	HitStateManager(posMy);
+	HitStateManager(posThis);
 
 	if (m_HitState == HIT_STATE_DEATH)
 	{
@@ -265,7 +265,7 @@ void CEnemy::Update(void)
 	}
 
 	// 移動処理
-	m_pMoveState->Move(this, posMy, rotMy);
+	m_pMoveState->Move(this, posThis, rotThis);
 
 	// Bキー
 	if (pInputKeyboard->GetTrigger(DIK_B))
@@ -276,23 +276,21 @@ void CEnemy::Update(void)
 	else if (pInputKeyboard->GetTrigger(DIK_N))
 	{
 		m_pMoveState->ControlAStar(this);			// 追跡 or 操作
-		m_pMoveState->SetEnemyType(m_EnemyType);	// 敵の種類設定
 
 	}
 	// Mキー
 	else if (pInputKeyboard->GetTrigger(DIK_M))
 	{
 		m_pMoveState->RandomAStar(this);			// ランダム or 追跡
-		m_pMoveState->SetEnemyType(m_EnemyType);	// 敵の種類設定
 	}
 
 	// 自分の番号を設定
-	m_Grid = CMapSystem::GetInstance()->CMapSystem::CalcGrid(posMy);
+	m_Grid = CMapSystem::GetInstance()->CMapSystem::CalcGrid(posThis);
 
 	//床の判定
-	if (posMy.y <= 0.0f)
+	if (posThis.y <= 0.0f)
 	{
-		posMy.y = 0.0f;
+		posThis.y = 0.0f;
 		m_move.y = 0.0f;
 	}
 
@@ -300,9 +298,9 @@ void CEnemy::Update(void)
 	if (m_pEffect != nullptr)
 	{
 		D3DXMATRIX mat = *GetUseMultiMatrix();
-		D3DXVECTOR3 pos = posMy;
+		D3DXVECTOR3 pos = posThis;
 		pos.y += 0.5f;
-		D3DXVECTOR3 ef = useful::CalcMatrix(pos, rotMy, *GetUseMultiMatrix());
+		D3DXVECTOR3 ef = useful::CalcMatrix(pos, rotThis, *GetUseMultiMatrix());
 		m_pEffect->SetPosition(ef);
 	}
 
@@ -311,15 +309,18 @@ void CEnemy::Update(void)
 
 	// デバッグ表示
 	DebugProc::Print(DebugProc::POINT_LEFT, "[敵]横 %d : 縦 %d\n", m_Grid.x, m_Grid.z);
-	DebugProc::Print(DebugProc::POINT_LEFT, "[敵]向き %f\n", rotMy.y);
+	DebugProc::Print(DebugProc::POINT_LEFT, "[敵]向き %f\n", rotThis.y);
 
 	m_pMoveState->Debug();		// 現在の移動状態
 
+	// スクロールに合わせて移動する
+	CGame::GetInstance()->GetDevil()->GetMove()->FollowScroll(posThis);
+
 	// 値更新
-	SetPos(posMy);			// 位置
-	SetPosOld(posOldMy);	// 前回の位置
-	SetRot(rotMy);			// 向き
-	SetSize(sizeMy);		// 大きさ
+	SetPos(posThis);			// 位置
+	SetPosOld(posOldThis);	// 前回の位置
+	SetRot(rotThis);			// 向き
+	SetSize(sizeThis);		// 大きさ
 }
 
 //====================================================================
@@ -344,10 +345,10 @@ bool CEnemy::Hit(void)
 //====================================================================
 // モデル関連の初期化処理
 //====================================================================
-HRESULT CEnemy::InitModel(const char* pFilename)
+HRESULT CEnemy::InitModel(const char* pFilename, int nRef)
 {
 	// キャラクターテキスト読み込み処理
-	CObjectCharacter::SetTxtCharacter(pFilename);
+	CObjectCharacter::SetTxtCharacter(pFilename, nRef);
 	
 	return S_OK;
 }
@@ -586,6 +587,8 @@ void CEnemy::ChangeMoveState(CMoveState* pMoveState)
 	}
 
 	m_pMoveState = pMoveState;
+	m_pMoveState->SetEnemyType(m_EnemyType);	// 敵の種類設定
+	m_pMoveState->Init();
 }
 
 //====================================================================

@@ -103,9 +103,6 @@
     <ClCompile Include="source\characterManager.cpp">
       <Filter>ソース ファイル\Character</Filter>
     </ClCompile>
-    <ClCompile Include="source\CubeBlock.cpp">
-      <Filter>ソース ファイル\Map\Object</Filter>
-    </ClCompile>
     <ClCompile Include="source\debugproc.cpp">
       <Filter>ソース ファイル\System</Filter>
     </ClCompile>
@@ -171,9 +168,6 @@
     </ClCompile>
     <ClCompile Include="source\MapSystem.cpp">
       <Filter>ソース ファイル\Map\System</Filter>
-    </ClCompile>
-    <ClCompile Include="source\MapModel.cpp">
-      <Filter>ソース ファイル\Map\Object</Filter>
     </ClCompile>
     <ClCompile Include="source\model.cpp">
       <Filter>ソース ファイル\Character</Filter>
@@ -354,9 +348,6 @@
     <ClInclude Include="source\characterManager.h">
       <Filter>ソース ファイル\Character</Filter>
     </ClInclude>
-    <ClInclude Include="source\CubeBlock.h">
-      <Filter>ソース ファイル\Map\Object</Filter>
-    </ClInclude>
     <ClInclude Include="source\deltatime.h">
       <Filter>ソース ファイル\System</Filter>
     </ClInclude>
@@ -422,9 +413,6 @@
     </ClInclude>
     <ClInclude Include="source\MapSystem.h">
       <Filter>ソース ファイル\Map\System</Filter>
-    </ClInclude>
-    <ClInclude Include="source\MapModel.h">
-      <Filter>ソース ファイル\Map\Object</Filter>
     </ClInclude>
     <ClInclude Include="source\motion.h">
       <Filter>ソース ファイル\Character</Filter>
