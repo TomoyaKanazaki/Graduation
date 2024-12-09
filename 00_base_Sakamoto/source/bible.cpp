@@ -142,6 +142,8 @@ void CBible::Move(D3DXVECTOR3& pos)
 
 	// ƒOƒŠƒbƒh‚ðÝ’è
 	SetGrid(CMapSystem::GetInstance()->CalcGrid(pos));
+
+	DebugProc::Print(DebugProc::POINT_CENTER, "( %f, %f )", base.x, base.z);
 }
 
 //==========================================

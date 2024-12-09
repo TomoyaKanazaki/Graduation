@@ -26,7 +26,7 @@ namespace
 {
 	float GRID_SIZE = 100.0f;	// グリッドのサイズ
 	D3DXVECTOR3 MAP_SIZE = D3DXVECTOR3(750.0f, 0.0f, 550.0f);		// 横の当たり判定
-	int BOWABOWA_RATE = 5; // ボワボワの生成率 ( 0以下でエラー )
+	int BOWABOWA_RATE = 1; // ボワボワの生成率 ( 0以下でエラー )
 }
 
 //静的メンバ変数宣言
@@ -406,7 +406,7 @@ void CMapSystem::Load(const char* pFilename)
 							{ // 十字架
 
 								// 十字架の生成
-								//CItem::Create(CItem::TYPE_CROSS, grid);
+								CItem::Create(CItem::TYPE_CROSS, grid);
 							}
 							else if (str == "3")
 							{ // デビルホールの生成範囲
@@ -490,7 +490,7 @@ void CMapSystem::Load(const char* pFilename)
 								// ランダム生成
 								if (!(rand() % BOWABOWA_RATE))
 								{
-									//CItem::Create(CItem::TYPE_BOWABOWA, grid);
+									CItem::Create(CItem::TYPE_BOWABOWA, grid);
 								}
 							}
 
