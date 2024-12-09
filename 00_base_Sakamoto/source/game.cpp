@@ -72,8 +72,9 @@ CGame::CGame()
 	m_pMapField = nullptr;
 	m_pCubeBlock = nullptr;
 	m_pDevil = nullptr;
-	m_pMask = nullptr;
+	m_pPlayerMask = nullptr;
 	m_pEnemyMask = nullptr;
+	m_pItemMask = nullptr;
 
 	m_bGameClear = false;
 	m_Wireframe = false;
@@ -124,13 +125,18 @@ HRESULT CGame::Init(void)
 		m_pPause = CPause::Create();
 	}
 
-	if (m_pMask == nullptr)
-	{// 2Dマスクの生成
-		m_pMask = CMask::Create(2, D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
+	if (m_pPlayerMask == nullptr)
+	{// プレイヤーマスクの生成
+		m_pPlayerMask = CMask::Create(2, D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
+	}
+
+	if (m_pItemMask == nullptr)
+	{// アイテムマスク
+		m_pItemMask = CMask::Create(4, D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
 	}
 
 	if (m_pEnemyMask == nullptr)
-	{
+	{// 敵マスク
 		m_pEnemyMask = CMask::Create(102, D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f));
 	}
 
@@ -708,10 +714,10 @@ void CGame::SetBgObjTest(void)
 	// マップ移動装置
 	{
 		CScrollDevice* pScrollDevice = CScrollDevice::Create(SCROLL_DEVICE_MODEL, SCROLL_DEVICE_ENEMY_MODEL);
-		pScrollDevice->SetPos(D3DXVECTOR3(1400.0f, -300.0f, -400.0f));
+		pScrollDevice->SetPos(D3DXVECTOR3(1300.0f, 0.0f, 0.0f));
 
 		pScrollDevice = CScrollDevice::Create(SCROLL_DEVICE_MODEL, SCROLL_DEVICE_ENEMY_MODEL);
-		pScrollDevice->SetPos(D3DXVECTOR3(-1400.0f, -300.0f, -400.0f));
+		pScrollDevice->SetPos(D3DXVECTOR3(-1300.0f, 0.0f, 0.0f));
 	}
 
 	// ジャッキ

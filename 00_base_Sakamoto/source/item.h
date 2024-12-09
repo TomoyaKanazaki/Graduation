@@ -35,7 +35,7 @@ public:
 	CItem(int nPriority = 2);
 	~CItem();
 
-	HRESULT Init(const char* pModelName);
+	HRESULT Init(const char* pModelName, int ref);
 	HRESULT Init() { assert(false); return E_FAIL; }; // 呼ばれてはならない
 	void Uninit(void);
 	void Update(void);
@@ -76,6 +76,10 @@ public:
 	void Effect(CEffekseer* pEffect) { m_pEffect = pEffect; }
 	CEffekseer* GetEffect() { return m_pEffect; }
 
+	// ステンシルの参照値設定・取得
+	void SetRefIdx(int nRef) { m_nRefIdx = nRef; }
+	int GetRefIdx() { return m_nRefIdx; }
+
 	// 静的メンバ関数
 	static CListManager<CItem>* GetList(void); // リスト取得
 	static CItem* Create(const TYPE eType, const CMapSystem::GRID& pos);
@@ -115,6 +119,8 @@ private:
 	CMapSystem::GRID m_Grid;	// マップ番号
 	CShadow* m_pShadow;		// シャドウのポインタ
 	CEffekseer* m_pEffect; // エフェクト
+
+	int m_nRefIdx;		// ステンシルの参照値
 
 	// 静的メンバ変数
 	static CListManager<CItem>* m_pList; // オブジェクトリスト

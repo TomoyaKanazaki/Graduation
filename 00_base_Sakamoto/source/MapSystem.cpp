@@ -26,7 +26,7 @@ namespace
 {
 	float GRID_SIZE = 100.0f;	// グリッドのサイズ
 	D3DXVECTOR3 MAP_SIZE = D3DXVECTOR3(750.0f, 0.0f, 550.0f);		// 横の当たり判定
-	int BOWABOWA_RATE = 1; // ボワボワの生成率 ( 0以下でエラー )
+	int BOWABOWA_RATE = 2; // ボワボワの生成率 ( 0以下でエラー )
 }
 
 //静的メンバ変数宣言
