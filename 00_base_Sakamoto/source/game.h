@@ -113,7 +113,8 @@ private:
 
 	CObject2D* LetterBox[2];				//イベント時の背景表示
 
-	CMask* m_pMask;	// 2Dマスク
-	CMask* m_pEnemyMask;	// 2Dマスク
+	CMask* m_pPlayerMask;	// プレイヤーマスク
+	CMask* m_pEnemyMask;	// 敵マスク
+	CMask* m_pItemMask;		// アイテムマスク
 };
 #endif
