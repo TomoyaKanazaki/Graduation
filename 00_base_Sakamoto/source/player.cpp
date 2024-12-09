@@ -19,7 +19,6 @@
 #include "enemy.h"
 #include "slowManager.h"
 #include "Number.h"
-#include "MapModel.h"
 #include "sound.h"
 #include "LifeUi.h"
 #include "cross.h"
