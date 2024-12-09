@@ -210,9 +210,9 @@ HRESULT CScrollDevice::InitModel(const char* pModelNameScrollDevice, const char*
 		m_pObjectCharacter->GetModel(0)->SetParent(GetModel(SETUP_TYPE_FOUNDATION));
 
 		// メダマンの位置を取得
-		D3DXVECTOR3 pos = m_pObjectCharacter->GetModel(0)->GetStartPos();
-		D3DXVECTOR3 rot = m_pObjectCharacter->GetModel(0)->GetStartRot();
-		D3DXVECTOR3 posAdd = D3DXVECTOR3(0.0f, 300.0f, -200.0f);
+		D3DXVECTOR3 pos = m_pObjectCharacter->GetModel(2)->GetStartPos();
+		D3DXVECTOR3 rot = m_pObjectCharacter->GetModel(2)->GetStartRot();
+		D3DXVECTOR3 posAdd = D3DXVECTOR3(-50.0f, 375.0f, 500.0f);
 		D3DXVECTOR3 rotAdd = D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f);
 
 		// メダマンを上に

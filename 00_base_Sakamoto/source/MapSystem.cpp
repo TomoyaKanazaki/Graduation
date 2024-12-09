@@ -8,7 +8,7 @@
 #include "renderer.h"
 #include "game.h"
 #include "tutorial.h"
-#include "Devil.h"
+#include "devil.h"
 
 #include "AStar.h"
 #include "tile.h"
@@ -19,6 +19,7 @@
 #include "enemy.h"
 #include "RollRock.h"
 #include "objmeshField.h"
+#include "MapMove.h"
 
 // 定数定義
 namespace
@@ -126,7 +127,7 @@ void CMapSystem::Uninit(void)
 //====================================================================
 void CMapSystem::Update(void)
 {
-
+	CGame::GetInstance()->GetDevil()->GetMove()->FollowScroll(m_MapPos);
 }
 
 //====================================================================
@@ -405,7 +406,7 @@ void CMapSystem::Load(const char* pFilename)
 							{ // 十字架
 
 								// 十字架の生成
-								CItem::Create(CItem::TYPE_CROSS, grid);
+								//CItem::Create(CItem::TYPE_CROSS, grid);
 							}
 							else if (str == "3")
 							{ // デビルホールの生成範囲
@@ -489,7 +490,7 @@ void CMapSystem::Load(const char* pFilename)
 								// ランダム生成
 								if (!(rand() % BOWABOWA_RATE))
 								{
-									CItem::Create(CItem::TYPE_BOWABOWA, grid);
+									//CItem::Create(CItem::TYPE_BOWABOWA, grid);
 								}
 							}
 

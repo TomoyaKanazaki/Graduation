@@ -237,12 +237,6 @@ void CItem::Update()
 	// 移動処理
 	Move(pos);
 
-	// スクロールに合わせて移動する
-	if (m_bMapScroll)
-	{
-		CGame::GetInstance()->GetDevil()->GetMove()->FollowScroll(pos);
-	}
-
 	// 経過時間を取得
 	m_fMoveTime += DeltaTime::Get();
 
@@ -266,10 +260,13 @@ void CItem::Update()
 	// 情報の更新
 	SetPos(pos);
 	SetRot(rot);
-	m_Grid = CMapSystem::GetInstance()->CalcGrid(pos);
 
 	// 親クラスの更新処理
 	CObjectX::Update();
+
+	auto str = magic_enum::enum_name(m_eType);
+	DebugProc::Print(DebugProc::POINT_CENTER, str.data());
+	DebugProc::Print(DebugProc::POINT_CENTER, " : ( %d, %d ) : ( %f, %f )\n", m_Grid.x, m_Grid.z, pos.x, pos.z);
 }
 
 //====================================================================

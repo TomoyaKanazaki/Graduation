@@ -181,6 +181,7 @@ CFriedEgg* CFriedEgg::Create(const CEnemy::ENEMY_TYPE eType, const CMapSystem::G
 void CFriedEgg::Move(D3DXVECTOR3& pos)
 {
 	pos.y = 50.0f;
+	SetGrid(CMapSystem::GetInstance()->CalcGrid(pos));
 
 	// TODO : ランダム歩行でも何でも仕様を用意する
 }

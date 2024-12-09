@@ -159,6 +159,7 @@ private:
     CObjectCharacter::PROGGRESS m_ProgressOld;        // 前回の進行許可情報
     ROTSTATE m_RotState;            // 移動方向の状態
     int m_nSelectCounter;           // 移動方向変更カウンター
+    bool m_bSwitchMove;             // 移動方向を変えるか
 
 };
 
