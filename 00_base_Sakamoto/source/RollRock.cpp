@@ -45,10 +45,7 @@ m_pEffect(nullptr)
 	m_nStateCount = 0;
 	m_Scaling = 1.0f;
 	m_fColorA = 0.0f;
-	m_pos = INITVECTOR3;
-	m_posOld = INITVECTOR3;
 	m_move = INITVECTOR3;
-	m_rot = INITVECTOR3;
 	m_Grid.x = 0;
 	m_Grid.z = 0;
 
@@ -73,10 +70,7 @@ m_OldGrid(gridCenter)
 	m_nStateCount = 0;
 	m_Scaling = 1.0f;
 	m_fColorA = 0.0f;
-	m_pos = INITVECTOR3;
-	m_posOld = INITVECTOR3;
 	m_move = INITVECTOR3;
-	m_rot = INITVECTOR3;
 
 	m_OKL = false;
 	m_OKR = false;
@@ -120,9 +114,10 @@ CRollRock* CRollRock::Create(CMapSystem::GRID gridCenter)
 HRESULT CRollRock::Init(char* pModelName)
 {
 	m_pEffect = nullptr;
+
 	// 位置
-	m_pos = m_Grid.ToWorld();
-	m_pos.y = 50.0f;
+	D3DXVECTOR3 pos = m_Grid.ToWorld();
+	pos.y = 50.0f;
 
 	SetType(CObject::TYPE_ENEMY3D);
 
@@ -132,24 +127,9 @@ HRESULT CRollRock::Init(char* pModelName)
 	SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
 
 	// 位置設定
-	CObjectX::SetPos(m_pos);
+	CObjectX::SetPos(pos);
 
 	SetSize(SAMPLE_SIZE);
-
-	//モードごとに初期値を設定出来る
-	switch (CScene::GetMode())
-	{
-	case CScene::MODE_TITLE:
-		break;
-
-	case CScene::MODE_GAME:
-	case CScene::MODE_TUTORIAL:
-
-		break;
-
-	case CScene::MODE_RESULT:
-		break;
-	}
 
 	if (m_pList == nullptr)
 	{// リストマネージャー生成
@@ -194,74 +174,30 @@ void CRollRock::Uninit(void)
 //====================================================================
 void CRollRock::Update(void)
 {
-	switch (CScene::GetMode())
-	{
-	case CScene::MODE_TITLE:
-		TitleUpdate();
-		break;
+	// 値を取得
+	D3DXVECTOR3 posThis = GetPos();			// 位置
+	D3DXVECTOR3 posOldThis = GetPosOld();	// 前回の位置
+	D3DXVECTOR3 rotThis = GetRot();			// 向き
+	D3DXVECTOR3 sizeThis = GetSize();		// 大きさ
 
-	case CScene::MODE_GAME:
-	case CScene::MODE_TUTORIAL:
-
-		GameUpdate();
-		break;
-
-	case CScene::MODE_RESULT:
-		break;
-	}
-}
-
-//====================================================================
-//タイトルでの更新処理
-//====================================================================
-void CRollRock::TitleUpdate(void)
-{
-	D3DXVECTOR3 pos = GetPos();
-
-	//位置更新
-	pos += m_move;
-
-	SetPos(pos);
-
-	//頂点情報の更新
-	CObjectX::Update();
-}
-
-//====================================================================
-//ゲームでの更新処理
-//====================================================================
-void CRollRock::GameUpdate(void)
-{
 	//更新前の位置を過去の位置とする
-	m_posOld = m_pos;
+	posOldThis = posThis;
 	m_OldGrid = m_Grid;
-	CObjectX::SetPosOld(m_pos);
+	CObjectX::SetPosOld(posThis);
 
-	Move();
-
-	//// 移動量を位置に反映
-	//m_pos.x += m_move.x;
-
-	// X軸の当たり判定
-	CollisionWall(useful::COLLISION_X);
+	Move(posThis, rotThis);
 
 	// 移動した分だけ回転
-	m_rot.z -= (m_pos.x - m_posOld.x) * D3DX_PI * 0.01f;
-
-	//// 移動量を位置に反映
-	//m_pos.z += m_move.z;
-
-	// Z軸の当たり判定
-	CollisionWall(useful::COLLISION_Z);
+	rotThis.z -= (posThis.x - posOldThis.x) * D3DX_PI * 0.01f;
 
 	// 移動した分だけ回転
-	m_rot.x += (m_pos.z - m_posOld.z) * D3DX_PI * 0.01f;
+	rotThis.x += (posThis.z - posOldThis.z) * D3DX_PI * 0.01f;
 
 	// ステージ外との当たり判定
-	CollisionOut();
+	CollisionOut(posThis);
 
 	//// グリット番号の設定
-	//CMapSystem::GRID Grid = CMapSystem::GetInstance()->CalcGrid(m_pos);
+	//CMapSystem::GRID Grid = CMapSystem::GetInstance()->CalcGrid(pos);
 
 	//if (m_Grid != Grid)
 	//{
@@ -272,17 +208,19 @@ void CRollRock::GameUpdate(void)
 	//}
 
 	// グリッド情報を設定
-	m_Grid = CMapSystem::GetInstance()->CMapSystem::CalcGrid(m_pos);
+	m_Grid = CMapSystem::GetInstance()->CMapSystem::CalcGrid(posThis);
 
 	// A*判定を設定
 	Coodinate();
 
-	//位置更新
-	CObjectX::SetPos(m_pos);
-	CObjectX::SetRot(m_rot);
-
 	//大きさの設定
 	SetScaling(D3DXVECTOR3(m_Scaling, m_Scaling, m_Scaling));
+
+	// 値更新
+	SetPos(posThis);		// 位置
+	SetPosOld(posOldThis);	// 前回の位置
+	SetRot(rotThis);		// 向き
+	SetSize(sizeThis);		// 大きさ
 
 	//頂点情報の更新
 	CObjectX::Update();
@@ -305,7 +243,7 @@ void CRollRock::Draw(void)
 //====================================================================
 //傾き時の移動処理
 //====================================================================
-void CRollRock::Move(void)
+void CRollRock::Move(D3DXVECTOR3& pos, D3DXVECTOR3& rot)
 {
 	D3DXVECTOR3 SlopeRot = INITVECTOR3;
 
@@ -319,40 +257,40 @@ void CRollRock::Move(void)
 	D3DXVECTOR3 MyGritPos = m_Grid.ToWorld();
 	float MapGritSize = CMapSystem::GetInstance()->GetGritSize();
 
-	if (useful::CollisionCircle(MyGritPos, D3DXVECTOR3(m_pos.x, MyGritPos.y, m_pos.z), 5.0f) == true)
+	if (useful::CollisionCircle(MyGritPos, D3DXVECTOR3(pos.x, MyGritPos.y, pos.z), 5.0f) == true)
 	{// ブロックの中心にある時に上下か左右のどちらかになるまでに移動する
 
-		m_pos.x += m_move.x;
-		m_pos.z += m_move.z;
+		pos.x += m_move.x;
+		pos.z += m_move.z;
 	}
 	else
 	{// ブロックの中心にないとき
 
 		//上下移動
-		if (MyGritPos.x - m_pos.x >= -5.0f && MyGritPos.x - m_pos.x <= 5.0f)
+		if (MyGritPos.x - pos.x >= -5.0f && MyGritPos.x - pos.x <= 5.0f)
 		{
-			m_pos.z += m_move.z;
+			pos.z += m_move.z;
 		}
 		else
 		{
-			m_pos.z = MyGritPos.z;
+			pos.z = MyGritPos.z;
 		}
 
 		//左右移動
-		if (MyGritPos.z - m_pos.z >= -5.0f && MyGritPos.z - m_pos.z <= 5.0f)
+		if (MyGritPos.z - pos.z >= -5.0f && MyGritPos.z - pos.z <= 5.0f)
 		{
-			m_pos.x += m_move.x;
+			pos.x += m_move.x;
 		}
 		else
 		{
-			m_pos.x = MyGritPos.x;
+			pos.x = MyGritPos.x;
 		}
 	}
 
-	if (m_pos.x <= MyGritPos.x + ((MapGritSize * 0.5f) - (GRIT_OK * m_OKR)) &&	//左
-		m_pos.x >= MyGritPos.x - ((MapGritSize * 0.5f) - (GRIT_OK * m_OKL)) &&	//右
-		m_pos.z <= MyGritPos.z + ((MapGritSize * 0.5f)) &&	//上
-		m_pos.z >= MyGritPos.z - ((MapGritSize * 0.5f)))	//下
+	if (pos.x <= MyGritPos.x + ((MapGritSize * 0.5f) - (GRIT_OK * m_OKR)) &&	//左
+		pos.x >= MyGritPos.x - ((MapGritSize * 0.5f) - (GRIT_OK * m_OKL)) &&	//右
+		pos.z <= MyGritPos.z + ((MapGritSize * 0.5f)) &&	//上
+		pos.z >= MyGritPos.z - ((MapGritSize * 0.5f)))	//下
 	{// グリットの中心位置に立っているか
 
 		int nRGridX = m_Grid.x + 1;
@@ -380,10 +318,10 @@ void CRollRock::Move(void)
 		}
 	}
 
-	if (m_pos.x <= MyGritPos.x + ((MapGritSize * 0.5f)) &&	//左
-		m_pos.x >= MyGritPos.x - ((MapGritSize * 0.5f)) &&	//右
-		m_pos.z <= MyGritPos.z + ((MapGritSize * 0.5f) - (GRIT_OK * m_OKD)) &&	//上
-		m_pos.z >= MyGritPos.z - ((MapGritSize * 0.5f) - (GRIT_OK * m_OKU)))	//下
+	if (pos.x <= MyGritPos.x + ((MapGritSize * 0.5f)) &&	//左
+		pos.x >= MyGritPos.x - ((MapGritSize * 0.5f)) &&	//右
+		pos.z <= MyGritPos.z + ((MapGritSize * 0.5f) - (GRIT_OK * m_OKD)) &&	//上
+		pos.z >= MyGritPos.z - ((MapGritSize * 0.5f) - (GRIT_OK * m_OKU)))	//下
 	{// グリットの中心位置に立っているか
 
 		int nUGridZ = m_Grid.z - 1;
@@ -413,33 +351,33 @@ void CRollRock::Move(void)
 
 	if (!m_OKR && m_move.x > 0.0f)
 	{
-		if (m_pos.x > MyGritPos.x)
+		if (pos.x > MyGritPos.x)
 		{
-			m_pos.x = MyGritPos.x;
+			pos.x = MyGritPos.x;
 			m_move.x = 0.0f;
 		}
 	}
 	if (!m_OKL && m_move.x < 0.0f)
 	{
-		if (m_pos.x < MyGritPos.x)
+		if (pos.x < MyGritPos.x)
 		{
-			m_pos.x = MyGritPos.x;
+			pos.x = MyGritPos.x;
 			m_move.x = 0.0f;
 		}
 	}
 	if (!m_OKU && m_move.z > 0.0f)
 	{
-		if (m_pos.z > MyGritPos.z)
+		if (pos.z > MyGritPos.z)
 		{
-			m_pos.z = MyGritPos.z;
+			pos.z = MyGritPos.z;
 			m_move.z = 0.0f;
 		}
 	}
 	if (!m_OKD && m_move.z < 0.0f)
 	{
-		if (m_pos.z < MyGritPos.z)
+		if (pos.z < MyGritPos.z)
 		{
-			m_pos.z = MyGritPos.z;
+			pos.z = MyGritPos.z;
 			m_move.z = 0.0f;
 		}
 	}
@@ -447,11 +385,11 @@ void CRollRock::Move(void)
 	// エフェクトの生成
 	if (m_pEffect == nullptr && (fabsf(m_move.x) > 0.1f || fabsf(m_move.z) > 0.1f))
 	{
-		D3DXVECTOR3 rot = INITVECTOR3;
-		rot.y = atan2f(-m_move.x, -m_move.z);
+		D3DXVECTOR3 rotEf = INITVECTOR3;
+		rotEf.y = atan2f(-m_move.x, -m_move.z);
 		D3DXMATRIX mat = *GetUseMultiMatrix();
-		D3DXVECTOR3 ef = useful::CalcMatrix(m_pos, rot, mat);
-		m_pEffect = MyEffekseer::EffectCreate(CMyEffekseer::TYPE_ROLL, true, ef, rot);
+		D3DXVECTOR3 ef = useful::CalcMatrix(pos, rotEf, mat);
+		m_pEffect = MyEffekseer::EffectCreate(CMyEffekseer::TYPE_ROLL, true, ef, rotEf);
 	}
 
 	// エフェクトを移動
@@ -461,10 +399,10 @@ void CRollRock::Move(void)
 		D3DXMATRIX mat = *GetUseMultiMatrix();
 
 		// 座標と向きにマトリックスを反映
-		D3DXVECTOR3 pos = useful::CalcMatrix(m_pos, m_rot, mat);
+		D3DXVECTOR3 posEf = useful::CalcMatrix(pos, rot, mat);
 
 		// エフェクトに情報を適用
-		m_pEffect->SetPosition(pos);
+		m_pEffect->SetPosition(posEf);
 	}
 
 	// エフェクトを消去
@@ -476,38 +414,9 @@ void CRollRock::Move(void)
 }
 
 //====================================================================
-// 壁との当たり判定
-//====================================================================
-void CRollRock::CollisionWall(useful::COLLISION XYZ)
-{
-	// キューブブロックのリスト構造が無ければ抜ける
-	if (CWall::GetList() == nullptr) { return; }
-	std::list<CWall*> list = CWall::GetList()->GetList();    // リストを取得
-
-	// キューブブロックリストの中身を確認する
-	for (CWall* pWall : list)
-	{
-		D3DXVECTOR3 pos = pWall->GetPos();
-		D3DXVECTOR3 posOld = pWall->GetPosOld();
-		D3DXVECTOR3 Move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-		D3DXVECTOR3 Size = pWall->GetSize();
-
-		D3DXVECTOR3 ObjMove = INITVECTOR3;
-		D3DXVECTOR3 MySize = GetSize();
-		bool Jump = false;
-
-		// 矩形の当たり判定
-		if (useful::CollisionBlock(pos, pos, Move, Size, &m_pos, m_posOld, &m_move, &ObjMove, MySize, &Jump, XYZ) == true)
-		{
-
-		}
-	}
-}
-
-//====================================================================
 // ステージ外との当たり判定
 //====================================================================
-void CRollRock::CollisionOut()
+void CRollRock::CollisionOut(D3DXVECTOR3& pos)
 {
 	// キューブブロックのリスト構造が無ければ抜ける
 	if (CDevil::GetList() == nullptr) { return; }
@@ -521,21 +430,21 @@ void CRollRock::CollisionOut()
 		float GritSize = CMapSystem::GetInstance()->GetGritSize();
 
 		// ステージ外の当たり判定
-		if (Pos.x + MapSize.x < m_pos.x) // 右
+		if (Pos.x + MapSize.x < pos.x) // 右
 		{
-			m_pos.x = Pos.x - MapSize.x - GritSize;
+			pos.x = Pos.x - MapSize.x - GritSize;
 		}
-		if (Pos.x - MapSize.x - GritSize > m_pos.x) // 左
+		if (Pos.x - MapSize.x - GritSize > pos.x) // 左
 		{
-			m_pos.x = Pos.x + MapSize.x;
+			pos.x = Pos.x + MapSize.x;
 		}
-		if (Pos.z + MapSize.z + GritSize < m_pos.z) // 上
+		if (Pos.z + MapSize.z + GritSize < pos.z) // 上
 		{
-			m_pos.z = Pos.z - MapSize.z;
+			pos.z = Pos.z - MapSize.z;
 		}
-		if (Pos.z - MapSize.z > m_pos.z) // 下
+		if (Pos.z - MapSize.z > pos.z) // 下
 		{
-			m_pos.z = Pos.z + MapSize.z + GritSize;
+			pos.z = Pos.z + MapSize.z + GritSize;
 		}
 	}
 }

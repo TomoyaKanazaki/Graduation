@@ -192,6 +192,9 @@ void CRailBlock::Update(void)
 	//	RailCheck();
 	//}
 
+	// スクロールに合わせて移動する
+	CGame::GetInstance()->GetDevil()->GetMove()->FollowScroll(Pos);
+
 	// 位置設定
 	SetPos(Pos);
 	SetPosOld(PosOld);

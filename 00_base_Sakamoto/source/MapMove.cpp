@@ -165,6 +165,9 @@ void CMapMove::Update(void)
 	//m_ScrollType = SCROLL_TYPE_MAX;
 #endif // _DEBUG
 
+	// 移動量をリセット
+	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
 	// マップの傾き
 	m_DevilRot = CObjmeshField::GetListTop()->GetRot();
 
@@ -209,8 +212,6 @@ void CMapMove::Draw(void)
 //====================================================================
 void CMapMove::Move(int Arroow)
 {
-	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-
 	switch (m_ScrollType)
 	{
 	case CMapMove::SCROLL_TYPE_NORMAL:
