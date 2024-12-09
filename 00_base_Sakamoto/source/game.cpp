@@ -68,13 +68,6 @@ CGame::CGame()
 
 	m_pPause = nullptr;
 	m_pTime = nullptr;
-	m_p2DSample = nullptr;
-	m_p3DSample = nullptr;
-	m_pBillboardSample = nullptr;
-	m_pXModelSample = nullptr;
-	m_pMeshFieldSample = nullptr;
-	m_pMeshWallSample = nullptr;
-	m_pMeshCylinderSample = nullptr;
 	m_pMeshDomeUp = nullptr;
 	m_pMapField = nullptr;
 	m_pCubeBlock = nullptr;
