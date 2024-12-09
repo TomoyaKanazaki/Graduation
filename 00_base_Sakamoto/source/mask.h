@@ -18,7 +18,7 @@
 class CMask : public CObject2D
 {
 public:
-	CMask(int nPriority = 7);	//コンストラクタ
+	CMask(int nPriority = 5);	//コンストラクタ
 	~CMask();	//デストラクタ
 
 	static CMask* Create(int nRefidx, D3DXCOLOR col);
