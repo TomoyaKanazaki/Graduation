@@ -65,7 +65,7 @@ HRESULT CEnemyBonbon::Init(void)
 	SetEnemyType(CEnemy::ENEMY_MEDAMAN);	//敵の種類設定
 
 	// 見た目の設定
-	InitModel(MODEL_PASS);
+	InitModel(MODEL_PASS, 101);
 
 		// リストマネージャーの生成
 	if (m_pList == nullptr)

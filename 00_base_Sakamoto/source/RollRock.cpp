@@ -465,11 +465,16 @@ void CRollRock::Coodinate()
 		generator = AStar::Generator::Create();
 	}
 
+	// マップ情報を取得
+	CMapSystem* pMapSystem = CMapSystem::GetInstance();
+
 	// 前回のグリッドを移動可能地点に設定
 	generator->removeCollision(m_OldGrid.ToAStar());
+	pMapSystem->SetGritBool(m_OldGrid, false);
 
 	// 現在のグリッドを移動不可地点に設定
 	generator->addCollision(m_Grid.ToAStar());
+	pMapSystem->SetGritBool(m_Grid, true);
 }
 
 //====================================================================

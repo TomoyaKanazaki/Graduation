@@ -35,7 +35,7 @@ public:
 	CItem(int nPriority = 2);
 	~CItem();
 
-	HRESULT Init(const char* pModelName);
+	HRESULT Init(const char* pModelName, int ref);
 	HRESULT Init() { assert(false); return E_FAIL; }; // 呼ばれてはならない
 	void Uninit(void);
 	void Update(void);
@@ -59,7 +59,7 @@ public:
 	int GetStateCounter() { return m_nStateCount; }
 
 	// マップ番号の設定
-	void SetGrid(const CMapSystem::GRID& pos);
+	void SetGrid(const CMapSystem::GRID& pos, bool bBase = false);
 	CMapSystem::GRID GetGrid(void) { return m_Grid; }
 
 	// スクロールするかどうかの設定・取得
@@ -75,6 +75,10 @@ public:
 	void SetMoveTime(const float time) { m_fMoveTime = time; } // 移動時間の取得
 	void Effect(CEffekseer* pEffect) { m_pEffect = pEffect; }
 	CEffekseer* GetEffect() { return m_pEffect; }
+
+	// ステンシルの参照値設定・取得
+	void SetRefIdx(int nRef) { m_nRefIdx = nRef; }
+	int GetRefIdx() { return m_nRefIdx; }
 
 	// 静的メンバ関数
 	static CListManager<CItem>* GetList(void); // リスト取得
@@ -115,6 +119,8 @@ private:
 	CMapSystem::GRID m_Grid;	// マップ番号
 	CShadow* m_pShadow;		// シャドウのポインタ
 	CEffekseer* m_pEffect; // エフェクト
+
+	int m_nRefIdx;		// ステンシルの参照値
 
 	// 静的メンバ変数
 	static CListManager<CItem>* m_pList; // オブジェクトリスト

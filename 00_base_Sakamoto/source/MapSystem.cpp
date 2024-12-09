@@ -26,7 +26,7 @@ namespace
 {
 	float GRID_SIZE = 100.0f;	// グリッドのサイズ
 	D3DXVECTOR3 MAP_SIZE = D3DXVECTOR3(750.0f, 0.0f, 550.0f);		// 横の当たり判定
-	int BOWABOWA_RATE = 5; // ボワボワの生成率 ( 0以下でエラー )
+	int BOWABOWA_RATE = 2; // ボワボワの生成率 ( 0以下でエラー )
 }
 
 //静的メンバ変数宣言
@@ -348,7 +348,7 @@ void CMapSystem::Load(const char* pFilename)
 					map = CTutorial::GetInstance()->GetMapField();
 				}
 				map->SetPos(INITVECTOR3);
-				map->SetAlpha(0.0f); // 描画をオフ
+				map->SetDisp(false); // 描画をオフ
 
 				// 経路探索用情報の設定
 				generator->setWorldSize(MaxGrid.ToAStar()); // 世界の大きさ
@@ -387,7 +387,7 @@ void CMapSystem::Load(const char* pFilename)
 								CWall::Create(grid);
 
 								// グリッド判定の設定
-								pMapSystem->SetGritBool(grid, true);
+								pMapSystem->SetGritBool(grid.x, grid.z, true);
 
 								// 経路探索用情報の設定
 								generator->addCollision(grid.ToAStar()); // 通過不可地点を追加

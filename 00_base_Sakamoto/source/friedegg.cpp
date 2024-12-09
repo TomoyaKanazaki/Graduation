@@ -47,7 +47,7 @@ CFriedEgg::~CFriedEgg()
 HRESULT CFriedEgg::Init()
 {
 	// 親クラスの初期化
-	if (FAILED(CItem::Init(MODEL_PASS))) { assert(false); return E_FAIL; }
+	if (FAILED(CItem::Init(MODEL_PASS, 3))) { assert(false); return E_FAIL; }
 
 	// オブジェクトの種類を設定
 	SetType(CObject::TYPE_FRIEDEGG);

@@ -14,12 +14,12 @@
 //========================================
 namespace
 {
-	const D3DXCOLOR DEFAULT_COLOR = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);		// 通常のステンシルカラー
-	const D3DXCOLOR PLAYER_COLOR = D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f);		// タマゴンのステンシルカラー
-	const D3DXCOLOR MULTI_PLAYER_COLOR = D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f);	// 2Pタマゴンのステンシルカラー
-	const D3DXCOLOR MEDAMAN_COLOR = D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f);		// メダマンのステンシルカラー
-	const D3DXCOLOR BONBON_COLOR = D3DXCOLOR(1.0f, 0.5f, 0.0f, 1.0f);		// ボンンボンのステンシルカラー
-	const D3DXCOLOR YUNGDEVIL_COLOR = D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f);	// 子デビルのステンシルカラー
+	const D3DXCOLOR DEFAULT_COLOR = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);		// 通常のステンシルカラー(白)
+	const D3DXCOLOR PLAYER_COLOR = D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f);		// タマゴンのステンシルカラー(緑)
+	const D3DXCOLOR MULTI_PLAYER_COLOR = D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f);	// 2Pタマゴンのステンシルカラー(水色)
+	const D3DXCOLOR MEDAMAN_COLOR = D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f);		// メダマンのステンシルカラー(ピンク)
+	const D3DXCOLOR BONBON_COLOR = D3DXCOLOR(1.0f, 0.5f, 0.0f, 1.0f);		// ボンンボンのステンシルカラー(オレンジ)
+	const D3DXCOLOR YUNGDEVIL_COLOR = D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f);	// 子デビルのステンシルカラー(青)
 }
 
 //========================================
@@ -114,27 +114,7 @@ void CMask::Draw()
 	pDevice->SetRenderState(D3DRS_STENCILMASK, 255);
 
 	//ステンシルバッファの比較方法 <= (参照値 <= ステンシルバッファの参照値)なら合格
-	pDevice->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_LESSEQUAL);
-
-	//ステンシルテスト結果に対しての反映設定
-	pDevice->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_KEEP);		// Zテスト・ステンシルテスト成功
-	pDevice->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP);		// Zテスト・ステンシルテスト失敗
-	pDevice->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_KEEP);		// Zテスト失敗・ステンシルテスト成功
-
-	// 継承クラスの描画
-	CObject2D::Draw();
-
-	//ステンシルバッファ有効
-	pDevice->SetRenderState(D3DRS_STENCILENABLE, TRUE);
-
-	//ステンシルバッファと比較する参照値の設定 => ref
-	pDevice->SetRenderState(D3DRS_STENCILREF, m_nRefidx);
-
-	//ステンシルバッファの値に対してのマスク設定 => 0xff(全て真)
-	pDevice->SetRenderState(D3DRS_STENCILMASK, 255);
-
-	//ステンシルバッファの比較方法 <= (参照値 <= ステンシルバッファの参照値)なら合格
-	pDevice->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_LESSEQUAL);
+	pDevice->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_EQUAL);
 
 	//ステンシルテスト結果に対しての反映設定
 	pDevice->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_KEEP);		// Zテスト・ステンシルテスト成功
