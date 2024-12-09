@@ -296,6 +296,9 @@ void CObjmeshField::Draw(void)
 	//ワールドマトリックスの設定
 	m_pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
 
+	// 描画しない
+	if (!GetDisp()) { return; }
+
 	//頂点バッファをデータストリームに設定
 	m_pDevice->SetStreamSource(0, m_pVtxBuff, 0, sizeof(VERTEX_3D));
 
