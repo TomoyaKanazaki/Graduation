@@ -69,6 +69,8 @@ public:
 	void SetScrollType(SCROLL_TYPE Rot) { m_ScrollType = Rot; }
 	SCROLL_TYPE GetScrollType(void) { return m_ScrollType; }
 
+	void FollowScroll(D3DXVECTOR3& pos) { pos; }
+
 	// 静的メンバ関数
 	static CListManager<CMapMove>* GetList(void); // リスト取得
 	static CMapMove* GetListTop(void); // リスト取得

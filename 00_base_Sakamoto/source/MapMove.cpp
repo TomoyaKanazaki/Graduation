@@ -18,7 +18,6 @@
 #include "bowabowa.h"
 #include "Cross.h"
 #include "player.h"
-#include "enemy.h"
 #include "railblock.h"
 #include "RollRock.h"
 #include "tile.h"
@@ -152,6 +151,9 @@ void CMapMove::Uninit(void)
 		// リストマネージャーの破棄
 		m_pList->Release(m_pList);
 	}
+
+	// 自身を削除する
+	delete this;
 }
 
 //====================================================================
