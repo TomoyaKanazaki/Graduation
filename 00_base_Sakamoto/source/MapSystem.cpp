@@ -348,7 +348,7 @@ void CMapSystem::Load(const char* pFilename)
 					map = CTutorial::GetInstance()->GetMapField();
 				}
 				map->SetPos(INITVECTOR3);
-				map->SetAlpha(0.0f); // 描画をオフ
+				map->SetDisp(false); // 描画をオフ
 
 				// 経路探索用情報の設定
 				generator->setWorldSize(MaxGrid.ToAStar()); // 世界の大きさ
