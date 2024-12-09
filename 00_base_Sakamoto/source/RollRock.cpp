@@ -13,7 +13,6 @@
 #include "tutorial.h"
 #include "Devil.h"
 #include "MapSystem.h"
-#include "CubeBlock.h"
 #include "objmeshField.h"
 #include "wall.h"
 
