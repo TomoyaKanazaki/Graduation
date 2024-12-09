@@ -129,7 +129,7 @@ HRESULT CDevil::Init(void)
 	if (FAILED(CObjectCharacter::Init())) { assert(false); }
 
 	// キャラクターテキスト読み込み処理
-	SetTxtCharacter("data\\TXT\\MOTION\\01_enemy\\motion_devil.txt");
+	SetTxtCharacter("data\\TXT\\MOTION\\01_enemy\\motion_devil.txt", 0);
 
 	if (m_pMapMove == nullptr)
 	{

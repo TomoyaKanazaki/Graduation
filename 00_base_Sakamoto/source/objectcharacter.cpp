@@ -39,7 +39,8 @@ CObjectCharacter::CObjectCharacter(int nPriority) : CObject(nPriority),
 m_pShadow(nullptr),
 m_bUseShadow(true),
 m_State(STATE_WAIT),
-m_OldState(STATE_WAIT)
+m_OldState(STATE_WAIT),
+m_nRefIdx(0)
 {
 	for (int nCnt = 0; nCnt < MODEL_NUM; nCnt++)
 	{
@@ -194,7 +195,7 @@ void CObjectCharacter::Draw(void)
 {
 	//デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
-
+	
 	D3DXMATRIX mtxRot, mtxTrans;	//計算用マトリックス
 
 	//ワールドマトリックスの初期化
@@ -252,7 +253,7 @@ void CObjectCharacter::Draw(void)
 		pDevice->SetRenderState(D3DRS_STENCILENABLE, TRUE);
 
 		//ステンシルバッファと比較する参照値の設定 => ref
-		pDevice->SetRenderState(D3DRS_STENCILREF, 1);
+		pDevice->SetRenderState(D3DRS_STENCILREF, m_nRefIdx);
 
 		//ステンシルバッファの値に対してのマスク設定 => 0xff(全て真)
 		pDevice->SetRenderState(D3DRS_STENCILMASK, 255);
@@ -297,7 +298,7 @@ void CObjectCharacter::ChangeMoveState(CMoveState* pMoveState)
 //====================================================================
 // キャラクターテキスト設定処理
 //====================================================================
-void CObjectCharacter::SetTxtCharacter(const char* pFilename)
+void CObjectCharacter::SetTxtCharacter(const char* pFilename, int nRef)
 {
 	strcpy(&m_aModelName[0], pFilename);
 
@@ -310,6 +311,9 @@ void CObjectCharacter::SetTxtCharacter(const char* pFilename)
 	}
 
 	int nNum = pCharacterManager->Regist(this,pFilename);
+
+	// ステンシル参照値設定
+	SetRefIdx(nRef);
 
 #if 0 // 酒井のデバッグ用（モデル読み込みが正常かわかるまでコメントアウト）
 

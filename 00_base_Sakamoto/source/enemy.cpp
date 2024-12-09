@@ -345,10 +345,10 @@ bool CEnemy::Hit(void)
 //====================================================================
 // モデル関連の初期化処理
 //====================================================================
-HRESULT CEnemy::InitModel(const char* pFilename)
+HRESULT CEnemy::InitModel(const char* pFilename, int nRef)
 {
 	// キャラクターテキスト読み込み処理
-	CObjectCharacter::SetTxtCharacter(pFilename);
+	CObjectCharacter::SetTxtCharacter(pFilename, nRef);
 	
 	return S_OK;
 }
