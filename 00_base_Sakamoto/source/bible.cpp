@@ -139,6 +139,9 @@ void CBible::Move(D3DXVECTOR3& pos)
 	// 基準位置に移動量を加算する
 	pos.x = base.x + x;
 	pos.z = base.z + z;
+
+	// グリッドを設定
+	SetGrid(CMapSystem::GetInstance()->CalcGrid(pos));
 }
 
 //==========================================

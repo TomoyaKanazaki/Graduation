@@ -127,9 +127,9 @@ void CTile::Uninit(void)
 //====================================================================
 void CTile::Update(void)
 {
-	// スクロールに合わせて移動する
+	// グリッドに合わせて移動する
 	D3DXVECTOR3 pos = GetPos();
-	CGame::GetInstance()->GetDevil()->GetMove()->FollowScroll(pos);
+	pos = m_Grid.ToWorld();
 	SetPos(pos);
 
 	//頂点情報の更新

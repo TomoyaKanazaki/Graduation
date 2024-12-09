@@ -131,7 +131,8 @@ void CSoftCream::Move(D3DXVECTOR3& pos)
 	pos.x = base.x + x;
 	pos.z = base.z + z;
 
-	DebugProc::Print(DebugProc::POINT_CENTER, "ソフトクリーム : %f, %f\n", pos.x, pos.z);
+	// グリッドを設定
+	SetGrid(CMapSystem::GetInstance()->CalcGrid(pos));
 }
 
 //====================================================================

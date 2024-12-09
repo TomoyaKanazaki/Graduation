@@ -80,10 +80,14 @@ public:
 	static CListManager<CItem>* GetList(void); // リスト取得
 	static CItem* Create(const TYPE eType, const CMapSystem::GRID& pos);
 
-private:
+protected:
 
 	// メンバ関数
 	virtual void Move(D3DXVECTOR3& pos); // 移動処理
+
+private:
+
+	// メンバ関数
 	virtual void SetEffect() {};
 
 	// メンバ変数

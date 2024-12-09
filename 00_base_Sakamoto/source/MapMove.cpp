@@ -1019,10 +1019,10 @@ void CMapMove::GritScroll()
 			if (CMapSystem::GetInstance()->GetGritBool(nCntW, nCntH))
 			{// ブロックが存在するグリットのみエフェクトを表示
 
-				CEffect* pEffect = CEffect::Create();
-				pEffect->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(nCntW, nCntH)));
-				pEffect->SetRadius(20.0f);
-				pEffect->SetLife(10);
+				//CEffect* pEffect = CEffect::Create();
+				//pEffect->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(nCntW, nCntH)));
+				//pEffect->SetRadius(20.0f);
+				//pEffect->SetLife(10);
 			}
 		}
 	}
