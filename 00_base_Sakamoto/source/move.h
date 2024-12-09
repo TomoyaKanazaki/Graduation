@@ -155,6 +155,7 @@ private:
     void MoveSelect(CObjectCharacter* pCharacter);		// 移動方向の選択
 
     // メンバ変数
+    CMapSystem::GRID m_GridOld;
     CObjectCharacter::PROGGRESS m_Progress;           // 進行許可情報
     CObjectCharacter::PROGGRESS m_ProgressOld;        // 前回の進行許可情報
     ROTSTATE m_RotState;            // 移動方向の状態
