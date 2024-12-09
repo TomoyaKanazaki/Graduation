@@ -19,8 +19,9 @@ public:
 
 	enum STATE
 	{
-		STATE_START = 0,
-		STATE_END,
+		STATE_START = 0,	//ゲーム開始
+		STATE_CHANGE,		//マップ遷移
+		STATE_END,			//ゲーム終了
 		STATE_MAX
 	};
 
@@ -30,12 +31,17 @@ public:
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);
+
+	void SetEventType(STATE Event) { m_State = Event; }
 private:
 
 	void StartMovie(void);
+	void StageChangeMovie(void);
+	void EndMovie(void);
 
 	STATE m_State;
 	int m_nWave;
 	int m_nCount;
+	float m_fSinFloat;
 };
 #endif

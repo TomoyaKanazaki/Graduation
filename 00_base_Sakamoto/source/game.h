@@ -75,6 +75,10 @@ public:
 	bool GetSlow(void) { return m_Slow; }
 
 private:
+	void NextStage(void);
+	void DeleteCross(void);
+	void CreateBible(void);
+
 	void UpdateLetterBox(void);
 	void StageClear(int Stage);
 	void LoadStageRailBlock(const char* pFilename);
@@ -113,7 +117,8 @@ private:
 
 	CObject2D* LetterBox[2];				//イベント時の背景表示
 
-	CMask* m_pMask;	// 2Dマスク
-	CMask* m_pEnemyMask;	// 2Dマスク
+	CMask* m_pPlayerMask;	// プレイヤーマスク
+	CMask* m_pEnemyMask;	// 敵マスク
+	CMask* m_pItemMask;		// アイテムマスク
 };
 #endif
