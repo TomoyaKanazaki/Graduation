@@ -58,7 +58,7 @@ public:
 	void Update(void);
 	void Draw(void);
 
-	void SetTxtCharacter(const char* pFilename);
+	void SetTxtCharacter(const char* pFilename, int nRef);
 
 	void SetModelColor(CModel::COLORTYPE Type, D3DXCOLOR Col);
 
@@ -118,6 +118,9 @@ public:
 	PROGGRESS GetProgress() { return m_Progress; }		// 移動の進行許可状況取得
 	bool GetGritCenter() { return m_bGritCenter; }		// グリッドの中心にいるか取得
 
+	void SetRefIdx(int nRefIdx) { m_nRefIdx = nRefIdx; }
+	int GetRefIdx() { return m_nRefIdx; }
+
 protected:
 
 	CShadow* m_pShadow;
@@ -160,6 +163,7 @@ private:
 
 	CMoveState* m_pMoveState;		// 移動状態
 
+	int m_nRefIdx;					// ステンシル参照値
 };
 
 #endif

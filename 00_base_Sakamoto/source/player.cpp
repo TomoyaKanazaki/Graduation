@@ -151,13 +151,13 @@ HRESULT CPlayer::Init(int PlayNumber)
 	{
 	case 0:
 
-		CObjectCharacter::SetTxtCharacter("data\\TXT\\motion_tamagon1P.txt");
+		CObjectCharacter::SetTxtCharacter("data\\TXT\\motion_tamagon1P.txt", 1);
 
 		break;
 
 	case 1:
 
-		CObjectCharacter::SetTxtCharacter("data\\TXT\\motion_tamagon2P.txt");
+		CObjectCharacter::SetTxtCharacter("data\\TXT\\motion_tamagon2P.txt", 1);
 
 		break;
 	}
@@ -464,28 +464,8 @@ void CPlayer::Update(void)
 //====================================================================
 void CPlayer::Draw(void)
 {
-	//デバイスの取得
-	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
-
 	// キャラクタークラスの描画（継承）
 	CObjectCharacter::Draw();
-
-	//ステンシルバッファ有効
-	pDevice->SetRenderState(D3DRS_STENCILENABLE, TRUE);
-
-	//ステンシルバッファと比較する参照値の設定 => ref
-	pDevice->SetRenderState(D3DRS_STENCILREF, 1);
-
-	//ステンシルバッファの値に対してのマスク設定 => 0xff(全て真)
-	pDevice->SetRenderState(D3DRS_STENCILMASK, 255);
-
-	//ステンシルバッファの比較方法 <= (参照値 <= ステンシルバッファの参照値)なら合格
-	pDevice->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_EQUAL);
-
-	//ステンシルテスト結果に対しての反映設定
-	pDevice->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_INCRSAT);	// Zテスト・ステンシルテスト成功
-	pDevice->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP);		// Zテスト・ステンシルテスト失敗
-	pDevice->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_KEEP);		// Zテスト失敗・ステンシルテスト成功
 }
 
 //====================================================================
