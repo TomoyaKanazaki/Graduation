@@ -199,12 +199,12 @@ void CScrollDevice::SetState(STATE state)
 //====================================================================
 HRESULT CScrollDevice::InitModel(const char* pModelNameScrollDevice, const char* pModelNameEnemy)
 {
-	CObjectCharacter::SetTxtCharacter(pModelNameScrollDevice);
+	CObjectCharacter::SetTxtCharacter(pModelNameScrollDevice, 0);
 
 	if (m_pObjectCharacter != nullptr)
 	{
 		// キャラクターテキスト読み込み処理（メダマン）
-		m_pObjectCharacter->SetTxtCharacter(pModelNameEnemy);
+		m_pObjectCharacter->SetTxtCharacter(pModelNameEnemy, 0);
 
 		// メダマンの親を土台に変更
 		m_pObjectCharacter->GetModel(0)->SetParent(GetModel(SETUP_TYPE_FOUNDATION));

@@ -28,7 +28,9 @@ public:
 	void Update();
 	void Draw();
 
+	// ステンシルの参照値設定・取得
 	void SetRefidx(int nRef) { m_nRefidx = nRef; }
+	int GetRefIdx() { return m_nRefidx; }
 
 private:
 	//メンバ変数
