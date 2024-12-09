@@ -297,7 +297,6 @@ void CMapSystem::Load(const char* pFilename)
 	D3DXVECTOR3 posStart = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// グリッド開始位置
 	D3DXVECTOR2 charOffset = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// グリッドのオフセット
 	D3DXVECTOR3 size = D3DXVECTOR3(fMapSystemGritSize, 0.0f, fMapSystemGritSize);		// グリッドサイズ
-	GRID MaxGrid;		// グリッドの最大数
 
 	// グリッド設定の判定
 	bool bGridSet = false;
@@ -333,25 +332,25 @@ void CMapSystem::Load(const char* pFilename)
 			else if (str == "NUM_GRID")
 			{
 				// グリッドの行列数を読み込み
-				iss >> MaxGrid.x >> MaxGrid.z;
+				iss >> pMapSystem->m_MapGrid.x >> pMapSystem->m_MapGrid.z;
 
 				CObjmeshField* map = nullptr;
 				//床の生成
 				if (CScene::GetMode() == CScene::MODE_GAME)
 				{
-					CGame::GetInstance()->SetMapField(CObjmeshField::Create(MaxGrid));
+					CGame::GetInstance()->SetMapField(CObjmeshField::Create(pMapSystem->m_MapGrid));
 					map = CGame::GetInstance()->GetMapField();
 				}
 				else if (CScene::GetMode() == CScene::MODE_TUTORIAL)
 				{
-					CTutorial::GetInstance()->SetMapField(CObjmeshField::Create(MaxGrid));
+					CTutorial::GetInstance()->SetMapField(CObjmeshField::Create(pMapSystem->m_MapGrid));
 					map = CTutorial::GetInstance()->GetMapField();
 				}
 				map->SetPos(INITVECTOR3);
 				map->SetDisp(false); // 描画をオフ
 
 				// 経路探索用情報の設定
-				generator->setWorldSize(MaxGrid.ToAStar()); // 世界の大きさ
+				generator->setWorldSize(pMapSystem->m_MapGrid.ToAStar()); // 世界の大きさ
 			}
 
 			else if (str == "STARTSETSTAGE")
@@ -362,7 +361,7 @@ void CMapSystem::Load(const char* pFilename)
 					// 終端の場合ステージ生成を抜ける
 					if (str == "ENDSETSTAGE") { break; }
 
-					for (int nCntHeight = 0; nCntHeight < MaxGrid.z; nCntHeight++)
+					for (int nCntHeight = 0; nCntHeight < pMapSystem->m_MapGrid.z; nCntHeight++)
 					{ // 列カウント
 
 						// 横一行分の配列を拡張
@@ -371,7 +370,7 @@ void CMapSystem::Load(const char* pFilename)
 						// カンマ区切りごとにデータを読込
 						std::istringstream issChar(str);	// 文字列ストリーム
 
-						for (int nCntWidth = 0; nCntWidth < MaxGrid.x; nCntWidth++)
+						for (int nCntWidth = 0; nCntWidth < pMapSystem->m_MapGrid.x; nCntWidth++)
 						{ // 行カウント
 
 							// 1行ずつ読み込み
