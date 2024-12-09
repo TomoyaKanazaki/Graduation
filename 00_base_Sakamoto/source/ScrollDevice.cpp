@@ -82,10 +82,16 @@ HRESULT CScrollDevice::Init(void)
 	// キャラクタークラスの初期化（継承）
 	if (FAILED(CObjectCharacter::Init())) { assert(false); }
 
+	// マップマトリックスと紐づけ
+	SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
+
 	if (m_pObjectCharacter == nullptr)
 	{
 		// キャラクター（メダマン用）の生成処理
-		m_pObjectCharacter = CObjectCharacter::Create(false);
+		if (FAILED(m_pObjectCharacter = CObjectCharacter::Create(false))) { assert(false); }
+
+		// マップマトリックスと紐づけ
+		m_pObjectCharacter->SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
 	}
 
 	if (m_pList == nullptr)

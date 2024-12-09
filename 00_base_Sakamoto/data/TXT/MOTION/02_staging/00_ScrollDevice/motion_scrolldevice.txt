@@ -14,10 +14,10 @@ NUM_MODEL = 4
 #------------------------------------------------------------------------------
 # モデルファイル名
 #------------------------------------------------------------------------------
-MODEL_FILENAME = data/MODEL/03_staging/00_ScrollDevice/base.x	# [0]土台
-MODEL_FILENAME = data/MODEL/03_staging/00_ScrollDevice/wheel.x	# [1]回し車
-MODEL_FILENAME = data/MODEL/03_staging/00_ScrollDevice/tube.x		# [2]ローラー
-MODEL_FILENAME = data/MODEL/03_staging/00_ScrollDevice/conecter.x			# [3]先っぽ
+MODEL_FILENAME = data/MODEL/03_staging/00_ScrollDevice/00_foundation.x	# [0]土台
+MODEL_FILENAME = data/MODEL/03_staging/00_ScrollDevice/01_mawasiguruma.x	# [1]回し車
+MODEL_FILENAME = data/MODEL/03_staging/00_ScrollDevice/02_roller.x		# [2]ローラー
+MODEL_FILENAME = data/MODEL/03_staging/00_ScrollDevice/03_head.x			# [3]先っぽ
 
 #------------------------------------------------------------------------------
 # キャラクター情報
@@ -31,28 +31,28 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 0
 		PARENT = -1
-		POS = 0.00 -2.97 0.00
+		POS = 0.00 -1.5 0.00
 		ROT = 0.00 0.00 0.00
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 1
 		PARENT = 0
-		POS = -12.24 515.47 157.05
+		POS = -6.12 257.735 78.525
 		ROT = 0.00 0.00 0.00
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 2
 		PARENT = 0
-		POS = -10.26 523.58 1058.85
+		POS = -5.13 257.735 600.425
 		ROT = 0.00 0.00 0.00
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 3
 		PARENT = 0
-		POS = 22.41 486.22 2398.95
+		POS = 11.20 243.11 1199.47
 		ROT = 0.00 0.00 0.00
 	END_PARTSSET
 
