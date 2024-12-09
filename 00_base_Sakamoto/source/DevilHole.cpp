@@ -13,6 +13,8 @@
 #include "objmeshField.h"
 #include "game.h"
 #include "tutorial.h"
+#include "devil.h"
+#include "MapMove.h"
 
 //==========================================
 //  定数定義
@@ -45,10 +47,6 @@ CDevilHole::CDevilHole(int nPriority) : CObjectX(nPriority)
 	m_fColorA = 0.0f;
 	m_Grid.x = 0;
 	m_Grid.z = 0;
-	m_pos = INITVECTOR3;	
-	m_posOld = INITVECTOR3;
-	m_move = INITVECTOR3;
-	m_rot = INITVECTOR3;
 	m_Grid.x = 0;
 	m_Grid.z = 0;
 
@@ -75,10 +73,6 @@ CDevilHole::CDevilHole(int nPriority, CMapSystem::GRID gridCenter) : CObjectX(nP
 	m_fColorA = 0.0f;
 	m_Grid.x = 0;
 	m_Grid.z = 0;
-	m_pos = INITVECTOR3;
-	m_posOld = INITVECTOR3;
-	m_move = INITVECTOR3;
-	m_rot = INITVECTOR3;
 	m_Grid = gridCenter;		// グリッド
 
 	for (int nCnt = 0; nCnt < DIRECTION; nCnt++)
@@ -181,54 +175,22 @@ void CDevilHole::Uninit(void)
 //====================================================================
 void CDevilHole::Update(void)
 {
-	switch (CScene::GetMode())
-	{
-	case CScene::MODE_TITLE:
-		TitleUpdate();
-		break;
+	// 値を取得
+	D3DXVECTOR3 posThis = GetPos();			// 位置
+	D3DXVECTOR3 posOldThis = GetPosOld();	// 前回の位置
+	D3DXVECTOR3 rotThis = GetRot();			// 向き
+	D3DXVECTOR3 sizeThis = GetSize();		// 大きさ
 
-	case CScene::MODE_GAME:
-	case CScene::MODE_TUTORIAL:
-
-		GameUpdate();
-		break;
-
-	case CScene::MODE_RESULT:
-		break;
-	}
-}
-
-//====================================================================
-//タイトルでの更新処理
-//====================================================================
-void CDevilHole::TitleUpdate(void)
-{
-	D3DXVECTOR3 pos = GetPos();
-
-	//位置更新
-	pos += m_move;
-
-	SetPos(pos);
-
-	//頂点情報の更新
-	CObjectX::Update();
-}
-
-//====================================================================
-//ゲームでの更新処理
-//====================================================================
-void CDevilHole::GameUpdate(void)
-{
 	//更新前の位置を過去の位置とする
-	m_posOld = m_pos;
+	posOldThis = posThis;
 
 	//ホール解除判定処理
-	CollisionOpen();
+	CollisionOpen(posThis);
 
 	//クリア判定処理
 	ClearJudge();
 
-	m_pos = m_Grid.ToWorld();
+	posThis = m_Grid.ToWorld();
 
 	for (int nCnt = 0; nCnt < DIRECTION; nCnt++)
 	{
@@ -237,32 +199,41 @@ void CDevilHole::GameUpdate(void)
 			switch (nCnt)
 			{
 			case 0:	//上
-				m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(m_pos.x, m_pos.y, m_pos.z + MODEL_SET_DISTANCE));
+				m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(posThis.x, posThis.y, posThis.z + MODEL_SET_DISTANCE));
 				break;
 
 			case 1:	//下
-				m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(m_pos.x, m_pos.y, m_pos.z - MODEL_SET_DISTANCE));
+				m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(posThis.x, posThis.y, posThis.z - MODEL_SET_DISTANCE));
 				break;
 
 			case 2:	//右
-				m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(m_pos.x + MODEL_SET_DISTANCE, m_pos.y, m_pos.z));
+				m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(posThis.x + MODEL_SET_DISTANCE, posThis.y, posThis.z));
 				break;
 
 			case 3:	//左
-				m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(m_pos.x - MODEL_SET_DISTANCE, m_pos.y, m_pos.z));
+				m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(posThis.x - MODEL_SET_DISTANCE, posThis.y, posThis.z));
 				break;
 			}
 		}
 	}
 
 	//位置更新
-	CObjectX::SetPos(m_pos);
+	CObjectX::SetPos(posThis);
 
 	//大きさの設定
 	SetScaling(D3DXVECTOR3(m_Scaling, m_Scaling, m_Scaling));
 
 	//状態管理
 	StateManager();
+
+	// スクロールに合わせて移動する
+	CGame::GetInstance()->GetDevil()->GetMove()->FollowScroll(posThis);
+
+	// 値更新
+	SetPos(posThis);		// 位置
+	SetPosOld(posOldThis);	// 前回の位置
+	SetRot(rotThis);		// 向き
+	SetSize(sizeThis);		// 大きさ
 
 	//頂点情報の更新
 	CObjectX::Update();
@@ -298,7 +269,7 @@ void CDevilHole::StateManager(void)
 //====================================================================
 // 壁との当たり判定
 //====================================================================
-void CDevilHole::CollisionOpen(void)
+void CDevilHole::CollisionOpen(D3DXVECTOR3& pos)
 {
 	// プレイヤーのリスト構造が無ければ抜ける
 	if (CPlayer::GetList() == nullptr) { return; }
@@ -318,8 +289,6 @@ void CDevilHole::CollisionOpen(void)
 
 		for (int nCnt = 0; nCnt < DIRECTION; nCnt++)
 		{
-			D3DXVECTOR3 pos = m_pos;
-
 			switch (nCnt)
 			{
 			case 0:	//上
@@ -350,22 +319,22 @@ void CDevilHole::CollisionOpen(void)
 				switch (nCnt)
 				{
 				case 0:	//上
-					m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(m_pos.x, m_pos.y, m_pos.z + MODEL_SET_DISTANCE));
+					m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(pos.x, pos.y, pos.z + MODEL_SET_DISTANCE));
 					m_pHoleKey[nCnt]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 1.0f, 0.0f));
 					break;
 
 				case 1:	//下
-					m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(m_pos.x, m_pos.y, m_pos.z - MODEL_SET_DISTANCE));
+					m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(pos.x, pos.y, pos.z - MODEL_SET_DISTANCE));
 					m_pHoleKey[nCnt]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.0f, 0.0f));
 					break;
 
 				case 2:	//右
-					m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(m_pos.x + MODEL_SET_DISTANCE, m_pos.y, m_pos.z));
+					m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(pos.x + MODEL_SET_DISTANCE, pos.y, pos.z));
 					m_pHoleKey[nCnt]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
 					break;
 
 				case 3:	//左
-					m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(m_pos.x - MODEL_SET_DISTANCE, m_pos.y, m_pos.z));
+					m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(pos.x - MODEL_SET_DISTANCE, pos.y, pos.z));
 					m_pHoleKey[nCnt]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
 					break;
 				}

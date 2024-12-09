@@ -11,7 +11,6 @@
 #include "Devil.h"
 
 #include "AStar.h"
-#include "CubeBlock.h"
 #include "tile.h"
 #include "wall.h"
 #include "item.h"

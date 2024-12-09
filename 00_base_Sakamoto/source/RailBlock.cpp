@@ -15,6 +15,7 @@
 #include "Devil.h"
 #include "debugproc.h"
 #include "player.h"
+#include "MapMove.h"
 
 //==========================================
 //  定数定義
@@ -191,6 +192,9 @@ void CRailBlock::Update(void)
 	//	RailCheck();
 	//}
 
+	// スクロールに合わせて移動する
+	CGame::GetInstance()->GetDevil()->GetMove()->FollowScroll(Pos);
+
 	// 位置設定
 	SetPos(Pos);
 	SetPosOld(PosOld);
@@ -218,7 +222,7 @@ void CRailBlock::Move(D3DXVECTOR3* Pos)
 
 	D3DXVECTOR3 SlopeMove = INITVECTOR3;
 	D3DXVECTOR3 SlopeRot = INITVECTOR3;
-	SlopeRot = CDevil::GetListTop()->GetDevilRot();
+	SlopeRot = CMapMove::GetListTop()->GetDevilRot();
 	//D3DXVECTOR3 GritPos = CMapSystem::GRID(GetWightNumber(), GetHeightNumber()).ToWorld();
 	//D3DXVECTOR3 GritDistance = *Pos - GritPos;	//グリットの中心とした時の相対位置、差分
 

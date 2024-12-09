@@ -169,9 +169,6 @@ HRESULT CGame::Init(void)
 	pBottonField->SetPos(BOTTOM_FIELD_POS);
 	m_bGameEnd = false;
 
-	//レールブロックの生成
-	//LoadStageRailBlock("data\\TXT\\STAGE\\RailBlock.txt");
-
 	// 背景モデル設定処理
 	SetBgObjTest();
 
