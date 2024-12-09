@@ -15,6 +15,7 @@
 #include "MapSystem.h"
 #include "objmeshField.h"
 #include "wall.h"
+#include "MapMove.h"
 
 //==========================================
 //  ’è”’è‹`
@@ -308,7 +309,7 @@ void CRollRock::Move(void)
 {
 	D3DXVECTOR3 SlopeRot = INITVECTOR3;
 
-	SlopeRot = CDevil::GetListTop()->GetDevilRot();
+	SlopeRot = CMapMove::GetListTop()->GetDevilRot();
 
 	// ŒX‚«‚É‚æ‚éˆÚ“®—ÊÝ’è
 	m_move.x = -SlopeRot.z * 10.0f;
