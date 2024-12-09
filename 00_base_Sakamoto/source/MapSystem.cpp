@@ -406,7 +406,7 @@ void CMapSystem::Load(const char* pFilename)
 							{ // 十字架
 
 								// 十字架の生成
-								CItem::Create(CItem::TYPE_CROSS, grid);
+								//CItem::Create(CItem::TYPE_CROSS, grid);
 							}
 							else if (str == "3")
 							{ // デビルホールの生成範囲
@@ -490,7 +490,7 @@ void CMapSystem::Load(const char* pFilename)
 								// ランダム生成
 								if (!(rand() % BOWABOWA_RATE))
 								{
-									CItem::Create(CItem::TYPE_BOWABOWA, grid);
+									//CItem::Create(CItem::TYPE_BOWABOWA, grid);
 								}
 							}
 

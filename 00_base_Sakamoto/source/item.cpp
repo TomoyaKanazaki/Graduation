@@ -263,6 +263,10 @@ void CItem::Update()
 
 	// 親クラスの更新処理
 	CObjectX::Update();
+
+	auto str = magic_enum::enum_name(m_eType);
+	DebugProc::Print(DebugProc::POINT_CENTER, str.data());
+	DebugProc::Print(DebugProc::POINT_CENTER, " : ( %d, %d ) : ( %f, %f )\n", m_Grid.x, m_Grid.z, pos.x, pos.z);
 }
 
 //====================================================================
