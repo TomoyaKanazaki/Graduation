@@ -66,8 +66,12 @@ CGame::CGame()
 	m_BGColorA = 1.0f;
 	m_nTutorialWave = 0;
 	m_nNumBowabowa = 0;
-	CManager::GetInstance()->GetCamera()->SetBib(false);
-	CManager::GetInstance()->GetCamera()->SetCameraMode(CCamera::CAMERAMODE_DOWNVIEW);
+
+	for (int nCnt = 0; nCnt < NUM_CAMERA; nCnt++)
+	{
+		CManager::GetInstance()->GetCamera(nCnt)->SetBib(false);
+		CManager::GetInstance()->GetCamera(nCnt)->SetCameraMode(CCamera::CAMERAMODE_DOWNVIEW);
+	}
 
 	m_pPause = nullptr;
 	m_pTime = nullptr;

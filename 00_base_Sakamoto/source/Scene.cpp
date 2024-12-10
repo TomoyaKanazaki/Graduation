@@ -63,7 +63,7 @@ CScene* CScene::Create(MODE mode)
 		}
 	}
 
-	CManager::GetInstance()->GetInstance()->GetCamera()->ResetCamera();
+	CManager::GetInstance()->GetInstance()->GetCamera(0)->ResetCamera();
 
 	CManager::GetInstance()->GetInstance()->SetEdit(false);
 
