@@ -300,7 +300,7 @@ void CMyEffekseer::Draw(void)
 	m_EfkRenderer->SetProjectionMatrix(m_ProjectionMatrix);
 
 	// カメラ取得
-	CCamera* pCamera = CManager::GetInstance()->GetCamera();
+	CCamera* pCamera = CManager::GetInstance()->GetCamera(0);
 
 	// カメラが使用されていない場合処理抜ける
 	if (pCamera == nullptr)
