@@ -23,20 +23,28 @@
 #include "ScrollDevice.h"
 #include "mask.h"
 
+//====================================================================
+// 定数定義
+//====================================================================
 namespace
 {
 	const int SAMPLE_NAMESPACE = 0;
-
 	const int BOTTOM_FIELD_VTX_WIDTH = 64;		// 下床の横数
 	const int BOTTOM_FIELD_VTX_HEIGHT = 64;		// 下床の縦数
-	const char* BOTTOM_FIELD_TEX = "data\\TEXTURE\\Field\\outside.jpg";		// 下床のテクスチャ
-	const D3DXVECTOR3 BOTTOM_FIELD_POS = D3DXVECTOR3(0.0f, -1500.0f, 0.0f);	// 下床の位置
 	const int BIBLE_OUTGRIT = 3;	// 聖書がマップの外側から何マス内側にいるか
 
+	const char* BOTTOM_FIELD_TEX = "data\\TEXTURE\\Field\\outside.jpg";		// 下床のテクスチャ
 	const char* SCROLL_DEVICE_MODEL = "data\\TXT\\MOTION\\02_staging\\00_SlopeDevice\\motion_slopedevice.txt";
+	const char* TUTORIAL_GUIDE_TEX = "data\\TEXTURE\\UI\\tutorial_guid.png";	// チュートリアルテクスチャ
+
+	const D3DXVECTOR3 BOTTOM_FIELD_POS = D3DXVECTOR3(0.0f, -1500.0f, 0.0f);	// 下床の位置
+	const D3DXVECTOR3 GUIDE_TEX_POS = D3DXVECTOR3(200.0f, 225.0f, 0.0f);	// チュートリアルガイドの位置
+	const D3DXVECTOR3 GUIDE_TEX_SIZE = D3DXVECTOR3(420.0f, 360.0f, 0.0f);	// チュートリアルガイドのサイズ
 }
 
-//静的メンバ変数宣言
+//====================================================================
+// 静的メンバ変数宣言
+//====================================================================
 CTutorial* CTutorial::m_pTutorial = nullptr;
 
 //====================================================================
@@ -44,7 +52,6 @@ CTutorial* CTutorial::m_pTutorial = nullptr;
 //====================================================================
 CTutorial::CTutorial():
 m_pTutorialTex(nullptr),
-m_pCheckMaker(nullptr),
 m_pPlayerMask(nullptr),
 m_pEnemyMask(nullptr),
 m_pItemMask(nullptr)
@@ -115,9 +122,9 @@ HRESULT CTutorial::Init(void)
 
 	if(m_pTutorialTex != nullptr)
 	{// テクスチャ生成・位置・サイズ設定
-		m_pTutorialTex->SetTexture("data\\TEXTURE\\UI\\tutorial_guid.png");
-		m_pTutorialTex->SetPos(D3DXVECTOR3(200.0f, 225.0f, 0.0f));
-		m_pTutorialTex->SetSize(D3DXVECTOR3(420.0f, 360.0f, 0.0f));
+		m_pTutorialTex->SetTexture(TUTORIAL_GUIDE_TEX);
+		m_pTutorialTex->SetPos(GUIDE_TEX_POS);
+		m_pTutorialTex->SetSize(GUIDE_TEX_SIZE);
 	}
 
 	//クリアフラグのデフォルトをオンにしておく

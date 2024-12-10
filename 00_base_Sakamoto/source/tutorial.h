@@ -127,7 +127,6 @@ private:
 	bool m_Slow;								//スロー演出のオンオフ
 
 	CObject2D* m_pTutorialTex;	// チュートリアルガイドテクスチャ
-	CObject2D* m_pCheckMaker;	// チェックマーカー
 
 	CMask* m_pPlayerMask;	// プレイヤーマスク
 	CMask* m_pEnemyMask;	// 敵マスク
