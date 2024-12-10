@@ -149,7 +149,8 @@ CEnemy* CEnemy::Create(const ENEMY_TYPE eType, const CMapSystem::GRID& grid)
 	}
 
 	// 座標を設定
-	pEnemy->SetGrid(grid);
+	pEnemy->m_Grid = grid;
+	//pEnemy->SetGrid(pEnemy->m_Grid);
 	pEnemy->SetPos(CMapSystem::GetInstance()->GetGritPos(grid));
 
 	// 敵のタイプを設定
@@ -251,7 +252,8 @@ void CEnemy::Update(void)
 
 	// 過去の位置を記録
 	posOldThis = posThis;
-	SetGridOld(m_Grid);		// グリッド
+	//SetGridOld(m_Grid);		// グリッド
+	m_GridOld = m_Grid;			// 現在のグリッド位置
 
 	// 状態の更新
 	MoveStateManager(posThis);
