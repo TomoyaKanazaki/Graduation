@@ -330,6 +330,14 @@ void CGame::Update(void)
 		m_Slow = false;
 	}
 
+	if (pInputKeyboard->GetTrigger(DIK_RETURN) == true)
+	{
+		// ゲームの最初から
+		CFade::SetFade(CScene::MODE_GAME);
+
+	}
+
+
 #endif
 
 	if (m_bEvent == true)
@@ -422,6 +430,11 @@ void CGame::Update(void)
 		if (pInputKeyboard->GetTrigger(DIK_F4))
 		{
 			StageClear(1);
+		}
+
+		if (pInputKeyboard->GetTrigger(DIK_F5))
+		{
+			CFade::SetFade(CScene::MODE_TUTORIAL);
 		}
 
 #endif // _DEBUG
@@ -768,7 +781,6 @@ void CGame::LoadStageMapModel(const char* pFilename)
 //====================================================================
 void CGame::SetBgObjTest(void)
 {
-#if 1 // 酒井のデバッグ用（モデル読み込みクラスできるまで停止中）
 
 	// マップ移動装置
 	{
@@ -778,6 +790,8 @@ void CGame::SetBgObjTest(void)
 		pScrollDevice = CScrollDevice::Create(SCROLL_DEVICE_MODEL, SCROLL_DEVICE_ENEMY_MODEL);
 		pScrollDevice->SetPos(D3DXVECTOR3(-1300.0f, 0.0f, 0.0f));
 	}
+
+#if 0 // 酒井のデバッグ用（テスト中でめり込むため一時停止）
 
 	// ジャッキ
 	{
