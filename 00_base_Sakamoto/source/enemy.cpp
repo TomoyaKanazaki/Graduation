@@ -149,7 +149,8 @@ CEnemy* CEnemy::Create(const ENEMY_TYPE eType, const CMapSystem::GRID& grid)
 	}
 
 	// 座標を設定
-	pEnemy->SetGrid(grid);
+	pEnemy->m_Grid = grid;
+	//pEnemy->SetGrid(pEnemy->m_Grid);
 	pEnemy->SetPos(CMapSystem::GetInstance()->GetGritPos(grid));
 
 	// 敵のタイプを設定
@@ -251,7 +252,8 @@ void CEnemy::Update(void)
 
 	// 過去の位置を記録
 	posOldThis = posThis;
-	SetGridOld(m_Grid);		// グリッド
+	//SetGridOld(m_Grid);		// グリッド
+	m_GridOld = m_Grid;			// 現在のグリッド位置
 
 	// 状態の更新
 	MoveStateManager(posThis);
@@ -285,7 +287,7 @@ void CEnemy::Update(void)
 	}
 
 	// 自分の番号を設定
-	m_Grid = CMapSystem::GetInstance()->CMapSystem::CalcGrid(posThis);
+	m_Grid = CMapSystem::GetInstance()->CalcGrid(posThis);
 
 	//床の判定
 	if (posThis.y <= 0.0f)
@@ -321,6 +323,15 @@ void CEnemy::Update(void)
 	SetPosOld(posOldThis);	// 前回の位置
 	SetRot(rotThis);			// 向き
 	SetSize(sizeThis);		// 大きさ
+
+#ifdef _DEBUG
+#if 1
+	if (CMapSystem::GetInstance()->GetGritBool(m_Grid))
+	{
+		MyEffekseer::EffectCreate(CMyEffekseer::TYPE_TRUE, false, useful::CalcMatrix(posThis, INITVECTOR3, *GetUseMultiMatrix()), INITVECTOR3, { 10.0f, 10.0f, 10.0f });
+	}
+#endif
+#endif
 }
 
 //====================================================================

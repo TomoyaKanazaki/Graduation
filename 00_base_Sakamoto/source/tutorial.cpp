@@ -60,8 +60,8 @@ m_pItemMask(nullptr)
 	m_nTutorialWave = 0;
 	m_nEventNumber = 0;
 	m_nNumBowabowa = 0;
-	CManager::GetInstance()->GetCamera()->SetBib(false);
-	CManager::GetInstance()->GetCamera()->SetCameraMode(CCamera::CAMERAMODE_DOWNVIEW);
+	CManager::GetInstance()->GetCamera(0)->SetBib(false);
+	CManager::GetInstance()->GetCamera(0)->SetCameraMode(CCamera::CAMERAMODE_DOWNVIEW);
 }
 
 //====================================================================

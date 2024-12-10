@@ -81,6 +81,7 @@ public:
 	bool GetAppear(void) { return m_Appear; }
 	void SetDisp(bool Set) { m_bDisp = Set; }
 	bool GetDisp(void) { return m_bDisp; }
+	void SetIdxCamera(int nIdx) { m_nIdxCamera = nIdx; }
 
 protected:
 	void Release(void);
@@ -99,6 +100,7 @@ private:
 	bool m_Appear;							//表示状態かどうか
 	bool m_bDisp;							//表示状態かどうか
 	OBJECT_TYPE m_type;						//オブジェクトの種類
+	int m_nIdxCamera;						//カメラ番号
 };
 
 #endif

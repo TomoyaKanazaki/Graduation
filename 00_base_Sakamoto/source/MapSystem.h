@@ -75,10 +75,10 @@ public:
 	GRID CalcGrid(const D3DXVECTOR3& pos);
 	GRID GetCenter() { return m_mapCenter; };
 
-	void SetGritBool(int nWight, int nHeight, bool Set) { m_nMapGrit[nWight][nHeight] = Set; }
-	void SetGritBool(const GRID& grid, bool Set) { m_nMapGrit[grid.x][grid.z] = Set; }
-	bool GetGritBool(int nWight, int nHeight) { return m_nMapGrit[nWight][nHeight]; }
-	bool GetGritBool(const GRID& grid) { return m_nMapGrit[grid.x][grid.z]; }
+	void SetGritBool(int nWight, int nHeight, bool Set);
+	void SetGritBool(const GRID& grid, bool Set);
+	bool GetGritBool(int nWight, int nHeight);
+	bool GetGritBool(const GRID& grid);
 
 	void SetMapPos(D3DXVECTOR3 pos) { m_MapPos = pos; }
 	D3DXVECTOR3 GetMapPos(void) { return m_MapPos; }
@@ -95,14 +95,14 @@ public:
 	static void Load(const char* pFilename); // マップ情報の読み込み
 	static float GetGritSize();
 
-public:
+private:
 
 	static CMapSystem* m_pMapSystem;
 	static std::vector<std::tuple<>> m_nData;	// 複数の値を保持
 	static std::vector<GRID> m_PosPlayer;		// プレイヤーの位置を保持
 
 	// TODO : Load関数で動的確保する（ｻﾄﾈｼｵﾝ）
-	static bool m_nMapGrit[NUM_WIGHT][NUM_HEIGHT];	//グリットにブロックが存在していたらtrue
+	static bool m_bMapGrit[NUM_WIGHT][NUM_HEIGHT];	//グリットにブロックが存在していたらtrue
 	GRID m_mapCenter;
 	D3DXVECTOR3 m_InitPos;
 	D3DXVECTOR3 m_MapPos;

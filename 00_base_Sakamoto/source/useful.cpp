@@ -168,7 +168,7 @@ bool useful::PushSquareXZ(D3DXVECTOR3 PosMy, D3DXVECTOR3 SizeMy, D3DXVECTOR3 Mov
 //====================================================================
 bool useful::CameraFront(D3DXVECTOR3 pos)
 {
-	CCamera* pCamera = CManager::GetInstance()->GetCamera();
+	CCamera* pCamera = CManager::GetInstance()->GetCamera(0);
 	D3DXVECTOR3 CamPos = pCamera->GetPosV();
 	float CamRot = pCamera->GetRot().y;
 
@@ -591,8 +591,8 @@ void useful::Vec3Project(D3DXVECTOR3 *pOut, D3DXVECTOR3 v)
 	viewport.MinZ = 0.0f;
 
 	//マトリックスの取得
-	mtxView = CManager::GetInstance()->GetCamera()->GetViewMatrix();
-	mtxProjection = CManager::GetInstance()->GetCamera()->GetProjectionMatrix();
+	mtxView = CManager::GetInstance()->GetCamera(0)->GetViewMatrix();
+	mtxProjection = CManager::GetInstance()->GetCamera(0)->GetProjectionMatrix();
 
 	//ワールドマトリックスの初期化
 	D3DXMatrixIdentity(&mtxWorld);

@@ -87,7 +87,7 @@ void CMoveState::Debug(void)
 void CMoveState::Rot(CObjectCharacter* pCharacter, D3DXVECTOR3& rot)
 {
 	//キーボードの取得
-	D3DXVECTOR3 CameraRot = CManager::GetInstance()->GetCamera()->GetRot();
+	D3DXVECTOR3 CameraRot = CManager::GetInstance()->GetCamera(0)->GetRot();
 	D3DXVECTOR3 move = pCharacter->GetMove();
 
 	//移動方向に向きを合わせる処理
@@ -536,6 +536,7 @@ void CStateRandom::SearchWall(CObjectCharacter* pCharacter, D3DXVECTOR3& pos)
 
 		if (m_bSwitchMove == true)
 		{ // 方向変えられる場合
+
 			// 移動方向の選択
 			MoveSelect(pCharacter);
 			m_bSwitchMove = false;

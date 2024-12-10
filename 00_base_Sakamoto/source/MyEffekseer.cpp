@@ -65,6 +65,7 @@ namespace MyEffekseer
 		"data\\EFFEKSEER\\Effect\\31_clash_cross.efkefc",			// 十字架を失う時
 		"data\\EFFEKSEER\\Effect\\32_spawn_devil.efkefc",			// 十字架を失う時
 		"data\\EFFEKSEER\\Effect\\33_quake.efkefc",					// 揺れの破片
+		"data\\EFFEKSEER\\Effect\\34_debug_true.efkefc",					// 揺れの破片
 	};
 
 	//============================================
@@ -299,7 +300,7 @@ void CMyEffekseer::Draw(void)
 	m_EfkRenderer->SetProjectionMatrix(m_ProjectionMatrix);
 
 	// カメラ取得
-	CCamera* pCamera = CManager::GetInstance()->GetCamera();
+	CCamera* pCamera = CManager::GetInstance()->GetCamera(0);
 
 	// カメラが使用されていない場合処理抜ける
 	if (pCamera == nullptr)
