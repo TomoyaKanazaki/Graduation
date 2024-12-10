@@ -29,6 +29,7 @@
 #include "objmeshField.h"
 #include "Cross.h"
 #include "MapMove.h"
+#include "pause.h"
 
 #include "sound.h"
 #include "shadow.h"
@@ -345,6 +346,15 @@ void CGame::Update(void)
 		{
 			m_pEventMovie->Update();
 		}
+	}
+
+	if (CManager::GetInstance()->GetPause() == true)
+	{
+		m_pTime->SetStopTime(true);		//タイムの進行を止める
+	}
+	else
+	{
+		m_pTime->SetStopTime(false);	//タイムの進行を進める
 	}
 
 	if (CManager::GetInstance()->GetFade()->GetFade() == CFade::FADE_NONE)
@@ -766,7 +776,6 @@ void CGame::LoadStageMapModel(const char* pFilename)
 //====================================================================
 void CGame::SetBgObjTest(void)
 {
-#if 1 // 酒井のデバッグ用（モデル読み込みクラスできるまで停止中）
 
 	// マップ移動装置
 	{
@@ -776,6 +785,8 @@ void CGame::SetBgObjTest(void)
 		pScrollDevice = CScrollDevice::Create(SCROLL_DEVICE_MODEL, SCROLL_DEVICE_ENEMY_MODEL);
 		pScrollDevice->SetPos(D3DXVECTOR3(-1300.0f, 0.0f, 0.0f));
 	}
+
+#if 0 // 酒井のデバッグ用（テスト中でめり込むため一時停止）
 
 	// ジャッキ
 	{

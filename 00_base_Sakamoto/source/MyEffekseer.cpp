@@ -65,7 +65,8 @@ namespace MyEffekseer
 		"data\\EFFEKSEER\\Effect\\31_clash_cross.efkefc",			// 十字架を失う時
 		"data\\EFFEKSEER\\Effect\\32_spawn_devil.efkefc",			// 十字架を失う時
 		"data\\EFFEKSEER\\Effect\\33_quake.efkefc",					// 揺れの破片
-		"data\\EFFEKSEER\\Effect\\34_debug_true.efkefc",					// 揺れの破片
+		"data\\EFFEKSEER\\Effect\\34_debug_true.efkefc",			// デバッグ用true
+		"data\\EFFEKSEER\\Effect\\35_stage_limit.efkefc",			// ステージ端
 	};
 
 	//============================================

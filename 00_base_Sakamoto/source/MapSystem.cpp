@@ -31,6 +31,7 @@ namespace
 	float GRID_SIZE = 100.0f;	// ƒOƒŠƒbƒh‚ÌƒTƒCƒY
 	D3DXVECTOR3 MAP_SIZE = D3DXVECTOR3(750.0f, 0.0f, 550.0f);		// ‰¡‚Ì“–‚½‚è”»’è
 	int BOWABOWA_RATE = 2; // ƒ{ƒƒ{ƒ‚Ì¶¬—¦ ( 0ˆÈ‰º‚ÅƒGƒ‰[ )
+	const D3DXVECTOR3 EFFECT_SIZE = { 103.5f, 25.0f, 67.5f }; // ƒGƒtƒFƒNƒg‚Ì”{—¦
 }
 
 //Ã“Iƒƒ“ƒo•Ï”éŒ¾
@@ -43,7 +44,9 @@ std::vector<CMapSystem::GRID> CMapSystem::m_PosPlayer = {};	// ƒvƒŒƒCƒ„[‚ÌˆÊ’u‚
 //ƒRƒ“ƒXƒgƒ‰ƒNƒ^
 //====================================================================
 CMapSystem::CMapSystem() : 
-	m_mapCenter(0, 0)
+	m_mapCenter(0, 0),
+	m_pEffect(nullptr),
+	m_mtxStage(nullptr)
 {
 	for (int nCntW = 0; nCntW < NUM_WIGHT; nCntW++)
 	{
@@ -110,6 +113,9 @@ void CMapSystem::Init()
 
 	// ’†S‚ğİ’è
 	m_mapCenter = GRID(NUM_WIGHT / 2, NUM_HEIGHT / 2);
+
+	// °‚Ìƒ}ƒgƒŠƒbƒNƒX‚ğæ“¾
+	m_mtxStage = CObjmeshField::GetListTop()->GetMatrix();
 }
 
 //====================================================================
@@ -132,6 +138,20 @@ void CMapSystem::Uninit(void)
 void CMapSystem::Update(void)
 {
 	CDevil::GetListTop()->GetMove()->FollowScroll(m_MapPos);
+
+	// ƒGƒtƒFƒNƒg‚ğ“®‚©‚·
+	if (m_pEffect != nullptr)
+	{
+		D3DXVECTOR3 rot = INITVECTOR3;
+		rot.x = useful::CalcMatrixToRot(*CObjmeshField::GetListTop()->GetMatrix()).y;
+		rot.y = useful::CalcMatrixToRot(*CObjmeshField::GetListTop()->GetMatrix()).x;
+		rot.z = useful::CalcMatrixToRot(*CObjmeshField::GetListTop()->GetMatrix()).z;
+		m_pEffect->SetRotation(rot);
+	}
+	else
+	{
+		m_pEffect = MyEffekseer::EffectCreate(CMyEffekseer::TYPE_STAGE_LIMIT, true, INITVECTOR3, INITVECTOR3, EFFECT_SIZE);
+	}
 
 #ifdef _DEBUG
 #if 0
@@ -395,17 +415,23 @@ void CMapSystem::Load(const char* pFilename)
 				iss >> pMapSystem->m_MapGrid.x >> pMapSystem->m_MapGrid.z;
 
 				CObjmeshField* map = nullptr;
-				//°‚Ì¶¬
-				if (CScene::GetMode() == CScene::MODE_GAME)
-				{
+
+				switch (CScene::GetMode())
+				{// °‚Ì¶¬
+				case CScene::MODE_GAME:
 					CGame::GetInstance()->SetMapField(CObjmeshField::Create(pMapSystem->m_MapGrid));
 					map = CGame::GetInstance()->GetMapField();
-				}
-				else if (CScene::GetMode() == CScene::MODE_TUTORIAL)
-				{
+					break;
+
+				case CScene::MODE_TUTORIAL:
 					CTutorial::GetInstance()->SetMapField(CObjmeshField::Create(pMapSystem->m_MapGrid));
 					map = CTutorial::GetInstance()->GetMapField();
+					break;
+
+				default:
+					break;
 				}
+				
 				map->SetPos(INITVECTOR3);
 				map->SetDisp(false); // •`‰æ‚ğƒIƒt
 

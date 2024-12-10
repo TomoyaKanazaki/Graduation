@@ -25,7 +25,7 @@ CSound::SOUNDINFO CSound::m_aSoundInfo[SOUND_LABEL_MAX] =
 	// BGM
 	{ "data/BGM/00_BGM_title.wav", -1 },				// タイトル
 	{ "data/BGM/01_BGM_result.wav", -1 },				// リザルト
-	{ "data/BGM/02_BGM_stage1.wav", -1 },				// ステージ１
+	{ "data/BGM/01_BGM_game2.wav", -1 },				// ステージ１
 	{ "data/BGM/03_BGM_stage2.wav", -1 },				// ステージ２
 
 };

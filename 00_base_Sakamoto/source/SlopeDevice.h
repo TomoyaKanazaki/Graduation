@@ -66,7 +66,8 @@ public:
 	void Draw(void);
 
 	void SetState(STATE state) { m_State = state; }
-	void SetState(STATE state, CScrollArrow::Arrow stateArrow);
+	void SetStateArrow(CScrollArrow::Arrow stateArrow);
+	void SetStateArrowBack(CScrollArrow::Arrow stateArrow);
 	
 	void SetLocateWorldType(LOCATE_WORLD_TYPE LocateWorldType) { m_LocateWorldType = LocateWorldType ;}
 
@@ -78,8 +79,11 @@ private:
 
 	void StateManager(void);
 
-	void Ascent(int nNldxModel, D3DXVECTOR3 ascent, D3DXVECTOR3 ascentMax);
-	void Descent(int nNldxModel, D3DXVECTOR3 descent, D3DXVECTOR3 descentPosMin);
+	void Ascent(int nNldxModel);
+	void Descent(int nNldxModel);
+
+	D3DXVECTOR3 m_posTarget;				// ñ⁄ìIà íu
+	D3DXVECTOR3 m_move;						// à⁄ìÆó 
 
 	STATE m_State;							// èÛë‘
 	int m_nStateCount;						// èÛë‘ä«óùópïœêî

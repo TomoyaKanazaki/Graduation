@@ -107,6 +107,9 @@ private:
 	int m_nStateNum;				//状態カウント
 	bool m_bSlope;					//傾き状態かどうか
 
+	float m_fScrollMove;			//スクロールが移動した量
+	bool m_bScrollOK;				//スクロールが完了したかどうか
+
 	CMapSystem::GRID m_MinGrid;		//マップで一番左上にあるブロックの番号
 	CMapSystem::GRID m_MaxGrid;		//マップで一番右下にあるブロックの番号
 
