@@ -73,6 +73,7 @@ namespace useful
 		COLLISION_MAX,
 	};
 
+	float RoundUp2(float Num);				//2Œ…–Ú‚ÌlÌŒÜ“üˆ—
 	bool MoveIF(float Move1, float Move2);	// ˆÚ“®—Ê‚ğ”äŠr‚µˆÚ“®—Ê‚P‚æ‚èˆÚ“®—Ê‚Q‚ª‘‚¢‚Æ‚«true‚ğ•Ô‚·
 	int RangeNumber(int Max, int Min, int Number);	// ”š‚ğİ’è‚µ‚½”ÍˆÍ“à‚É”[‚ß‚éˆ—
 	bool CollisionRectangle2D(D3DXVECTOR3 pos1, D3DXVECTOR3 pos2, D3DXVECTOR3 Size1, D3DXVECTOR3 Size2, useful::COLLISION Shaft);

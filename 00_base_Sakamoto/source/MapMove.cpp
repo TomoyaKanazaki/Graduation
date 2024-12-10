@@ -39,8 +39,8 @@ namespace
 	const int SCROOL_MOVEGRID_02 = 3;					// スクロールの移動マス幅
 	const float SCROOL_SPEED_02 = (CMapSystem::GetGritSize() * SCROOL_MOVEGRID_02) / SCROOL_COUNT_02;			// スクロールの移動速度
 
-	int SLOPE_TIME = 300;						// 傾き操作時間
-	int SLOPE_RAND = 90;						// 傾き発生確率
+	const int SLOPE_TIME = 300;						// 傾き操作時間
+	const int SLOPE_RAND = 0;						// 傾き発生確率
 	float STAGE_ROT_LIMIT = D3DX_PI * 0.15f;	// 傾きの角度制限
 
 	const float SLOPE_SPEED01 = 0.00075f;				// 傾きの移動速度
@@ -285,28 +285,14 @@ void CMapMove::Move(int Arroow)
 		{
 			D3DXVECTOR3 MapPos = CMapSystem::GetInstance()->GetMapPos();
 
-			if (((int)MapPos.x % 100 / 10) >= 5)
-			{
-
-			}
-			else
-			{
-
-			}
-
-			if (((int)MapPos.z % 100 / 10) >= 5)
-			{
-
-			}
-			else
-			{
-
-			}
+			MapPos.x = useful::RoundUp2(MapPos.x);
+			MapPos.z = useful::RoundUp2(MapPos.z);
 
 			CMapSystem::GetInstance()->SetMapPos(MapPos);
 
 			m_bScrollOK = true;
 			m_fScrollMove = 0.0f;
+			m_move = INITVECTOR3;
 		}
 
 		break;
@@ -327,24 +313,25 @@ void CMapMove::Move(int Arroow)
 			m_move.x = SCROOL_SPEED_02;
 			break;
 		}
+
+		m_fScrollMove += SCROOL_SPEED_02;
+		if (m_fScrollMove > (SCROOL_MOVEGRID_02 * 100))
+		{
+			D3DXVECTOR3 MapPos = CMapSystem::GetInstance()->GetMapPos();
+
+			MapPos.x = useful::RoundUp2(MapPos.x);
+			MapPos.z = useful::RoundUp2(MapPos.z);
+
+			CMapSystem::GetInstance()->SetMapPos(MapPos);
+
+			m_bScrollOK = true;
+			m_fScrollMove = 0.0f;
+			m_move = INITVECTOR3;
+		}
+
 		break;
 
 	default:
-		switch (Arroow)
-		{
-		case 0:
-			m_move.z = SCROOL_SPEED_01;
-			break;
-		case 1:
-			m_move.z = -SCROOL_SPEED_01;
-			break;
-		case 2:
-			m_move.x = -SCROOL_SPEED_01;
-			break;
-		case 3:
-			m_move.x = SCROOL_SPEED_01;
-			break;
-		}
 		break;
 	}
 }
@@ -818,7 +805,7 @@ void CMapMove::StateManager(void)
 			{// 傾きの指定％じゃない時
 
 				// スクロール時間設定
-				m_nStateCount = SCROOL_TIME;
+				m_nStateCount = SCROOL_TIME * 2;
 
 				// スクロール方向指定
 				m_DevilArrow = rand() % 2;
@@ -960,7 +947,7 @@ void CMapMove::StateManager(void)
 			break;
 		}
 
-		if (m_nStateCount <= 0)
+		if (m_nStateCount < 0)
 		{
 			m_State = MOVE_WAIT;
 			m_nStateCount = 120;
