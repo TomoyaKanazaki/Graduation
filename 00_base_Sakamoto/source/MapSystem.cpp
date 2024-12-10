@@ -127,7 +127,7 @@ void CMapSystem::Uninit(void)
 //====================================================================
 void CMapSystem::Update(void)
 {
-	CGame::GetInstance()->GetDevil()->GetMove()->FollowScroll(m_MapPos);
+	CDevil::GetListTop()->GetMove()->FollowScroll(m_MapPos);
 }
 
 //====================================================================

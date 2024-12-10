@@ -314,7 +314,7 @@ void CEnemy::Update(void)
 	m_pMoveState->Debug();		// 現在の移動状態
 
 	// スクロールに合わせて移動する
-	CGame::GetInstance()->GetDevil()->GetMove()->FollowScroll(posThis);
+	CDevil::GetListTop()->GetMove()->FollowScroll(posThis);
 
 	// 値更新
 	SetPos(posThis);			// 位置
