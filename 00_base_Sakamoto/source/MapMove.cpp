@@ -40,7 +40,7 @@ namespace
 	const float SCROOL_SPEED_02 = (CMapSystem::GetGritSize() * SCROOL_MOVEGRID_02) / SCROOL_COUNT_02;			// ƒXƒNƒ[ƒ‹‚ÌˆÚ“®‘¬“x
 
 	const int SLOPE_TIME = 300;						// ŒX‚«‘€ìŽžŠÔ
-	const int SLOPE_RAND = 50;						// ŒX‚«”­¶Šm—¦
+	const int SLOPE_RAND = 0;						// ŒX‚«”­¶Šm—¦
 	const float STAGE_ROT_LIMIT = D3DX_PI * 0.15f;	// ŒX‚«‚ÌŠp“x§ŒÀ
 
 	const float SLOPE_SPEED01 = 0.00075f;				// ŒX‚«‚ÌˆÚ“®‘¬“x
@@ -86,6 +86,8 @@ CMapMove::CMapMove() :
 	m_pSignal[3] = nullptr;
 	m_nStateNum = 0;
 	m_SlopeType = 0;
+	m_bScrollOK = false;
+	m_fScrollMove = 0.0f;
 }
 
 //====================================================================
@@ -277,6 +279,36 @@ void CMapMove::Move(int Arroow)
 			m_move.x = SCROOL_SPEED_01;
 			break;
 		}
+
+		m_fScrollMove += SCROOL_SPEED_01;
+		if (m_fScrollMove >= (SCROOL_MOVEGRID_01 * 100))
+		{
+			D3DXVECTOR3 MapPos = CMapSystem::GetInstance()->GetMapPos();
+
+			if (((int)MapPos.x % 100 / 10) >= 5)
+			{
+
+			}
+			else
+			{
+
+			}
+
+			if (((int)MapPos.z % 100 / 10) >= 5)
+			{
+
+			}
+			else
+			{
+
+			}
+
+			CMapSystem::GetInstance()->SetMapPos(MapPos);
+
+			m_bScrollOK = true;
+			m_fScrollMove = 0.0f;
+		}
+
 		break;
 
 	case CMapMove::SCROLL_TYPE_RETRO:
@@ -835,6 +867,8 @@ void CMapMove::StateManager(void)
 					// ‰ñ“]ó‘Ô‚É•ÏX
 					pScrollDevice->SetState(CScrollDevice::STATE_ROTATE);
 				}
+
+				m_bScrollOK = false;
 			}
 		}
 
@@ -865,7 +899,7 @@ void CMapMove::StateManager(void)
 			break;
 		}
 
-		if (m_nStateCount <= 1)
+		if (m_bScrollOK == true)
 		{
 			m_State = MOVE_WAIT;
 			m_nStateCount = 120;
@@ -935,7 +969,7 @@ void CMapMove::StateManager(void)
 		break;
 	}
 
-	if (m_nStateCount > 0)
+	if (m_nStateCount >= 0)
 	{
 		m_nStateCount--;
 	}
