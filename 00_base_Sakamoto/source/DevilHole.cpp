@@ -227,7 +227,7 @@ void CDevilHole::Update(void)
 	StateManager();
 
 	// スクロールに合わせて移動する
-	CDevil::GetListTop()->GetMove()->FollowScroll(posThis);
+	CMapSystem::GetInstance()->GetMove()->FollowScroll(posThis);
 
 	// 値更新
 	SetPos(posThis);		// 位置
