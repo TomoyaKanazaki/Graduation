@@ -288,8 +288,8 @@ void CRenderer::Update(void)
 void CRenderer::Draw(void)
 {
 	//カメラの取得
-	CCamera* pCamera = CManager::GetInstance()->GetCamera();
-	//CMiniMapCamera* pMiniMapCamera = CManager::GetInstance()->GetMiniMapCamera();
+	CCamera* pCamera = CManager::GetInstance()->GetCamera(0);
+	CCamera* pSignalCamera = CManager::GetInstance()->GetCamera(1);
 
 	//フェードの取得
 	CFade* pFade = CManager::GetInstance()->GetFade();
@@ -428,11 +428,21 @@ void CRenderer::Draw(void)
 			D3DVIEWPORT9 viewportDef;
 			m_pD3DDevice->GetViewport(&viewportDef);
 
-			//カメラの設定
-			pCamera->SetCamera();
+			{
+				//カメラの設定
+				pCamera->SetCamera();
 
-			//全てのオブジェクト2Dの描画処理
-			CObject::DrawAll(0);
+				//全てのオブジェクト2Dの描画処理
+				CObject::DrawAll(0);
+			}
+
+			{
+				// 矢印カメラの設定
+				pSignalCamera->SetCamera();
+
+				//全てのオブジェクト2Dの描画処理
+				CObject::DrawAll(1);
+			}
 
 			// エフェクシアの描画
 			CManager::GetInstance()->GetEffect()->Draw();

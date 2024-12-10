@@ -29,6 +29,8 @@ class CBlockManager;
 class CItemManager;
 class CScene;
 
+#define NUM_CAMERA	(3)		//カメラの最大数
+
 //マネージャクラス
 class CManager
 {
@@ -68,7 +70,7 @@ public:
 	CInputKeyboard *GetInputKeyboard(void) { return m_pInputKeyboard; }
 	CInputJoypad* GetInputJoyPad(void) { return m_pInputJoyPad; }
 	CInputMouse*GetInputMouse(void) { return m_pInputMouse; }
-	CCamera* GetCamera(void) { return m_pCamera; }
+	CCamera* GetCamera(int nIdx) { return m_pCamera[nIdx]; }
 	CMiniMapCamera* GetMiniMapCamera(void) { return m_pMiniMapCamera; }
 	CTexture *GetTexture(void) { return m_pTexture; }
 	CXModel *GetXModel(void) { return m_pXModel; }
@@ -153,7 +155,7 @@ private:
 	CInputKeyboard *m_pInputKeyboard;		//キーボードのポインタ
 	CInputJoypad* m_pInputJoyPad;			//ジョイパッドのポインタ
 	CInputMouse*m_pInputMouse;				//マウスのポインタ
-	CCamera *m_pCamera;						//カメラのポインタ
+	CCamera *m_pCamera[NUM_CAMERA];			//カメラのポインタ
 	CMiniMapCamera* m_pMiniMapCamera;		//ミニマップカメラのポインタ
 	CLight *m_pLight;						//ライトのポインタ
 	CTexture *m_pTexture;					//テクスチャのポインタ

@@ -287,7 +287,7 @@ void CEnemy::Update(void)
 	}
 
 	// é©ï™ÇÃî‘çÜÇê›íË
-	m_Grid = CMapSystem::GetInstance()->CMapSystem::CalcGrid(posThis);
+	m_Grid = CMapSystem::GetInstance()->CalcGrid(posThis);
 
 	//è∞ÇÃîªíË
 	if (posThis.y <= 0.0f)
@@ -323,6 +323,15 @@ void CEnemy::Update(void)
 	SetPosOld(posOldThis);	// ëOâÒÇÃà íu
 	SetRot(rotThis);			// å¸Ç´
 	SetSize(sizeThis);		// ëÂÇ´Ç≥
+
+#ifdef _DEBUG
+#if 1
+	if (CMapSystem::GetInstance()->GetGritBool(m_Grid))
+	{
+		MyEffekseer::EffectCreate(CMyEffekseer::TYPE_TRUE, false, useful::CalcMatrix(posThis, INITVECTOR3, *GetUseMultiMatrix()), INITVECTOR3, { 10.0f, 10.0f, 10.0f });
+	}
+#endif
+#endif
 }
 
 //====================================================================
