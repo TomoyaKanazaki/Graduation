@@ -217,7 +217,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "data\\TEXTURE\\Field\\wall.png";
+    "data\\TEXTURE\\Field\\wall_test.png";
    }
   }
   Material {
@@ -226,7 +226,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "data\\TEXTURE\\Field\\wall.png";
+    "data\\TEXTURE\\Field\\wall_test.png";
    }
   }
   Material {
@@ -235,7 +235,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "data\\TEXTURE\\Field\\wall.png";
+    "data\\TEXTURE\\Field\\wall_test.png";
    }
   }
   Material {
@@ -244,7 +244,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "data\\TEXTURE\\Field\\black.jpg";
+    "data\\TEXTURE\\Field\\stripe.png";
    }
   }
   Material {
@@ -253,7 +253,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "data\\TEXTURE\\Field\\black.jpg";
+    "data\\TEXTURE\\Field\\stripe.png";
    }
   }
   Material {
@@ -262,7 +262,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "data\\TEXTURE\\Field\\black.jpg";
+    "data\\TEXTURE\\Field\\stripe.png";
    }
   }
  }

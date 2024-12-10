@@ -61,6 +61,7 @@ public:
 		TYPE_SPAWN_DEVIL,			// デビルの出現
 		TYPE_QUAKE,					// 揺れる時の破片
 		TYPE_TRUE,					// デバッグtrue
+		TYPE_STAGE_LIMIT,			// ステージ端
 		TYPE_MAX,
 		TYPE_NONE					// なんもない
 	};
