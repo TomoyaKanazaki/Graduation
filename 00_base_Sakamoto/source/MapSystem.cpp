@@ -395,17 +395,23 @@ void CMapSystem::Load(const char* pFilename)
 				iss >> pMapSystem->m_MapGrid.x >> pMapSystem->m_MapGrid.z;
 
 				CObjmeshField* map = nullptr;
-				//°‚Ì¶¬
-				if (CScene::GetMode() == CScene::MODE_GAME)
-				{
+
+				switch (CScene::GetMode())
+				{// °‚Ì¶¬
+				case CScene::MODE_GAME:
 					CGame::GetInstance()->SetMapField(CObjmeshField::Create(pMapSystem->m_MapGrid));
 					map = CGame::GetInstance()->GetMapField();
-				}
-				else if (CScene::GetMode() == CScene::MODE_TUTORIAL)
-				{
+					break;
+
+				case CScene::MODE_TUTORIAL:
 					CTutorial::GetInstance()->SetMapField(CObjmeshField::Create(pMapSystem->m_MapGrid));
 					map = CTutorial::GetInstance()->GetMapField();
+					break;
+
+				default:
+					break;
 				}
+				
 				map->SetPos(INITVECTOR3);
 				map->SetDisp(false); // •`‰æ‚ğƒIƒt
 

@@ -44,6 +44,7 @@ CTutorial* CTutorial::m_pTutorial = nullptr;
 //====================================================================
 CTutorial::CTutorial():
 m_pTutorialTex(nullptr),
+m_pCheckMaker(nullptr),
 m_pPlayerMask(nullptr),
 m_pEnemyMask(nullptr),
 m_pItemMask(nullptr)
