@@ -116,7 +116,7 @@ void CEventMovie::Draw(void)
 //====================================================================
 void CEventMovie::StartMovie(void)
 {
-	CCamera* pCamera = CManager::GetInstance()->GetCamera();
+	CCamera* pCamera = CManager::GetInstance()->GetCamera(0);
 
 	CDevil* pDevil = CDevil::GetListTop();
 
@@ -172,7 +172,7 @@ void CEventMovie::StartMovie(void)
 //====================================================================
 void CEventMovie::StageChangeMovie(void)
 {
-	CCamera* pCamera = CManager::GetInstance()->GetCamera();
+	CCamera* pCamera = CManager::GetInstance()->GetCamera(0);
 
 	CDevil* pDevil = CDevil::GetListTop();
 	CPlayer* pPlayer = CGame::GetInstance()->GetPlayer(0);

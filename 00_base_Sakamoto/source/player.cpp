@@ -804,13 +804,13 @@ D3DXVECTOR3 CPlayer::MoveInputPadKey(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis,
 //====================================================================
 void CPlayer::Rot(D3DXVECTOR3& rotThis)
 {
-	D3DXVECTOR3 CameraRot = CManager::GetInstance()->GetCamera()->GetRot();
+	D3DXVECTOR3 CameraRot = CManager::GetInstance()->GetCamera(0)->GetRot();
 	STATE state = GetState();		// ó‘Ô
 
 	//ˆÚ“®•ûŒü‚ÉŒü‚«‚ð‡‚í‚¹‚éˆ—
 	float fRotMove, fRotDest;
 	fRotMove = rotThis.y;
-	fRotDest = CManager::GetInstance()->GetCamera()->GetRot().y;
+	fRotDest = CManager::GetInstance()->GetCamera(0)->GetRot().y;
 
 	if (state == STATE_WALK)
 	{

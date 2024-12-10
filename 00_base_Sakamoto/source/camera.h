@@ -32,6 +32,13 @@ public:
 		CAMERAMODE_SEAMLESS,		//シームレス
 		CAMERAMODE_MAX,
 	};
+
+	enum CAMERATYPE
+	{
+		CAMERATYPE_MAIN = 0,	// メインカメラ
+		CAMERATYPE_SIGNAL,		// 矢印カメラ
+		CAMERATYPE_DEVIL,		// デビルカメラ
+	};
 	
 	HRESULT Init(void);
 	void Uninit(void);
