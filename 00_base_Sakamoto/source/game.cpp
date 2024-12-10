@@ -329,6 +329,14 @@ void CGame::Update(void)
 		m_Slow = false;
 	}
 
+	if (pInputKeyboard->GetTrigger(DIK_RETURN) == true)
+	{
+		// ƒQ[ƒ€‚ÌÅ‰‚©‚ç
+		CFade::SetFade(CScene::MODE_GAME);
+
+	}
+
+
 #endif
 
 	if (m_bEvent == true)
