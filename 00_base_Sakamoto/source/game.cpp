@@ -432,6 +432,11 @@ void CGame::Update(void)
 			StageClear(1);
 		}
 
+		if (pInputKeyboard->GetTrigger(DIK_F5))
+		{
+			CFade::SetFade(CScene::MODE_TUTORIAL);
+		}
+
 #endif // _DEBUG
 	}
 }
