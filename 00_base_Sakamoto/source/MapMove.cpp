@@ -30,22 +30,25 @@
 //===========================================
 namespace
 {
-	int SCROOL_TIME = 300;						// スクロール時間
+	const int SCROOL_TIME = 300;						// スクロール時間
 
-	int SCROOL_MOVEGRID_01 = 3;					// スクロールの移動マス幅
-	float SCROOL_SPEED_01 = (CMapSystem::GetGritSize() * SCROOL_MOVEGRID_01 / SCROOL_TIME);				// スクロールの移動速度
+	const int SCROOL_MOVEGRID_01 = 3;					// スクロールの移動マス幅
+	const float SCROOL_SPEED_01 = (CMapSystem::GetGritSize() * SCROOL_MOVEGRID_01 / SCROOL_TIME);				// スクロールの移動速度
 
-	int SCROOL_COUNT_02 = 12;					// スクロールの移動回数
-	int SCROOL_MOVEGRID_02 = 3;					// スクロールの移動マス幅
-	float SCROOL_SPEED_02 = (CMapSystem::GetGritSize() * SCROOL_MOVEGRID_02) / SCROOL_COUNT_02;			// スクロールの移動速度
+	const int SCROOL_COUNT_02 = 12;					// スクロールの移動回数
+	const int SCROOL_MOVEGRID_02 = 3;					// スクロールの移動マス幅
+	const float SCROOL_SPEED_02 = (CMapSystem::GetGritSize() * SCROOL_MOVEGRID_02) / SCROOL_COUNT_02;			// スクロールの移動速度
 
-	int SLOPE_TIME = 300;						// 傾き操作時間
-	int SLOPE_RAND = 25;						// 傾き発生確率
-	float STAGE_ROT_LIMIT = D3DX_PI * 0.15f;	// 傾きの角度制限
+	const int SLOPE_TIME = 300;						// 傾き操作時間
+	const int SLOPE_RAND = 50;						// 傾き発生確率
+	const float STAGE_ROT_LIMIT = D3DX_PI * 0.15f;	// 傾きの角度制限
 
-	float SLOPE_SPEED01 = 0.00075f;				// 傾きの移動速度
+	const float SLOPE_SPEED01 = 0.00075f;				// 傾きの移動速度
 
-	float SLOPE_SPEED02 = 0.0125f;				// 傾きの移動速度
+	const float SLOPE_SPEED02 = 0.0125f;				// 傾きの移動速度
+
+	const int EFFECT_NUM = 3; // 一度に生成するエフェクトの数
+	const float EFFECT_RANGE = 1.5f; // エフェクトの生成間隔
 }
 
 //===========================================
@@ -56,7 +59,8 @@ CListManager<CMapMove>* CMapMove::m_pList = nullptr; // オブジェクトリスト
 //====================================================================
 //コンストラクタ
 //====================================================================
-CMapMove::CMapMove()
+CMapMove::CMapMove() : 
+	m_fEffectTime(0.0f)
 {
 	m_move = INITVECTOR3;
 	m_Objmove = INITVECTOR3;
@@ -197,6 +201,46 @@ void CMapMove::Update(void)
 
 	DebugProc::Print(DebugProc::POINT_RIGHT, "[最小番号]左 %d : 上 %d\n", m_MinGrid.x, m_MinGrid.z);
 	DebugProc::Print(DebugProc::POINT_RIGHT, "[最大番号]右 %d : 下 %d\n", m_MaxGrid.x, m_MaxGrid.z);
+
+	// エフェクトを生成
+	switch (m_State)
+	{
+	case MOVE_WAIT:
+
+		// 生成時間をリセット
+		m_fEffectTime = EFFECT_RANGE;
+		break;
+
+	default:
+
+		// 生成時間を更新
+		m_fEffectTime -= DeltaTime::Get();
+
+		// タイマー
+		if (m_fEffectTime > 0.0f)
+		{
+			break;
+		}
+
+		// 生成時間をリセット
+		m_fEffectTime = EFFECT_RANGE;
+
+		// グリッド情報の取得
+		CMapSystem* system = CMapSystem::GetInstance();
+		CMapSystem::GRID maxGrid = system->GetMapGrid();
+		D3DXMATRIX mat = *CObjmeshField::GetListTop()->GetMatrix();
+		D3DXVECTOR3 rotEffect = useful::CalcMatrixToRot(mat);
+		for (int i = 0; i < EFFECT_NUM; ++i)
+		{
+			// 生成情報を算出
+			CMapSystem::GRID grid = { rand() % maxGrid.x, rand() % maxGrid.z };
+
+			// 生成
+			MyEffekseer::EffectCreate(CMyEffekseer::TYPE_QUAKE, false, useful::CalcMatrix(grid.ToWorld(), INITVECTOR3, mat), rotEffect);
+		}
+
+		break;
+	}
 }
 
 //====================================================================

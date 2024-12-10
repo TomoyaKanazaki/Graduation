@@ -546,48 +546,15 @@ void CStateRandom::SearchWall(CObjectCharacter* pCharacter, D3DXVECTOR3& pos)
 //====================================================================
 void CStateRandom::MoveSelect(CObjectCharacter* pCharacter)
 {
-	float fAngle = 0.0f;	// 向き
-	D3DXVECTOR3 moveSave = pCharacter->GetMove();		// 移動量
 	std::vector<D3DXVECTOR3> move = {};
+	D3DXVECTOR3 moveSave = pCharacter->GetMove();		// 移動量
+	float fAngle = 0.0f;	// 向き
 	
-	if (m_bSwitchMove == true)
-	{ // 方向変えられる場合
-
-		// 進行できる方向を確認
-		if (m_Progress.bOKL && m_RotState != CMoveState::ROTSTATE_LEFT)
-		{ // 左
-
-			// 移動方向設定
-			fAngle = D3DX_PI * -0.5f;
-			move.push_back(D3DXVECTOR3(sinf(fAngle) * ENEMY_SPEED, moveSave.y, cosf(fAngle) * ENEMY_SPEED));
-		}
-		if (m_Progress.bOKR && m_RotState != CMoveState::ROTSTATE_RIGHT)
-		{ // 右
-
-			// 移動方向設定
-			fAngle = D3DX_PI * 0.5f;
-			move.push_back(D3DXVECTOR3(sinf(fAngle) * ENEMY_SPEED, moveSave.y, cosf(fAngle) * ENEMY_SPEED));
-		}
-		if (m_Progress.bOKU && m_RotState != CMoveState::ROTSTATE_UP)
-		{ // 上
-
-			// 移動方向設定
-			fAngle = D3DX_PI * 0.0f;
-			move.push_back(D3DXVECTOR3(sinf(fAngle) * ENEMY_SPEED, moveSave.y, cosf(fAngle) * ENEMY_SPEED));
-		}
-		if (m_Progress.bOKD && m_RotState != CMoveState::ROTSTATE_DOWN)
-		{ // 下
-
-			// 移動方向設定
-			fAngle = D3DX_PI * 1.0f;
-			move.push_back(D3DXVECTOR3(sinf(fAngle) * ENEMY_SPEED, moveSave.y, cosf(fAngle) * ENEMY_SPEED));
-		}
-
-		m_bSwitchMove = false;
-	}
+	// 各移動方向の移動量設定
+	MoveAngle(pCharacter, move);
 
 	// 進行する方向を決定
-	if (move.size() >= 1)
+	if (move.size() >= 2)
 	{ // 進行できる方向が複数ある場合
 
 		int nRand = rand() % move.size();		// 進行方向決定
@@ -619,8 +586,82 @@ void CStateRandom::MoveSelect(CObjectCharacter* pCharacter)
 		// 移動量設定
 		pCharacter->SetMove(move[0]);
 	}
+	else if (move.size() == 0)
+	{ // 後ろ以外進めない時
+		
+		// 向きの状態設定
+		switch (m_RotState)
+		{
+		case CMoveState::ROTSTATE_LEFT:		// 左
+			fAngle = D3DX_PI * -0.5f;
+			move.push_back(D3DXVECTOR3(sinf(fAngle) * ENEMY_SPEED, moveSave.y, cosf(fAngle) * ENEMY_SPEED));
+			break;
+		case CMoveState::ROTSTATE_RIGHT:	// 右
+			// 移動方向設定
+			fAngle = D3DX_PI * 0.5f;
+			move.push_back(D3DXVECTOR3(sinf(fAngle) * ENEMY_SPEED, moveSave.y, cosf(fAngle) * ENEMY_SPEED));
+			break;
+		case CMoveState::ROTSTATE_UP:		// 上
+			// 移動方向設定
+			fAngle = D3DX_PI * 0.0f;
+			move.push_back(D3DXVECTOR3(sinf(fAngle) * ENEMY_SPEED, moveSave.y, cosf(fAngle) * ENEMY_SPEED));
+			break;
+		case CMoveState::ROTSTATE_DOWN:		// 下
+			// 移動方向設定
+			fAngle = D3DX_PI * 1.0f;
+			move.push_back(D3DXVECTOR3(sinf(fAngle) * ENEMY_SPEED, moveSave.y, cosf(fAngle) * ENEMY_SPEED));
+			break;
+		default:
+			break;
+		}
+	}
 
 	m_ProgressOld = m_Progress;		// 現在の進行状況にする
+}
+
+//====================================================================
+// 各方向の移動量設定
+//====================================================================
+void CStateRandom::MoveAngle(CObjectCharacter* pCharacter, std::vector<D3DXVECTOR3>& move)
+{
+	D3DXVECTOR3 moveSave = pCharacter->GetMove();		// 移動量
+	float fAngle = 0.0f;	// 向き
+
+	if (m_bSwitchMove == true)
+	{ // 方向変えられる場合
+
+		// 進行できる方向を確認
+		if (m_Progress.bOKL/* && m_RotState != CMoveState::ROTSTATE_LEFT*/)
+		{ // 左
+
+			// 移動方向設定
+			fAngle = D3DX_PI * -0.5f;
+			move.push_back(D3DXVECTOR3(sinf(fAngle) * ENEMY_SPEED, moveSave.y, cosf(fAngle) * ENEMY_SPEED));
+		}
+		if (m_Progress.bOKR/* && m_RotState != CMoveState::ROTSTATE_RIGHT*/)
+		{ // 右
+
+			// 移動方向設定
+			fAngle = D3DX_PI * 0.5f;
+			move.push_back(D3DXVECTOR3(sinf(fAngle) * ENEMY_SPEED, moveSave.y, cosf(fAngle) * ENEMY_SPEED));
+		}
+		if (m_Progress.bOKU/* && m_RotState != CMoveState::ROTSTATE_UP*/)
+		{ // 上
+
+			// 移動方向設定
+			fAngle = D3DX_PI * 0.0f;
+			move.push_back(D3DXVECTOR3(sinf(fAngle) * ENEMY_SPEED, moveSave.y, cosf(fAngle) * ENEMY_SPEED));
+		}
+		if (m_Progress.bOKD/* && m_RotState != CMoveState::ROTSTATE_DOWN*/)
+		{ // 下
+
+			// 移動方向設定
+			fAngle = D3DX_PI * 1.0f;
+			move.push_back(D3DXVECTOR3(sinf(fAngle) * ENEMY_SPEED, moveSave.y, cosf(fAngle) * ENEMY_SPEED));
+		}
+
+		m_bSwitchMove = false;
+	}
 }
 
 //**********************************************************************************************************

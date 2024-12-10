@@ -121,6 +121,7 @@ private:
 	int m_SlopwArrowOld;			// 過去の傾きの方向
 	SCROLL_TYPE m_ScrollType;		// スクロールの種類
 	int m_SlopeType;				// スロープの種類
+	float m_fEffectTime;			// エフェクト生成タイマー
 
 	// 静的メンバ変数
 	static CListManager<CMapMove>* m_pList; // オブジェクトリスト

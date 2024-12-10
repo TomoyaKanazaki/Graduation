@@ -59,6 +59,7 @@ public:
 		TYPE_SOFTCREAM,				// ソフトクリームのオーラ
 		TYPE_CRASH_CROSS,			// 十字架を失う時
 		TYPE_SPAWN_DEVIL,			// デビルの出現
+		TYPE_QUAKE,					// 揺れる時の破片
 		TYPE_MAX,
 		TYPE_NONE					// なんもない
 	};

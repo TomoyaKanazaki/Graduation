@@ -64,6 +64,7 @@ namespace MyEffekseer
 		"data\\EFFEKSEER\\Effect\\30_aura_softcream.efkefc",		// ソフトクリームオーラ
 		"data\\EFFEKSEER\\Effect\\31_clash_cross.efkefc",			// 十字架を失う時
 		"data\\EFFEKSEER\\Effect\\32_spawn_devil.efkefc",			// 十字架を失う時
+		"data\\EFFEKSEER\\Effect\\33_quake.efkefc",					// 揺れの破片
 	};
 
 	//============================================
