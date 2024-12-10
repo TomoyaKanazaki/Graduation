@@ -65,6 +65,7 @@ namespace MyEffekseer
 		"data\\EFFEKSEER\\Effect\\31_clash_cross.efkefc",			// \š‰Ë‚ğ¸‚¤
 		"data\\EFFEKSEER\\Effect\\32_spawn_devil.efkefc",			// \š‰Ë‚ğ¸‚¤
 		"data\\EFFEKSEER\\Effect\\33_quake.efkefc",					// —h‚ê‚Ì”j•Ğ
+		"data\\EFFEKSEER\\Effect\\34_debug_true.efkefc",					// —h‚ê‚Ì”j•Ğ
 	};
 
 	//============================================
