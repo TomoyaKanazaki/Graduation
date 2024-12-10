@@ -115,7 +115,7 @@ HRESULT CTutorial::Init(void)
 	if(m_pTutorialTex != nullptr)
 	{// テクスチャ生成・位置・サイズ設定
 		m_pTutorialTex->SetTexture("data\\TEXTURE\\UI\\tutorial_guid.png");
-		m_pTutorialTex->SetPos(D3DXVECTOR3(1050.0f, 150.0f, 0.0f));
+		m_pTutorialTex->SetPos(D3DXVECTOR3(200.0f, 225.0f, 0.0f));
 		m_pTutorialTex->SetSize(D3DXVECTOR3(420.0f, 360.0f, 0.0f));
 	}
 
