@@ -42,7 +42,12 @@ CTutorial* CTutorial::m_pTutorial = nullptr;
 //====================================================================
 //コンストラクタ
 //====================================================================
-CTutorial::CTutorial()
+CTutorial::CTutorial():
+m_pTutorialTex(nullptr),
+m_pCheckMaker(nullptr),
+m_pPlayerMask(nullptr),
+m_pEnemyMask(nullptr),
+m_pItemMask(nullptr)
 {
 	m_bGameEnd = false;
 	m_bEvent = false;
@@ -88,9 +93,32 @@ HRESULT CTutorial::Init(void)
 	////BGMの再生
 	//CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_BGM_TUTORIAL);
 
-	// 2Dマスクの生成
-	m_pMask = CMask::Create(2, D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
-	m_pEnemyMask = CMask::Create(102, D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f));
+	if (m_pPlayerMask == nullptr)
+	{// プレイヤーマスクの生成
+		m_pPlayerMask = CMask::Create(2, D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
+	}
+
+	if (m_pItemMask == nullptr)
+	{// アイテムマスク
+		m_pItemMask = CMask::Create(4, D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+	}
+
+	if (m_pEnemyMask == nullptr)
+	{// 敵マスク
+		m_pEnemyMask = CMask::Create(102, D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f));
+	}
+
+	if (m_pTutorialTex == nullptr)
+	{// チュートリアルテクスチャの生成
+		m_pTutorialTex = CObject2D::Create();
+	}
+
+	if(m_pTutorialTex != nullptr)
+	{// テクスチャ生成・位置・サイズ設定
+		m_pTutorialTex->SetTexture("data\\TEXTURE\\UI\\tutorial_guid.png");
+		m_pTutorialTex->SetPos(D3DXVECTOR3(200.0f, 225.0f, 0.0f));
+		m_pTutorialTex->SetSize(D3DXVECTOR3(420.0f, 360.0f, 0.0f));
+	}
 
 	//クリアフラグのデフォルトをオンにしておく
 	m_bGameClear = true;
@@ -116,32 +144,36 @@ HRESULT CTutorial::Init(void)
 	CMapSystem::GetInstance()->Init();
 	CMapSystem::Load("data\\TXT\\STAGE\\map01.csv");
 
-	//// 下床の生成
-	//CObjmeshField* pBottonField = CObjmeshField::Create(BOTTOM_FIELD_VTX_WIDTH, BOTTOM_FIELD_VTX_HEIGHT);
-	//pBottonField->SetTexture(BOTTOM_FIELD_TEX);
-	//pBottonField->SetPos(BOTTOM_FIELD_POS);
 	m_bGameEnd = false;
 
-	if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_SINGLE)
+	switch (CManager::GetInstance()->GetGameMode())
 	{
+	case CManager::GAME_MODE::MODE_SINGLE:
+
 		//プレイヤーの生成
 		m_pPlayer[0] = CTutorialPlayer::Create(0);
 		m_pPlayer[0]->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(11, 9)));
-	}
-	else if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
-	{
+
+		break;
+
+	case CManager::GAME_MODE::MODE_MULTI:
+
 		//プレイヤーの生成
 		m_pPlayer[0] = CTutorialPlayer::Create(0);
 		m_pPlayer[0]->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(11, 9)));
 
 		m_pPlayer[1] = CTutorialPlayer::Create(1);
 		m_pPlayer[1]->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(11, 4)));
-	}
-	else
-	{
+
+		break;
+
+	default:
+
 		//プレイヤーの生成
 		m_pPlayer[0] = CTutorialPlayer::Create(0);
 		m_pPlayer[0]->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(11, 9)));
+
+		break;
 	}
 
 	//レールブロックの生成
@@ -153,40 +185,40 @@ HRESULT CTutorial::Init(void)
 	switch (CManager::GetInstance()->GetStage())
 	{
 	case 0:
-		CMapSystem::Load("data\\TXT\\STAGE\\Block.txt");
+		//CMapSystem::Load("data\\TXT\\STAGE\\Block.txt");
 
-		//pDevilHole = CDevilHole::Create("data\\MODEL\\DevilHole.x");
-		//pDevilHole->SetGrid(CMapSystem::GRID(11, 7));
-		//CMapSystem::GetInstance()->SetGritBool(11, 7, true);
+		////pDevilHole = CDevilHole::Create("data\\MODEL\\DevilHole.x");
+		////pDevilHole->SetGrid(CMapSystem::GRID(11, 7));
+		////CMapSystem::GetInstance()->SetGritBool(11, 7, true);
 
-		// TODO : 外部書き出しを利用する
-		{
-			// 幅・高さ取得
-			int nWidth = CMapSystem::GetInstance()->GetWightMax();
-			int nHeight = CMapSystem::GetInstance()->GetHeightMax();
+		//// TODO : 外部書き出しを利用する
+		//{
+		//	// 幅・高さ取得
+		//	int nWidth = CMapSystem::GetInstance()->GetWightMax();
+		//	int nHeight = CMapSystem::GetInstance()->GetHeightMax();
 
-			for (int i = 1; i < nWidth; i++)
-			{
-				for (int nCnt = 1; nCnt < nHeight; nCnt++)
-				{// アイテム無い場所にボワボワ生成
-					if (CMapSystem::GetInstance()->GetGritBool(i, nCnt)) { continue; }
+		//	for (int i = 1; i < nWidth; i++)
+		//	{
+		//		for (int nCnt = 1; nCnt < nHeight; nCnt++)
+		//		{// アイテム無い場所にボワボワ生成
+		//			if (CMapSystem::GetInstance()->GetGritBool(i, nCnt)) { continue; }
 
-					if (rand() % 5) { continue; }
+		//			if (rand() % 5) { continue; }
 
-					CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(i, nCnt));
-				}
-			}
-		}
+		//			CItem::Create(CItem::TYPE_BOWABOWA, CMapSystem::GRID(i, nCnt));
+		//		}
+		//	}
+		//}
 
-		// 十字架の生成
-		CItem::Create(CItem::TYPE_CROSS, CMapSystem::GRID(11, 2));
-		CItem::Create(CItem::TYPE_CROSS, CMapSystem::GRID(20, 4));
-		CItem::Create(CItem::TYPE_CROSS, CMapSystem::GRID(22, 9));
-		CItem::Create(CItem::TYPE_CROSS, CMapSystem::GRID(6, 11));
-		CItem::Create(CItem::TYPE_CROSS, CMapSystem::GRID(16, 11));
+		//// 十字架の生成
+		//CItem::Create(CItem::TYPE_CROSS, CMapSystem::GRID(11, 2));
+		//CItem::Create(CItem::TYPE_CROSS, CMapSystem::GRID(20, 4));
+		//CItem::Create(CItem::TYPE_CROSS, CMapSystem::GRID(22, 9));
+		//CItem::Create(CItem::TYPE_CROSS, CMapSystem::GRID(6, 11));
+		//CItem::Create(CItem::TYPE_CROSS, CMapSystem::GRID(16, 11));
 
-		// ソフトクリームの生成
-		CItem::Create(CItem::TYPE_SOFTCREAM, CMapSystem::GetInstance()->GetCenter());
+		//// ソフトクリームの生成
+		//CItem::Create(CItem::TYPE_SOFTCREAM, CMapSystem::GetInstance()->GetCenter());
 
 		break;
 
