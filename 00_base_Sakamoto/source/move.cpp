@@ -536,6 +536,7 @@ void CStateRandom::SearchWall(CObjectCharacter* pCharacter, D3DXVECTOR3& pos)
 
 		if (m_bSwitchMove == true)
 		{ // •ûŒü•Ï‚¦‚ç‚ê‚éê‡
+
 			// ˆÚ“®•ûŒü‚Ì‘I‘ğ
 			MoveSelect(pCharacter);
 			m_bSwitchMove = false;
