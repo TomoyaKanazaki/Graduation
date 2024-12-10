@@ -16,16 +16,23 @@
 #include "model.h"
 #include "motion.h"
 
-#include "objmeshField.h"
-
+#include "MapMove.h"
 
 //==========================================
 //  定数定義
 //==========================================
 namespace
 {
-	const D3DXVECTOR3 ASCENT_ADD = D3DXVECTOR3(0.0f, 1.5f, 0.0f);	// 上昇量
-	const D3DXVECTOR3 DESCENT_DEST = D3DXVECTOR3(0.0f, 1.5f, 0.0f);	// 下降量
+	const D3DXVECTOR3 ASCENT_ADD = D3DXVECTOR3(0.0f, 30.0f, 0.0f);		// 上昇量
+	const D3DXVECTOR3 DESCENT_DEST = D3DXVECTOR3(0.0f, 30.0f, 0.0f);	// 下降量
+
+	const D3DXVECTOR3 NEUTRAL_POS = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		// 基本位置
+
+	const D3DXVECTOR3 MAX_POS_HEIGHT = D3DXVECTOR3(0.0f, 500.0f, 0.0f);	// 縦傾きの最大上昇数
+	const D3DXVECTOR3 MAX_POS_WIDTH = D3DXVECTOR3(0.0f,500.0f,0.0f);	// 横傾きの最大上小数
+
+	const D3DXVECTOR3 MIN_POS_HEIGHT = D3DXVECTOR3(0.0f, -500.0f, 0.0f);	// 縦傾きの最小上昇数
+	const D3DXVECTOR3 MIN_POS_WIDTH = D3DXVECTOR3(0.0f, -500.0f, 0.0f);	// 横傾きの最小上小数
 }
 
 //====================================================================
@@ -38,6 +45,9 @@ CListManager<CSlopeDevice>* CSlopeDevice::m_pList = nullptr; // オブジェクトリス
 //====================================================================
 CSlopeDevice::CSlopeDevice(int nPriority) : CObjectCharacter(nPriority)
 {
+	m_posTarget = NEUTRAL_POS;
+	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
 	m_State = STATE(0);
 	m_nStateCount = 0;
 
@@ -166,7 +176,7 @@ void CSlopeDevice::Draw(void)
 //====================================================================
 // 特定条件（傾き）の状態設定処理
 //====================================================================
-void CSlopeDevice::SetState(STATE state, CScrollArrow::Arrow stateArrow)
+void CSlopeDevice::SetStateArrow(CScrollArrow::Arrow stateArrow)
 {
 	switch (stateArrow)
 	{
@@ -175,15 +185,24 @@ void CSlopeDevice::SetState(STATE state, CScrollArrow::Arrow stateArrow)
 		if (m_LocateWorldType == LOCATE_WORLD_TYPE_BOTTOM_LEFT ||
 			m_LocateWorldType == LOCATE_WORLD_TYPE_BOTTOM_RIGHT)
 		{
-			m_State = state;
+			m_State = STATE_ASCENT;
 		}
+		else
+		{
+			m_State = STATE_DESCENT;
+		}
+
 		break;
 	case CScrollArrow::STATE_DOWN:
 
 		if (m_LocateWorldType == LOCATE_WORLD_TYPE_TOP_LEFT ||
 			m_LocateWorldType == LOCATE_WORLD_TYPE_TOP_RIGHT)
 		{
-			m_State = state;
+			m_State = STATE_ASCENT;
+		}
+		else
+		{
+			m_State = STATE_DESCENT;
 		}
 
 		break;
@@ -192,16 +211,88 @@ void CSlopeDevice::SetState(STATE state, CScrollArrow::Arrow stateArrow)
 		if (m_LocateWorldType == LOCATE_WORLD_TYPE_TOP_LEFT ||
 			m_LocateWorldType == LOCATE_WORLD_TYPE_BOTTOM_LEFT)
 		{
-			m_State = state;
+			m_State = STATE_ASCENT;
 		}
+		else
+		{
+			m_State = STATE_DESCENT;
+		}
+
 		break;
 	case CScrollArrow::STATE_RIGHT:
 
 		if (m_LocateWorldType == LOCATE_WORLD_TYPE_TOP_RIGHT ||
 			m_LocateWorldType == LOCATE_WORLD_TYPE_BOTTOM_RIGHT)
 		{
-			m_State = state;
+			m_State = STATE_ASCENT;
 		}
+		else
+		{
+			m_State = STATE_DESCENT;
+		}
+
+		break;
+	}
+}
+
+//====================================================================
+// 特定条件（傾き戻り）の状態設定処理
+//====================================================================
+void CSlopeDevice::SetStateArrowBack(CScrollArrow::Arrow stateArrow)
+{
+	switch (stateArrow)
+	{
+	case CScrollArrow::STATE_UP:
+
+		if (m_LocateWorldType == LOCATE_WORLD_TYPE_BOTTOM_LEFT ||
+			m_LocateWorldType == LOCATE_WORLD_TYPE_BOTTOM_RIGHT)
+		{
+			m_State = STATE_DESCENT;
+		}
+		else
+		{
+			m_State = STATE_ASCENT;
+		}
+
+		break;
+	case CScrollArrow::STATE_DOWN:
+
+		if (m_LocateWorldType == LOCATE_WORLD_TYPE_TOP_LEFT ||
+			m_LocateWorldType == LOCATE_WORLD_TYPE_TOP_RIGHT)
+		{
+			m_State = STATE_DESCENT;
+		}
+		else
+		{
+			m_State = STATE_ASCENT;
+		}
+
+		break;
+	case CScrollArrow::STATE_LEFT:
+
+		if (m_LocateWorldType == LOCATE_WORLD_TYPE_TOP_LEFT ||
+			m_LocateWorldType == LOCATE_WORLD_TYPE_BOTTOM_LEFT)
+		{
+			m_State = STATE_DESCENT;
+		}
+		else
+		{
+			m_State = STATE_ASCENT;
+		}
+
+		break;
+	case CScrollArrow::STATE_RIGHT:
+
+		if (m_LocateWorldType == LOCATE_WORLD_TYPE_TOP_RIGHT ||
+			m_LocateWorldType == LOCATE_WORLD_TYPE_BOTTOM_RIGHT)
+		{
+			m_State = STATE_DESCENT;
+		}
+		else
+		{
+			m_State = STATE_ASCENT;
+		}
+
 		break;
 	}
 }
@@ -240,18 +331,44 @@ HRESULT CSlopeDevice::InitModel(const char* pModelNameSlopeDevice, const char* p
 //====================================================================
 void CSlopeDevice::StateManager(void)
 {
+	CMapMove* pMapMove = CMapMove::GetListTop();
+	CMapMove::MOVE MoveState = CMapMove::MOVE_WAIT;
+
+	if (pMapMove != nullptr)
+	{
+		MoveState = pMapMove->GetState();
+	}
+
 	switch (m_State)
 	{
 	case STATE_NORMAL:
 		break;
 	case STATE_ASCENT:
 
-		Ascent(SETUP_TYPE_ELEVATING_PART, ASCENT_ADD,D3DXVECTOR3(0.0f,200.0f,0.0f));
+		if (MoveState == CMapMove::MOVE_SLOPE_UP ||
+			MoveState == CMapMove::MOVE_SLOPE_DOWN)
+		{
+			Ascent(SETUP_TYPE_ELEVATING_PART);
+		}
+		else if (MoveState == CMapMove::MOVE_SLOPE_RIGHT ||
+				 MoveState == CMapMove::MOVE_SLOPE_LEFT)
+		{
+			Ascent(SETUP_TYPE_ELEVATING_PART);
+		}
 
 		break;
 	case STATE_DESCENT:
 
-		Descent(SETUP_TYPE_ELEVATING_PART, DESCENT_DEST, D3DXVECTOR3(0.0f, 80.0f, 0.0f));
+		if (MoveState == CMapMove::MOVE_SLOPE_UP ||
+			MoveState == CMapMove::MOVE_SLOPE_DOWN)
+		{
+			Descent(SETUP_TYPE_ELEVATING_PART);
+		}
+		else if (MoveState == CMapMove::MOVE_SLOPE_RIGHT ||
+				 MoveState == CMapMove::MOVE_SLOPE_LEFT)
+		{
+			Descent(SETUP_TYPE_ELEVATING_PART);
+		}
 
 		break;
 	}
@@ -265,7 +382,7 @@ void CSlopeDevice::StateManager(void)
 //====================================================================
 // 上昇処理
 //====================================================================
-void CSlopeDevice::Ascent(int nNldxModel, D3DXVECTOR3 ascent, D3DXVECTOR3 ascentPosMax)
+void CSlopeDevice::Ascent(int nNldxModel)
 {
 	// モデルの取得
 	CModel* pModel = GetModel(nNldxModel);
@@ -278,12 +395,8 @@ void CSlopeDevice::Ascent(int nNldxModel, D3DXVECTOR3 ascent, D3DXVECTOR3 ascent
 	// モデルの位置を取得
 	D3DXVECTOR3 pos = pModel->GetStartPos();
 
-	// 最大上昇位置判定
-	if (pos.y <= ascentPosMax.y)
-	{
-		// 上昇量を加算
-		pos += ascent;
-	}
+	// 上昇量を加算
+	pos += m_move;
 
 	// モデルの位置更新
 	pModel->SetStartPos(pos);
@@ -292,7 +405,7 @@ void CSlopeDevice::Ascent(int nNldxModel, D3DXVECTOR3 ascent, D3DXVECTOR3 ascent
 //====================================================================
 // 下降処理
 //====================================================================
-void CSlopeDevice::Descent(int nNldxModel, D3DXVECTOR3 descent, D3DXVECTOR3 descentPosMin)
+void CSlopeDevice::Descent(int nNldxModel)
 {
 	// モデルの取得
 	CModel* pModel = GetModel(nNldxModel);
@@ -305,12 +418,8 @@ void CSlopeDevice::Descent(int nNldxModel, D3DXVECTOR3 descent, D3DXVECTOR3 desc
 	// モデルの位置を取得
 	D3DXVECTOR3 pos = pModel->GetStartPos();
 
-	// 最大下降位置判定
-	if (pos.y >= descentPosMin.y)
-	{
-		// 下降量を減算
-		pos -= descent;
-	}
+	// 下降量を加算
+	pos -= m_move;
 
 	// モデルの位置更新
 	pModel->SetStartPos(pos);

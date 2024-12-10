@@ -759,7 +759,7 @@ void CMapMove::StateManager(void)
 					for (CSlopeDevice* pSlopeDevice : list)
 					{
 						// 方向の傾き装置を上昇状態に変更
-						pSlopeDevice->SetState(CSlopeDevice::STATE_ASCENT, (CScrollArrow::Arrow)m_DevilArrow);
+						pSlopeDevice->SetStateArrow((CScrollArrow::Arrow)m_DevilArrow);
 					}
 				}
 				else
@@ -777,8 +777,8 @@ void CMapMove::StateManager(void)
 					// 傾き装置のリストの中身を確認する
 					for (CSlopeDevice* pSlopeDevice : list)
 					{
-						// 方向の傾き装置を下降状態に変更
-						pSlopeDevice->SetState(CSlopeDevice::STATE_DESCENT, (CScrollArrow::Arrow)m_SlopwArrowOld);
+						// 方向の傾き装置を上昇状態に変更
+						pSlopeDevice->SetStateArrowBack((CScrollArrow::Arrow)m_SlopwArrowOld);
 					}
 				}
 			}
