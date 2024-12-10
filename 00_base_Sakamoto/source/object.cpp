@@ -201,7 +201,7 @@ void CObject::DrawAll(int nCnt)
 		{
 			CObject* pObjectNext = pObject->m_pNext;	//次のオブジェクトを保存
 
-			if (pObject->m_Appear == true && pObject->m_bDisp == true && nCnt == pObject->m_nIdxCamera)
+			if (pObject->m_Appear == true && nCnt == pObject->m_nIdxCamera)
 			{
 				//描画処理
 				pObject->Draw();
