@@ -377,6 +377,7 @@ D3DXVECTOR3 CStateControl::InputKey(CObjectCharacter* pCharacter, D3DXVECTOR3& p
 CStateRandom::CStateRandom()
 {
 	m_State = STATE_RANDOM;
+	m_RotState = ROTSTATE_NONE;
 
 	// 進行許可情報
 	m_Progress.bOKR = false;	//右
@@ -441,6 +442,13 @@ void CStateRandom::Move(CObjectCharacter* pCharacter, D3DXVECTOR3& pos, D3DXVECT
 
 	// 位置更新処理
 	UpdatePos(pCharacter, pos);
+
+	DebugProc::Print(DebugProc::POINT_LEFT, "移動向き : ");
+
+	auto str = magic_enum::enum_name(m_RotState);
+
+	DebugProc::Print(DebugProc::POINT_LEFT, str.data());
+	DebugProc::Print(DebugProc::POINT_LEFT, "\n");
 }
 
 //====================================================================
@@ -531,7 +539,7 @@ void CStateRandom::SearchWall(CObjectCharacter* pCharacter, D3DXVECTOR3& pos)
 		{ // いずれかの進行が許可されてないとき
 			// 待機状態にする
 			pCharacter->SetState(CObjectCharacter::STATE_WAIT);
-			m_RotState = ROTSTATE_WAIT;
+			//m_RotState = ROTSTATE_WAIT;
 		}
 
 		if (m_bSwitchMove == true)
@@ -553,73 +561,81 @@ void CStateRandom::SearchWall(CObjectCharacter* pCharacter, D3DXVECTOR3& pos)
 void CStateRandom::MoveSelect(CObjectCharacter* pCharacter)
 {
 	std::vector<D3DXVECTOR3> move = {};
+	std::vector<ROTSTATE> RotState = {};
+
 	D3DXVECTOR3 moveSave = pCharacter->GetMove();		// 移動量
 	float fAngle = 0.0f;	// 向き
 	
 	// 各移動方向の移動量設定
-	MoveAngle(pCharacter, move);
+	MoveAngle(pCharacter, move, RotState);
 
 	// 進行する方向を決定
 	if (move.size() >= 2)
-	{ // 進行できる方向が複数ある場合
+	{ // 進行できる方向が2つ以上ある場合
 
 		int nRand = rand() % move.size();		// 進行方向決定
 
-		// 向きの状態設定
-		switch (nRand)
-		{
-		case CMoveState::ROTSTATE_LEFT:		// 左
-			m_RotState = CMoveState::ROTSTATE_LEFT;
-			break;
-		case CMoveState::ROTSTATE_RIGHT:	// 右
-			m_RotState = CMoveState::ROTSTATE_RIGHT;
-			break;
-		case CMoveState::ROTSTATE_UP:		// 上
-			m_RotState = CMoveState::ROTSTATE_UP;
-			break;
-		case CMoveState::ROTSTATE_DOWN:		// 下
-			m_RotState = CMoveState::ROTSTATE_DOWN;
-			break;
-		default:
-			break;
-		}
+		m_RotState = RotState[nRand];			// 向きの状態
 
 		// 移動量設定
 		pCharacter->SetMove(move[nRand]);
 	}
 	else if(move.size() == 1)
 	{
+		m_RotState = RotState[0];			// 向きの状態
+
 		// 移動量設定
 		pCharacter->SetMove(move[0]);
 	}
-	else if (move.size() == 0)
+	else if (move.empty())
 	{ // 後ろ以外進めない時
 		
 		// 向きの状態設定
 		switch (m_RotState)
 		{
 		case CMoveState::ROTSTATE_LEFT:		// 左
-			fAngle = D3DX_PI * -0.5f;
-			move.push_back(D3DXVECTOR3(sinf(fAngle) * ENEMY_SPEED, moveSave.y, cosf(fAngle) * ENEMY_SPEED));
-			break;
-		case CMoveState::ROTSTATE_RIGHT:	// 右
-			// 移動方向設定
+			// 右に移動
 			fAngle = D3DX_PI * 0.5f;
 			move.push_back(D3DXVECTOR3(sinf(fAngle) * ENEMY_SPEED, moveSave.y, cosf(fAngle) * ENEMY_SPEED));
+			RotState.push_back(ROTSTATE_RIGHT);
+			break;
+		case CMoveState::ROTSTATE_RIGHT:	// 右
+			// 左に移動
+			fAngle = D3DX_PI * -0.5f;
+			move.push_back(D3DXVECTOR3(sinf(fAngle) * ENEMY_SPEED, moveSave.y, cosf(fAngle) * ENEMY_SPEED));
+			RotState.push_back(ROTSTATE_LEFT);
+
 			break;
 		case CMoveState::ROTSTATE_UP:		// 上
-			// 移動方向設定
-			fAngle = D3DX_PI * 0.0f;
-			move.push_back(D3DXVECTOR3(sinf(fAngle) * ENEMY_SPEED, moveSave.y, cosf(fAngle) * ENEMY_SPEED));
-			break;
-		case CMoveState::ROTSTATE_DOWN:		// 下
-			// 移動方向設定
+			// 下に移動
 			fAngle = D3DX_PI * 1.0f;
 			move.push_back(D3DXVECTOR3(sinf(fAngle) * ENEMY_SPEED, moveSave.y, cosf(fAngle) * ENEMY_SPEED));
+			RotState.push_back(ROTSTATE_DOWN);
+
+			break;
+		case CMoveState::ROTSTATE_DOWN:		// 下
+			// 上に移動
+			fAngle = D3DX_PI * 0.0f;
+			move.push_back(D3DXVECTOR3(sinf(fAngle) * ENEMY_SPEED, moveSave.y, cosf(fAngle) * ENEMY_SPEED));
+			RotState.push_back(ROTSTATE_UP);
+
+			break;
+
+		case CMoveState::ROTSTATE_WAIT:		// 待機
+			// 止まる
+			fAngle = D3DX_PI * 0.0f;
+			move.push_back(D3DXVECTOR3(0.0f, moveSave.y, 0.0f));
+
 			break;
 		default:
 			break;
 		}
+
+		// 向きの状態設定
+		m_RotState = RotState[0];
+
+		// 移動量設定
+		pCharacter->SetMove(move[0]);
 	}
 
 	m_ProgressOld = m_Progress;		// 現在の進行状況にする
@@ -628,7 +644,7 @@ void CStateRandom::MoveSelect(CObjectCharacter* pCharacter)
 //====================================================================
 // 各方向の移動量設定
 //====================================================================
-void CStateRandom::MoveAngle(CObjectCharacter* pCharacter, std::vector<D3DXVECTOR3>& move)
+void CStateRandom::MoveAngle(CObjectCharacter* pCharacter, std::vector<D3DXVECTOR3>& move, std::vector<ROTSTATE>& rotState)
 {
 	D3DXVECTOR3 moveSave = pCharacter->GetMove();		// 移動量
 	float fAngle = 0.0f;	// 向き
@@ -640,6 +656,8 @@ void CStateRandom::MoveAngle(CObjectCharacter* pCharacter, std::vector<D3DXVECTO
 		// 移動方向設定
 		fAngle = D3DX_PI * -0.5f;
 		move.push_back(D3DXVECTOR3(sinf(fAngle) * ENEMY_SPEED, moveSave.y, cosf(fAngle) * ENEMY_SPEED));
+		rotState.push_back(ROTSTATE_LEFT);
+
 	}
 	if (m_Progress.bOKR/* && m_RotState != CMoveState::ROTSTATE_RIGHT*/)
 	{ // 右
@@ -647,6 +665,8 @@ void CStateRandom::MoveAngle(CObjectCharacter* pCharacter, std::vector<D3DXVECTO
 		// 移動方向設定
 		fAngle = D3DX_PI * 0.5f;
 		move.push_back(D3DXVECTOR3(sinf(fAngle) * ENEMY_SPEED, moveSave.y, cosf(fAngle) * ENEMY_SPEED));
+		rotState.push_back(ROTSTATE_RIGHT);
+
 	}
 	if (m_Progress.bOKU/* && m_RotState != CMoveState::ROTSTATE_UP*/)
 	{ // 上
@@ -654,6 +674,8 @@ void CStateRandom::MoveAngle(CObjectCharacter* pCharacter, std::vector<D3DXVECTO
 		// 移動方向設定
 		fAngle = D3DX_PI * 0.0f;
 		move.push_back(D3DXVECTOR3(sinf(fAngle) * ENEMY_SPEED, moveSave.y, cosf(fAngle) * ENEMY_SPEED));
+		rotState.push_back(ROTSTATE_UP);
+
 	}
 	if (m_Progress.bOKD/* && m_RotState != CMoveState::ROTSTATE_DOWN*/)
 	{ // 下
@@ -661,6 +683,8 @@ void CStateRandom::MoveAngle(CObjectCharacter* pCharacter, std::vector<D3DXVECTO
 		// 移動方向設定
 		fAngle = D3DX_PI * 1.0f;
 		move.push_back(D3DXVECTOR3(sinf(fAngle) * ENEMY_SPEED, moveSave.y, cosf(fAngle) * ENEMY_SPEED));
+		rotState.push_back(ROTSTATE_DOWN);
+
 	}
 
 }

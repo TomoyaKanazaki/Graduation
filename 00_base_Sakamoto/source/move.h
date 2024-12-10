@@ -153,7 +153,7 @@ private:
     // メンバ関数
     void SearchWall(CObjectCharacter* pCharacter, D3DXVECTOR3& pos);				// 壁のサーチ判定(移動方向の選択処理の準備)
     void MoveSelect(CObjectCharacter* pCharacter);		// 移動方向の選択
-    void MoveAngle(CObjectCharacter* pCharacter, std::vector<D3DXVECTOR3>& move);      // 各方向の移動量設定
+    void MoveAngle(CObjectCharacter* pCharacter, std::vector<D3DXVECTOR3>& move, std::vector<ROTSTATE>& rotState);      // 各方向の移動量設定
 
     // メンバ変数
     CMapSystem::GRID m_GridOld;
