@@ -191,7 +191,7 @@ void CDevil::Update(void)
 
 	// ƒXƒNƒ[ƒ‹‚É’Ç]‚·‚é
 	D3DXVECTOR3 pos = GetPos();
-	m_pMapMove->FollowScroll(pos);
+	CMapSystem::GetInstance()->GetMove()->FollowScroll(pos);
 	SetPos(pos);
 }
 
