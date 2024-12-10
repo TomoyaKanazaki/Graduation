@@ -534,13 +534,13 @@ void CMapSystem::Load(const char* pFilename)
 							{ // 転がる岩
 
 								// 転がる岩生成
-								//CRollRock::Create(grid);
+								CRollRock::Create(grid);
 
-								//// グリッド設定の判定
-								//bGridSet = true;
+								// グリッド設定の判定
+								bGridSet = true;
 
-								//// 経路探索用情報の設定
-								//generator->addCollision(grid.ToAStar()); // 通過不可地点を追加
+								// 経路探索用情報の設定
+								generator->addCollision(grid.ToAStar()); // 通過不可地点を追加
 							}
 							else
 							{ // ボワボワの生成
