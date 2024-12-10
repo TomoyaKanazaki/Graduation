@@ -29,6 +29,7 @@
 #include "objmeshField.h"
 #include "Cross.h"
 #include "MapMove.h"
+#include "pause.h"
 
 #include "sound.h"
 #include "shadow.h"
@@ -337,6 +338,15 @@ void CGame::Update(void)
 		{
 			m_pEventMovie->Update();
 		}
+	}
+
+	if (CManager::GetInstance()->GetPause() == true)
+	{
+		m_pTime->SetStopTime(true);		//タイムの進行を止める
+	}
+	else
+	{
+		m_pTime->SetStopTime(false);	//タイムの進行を進める
 	}
 
 	if (CManager::GetInstance()->GetFade()->GetFade() == CFade::FADE_NONE)
