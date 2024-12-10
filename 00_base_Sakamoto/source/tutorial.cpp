@@ -146,26 +146,34 @@ HRESULT CTutorial::Init(void)
 
 	m_bGameEnd = false;
 
-	if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_SINGLE)
+	switch (CManager::GetInstance()->GetGameMode())
 	{
+	case CManager::GAME_MODE::MODE_SINGLE:
+
 		//プレイヤーの生成
 		m_pPlayer[0] = CTutorialPlayer::Create(0);
 		m_pPlayer[0]->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(11, 9)));
-	}
-	else if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
-	{
+
+		break;
+
+	case CManager::GAME_MODE::MODE_MULTI:
+
 		//プレイヤーの生成
 		m_pPlayer[0] = CTutorialPlayer::Create(0);
 		m_pPlayer[0]->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(11, 9)));
 
 		m_pPlayer[1] = CTutorialPlayer::Create(1);
 		m_pPlayer[1]->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(11, 4)));
-	}
-	else
-	{
+
+		break;
+
+	default:
+
 		//プレイヤーの生成
 		m_pPlayer[0] = CTutorialPlayer::Create(0);
 		m_pPlayer[0]->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(11, 9)));
+
+		break;
 	}
 
 	//レールブロックの生成
