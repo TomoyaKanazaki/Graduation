@@ -35,7 +35,7 @@ namespace
 
 //静的メンバ変数宣言
 CMapSystem* CMapSystem::m_pMapSystem = nullptr;
-bool CMapSystem::m_nMapGrit[NUM_WIGHT][NUM_HEIGHT] = {false};
+bool CMapSystem::m_bMapGrit[NUM_WIGHT][NUM_HEIGHT] = {false};
 std::vector<std::tuple<>> CMapSystem::m_nData = {};	// 複数の値を保持
 std::vector<CMapSystem::GRID> CMapSystem::m_PosPlayer = {};	// プレイヤーの位置を保持
 
@@ -49,7 +49,7 @@ CMapSystem::CMapSystem() :
 	{
 		for (int nCntH = 0; nCntH < NUM_HEIGHT; nCntH++)
 		{
-			m_nMapGrit[nCntW][nCntH] = false;
+			m_bMapGrit[nCntW][nCntH] = false;
 		}
 	}
 	m_WightMax = NUM_WIGHT;
@@ -92,7 +92,7 @@ void CMapSystem::Init()
 	{
 		for (int nCntH = 0; nCntH < NUM_HEIGHT; nCntH++)
 		{
-			m_pMapSystem->m_nMapGrit[nCntW][nCntH] = false;
+			m_pMapSystem->m_bMapGrit[nCntW][nCntH] = false;
 		}
 	}
 
@@ -134,14 +134,14 @@ void CMapSystem::Update(void)
 	CGame::GetInstance()->GetDevil()->GetMove()->FollowScroll(m_MapPos);
 
 #ifdef _DEBUG
-#if 1
+#if 0
 
 	// デバッグ表示
 	for (int i = 0; i < m_MapGrid.x; ++i)
 	{
 		for (int j = 0; j < m_MapGrid.z; ++j)
 		{
-			if (!m_nMapGrit[i][j]) { continue; }
+			if (!m_bMapGrit[i][j]) { continue; }
 			MyEffekseer::EffectCreate(CMyEffekseer::TYPE_TRUE, false, useful::CalcMatrix(GRID(i, j).ToWorld(), INITVECTOR3, *CObjmeshField::GetListTop()->GetMatrix()), INITVECTOR3, {10.0f, 10.0f, 10.0f});
 		}
 	}
@@ -267,6 +267,46 @@ CMapSystem::GRID CMapSystem::CalcGrid(const D3DXVECTOR3& pos)
 	}
 
 	return grid;
+}
+
+//==========================================
+//  グリッドの移動可能フラグを設定
+//==========================================
+void CMapSystem::SetGritBool(int nWight, int nHeight, bool Set)
+{
+	if (nWight < 0 || nHeight < 0) { return; }
+	if (nWight >= m_MapGrid.x || nHeight >= m_MapGrid.z) { return; }
+	m_bMapGrit[nWight][nHeight] = Set;
+}
+
+//==========================================
+//  グリッドの移動可能フラグを設定
+//==========================================
+void CMapSystem::SetGritBool(const GRID& grid, bool Set)
+{
+	if (grid.x < 0 || grid.z < 0) { return; }
+	if (grid.x >= m_MapGrid.x || grid.z >= m_MapGrid.z) { return; }
+	m_bMapGrit[grid.x][grid.z] = Set;
+}
+
+//==========================================
+//  グリッドの移動可能フラグを取得
+//==========================================
+bool CMapSystem::GetGritBool(int nWight, int nHeight)
+{
+	if (nWight < 0 || nHeight < 0) { return false; }
+	if (nWight >= m_MapGrid.x || nHeight >= m_MapGrid.z) { return false; }
+	return m_bMapGrit[nWight][nHeight];
+}
+
+//==========================================
+//  グリッドの移動可能フラグを取得
+//==========================================
+bool CMapSystem::GetGritBool(const GRID& grid)
+{
+	if (grid.x < 0 || grid.z < 0) { return false; }
+	if (grid.x >= m_MapGrid.x || grid.z >= m_MapGrid.z) { return false; }
+	return m_bMapGrit[grid.x][grid.z];
 }
 
 
