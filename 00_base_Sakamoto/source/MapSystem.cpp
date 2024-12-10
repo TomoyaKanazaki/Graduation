@@ -131,7 +131,7 @@ void CMapSystem::Uninit(void)
 //====================================================================
 void CMapSystem::Update(void)
 {
-	CGame::GetInstance()->GetDevil()->GetMove()->FollowScroll(m_MapPos);
+	CDevil::GetListTop()->GetMove()->FollowScroll(m_MapPos);
 
 #ifdef _DEBUG
 #if 0
@@ -395,17 +395,23 @@ void CMapSystem::Load(const char* pFilename)
 				iss >> pMapSystem->m_MapGrid.x >> pMapSystem->m_MapGrid.z;
 
 				CObjmeshField* map = nullptr;
-				//床の生成
-				if (CScene::GetMode() == CScene::MODE_GAME)
-				{
+
+				switch (CScene::GetMode())
+				{// 床の生成
+				case CScene::MODE_GAME:
 					CGame::GetInstance()->SetMapField(CObjmeshField::Create(pMapSystem->m_MapGrid));
 					map = CGame::GetInstance()->GetMapField();
-				}
-				else if (CScene::GetMode() == CScene::MODE_TUTORIAL)
-				{
+					break;
+
+				case CScene::MODE_TUTORIAL:
 					CTutorial::GetInstance()->SetMapField(CObjmeshField::Create(pMapSystem->m_MapGrid));
 					map = CTutorial::GetInstance()->GetMapField();
+					break;
+
+				default:
+					break;
 				}
+				
 				map->SetPos(INITVECTOR3);
 				map->SetDisp(false); // 描画をオフ
 
@@ -534,13 +540,13 @@ void CMapSystem::Load(const char* pFilename)
 							{ // 転がる岩
 
 								// 転がる岩生成
-								//CRollRock::Create(grid);
+								CRollRock::Create(grid);
 
-								//// グリッド設定の判定
-								//bGridSet = true;
+								// グリッド設定の判定
+								bGridSet = true;
 
-								//// 経路探索用情報の設定
-								//generator->addCollision(grid.ToAStar()); // 通過不可地点を追加
+								// 経路探索用情報の設定
+								generator->addCollision(grid.ToAStar()); // 通過不可地点を追加
 							}
 							else
 							{ // ボワボワの生成
