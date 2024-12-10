@@ -52,6 +52,7 @@ CObject::CObject(int nPriority) :
 	m_bDeath = false;
 	m_bLevelUI = false;
 	m_Appear = true;
+	m_nIdxCamera = 0;
 	m_nNumAll++;					//総数をカウントアップ
 }
 
@@ -130,8 +131,7 @@ void CObject::UpdateAll(void)
 				{
 					if (CGame::GetInstance()->GetEvent() == true)
 					{
-						if (pObject->m_type != TYPE_PLAYER3D &&
-							pObject->m_type != TYPE_ENEMY3D &&
+						if (pObject->m_type != TYPE_ENEMY3D &&
 							pObject->m_type != TYPE_SOFTCREAM)
 						{
 							//更新処理
@@ -193,57 +193,21 @@ void CObject::DrawAll(int nCnt)
 		MultiTargetDraw();
 	}
 
-	switch (nCnt)
+	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
 	{
-	case 0:
+		CObject* pObject = m_pTop[nCntPriority];	//先頭オブジェクトを代入
 
-		for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
+		while (pObject != nullptr)
 		{
-			CObject* pObject = m_pTop[nCntPriority];	//先頭オブジェクトを代入
+			CObject* pObjectNext = pObject->m_pNext;	//次のオブジェクトを保存
 
-			while (pObject != nullptr)
+			if (pObject->m_Appear == true && pObject->m_bDisp == true && nCnt == pObject->m_nIdxCamera)
 			{
-				CObject* pObjectNext = pObject->m_pNext;	//次のオブジェクトを保存
-
-				if (pObject->m_Appear == true && pObject->m_bDisp == true)
-				{
-					//描画処理
-					pObject->Draw();
-				}
-
-				pObject = pObjectNext;
+				//描画処理
+				pObject->Draw();
 			}
+			pObject = pObjectNext;
 		}
-
-		break;
-	case 1:
-
-		for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
-		{
-			CObject* pObject = m_pTop[nCntPriority];	//先頭オブジェクトを代入
-
-			while (pObject != nullptr)
-			{
-				CObject* pObjectNext = pObject->m_pNext;	//次のオブジェクトを保存
-
-				if (pObject->m_Appear == true)
-				{
-					if (pObject->m_type == CObject::TYPE_PLAYER3D || 
-						pObject->m_type == CObject::TYPE_CUBEBLOCK ||
-						pObject->m_type == CObject::TYPE_OBJMESHFIELD ||
-						pObject->m_type == CObject::TYPE_MAPMODEL || 
-						pObject->m_type == CObject::TYPE_ENEMY3D)
-					{
-						//描画処理
-						pObject->Draw();
-					}
-				}
-
-				pObject = pObjectNext;
-			}
-		}
-
-		break;
 	}
 }
 
@@ -259,7 +223,7 @@ void CObject::MultiTargetDraw(void)
 	D3DXMATRIX mtxViewDef, mtxProjectionDef;
 
 	//カメラの取得
-	CCamera* pCamera = CManager::GetInstance()->GetCamera();
+	CCamera* pCamera = CManager::GetInstance()->GetCamera(0);
 
 	//デバイスの取得
 	LPDIRECT3DDEVICE9 m_pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();

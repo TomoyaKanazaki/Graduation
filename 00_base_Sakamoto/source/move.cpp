@@ -87,7 +87,7 @@ void CMoveState::Debug(void)
 void CMoveState::Rot(CObjectCharacter* pCharacter, D3DXVECTOR3& rot)
 {
 	//キーボードの取得
-	D3DXVECTOR3 CameraRot = CManager::GetInstance()->GetCamera()->GetRot();
+	D3DXVECTOR3 CameraRot = CManager::GetInstance()->GetCamera(0)->GetRot();
 	D3DXVECTOR3 move = pCharacter->GetMove();
 
 	//移動方向に向きを合わせる処理
@@ -455,7 +455,7 @@ void CStateRandom::SearchWall(CObjectCharacter* pCharacter, D3DXVECTOR3& pos)
 	CMapSystem* pMapSystem = CMapSystem::GetInstance(); // マップシステムのインスタンスを取得
 	/* GRID 構造体にする*/
 	CMapSystem::GRID MaxGrid;
-	MaxGrid.x = pMapSystem->GetWightMax(); // マップの横幅
+	MaxGrid.x = pMapSystem->GetWightMax();	// マップの横幅
 	MaxGrid.z = pMapSystem->GetHeightMax(); // マップの立幅
 	D3DXVECTOR3 MapSystemPos = pMapSystem->GetMapPos(); // スクロールでずれてる幅
 
@@ -483,11 +483,32 @@ void CStateRandom::SearchWall(CObjectCharacter* pCharacter, D3DXVECTOR3& pos)
 	m_Progress.bOKU = !pMapSystem->GetGritBool(grid.x, nNumber[ROTSTATE_UP]);
 	m_Progress.bOKD = !pMapSystem->GetGritBool(grid.x, nNumber[ROTSTATE_DOWN]);
 
-	if (m_Progress.bOKD != m_ProgressOld.bOKD || m_Progress.bOKL != m_ProgressOld.bOKL ||
-		m_Progress.bOKR != m_ProgressOld.bOKR || m_Progress.bOKU != m_ProgressOld.bOKU)
-	{ // 前回と進める方向が変わる場合
+	// 前回通ったグリッドと同じ場合、通らないようにする
+	if (nNumber[ROTSTATE_LEFT] == m_GridOld.x)
+	{
+		m_Progress.bOKL = false;
+	}
+	else if(nNumber[ROTSTATE_RIGHT] == m_GridOld.x)
+	{
+		m_Progress.bOKR = false;
+	}
+	else if (nNumber[ROTSTATE_UP] == m_GridOld.z)
+	{
+		m_Progress.bOKU = false;
+	}
+	else if (nNumber[ROTSTATE_DOWN] == m_GridOld.z)
+	{
+		m_Progress.bOKD = false;
+	}
 
-		m_bSwitchMove = true;		// 向き選択する
+	if (grid != m_GridOld)
+	{ // 前回のグリッドと位置が違う時
+		if (m_Progress.bOKD != m_ProgressOld.bOKD || m_Progress.bOKL != m_ProgressOld.bOKL ||
+			m_Progress.bOKR != m_ProgressOld.bOKR || m_Progress.bOKU != m_ProgressOld.bOKU)
+		{ // 前回と進める方向が変わる場合
+
+			m_bSwitchMove = true;		// 向き選択する
+		}
 	}
 
 	//自分の立っているグリットの中心位置を求める
@@ -513,8 +534,16 @@ void CStateRandom::SearchWall(CObjectCharacter* pCharacter, D3DXVECTOR3& pos)
 			m_RotState = ROTSTATE_WAIT;
 		}
 
-		// 移動方向の選択
-		MoveSelect(pCharacter);
+		if (m_bSwitchMove == true)
+		{ // 方向変えられる場合
+
+			// 移動方向の選択
+			MoveSelect(pCharacter);
+			m_bSwitchMove = false;
+
+		}
+
+		m_GridOld = grid;	// 前回の位置更新
 	}
 }
 
@@ -523,48 +552,15 @@ void CStateRandom::SearchWall(CObjectCharacter* pCharacter, D3DXVECTOR3& pos)
 //====================================================================
 void CStateRandom::MoveSelect(CObjectCharacter* pCharacter)
 {
-	float fAngle = 0.0f;	// 向き
-	D3DXVECTOR3 moveSave = pCharacter->GetMove();		// 移動量
 	std::vector<D3DXVECTOR3> move = {};
+	D3DXVECTOR3 moveSave = pCharacter->GetMove();		// 移動量
+	float fAngle = 0.0f;	// 向き
 	
-	if (m_bSwitchMove == true)
-	{ // 方向変えられる場合
-
-		// 進行できる方向を確認
-		if (m_Progress.bOKR && m_RotState != CMoveState::ROTSTATE_LEFT)
-		{ // 左
-
-			// 移動方向設定
-			fAngle = D3DX_PI * 0.5f;
-			move.push_back(D3DXVECTOR3(sinf(fAngle) * ENEMY_SPEED, moveSave.y, cosf(fAngle) * ENEMY_SPEED));
-		}
-		if (m_Progress.bOKL && m_RotState != CMoveState::ROTSTATE_RIGHT)
-		{ // 右
-
-			// 移動方向設定
-			fAngle = D3DX_PI * -0.5f;
-			move.push_back(D3DXVECTOR3(sinf(fAngle) * ENEMY_SPEED, moveSave.y, cosf(fAngle) * ENEMY_SPEED));
-		}
-		if (m_Progress.bOKD && m_RotState != CMoveState::ROTSTATE_UP)
-		{ // 上
-
-			// 移動方向設定
-			fAngle = D3DX_PI * 1.0f;
-			move.push_back(D3DXVECTOR3(sinf(fAngle) * ENEMY_SPEED, moveSave.y, cosf(fAngle) * ENEMY_SPEED));
-		}
-		if (m_Progress.bOKU && m_RotState != CMoveState::ROTSTATE_DOWN)
-		{ // 下
-
-			// 移動方向設定
-			fAngle = D3DX_PI * 0.0f;
-			move.push_back(D3DXVECTOR3(sinf(fAngle) * ENEMY_SPEED, moveSave.y, cosf(fAngle) * ENEMY_SPEED));
-		}
-
-		m_bSwitchMove = false;
-	}
+	// 各移動方向の移動量設定
+	MoveAngle(pCharacter, move);
 
 	// 進行する方向を決定
-	if (move.size() >= 1)
+	if (move.size() >= 2)
 	{ // 進行できる方向が複数ある場合
 
 		int nRand = rand() % move.size();		// 進行方向決定
@@ -591,6 +587,82 @@ void CStateRandom::MoveSelect(CObjectCharacter* pCharacter)
 		// 移動量設定
 		pCharacter->SetMove(move[nRand]);
 	}
+	else if(move.size() == 1)
+	{
+		// 移動量設定
+		pCharacter->SetMove(move[0]);
+	}
+	else if (move.size() == 0)
+	{ // 後ろ以外進めない時
+		
+		// 向きの状態設定
+		switch (m_RotState)
+		{
+		case CMoveState::ROTSTATE_LEFT:		// 左
+			fAngle = D3DX_PI * -0.5f;
+			move.push_back(D3DXVECTOR3(sinf(fAngle) * ENEMY_SPEED, moveSave.y, cosf(fAngle) * ENEMY_SPEED));
+			break;
+		case CMoveState::ROTSTATE_RIGHT:	// 右
+			// 移動方向設定
+			fAngle = D3DX_PI * 0.5f;
+			move.push_back(D3DXVECTOR3(sinf(fAngle) * ENEMY_SPEED, moveSave.y, cosf(fAngle) * ENEMY_SPEED));
+			break;
+		case CMoveState::ROTSTATE_UP:		// 上
+			// 移動方向設定
+			fAngle = D3DX_PI * 0.0f;
+			move.push_back(D3DXVECTOR3(sinf(fAngle) * ENEMY_SPEED, moveSave.y, cosf(fAngle) * ENEMY_SPEED));
+			break;
+		case CMoveState::ROTSTATE_DOWN:		// 下
+			// 移動方向設定
+			fAngle = D3DX_PI * 1.0f;
+			move.push_back(D3DXVECTOR3(sinf(fAngle) * ENEMY_SPEED, moveSave.y, cosf(fAngle) * ENEMY_SPEED));
+			break;
+		default:
+			break;
+		}
+	}
+
+	m_ProgressOld = m_Progress;		// 現在の進行状況にする
+}
+
+//====================================================================
+// 各方向の移動量設定
+//====================================================================
+void CStateRandom::MoveAngle(CObjectCharacter* pCharacter, std::vector<D3DXVECTOR3>& move)
+{
+	D3DXVECTOR3 moveSave = pCharacter->GetMove();		// 移動量
+	float fAngle = 0.0f;	// 向き
+
+		// 進行できる方向を確認
+	if (m_Progress.bOKL/* && m_RotState != CMoveState::ROTSTATE_LEFT*/)
+	{ // 左
+
+		// 移動方向設定
+		fAngle = D3DX_PI * -0.5f;
+		move.push_back(D3DXVECTOR3(sinf(fAngle) * ENEMY_SPEED, moveSave.y, cosf(fAngle) * ENEMY_SPEED));
+	}
+	if (m_Progress.bOKR/* && m_RotState != CMoveState::ROTSTATE_RIGHT*/)
+	{ // 右
+
+		// 移動方向設定
+		fAngle = D3DX_PI * 0.5f;
+		move.push_back(D3DXVECTOR3(sinf(fAngle) * ENEMY_SPEED, moveSave.y, cosf(fAngle) * ENEMY_SPEED));
+	}
+	if (m_Progress.bOKU/* && m_RotState != CMoveState::ROTSTATE_UP*/)
+	{ // 上
+
+		// 移動方向設定
+		fAngle = D3DX_PI * 0.0f;
+		move.push_back(D3DXVECTOR3(sinf(fAngle) * ENEMY_SPEED, moveSave.y, cosf(fAngle) * ENEMY_SPEED));
+	}
+	if (m_Progress.bOKD/* && m_RotState != CMoveState::ROTSTATE_DOWN*/)
+	{ // 下
+
+		// 移動方向設定
+		fAngle = D3DX_PI * 1.0f;
+		move.push_back(D3DXVECTOR3(sinf(fAngle) * ENEMY_SPEED, moveSave.y, cosf(fAngle) * ENEMY_SPEED));
+	}
+
 }
 
 //**********************************************************************************************************

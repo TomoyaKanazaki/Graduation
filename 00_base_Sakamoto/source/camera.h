@@ -28,9 +28,16 @@ public:
 		CAMERAMODE_EVENTBOSS,		//イベント中のボス注目
 		CAMERAMODE_FPS,				//一人称視点
 		CAMERAMODE_FPSCOMPLEMENT,	//一人称視点変更時の補完用
-		CAMERAMODE_ULTIMATE,		//術発動時の視点
+		CAMERAMODE_SETPOS,			//指定位置へ移動
 		CAMERAMODE_SEAMLESS,		//シームレス
 		CAMERAMODE_MAX,
+	};
+
+	enum CAMERATYPE
+	{
+		CAMERATYPE_MAIN = 0,	// メインカメラ
+		CAMERATYPE_SIGNAL,		// 矢印カメラ
+		CAMERATYPE_DEVIL,		// デビルカメラ
 	};
 	
 	HRESULT Init(void);
@@ -38,6 +45,7 @@ public:
 	void Update(void);
 	void SetCamera(void);
 	void SetCameraPos(D3DXVECTOR3 Pos) { m_posV = Pos; m_posR = Pos; }
+	void SetCameraPosMode(D3DXVECTOR3 PosV, D3DXVECTOR3 PosR) { m_SetposV = PosV; m_SetposR = PosR; }
 	D3DXVECTOR3 GetCameraPos(void) { return m_posR;}
 	void SetCameraPosY(float PosY) { m_EventPosY = PosY; }
 	void ResetCamera(void);
@@ -73,7 +81,7 @@ private:
 	void SideviewCamera(void);
 	void EventBossCamera(void);
 	void FPSCamera(void);
-	void UltimateCamera(void);
+	void SetPosCamera(void);
 	void TitleCamera(void);
 	void SeamlessModeChangeCamera(void);
 
@@ -85,6 +93,8 @@ private:
 	D3DXVECTOR3 m_move;			//移動量
 	D3DXVECTOR3 m_posV;			//視点
 	D3DXVECTOR3 m_posR;			//注視点
+	D3DXVECTOR3 m_SetposV;		//指定カメラモード視点
+	D3DXVECTOR3 m_SetposR;		//指定カメラモード注視点
 	D3DXVECTOR3 m_vecU;			//上方向ベクトル
 	D3DXVECTOR3 m_rot;			//現在の向き
 	D3DXVECTOR3 m_rotOld;		//過去の向き

@@ -315,7 +315,7 @@ HRESULT CResult::Init(void)
 		}
 	}
 
-	CManager::GetInstance()->GetCamera()->SetCameraPos(D3DXVECTOR3(3500.0f, 450.0f, 0.0f));
+	CManager::GetInstance()->GetCamera(0)->SetCameraPos(D3DXVECTOR3(3500.0f, 450.0f, 0.0f));
 
 	// タイマーの初期化
 	m_fTimer = 0.0f;

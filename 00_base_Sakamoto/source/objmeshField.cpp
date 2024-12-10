@@ -18,7 +18,7 @@ namespace
 {
 	const float WAIGHT_CENTER = 0.5f;	//横の原点(0.0f～1.0f)
 	const float HEIGHT_CENTER = 0.5f;	//縦の原点(0.0f～1.0f)
-	const float FIELD_SIZE = 100.0f;		//床一枚の大きさ
+	const float FIELD_SIZE = 100.0f;	//床一枚の大きさ
 }
 
 //===========================================
@@ -295,6 +295,9 @@ void CObjmeshField::Draw(void)
 
 	//ワールドマトリックスの設定
 	m_pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
+
+	// 描画しない
+	if (!GetDisp()) { return; }
 
 	//頂点バッファをデータストリームに設定
 	m_pDevice->SetStreamSource(0, m_pVtxBuff, 0, sizeof(VERTEX_3D));

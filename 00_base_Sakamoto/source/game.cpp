@@ -26,6 +26,9 @@
 #include "signal.h"
 #include "pause.h"
 #include "EventMovie.h"
+#include "objmeshField.h"
+#include "Cross.h"
+#include "MapMove.h"
 
 #include "sound.h"
 #include "shadow.h"
@@ -37,7 +40,7 @@ namespace
 	const CMapSystem::GRID FIELD_GRID = { 64, 64 }; // 下の床のサイズ
 	const char* BOTTOM_FIELD_TEX = "data\\TEXTURE\\Field\\outside.jpg";		// 下床のテクスチャ
 	const D3DXVECTOR3 BOTTOM_FIELD_POS = D3DXVECTOR3(0.0f, -1500.0f, 0.0f);	// 下床の位置
-	const int BIBLE_OUTGRIT = 3;	// 聖書がマップの外側から何マス内側にいるか
+	const int BIBLE_OUTGRIT = 2;	// 聖書がマップの外側から何マス内側にいるか
 
 	const char* SCROLL_DEVICE_MODEL = "data\\TXT\\MOTION\\02_staging\\00_ScrollDevice\\motion_scrolldevice.txt";
 	const char* SCROLL_DEVICE_ENEMY_MODEL = "data\\TXT\\MOTION\\01_enemy\\motion_medaman.txt";
@@ -63,8 +66,12 @@ CGame::CGame()
 	m_BGColorA = 1.0f;
 	m_nTutorialWave = 0;
 	m_nNumBowabowa = 0;
-	CManager::GetInstance()->GetCamera()->SetBib(false);
-	CManager::GetInstance()->GetCamera()->SetCameraMode(CCamera::CAMERAMODE_DOWNVIEW);
+
+	for (int nCnt = 0; nCnt < NUM_CAMERA; nCnt++)
+	{
+		CManager::GetInstance()->GetCamera(nCnt)->SetBib(false);
+		CManager::GetInstance()->GetCamera(nCnt)->SetCameraMode(CCamera::CAMERAMODE_DOWNVIEW);
+	}
 
 	m_pPause = nullptr;
 	m_pTime = nullptr;
@@ -390,6 +397,7 @@ void CGame::Update(void)
 
 		//ポーズの更新処理
 		if (m_pPause != nullptr)
+	
 		{
 			m_pPause->Update();
 		}
@@ -422,40 +430,81 @@ void CGame::Draw(void)
 }
 
 //====================================================================
+//ステージ進行処理
+//====================================================================
+void CGame::NextStage(void)
+{
+	//イベントフラグを立てる
+	m_bEvent = true;
+
+	// マップの生成
+	CMapMove::GetListTop()->Init();
+	CObjmeshField::GetListTop()->SetRot(INITVECTOR3);
+
+	if(m_pEventMovie != nullptr)
+	{
+		m_pEventMovie->SetEventType(CEventMovie::STATE_CHANGE);
+	}
+
+	//十字架の削除
+	DeleteCross();
+
+	// ソフトクリームの生成
+	CItem::Create(CItem::TYPE_SOFTCREAM, CMapSystem::GetInstance()->GetCenter());
+
+	//聖書の生成
+	CreateBible();
+
+	//ステージ情報を進める
+	CManager::GetInstance()->SetStage(1);
+
+	m_bGameEnd = false;
+}
+
+//====================================================================
+//十字架の削除
+//====================================================================
+void CGame::DeleteCross(void)
+{
+	// デビルホールのリスト構造が無ければ抜ける
+	if (CCross::GetList() == nullptr) { return; }
+	std::list<CCross*> list = CCross::GetList()->GetList();    // リストを取得
+
+	// デビルホールリストの中身を確認する
+	for (CCross* pCross : list)
+	{
+		pCross->Uninit();
+	}
+}
+
+//====================================================================
+//聖書の生成
+//====================================================================
+void CGame::CreateBible(void)
+{
+	//グリッド最大・最小位置取得
+	CMapSystem::GRID GMax = CMapMove::GetListTop()->GetMaxGrid();
+	CMapSystem::GRID GMin = CMapMove::GetListTop()->GetMinGrid();
+
+	// 聖書生成
+	CItem::Create(CItem::TYPE_BIBLE, CMapSystem::GRID(GMin.x + BIBLE_OUTGRIT, GMin.z + BIBLE_OUTGRIT));
+	CItem::Create(CItem::TYPE_BIBLE, CMapSystem::GRID(GMax.x - BIBLE_OUTGRIT, GMin.z + BIBLE_OUTGRIT));
+	CItem::Create(CItem::TYPE_BIBLE, CMapSystem::GRID(GMin.x + BIBLE_OUTGRIT, GMax.z - BIBLE_OUTGRIT));
+	CItem::Create(CItem::TYPE_BIBLE, CMapSystem::GRID(GMax.x - BIBLE_OUTGRIT, GMax.z - BIBLE_OUTGRIT));
+}
+
+//====================================================================
 //ステージクリア処理
 //====================================================================
 void CGame::StageClear(int Stage)
 {
-	if (Stage == 1)
+	if (Stage == 0)
 	{
-		CManager::GetInstance()->SetStage(0);
-
-		CFade::SetFade(CScene::MODE_RESULT);
-		m_pTime->SetStopTime(true);
-
-		int EndScore = 0;
-
-		for (unsigned int nCnt = 0; nCnt < m_pPlayer.size(); nCnt++)
-		{
-			if (m_pPlayer.at(nCnt) != nullptr)
-			{
-				EndScore += m_pPlayer.at(nCnt)->GetScore()->GetScore();
-			}
-		}
-
-		CManager::GetInstance()->SetEndScore(EndScore);
-
-		if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
-		{
-			CManager::GetInstance()->SetEnd1PScore(m_pPlayer.at(0)->GetScore()->GetScore());
-			CManager::GetInstance()->SetEnd2PScore(m_pPlayer.at(1)->GetScore()->GetScore());
-		}
+		NextStage();
 	}
 	else
 	{
-		CManager::GetInstance()->SetStage(Stage + 1);
-
-		CFade::SetFade(CScene::MODE_GAME);
+		CFade::SetFade(CScene::MODE_RESULT);
 		m_pTime->SetStopTime(true);
 
 		int EndScore = 0;
