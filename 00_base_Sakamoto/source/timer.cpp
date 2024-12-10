@@ -179,6 +179,10 @@ void CTimer::FloatSetTime(int Time)
 	{
 		m_nTime = Time - m_StartTime;
 	}
+	else
+	{
+		m_StartTime = Time - m_nTime;
+	}
 }
 
 //====================================================================

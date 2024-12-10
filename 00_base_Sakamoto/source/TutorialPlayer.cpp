@@ -19,6 +19,10 @@
 //===========================================
 namespace
 {
+	const char* CHECK_MARKER_TEX = "data\\TEXTURE\\UI\\tutorial_check.png";	// チェックマーカーテクスチャ
+
+	const D3DXVECTOR3 MARKER_TEX_POS = D3DXVECTOR3(50.0f, 110.0f, 0.0f);	// マーカー位置
+	const D3DXVECTOR3 MARKER_TEX_SIZE = D3DXVECTOR3(50.0f, 50.0f, 0.0f);	// マーカーサイズ
 
 }
 
@@ -29,7 +33,8 @@ namespace
 //====================================================================
 //コンストラクタ
 //====================================================================
-CTutorialPlayer::CTutorialPlayer(int nPriority) : CPlayer(nPriority)
+CTutorialPlayer::CTutorialPlayer(int nPriority) : CPlayer(nPriority),
+m_pCheckMaker(nullptr)
 {
 
 }
@@ -88,6 +93,20 @@ void CTutorialPlayer::Uninit(void)
 void CTutorialPlayer::Update(void)
 {
 	CPlayer::Update();
+
+	if (GetItemType() == TYPE_CROSS)
+	{
+		if (m_pCheckMaker == nullptr)
+		{// チェックマーカー生成
+			m_pCheckMaker = CObject2D::Create();
+		}
+		if (m_pCheckMaker != nullptr)
+		{// テクスチャ生成・位置・サイズ設定
+			m_pCheckMaker->SetTexture(CHECK_MARKER_TEX);
+			m_pCheckMaker->SetPos(MARKER_TEX_POS);
+			m_pCheckMaker->SetSize(MARKER_TEX_SIZE);
+		}
+	}
 }
 
 //====================================================================
