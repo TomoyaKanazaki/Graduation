@@ -96,6 +96,8 @@ HRESULT CSignal::Init(const char* pModelName)
 {
 	D3DXVECTOR3 pos = GetPos();
 
+	CObject::SetIdxCamera(1);
+
 	// Œp³ƒNƒ‰ƒX‚Ì‰Šú‰»
 	CObjectX::Init(pModelName);
 

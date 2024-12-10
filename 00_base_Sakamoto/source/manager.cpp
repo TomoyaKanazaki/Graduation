@@ -51,7 +51,12 @@ CManager::CManager() :
 	m_pInputKeyboard = nullptr;
 	m_pInputJoyPad = nullptr;
 	m_pInputMouse = nullptr;
-	m_pCamera = nullptr;
+
+	for (int nCnt = 0; nCnt < NUM_CAMERA; nCnt++)
+	{
+		m_pCamera[nCnt] = nullptr;
+	}
+
 	m_pLight = nullptr;
 	m_pTexture = nullptr;
 	m_pXModel = nullptr;
@@ -154,16 +159,22 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 		return E_FAIL;
 	}
 
-	if (m_pCamera == nullptr)
+	for (int nCnt = 0; nCnt < NUM_CAMERA; nCnt++)
 	{
-		//カメラの生成
-		m_pCamera = new CCamera;
+		if (m_pCamera[nCnt] == nullptr)
+		{
+			//カメラの生成
+			m_pCamera[nCnt] = new CCamera;
+		}
 	}
 
-	//カメラの初期化処理
-	if (FAILED(m_pCamera->Init()))
-	{//初期化処理が失敗した場合
-		return E_FAIL;
+	for (int nCnt = 0; nCnt < NUM_CAMERA; nCnt++)
+	{
+		//カメラの初期化処理
+		if (FAILED(m_pCamera[nCnt]->Init()))
+		{//初期化処理が失敗した場合
+			return E_FAIL;
+		}
 	}
 
 	if (m_pLight == nullptr)
@@ -299,13 +310,16 @@ void CManager::Uninit(void)
 		m_pLight = nullptr;
 	}
 
-	if (m_pCamera != nullptr)
+	for (int nCnt = 0; nCnt < NUM_CAMERA; nCnt++)
 	{
-		//カメラの終了処理
-		m_pCamera->Uninit();
+		if (m_pCamera[nCnt] != nullptr)
+		{
+			//カメラの終了処理
+			m_pCamera[nCnt]->Uninit();
 
-		delete m_pCamera;
-		m_pCamera = nullptr;
+			delete m_pCamera[nCnt];
+			m_pCamera[nCnt] = nullptr;
+		}
 	}
 
 	if (m_pInputMouse != nullptr)
@@ -372,8 +386,11 @@ void CManager::Update(void)
 	DebugProc::Print(DebugProc::POINT_LEFT, "-----デバッグ表示-----\n");
 	DebugProc::Print(DebugProc::POINT_CENTER, "FPS : %d\n", GetFps());
 
-	//カメラの更新処理
-	(m_pCamera != nullptr) ? m_pCamera->Update() : assert(false);
+	for (int nCnt = 0; nCnt < NUM_CAMERA; nCnt++)
+	{
+		//カメラの更新処理
+		(m_pCamera != nullptr) ? m_pCamera[nCnt]->Update() : assert(false);
+	}
 
 	//ライトの更新処理
 	m_pLight != nullptr ? m_pLight->Update() : assert(false);
@@ -397,7 +414,7 @@ void CManager::Update(void)
 			//条件？ 処理１：処理２;
 			m_bEdit = m_bEdit ? false : true;
 			CObject::DeleteBlock();
-			CManager::GetInstance()->GetCamera()->SetCameraMode(CCamera::CAMERAMODE_CONTROL);
+			CManager::GetInstance()->GetCamera(0)->SetCameraMode(CCamera::CAMERAMODE_CONTROL);
 		}
 	}
 
