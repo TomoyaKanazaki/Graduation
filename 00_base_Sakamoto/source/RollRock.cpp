@@ -196,17 +196,6 @@ void CRollRock::Update(void)
 	// ステージ外との当たり判定
 	CollisionOut(posThis);
 
-	//// グリット番号の設定
-	//CMapSystem::GRID Grid = CMapSystem::GetInstance()->CalcGrid(pos);
-
-	//if (m_Grid != Grid)
-	//{
-	//	CMapSystem::GetInstance()->SetGritBool(m_Grid.x, m_Grid.z, false);
-	//	CMapSystem::GetInstance()->SetGritBool(Grid.x, Grid.z, true);
-
-	//	m_Grid = Grid;
-	//}
-
 	// グリッド情報を設定
 	m_Grid = CMapSystem::GetInstance()->CMapSystem::CalcGrid(posThis);
 

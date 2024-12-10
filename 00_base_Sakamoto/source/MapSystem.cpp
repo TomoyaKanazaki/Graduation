@@ -21,6 +21,10 @@
 #include "objmeshField.h"
 #include "MapMove.h"
 
+#ifdef _DEBUG
+#include "objmeshField.h"
+#endif
+
 // 定数定義
 namespace
 {
@@ -128,6 +132,22 @@ void CMapSystem::Uninit(void)
 void CMapSystem::Update(void)
 {
 	CGame::GetInstance()->GetDevil()->GetMove()->FollowScroll(m_MapPos);
+
+#ifdef _DEBUG
+#if 1
+
+	// デバッグ表示
+	for (int i = 0; i < m_MapGrid.x; ++i)
+	{
+		for (int j = 0; j < m_MapGrid.z; ++j)
+		{
+			if (!m_nMapGrit[i][j]) { continue; }
+			MyEffekseer::EffectCreate(CMyEffekseer::TYPE_TRUE, false, useful::CalcMatrix(GRID(i, j).ToWorld(), INITVECTOR3, *CObjmeshField::GetListTop()->GetMatrix()), INITVECTOR3, {10.0f, 10.0f, 10.0f});
+		}
+	}
+
+#endif // 0 or 1
+#endif // _DEBUG
 }
 
 //====================================================================
@@ -474,13 +494,13 @@ void CMapSystem::Load(const char* pFilename)
 							{ // 転がる岩
 
 								// 転がる岩生成
-								CRollRock::Create(grid);
+								//CRollRock::Create(grid);
 
-								// グリッド設定の判定
-								bGridSet = true;
+								//// グリッド設定の判定
+								//bGridSet = true;
 
-								// 経路探索用情報の設定
-								generator->addCollision(grid.ToAStar()); // 通過不可地点を追加
+								//// 経路探索用情報の設定
+								//generator->addCollision(grid.ToAStar()); // 通過不可地点を追加
 							}
 							else
 							{ // ボワボワの生成
