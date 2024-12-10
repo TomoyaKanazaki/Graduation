@@ -534,8 +534,13 @@ void CStateRandom::SearchWall(CObjectCharacter* pCharacter, D3DXVECTOR3& pos)
 			m_RotState = ROTSTATE_WAIT;
 		}
 
-		// 移動方向の選択
-		MoveSelect(pCharacter);
+		if (m_bSwitchMove == true)
+		{ // 方向変えられる場合
+			// 移動方向の選択
+			MoveSelect(pCharacter);
+			m_bSwitchMove = false;
+
+		}
 
 		m_GridOld = grid;	// 前回の位置更新
 	}
@@ -627,41 +632,36 @@ void CStateRandom::MoveAngle(CObjectCharacter* pCharacter, std::vector<D3DXVECTO
 	D3DXVECTOR3 moveSave = pCharacter->GetMove();		// 移動量
 	float fAngle = 0.0f;	// 向き
 
-	if (m_bSwitchMove == true)
-	{ // 方向変えられる場合
-
 		// 進行できる方向を確認
-		if (m_Progress.bOKL/* && m_RotState != CMoveState::ROTSTATE_LEFT*/)
-		{ // 左
+	if (m_Progress.bOKL/* && m_RotState != CMoveState::ROTSTATE_LEFT*/)
+	{ // 左
 
-			// 移動方向設定
-			fAngle = D3DX_PI * -0.5f;
-			move.push_back(D3DXVECTOR3(sinf(fAngle) * ENEMY_SPEED, moveSave.y, cosf(fAngle) * ENEMY_SPEED));
-		}
-		if (m_Progress.bOKR/* && m_RotState != CMoveState::ROTSTATE_RIGHT*/)
-		{ // 右
-
-			// 移動方向設定
-			fAngle = D3DX_PI * 0.5f;
-			move.push_back(D3DXVECTOR3(sinf(fAngle) * ENEMY_SPEED, moveSave.y, cosf(fAngle) * ENEMY_SPEED));
-		}
-		if (m_Progress.bOKU/* && m_RotState != CMoveState::ROTSTATE_UP*/)
-		{ // 上
-
-			// 移動方向設定
-			fAngle = D3DX_PI * 0.0f;
-			move.push_back(D3DXVECTOR3(sinf(fAngle) * ENEMY_SPEED, moveSave.y, cosf(fAngle) * ENEMY_SPEED));
-		}
-		if (m_Progress.bOKD/* && m_RotState != CMoveState::ROTSTATE_DOWN*/)
-		{ // 下
-
-			// 移動方向設定
-			fAngle = D3DX_PI * 1.0f;
-			move.push_back(D3DXVECTOR3(sinf(fAngle) * ENEMY_SPEED, moveSave.y, cosf(fAngle) * ENEMY_SPEED));
-		}
-
-		m_bSwitchMove = false;
+		// 移動方向設定
+		fAngle = D3DX_PI * -0.5f;
+		move.push_back(D3DXVECTOR3(sinf(fAngle) * ENEMY_SPEED, moveSave.y, cosf(fAngle) * ENEMY_SPEED));
 	}
+	if (m_Progress.bOKR/* && m_RotState != CMoveState::ROTSTATE_RIGHT*/)
+	{ // 右
+
+		// 移動方向設定
+		fAngle = D3DX_PI * 0.5f;
+		move.push_back(D3DXVECTOR3(sinf(fAngle) * ENEMY_SPEED, moveSave.y, cosf(fAngle) * ENEMY_SPEED));
+	}
+	if (m_Progress.bOKU/* && m_RotState != CMoveState::ROTSTATE_UP*/)
+	{ // 上
+
+		// 移動方向設定
+		fAngle = D3DX_PI * 0.0f;
+		move.push_back(D3DXVECTOR3(sinf(fAngle) * ENEMY_SPEED, moveSave.y, cosf(fAngle) * ENEMY_SPEED));
+	}
+	if (m_Progress.bOKD/* && m_RotState != CMoveState::ROTSTATE_DOWN*/)
+	{ // 下
+
+		// 移動方向設定
+		fAngle = D3DX_PI * 1.0f;
+		move.push_back(D3DXVECTOR3(sinf(fAngle) * ENEMY_SPEED, moveSave.y, cosf(fAngle) * ENEMY_SPEED));
+	}
+
 }
 
 //**********************************************************************************************************
