@@ -206,7 +206,7 @@ void CRollRock::Update(void)
 	SetScaling(D3DXVECTOR3(m_Scaling, m_Scaling, m_Scaling));
 
 	// スクロールに合わせて移動する
-	CDevil::GetListTop()->GetMove()->FollowScroll(posThis);
+	CMapSystem::GetInstance()->GetMove()->FollowScroll(posThis);
 
 	// 値更新
 	SetPos(posThis);		// 位置

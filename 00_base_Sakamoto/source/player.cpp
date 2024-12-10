@@ -433,7 +433,7 @@ void CPlayer::Update(void)
 	DebugKey();
 
 	// スクロールに合わせて移動する
-	CDevil::GetListTop()->GetMove()->FollowScroll(posThis);
+	CMapSystem::GetInstance()->GetMove()->FollowScroll(posThis);
 
 	//デバッグ表示
 	DebugProc::Print(DebugProc::POINT_LEFT, "[自分]位置 %f : %f : %f\n", posThis.x, posThis.y, posThis.z);

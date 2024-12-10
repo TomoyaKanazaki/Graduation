@@ -72,7 +72,6 @@ public:
 
 	void SetAction(ACTION_TYPE Action, float BlendTime);
 	ACTION_TYPE GetAction(void) { return m_Action; }
-	CMapMove* GetMove(void) { return m_pMapMove; }
 
 	void SetModelDisp(bool Sst);
 
@@ -90,7 +89,6 @@ private:
 	//お引越し終了
 
 	ACTION_TYPE m_AtkAction;		//攻撃状態記録用変数
-	CMapMove* m_pMapMove;
 
 	//お引越し開始
 	D3DXVECTOR3 m_move;				//移動量

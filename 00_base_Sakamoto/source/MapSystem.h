@@ -12,6 +12,7 @@
 #include "AStar.h"
 
 class CObject2D;
+class CMapMove;
 
 //マクロ定義
 #define NUM_WIGHT (23)
@@ -80,6 +81,7 @@ public:
 	bool GetGritBool(int nWight, int nHeight);
 	bool GetGritBool(const GRID& grid);
 
+	CMapMove* GetMove(void) { return m_pMapMove; }
 	void SetMapPos(D3DXVECTOR3 pos) { m_MapPos = pos; }
 	D3DXVECTOR3 GetMapPos(void) { return m_MapPos; }
 	D3DXVECTOR3 GetInitPos(void) { return m_InitPos; }
@@ -96,6 +98,8 @@ public:
 	static float GetGritSize();
 
 private:
+
+	CMapMove* m_pMapMove;
 
 	static CMapSystem* m_pMapSystem;
 	static std::vector<std::tuple<>> m_nData;	// 複数の値を保持

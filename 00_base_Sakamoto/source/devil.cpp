@@ -81,7 +81,6 @@ CDevil::CDevil(int nPriority) : CObjectCharacter(nPriority)
 	m_pSignal[3] = nullptr;
 	m_nStateNum = 0;
 	m_SlopeType = 0;
-	m_pMapMove = nullptr;
 }
 
 //====================================================================
@@ -132,11 +131,6 @@ HRESULT CDevil::Init(void)
 	// キャラクターテキスト読み込み処理
 	SetTxtCharacter("data\\TXT\\MOTION\\01_enemy\\motion_devil.txt", 0);
 
-	if (m_pMapMove == nullptr)
-	{
-		m_pMapMove = CMapMove::Create();
-	}
-
 	// スローの生成
 	m_pSlow = CSlowManager::Create(CSlowManager::CAMP_PLAYER, CSlowManager::TAG_PLAYER);
 
@@ -158,12 +152,6 @@ HRESULT CDevil::Init(void)
 //====================================================================
 void CDevil::Uninit(void)
 {
-	if (m_pMapMove != nullptr)
-	{
-		m_pMapMove->Uninit();
-		m_pMapMove = nullptr;
-	}
-
 	// リストから自身のオブジェクトを削除
 	m_pList->DelList(m_iterator);
 
@@ -183,16 +171,6 @@ void CDevil::Uninit(void)
 //====================================================================
 void CDevil::Update(void)
 {
-	if (CScene::GetMode() == CScene::MODE_GAME)
-	{
-		if (CGame::GetInstance()->GetEvent() == false &&
-			m_pMapMove != nullptr)
-		{
-			//マップの動き
-			m_pMapMove->Update();
-		}
-	}
-
 	// キャラクタークラスの更新（継承）
 	CObjectCharacter::Update();
 
@@ -231,11 +209,11 @@ void CDevil::Draw(void)
 //====================================================================
 void CDevil::ActionState(void)
 {
-	if (m_pMapMove != nullptr)
+	if (CMapSystem::GetInstance()->GetMove() != nullptr)
 	{
 		// 上モーション
-		if (m_pMapMove->GetState() == CMapMove::MOVE_SCROLL_UP ||
-			m_pMapMove->GetState() == CMapMove::MOVE_SLOPE_UP)
+		if (CMapSystem::GetInstance()->GetMove()->GetState() == CMapMove::MOVE_SCROLL_UP ||
+			CMapSystem::GetInstance()->GetMove()->GetState() == CMapMove::MOVE_SLOPE_UP)
 		{
 			if (m_Action != ACTION_SIGNAL_UP)
 			{
@@ -245,8 +223,8 @@ void CDevil::ActionState(void)
 			}
 		}
 		// 下モーション
-		else if (m_pMapMove->GetState() == CMapMove::MOVE_SCROLL_DOWN ||
-			m_pMapMove->GetState() == CMapMove::MOVE_SLOPE_DOWN)
+		else if (CMapSystem::GetInstance()->GetMove()->GetState() == CMapMove::MOVE_SCROLL_DOWN ||
+			CMapSystem::GetInstance()->GetMove()->GetState() == CMapMove::MOVE_SLOPE_DOWN)
 		{
 			if (m_Action != ACTION_SIGNAL_DOWN)
 			{
@@ -256,8 +234,8 @@ void CDevil::ActionState(void)
 			}
 		}
 		// 左モーション
-		else if (m_pMapMove->GetState() == CMapMove::MOVE_SCROLL_LEFT ||
-			m_pMapMove->GetState() == CMapMove::MOVE_SLOPE_LEFT)
+		else if (CMapSystem::GetInstance()->GetMove()->GetState() == CMapMove::MOVE_SCROLL_LEFT ||
+			CMapSystem::GetInstance()->GetMove()->GetState() == CMapMove::MOVE_SLOPE_LEFT)
 		{
 			if (m_Action != ACTION_SIGNAL_LEFT)
 			{
@@ -267,8 +245,8 @@ void CDevil::ActionState(void)
 			}
 		}
 		// 右モーション
-		else if (m_pMapMove->GetState() == CMapMove::MOVE_SCROLL_RIGHT ||
-			m_pMapMove->GetState() == CMapMove::MOVE_SLOPE_RIGHT)
+		else if (CMapSystem::GetInstance()->GetMove()->GetState() == CMapMove::MOVE_SCROLL_RIGHT ||
+			CMapSystem::GetInstance()->GetMove()->GetState() == CMapMove::MOVE_SLOPE_RIGHT)
 		{
 			if (m_Action != ACTION_SIGNAL_RIGHT)
 			{

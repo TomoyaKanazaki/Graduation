@@ -193,7 +193,7 @@ void CRailBlock::Update(void)
 	//}
 
 	// スクロールに合わせて移動する
-	CGame::GetInstance()->GetDevil()->GetMove()->FollowScroll(Pos);
+	CMapSystem::GetInstance()->GetMove()->FollowScroll(Pos);
 
 	// 位置設定
 	SetPos(Pos);
