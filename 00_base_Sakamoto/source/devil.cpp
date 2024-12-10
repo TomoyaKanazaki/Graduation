@@ -97,21 +97,22 @@ CDevil::~CDevil()
 //====================================================================
 CDevil* CDevil::Create()
 {
-	CDevil* pPlayer = nullptr;
+	CDevil* pDevil
+		= nullptr;
 
-	if (pPlayer == nullptr)
+	if (pDevil == nullptr)
 	{
 		//プレイヤーの生成
-		pPlayer = new CDevil();
+		pDevil = new CDevil();
 	}
 
 	//オブジェクトの初期化処理
-	if (FAILED(pPlayer->Init()))
+	if (FAILED(pDevil->Init()))
 	{//初期化処理が失敗した場合
 		return nullptr;
 	}
 
-	return pPlayer;
+	return pDevil;
 }
 
 //====================================================================
@@ -209,6 +210,11 @@ void CDevil::Update(void)
 		//モーションの管理
 		ActionState();
 	}
+
+	// スクロールに追従する
+	D3DXVECTOR3 pos = GetPos();
+	m_pMapMove->FollowScroll(pos);
+	SetPos(pos);
 }
 
 //====================================================================

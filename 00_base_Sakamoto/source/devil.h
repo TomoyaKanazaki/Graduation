@@ -65,14 +65,10 @@ public:
 	void Update(void);
 	void Draw(void);
 
-	//Ç®à¯âzÇµäJén
-
 	void SetDevilPos(D3DXVECTOR3 size) { m_DevilPos = size; }
 	D3DXVECTOR3 GetDevilPos(void) { return m_DevilPos; }
 	void SetDifference(D3DXVECTOR3 size) { m_MapDifference = size; }
 	D3DXVECTOR3 GetDifference(void) { return m_MapDifference; }
-
-	//Ç®à¯âzÇµèIóπ
 
 	void SetAction(ACTION_TYPE Action, float BlendTime);
 	ACTION_TYPE GetAction(void) { return m_Action; }

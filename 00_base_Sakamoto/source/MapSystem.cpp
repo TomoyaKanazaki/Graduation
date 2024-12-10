@@ -45,7 +45,6 @@ std::vector<CMapSystem::GRID> CMapSystem::m_PosPlayer = {};	// ÉvÉåÉCÉÑÅ[ÇÃà íuÇ
 //====================================================================
 CMapSystem::CMapSystem() : 
 	m_mapCenter(0, 0),
-	m_pEffect(nullptr),
 	m_mtxStage(nullptr)
 {
 	for (int nCntW = 0; nCntW < NUM_WIGHT; nCntW++)
@@ -138,20 +137,6 @@ void CMapSystem::Uninit(void)
 void CMapSystem::Update(void)
 {
 	CDevil::GetListTop()->GetMove()->FollowScroll(m_MapPos);
-
-	// ÉGÉtÉFÉNÉgÇìÆÇ©Ç∑
-	if (m_pEffect != nullptr)
-	{
-		D3DXVECTOR3 rot = INITVECTOR3;
-		rot.x = useful::CalcMatrixToRot(*CObjmeshField::GetListTop()->GetMatrix()).y;
-		rot.y = useful::CalcMatrixToRot(*CObjmeshField::GetListTop()->GetMatrix()).x;
-		rot.z = useful::CalcMatrixToRot(*CObjmeshField::GetListTop()->GetMatrix()).z;
-		m_pEffect->SetRotation(rot);
-	}
-	else
-	{
-		m_pEffect = MyEffekseer::EffectCreate(CMyEffekseer::TYPE_STAGE_LIMIT, true, INITVECTOR3, INITVECTOR3, EFFECT_SIZE);
-	}
 
 #ifdef _DEBUG
 #if 0

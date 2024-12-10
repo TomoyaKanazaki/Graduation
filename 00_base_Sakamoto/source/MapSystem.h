@@ -112,7 +112,6 @@ private:
 	D3DXVECTOR3 m_MapSize;		//マップの境界線の大きさ
 	GRID m_MapGrid;		//マップの境界線の大きさ
 
-	CEffekseer* m_pEffect; // エフェクト
 	D3DXMATRIX* m_mtxStage;
 
 	//MAPTYPE m_MapType;			// マップオブジェクトの種類
