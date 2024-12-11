@@ -316,7 +316,7 @@ void CEnemy::Update(void)
 	SetSize(sizeThis);		// ‘å‚«‚³
 
 #ifdef _DEBUG
-#if 1
+#if 0
 	if (CMapSystem::GetInstance()->GetGritBool(m_Grid))
 	{
 		MyEffekseer::EffectCreate(CMyEffekseer::TYPE_TRUE, false, useful::CalcMatrix(posThis, INITVECTOR3, *GetUseMultiMatrix()), INITVECTOR3, { 10.0f, 10.0f, 10.0f });
