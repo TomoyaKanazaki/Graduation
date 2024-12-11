@@ -14,6 +14,7 @@
 #include "devil.h"
 #include "MapMove.h"
 #include "DevilHole.h"
+#include "item.h"
 
 #include "camera.h"
 #include "MapSystem.h"
@@ -24,10 +25,11 @@
 //==========================================
 namespace
 {
-	const D3DXVECTOR3 EGG_MOVE = D3DXVECTOR3(10.0f, 10.0f, 10.0f);	 //移動量の減衰速度(卵)
-	const int INVINCIBLE_TIME = 120;		//無敵時間
-	const float PLAYER_SPEED = 5.0f;		//プレイヤーの移動速度
-	const float ENEMY_SPEED = 3.0f;			//敵の移動速度
+	const D3DXVECTOR3 EGG_MOVE = D3DXVECTOR3(10.0f, 10.0f, 10.0f);	 // 移動量の減衰速度(卵)
+	const int INVINCIBLE_TIME = 120;		// 無敵時間
+	const float PLAYER_SPEED = 5.0f;		// プレイヤーの移動速度
+	const float ENEMY_SPEED = 3.0f;			// 敵の移動速度
+	const float FRIEDEGG_SPEED = 3.0f;		// 目玉焼きの移動速度
 
 	const float COORDDINATE_RATE[] =		// 経路探索を行う間隔
 	{
@@ -39,7 +41,7 @@ namespace
 	const float TARGET_DIFF = 10.0f;		// 許容範囲
 	const float MOVE_ASTAR = 150.0f;		// 追跡時の移動速度
 
-	const float GRIT_OK = 45.0f;			//移動可能なグリットの範囲内
+	const float GRIT_OK = 45.0f;			// 移動可能なグリットの範囲内
 
 }
 
@@ -82,7 +84,7 @@ void CMoveState::Debug(void)
 }
 
 //====================================================================
-// 移動方向処理
+// 移動方向処理(キャラクター)
 //====================================================================
 void CMoveState::Rot(CObjectCharacter* pCharacter, D3DXVECTOR3& rot)
 {
@@ -101,7 +103,21 @@ void CMoveState::Rot(CObjectCharacter* pCharacter, D3DXVECTOR3& rot)
 }
 
 //====================================================================
-// 位置更新処理
+// 移動方向処理(アイテム)
+//====================================================================
+void CMoveState::Rot(CItem* pItem, D3DXVECTOR3& rot)
+{
+	//キーボードの取得
+	D3DXVECTOR3 CameraRot = CManager::GetInstance()->GetCamera(0)->GetRot();
+	D3DXVECTOR3 move = pItem->GetMove();
+
+	rot.y = atan2f(-move.x, -move.z);
+
+	useful::NormalizeAngle(&rot);
+}
+
+//====================================================================
+// 位置更新処理(キャラクター)
 //====================================================================
 void CMoveState::UpdatePos(CObjectCharacter* pCharacter, D3DXVECTOR3& pos)
 {
@@ -140,6 +156,35 @@ void CMoveState::UpdatePos(CObjectCharacter* pCharacter, D3DXVECTOR3& pos)
 	//CollisionWall(pos, posOldMy, sizeMy, useful::COLLISION_Z);
 	//CollisionDevilHole(useful::COLLISION_Z);
 
+}
+
+//====================================================================
+// 位置更新処理(アイテム)
+//====================================================================
+void CMoveState::UpdatePos(CItem* pItem, D3DXVECTOR3& pos)
+{
+	// 変数宣言
+	CMapMove* pMapMove = CMapMove::GetListTop();
+	D3DXVECTOR3 move = pItem->GetMove();		// 移動量
+	//D3DXVECTOR3 objMove = pItem->GetObjMove();
+
+	float fSpeed = 1.0f;	// スロー用 default1.0fで初期化
+
+	//重力
+	move.y -= 0.5f;
+	pItem->SetMove(move);		// 移動量
+
+	//Y軸の位置更新
+	pos.y += move.y * CManager::GetInstance()->GetGameSpeed() * fSpeed;
+	//pos.y += objMove.y * CManager::GetInstance()->GetGameSpeed() * fSpeed;
+
+	//X軸の位置更新
+	pos.x += move.x * CManager::GetInstance()->GetGameSpeed() * fSpeed * pMapMove->MoveSlopeX(move.x);
+	//pos.x += objMove.x * CManager::GetInstance()->GetGameSpeed() * fSpeed * pMapMove->MoveSlopeX(move.x);
+
+	//Z軸の位置更新
+	pos.z += move.z * CManager::GetInstance()->GetGameSpeed() * fSpeed * pMapMove->MoveSlopeZ(move.z);
+	//pos.z += objMove.z * CManager::GetInstance()->GetGameSpeed() * fSpeed * pMapMove->MoveSlopeZ(move.z);
 }
 
 //**********************************************************************************************************
@@ -451,8 +496,30 @@ void CStateRandom::Move(CObjectCharacter* pCharacter, D3DXVECTOR3& pos, D3DXVECT
 	DebugProc::Print(DebugProc::POINT_LEFT, "\n");
 }
 
+//==========================================
+// アイテムの移動処理
+//==========================================
+void CStateRandom::Move(CItem* pItem, D3DXVECTOR3& pos, D3DXVECTOR3& rot)
+{
+	// 壁の索敵判定
+	SearchWall(pItem, pos);
+
+	// 移動方向処理
+	Rot(pItem, rot);
+
+	// 位置更新処理
+	UpdatePos(pItem, pos);
+
+	DebugProc::Print(DebugProc::POINT_LEFT, "移動向き : ");
+
+	auto str = magic_enum::enum_name(m_RotState);
+
+	DebugProc::Print(DebugProc::POINT_LEFT, str.data());
+	DebugProc::Print(DebugProc::POINT_LEFT, "\n");
+}
+
 //====================================================================
-// 壁の索敵判定(移動選択の準備)
+// 壁の索敵判定(キャラクター)
 //====================================================================
 void CStateRandom::SearchWall(CObjectCharacter* pCharacter, D3DXVECTOR3& pos)
 {
@@ -556,7 +623,104 @@ void CStateRandom::SearchWall(CObjectCharacter* pCharacter, D3DXVECTOR3& pos)
 }
 
 //====================================================================
-// 移動方向の選択
+// 壁の索敵判定(アイテム)
+//====================================================================
+void CStateRandom::SearchWall(CItem* pItem, D3DXVECTOR3& pos)
+{
+	CMapSystem::GRID grid = pItem->GetGrid();
+
+	m_ProgressOld = m_Progress;		// 現在の進行状況にする
+
+	CMapSystem* pMapSystem = CMapSystem::GetInstance(); // マップシステムのインスタンスを取得
+	/* GRID 構造体にする*/
+	CMapSystem::GRID MaxGrid;
+	MaxGrid.x = pMapSystem->GetWightMax();	// マップの横幅
+	MaxGrid.z = pMapSystem->GetHeightMax(); // マップの立幅
+	D3DXVECTOR3 MapSystemPos = pMapSystem->GetMapPos(); // スクロールでずれてる幅
+
+	/* 自身の隣接４マスのグリッド */
+	int nNumber[ROTSTATE_MAX];	// 4方向の隣接するグリッド
+	nNumber[ROTSTATE_LEFT] = grid.x - 1;		// 左
+	nNumber[ROTSTATE_RIGHT] = grid.x + 1;		// 右
+	nNumber[ROTSTATE_UP] = grid.z - 1;			// 上
+	nNumber[ROTSTATE_DOWN] = grid.z + 1;		// 下
+
+	/*
+	* useful::RangeNumber(int , int , int);
+	* 第三引数が第一、第二引数の範囲内に存在しない場合に丸め込みを行う関数
+	* 第一引数より大きければ第一引数の値が
+	* 第二引数より小さければ第二引数の値が返ってくる
+	*/
+	nNumber[ROTSTATE_LEFT] = useful::RangeNumber(MaxGrid.x, 0, nNumber[ROTSTATE_LEFT]);
+	nNumber[ROTSTATE_RIGHT] = useful::RangeNumber(MaxGrid.x, 0, nNumber[ROTSTATE_RIGHT]);
+	nNumber[ROTSTATE_UP] = useful::RangeNumber(MaxGrid.z, 0, nNumber[ROTSTATE_UP]);
+	nNumber[ROTSTATE_DOWN] = useful::RangeNumber(MaxGrid.z, 0, nNumber[ROTSTATE_DOWN]);
+
+	// 隣接４マスが移動可能か判断する
+	m_Progress.bOKL = !pMapSystem->GetGritBool(nNumber[ROTSTATE_LEFT], grid.z);
+	m_Progress.bOKR = !pMapSystem->GetGritBool(nNumber[ROTSTATE_RIGHT], grid.z);
+	m_Progress.bOKU = !pMapSystem->GetGritBool(grid.x, nNumber[ROTSTATE_UP]);
+	m_Progress.bOKD = !pMapSystem->GetGritBool(grid.x, nNumber[ROTSTATE_DOWN]);
+
+	// 前回通ったグリッドと同じ場合、通らないようにする
+	if (nNumber[ROTSTATE_LEFT] == m_GridOld.x)
+	{
+		m_Progress.bOKL = false;
+	}
+	else if (nNumber[ROTSTATE_RIGHT] == m_GridOld.x)
+	{
+		m_Progress.bOKR = false;
+	}
+	else if (nNumber[ROTSTATE_UP] == m_GridOld.z)
+	{
+		m_Progress.bOKU = false;
+	}
+	else if (nNumber[ROTSTATE_DOWN] == m_GridOld.z)
+	{
+		m_Progress.bOKD = false;
+	}
+
+	if (grid != m_GridOld)
+	{ // 前回のグリッドと位置が違う時
+		if (m_Progress.bOKD != m_ProgressOld.bOKD || m_Progress.bOKL != m_ProgressOld.bOKL ||
+			m_Progress.bOKR != m_ProgressOld.bOKR || m_Progress.bOKU != m_ProgressOld.bOKU)
+		{ // 前回と進める方向が変わる場合
+
+			m_bSwitchMove = true;		// 向き選択する
+		}
+	}
+
+	//自分の立っているグリットの中心位置を求める
+	D3DXVECTOR3 MyGritPos = grid.ToWorld();
+	float MapGritSize = pMapSystem->GetGritSize();
+
+	DebugProc::Print(DebugProc::POINT_LEFT, "敵の位置 %f %f %f\n", MyGritPos.x, MyGritPos.y, MyGritPos.z);
+	DebugProc::Print(DebugProc::POINT_LEFT, "敵の位置 : %d, %d\n", grid.x, grid.z);
+
+	// 自身の座標とグリッドの中心が許容範囲よりも小さい場合
+	if (
+		(pos.x <= MyGritPos.x + ((MapGritSize * 0.5f) - GRIT_OK) && // 自身の座標 <= 自身が存在しているグリッドの中心 + グリッドサイズ * 0.5f - 許容範囲
+			pos.x >= MyGritPos.x - ((MapGritSize * 0.5f) - GRIT_OK) &&
+
+			pos.z <= MyGritPos.z + ((MapGritSize * 0.5f) - GRIT_OK) &&
+			pos.z >= MyGritPos.z - ((MapGritSize * 0.5f) - GRIT_OK)))
+	{// グリットの中心位置に立っているなら操作を受け付ける
+
+		if (m_bSwitchMove == true)
+		{ // 方向変えられる場合
+
+			// 移動方向の選択
+			MoveSelect(pItem);
+			m_bSwitchMove = false;
+			m_GridOld = grid;	// 前回の位置更新
+
+		}
+
+	}
+}
+
+//====================================================================
+// 移動方向の選択(キャラクター)
 //====================================================================
 void CStateRandom::MoveSelect(CObjectCharacter* pCharacter)
 {
@@ -567,7 +731,7 @@ void CStateRandom::MoveSelect(CObjectCharacter* pCharacter)
 	float fAngle = 0.0f;	// 向き
 	
 	// 各移動方向の移動量設定
-	MoveAngle(pCharacter, move, RotState);
+	MoveAngle(moveSave, move, RotState);
 
 	// 進行する方向を決定
 	if (move.size() >= 2)
@@ -642,11 +806,95 @@ void CStateRandom::MoveSelect(CObjectCharacter* pCharacter)
 }
 
 //====================================================================
+// 移動方向の選択(アイテム)
+//====================================================================
+void CStateRandom::MoveSelect(CItem* pItem)
+{
+	std::vector<D3DXVECTOR3> move = {};
+	std::vector<ROTSTATE> RotState = {};
+	D3DXVECTOR3 moveSave = pItem->GetMove();		// 移動量
+	float fAngle = 0.0f;	// 向き
+
+	// 各移動方向の移動量設定
+	MoveAngle(moveSave, move, RotState);
+
+	// 進行する方向を決定
+	if (move.size() >= 2)
+	{ // 進行できる方向が2つ以上ある場合
+
+		int nRand = rand() % move.size();		// 進行方向決定
+
+		m_RotState = RotState[nRand];			// 向きの状態
+
+		// 移動量設定
+		pItem->SetMove(move[nRand]);
+	}
+	else if (move.size() == 1)
+	{
+		m_RotState = RotState[0];			// 向きの状態
+
+		// 移動量設定
+		pItem->SetMove(move[0]);
+	}
+	else if (move.empty())
+	{ // 後ろ以外進めない時
+
+		// 向きの状態設定
+		switch (m_RotState)
+		{
+		case CMoveState::ROTSTATE_LEFT:		// 左
+			// 右に移動
+			fAngle = D3DX_PI * 0.5f;
+			move.push_back(D3DXVECTOR3(sinf(fAngle) * FRIEDEGG_SPEED, moveSave.y, cosf(fAngle) * FRIEDEGG_SPEED));
+			RotState.push_back(ROTSTATE_RIGHT);
+			break;
+		case CMoveState::ROTSTATE_RIGHT:	// 右
+			// 左に移動
+			fAngle = D3DX_PI * -0.5f;
+			move.push_back(D3DXVECTOR3(sinf(fAngle) * FRIEDEGG_SPEED, moveSave.y, cosf(fAngle) * FRIEDEGG_SPEED));
+			RotState.push_back(ROTSTATE_LEFT);
+
+			break;
+		case CMoveState::ROTSTATE_UP:		// 上
+			// 下に移動
+			fAngle = D3DX_PI * 1.0f;
+			move.push_back(D3DXVECTOR3(sinf(fAngle) * FRIEDEGG_SPEED, moveSave.y, cosf(fAngle) * FRIEDEGG_SPEED));
+			RotState.push_back(ROTSTATE_DOWN);
+
+			break;
+		case CMoveState::ROTSTATE_DOWN:		// 下
+			// 上に移動
+			fAngle = D3DX_PI * 0.0f;
+			move.push_back(D3DXVECTOR3(sinf(fAngle) * FRIEDEGG_SPEED, moveSave.y, cosf(fAngle) * FRIEDEGG_SPEED));
+			RotState.push_back(ROTSTATE_UP);
+
+			break;
+
+		case CMoveState::ROTSTATE_WAIT:		// 待機
+			// 止まる
+			fAngle = D3DX_PI * 0.0f;
+			move.push_back(D3DXVECTOR3(0.0f, moveSave.y, 0.0f));
+
+			break;
+		default:
+			break;
+		}
+
+		// 向きの状態設定
+		m_RotState = RotState[0];
+
+		// 移動量設定
+		pItem->SetMove(move[0]);
+	}
+
+	m_ProgressOld = m_Progress;		// 現在の進行状況にする
+}
+
+//====================================================================
 // 各方向の移動量設定
 //====================================================================
-void CStateRandom::MoveAngle(CObjectCharacter* pCharacter, std::vector<D3DXVECTOR3>& move, std::vector<ROTSTATE>& rotState)
+void CStateRandom::MoveAngle(D3DXVECTOR3& moveSave, std::vector<D3DXVECTOR3>& move, std::vector<ROTSTATE>& rotState)
 {
-	D3DXVECTOR3 moveSave = pCharacter->GetMove();		// 移動量
 	float fAngle = 0.0f;	// 向き
 
 		// 進行できる方向を確認
