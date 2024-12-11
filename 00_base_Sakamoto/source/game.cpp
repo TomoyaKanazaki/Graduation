@@ -49,6 +49,13 @@ namespace
 	const char* SLOPE_DEVICE_MODEL = "data\\TXT\\MOTION\\02_staging\\01_SlopeDevice\\motion_slopedevice.txt";
 	const char* SLOPE_DEVICE_ENEMY_MODEL = "data\\TXT\\MOTION\\01_enemy\\motion_medaman.txt";
 
+	const D3DXCOLOR MASK_DEFAULT_COLOR = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);			// 通常のステンシルカラー(白)
+	const D3DXCOLOR MASK_PLAYER_COLOR = D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f);			// タマゴンのステンシルカラー(緑)
+	const D3DXCOLOR MASK_MULTI_PLAYER_COLOR = D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f);	// 2Pタマゴンのステンシルカラー(水色)
+	const D3DXCOLOR MASK_MEDAMAN_COLOR = D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f);			// メダマンのステンシルカラー(ピンク)
+	const D3DXCOLOR MASK_BONBON_COLOR = D3DXCOLOR(1.0f, 0.5f, 0.0f, 1.0f);			// ボンンボンのステンシルカラー(オレンジ)
+	const D3DXCOLOR MASK_YUNGDEVIL_COLOR = D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f);		// 子デビルのステンシルカラー(青)
+	const D3DXCOLOR MASK_ITEM_COLOR = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);			// 子デビルのステンシルカラー(青)
 }
 
 //静的メンバ変数宣言
@@ -135,17 +142,17 @@ HRESULT CGame::Init(void)
 
 	if (m_pPlayerMask == nullptr)
 	{// プレイヤーマスクの生成
-		m_pPlayerMask = CMask::Create(2, D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
+		m_pPlayerMask = CMask::Create(2, MASK_PLAYER_COLOR);
 	}
 
 	if (m_pItemMask == nullptr)
 	{// アイテムマスク
-		m_pItemMask = CMask::Create(4, D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+		m_pItemMask = CMask::Create(4, MASK_ITEM_COLOR);
 	}
 
 	if (m_pEnemyMask == nullptr)
 	{// 敵マスク
-		m_pEnemyMask = CMask::Create(102, D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f));
+		m_pEnemyMask = CMask::Create(102, MASK_MEDAMAN_COLOR);
 	}
 
 	//クリアフラグのデフォルトをオンにしておく

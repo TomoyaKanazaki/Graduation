@@ -257,8 +257,10 @@ void CTutorial::Uninit(void)
 	//全てのオブジェクトの破棄
 	CObject::ReleaseAll();
 
+	// シーンの終了
 	CScene::Uninit();
 
+	// マップシステムの終了
 	CMapSystem::GetInstance()->Uninit();
 
 	if (m_pTutorial != nullptr)
