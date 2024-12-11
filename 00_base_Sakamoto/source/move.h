@@ -14,10 +14,8 @@
 // 前方宣言
 //============================================
 class CObjectCharacter;         // キャラクター情報
-class CPlayer;                  // プレイヤー情報
-class CEnemy;                   // 敵情報
-
 class CItem;                    // アイテム情報
+class CObjectX;                 // オブジェクトXの情報
 
 //============================================
 // 移動状態のインターフェースクラス
@@ -34,6 +32,8 @@ public:
         STATE_ASTAR,        // 追跡
         STATE_RANDOM,       // ランダム
         STATE_STOP,         // 停止
+        STATE_ROLL,         // 転がる
+
         STATE_MAX
     };
 
@@ -47,6 +47,15 @@ public:
         ROTSTATE_MAX,		// 最大
         ROTSTATE_WAIT,	    // 待機
         ROTSTATE_NONE
+    };
+
+    // 移動の進行状況を管理する構造体
+    struct PROGGRESS
+    {
+        bool bOKL;		//左への進行が許されるかどうか
+        bool bOKR;		//右への進行が許されるかどうか
+        bool bOKU;		//上への進行が許されるかどうか
+        bool bOKD;		//下への進行が許されるかどうか
     };
 
     CMoveState();
@@ -66,10 +75,12 @@ public:
 
     // 追跡
     virtual void AStarStop(CObjectCharacter* pCharacter) {}             // 追跡と停止切り替え
+    virtual void RollStop(CObjectX* pObjectX) {}                        // 転がりと停止切り替え
 
     // 移動処理
     virtual void Move(CObjectCharacter* pCharacter, D3DXVECTOR3& pos, D3DXVECTOR3& rot) {}           // 移動処理(キャラクター)
     virtual void Move(CItem* pItem, D3DXVECTOR3& pos, D3DXVECTOR3& rot) {}                           // 移動処理(アイテム)
+    virtual void Move(CObjectX* pObjectX, D3DXVECTOR3& pos, D3DXVECTOR3& rot) {}                     // 移動処理(オブジェクトX)
 
 
     CMoveState* GetMoveState(CObjectCharacter* pCharacter);             // 移動状態の情報取得
@@ -93,7 +104,10 @@ protected:
 
 
     // メンバ変数
-    STATE m_State;        // デバッグ用状態
+    STATE m_State;                  // デバッグ用状態
+    PROGGRESS m_Progress;			// 移動の進行許可状況
+    PROGGRESS m_ProgressOld;		// 前回の移動の進行許可状況
+
    
 };
 
@@ -166,8 +180,6 @@ private:
 
     // メンバ変数
     CMapSystem::GRID m_GridOld;
-    CObjectCharacter::PROGGRESS m_Progress;           // 進行許可情報
-    CObjectCharacter::PROGGRESS m_ProgressOld;        // 前回の進行許可情報
     ROTSTATE m_RotState;            // 移動方向の状態
     int m_nSelectCounter;           // 移動方向変更カウンター
     bool m_bSwitchMove;             // 移動方向を変えるか
@@ -228,8 +240,32 @@ public:
     void ControlStop(CObjectCharacter* pCharacter) override;        // 操作に切り替え
     void RandomStop(CObjectCharacter* pCharacter) override;         // ランダム歩行に切り替え
     void AStarStop(CObjectCharacter* pCharacter) override;          // 追跡に切り替え
+    void RollStop(CObjectX* pObjectX) override;                     // 転がりと停止切り替え
 
     void Move(CObjectCharacter* pCharacter, D3DXVECTOR3& pos, D3DXVECTOR3& rot) override;      // キャラクターの移動処理
+};
+
+//============================================
+// 転がる状態
+//============================================
+class CStateRoll : public CMoveState
+{
+public:
+
+    CStateRoll();
+    ~CStateRoll() {}
+
+    void Release() override;      // 破棄
+
+    // 切り替え処理
+    void RollStop(CObjectX* pObjectX) override;                     // 転がりと停止切り替え
+
+    void Move(CObjectX* pObjectX, D3DXVECTOR3& pos, D3DXVECTOR3& rot) override;      // キャラクターの移動処理
+
+private:
+    void SetJudg(int& nGridPosX, int& nGridPosZ, bool& bProgress);                  // 転がるか判断する
+    void Stop(D3DXVECTOR3& pos, D3DXVECTOR3& GridPos, D3DXVECTOR3& move);           // 転がらないときの位置
+
 };
 
 #endif

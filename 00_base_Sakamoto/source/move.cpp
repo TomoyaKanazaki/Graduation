@@ -59,6 +59,19 @@ static_assert(NUM_ARRAY(COORDDINATE_RATE) == CEnemy::ENEMY_MAX, "ERROR : Type Co
 CMoveState::CMoveState()
 {
 	m_State = STATE_NONE;
+
+	// 進行許可情報
+	m_Progress.bOKR = false;	//右
+	m_Progress.bOKL = false;	//左
+	m_Progress.bOKU = false;	//上
+	m_Progress.bOKD = false;	//下 
+
+	// 前回の進行許可情報
+	m_ProgressOld.bOKR = false;	//右
+	m_ProgressOld.bOKL = false;	//左
+	m_ProgressOld.bOKU = false;	//上
+	m_ProgressOld.bOKD = false;	//下 
+
 }
 
 //==========================================
@@ -166,7 +179,6 @@ void CMoveState::UpdatePos(CItem* pItem, D3DXVECTOR3& pos)
 	// 変数宣言
 	CMapMove* pMapMove = CMapMove::GetListTop();
 	D3DXVECTOR3 move = pItem->GetMove();		// 移動量
-	//D3DXVECTOR3 objMove = pItem->GetObjMove();
 
 	float fSpeed = 1.0f;	// スロー用 default1.0fで初期化
 
@@ -174,17 +186,10 @@ void CMoveState::UpdatePos(CItem* pItem, D3DXVECTOR3& pos)
 	move.y -= 0.5f;
 	pItem->SetMove(move);		// 移動量
 
-	//Y軸の位置更新
-	pos.y += move.y * CManager::GetInstance()->GetGameSpeed() * fSpeed;
-	//pos.y += objMove.y * CManager::GetInstance()->GetGameSpeed() * fSpeed;
-
-	//X軸の位置更新
+	//位置更新
 	pos.x += move.x * CManager::GetInstance()->GetGameSpeed() * fSpeed * pMapMove->MoveSlopeX(move.x);
-	//pos.x += objMove.x * CManager::GetInstance()->GetGameSpeed() * fSpeed * pMapMove->MoveSlopeX(move.x);
-
-	//Z軸の位置更新
+	pos.y += move.y * CManager::GetInstance()->GetGameSpeed() * fSpeed;
 	pos.z += move.z * CManager::GetInstance()->GetGameSpeed() * fSpeed * pMapMove->MoveSlopeZ(move.z);
-	//pos.z += objMove.z * CManager::GetInstance()->GetGameSpeed() * fSpeed * pMapMove->MoveSlopeZ(move.z);
 }
 
 //**********************************************************************************************************
@@ -199,6 +204,18 @@ CStateControl::CStateControl()
 	m_RotState = ROTSTATE_NONE;		// 移動方向の状態
 
 	m_State = STATE_CONTROL;			// 操作状態
+
+	// 進行許可情報
+	m_Progress.bOKR = false;	//右
+	m_Progress.bOKL = false;	//左
+	m_Progress.bOKU = false;	//上
+	m_Progress.bOKD = false;	//下 
+
+	// 前回の進行許可情報
+	m_ProgressOld.bOKR = false;	//右
+	m_ProgressOld.bOKL = false;	//左
+	m_ProgressOld.bOKU = false;	//上
+	m_ProgressOld.bOKD = false;	//下 
 
 }
 
@@ -1151,9 +1168,201 @@ void CStateStop::AStarStop(CObjectCharacter* pCharacter)
 }
 
 //==========================================
+// 転がりと停止切り替え
+//==========================================
+void CStateStop::RollStop(CObjectX* pObjectX)
+{
+	// 転がり状態にする
+	pObjectX->ChangeMoveState(new CStateRoll);
+}
+
+//==========================================
 // キャラクターの移動処理
 //==========================================
 void CStateStop::Move(CObjectCharacter* pCharacter, D3DXVECTOR3& pos, D3DXVECTOR3& rot)
 {
 
+}
+
+//**********************************************************************************************************
+// 転がり状態
+//**********************************************************************************************************
+//==========================================
+// コンストラクタ
+//==========================================
+CStateRoll::CStateRoll()
+{
+	m_State = STATE_ROLL;
+
+	// 進行許可情報
+	m_Progress.bOKR = false;	//右
+	m_Progress.bOKL = false;	//左
+	m_Progress.bOKU = false;	//上
+	m_Progress.bOKD = false;	//下 
+
+	// 前回の進行許可情報
+	m_ProgressOld.bOKR = false;	//右
+	m_ProgressOld.bOKL = false;	//左
+	m_ProgressOld.bOKU = false;	//上
+	m_ProgressOld.bOKD = false;	//下 
+}
+//==========================================
+// 破棄
+//==========================================
+void CStateRoll::Release()
+{
+
+}
+
+//==========================================
+// 転がりと停止切り替え
+//==========================================
+void CStateRoll::RollStop(CObjectX* pObjectX)
+{
+	// 停止状態にする
+	pObjectX->ChangeMoveState(new CStateStop);
+}
+
+//==========================================
+// 転がりの移動処理
+//==========================================
+void CStateRoll::Move(CObjectX* pObjectX, D3DXVECTOR3& pos, D3DXVECTOR3& rot)
+{
+	D3DXVECTOR3 SlopeRot = CMapMove::GetListTop()->GetDevilRot();		// マップの傾き
+	D3DXVECTOR3 move = pObjectX->GetMove();			// 移動量
+	CMapSystem::GRID grid = pObjectX->GetGrid();	// グリッド
+
+	// 傾きによる移動量設定
+	move.x = -SlopeRot.z * 10.0f;
+	move.z = SlopeRot.x * 10.0f;
+
+	//自分の立っているグリットの中心位置を求める
+	D3DXVECTOR3 MyGritPos = pObjectX->GetGrid().ToWorld();
+	float MapGritSize = CMapSystem::GetInstance()->GetGritSize();
+
+	if (useful::CollisionCircle(MyGritPos, D3DXVECTOR3(pos.x, MyGritPos.y, pos.z), 5.0f) == true)
+	{// ブロックの中心にある時に上下か左右のどちらかになるまでに移動する(傾いてない時)
+
+		pos.x += move.x;
+		pos.z += move.z;
+	}
+	else
+	{// ブロックの中心にないとき(傾いた時)
+
+		//上下移動
+		if (MyGritPos.x - pos.x >= -5.0f && MyGritPos.x - pos.x <= 5.0f)
+		{
+			pos.z += move.z;
+		}
+		else
+		{
+			pos.z = MyGritPos.z;
+		}
+
+		//左右移動
+		if (MyGritPos.z - pos.z >= -5.0f && MyGritPos.z - pos.z <= 5.0f)
+		{
+			pos.x += move.x;
+		}
+		else
+		{
+			pos.x = MyGritPos.x;
+		}
+	}
+
+	// 停止しているか判定をとる
+	if (pos.x <= MyGritPos.x + ((MapGritSize * 0.5f) - (GRIT_OK * m_Progress.bOKR)) &&	//左
+		pos.x >= MyGritPos.x - ((MapGritSize * 0.5f) - (GRIT_OK * m_Progress.bOKL)) &&	//右
+		pos.z <= MyGritPos.z + ((MapGritSize * 0.5f)) &&	//上
+		pos.z >= MyGritPos.z - ((MapGritSize * 0.5f)))	//下
+	{// グリットの中心位置に立っているか
+
+		int nRGridX = grid.x + 1;
+		int nLGridX = grid.x - 1;
+
+		nRGridX = useful::RangeNumber(CMapSystem::GetInstance()->GetWightMax(), 0, nRGridX);
+		nLGridX = useful::RangeNumber(CMapSystem::GetInstance()->GetWightMax(), 0, nLGridX);
+
+		// 左右の移動判定
+		SetJudg(nRGridX, grid.z, m_Progress.bOKR);
+		SetJudg(nLGridX, grid.z, m_Progress.bOKL);
+	}
+
+	if (pos.x <= MyGritPos.x + ((MapGritSize * 0.5f)) &&	//左
+		pos.x >= MyGritPos.x - ((MapGritSize * 0.5f)) &&	//右
+		pos.z <= MyGritPos.z + ((MapGritSize * 0.5f) - (GRIT_OK * m_Progress.bOKD)) &&	//上
+		pos.z >= MyGritPos.z - ((MapGritSize * 0.5f) - (GRIT_OK * m_Progress.bOKU)))	//下
+	{// グリットの中心位置に立っているか
+
+		int nUGridZ = grid.z - 1;
+		int nDGridZ = grid.z + 1;
+
+		nUGridZ = useful::RangeNumber(CMapSystem::GetInstance()->GetHeightMax(), 0, nUGridZ);
+		nDGridZ = useful::RangeNumber(CMapSystem::GetInstance()->GetHeightMax(), 0, nDGridZ);
+
+		// 上下の移動判定
+		SetJudg(grid.x, nUGridZ, m_Progress.bOKU);
+		SetJudg(grid.x, nDGridZ, m_Progress.bOKD);
+	}
+
+	// 停止処理
+	Stop(pos, MyGritPos, move);
+
+	pObjectX->SetMove(move);	// 移動量設定
+}
+
+//==========================================
+// 転がれるか判断する処理
+//==========================================
+void CStateRoll::SetJudg(int& nGridPosX, int& nGridPosZ, bool& bProgress)
+{
+	// 転がれる場所があるか判定を取る
+	if (CMapSystem::GetInstance()->GetGritBool(nGridPosX, nGridPosZ) == true)
+	{
+		bProgress = false;
+	}
+	else
+	{
+		bProgress = true;
+	}
+}
+
+//==========================================
+// 転がらないときの位置
+//==========================================
+void CStateRoll::Stop(D3DXVECTOR3& pos, D3DXVECTOR3& GridPos, D3DXVECTOR3& move)
+{
+	// 停止している場合、その位置に固定する
+	if (!m_Progress.bOKR && move.x > 0.0f)
+	{
+		if (pos.x > GridPos.x)
+		{
+			pos.x = GridPos.x;
+			move.x = 0.0f;
+		}
+	}
+	if (!m_Progress.bOKL && move.x < 0.0f)
+	{
+		if (pos.x < GridPos.x)
+		{
+			pos.x = GridPos.x;
+			move.x = 0.0f;
+		}
+	}
+	if (!m_Progress.bOKU && move.z > 0.0f)
+	{
+		if (pos.z > GridPos.z)
+		{
+			pos.z = GridPos.z;
+			move.z = 0.0f;
+		}
+	}
+	if (!m_Progress.bOKD && move.z < 0.0f)
+	{
+		if (pos.z < GridPos.z)
+		{
+			pos.z = GridPos.z;
+			move.z = 0.0f;
+		}
+	}
 }

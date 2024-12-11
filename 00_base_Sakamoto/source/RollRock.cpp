@@ -16,6 +16,7 @@
 #include "objmeshField.h"
 #include "wall.h"
 #include "MapMove.h"
+#include "move.h"
 
 //==========================================
 //  定数定義
@@ -35,7 +36,8 @@ CListManager<CRollRock>* CRollRock::m_pList = nullptr; // オブジェクトリスト
 //コンストラクタ
 //====================================================================
 CRollRock::CRollRock(int nPriority) : CObjectX(nPriority),
-m_pEffect(nullptr)
+m_pEffect(nullptr),
+m_pMoveState(nullptr)
 {
 	SetSize(SAMPLE_SIZE);
 	SetPos(INITVECTOR3);
@@ -45,7 +47,6 @@ m_pEffect(nullptr)
 	m_nStateCount = 0;
 	m_Scaling = 1.0f;
 	m_fColorA = 0.0f;
-	m_move = INITVECTOR3;
 	m_Grid.x = 0;
 	m_Grid.z = 0;
 
@@ -60,7 +61,9 @@ m_pEffect(nullptr)
 //====================================================================
 CRollRock::CRollRock(int nPriority, CMapSystem::GRID gridCenter) : CObjectX(nPriority),
 m_Grid(gridCenter),
-m_OldGrid(gridCenter)
+m_OldGrid(gridCenter),
+m_pEffect(nullptr),
+m_pMoveState(nullptr)
 {
 	SetSize(SAMPLE_SIZE);
 	SetPos(INITVECTOR3);
@@ -70,7 +73,6 @@ m_OldGrid(gridCenter)
 	m_nStateCount = 0;
 	m_Scaling = 1.0f;
 	m_fColorA = 0.0f;
-	m_move = INITVECTOR3;
 
 	m_OKL = false;
 	m_OKR = false;
@@ -129,7 +131,17 @@ HRESULT CRollRock::Init(char* pModelName)
 	// 位置設定
 	CObjectX::SetPos(pos);
 
+	// 移動量設定
+	CObjectX::SetMove(INITVECTOR3);
+
 	SetSize(SAMPLE_SIZE);
+
+	// 移動状態設定
+	if (m_pMoveState == nullptr)
+	{ // 移動状態設定
+		m_pMoveState = new CStateRoll();		// 転がる状態
+		m_pMoveState->SetRotState(CMoveState::ROTSTATE_MAX);		// 移動向きの状態を設定
+	}
 
 	if (m_pList == nullptr)
 	{// リストマネージャー生成
@@ -149,6 +161,14 @@ HRESULT CRollRock::Init(char* pModelName)
 //====================================================================
 void CRollRock::Uninit(void)
 {
+	// 移動状態の破棄
+	if (m_pMoveState != nullptr)
+	{
+		m_pMoveState->Release();		// 破棄
+		delete m_pMoveState;
+		m_pMoveState = nullptr;
+	}
+
 	// リストから自身のオブジェクトを削除
 	m_pList->DelList(m_iterator);
 
@@ -237,148 +257,16 @@ void CRollRock::Draw(void)
 //====================================================================
 void CRollRock::Move(D3DXVECTOR3& pos, D3DXVECTOR3& rot)
 {
-	D3DXVECTOR3 SlopeRot = INITVECTOR3;
+	// 移動処理
+	m_pMoveState->Move(this, pos, rot);
 
-	SlopeRot = CMapMove::GetListTop()->GetDevilRot();
-
-	// 傾きによる移動量設定
-	m_move.x = -SlopeRot.z * 10.0f;
-	m_move.z = SlopeRot.x * 10.0f;
-
-	//自分の立っているグリットの中心位置を求める
-	D3DXVECTOR3 MyGritPos = m_Grid.ToWorld();
-	float MapGritSize = CMapSystem::GetInstance()->GetGritSize();
-
-	if (useful::CollisionCircle(MyGritPos, D3DXVECTOR3(pos.x, MyGritPos.y, pos.z), 5.0f) == true)
-	{// ブロックの中心にある時に上下か左右のどちらかになるまでに移動する
-
-		pos.x += m_move.x;
-		pos.z += m_move.z;
-	}
-	else
-	{// ブロックの中心にないとき
-
-		//上下移動
-		if (MyGritPos.x - pos.x >= -5.0f && MyGritPos.x - pos.x <= 5.0f)
-		{
-			pos.z += m_move.z;
-		}
-		else
-		{
-			pos.z = MyGritPos.z;
-		}
-
-		//左右移動
-		if (MyGritPos.z - pos.z >= -5.0f && MyGritPos.z - pos.z <= 5.0f)
-		{
-			pos.x += m_move.x;
-		}
-		else
-		{
-			pos.x = MyGritPos.x;
-		}
-	}
-
-	if (pos.x <= MyGritPos.x + ((MapGritSize * 0.5f) - (GRIT_OK * m_OKR)) &&	//左
-		pos.x >= MyGritPos.x - ((MapGritSize * 0.5f) - (GRIT_OK * m_OKL)) &&	//右
-		pos.z <= MyGritPos.z + ((MapGritSize * 0.5f)) &&	//上
-		pos.z >= MyGritPos.z - ((MapGritSize * 0.5f)))	//下
-	{// グリットの中心位置に立っているか
-
-		int nRGridX = m_Grid.x + 1;
-		int nLGridX = m_Grid.x - 1;
-
-		nRGridX = useful::RangeNumber(CMapSystem::GetInstance()->GetWightMax(), 0, nRGridX);
-		nLGridX = useful::RangeNumber(CMapSystem::GetInstance()->GetWightMax(), 0, nLGridX);
-
-		if (CMapSystem::GetInstance()->GetGritBool(nRGridX, m_Grid.z) == true)
-		{//右
-			m_OKR = false;
-		}
-		else
-		{
-			m_OKR = true;
-		}
-
-		if (CMapSystem::GetInstance()->GetGritBool(nLGridX, m_Grid.z) == true)
-		{//左
-			m_OKL = false;
-		}
-		else
-		{
-			m_OKL = true;
-		}
-	}
-
-	if (pos.x <= MyGritPos.x + ((MapGritSize * 0.5f)) &&	//左
-		pos.x >= MyGritPos.x - ((MapGritSize * 0.5f)) &&	//右
-		pos.z <= MyGritPos.z + ((MapGritSize * 0.5f) - (GRIT_OK * m_OKD)) &&	//上
-		pos.z >= MyGritPos.z - ((MapGritSize * 0.5f) - (GRIT_OK * m_OKU)))	//下
-	{// グリットの中心位置に立っているか
-
-		int nUGridZ = m_Grid.z - 1;
-		int nDGridZ = m_Grid.z + 1;
-
-		nUGridZ = useful::RangeNumber(CMapSystem::GetInstance()->GetHeightMax(), 0, nUGridZ);
-		nDGridZ = useful::RangeNumber(CMapSystem::GetInstance()->GetHeightMax(), 0, nDGridZ);
-
-		if (CMapSystem::GetInstance()->GetGritBool(m_Grid.x, nUGridZ) == true)
-		{//上
-			m_OKU = false;
-		}
-		else
-		{
-			m_OKU = true;
-		}
-
-		if (CMapSystem::GetInstance()->GetGritBool(m_Grid.x, nDGridZ) == true)
-		{//下
-			m_OKD = false;
-		}
-		else
-		{
-			m_OKD = true;
-		}
-	}
-
-	if (!m_OKR && m_move.x > 0.0f)
-	{
-		if (pos.x > MyGritPos.x)
-		{
-			pos.x = MyGritPos.x;
-			m_move.x = 0.0f;
-		}
-	}
-	if (!m_OKL && m_move.x < 0.0f)
-	{
-		if (pos.x < MyGritPos.x)
-		{
-			pos.x = MyGritPos.x;
-			m_move.x = 0.0f;
-		}
-	}
-	if (!m_OKU && m_move.z > 0.0f)
-	{
-		if (pos.z > MyGritPos.z)
-		{
-			pos.z = MyGritPos.z;
-			m_move.z = 0.0f;
-		}
-	}
-	if (!m_OKD && m_move.z < 0.0f)
-	{
-		if (pos.z < MyGritPos.z)
-		{
-			pos.z = MyGritPos.z;
-			m_move.z = 0.0f;
-		}
-	}
+	D3DXVECTOR3 move = GetMove();	// 移動量
 
 	// エフェクトの生成
-	if (m_pEffect == nullptr && (fabsf(m_move.x) > 0.1f || fabsf(m_move.z) > 0.1f))
+	if (m_pEffect == nullptr && (fabsf(move.x) > 0.1f || fabsf(move.z) > 0.1f))
 	{
 		D3DXVECTOR3 rotEf = INITVECTOR3;
-		rotEf.y = atan2f(-m_move.x, -m_move.z);
+		rotEf.y = atan2f(-move.x, -move.z);
 		D3DXMATRIX mat = *GetUseMultiMatrix();
 		D3DXVECTOR3 ef = useful::CalcMatrix(pos, rotEf, mat);
 		m_pEffect = MyEffekseer::EffectCreate(CMyEffekseer::TYPE_ROLL, true, ef, rotEf);
@@ -398,7 +286,7 @@ void CRollRock::Move(D3DXVECTOR3& pos, D3DXVECTOR3& rot)
 	}
 
 	// エフェクトを消去
-	if (m_pEffect != nullptr && fabsf(m_move.x) <= 0.1f && fabsf(m_move.z) <= 0.1f)
+	if (m_pEffect != nullptr && fabsf(move.x) <= 0.1f && fabsf(move.z) <= 0.1f)
 	{
 		m_pEffect->SetDeath();
 		m_pEffect = nullptr;
@@ -467,6 +355,22 @@ void CRollRock::Coodinate()
 	// 現在のグリッドを移動不可地点に設定
 	generator->addCollision(m_Grid.ToAStar());
 	pMapSystem->SetGritBool(m_Grid, true);
+}
+
+//==========================================
+// 移動状態変更処理
+//==========================================
+void CRollRock::ChangeMoveState(CMoveState* pMoveState)
+{
+	if (m_pMoveState != nullptr)
+	{
+		m_pMoveState->Release();
+		delete m_pMoveState;
+		m_pMoveState = nullptr;
+	}
+
+	m_pMoveState = pMoveState;
+	m_pMoveState->Init();
 }
 
 //====================================================================
