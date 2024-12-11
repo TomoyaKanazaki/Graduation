@@ -548,10 +548,10 @@ void CStateRandom::SearchWall(CObjectCharacter* pCharacter, D3DXVECTOR3& pos)
 			// 移動方向の選択
 			MoveSelect(pCharacter);
 			m_bSwitchMove = false;
+			m_GridOld = grid;	// 前回の位置更新
 
 		}
 
-		m_GridOld = grid;	// 前回の位置更新
 	}
 }
 
