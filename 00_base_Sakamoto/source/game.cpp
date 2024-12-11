@@ -161,7 +161,6 @@ HRESULT CGame::Init(void)
 
 	//デビルの生成
 	m_pDevil = CDevil::Create();
-	m_pDevil->SetPos(D3DXVECTOR3(0.0f, 100.0f, 500.0f));
 
 	// マップの生成
 	CMapSystem::GetInstance()->Init();
@@ -430,6 +429,11 @@ void CGame::Update(void)
 		if (pInputKeyboard->GetTrigger(DIK_F4))
 		{
 			StageClear(1);
+		}
+
+		if (pInputKeyboard->GetTrigger(DIK_F5))
+		{
+			CFade::SetFade(CScene::MODE_TUTORIAL);
 		}
 
 #endif // _DEBUG

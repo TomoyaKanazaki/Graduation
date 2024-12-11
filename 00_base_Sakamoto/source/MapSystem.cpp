@@ -45,7 +45,6 @@ std::vector<CMapSystem::GRID> CMapSystem::m_PosPlayer = {};	// ÉvÉåÉCÉÑÅ[ÇÃà íuÇ
 //====================================================================
 CMapSystem::CMapSystem() : 
 	m_mapCenter(0, 0),
-	m_pEffect(nullptr),
 	m_mtxStage(nullptr)
 {
 	for (int nCntW = 0; nCntW < NUM_WIGHT; nCntW++)
@@ -62,6 +61,7 @@ CMapSystem::CMapSystem() :
 	m_InitPos = m_MapPos;
 	m_MapSize = MAP_SIZE;
 	m_MapSize = D3DXVECTOR3((NUM_WIGHT - 1) * 50.0f, 0.0f, (NUM_HEIGHT - 1) * 50.0f);
+	m_pMapMove = nullptr;
 	//m_MapType = MAPTYPE_NONE;			// É}ÉbÉvÉIÉuÉWÉFÉNÉgÇÃéÌóﬁ
 }
 
@@ -99,6 +99,11 @@ void CMapSystem::Init()
 		}
 	}
 
+	if (m_pMapMove == nullptr)
+	{
+		m_pMapMove = CMapMove::Create();
+	}
+
 	m_MapPos = D3DXVECTOR3((((m_WightMax * 0.5f) * -100.0f) + m_fGritSize * 0.5f), 0.0f, (((m_HeightMax * 0.5f) * 100.0f) - m_fGritSize * 0.5f));
 	m_InitPos = m_MapPos;
 
@@ -123,6 +128,12 @@ void CMapSystem::Init()
 //====================================================================
 void CMapSystem::Uninit(void)
 {
+	if (m_pMapMove != nullptr)
+	{
+		m_pMapMove->Uninit();
+		m_pMapMove = nullptr;
+	}
+
 	if (m_pMapSystem != nullptr)
 	{
 		delete m_pMapSystem;
@@ -137,20 +148,21 @@ void CMapSystem::Uninit(void)
 //====================================================================
 void CMapSystem::Update(void)
 {
-	CDevil::GetListTop()->GetMove()->FollowScroll(m_MapPos);
+	if (CScene::GetMode() == CScene::MODE_GAME)
+	{
+		if (CGame::GetInstance()->GetEvent() == false &&
+			m_pMapMove != nullptr)
+		{
+			//É}ÉbÉvÇÃìÆÇ´
+			m_pMapMove->Update();
 
-	// ÉGÉtÉFÉNÉgÇìÆÇ©Ç∑
-	if (m_pEffect != nullptr)
-	{
-		D3DXVECTOR3 rot = INITVECTOR3;
-		rot.x = useful::CalcMatrixToRot(*CObjmeshField::GetListTop()->GetMatrix()).y;
-		rot.y = useful::CalcMatrixToRot(*CObjmeshField::GetListTop()->GetMatrix()).x;
-		rot.z = useful::CalcMatrixToRot(*CObjmeshField::GetListTop()->GetMatrix()).z;
-		m_pEffect->SetRotation(rot);
-	}
-	else
-	{
-		m_pEffect = MyEffekseer::EffectCreate(CMyEffekseer::TYPE_STAGE_LIMIT, true, INITVECTOR3, INITVECTOR3, EFFECT_SIZE);
+			if (CManager::GetInstance()->GetPause())
+			{
+				m_pMapMove->SetMove(INITVECTOR3);
+			}
+
+			m_pMapMove->FollowScroll(m_MapPos);
+		}
 	}
 
 #ifdef _DEBUG

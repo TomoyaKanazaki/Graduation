@@ -65,18 +65,13 @@ public:
 	void Update(void);
 	void Draw(void);
 
-	//お引越し開始
-
 	void SetDevilPos(D3DXVECTOR3 size) { m_DevilPos = size; }
 	D3DXVECTOR3 GetDevilPos(void) { return m_DevilPos; }
 	void SetDifference(D3DXVECTOR3 size) { m_MapDifference = size; }
 	D3DXVECTOR3 GetDifference(void) { return m_MapDifference; }
 
-	//お引越し終了
-
 	void SetAction(ACTION_TYPE Action, float BlendTime);
 	ACTION_TYPE GetAction(void) { return m_Action; }
-	CMapMove* GetMove(void) { return m_pMapMove; }
 
 	void SetModelDisp(bool Sst);
 
@@ -94,7 +89,6 @@ private:
 	//お引越し終了
 
 	ACTION_TYPE m_AtkAction;		//攻撃状態記録用変数
-	CMapMove* m_pMapMove;
 
 	//お引越し開始
 	D3DXVECTOR3 m_move;				//移動量

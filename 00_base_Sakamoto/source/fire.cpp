@@ -170,7 +170,7 @@ void CFire::Update(void)
 	pos += m_move;
 
 	// スクロールに合わせて移動する
-	CGame::GetInstance()->GetDevil()->GetMove()->FollowScroll(pos);
+	CMapSystem::GetInstance()->GetMove()->FollowScroll(pos);
 
 	// 位置・移動量設定
 	SetPos(pos);

@@ -316,7 +316,7 @@ void CEnemy::Update(void)
 	m_pMoveState->Debug();		// 現在の移動状態
 
 	// スクロールに合わせて移動する
-	CDevil::GetListTop()->GetMove()->FollowScroll(posThis);
+	CMapSystem::GetInstance()->GetMove()->FollowScroll(posThis);
 
 	// 値更新
 	SetPos(posThis);			// 位置
