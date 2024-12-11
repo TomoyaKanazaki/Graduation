@@ -22,6 +22,7 @@ namespace
 	const D3DXVECTOR3 SAMPLE_SIZE = D3DXVECTOR3(20.0f, 20.0f, 20.0f);		//当たり判定
 	const char* MODEL_PASS = "data\\MODEL\\Testbowabowa.x"; // モデルパス
 	const float MOVE_HEIGHT = 25.0f; // 移動量
+	const D3DXVECTOR3 ADD_ROT = D3DXVECTOR3(0.01f, 0.01f, 0.01f); // 回転量
 }
 
 //===========================================
@@ -138,6 +139,15 @@ bool CBowabowa::Hit(CPlayer* pPlayer)
 //==========================================
 void CBowabowa::Move(D3DXVECTOR3& pos)
 {
+	// 現在の向きを取得する
+	D3DXVECTOR3 rot = GetRot();
+
+	// 向きを加算
+	rot += ADD_ROT;
+
+	// 向きを適用
+	SetRot(rot);
+
 	// 移動情報を取得
 	D3DXVECTOR3 base = GetBase();
 	float time = GetMoveTime();

@@ -45,15 +45,6 @@ namespace
 	const float DISTANCE_RECEDE = 200.0f;	//‹ß‚Ã‚­‹——£
 	const float DISTANCE_APPROACH = 100.0f;	//‰“‚´‚©‚é‹——£
 
-	//const float COORDDINATE_RATE[] = // Œo˜H’Tõ‚ðs‚¤ŠÔŠu
-	//{
-	//	5.0f,
-	//	3.0f,
-	//	1.0f
-	//};
-	//const float TARGET_DIFF = 10.0f; // ‹–—e”ÍˆÍ
-	//const float MOVE_ASTAR = 150.0f; // ’ÇÕŽž‚ÌˆÚ“®‘¬“x
-
 	const CMyEffekseer::TYPE EFFECT_TYPE[] = // Œo˜H’Tõ‚ðs‚¤ŠÔŠu
 	{
 		CMyEffekseer::TYPE_RESPAWN_MEDAMAN,
@@ -328,7 +319,7 @@ void CEnemy::Update(void)
 	SetSize(sizeThis);		// ‘å‚«‚³
 
 #ifdef _DEBUG
-#if 1
+#if 0
 	if (CMapSystem::GetInstance()->GetGritBool(m_Grid))
 	{
 		MyEffekseer::EffectCreate(CMyEffekseer::TYPE_TRUE, false, useful::CalcMatrix(posThis, INITVECTOR3, *GetUseMultiMatrix()), INITVECTOR3, { 10.0f, 10.0f, 10.0f });

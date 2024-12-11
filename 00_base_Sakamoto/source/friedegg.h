@@ -8,6 +8,11 @@
 #include "item.h"
 #include "enemy.h"
 
+//============================================
+// 前方宣言
+//============================================
+class CMoveState;		// 移動の状態
+
 //==========================================
 //  クラス定義
 //==========================================
@@ -28,6 +33,8 @@ public:
 
 	void SetEnemy(const CEnemy::ENEMY_TYPE eType) { m_eCreateType = eType; };
 
+	void ChangeMoveState(CMoveState* pMoveState) override;   // 移動状態変更
+
 	// 静的メンバ関数
 	static CListManager<CFriedEgg>* GetList(void); // リスト取得
 	static CFriedEgg* Create(const CEnemy::ENEMY_TYPE eType, const CMapSystem::GRID& pos);
@@ -45,6 +52,7 @@ private:
 	// メンバ変数
 	CListManager<CFriedEgg>::AIterator m_iterator; // イテレーター
 	float m_fDeleteTimer; // 自動消滅タイマー
-	CEnemy::ENEMY_TYPE m_eCreateType; // 消滅した時に生成する敵の種類
+	CEnemy::ENEMY_TYPE m_eCreateType;	// 消滅した時に生成する敵の種類
+	CMoveState* m_pMoveState;			// 移動状態
 
 };
