@@ -244,12 +244,13 @@ void CGame::Uninit(void)
 	// スロー情報の全削除
 	CSlowManager::ReleaseAll();
 
+	// マップシステムの終了
+	CMapSystem::GetInstance()->Uninit();
+
 	//全てのオブジェクトの破棄
 	CObject::ReleaseAll();
 
 	CScene::Uninit();
-
-	CMapSystem::GetInstance()->Uninit();
 
 	if (m_pGame != nullptr)
 	{

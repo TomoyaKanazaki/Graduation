@@ -34,94 +34,82 @@
 #include "sound.h"
 #include "shadow.h"
 
+//====================================================================
+// 定数定義
+//====================================================================
 namespace
 {
-	const int SAMPLE_NAMESPACE = 0;
-
-	const CMapSystem::GRID FIELD_GRID = { 64, 64 }; // 下の床のサイズ
-	const char* BOTTOM_FIELD_TEX = "data\\TEXTURE\\Field\\outside.jpg";		// 下床のテクスチャ
-	const D3DXVECTOR3 BOTTOM_FIELD_POS = D3DXVECTOR3(0.0f, -1000.0f, 0.0f);	// 下床の位置
 	const int BIBLE_OUTGRIT = 2;	// 聖書がマップの外側から何マス内側にいるか
+	const int STENCIL_REF_PLAYER = 2;		// プレイヤーのステンシルの参照値
+	const int STENCIL_REF_ITEM = 4;			// アイテムのステンシルの参照値
+	const int STENCIL_REF_MEDAMAN = 102;	// メダマンのステンシルの参照値
 
+	const char* BOTTOM_FIELD_TEX = "data\\TEXTURE\\Field\\outside.jpg";		// 下床のテクスチャ
 	const char* SCROLL_DEVICE_MODEL = "data\\TXT\\MOTION\\02_staging\\00_ScrollDevice\\motion_scrolldevice.txt";
 	const char* SCROLL_DEVICE_ENEMY_MODEL = "data\\TXT\\MOTION\\01_enemy\\motion_medaman.txt";
-
 	const char* SLOPE_DEVICE_MODEL = "data\\TXT\\MOTION\\02_staging\\01_SlopeDevice\\motion_slopedevice.txt";
 	const char* SLOPE_DEVICE_ENEMY_MODEL = "data\\TXT\\MOTION\\01_enemy\\motion_medaman.txt";
+	const char* TUTORIAL_GUIDE = "data\\TEXTURE\\UI\\tutorial_guid.png";	// チュートリアルガイドのテクスチャ
 
+	const CMapSystem::GRID FIELD_GRID = { 64, 64 }; // 下の床のサイズ
+	const D3DXVECTOR3 BOTTOM_FIELD_POS = D3DXVECTOR3(0.0f, -1000.0f, 0.0f);	// 下床の位置
+	const D3DXVECTOR3 GUIDE_POS = D3DXVECTOR3(200.0f, 225.0f, 0.0f);	// チュートリアルガイドの位置
+	const D3DXVECTOR3 GUIDE_SIZE = D3DXVECTOR3(420.0f, 360.0f, 0.0f);	// チュートリアルガイドのサイズ
 }
 
-//静的メンバ変数宣言
+//====================================================================
+// 静的メンバ変数宣言
+//====================================================================
 CTutorial* CTutorial::m_pTutorial = nullptr;
 
 //====================================================================
-//コンストラクタ
+// コンストラクタ
 //====================================================================
-CTutorial::CTutorial()
+CTutorial::CTutorial():
+m_bTutorialEnd(false),		// ゲーム終了のフラグ
+m_bDevilHoleFinish(false),	// デビルホールが4方向埋まったかどうか
+m_BGColorA(1.0f),			// イベント背景の透明度
+m_nTutorialWave(0),			// チュートリアルの段階
+m_nNumBowabowa(0),			// ボワボワの総数
+m_pPause(nullptr),			// ポーズのポインタ
+m_pDevil(nullptr),			// デビルのポインタ
+m_pPlayerMask(nullptr),		// プレイヤーマスクのポインタ
+m_pMedamanMask(nullptr),		// メダマンマスクのポインタ
+m_pItemMask(nullptr),		// アイテムマスクのポインタ
+m_bTutorialClear(false),	// ゲームクリアのフラグ
+m_Wireframe(false),			// ワイヤーフレーム切り替え
+m_Slow(false),				// スロー演出フラグ
+m_pTutorialGuide(nullptr)		// チュートリアルガイドのポインタ
 {
-	m_bGameEnd = false;
-	m_pEventMovie = nullptr;
-	m_bEvent = false;
-	m_bEventEnd = false;
-	m_bDevilHoleFinish = false;
-	m_BGColorA = 1.0f;
-	m_nTutorialWave = 0;
-	m_nNumBowabowa = 0;
-
-	for (int nCnt = 0; nCnt < NUM_CAMERA; nCnt++)
-	{
+	for (int nCnt = 0; nCnt < NUM_CAMERA; ++nCnt)
+	{// カメラ分回す
 		CManager::GetInstance()->GetCamera(nCnt)->SetBib(false);
 		CManager::GetInstance()->GetCamera(nCnt)->SetCameraMode(CCamera::CAMERAMODE_DOWNVIEW);
 	}
-
-	m_pPause = nullptr;
-	m_pTime = nullptr;
-	m_pMeshDomeUp = nullptr;
-	m_pMapField = nullptr;
-	m_pCubeBlock = nullptr;
-	m_pDevil = nullptr;
-	m_pPlayerMask = nullptr;
-	m_pEnemyMask = nullptr;
-	m_pItemMask = nullptr;
-
-	m_bGameClear = false;
-	m_Wireframe = false;
-	m_Slow = false;
-	m_bDevilHoleFinish = false;
-
-	m_nTutorialWave = 0;
-	m_nNumBowabowa = 0;
-
-	m_BGColorA = 1.0f;
-
-	m_BGRot = INITVECTOR3;
-
-	LetterBox[0] = nullptr;
-	LetterBox[1] = nullptr;
 }
 
 //====================================================================
-//デストラクタ
+// デストラクタ
 //====================================================================
 CTutorial::~CTutorial()
 {
 }
 
 //====================================================================
-//インスタンス取得
+// インスタンス取得
 //====================================================================
 CTutorial* CTutorial::GetInstance(void)
 {
 	if (m_pTutorial == nullptr)
-	{
+	{// インスタンス生成
 		m_pTutorial = new CTutorial;
 	}
+
 	return m_pTutorial;
 }
 
-
 //====================================================================
-//初期化処理
+// 初期化処理
 //====================================================================
 HRESULT CTutorial::Init(void)
 {
@@ -129,7 +117,7 @@ HRESULT CTutorial::Init(void)
 	CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_BGM_STAGE1);
 
 	if (m_pPause == nullptr)
-	{
+	{// ポーズの生成
 		m_pPause = CPause::Create();
 	}
 
@@ -143,44 +131,40 @@ HRESULT CTutorial::Init(void)
 		m_pItemMask = CMask::Create(4, D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
 	}
 
-	if (m_pEnemyMask == nullptr)
+	if (m_pMedamanMask == nullptr)
 	{// 敵マスク
-		m_pEnemyMask = CMask::Create(102, D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f));
+		m_pMedamanMask = CMask::Create(102, D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f));
+	}
+
+	if (m_pTutorialGuide == nullptr)
+	{// チュートリアルガイドの生成
+		m_pTutorialGuide = CObject2D::Create();
+	}
+	if (m_pTutorialGuide != nullptr)
+	{// テクスチャ・位置・サイズ設定
+		m_pTutorialGuide->SetTexture(TUTORIAL_GUIDE);
+		m_pTutorialGuide->SetPos(GUIDE_POS);
+		m_pTutorialGuide->SetSize(GUIDE_SIZE);
 	}
 
 	//クリアフラグのデフォルトをオンにしておく
-	m_bGameClear = true;
+	m_bTutorialClear = true;
 
 	//タイムの起動
 	CTutorial::GetTime()->SetStopTime(false);
-
-	// タイムの生成
-	m_pTime = CTimer::Create();
-	m_pTime->SetStartTime(timeGetTime());
-	m_pTime->SetTime(0);
 
 	//デビルの生成
 	m_pDevil = CDevil::Create();
 
 	// マップの生成
 	CMapSystem::GetInstance()->Init();
-	CMapSystem::Load("data\\TXT\\STAGE\\map06.csv");
-
-	for (int nCnt = 0; nCnt < 2; nCnt++)
-	{
-		LetterBox[nCnt] = CObject2D::Create();
-		LetterBox[nCnt]->SetPos(D3DXVECTOR3(640.0f, nCnt * 720.0f, 0.0f));
-		LetterBox[nCnt]->SetSize(D3DXVECTOR3(1280.0f, 0.0f, 0.0f));
-		LetterBox[nCnt]->SetColor(D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
-		LetterBox[nCnt]->SetTexture("data\\TEXTURE\\Test.jpg");
-	}
+	CMapSystem::Load("data\\TXT\\STAGE\\map01.csv");
 
 	// 下床の生成
 	auto grid = FIELD_GRID;
 	CObjmeshField* pBottonField = CObjmeshField::Create(grid);
 	pBottonField->SetTexture(BOTTOM_FIELD_TEX);
 	pBottonField->SetPos(BOTTOM_FIELD_POS);
-	m_bGameEnd = false;
 
 	// 背景モデル設定処理
 	SetBgObjTest();
@@ -189,14 +173,6 @@ HRESULT CTutorial::Init(void)
 	switch (CManager::GetInstance()->GetStage())
 	{
 	case 0:
-
-		//m_bEvent = true;
-
-		if (m_pEventMovie == nullptr)
-		{
-			m_pEventMovie = CEventMovie::Create();
-		}
-
 		// ソフトクリームの生成
 		CItem::Create(CItem::TYPE_SOFTCREAM, CMapSystem::GetInstance()->GetCenter());
 
@@ -229,16 +205,10 @@ HRESULT CTutorial::Init(void)
 void CTutorial::Uninit(void)
 {
 	if (m_pPause != nullptr)
-	{
+	{// ポーズの終了
 		m_pPause->Uninit();
 		delete m_pPause;
 		m_pPause = nullptr;
-	}
-
-	if (m_pEventMovie != nullptr)
-	{
-		m_pEventMovie->Uninit();
-		m_pEventMovie = nullptr;
 	}
 
 	// プレイヤーの解放
@@ -249,19 +219,20 @@ void CTutorial::Uninit(void)
 		m_pPlayer.pop_back();
 	}
 
+	// サウンド停止
 	CManager::GetInstance()->GetSound()->Stop();
 
 	// スロー情報の全削除
 	CSlowManager::ReleaseAll();
+
+	// マップシステムの終了
+	CMapSystem::GetInstance()->Uninit();
 
 	//全てのオブジェクトの破棄
 	CObject::ReleaseAll();
 
 	// シーンの終了
 	CScene::Uninit();
-
-	// マップシステムの終了
-	CMapSystem::GetInstance()->Uninit();
 
 	if (m_pTutorial != nullptr)
 	{
@@ -318,12 +289,6 @@ void CTutorial::Update(void)
 		CManager::GetInstance()->SetGameSpeed(Speed);
 	}
 
-	if (pInputKeyboard->GetTrigger(DIK_3) == true)
-	{
-		m_pTime->SetStartTime(0);
-		m_pTime->SetTime(0);
-	}
-
 	if (CManager::GetInstance()->GetGameSpeed() <= 1.0f)
 	{
 		m_Slow = true;
@@ -333,32 +298,7 @@ void CTutorial::Update(void)
 		m_Slow = false;
 	}
 
-	if (pInputKeyboard->GetTrigger(DIK_RETURN) == true)
-	{
-		// ゲームの最初から
-		CFade::SetFade(CScene::MODE_GAME);
-
-	}
-
-
 #endif
-
-	if (m_bEvent == true)
-	{
-		if (m_pEventMovie != nullptr)
-		{
-			m_pEventMovie->Update();
-		}
-	}
-
-	if (CManager::GetInstance()->GetPause() == true)
-	{
-		m_pTime->SetStopTime(true);		//タイムの進行を止める
-	}
-	else
-	{
-		m_pTime->SetStopTime(false);	//タイムの進行を進める
-	}
 
 	if (CManager::GetInstance()->GetFade()->GetFade() == CFade::FADE_NONE)
 	{
@@ -369,29 +309,29 @@ void CTutorial::Update(void)
 			// ボワボワのリスト構造が無ければ抜ける
 			if (CBowabowa::GetList() == nullptr)
 			{
-				m_bGameEnd = true;
+				m_bTutorialEnd = true;
 			}
 			break;
 
 		case 1:
 			if (m_bDevilHoleFinish == true)
 			{
-				m_bGameEnd = true;
+				m_bTutorialEnd = true;
 			}
 			break;
 		}
 
 		//ステージクリア時の処理
-		if (m_bGameEnd == true)
+		if (m_bTutorialEnd == true)
 		{
-			if (m_bGameClear == true)
-			{
-				StageClear(CManager::GetInstance()->GetStage());
+			if (m_bTutorialEnd == true
+				&& pInputKeyboard->GetTrigger(DIK_RETURN))
+			{// 好きなタイミングでチュートリアル抜ける
+				CFade::SetFade(CScene::MODE_GAME);
 			}
 			else
 			{
 				CFade::SetFade(CScene::MODE_RESULT);
-				m_pTime->SetStopTime(true);
 
 				int EndScore = 0;
 
@@ -413,9 +353,6 @@ void CTutorial::Update(void)
 			}
 		}
 
-		//レターボックスの更新
-		UpdateLetterBox();
-
 		//ポーズの更新処理
 		if (m_pPause != nullptr)
 
@@ -425,18 +362,8 @@ void CTutorial::Update(void)
 
 #ifdef _DEBUG
 
-		if (pInputKeyboard->GetTrigger(DIK_F3))
-		{
-			StageClear(0);
-		}
-
-		if (pInputKeyboard->GetTrigger(DIK_F4))
-		{
-			StageClear(1);
-		}
-
-		if (pInputKeyboard->GetTrigger(DIK_F5))
-		{
+		if (pInputKeyboard->GetTrigger(DIK_F6) == true)
+		{// チュートリアル最初から
 			CFade::SetFade(CScene::MODE_TUTORIAL);
 		}
 
@@ -460,17 +387,9 @@ void CTutorial::Draw(void)
 //====================================================================
 void CTutorial::NextStage(void)
 {
-	//イベントフラグを立てる
-	m_bEvent = true;
-
 	// マップの生成
 	CMapMove::GetListTop()->Init();
 	CObjmeshField::GetListTop()->SetRot(INITVECTOR3);
-
-	if (m_pEventMovie != nullptr)
-	{
-		m_pEventMovie->SetEventType(CEventMovie::STATE_CHANGE);
-	}
 
 	//十字架の削除
 	DeleteCross();
@@ -484,7 +403,7 @@ void CTutorial::NextStage(void)
 	//ステージ情報を進める
 	CManager::GetInstance()->SetStage(1);
 
-	m_bGameEnd = false;
+	m_bTutorialEnd = false;
 }
 
 //====================================================================
@@ -517,75 +436,6 @@ void CTutorial::CreateBible(void)
 	CItem::Create(CItem::TYPE_BIBLE, CMapSystem::GRID(GMax.x - BIBLE_OUTGRIT, GMin.z + BIBLE_OUTGRIT));
 	CItem::Create(CItem::TYPE_BIBLE, CMapSystem::GRID(GMin.x + BIBLE_OUTGRIT, GMax.z - BIBLE_OUTGRIT));
 	CItem::Create(CItem::TYPE_BIBLE, CMapSystem::GRID(GMax.x - BIBLE_OUTGRIT, GMax.z - BIBLE_OUTGRIT));
-}
-
-//====================================================================
-//ステージクリア処理
-//====================================================================
-void CTutorial::StageClear(int Stage)
-{
-	if (Stage == 0)
-	{
-		NextStage();
-	}
-	else
-	{
-		CFade::SetFade(CScene::MODE_RESULT);
-		m_pTime->SetStopTime(true);
-
-		int EndScore = 0;
-
-		for (unsigned int nCnt = 0; nCnt < m_pPlayer.size(); nCnt++)
-		{
-			if (m_pPlayer.at(nCnt) != nullptr)
-			{
-				EndScore += m_pPlayer.at(nCnt)->GetScore()->GetScore();
-			}
-		}
-
-		CManager::GetInstance()->SetEndScore(EndScore);
-
-		if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
-		{
-			CManager::GetInstance()->SetEnd1PScore(m_pPlayer.at(0)->GetScore()->GetScore());
-			CManager::GetInstance()->SetEnd2PScore(m_pPlayer.at(1)->GetScore()->GetScore());
-		}
-	}
-}
-
-//====================================================================
-//描画処理
-//====================================================================
-void CTutorial::UpdateLetterBox(void)
-{
-	if (m_bEvent)
-	{
-		for (int nCnt = 0; nCnt < 2; nCnt++)
-		{
-			D3DXVECTOR3 Height = LetterBox[nCnt]->GetSize();
-
-			if (Height.y < 200.0f)
-			{
-				Height.y += 2.0f;
-			}
-
-			LetterBox[nCnt]->SetSize(Height);
-		}
-	}
-	else
-	{
-		for (int nCnt = 0; nCnt < 2; nCnt++)
-		{
-			D3DXVECTOR3 Height = LetterBox[nCnt]->GetSize();
-
-			if (Height.y > 0.0f)
-			{
-				Height.y -= 2.0f;
-			}
-
-			LetterBox[nCnt]->SetSize(Height);
-		}
-	}
 }
 
 //====================================================================

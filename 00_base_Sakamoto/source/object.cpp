@@ -10,6 +10,8 @@
 #include "camera.h"
 #include "Scene.h"
 #include "game.h"
+#include "MapSystem.h"
+#include "MapMove.h"
 
 //==========================================
 //  定数定義
@@ -51,6 +53,7 @@ CObject::CObject(int nPriority) :
 
 	m_bDeath = false;
 	m_bLevelUI = false;
+	m_bMapScroll = false;
 	m_Appear = true;
 	m_nIdxCamera = 0;
 	m_nNumAll++;					//総数をカウントアップ
@@ -430,6 +433,32 @@ void CObject::DeleteBlock(void)
 
 			//削除処理
 			pObject->Release();
+
+			pObject = pObjectNext;
+		}
+	}
+}
+
+//====================================================================
+//フラグのオブジェクトのスクロール移動
+//====================================================================
+void CObject::ScrollAll(void)
+{
+	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
+	{
+		CObject* pObject = m_pTop[nCntPriority];	//先頭オブジェクトを代入
+
+		while (pObject != nullptr)
+		{
+			CObject* pObjectNext = pObject->m_pNext;	//次のオブジェクトを保存
+
+			if (pObject->GetMapScroll())
+			{
+				// スクロールに追従する
+				D3DXVECTOR3 pos = pObject->GetPos();
+				CMapSystem::GetInstance()->GetMove()->FollowScroll(pos);
+				pObject->SetPos(pos);
+			}
 
 			pObject = pObjectNext;
 		}
