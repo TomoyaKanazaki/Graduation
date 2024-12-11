@@ -1240,6 +1240,7 @@ void CStateRoll::Move(CObjectX* pObjectX, D3DXVECTOR3& pos, D3DXVECTOR3& rot)
 	D3DXVECTOR3 MyGritPos = pObjectX->GetGrid().ToWorld();
 	float MapGritSize = CMapSystem::GetInstance()->GetGritSize();
 
+	// 移動処理
 	if (useful::CollisionCircle(MyGritPos, D3DXVECTOR3(pos.x, MyGritPos.y, pos.z), 5.0f) == true)
 	{// ブロックの中心にある時に上下か左右のどちらかになるまでに移動する(傾いてない時)
 
@@ -1319,11 +1320,11 @@ void CStateRoll::SetJudg(int& nGridPosX, int& nGridPosZ, bool& bProgress)
 	// 転がれる場所があるか判定を取る
 	if (CMapSystem::GetInstance()->GetGritBool(nGridPosX, nGridPosZ) == true)
 	{
-		bProgress = false;
+		bProgress = false;		// 転がることが出来ない
 	}
 	else
 	{
-		bProgress = true;
+		bProgress = true;		// 転がることが出来る
 	}
 }
 
