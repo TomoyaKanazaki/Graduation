@@ -90,8 +90,8 @@ private:
 
 	int m_nNumBowabowa;						//ボワボワの数
 	bool m_bDevilHoleFinish;				//デビルホールがすべて埋まったかどうか
-	bool m_bTutorialEnd;					//ゲーム終了状態かどうか
-	bool m_bTutorialClear;					//ゲームクリア状態かどうか
+	bool m_bTutorialEnd;					//チュートリアル終了状態かどうか
+	bool m_bTutorialClear;					//チュートリアルクリア状態かどうか
 
 	int m_nTutorialWave;					//チュートリアルの段階
 	float m_BGColorA;						//ゲーム背景の不透明度
@@ -105,10 +105,11 @@ private:
 	bool m_Wireframe;						//ワイヤーフレームのオンオフ
 	bool m_Slow;							//スロー演出のオンオフ
 
-	CObject2D* TutorialGuide;	
+	CObject2D* m_pTutorialGuide;	// チュートリアルガイド
 
 	CMask* m_pPlayerMask;	// プレイヤーマスク
-	CMask* m_pEnemyMask;	// 敵マスク
 	CMask* m_pItemMask;		// アイテムマスク
+	CMask* m_pMedamanMask;	// 敵マスク
+
 };
 #endif
