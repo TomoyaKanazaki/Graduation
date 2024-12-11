@@ -39,7 +39,7 @@ namespace
 	const int SAMPLE_NAMESPACE = 0;
 
 	const CMapSystem::GRID FIELD_GRID = { 64, 64 }; // 下の床のサイズ
-	const char* BOTTOM_FIELD_TEX = "data\\TEXTURE\\Field\\outside.jpg";		// 下床のテクスチャ
+	const char* BOTTOM_FIELD_TEX = "data\\TEXTURE\\Field\\tile_test_02.png";		// 下床のテクスチャ
 	const D3DXVECTOR3 BOTTOM_FIELD_POS = D3DXVECTOR3(0.0f, -1000.0f, 0.0f);	// 下床の位置
 	const int BIBLE_OUTGRIT = 2;	// 聖書がマップの外側から何マス内側にいるか
 

@@ -9,6 +9,8 @@
 #include "player.h"
 #include "manager.h"
 #include "sound.h"
+#include "move.h"
+#include "MapMove.h"
 
 //==========================================
 //  定数定義
@@ -29,7 +31,8 @@ CListManager<CFriedEgg>* CFriedEgg::m_pList = nullptr; // オブジェクトリスト
 //====================================================================
 CFriedEgg::CFriedEgg(int nPriority) : CItem(nPriority),
 m_fDeleteTimer(0.0f),
-m_eCreateType(CEnemy::ENEMY_NONE)
+m_eCreateType(CEnemy::ENEMY_NONE),
+m_pMoveState(nullptr)
 {
 }
 
@@ -55,6 +58,13 @@ HRESULT CFriedEgg::Init()
 	// タイプの設定
 	SetItem(CItem::TYPE_FRIEDEGG);
 
+	// 移動状態設定
+	if (m_pMoveState == nullptr)
+	{ // 移動状態設定
+		m_pMoveState = new CStateRandom();		// 停止状態
+		m_pMoveState->SetRotState(CMoveState::ROTSTATE_MAX);		// 移動向きの状態を設定
+	}
+
 	// リストマネージャーの生成
 	if (m_pList == nullptr)
 	{
@@ -73,6 +83,14 @@ HRESULT CFriedEgg::Init()
 //====================================================================
 void CFriedEgg::Uninit(void)
 {
+	// 移動状態の破棄
+	if (m_pMoveState != nullptr)
+	{
+		m_pMoveState->Release();		// 破棄
+		delete m_pMoveState;
+		m_pMoveState = nullptr;
+	}
+
 	// リストから自身のオブジェクトを削除
 	m_pList->DelList(m_iterator);
 
@@ -180,10 +198,17 @@ CFriedEgg* CFriedEgg::Create(const CEnemy::ENEMY_TYPE eType, const CMapSystem::G
 //==========================================
 void CFriedEgg::Move(D3DXVECTOR3& pos)
 {
-	pos.y = 50.0f;
-	SetGrid(CMapSystem::GetInstance()->CalcGrid(pos));
+	// 移動処理
+	m_pMoveState->Move(this, pos, INITVECTOR3);
 
-	// TODO : ランダム歩行でも何でも仕様を用意する
+	// スクロールに合わせて移動する
+	CMapSystem::GetInstance()->GetMove()->FollowScroll(pos);
+
+	// 高さを調整する
+	pos.y = 50.0f;
+
+	// 存在グリッドを設定する
+	SetGrid(CMapSystem::GetInstance()->CalcGrid(pos));
 }
 
 //==========================================
@@ -227,4 +252,20 @@ void CFriedEgg::ChangeEffect()
 		assert(false);
 		break;
 	}
+}
+
+//==========================================
+// 移動状態変更処理
+//==========================================
+void CFriedEgg::ChangeMoveState(CMoveState* pMoveState)
+{
+	if (m_pMoveState != nullptr)
+	{
+		m_pMoveState->Release();
+		delete m_pMoveState;
+		m_pMoveState = nullptr;
+	}
+
+	m_pMoveState = pMoveState;
+	m_pMoveState->Init();
 }
