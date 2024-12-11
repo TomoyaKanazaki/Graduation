@@ -259,6 +259,8 @@ void CGame::Uninit(void)
 
 	CScene::Uninit();
 
+	CMapSystem::GetInstance()->Uninit();
+
 	if (m_pGame != nullptr)
 	{
 		delete m_pGame;

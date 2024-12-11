@@ -53,7 +53,7 @@ AStar::uint AStar::Node::getScore()
 }
 
 //===============================================================
-// 経路を生成するクラス
+//  コンストラクタ
 //===============================================================
 AStar::Generator::Generator()
 {// A*アルゴリズムの主要な部分を管理
@@ -69,6 +69,25 @@ AStar::Generator::Generator()
         { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 },
         { -1, -1 }, { 1, 1 }, { -1, 1 }, { 1, -1 }
     };
+}
+
+//==========================================
+//  デストラクタ
+//==========================================
+AStar::Generator::~Generator()
+{
+
+}
+
+//==========================================
+//  終了処理
+//==========================================
+void AStar::Generator::Uninit()
+{
+    if (m_pGenerator == nullptr) { return; }
+
+    delete m_pGenerator;
+    m_pGenerator = nullptr;
 }
 
 //===============================================================
@@ -139,6 +158,9 @@ AStar::Generator* AStar::Generator::Create()
 
     // メモリを確保
     m_pGenerator = new Generator;
+
+    m_pGenerator->setHeuristic(AStar::Heuristic::euclidean); // 最短ルート計測の種類
+    m_pGenerator->setDiagonalMovement(false); // 斜め移動をオフ
 
     // 確保したアドレスを返す
     return m_pGenerator;

@@ -108,13 +108,10 @@ void CMapSystem::Init()
 	m_InitPos = m_MapPos;
 
 	// 経路探索用の情報を取得
-	AStar::Generator::Create();
-	auto generator = AStar::Generator::GetInstance();
+	auto generator = AStar::Generator::Create();
 
 	// 経路探索用情報の設定
 	generator->setWorldSize({ NUM_WIGHT, NUM_HEIGHT }); // 世界の大きさ
-	generator->setHeuristic(AStar::Heuristic::euclidean); // 最短ルート計測の種類
-	generator->setDiagonalMovement(false); // 斜め移動をオフ
 
 	// 中心を設定
 	m_mapCenter = GRID(NUM_WIGHT / 2, NUM_HEIGHT / 2);
@@ -140,7 +137,7 @@ void CMapSystem::Uninit(void)
 		m_pMapSystem = nullptr;
 	}
 
-	delete AStar::Generator::GetInstance();
+	AStar::Generator::GetInstance()->Uninit();
 }
 
 //====================================================================
@@ -373,12 +370,7 @@ D3DXVECTOR3 CMapSystem::GetPlayerPos(unsigned int PlayNumber)
 void CMapSystem::Load(const char* pFilename)
 {
 	// 経路探索用の情報を取得
-	auto generator = AStar::Generator::GetInstance();
-	if (generator == nullptr)
-	{
-		assert(false);
-		generator = AStar::Generator::Create();
-	}
+	auto generator = AStar::Generator::Create();
 
 	// マップシステムの情報
 	CMapSystem* pMapSystem = CMapSystem::GetInstance();
