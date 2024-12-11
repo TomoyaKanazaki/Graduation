@@ -65,7 +65,6 @@ public:
 	void Update(void);
 	void Draw(void);
 
-	void SetState(STATE state) { m_State = state; }
 	void SetStateArrow(CScrollArrow::Arrow stateArrow);
 	void SetStateArrowBack(CScrollArrow::Arrow stateArrow);
 	
@@ -81,11 +80,17 @@ private:
 
 	void Ascent(int nNldxModel);
 	void Descent(int nNldxModel);
+	void leverBehavior(int nNldxModel);
+
+	void SetState(STATE state);
 
 	D3DXVECTOR3 m_posTarget;				// 目的位置
 	D3DXVECTOR3 m_posTargetDef;				// デフォルトの目的位置
 	D3DXVECTOR3 m_move;						// 移動量
 
+	D3DXVECTOR3 m_rotleverDef;				// レバーの向きの初期位置
+	bool m_bleverMove;						// レバー移動方向[True = 加算:False = 減算]
+	
 	STATE m_State;							// 状態
 	int m_nStateCount;						// 状態管理用変数
 	LOCATE_WORLD_TYPE m_LocateWorldType;	// 世界からの設置位置
