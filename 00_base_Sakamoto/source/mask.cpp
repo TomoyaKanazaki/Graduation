@@ -10,19 +10,6 @@
 #include "renderer.h"
 
 //========================================
-// 定数定義
-//========================================
-namespace
-{
-	const D3DXCOLOR DEFAULT_COLOR = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);		// 通常のステンシルカラー(白)
-	const D3DXCOLOR PLAYER_COLOR = D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f);		// タマゴンのステンシルカラー(緑)
-	const D3DXCOLOR MULTI_PLAYER_COLOR = D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f);	// 2Pタマゴンのステンシルカラー(水色)
-	const D3DXCOLOR MEDAMAN_COLOR = D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f);		// メダマンのステンシルカラー(ピンク)
-	const D3DXCOLOR BONBON_COLOR = D3DXCOLOR(1.0f, 0.5f, 0.0f, 1.0f);		// ボンンボンのステンシルカラー(オレンジ)
-	const D3DXCOLOR YUNGDEVIL_COLOR = D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f);	// 子デビルのステンシルカラー(青)
-}
-
-//========================================
 // コンストラクタ
 //========================================
 CMask::CMask(int nPriority) : CObject2D(nPriority)
@@ -71,9 +58,6 @@ HRESULT CMask::Init()
 
 	// 位置設定
 	SetPos(SCREEN_CENTER_F);
-
-	// カラー設定
-	SetColor(DEFAULT_COLOR);
 
 	return S_OK;
 }
