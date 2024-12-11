@@ -83,6 +83,7 @@ private:
 	void Descent(int nNldxModel);
 
 	D3DXVECTOR3 m_posTarget;				// 目的位置
+	D3DXVECTOR3 m_posTargetDef;				// デフォルトの目的位置
 	D3DXVECTOR3 m_move;						// 移動量
 
 	STATE m_State;							// 状態

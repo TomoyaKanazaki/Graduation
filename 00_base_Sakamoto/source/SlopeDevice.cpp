@@ -26,13 +26,14 @@ namespace
 	const D3DXVECTOR3 ASCENT_ADD = D3DXVECTOR3(0.0f, 30.0f, 0.0f);		// 上昇量
 	const D3DXVECTOR3 DESCENT_DEST = D3DXVECTOR3(0.0f, 30.0f, 0.0f);	// 下降量
 
-	const D3DXVECTOR3 NEUTRAL_POS = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		// 基本位置
+	const D3DXVECTOR3 MAX_POS_HEIGHT = D3DXVECTOR3(0.0f, 500.0f, 0.0f);		// 縦傾きの最大上昇値
+	const D3DXVECTOR3 MAX_POS_WIDTH = D3DXVECTOR3(0.0f,500.0f,0.0f);		// 横傾きの最大上小値
 
-	const D3DXVECTOR3 MAX_POS_HEIGHT = D3DXVECTOR3(0.0f, 500.0f, 0.0f);	// 縦傾きの最大上昇数
-	const D3DXVECTOR3 MAX_POS_WIDTH = D3DXVECTOR3(0.0f,500.0f,0.0f);	// 横傾きの最大上小数
+	const D3DXVECTOR3 MIN_POS_HEIGHT = D3DXVECTOR3(0.0f, -200.0f, 0.0f);	// 縦傾きの最小上昇値
+	const D3DXVECTOR3 MIN_POS_WIDTH = D3DXVECTOR3(0.0f, -200.0f, 0.0f);		// 横傾きの最小上小値
 
-	const D3DXVECTOR3 MIN_POS_HEIGHT = D3DXVECTOR3(0.0f, -500.0f, 0.0f);	// 縦傾きの最小上昇数
-	const D3DXVECTOR3 MIN_POS_WIDTH = D3DXVECTOR3(0.0f, -500.0f, 0.0f);	// 横傾きの最小上小数
+	const D3DXVECTOR3 MOVE_SPEED_HEIGHT = D3DXVECTOR3(0.0f, 1.75f, 0.0f);	// 縦傾きの昇降移動量
+	const D3DXVECTOR3 MOVE_SPEED_WIDTH = D3DXVECTOR3(0.0f, 2.25f, 0.0f);	// 横傾きの昇降移動量
 }
 
 //====================================================================
@@ -45,7 +46,8 @@ CListManager<CSlopeDevice>* CSlopeDevice::m_pList = nullptr; // オブジェクトリス
 //====================================================================
 CSlopeDevice::CSlopeDevice(int nPriority) : CObjectCharacter(nPriority)
 {
-	m_posTarget = NEUTRAL_POS;
+	m_posTarget = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_posTargetDef = D3DXVECTOR3(0.0f,0.0f,0.0f);
 	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
 	m_State = STATE(0);
@@ -206,6 +208,7 @@ void CSlopeDevice::SetStateArrow(CScrollArrow::Arrow stateArrow)
 		}
 
 		break;
+
 	case CScrollArrow::STATE_LEFT:
 
 		if (m_LocateWorldType == LOCATE_WORLD_TYPE_TOP_LEFT ||
@@ -232,6 +235,41 @@ void CSlopeDevice::SetStateArrow(CScrollArrow::Arrow stateArrow)
 		}
 
 		break;
+	}
+
+	if (stateArrow == CScrollArrow::STATE_UP ||
+		stateArrow == CScrollArrow::STATE_DOWN)
+	{
+		// 昇降移動量を設定
+		m_move = MOVE_SPEED_HEIGHT;
+
+		if (m_State == STATE_ASCENT)
+		{
+			// 最大上昇値を代入
+			m_posTarget = MAX_POS_HEIGHT;
+		}
+		else if (m_State == STATE_DESCENT)
+		{
+			// 最小下降値を代入
+			m_posTarget = MIN_POS_HEIGHT;
+		}
+	}
+	else if (stateArrow == CScrollArrow::STATE_LEFT ||
+			 stateArrow == CScrollArrow::STATE_RIGHT)
+	{
+		// 昇降移動量を設定
+		m_move = MOVE_SPEED_WIDTH;
+
+		if (m_State == STATE_ASCENT)
+		{
+			// 最大上昇値を代入
+			m_posTarget = MAX_POS_WIDTH;
+		}
+		else if (m_State == STATE_DESCENT)
+		{
+			// 最小下降値を代入
+			m_posTarget = MIN_POS_WIDTH;
+		}
 	}
 }
 
@@ -295,6 +333,19 @@ void CSlopeDevice::SetStateArrowBack(CScrollArrow::Arrow stateArrow)
 
 		break;
 	}
+
+	if (stateArrow == CScrollArrow::STATE_UP ||
+		stateArrow == CScrollArrow::STATE_DOWN)
+	{
+		// 目的位置を通常位置に変更
+		m_posTarget = m_posTargetDef;
+	}
+	else if (stateArrow == CScrollArrow::STATE_LEFT ||
+			 stateArrow == CScrollArrow::STATE_RIGHT)
+	{
+		// 目的位置を通常位置に変更
+		m_posTarget = m_posTargetDef;
+	}
 }
 
 //====================================================================
@@ -303,6 +354,10 @@ void CSlopeDevice::SetStateArrowBack(CScrollArrow::Arrow stateArrow)
 HRESULT CSlopeDevice::InitModel(const char* pModelNameSlopeDevice, const char* pModelNameEnemy)
 {
 	CObjectCharacter::SetTxtCharacter(pModelNameSlopeDevice, 0);
+
+	// デフォルト目的位置を取得・設定
+	m_posTargetDef = GetModel(SETUP_TYPE_ELEVATING_PART)->GetStartPos();
+	m_posTarget = m_posTargetDef;
 
 	if (m_pObjectCharacter != nullptr)
 	{
@@ -395,8 +450,12 @@ void CSlopeDevice::Ascent(int nNldxModel)
 	// モデルの位置を取得
 	D3DXVECTOR3 pos = pModel->GetStartPos();
 
-	// 上昇量を加算
-	pos += m_move;
+	// 上昇最大値判定
+	if (pos.y < m_posTarget.y)
+	{
+		// 上昇量を加算
+		pos += m_move;
+	}
 
 	// モデルの位置更新
 	pModel->SetStartPos(pos);
@@ -418,8 +477,12 @@ void CSlopeDevice::Descent(int nNldxModel)
 	// モデルの位置を取得
 	D3DXVECTOR3 pos = pModel->GetStartPos();
 
-	// 下降量を加算
-	pos -= m_move;
+	// 下降最小値判定
+	if (pos.y > m_posTarget.y)
+	{
+		// 下降量を加算
+		pos -= m_move;
+	}
 
 	// モデルの位置更新
 	pModel->SetStartPos(pos);
