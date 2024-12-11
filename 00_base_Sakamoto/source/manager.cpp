@@ -20,7 +20,7 @@
 #ifdef _DEBUG
 #define SET_MODE (CScene::MODE_GAME)
 #define SET_PLAY_MODE (GAME_MODE::MODE_SINGLE)
-#define SET_SCROLL_TYPE (1)
+#define SET_SCROLL_TYPE (0)
 #else
 #define SET_MODE (CScene::MODE_TITLE)
 #define SET_PLAY_MODE (GAME_MODE::MODE_SINGLE)
