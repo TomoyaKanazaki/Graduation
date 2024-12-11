@@ -39,17 +39,22 @@
 //====================================================================
 namespace
 {
-	const CMapSystem::GRID FIELD_GRID = { 64, 64 }; // 下の床のサイズ
-	const char* BOTTOM_FIELD_TEX = "data\\TEXTURE\\Field\\outside.jpg";		// 下床のテクスチャ
-	const D3DXVECTOR3 BOTTOM_FIELD_POS = D3DXVECTOR3(0.0f, -1000.0f, 0.0f);	// 下床の位置
 	const int BIBLE_OUTGRIT = 2;	// 聖書がマップの外側から何マス内側にいるか
+	const int STENCIL_REF_PLAYER = 2;		// プレイヤーのステンシルの参照値
+	const int STENCIL_REF_ITEM = 4;			// アイテムのステンシルの参照値
+	const int STENCIL_REF_MEDAMAN = 102;	// メダマンのステンシルの参照値
 
+	const char* BOTTOM_FIELD_TEX = "data\\TEXTURE\\Field\\outside.jpg";		// 下床のテクスチャ
 	const char* SCROLL_DEVICE_MODEL = "data\\TXT\\MOTION\\02_staging\\00_ScrollDevice\\motion_scrolldevice.txt";
 	const char* SCROLL_DEVICE_ENEMY_MODEL = "data\\TXT\\MOTION\\01_enemy\\motion_medaman.txt";
-
 	const char* SLOPE_DEVICE_MODEL = "data\\TXT\\MOTION\\02_staging\\01_SlopeDevice\\motion_slopedevice.txt";
 	const char* SLOPE_DEVICE_ENEMY_MODEL = "data\\TXT\\MOTION\\01_enemy\\motion_medaman.txt";
+	const char* TUTORIAL_GUIDE = "data\\TEXTURE\\UI\\tutorial_guid.png";	// チュートリアルガイドのテクスチャ
 
+	const CMapSystem::GRID FIELD_GRID = { 64, 64 }; // 下の床のサイズ
+	const D3DXVECTOR3 BOTTOM_FIELD_POS = D3DXVECTOR3(0.0f, -1000.0f, 0.0f);	// 下床の位置
+	const D3DXVECTOR3 GUIDE_POS = D3DXVECTOR3(200.0f, 225.0f, 0.0f);	// チュートリアルガイドの位置
+	const D3DXVECTOR3 GUIDE_SIZE = D3DXVECTOR3(420.0f, 360.0f, 0.0f);	// チュートリアルガイドのサイズ
 }
 
 //====================================================================
@@ -61,7 +66,7 @@ CTutorial* CTutorial::m_pTutorial = nullptr;
 // コンストラクタ
 //====================================================================
 CTutorial::CTutorial():
-m_bTutorialEnd(false),			// ゲーム終了のフラグ
+m_bTutorialEnd(false),		// ゲーム終了のフラグ
 m_bDevilHoleFinish(false),	// デビルホールが4方向埋まったかどうか
 m_BGColorA(1.0f),			// イベント背景の透明度
 m_nTutorialWave(0),			// チュートリアルの段階
@@ -69,11 +74,12 @@ m_nNumBowabowa(0),			// ボワボワの総数
 m_pPause(nullptr),			// ポーズのポインタ
 m_pDevil(nullptr),			// デビルのポインタ
 m_pPlayerMask(nullptr),		// プレイヤーマスクのポインタ
-m_pEnemyMask(nullptr),		// メダマンマスクのポインタ
+m_pMedamanMask(nullptr),		// メダマンマスクのポインタ
 m_pItemMask(nullptr),		// アイテムマスクのポインタ
 m_bTutorialClear(false),	// ゲームクリアのフラグ
 m_Wireframe(false),			// ワイヤーフレーム切り替え
-m_Slow(false)				// スロー演出フラグ
+m_Slow(false),				// スロー演出フラグ
+m_pTutorialGuide(nullptr)		// チュートリアルガイドのポインタ
 {
 	for (int nCnt = 0; nCnt < NUM_CAMERA; ++nCnt)
 	{// カメラ分回す
@@ -125,9 +131,20 @@ HRESULT CTutorial::Init(void)
 		m_pItemMask = CMask::Create(4, D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
 	}
 
-	if (m_pEnemyMask == nullptr)
+	if (m_pMedamanMask == nullptr)
 	{// 敵マスク
-		m_pEnemyMask = CMask::Create(102, D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f));
+		m_pMedamanMask = CMask::Create(102, D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f));
+	}
+
+	if (m_pTutorialGuide == nullptr)
+	{// チュートリアルガイドの生成
+		m_pTutorialGuide = CObject2D::Create();
+	}
+	if (m_pTutorialGuide != nullptr)
+	{// テクスチャ・位置・サイズ設定
+		m_pTutorialGuide->SetTexture(TUTORIAL_GUIDE);
+		m_pTutorialGuide->SetPos(GUIDE_POS);
+		m_pTutorialGuide->SetSize(GUIDE_SIZE);
 	}
 
 	//クリアフラグのデフォルトをオンにしておく
@@ -208,14 +225,14 @@ void CTutorial::Uninit(void)
 	// スロー情報の全削除
 	CSlowManager::ReleaseAll();
 
+	// マップシステムの終了
+	CMapSystem::GetInstance()->Uninit();
+
 	//全てのオブジェクトの破棄
 	CObject::ReleaseAll();
 
 	// シーンの終了
 	CScene::Uninit();
-
-	// マップシステムの終了
-	CMapSystem::GetInstance()->Uninit();
 
 	if (m_pTutorial != nullptr)
 	{

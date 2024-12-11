@@ -106,7 +106,6 @@ private:
 	void Rot(D3DXVECTOR3& rotMy);									//移動方向処理
 	void Attack(D3DXVECTOR3& posMy, D3DXVECTOR3& rotMy);			//攻撃処理
 	void CollisionWall(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR3& sizeMy, useful::COLLISION XYZ);		//壁との当たり判定
-	void CollisionPressWall(D3DXVECTOR3& posMy, D3DXVECTOR3& sizeMy,useful::COLLISION XYZ);	//壁との圧死判定
 	void CollisionWaitRailBlock(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR3& sizeMy, useful::COLLISION XYZ);	//止まっているレールブロックとの当たり判定
 	void CollisionMoveRailBlock(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR3& sizeMy, useful::COLLISION XYZ);	//動いているレールブロックとの当たり判定
 	void CollisionWaitRock(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR3& sizeMy, useful::COLLISION XYZ);	//止まっている岩との当たり判定
@@ -116,7 +115,8 @@ private:
 	void CollisionEnemy(D3DXVECTOR3& posMy);						// 敵との当たり判定
 	void CollisionStageOut(D3DXVECTOR3& posMy);					// ステージ外の当たり判定
 	bool CollisionStageIn(D3DXVECTOR3& posMy);					// ステージ内にいるかどうか
-	void CollisionPressStageOut(D3DXVECTOR3& posMy);				// ステージ外の圧死判定
+	void CollisionPressStageOut(D3DXVECTOR3& posMy);			// ステージ外の圧死判定
+	void CollisionPressWall(D3DXVECTOR3& posThis, int Rot);		//壁との圧死判定
 
 	void CameraPosUpdate(D3DXVECTOR3& posMy);	//カメラ位置更新処理
 	void PosUpdate(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR3& sizeMy);		//位置更新処理

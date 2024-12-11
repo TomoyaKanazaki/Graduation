@@ -144,6 +144,9 @@ HRESULT CDevil::Init(void)
 	// リストに自身のオブジェクトを追加・イテレーターを取得
 	m_iterator = m_pList->AddList(this);
 
+	// スクロールをオンにする
+	SetMapScroll(true);
+
 	return S_OK;
 }
 
@@ -191,7 +194,7 @@ void CDevil::Update(void)
 
 	// スクロールに追従する
 	D3DXVECTOR3 pos = GetPos();
-	CMapSystem::GetInstance()->GetMove()->FollowScroll(pos);
+	//CMapSystem::GetInstance()->GetMove()->FollowScroll(pos);
 	SetPos(pos);
 }
 

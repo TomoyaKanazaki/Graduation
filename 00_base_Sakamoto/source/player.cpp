@@ -228,6 +228,9 @@ HRESULT CPlayer::Init(int PlayNumber)
 	// リストに自身のオブジェクトを追加・イテレーターを取得
 	m_iterator = m_pList->AddList(this);
 
+	// スクロールをオンにする
+	SetMapScroll(true);
+
 	return S_OK;
 }
 
@@ -431,9 +434,6 @@ void CPlayer::Update(void)
 
 	//デバッグキーの処理と設定
 	DebugKey();
-
-	// スクロールに合わせて移動する
-	CMapSystem::GetInstance()->GetMove()->FollowScroll(posThis);
 
 	//デバッグ表示
 	DebugProc::Print(DebugProc::POINT_LEFT, "[自分]位置 %f : %f : %f\n", posThis.x, posThis.y, posThis.z);
@@ -1067,7 +1067,7 @@ void CPlayer::CollisionWall(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D3DXV
 	for (CWall* pWall : list)
 	{
 		D3DXVECTOR3 pos = pWall->GetPos();
-		D3DXVECTOR3 posOld = pWall->GetPosOld();
+		CMapSystem::GetInstance()->GetMove()->FollowScroll(pos);
 		D3DXVECTOR3 Move = D3DXVECTOR3(0.0f,0.0f,0.0f);
 		D3DXVECTOR3 Size = pWall->GetSize();
 
@@ -1079,29 +1079,6 @@ void CPlayer::CollisionWall(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D3DXV
 			// 向き状態の設定
 			m_pMoveState->SetRotState(CMoveState::ROTSTATE_WAIT);
 			posThis = m_Grid.ToWorld();
-		}
-	}
-}
-
-//====================================================================
-// 壁との圧死判定
-//====================================================================
-void CPlayer::CollisionPressWall(D3DXVECTOR3& posThis, D3DXVECTOR3& sizeThis,useful::COLLISION XYZ)
-{
-	// 壁のリスト構造が無ければ抜ける
-	if (CWall::GetList() == nullptr) { return; }
-	std::list<CWall*> list = CWall::GetList()->GetList();    // リストを取得
-
-	// キューブブロックリストの中身を確認する
-	for (CWall* pWall : list)
-	{
-		D3DXVECTOR3 pos = pWall->GetPos();
-		D3DXVECTOR3 Size = pWall->GetSize();
-
-		// 矩形の当たり判定
-		if (useful::CollisionRectangle2D(posThis, pos, sizeThis, Size, XYZ) == true)
-		{
-			Death();
 		}
 	}
 }
@@ -1413,30 +1390,103 @@ void CPlayer::CollisionStageOut(D3DXVECTOR3& posThis)
 	D3DXVECTOR3 D_pos = CDevil::GetListTop()->GetDevilPos();
 	D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
 	float G_Size = CMapSystem::GetInstance()->GetGritSize();
+	D3DXVECTOR3 PressPos = posThis;
 
 	if (posThis.x + G_Size > D_pos.x + MapSize.x)	// 右
 	{
-		posThis.x = D_pos.x + MapSize.x - G_Size;
 		SetState(STATE_WAIT);
+
+		//壁の圧死判定
+		CollisionPressWall(posThis, 2);
+
+		posThis.x = D_pos.x + MapSize.x - G_Size;
 		m_move.x = 0.0f;
 	}
 	if (posThis.x - G_Size < D_pos.x - MapSize.x)	// 左
 	{
-		posThis.x = D_pos.x - MapSize.x + G_Size;
 		SetState(STATE_WAIT);
+
+		//壁の圧死判定
+		CollisionPressWall(posThis, 3);
+
+		posThis.x = D_pos.x - MapSize.x + G_Size;
 		m_move.x = 0.0f;
 	}
 	if (posThis.z + G_Size > D_pos.z + MapSize.z)	// 上
 	{
-		posThis.z = D_pos.z + MapSize.z - G_Size;
 		SetState(STATE_WAIT);
+
+		//壁の圧死判定
+		CollisionPressWall(posThis, 0);
+
+		posThis.z = D_pos.z + MapSize.z - G_Size;
 		m_move.z = 0.0f;
 	}
 	if (posThis.z - G_Size < D_pos.z - MapSize.z)	// 下
 	{
-		posThis.z = D_pos.z - MapSize.z + G_Size;
 		SetState(STATE_WAIT);
+
+		//壁の圧死判定
+		CollisionPressWall(posThis, 1);
+
+		posThis.z = D_pos.z - MapSize.z + G_Size;
 		m_move.z = 0.0f;
+	}
+}
+
+//====================================================================
+// 壁との圧死判定
+//====================================================================
+void CPlayer::CollisionPressWall(D3DXVECTOR3& posThis, int Rot)
+{//Rot [0 : 上][1 : 下][2 : 右][3 : 左]
+
+	D3DXVECTOR3 ScorllPos = posThis;
+	CMapSystem::GetInstance()->GetMove()->FollowScroll(ScorllPos);
+
+	if (posThis == ScorllPos)
+	{
+		return;
+	}
+
+	CMapSystem::GRID MyGrid = GetGrid();
+
+	switch (Rot)
+	{
+	case 0:
+		MyGrid.z += 1;
+
+		if (CMapSystem::GetInstance()->GetGritBool(MyGrid) == true)
+		{
+			Death();
+		}
+		break;
+
+	case 1:
+		MyGrid.z -= 1;
+
+		if (CMapSystem::GetInstance()->GetGritBool(MyGrid) == true)
+		{
+			Death();
+		}
+		break;
+
+	case 2:
+		MyGrid.x -= 1;
+
+		if (CMapSystem::GetInstance()->GetGritBool(MyGrid) == true)
+		{
+			Death();
+		}
+		break;
+
+	case 3:
+		MyGrid.x += 1;
+
+		if (CMapSystem::GetInstance()->GetGritBool(MyGrid) == true)
+		{
+			Death();
+		}
+		break;
 	}
 }
 
@@ -1465,29 +1515,29 @@ bool CPlayer::CollisionStageIn(D3DXVECTOR3& posThis)
 //====================================================================
 void CPlayer::CollisionPressStageOut(D3DXVECTOR3& posThis)
 {
-	if (m_bPressObj == true)
-	{
-		D3DXVECTOR3 D_pos = CDevil::GetListTop()->GetDevilPos();
-		D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
-		float G_Size = CMapSystem::GetInstance()->GetGritSize() * 0.5f;
+	//if (m_bPressObj == true)
+	//{
+	//	D3DXVECTOR3 D_pos = CDevil::GetListTop()->GetDevilPos();
+	//	D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
+	//	float G_Size = CMapSystem::GetInstance()->GetGritSize() * 0.5f;
 
-		if (posThis.x + G_Size > D_pos.x + MapSize.x)
-		{
-			Death();
-		}
-		if (posThis.x - G_Size < D_pos.x - MapSize.x)
-		{
-			Death();
-		}
-		if (posThis.z + G_Size > D_pos.z + MapSize.z)
-		{
-			Death();
-		}
-		if (posThis.z - G_Size < D_pos.z - MapSize.z)
-		{
-			Death();
-		}
-	}
+	//	if (posThis.x + G_Size > D_pos.x + MapSize.x)
+	//	{
+	//		Death();
+	//	}
+	//	if (posThis.x - G_Size < D_pos.x - MapSize.x)
+	//	{
+	//		Death();
+	//	}
+	//	if (posThis.z + G_Size > D_pos.z + MapSize.z)
+	//	{
+	//		Death();
+	//	}
+	//	if (posThis.z - G_Size < D_pos.z - MapSize.z)
+	//	{
+	//		Death();
+	//	}
+	//}
 }
 
 //====================================================================
@@ -1616,9 +1666,6 @@ void CPlayer::ObjPosUpdate(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D3DXVE
 
 	CollisionMoveRailBlock(posThis, posOldThis, sizeThis, useful::COLLISION_Z);
 	CollisionMoveRock(posThis, posOldThis, sizeThis, useful::COLLISION_Z);
-
-	//// 壁との当たり判定
-	CollisionPressWall(posThis, sizeThis, useful::COLLISION_ZX);
 }
 
 //====================================================================
