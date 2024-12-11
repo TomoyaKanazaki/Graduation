@@ -613,12 +613,27 @@ void CCamera::BetWeen(void)
 void CCamera::DownviewCamera(void)
 {
 	m_rot.y = 0.0f;
-	m_posV.x += (DOWNVIEW_POSV.x - m_posV.x) * m_fHomingSpeed;
-	m_posV.y += (DOWNVIEW_POSV.y - m_posV.y) * m_fHomingSpeed;
-	m_posV.z += (DOWNVIEW_POSV.z - m_posV.z) * m_fHomingSpeed;
-	m_posR.x += (DOWNVIEW_POSR.x - m_posR.x) * m_fHomingSpeed;
-	m_posR.y += (DOWNVIEW_POSR.y - m_posR.y) * m_fHomingSpeed;
-	m_posR.z += (DOWNVIEW_POSR.z - m_posR.z) * m_fHomingSpeed;
+
+	if (m_bBib == true)
+	{
+		m_fBibPowor += 0.4f;
+
+		m_posV.x += (DOWNVIEW_POSV.x - m_posV.x) * m_fHomingSpeed + (int)(sin(D3DX_PI * m_fBibPowor) * 5.0f);
+		m_posV.y += (DOWNVIEW_POSV.y - m_posV.y) * m_fHomingSpeed;
+		m_posV.z += (DOWNVIEW_POSV.z - m_posV.z) * m_fHomingSpeed + (int)(sin(D3DX_PI * m_fBibPowor) * 5.0f);
+		m_posR.x += (DOWNVIEW_POSR.x - m_posR.x) * m_fHomingSpeed;
+		m_posR.y += (DOWNVIEW_POSR.y - m_posR.y) * m_fHomingSpeed;
+		m_posR.z += (DOWNVIEW_POSR.z - m_posR.z) * m_fHomingSpeed;
+	}
+	else
+	{
+		m_posV.x += (DOWNVIEW_POSV.x - m_posV.x) * m_fHomingSpeed;
+		m_posV.y += (DOWNVIEW_POSV.y - m_posV.y) * m_fHomingSpeed;
+		m_posV.z += (DOWNVIEW_POSV.z - m_posV.z) * m_fHomingSpeed;
+		m_posR.x += (DOWNVIEW_POSR.x - m_posR.x) * m_fHomingSpeed;
+		m_posR.y += (DOWNVIEW_POSR.y - m_posR.y) * m_fHomingSpeed;
+		m_posR.z += (DOWNVIEW_POSR.z - m_posR.z) * m_fHomingSpeed;
+	}
 }
 
 //====================================================================
