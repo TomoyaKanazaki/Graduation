@@ -45,15 +45,6 @@ namespace
 	const float DISTANCE_RECEDE = 200.0f;	//近づく距離
 	const float DISTANCE_APPROACH = 100.0f;	//遠ざかる距離
 
-	//const float COORDDINATE_RATE[] = // 経路探索を行う間隔
-	//{
-	//	5.0f,
-	//	3.0f,
-	//	1.0f
-	//};
-	//const float TARGET_DIFF = 10.0f; // 許容範囲
-	//const float MOVE_ASTAR = 150.0f; // 追跡時の移動速度
-
 	const CMyEffekseer::TYPE EFFECT_TYPE[] = // 経路探索を行う間隔
 	{
 		CMyEffekseer::TYPE_RESPAWN_MEDAMAN,
@@ -316,7 +307,7 @@ void CEnemy::Update(void)
 	m_pMoveState->Debug();		// 現在の移動状態
 
 	// スクロールに合わせて移動する
-	CDevil::GetListTop()->GetMove()->FollowScroll(posThis);
+	CMapSystem::GetInstance()->GetMove()->FollowScroll(posThis);
 
 	// 値更新
 	SetPos(posThis);			// 位置

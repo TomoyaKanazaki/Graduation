@@ -12,6 +12,7 @@
 #include "AStar.h"
 
 class CObject2D;
+class CMapMove;
 
 //マクロ定義
 #define NUM_WIGHT (23)
@@ -80,6 +81,7 @@ public:
 	bool GetGritBool(int nWight, int nHeight);
 	bool GetGritBool(const GRID& grid);
 
+	CMapMove* GetMove(void) { return m_pMapMove; }
 	void SetMapPos(D3DXVECTOR3 pos) { m_MapPos = pos; }
 	D3DXVECTOR3 GetMapPos(void) { return m_MapPos; }
 	D3DXVECTOR3 GetInitPos(void) { return m_InitPos; }
@@ -97,6 +99,8 @@ public:
 
 private:
 
+	CMapMove* m_pMapMove;
+
 	static CMapSystem* m_pMapSystem;
 	static std::vector<std::tuple<>> m_nData;	// 複数の値を保持
 	static std::vector<GRID> m_PosPlayer;		// プレイヤーの位置を保持
@@ -112,7 +116,6 @@ private:
 	D3DXVECTOR3 m_MapSize;		//マップの境界線の大きさ
 	GRID m_MapGrid;		//マップの境界線の大きさ
 
-	CEffekseer* m_pEffect; // エフェクト
 	D3DXMATRIX* m_mtxStage;
 
 	//MAPTYPE m_MapType;			// マップオブジェクトの種類

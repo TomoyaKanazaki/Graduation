@@ -62,6 +62,8 @@ namespace AStar
 
     public:
         Generator();
+        ~Generator();
+        void Uninit();
         void setWorldSize(Vec2i worldSize_);        // 探索するグリッド（ワールド）のサイズを設定
         void setDiagonalMovement(bool enable_);     // 斜め移動の許可を設定。trueだと8方向(斜め含む)に移動可能
         void setHeuristic(HeuristicFunction heuristic_);        // ヒューリスティック関数を設定

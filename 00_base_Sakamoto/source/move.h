@@ -17,6 +17,8 @@ class CObjectCharacter;         // キャラクター情報
 class CPlayer;                  // プレイヤー情報
 class CEnemy;                   // 敵情報
 
+class CItem;                    // アイテム情報
+
 //============================================
 // 移動状態のインターフェースクラス
 //============================================
@@ -67,6 +69,8 @@ public:
 
     // 移動処理
     virtual void Move(CObjectCharacter* pCharacter, D3DXVECTOR3& pos, D3DXVECTOR3& rot) {}           // 移動処理(キャラクター)
+    virtual void Move(CItem* pItem, D3DXVECTOR3& pos, D3DXVECTOR3& rot) {}                           // 移動処理(アイテム)
+
 
     CMoveState* GetMoveState(CObjectCharacter* pCharacter);             // 移動状態の情報取得
 
@@ -81,15 +85,15 @@ public:
 protected:
 
     // メンバ関数
-    void Rot(CObjectCharacter* pCharacter, D3DXVECTOR3& rotMy);						//移動方向処理
-    void UpdatePos(CObjectCharacter* pCharacter, D3DXVECTOR3& pos);	// 位置更新処理
+    void Rot(CObjectCharacter* pCharacter, D3DXVECTOR3& rotMy);				// 移動方向処理(キャラクター)
+    void Rot(CItem* pItem, D3DXVECTOR3& rotMy);						        // 移動方向処理(アイテム)
+
+    void UpdatePos(CObjectCharacter* pCharacter, D3DXVECTOR3& pos);	        // 位置更新処理(キャラクター)
+    void UpdatePos(CItem* pItem, D3DXVECTOR3& pos);	                        // 位置更新処理(アイテム)
+
 
     // メンバ変数
-
     STATE m_State;        // デバッグ用状態
-
-
-private:
    
 };
 
@@ -147,13 +151,18 @@ public:
     void RandomStop(CObjectCharacter* pCharacter) override;         // 停止に切り替え
 
     void Move(CObjectCharacter* pCharacter, D3DXVECTOR3& pos, D3DXVECTOR3& rot) override;      // キャラクターの移動処理
+    void Move(CItem* pItem, D3DXVECTOR3& pos, D3DXVECTOR3& rot) override;                      // 移動処理(アイテム)
 
 private:
 
     // メンバ関数
-    void SearchWall(CObjectCharacter* pCharacter, D3DXVECTOR3& pos);				// 壁のサーチ判定(移動方向の選択処理の準備)
-    void MoveSelect(CObjectCharacter* pCharacter);		// 移動方向の選択
-    void MoveAngle(CObjectCharacter* pCharacter, std::vector<D3DXVECTOR3>& move, std::vector<ROTSTATE>& rotState);      // 各方向の移動量設定
+    void SearchWall(CObjectCharacter* pCharacter, D3DXVECTOR3& pos);				// 壁のサーチ判定(キャラクター)
+    void SearchWall(CItem* pItem, D3DXVECTOR3& pos);				                // 壁のサーチ判定(アイテム)
+
+    void MoveSelect(CObjectCharacter* pCharacter);		                            // 移動方向の選択(キャラクター)
+    void MoveSelect(CItem* pItem);		                                            // 移動方向の選択(アイテム)
+
+    void MoveAngle(D3DXVECTOR3& moveSave, std::vector<D3DXVECTOR3>& move, std::vector<ROTSTATE>& rotState);      // 各方向の移動量設定
 
     // メンバ変数
     CMapSystem::GRID m_GridOld;

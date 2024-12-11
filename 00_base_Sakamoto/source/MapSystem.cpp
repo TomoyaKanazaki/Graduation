@@ -45,7 +45,6 @@ std::vector<CMapSystem::GRID> CMapSystem::m_PosPlayer = {};	// ƒvƒŒƒCƒ„[‚ÌˆÊ’u‚
 //====================================================================
 CMapSystem::CMapSystem() : 
 	m_mapCenter(0, 0),
-	m_pEffect(nullptr),
 	m_mtxStage(nullptr)
 {
 	for (int nCntW = 0; nCntW < NUM_WIGHT; nCntW++)
@@ -62,6 +61,7 @@ CMapSystem::CMapSystem() :
 	m_InitPos = m_MapPos;
 	m_MapSize = MAP_SIZE;
 	m_MapSize = D3DXVECTOR3((NUM_WIGHT - 1) * 50.0f, 0.0f, (NUM_HEIGHT - 1) * 50.0f);
+	m_pMapMove = nullptr;
 	//m_MapType = MAPTYPE_NONE;			// ƒ}ƒbƒvƒIƒuƒWƒFƒNƒg‚Ìí—Ş
 }
 
@@ -99,17 +99,19 @@ void CMapSystem::Init()
 		}
 	}
 
+	if (m_pMapMove == nullptr)
+	{
+		m_pMapMove = CMapMove::Create();
+	}
+
 	m_MapPos = D3DXVECTOR3((((m_WightMax * 0.5f) * -100.0f) + m_fGritSize * 0.5f), 0.0f, (((m_HeightMax * 0.5f) * 100.0f) - m_fGritSize * 0.5f));
 	m_InitPos = m_MapPos;
 
 	// Œo˜H’Tõ—p‚Ìî•ñ‚ğæ“¾
-	AStar::Generator::Create();
-	auto generator = AStar::Generator::GetInstance();
+	auto generator = AStar::Generator::Create();
 
 	// Œo˜H’Tõ—pî•ñ‚Ìİ’è
 	generator->setWorldSize({ NUM_WIGHT, NUM_HEIGHT }); // ¢ŠE‚Ì‘å‚«‚³
-	generator->setHeuristic(AStar::Heuristic::euclidean); // Å’Zƒ‹[ƒgŒv‘ª‚Ìí—Ş
-	generator->setDiagonalMovement(false); // Î‚ßˆÚ“®‚ğƒIƒt
 
 	// ’†S‚ğİ’è
 	m_mapCenter = GRID(NUM_WIGHT / 2, NUM_HEIGHT / 2);
@@ -123,13 +125,19 @@ void CMapSystem::Init()
 //====================================================================
 void CMapSystem::Uninit(void)
 {
+	if (m_pMapMove != nullptr)
+	{
+		m_pMapMove->Uninit();
+		m_pMapMove = nullptr;
+	}
+
 	if (m_pMapSystem != nullptr)
 	{
 		delete m_pMapSystem;
 		m_pMapSystem = nullptr;
 	}
 
-	delete AStar::Generator::GetInstance();
+	AStar::Generator::GetInstance()->Uninit();
 }
 
 //====================================================================
@@ -137,20 +145,22 @@ void CMapSystem::Uninit(void)
 //====================================================================
 void CMapSystem::Update(void)
 {
-	CDevil::GetListTop()->GetMove()->FollowScroll(m_MapPos);
+	if (CScene::GetMode() == CScene::MODE_GAME &&
+		CManager::GetInstance()->GetPause() == false)
+	{
+		if (CGame::GetInstance()->GetEvent() == false &&
+			m_pMapMove != nullptr)
+		{
+			//ƒ}ƒbƒv‚Ì“®‚«
+			m_pMapMove->Update();
 
-	// ƒGƒtƒFƒNƒg‚ğ“®‚©‚·
-	if (m_pEffect != nullptr)
-	{
-		D3DXVECTOR3 rot = INITVECTOR3;
-		rot.x = useful::CalcMatrixToRot(*CObjmeshField::GetListTop()->GetMatrix()).y;
-		rot.y = useful::CalcMatrixToRot(*CObjmeshField::GetListTop()->GetMatrix()).x;
-		rot.z = useful::CalcMatrixToRot(*CObjmeshField::GetListTop()->GetMatrix()).z;
-		m_pEffect->SetRotation(rot);
-	}
-	else
-	{
-		m_pEffect = MyEffekseer::EffectCreate(CMyEffekseer::TYPE_STAGE_LIMIT, true, INITVECTOR3, INITVECTOR3, EFFECT_SIZE);
+			if (CManager::GetInstance()->GetPause())
+			{
+				m_pMapMove->SetMove(INITVECTOR3);
+			}
+
+			m_pMapMove->FollowScroll(m_MapPos);
+		}
 	}
 
 #ifdef _DEBUG
@@ -361,12 +371,7 @@ D3DXVECTOR3 CMapSystem::GetPlayerPos(unsigned int PlayNumber)
 void CMapSystem::Load(const char* pFilename)
 {
 	// Œo˜H’Tõ—p‚Ìî•ñ‚ğæ“¾
-	auto generator = AStar::Generator::GetInstance();
-	if (generator == nullptr)
-	{
-		assert(false);
-		generator = AStar::Generator::Create();
-	}
+	auto generator = AStar::Generator::Create();
 
 	// ƒ}ƒbƒvƒVƒXƒeƒ€‚Ìî•ñ
 	CMapSystem* pMapSystem = CMapSystem::GetInstance();

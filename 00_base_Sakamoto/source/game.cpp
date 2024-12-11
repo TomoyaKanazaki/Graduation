@@ -39,7 +39,7 @@ namespace
 	const int SAMPLE_NAMESPACE = 0;
 
 	const CMapSystem::GRID FIELD_GRID = { 64, 64 }; // 下の床のサイズ
-	const char* BOTTOM_FIELD_TEX = "data\\TEXTURE\\Field\\outside.jpg";		// 下床のテクスチャ
+	const char* BOTTOM_FIELD_TEX = "data\\TEXTURE\\Field\\tile_test_02.png";		// 下床のテクスチャ
 	const D3DXVECTOR3 BOTTOM_FIELD_POS = D3DXVECTOR3(0.0f, -1000.0f, 0.0f);	// 下床の位置
 	const int BIBLE_OUTGRIT = 2;	// 聖書がマップの外側から何マス内側にいるか
 
@@ -49,6 +49,13 @@ namespace
 	const char* SLOPE_DEVICE_MODEL = "data\\TXT\\MOTION\\02_staging\\01_SlopeDevice\\motion_slopedevice.txt";
 	const char* SLOPE_DEVICE_ENEMY_MODEL = "data\\TXT\\MOTION\\01_enemy\\motion_medaman.txt";
 
+	const D3DXCOLOR MASK_DEFAULT_COLOR = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);			// 通常のステンシルカラー(白)
+	const D3DXCOLOR MASK_PLAYER_COLOR = D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f);			// タマゴンのステンシルカラー(緑)
+	const D3DXCOLOR MASK_MULTI_PLAYER_COLOR = D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f);	// 2Pタマゴンのステンシルカラー(水色)
+	const D3DXCOLOR MASK_MEDAMAN_COLOR = D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f);			// メダマンのステンシルカラー(ピンク)
+	const D3DXCOLOR MASK_BONBON_COLOR = D3DXCOLOR(1.0f, 0.5f, 0.0f, 1.0f);			// ボンンボンのステンシルカラー(オレンジ)
+	const D3DXCOLOR MASK_YUNGDEVIL_COLOR = D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f);		// 子デビルのステンシルカラー(青)
+	const D3DXCOLOR MASK_ITEM_COLOR = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);			// 子デビルのステンシルカラー(青)
 }
 
 //静的メンバ変数宣言
@@ -135,17 +142,17 @@ HRESULT CGame::Init(void)
 
 	if (m_pPlayerMask == nullptr)
 	{// プレイヤーマスクの生成
-		m_pPlayerMask = CMask::Create(2, D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
+		m_pPlayerMask = CMask::Create(2, MASK_PLAYER_COLOR);
 	}
 
 	if (m_pItemMask == nullptr)
 	{// アイテムマスク
-		m_pItemMask = CMask::Create(4, D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+		m_pItemMask = CMask::Create(4, MASK_ITEM_COLOR);
 	}
 
 	if (m_pEnemyMask == nullptr)
 	{// 敵マスク
-		m_pEnemyMask = CMask::Create(102, D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f));
+		m_pEnemyMask = CMask::Create(102, MASK_MEDAMAN_COLOR);
 	}
 
 	//クリアフラグのデフォルトをオンにしておく
@@ -161,7 +168,6 @@ HRESULT CGame::Init(void)
 
 	//デビルの生成
 	m_pDevil = CDevil::Create();
-	m_pDevil->SetPos(D3DXVECTOR3(0.0f, 100.0f, 500.0f));
 
 	// マップの生成
 	CMapSystem::GetInstance()->Init();
@@ -186,33 +192,16 @@ HRESULT CGame::Init(void)
 	// 背景モデル設定処理
 	SetBgObjTest();
 
-	//ステージの読み込み
-	switch (CManager::GetInstance()->GetStage())
+	// イベントの開始
+	//m_bEvent = true;
+
+	if (m_pEventMovie == nullptr)
 	{
-	case 0:
-
-		//m_bEvent = true;
-
-		if (m_pEventMovie == nullptr)
-		{
-			m_pEventMovie = CEventMovie::Create();
-		}
-
-		// ソフトクリームの生成
-		CItem::Create(CItem::TYPE_SOFTCREAM, CMapSystem::GetInstance()->GetCenter());
-
-		break;
-
-	case 1:
-
-		// 聖書生成
-		CItem::Create(CItem::TYPE_BIBLE, CMapSystem::GRID(BIBLE_OUTGRIT - 1, BIBLE_OUTGRIT - 1));
-		CItem::Create(CItem::TYPE_BIBLE, CMapSystem::GRID(NUM_WIGHT - BIBLE_OUTGRIT, BIBLE_OUTGRIT - 1));
-		CItem::Create(CItem::TYPE_BIBLE, CMapSystem::GRID(BIBLE_OUTGRIT - 1, NUM_HEIGHT - BIBLE_OUTGRIT));
-		CItem::Create(CItem::TYPE_BIBLE, CMapSystem::GRID(NUM_WIGHT - BIBLE_OUTGRIT, NUM_HEIGHT - BIBLE_OUTGRIT));
-
-		break;
+		m_pEventMovie = CEventMovie::Create();
 	}
+
+	// ソフトクリームの生成
+	CItem::Create(CItem::TYPE_SOFTCREAM, CMapSystem::GetInstance()->GetCenter());
 
 
 	// プレイヤーを生成する
@@ -259,6 +248,8 @@ void CGame::Uninit(void)
 	CObject::ReleaseAll();
 
 	CScene::Uninit();
+
+	CMapSystem::GetInstance()->Uninit();
 
 	if (m_pGame != nullptr)
 	{
@@ -329,14 +320,6 @@ void CGame::Update(void)
 	{
 		m_Slow = false;
 	}
-
-	if (pInputKeyboard->GetTrigger(DIK_RETURN) == true)
-	{
-		// ゲームの最初から
-		CFade::SetFade(CScene::MODE_GAME);
-
-	}
-
 
 #endif
 
@@ -430,6 +413,11 @@ void CGame::Update(void)
 		if (pInputKeyboard->GetTrigger(DIK_F4))
 		{
 			StageClear(1);
+		}
+
+		if (pInputKeyboard->GetTrigger(DIK_F5))
+		{
+			CFade::SetFade(CScene::MODE_TUTORIAL);
 		}
 
 #endif // _DEBUG
@@ -786,7 +774,7 @@ void CGame::SetBgObjTest(void)
 		pScrollDevice->SetPos(D3DXVECTOR3(-1300.0f, 0.0f, 0.0f));
 	}
 
-#if 0 // 酒井のデバッグ用（テスト中でめり込むため一時停止）
+#if 1 // 酒井のデバッグ用（テスト中でめり込むため一時停止）
 
 	// ジャッキ
 	{

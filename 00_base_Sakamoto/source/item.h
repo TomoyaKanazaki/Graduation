@@ -10,6 +10,7 @@
 #include "main.h"
 #include "objectX.h"
 #include "MapSystem.h"
+#include "move.h"
 
 // ‘O•ûéŒ¾
 class CPlayer;
@@ -88,6 +89,8 @@ protected:
 
 	// ƒƒ“ƒoŠÖ”
 	virtual void Move(D3DXVECTOR3& pos); // ˆÚ“®ˆ—
+	virtual void ChangeMoveState(CMoveState* pMoveState) {};   // ˆÚ“®ó‘Ô•ÏX
+
 
 private:
 

@@ -195,9 +195,6 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 		m_pEffect = new CMyEffekseer;
 		m_pEffect->Init();
 	}
-
-	// マップシステムの初期化
-	CMapSystem::GetInstance();
 	
 	// テクスチャの初期化	
 	if (m_pTexture == nullptr)
@@ -229,6 +226,10 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 		// キャラクター管理の生成
 		m_pCharacterManager = new CCharacterManager;
 	}
+
+	// マップシステムの初期化
+	CMapSystem::GetInstance();
+
 
 	if (m_pFade == nullptr)
 	{
