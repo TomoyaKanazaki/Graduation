@@ -111,21 +111,6 @@ void CTutorialPlayer::Update(void)
 
 		break;
 
-	case TYPE_BIBLE:
-
-		if (m_pCheckMaker == nullptr)
-		{// チェックマーカー生成
-			m_pCheckMaker = CObject2D::Create();
-		}
-		if (m_pCheckMaker != nullptr)
-		{// テクスチャ生成・位置・サイズ設定
-			m_pCheckMaker->SetTexture(CHECK_MARKER_TEX);
-			m_pCheckMaker->SetPos(D3DXVECTOR3(50.0f, 0.0f, 0.0f));
-			m_pCheckMaker->SetSize(MARKER_TEX_SIZE);
-		}
-
-		break;
-
 	default:
 		break;
 	}
