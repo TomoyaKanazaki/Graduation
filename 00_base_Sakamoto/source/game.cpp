@@ -790,7 +790,7 @@ void CGame::SetBgObjTest(void)
 		pScrollDevice->SetPos(D3DXVECTOR3(-1300.0f, 0.0f, 0.0f));
 	}
 
-#if 0 // 酒井のデバッグ用（テスト中でめり込むため一時停止）
+#if 1 // 酒井のデバッグ用（テスト中でめり込むため一時停止）
 
 	// ジャッキ
 	{
