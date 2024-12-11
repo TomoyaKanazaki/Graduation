@@ -181,7 +181,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "data\\TEXTURE\\Field\\tile_test_01.png";
+    "data\\TEXTURE\\Field\\tile_test_02.png";
    }
   }
   Material {
@@ -190,7 +190,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "data\\TEXTURE\\Field\\tile_test_01.png";
+    "data\\TEXTURE\\Field\\tile_test_02.png";
    }
   }
   Material {
@@ -199,7 +199,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "data\\TEXTURE\\Field\\tile_test_01.png";
+    "data\\TEXTURE\\Field\\tile_test_02.png";
    }
   }
  }

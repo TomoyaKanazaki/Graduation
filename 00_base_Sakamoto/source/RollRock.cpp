@@ -152,6 +152,8 @@ HRESULT CRollRock::Init(char* pModelName)
 	// リストに自身のオブジェクトを追加・イテレーターを取得
 	m_iterator = m_pList->AddList(this);
 
+	// スクロールをオンにする
+	SetMapScroll(true);
 
 	return S_OK;
 }
@@ -226,7 +228,7 @@ void CRollRock::Update(void)
 	SetScaling(D3DXVECTOR3(m_Scaling, m_Scaling, m_Scaling));
 
 	// スクロールに合わせて移動する
-	CMapSystem::GetInstance()->GetMove()->FollowScroll(posThis);
+	//CMapSystem::GetInstance()->GetMove()->FollowScroll(posThis);
 
 	// 値更新
 	SetPos(posThis);		// 位置
