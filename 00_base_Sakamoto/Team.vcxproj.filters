@@ -286,6 +286,9 @@
     <ClCompile Include="source\EventMovie.cpp">
       <Filter>ソース ファイル\Scene\Event</Filter>
     </ClCompile>
+    <ClCompile Include="source\tutorialCheck.cpp">
+      <Filter>ソース ファイル\Ui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\object.h">
@@ -530,6 +533,9 @@
     </ClInclude>
     <ClInclude Include="source\EventMovie.h">
       <Filter>ソース ファイル\Scene\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="source\tutorialCheck.h">
+      <Filter>ソース ファイル\Ui</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

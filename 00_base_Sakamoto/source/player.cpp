@@ -170,6 +170,8 @@ HRESULT CPlayer::Init(int PlayNumber)
 
 	// プレイヤーの位置取得
 	posThis = pMapSystem->GetPlayerPos(PlayNumber);
+	SetGrid(pMapSystem->GetPlayerGrid(PlayNumber));
+	SetGridOld(pMapSystem->GetPlayerGrid(PlayNumber));
 
 	// サイズの設定
 	sizeThis = COLLISION_SIZE;

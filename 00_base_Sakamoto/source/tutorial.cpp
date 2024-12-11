@@ -1,7 +1,7 @@
 //============================================
 //
 //	チュートリアル画面 [tutorial.cpp]
-//	Author:sakamoto kai
+//	Author:morikawa shunya
 //
 //============================================
 #include "tutorial.h"
@@ -30,6 +30,7 @@
 #include "Cross.h"
 #include "MapMove.h"
 #include "pause.h"
+#include "tutorialCheck.h"
 
 #include "sound.h"
 #include "shadow.h"
@@ -39,7 +40,18 @@
 //====================================================================
 namespace
 {
-	const int BIBLE_OUTGRIT = 2;	// 聖書がマップの外側から何マス内側にいるか
+	const D3DXVECTOR3 CHECK_POS[]
+	{
+		{ 0.0f, 0.0f, 0.0f },	 // NONEの座標
+		{ 50.0f, 110.0f, 0.0f }, // 移動の座標
+		{ 50.0f, 160.0f, 0.0f }, // 十字架座標
+		{ 50.0f, 210.0f, 0.0f }, // 攻撃動の座標
+		{ 50.0f, 260.0f, 0.0f }, // ボワボワの座標
+		{ 50.0f, 360.0f, 0.0f }, // 聖書の座標
+		{ 50.0f, 360.0f, 0.0f }, // デビルホールの座標
+	};
+
+	const int BIBLE_OUTGRIT = 2;			// 聖書がマップの外側から何マス内側にいるか
 	const int STENCIL_REF_PLAYER = 2;		// プレイヤーのステンシルの参照値
 	const int STENCIL_REF_ITEM = 4;			// アイテムのステンシルの参照値
 	const int STENCIL_REF_MEDAMAN = 102;	// メダマンのステンシルの参照値
@@ -50,12 +62,20 @@ namespace
 	const char* SLOPE_DEVICE_MODEL = "data\\TXT\\MOTION\\02_staging\\01_SlopeDevice\\motion_slopedevice.txt";
 	const char* SLOPE_DEVICE_ENEMY_MODEL = "data\\TXT\\MOTION\\01_enemy\\motion_medaman.txt";
 	const char* TUTORIAL_GUIDE = "data\\TEXTURE\\UI\\tutorial_guid.png";	// チュートリアルガイドのテクスチャ
+	const char* CHECK_MARKER_TEX = "data\\TEXTURE\\UI\\tutorial_check.png";	// チェックマーカーテクスチャ
 
 	const CMapSystem::GRID FIELD_GRID = { 64, 64 }; // 下の床のサイズ
 	const D3DXVECTOR3 BOTTOM_FIELD_POS = D3DXVECTOR3(0.0f, -1000.0f, 0.0f);	// 下床の位置
 	const D3DXVECTOR3 GUIDE_POS = D3DXVECTOR3(200.0f, 225.0f, 0.0f);	// チュートリアルガイドの位置
 	const D3DXVECTOR3 GUIDE_SIZE = D3DXVECTOR3(420.0f, 360.0f, 0.0f);	// チュートリアルガイドのサイズ
+	const D3DXVECTOR3 MARKER_POS = D3DXVECTOR3(50.0f, 160.0f, 0.0f);	// マーカー位置
+	const D3DXVECTOR3 MARKER_SIZE = D3DXVECTOR3(50.0f, 50.0f, 0.0f);	// マーカーサイズ
 }
+
+//==========================================
+//  静的警告処理
+//==========================================
+static_assert(NUM_ARRAY(CHECK_POS) == CTutorial::TYPE_MAX, "ERROR : Type Count Missmatch");
 
 //====================================================================
 // 静的メンバ変数宣言
@@ -71,15 +91,18 @@ m_bDevilHoleFinish(false),	// デビルホールが4方向埋まったかどうか
 m_BGColorA(1.0f),			// イベント背景の透明度
 m_nTutorialWave(0),			// チュートリアルの段階
 m_nNumBowabowa(0),			// ボワボワの総数
+m_nNumCross(0),				// 十字架の総数
+m_nNumEnemy(0),				// 敵の総数
 m_pPause(nullptr),			// ポーズのポインタ
 m_pDevil(nullptr),			// デビルのポインタ
 m_pPlayerMask(nullptr),		// プレイヤーマスクのポインタ
-m_pMedamanMask(nullptr),		// メダマンマスクのポインタ
+m_pMedamanMask(nullptr),	// メダマンマスクのポインタ
 m_pItemMask(nullptr),		// アイテムマスクのポインタ
 m_bTutorialClear(false),	// ゲームクリアのフラグ
 m_Wireframe(false),			// ワイヤーフレーム切り替え
 m_Slow(false),				// スロー演出フラグ
-m_pTutorialGuide(nullptr)		// チュートリアルガイドのポインタ
+m_pTutorialGuide(nullptr),	// チュートリアルガイドのポインタ
+InitPlayerPos(D3DXVECTOR3())	// プレイヤーの初期位置
 {
 	for (int nCnt = 0; nCnt < NUM_CAMERA; ++nCnt)
 	{// カメラ分回す
@@ -113,7 +136,7 @@ CTutorial* CTutorial::GetInstance(void)
 //====================================================================
 HRESULT CTutorial::Init(void)
 {
-	////BGMの再生
+	//BGMの再生
 	CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_BGM_STAGE1);
 
 	if (m_pPause == nullptr)
@@ -123,17 +146,17 @@ HRESULT CTutorial::Init(void)
 
 	if (m_pPlayerMask == nullptr)
 	{// プレイヤーマスクの生成
-		m_pPlayerMask = CMask::Create(2, D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
+		m_pPlayerMask = CMask::Create(STENCIL_REF_PLAYER, D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
 	}
 
 	if (m_pItemMask == nullptr)
 	{// アイテムマスク
-		m_pItemMask = CMask::Create(4, D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+		m_pItemMask = CMask::Create(STENCIL_REF_ITEM, D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
 	}
 
 	if (m_pMedamanMask == nullptr)
 	{// 敵マスク
-		m_pMedamanMask = CMask::Create(102, D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f));
+		m_pMedamanMask = CMask::Create(STENCIL_REF_MEDAMAN, D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f));
 	}
 
 	if (m_pTutorialGuide == nullptr)
@@ -160,6 +183,20 @@ HRESULT CTutorial::Init(void)
 	CMapSystem::GetInstance()->Init();
 	CMapSystem::Load("data\\TXT\\STAGE\\map01.csv");
 
+	// 十字架の総数保存
+	m_nNumCross = CCross::GetList()->GetList().size();
+
+	// ボワボワの総数保存
+	m_nNumBowabowa = CBowabowa::GetList()->GetList().size();
+
+	// 敵の総数保存
+	m_nNumEnemy = CEnemy::GetList()->GetList().size();
+
+	for (int i = 0; i < TYPE_MAX; ++i)
+	{
+		m_bCheck[i] = false;
+	}
+	
 	// 下床の生成
 	auto grid = FIELD_GRID;
 	CObjmeshField* pBottonField = CObjmeshField::Create(grid);
@@ -189,11 +226,11 @@ HRESULT CTutorial::Init(void)
 		break;
 	}
 
-
 	// プレイヤーを生成する
 	for (int i = 0; i < CManager::GetInstance()->GetGameMode(); ++i)
 	{
 		m_pPlayer.push_back(CTutorialPlayer::Create(i));
+		m_gridPlayer.push_back(m_pPlayer.at(i)->GetGrid());
 	}
 
 	return S_OK;
@@ -252,7 +289,48 @@ void CTutorial::Update(void)
 
 	DebugProc::Print(DebugProc::POINT_LEFT, "ゲームスピード : %f\n", CManager::GetInstance()->GetGameSpeed());
 
+	// マップシステムの更新
 	CMapSystem::GetInstance()->Update();
+	
+	// プレイヤーリストを取得
+	if (CPlayer::GetList() == nullptr) { assert(false); }
+	std::list<CPlayer*> list = CPlayer::GetList()->GetList();    // リストを取得
+
+	int nNumPlayer = 0;
+
+	// 各プレイヤーに向けた最短経路を取得
+	for (CPlayer* player : list)
+	{
+		if (m_gridPlayer.at(nNumPlayer) != player->GetGrid() && m_bCheck[TYPE_MOVE] == false)
+		{// 座標が一致しなかったら
+			CTutorialCheck::Create(CHECK_POS[TYPE_MOVE]);
+			m_bCheck[TYPE_MOVE] = true;
+		}
+
+		if (player->GetItemType() == CPlayer::TYPE_CROSS && m_bCheck[TYPE_CROSS] == false)
+		{// 十字架
+			CTutorialCheck::Create(CHECK_POS[TYPE_CROSS]);
+			m_bCheck[TYPE_CROSS] = true;
+		}
+
+		if (player->GetItemType() == CPlayer::TYPE_BIBLE && m_bCheck[TYPE_BIBLE] == false)
+		{// 聖書
+			CTutorialCheck::Create(CHECK_POS[TYPE_BIBLE]);
+			m_bCheck[TYPE_BIBLE] = true;
+		}
+	}
+
+	if (m_nNumEnemy != CEnemy::GetList()->GetList().size() && m_bCheck[TYPE_ATTACK] == false)
+	{// 敵の総数減少
+		CTutorialCheck::Create(CHECK_POS[TYPE_ATTACK]);
+		m_bCheck[TYPE_ATTACK] = true;
+	}
+
+	if (m_nNumBowabowa != CBowabowa::GetList()->GetList().size() && m_bCheck[TYPE_BOWABOWA] == false)
+	{// ボワボワの総数減少
+		CTutorialCheck::Create(CHECK_POS[TYPE_BOWABOWA]);
+		m_bCheck[TYPE_BOWABOWA] = true;
+	}
 
 #if _DEBUG
 	if (pInputKeyboard->GetTrigger(DIK_0) == true)
