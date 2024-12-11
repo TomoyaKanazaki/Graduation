@@ -185,33 +185,16 @@ HRESULT CGame::Init(void)
 	// 背景モデル設定処理
 	SetBgObjTest();
 
-	//ステージの読み込み
-	switch (CManager::GetInstance()->GetStage())
+	// イベントの開始
+	//m_bEvent = true;
+
+	if (m_pEventMovie == nullptr)
 	{
-	case 0:
-
-		//m_bEvent = true;
-
-		if (m_pEventMovie == nullptr)
-		{
-			m_pEventMovie = CEventMovie::Create();
-		}
-
-		// ソフトクリームの生成
-		CItem::Create(CItem::TYPE_SOFTCREAM, CMapSystem::GetInstance()->GetCenter());
-
-		break;
-
-	case 1:
-
-		// 聖書生成
-		CItem::Create(CItem::TYPE_BIBLE, CMapSystem::GRID(BIBLE_OUTGRIT - 1, BIBLE_OUTGRIT - 1));
-		CItem::Create(CItem::TYPE_BIBLE, CMapSystem::GRID(NUM_WIGHT - BIBLE_OUTGRIT, BIBLE_OUTGRIT - 1));
-		CItem::Create(CItem::TYPE_BIBLE, CMapSystem::GRID(BIBLE_OUTGRIT - 1, NUM_HEIGHT - BIBLE_OUTGRIT));
-		CItem::Create(CItem::TYPE_BIBLE, CMapSystem::GRID(NUM_WIGHT - BIBLE_OUTGRIT, NUM_HEIGHT - BIBLE_OUTGRIT));
-
-		break;
+		m_pEventMovie = CEventMovie::Create();
 	}
+
+	// ソフトクリームの生成
+	CItem::Create(CItem::TYPE_SOFTCREAM, CMapSystem::GetInstance()->GetCenter());
 
 
 	// プレイヤーを生成する
@@ -328,14 +311,6 @@ void CGame::Update(void)
 	{
 		m_Slow = false;
 	}
-
-	if (pInputKeyboard->GetTrigger(DIK_RETURN) == true)
-	{
-		// ゲームの最初から
-		CFade::SetFade(CScene::MODE_GAME);
-
-	}
-
 
 #endif
 
