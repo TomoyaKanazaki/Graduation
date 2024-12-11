@@ -10,6 +10,7 @@
 #include "manager.h"
 #include "sound.h"
 #include "move.h"
+#include "MapMove.h"
 
 //==========================================
 //  定数定義
@@ -197,14 +198,16 @@ CFriedEgg* CFriedEgg::Create(const CEnemy::ENEMY_TYPE eType, const CMapSystem::G
 //==========================================
 void CFriedEgg::Move(D3DXVECTOR3& pos)
 {
-	// TODO : ランダム歩行でも何でも仕様を用意する
-	// ランダム歩行
-
 	// 移動処理
 	m_pMoveState->Move(this, pos, INITVECTOR3);
 
+	// スクロールに合わせて移動する
+	CMapSystem::GetInstance()->GetMove()->FollowScroll(pos);
+
+	// 高さを調整する
 	pos.y = 50.0f;
 
+	// 存在グリッドを設定する
 	SetGrid(CMapSystem::GetInstance()->CalcGrid(pos));
 }
 
