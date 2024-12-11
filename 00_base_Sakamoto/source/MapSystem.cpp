@@ -151,14 +151,13 @@ void CMapSystem::Update(void)
 		if (CGame::GetInstance()->GetEvent() == false &&
 			m_pMapMove != nullptr)
 		{
-			//マップの動き
+			//マップの動き設定
 			m_pMapMove->Update();
 
-			if (CManager::GetInstance()->GetPause())
-			{
-				m_pMapMove->SetMove(INITVECTOR3);
-			}
+			//その他オブジェクトのスクロール
+			CObject::ScrollAll();
 
+			//マップの位置設定
 			m_pMapMove->FollowScroll(m_MapPos);
 		}
 	}

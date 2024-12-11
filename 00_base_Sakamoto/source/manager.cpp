@@ -20,9 +20,11 @@
 #ifdef _DEBUG
 #define SET_MODE (CScene::MODE_GAME)
 #define SET_PLAY_MODE (GAME_MODE::MODE_SINGLE)
+#define SET_SCROLL_TYPE (1)
 #else
 #define SET_MODE (CScene::MODE_TITLE)
 #define SET_PLAY_MODE (GAME_MODE::MODE_SINGLE)
+#define SET_SCROLL_TYPE (0)
 #endif // _DEBUG
 
 //ê√ìIÉÅÉìÉoïœêîêÈåæ
@@ -69,7 +71,7 @@ CManager::CManager() :
 	m_pBlockManager = nullptr;
 	m_typeInput = TYPE_INPUT::TYPE_NONE;
 	m_nStage = 0;
-	m_ScrollType = 0;
+	m_ScrollType = SET_SCROLL_TYPE;
 	m_End1PScore = 0;
 	m_End2PScore = 0;
 	m_GameMode = SET_PLAY_MODE;

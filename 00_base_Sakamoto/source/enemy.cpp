@@ -199,6 +199,9 @@ HRESULT CEnemy::Init(void)
 	// リストに自身のオブジェクトを追加・イテレーターを取得
 	m_iterator = m_pList->AddList(this);
 
+	// スクロールをオンにする
+	SetMapScroll(true);
+
 	return S_OK;
 }
 
@@ -316,7 +319,7 @@ void CEnemy::Update(void)
 	m_pMoveState->Debug();		// 現在の移動状態
 
 	// スクロールに合わせて移動する
-	CMapSystem::GetInstance()->GetMove()->FollowScroll(posThis);
+	//CMapSystem::GetInstance()->GetMove()->FollowScroll(posThis);
 
 	// 値更新
 	SetPos(posThis);			// 位置
