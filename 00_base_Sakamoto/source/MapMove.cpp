@@ -159,6 +159,15 @@ void CMapMove::Uninit(void)
 		m_pList->Release(m_pList);
 	}
 
+	// –îˆó‚ğI—¹
+	for (int i = 0; i < 4; ++i)
+	{
+		if (m_pSignal[i] == nullptr) { continue; }
+		m_pSignal[i]->Uninit();
+		m_pSignal[i] = nullptr;
+		delete m_pSignal[i];
+	}
+
 	// ©g‚ğíœ‚·‚é
 	delete this;
 }
