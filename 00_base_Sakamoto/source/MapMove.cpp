@@ -24,6 +24,7 @@
 #include "friedegg.h"
 #include "fire.h"
 #include "wall.h"
+#include "camera.h"
 
 //===========================================
 // 定数定義
@@ -470,6 +471,7 @@ void CMapMove::BackSlope(void)
 
 	if (bBackOK)
 	{
+		CManager::GetInstance()->GetCamera(0)->SetBib(false);	//カメラの振動をオフにする
 		MOVE_WAIT;
 		m_nStateCount = 60;
 		MapRot.x = 0.0f;
@@ -502,6 +504,7 @@ void CMapMove::Slope(int Arroow)
 			if (MapRot.x > STAGE_ROT_LIMIT)
 			{
 				MapRot.x = STAGE_ROT_LIMIT;
+				CManager::GetInstance()->GetCamera(0)->SetBib(false);	//カメラの振動をオフにする
 			}
 			// 右側
 			m_SlopeType = 0;
@@ -514,6 +517,7 @@ void CMapMove::Slope(int Arroow)
 			if (MapRot.x < -STAGE_ROT_LIMIT)
 			{
 				MapRot.x = -STAGE_ROT_LIMIT;
+				CManager::GetInstance()->GetCamera(0)->SetBib(false);	//カメラの振動をオフにする
 			}
 			// 左側
 			m_SlopeType = 1;
@@ -526,6 +530,7 @@ void CMapMove::Slope(int Arroow)
 			if (MapRot.z > STAGE_ROT_LIMIT)
 			{
 				MapRot.z = STAGE_ROT_LIMIT;
+				CManager::GetInstance()->GetCamera(0)->SetBib(false);	//カメラの振動をオフにする
 			}
 			// 奥側
 			m_SlopeType = 2;
@@ -538,6 +543,7 @@ void CMapMove::Slope(int Arroow)
 			if (MapRot.z < -STAGE_ROT_LIMIT)
 			{
 				MapRot.z = -STAGE_ROT_LIMIT;
+				CManager::GetInstance()->GetCamera(0)->SetBib(false);	//カメラの振動をオフにする
 			}
 			// 手前側
 			m_SlopeType = 3;
@@ -560,6 +566,7 @@ void CMapMove::Slope(int Arroow)
 			if (MapRot.x > STAGE_ROT_LIMIT)
 			{
 				MapRot.x = STAGE_ROT_LIMIT;
+				CManager::GetInstance()->GetCamera(0)->SetBib(false);	//カメラの振動をオフにする
 			}
 
 			break;
@@ -570,6 +577,7 @@ void CMapMove::Slope(int Arroow)
 			if (MapRot.x < -STAGE_ROT_LIMIT)
 			{
 				MapRot.x = -STAGE_ROT_LIMIT;
+				CManager::GetInstance()->GetCamera(0)->SetBib(false);	//カメラの振動をオフにする
 			}
 
 			break;
@@ -580,6 +588,7 @@ void CMapMove::Slope(int Arroow)
 			if (MapRot.z > STAGE_ROT_LIMIT)
 			{
 				MapRot.z = STAGE_ROT_LIMIT;
+				CManager::GetInstance()->GetCamera(0)->SetBib(false);	//カメラの振動をオフにする
 			}
 
 			break;
@@ -590,6 +599,7 @@ void CMapMove::Slope(int Arroow)
 			if (MapRot.z < -STAGE_ROT_LIMIT)
 			{
 				MapRot.z = -STAGE_ROT_LIMIT;
+				CManager::GetInstance()->GetCamera(0)->SetBib(false);	//カメラの振動をオフにする
 			}
 
 			break;
@@ -600,51 +610,6 @@ void CMapMove::Slope(int Arroow)
 		break;
 
 	default:
-
-		switch (Arroow)
-		{
-		case 0:
-
-			MapRot.x += D3DX_PI * SLOPE_SPEED01;
-
-			if (MapRot.x > STAGE_ROT_LIMIT)
-			{
-				MapRot.x = STAGE_ROT_LIMIT;
-			}
-
-			break;
-		case 1:
-
-			MapRot.x -= D3DX_PI * SLOPE_SPEED01;
-
-			if (MapRot.x < -STAGE_ROT_LIMIT)
-			{
-				MapRot.x = -STAGE_ROT_LIMIT;
-			}
-
-			break;
-		case 2:
-
-			MapRot.z += D3DX_PI * SLOPE_SPEED01;
-
-			if (MapRot.z > STAGE_ROT_LIMIT)
-			{
-				MapRot.z = STAGE_ROT_LIMIT;
-			}
-
-			break;
-		case 3:
-
-			MapRot.z -= D3DX_PI * SLOPE_SPEED01;
-
-			if (MapRot.z < -STAGE_ROT_LIMIT)
-			{
-				MapRot.z = -STAGE_ROT_LIMIT;
-			}
-
-			break;
-		}
-
 		break;
 	}
 
@@ -770,6 +735,9 @@ void CMapMove::StateManager(void)
 						break;
 					}
 
+					//カメラを振動させる
+					CManager::GetInstance()->GetCamera(0)->SetBib(true);
+
 					// 傾き装置のリスト構造が無ければ抜ける
 					if (CSlopeDevice::GetList() == nullptr) { return; }
 					std::list<CSlopeDevice*> list = CSlopeDevice::GetList()->GetList();    // リストを取得
@@ -788,6 +756,9 @@ void CMapMove::StateManager(void)
 					m_nStateCount = SLOPE_TIME * 2;
 
 					m_State = m_SlopeOld;
+
+					//カメラを振動させる
+					CManager::GetInstance()->GetCamera(0)->SetBib(true);
 
 					// 傾き装置のリスト構造が無ければ抜ける
 					if (CSlopeDevice::GetList() == nullptr) { return; }
