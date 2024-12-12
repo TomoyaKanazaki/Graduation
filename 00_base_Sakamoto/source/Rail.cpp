@@ -94,10 +94,39 @@ CRail* CRail::Create(CMapSystem::GRID grid, POSTYPE PosType0, POSTYPE PosType1)
 //====================================================================
 HRESULT CRail::Init()
 {
-	// 初期化処理
+	D3DXVECTOR3 rot = INITVECTOR3;
+
+	// レールモデル
 	for (int nCnt = 0; nCnt < POSSTATE_MAX; nCnt++)
 	{
-		m_pRailModel[nCnt]->Init(FILE_PASS);
+		m_pRailModel[nCnt]->Init(FILE_PASS);		// 初期化処理
+		m_pRailModel[nCnt]->SetGrid(m_Grid);		// グリッド設定
+
+		// 設置する向き
+		switch (m_PosType[nCnt])
+		{
+		case CRail::POSTYPE_UP:		// 上
+			rot.y = D3DX_PI * 0.0f;
+			break;
+
+		case CRail::POSTYPE_DOWN:	// 下
+			rot.y = D3DX_PI * 1.0f;
+			break;
+
+		case CRail::POSTYPE_LEFT:	// 左
+			rot.y = D3DX_PI * 0.5f;
+			break;
+
+		case CRail::POSTYPE_RIGHT:	// 右
+			rot.y = D3DX_PI * -0.5f;
+			break;
+
+		default:
+			break;
+		}
+
+		// 向き設定
+		m_pRailModel[nCnt]->SetRot(rot);
 	}
 
 	SetType(CObject::TYPE_RAIL);
