@@ -58,11 +58,6 @@ private:
 	float m_Scaling;				//大きさ
 	float m_fColorA;				//不透明度
 
-	bool m_OKL;					//左への進行が許されるかどうか
-	bool m_OKR;					//右への進行が許されるかどうか
-	bool m_OKU;					//上への進行が許されるかどうか
-	bool m_OKD;					//下への進行が許されるかどうか
-
 	CEffekseer* m_pEffect; // エフェクト
 	CMoveState* m_pMoveState;		// 移動状態
 

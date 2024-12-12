@@ -13,6 +13,7 @@
 #include "MapSystem.h"
 
 class CRail;
+class CMoveState;		// 移動状態
 
 //オブジェクトメッシュフィールドクラス
 class CRailBlock : public CObjectX
@@ -44,6 +45,8 @@ public:
 	int GetRailMax() { return m_nMax; }
 	int GetRailMove(int nCnt);
 
+	void ChangeMoveState(CMoveState* pMoveState) override;   // 移動状態変更
+
 	// 静的メンバ関数
 	static CListManager<CRailBlock>* GetList(void); // リスト取得
 
@@ -59,6 +62,7 @@ private:
 
 	CMapSystem::GRID m_Grid;	//グリット番号
 	CMapSystem::GRID m_OldGrid;	//グリット番号
+	CMoveState* m_pMoveState;	// 移動状態
 
 	bool bMoveOK[4];
 	int m_nMax;
