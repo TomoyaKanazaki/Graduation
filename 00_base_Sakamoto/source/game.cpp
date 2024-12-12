@@ -156,12 +156,12 @@ HRESULT CGame::Init(void)
 	m_pTime->SetStartTime(timeGetTime());
 	m_pTime->SetTime(0);
 
-	//デビルの生成
-	m_pDevil = CDevil::Create();
-
 	// マップの生成
 	CMapSystem::GetInstance();
 	CMapSystem::Load("data\\TXT\\STAGE\\map06.csv");
+
+	//デビルの生成
+	m_pDevil = CDevil::Create();
 
 	for (int nCnt = 0; nCnt < 2; nCnt++)
 	{

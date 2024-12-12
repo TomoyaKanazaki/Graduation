@@ -39,13 +39,15 @@
 #include "signal.h"
 #include "friedegg.h"
 #include "MapMove.h"
+#include "shadow.h"
 
 //===========================================
 // 定数定義
 //===========================================
 namespace
 {
-
+	const float FLOAT_HEIGHT = 100.0f; // 高さ
+	const float SHADOW_PFFSET = -30.0f; // 高さ
 }
 
 //===========================================
@@ -121,9 +123,14 @@ HRESULT CDevil::Init(void)
 {
 	//種類設定
 	SetType(CObject::TYPE_DEVIL);
+	
+	// 高さを設定
+	D3DXVECTOR3 pos = GetPos();
+	pos.y = FLOAT_HEIGHT;
+	SetPos(pos);
 
-	// 影を不使用に設定
-	SetShadow(false);
+	// マップマトリックスと掛け合わせ
+	SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
 
 	// キャラクタークラスの初期化（継承）
 	if (FAILED(CObjectCharacter::Init())) { assert(false); }
@@ -146,6 +153,14 @@ HRESULT CDevil::Init(void)
 
 	// スクロールをオンにする
 	SetMapScroll(true);
+
+	// マップの中心に存在する
+	m_Grid = CMapSystem::GetInstance()->GetCenter();
+
+	// グリッドに沿った座標を取得、設定
+	D3DXVECTOR3 posGrid = m_Grid.ToWorld();
+	pos.x = posGrid.x;
+	pos.z = posGrid.z;
 
 	return S_OK;
 }
@@ -192,10 +207,16 @@ void CDevil::Update(void)
 		ActionState();
 	}
 
-	// スクロールに追従する
+	// グリッドに沿った座標を取得、設定
 	D3DXVECTOR3 pos = GetPos();
-	//CMapSystem::GetInstance()->GetMove()->FollowScroll(pos);
+	D3DXVECTOR3 posGrid = m_Grid.ToWorld();
+	pos.x = posGrid.x;
+	pos.z = posGrid.z;
 	SetPos(pos);
+
+	// 影を設定
+	pos.y += SHADOW_PFFSET;
+	m_pShadow->SetPos(pos);
 }
 
 //====================================================================
