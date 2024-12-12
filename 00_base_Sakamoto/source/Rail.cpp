@@ -10,6 +10,7 @@
 #include "texture.h"
 #include "objectX.h"
 #include "MapSystem.h"
+#include "MapMove.h"
 #include "game.h"
 #include "objmeshField.h"
 
@@ -19,7 +20,7 @@
 namespace
 {
 	const D3DXVECTOR3 SAMPLE_SIZE = D3DXVECTOR3(20.0f, 20.0f, 20.0f);		//当たり判定
-	const char* FILE_PASS = "data\\MODEL\\fireball.x"; // モデルパス
+	const char* FILE_PASS = "data\\MODEL\\rail.x"; // モデルパス
 }
 
 //====================================================================
@@ -74,17 +75,17 @@ CRail* CRail::Create(CMapSystem::GRID grid, POSTYPE PosType0, POSTYPE PosType1)
 		pRail = new CRail();
 	}
 
-	//オブジェクトの初期化処理
-	if (FAILED(pRail->Init()))
-	{//初期化処理が失敗した場合
-		return nullptr;
-	}
-
 	pRail->m_Grid = grid;
 
 	// レールの位置状態
 	pRail->m_PosType[POSSTATE_FIRST] = PosType0;		// 1番目
 	pRail->m_PosType[POSSTATE_SECOND] = PosType1;		// 2番目
+
+	//オブジェクトの初期化処理
+	if (FAILED(pRail->Init()))
+	{//初期化処理が失敗した場合
+		return nullptr;
+	}
 
 	return pRail;
 }
@@ -94,23 +95,27 @@ CRail* CRail::Create(CMapSystem::GRID grid, POSTYPE PosType0, POSTYPE PosType1)
 //====================================================================
 HRESULT CRail::Init()
 {
+	D3DXVECTOR3 pos = m_Grid.ToWorld();
 	D3DXVECTOR3 rot = INITVECTOR3;
-
 	// レールモデル
 	for (int nCnt = 0; nCnt < POSSTATE_MAX; nCnt++)
 	{
-		m_pRailModel[nCnt]->Init(FILE_PASS);		// 初期化処理
-		m_pRailModel[nCnt]->SetGrid(m_Grid);		// グリッド設定
+		m_pRailModel[nCnt] = CObjectX::Create(FILE_PASS);	// 生成処理
+		m_pRailModel[nCnt]->SetGrid(m_Grid);				// グリッド設定
+		m_pRailModel[nCnt]->SetPos(pos);					// 位置設定
+		m_pRailModel[nCnt]->SetPosOld(pos);					// 前回の位置設定
+
+		m_pRailModel[nCnt]->SetType(CObject::TYPE_RAIL);
 
 		// 設置する向き
 		switch (m_PosType[nCnt])
 		{
 		case CRail::POSTYPE_UP:		// 上
-			rot.y = D3DX_PI * 0.0f;
+			rot.y = D3DX_PI * 1.0f;
 			break;
 
 		case CRail::POSTYPE_DOWN:	// 下
-			rot.y = D3DX_PI * 1.0f;
+			rot.y = D3DX_PI * 0.0f;
 			break;
 
 		case CRail::POSTYPE_LEFT:	// 左
@@ -127,6 +132,7 @@ HRESULT CRail::Init()
 
 		// 向き設定
 		m_pRailModel[nCnt]->SetRot(rot);
+		rot = INITVECTOR3;
 	}
 
 	SetType(CObject::TYPE_RAIL);
@@ -191,11 +197,35 @@ void CRail::SetNULL(void)
 //====================================================================
 void CRail::Update(void)
 {
+	D3DXVECTOR3 pos;
+	D3DXVECTOR3 move;
+	D3DXVECTOR3 posOld;
+	D3DXVECTOR3 rot;			// 向き
+
+	D3DXVECTOR3 SlopeRot = CMapSystem::GetInstance()->GetMove()->GetDevilRot();		// マップの傾き
+	
+
 	for (int nCnt = 0; nCnt < POSSTATE_MAX; nCnt++)
 	{
 		if (m_pRailModel[nCnt] != nullptr)
 		{
-			m_pRailModel[nCnt]->SetPos(CMapSystem::GRID(m_nMapWidth, m_nMapHeight).ToWorld());
+			//// 取得
+			//pos = m_pRailModel[nCnt]->GetPos();					// 位置
+			//posOld = m_pRailModel[nCnt]->GetPosOld();			// 前回の位置
+			rot = m_pRailModel[nCnt]->GetRot();					// 向き
+
+			//// 傾きによる移動量設定
+			//move.x = -SlopeRot.z;
+			//move.z = SlopeRot.x;
+
+			//pos.x += move.x;
+			//pos.z += move.z;
+
+			m_pRailModel[nCnt]->SetPos(m_Grid.ToWorld());		// 位置設定
+			m_pRailModel[nCnt]->SetRot(rot);					// 向き設定
+
+			//m_pRailModel[nCnt]->SetPosOld(posOld);				// 位置
+			m_pRailModel[nCnt]->Update();
 		}
 	}
 }
@@ -205,7 +235,7 @@ void CRail::Update(void)
 //====================================================================
 void CRail::Draw(void)
 {
-
+	
 }
 
 #if 0	// まだ消さないで

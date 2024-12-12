@@ -81,25 +81,22 @@ void CRailManager::Draw(void)
 //====================================================================
 void CRailManager::Set(void)
 {
-	// 何もない状態にする
-	CRail::POSTYPE PosType[CRail::POSSTATE_MAX];
-
-	for (int nCnt = 0; nCnt < CRail::POSSTATE_MAX; nCnt++)
-	{
-		PosType[nCnt] = CRail::POSTYPE_NONE;
-	}
-
 	int nMax = m_GridPos.size();
 	int nCnt = 0;
 
-	while (nCnt <= nMax)
+	while (nCnt < nMax)
 	{ // グリッドの数分まわす
+
+		// 何もない状態にする
+		CRail::POSTYPE PosType[CRail::POSSTATE_MAX] = { CRail::POSTYPE::POSTYPE_NONE, CRail::POSTYPE::POSTYPE_NONE };
 
 		//モデルの向き設定
 		SetRot(m_GridPos[nCnt], PosType[CRail::POSSTATE_FIRST], PosType[CRail::POSSTATE_SECOND]);
 
 		// レールの生成
 		CRail::Create(m_GridPos[nCnt], PosType[CRail::POSSTATE_FIRST], PosType[CRail::POSSTATE_SECOND]);
+
+		nCnt++;
 	}
 }
 
@@ -135,7 +132,8 @@ void CRailManager::SetRot(CMapSystem::GRID& grid, CRail::POSTYPE& PosType0, CRai
 	// レールの配置場所設定
 	for (int nCnt = CRail::POSTYPE_UP; nCnt < CRail::POSTYPE_MAX; nCnt++)
 	{
-		if (m_bRail[nCnt])
+		if (!m_bRail[nCnt]) { continue; }
+		else if (m_bRail[nCnt])
 		{ // 配置可能な場合
 
 			// 場所設定

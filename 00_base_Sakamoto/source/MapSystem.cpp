@@ -532,6 +532,7 @@ void CMapSystem::Load(const char* pFilename)
 
 							// グリッド設定の判定
 							bGridSet = false;
+							bRailGridSet = false;
 
 							// オブジェクトを設置
 							if (str == "2")
@@ -654,6 +655,9 @@ void CMapSystem::Load(const char* pFilename)
 			}
 		}
 	}
+
+	// レールの向き設定
+	pRailManager->Set();
 
 	// ファイルを閉じる
 	file.close();
