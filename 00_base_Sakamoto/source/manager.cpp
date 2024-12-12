@@ -227,10 +227,6 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 		m_pCharacterManager = new CCharacterManager;
 	}
 
-	// マップシステムの初期化
-	CMapSystem::GetInstance();
-
-
 	if (m_pFade == nullptr)
 	{
 		//フェードの生成

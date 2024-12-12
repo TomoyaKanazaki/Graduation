@@ -170,7 +170,7 @@ HRESULT CGame::Init(void)
 	m_pDevil = CDevil::Create();
 
 	// ƒ}ƒbƒv‚Ì¶¬
-	CMapSystem::GetInstance()->Init();
+	CMapSystem::GetInstance();
 	CMapSystem::Load("data\\TXT\\STAGE\\map06.csv");
 
 	for (int nCnt = 0; nCnt < 2; nCnt++)

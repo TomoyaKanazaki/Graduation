@@ -163,9 +163,7 @@ void CMapMove::Uninit(void)
 	for (int i = 0; i < 4; ++i)
 	{
 		if (m_pSignal[i] == nullptr) { continue; }
-		m_pSignal[i]->Uninit();
-		m_pSignal[i] = nullptr;
-		delete m_pSignal[i];
+		m_pSignal[i]->SetDeathFlag(true);
 	}
 
 	// ©g‚ğíœ‚·‚é
