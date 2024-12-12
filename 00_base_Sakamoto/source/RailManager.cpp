@@ -1,18 +1,13 @@
 //============================================
 //
 //	レールマネージャー [RailManager.cpp]
-//	Author:sakamoto kai
+//	Author:Satone Shion
 //
 //============================================
 #include "RailManager.h"
 #include "renderer.h"
 #include "manager.h"
 #include "texture.h"
-#include "XModel.h"
-#include "objectX.h"
-#include "MapSystem.h"
-#include "game.h"
-#include "objmeshField.h"
 
 //==========================================
 //  定数定義
@@ -31,15 +26,10 @@ CListManager<CRailManager>* CRailManager::m_pList = nullptr; // オブジェクトリス
 //====================================================================
 //コンストラクタ
 //====================================================================
-CRailManager::CRailManager(int nPriority) : CObjectX(nPriority)
+CRailManager::CRailManager()
 {
 	m_pRailManagerModel[0] = nullptr;
 	m_pRailManagerModel[1] = nullptr;
-
-	for (int nCnt = 0; nCnt < RAIL_POS_MAX; nCnt++)
-	{
-		m_bRailManager[nCnt] = false;
-	}
 
 	m_pPrev = nullptr;		// 前のレールへのポインタ
 	m_pNext = nullptr;		// 次のレールへのポインタ
@@ -80,9 +70,6 @@ CRailManager* CRailManager::Create()
 //====================================================================
 HRESULT CRailManager::Init()
 {
-	CObjectX::Init(FILE_PASS);
-
-	SetType(CObject::TYPE_RAIL);
 
 	if (m_pList == nullptr)
 	{// リストマネージャー生成
@@ -109,8 +96,6 @@ void CRailManager::Uninit(void)
 		}
 	}
 
-	SetDeathFlag(true);
-
 	// リストから自身のオブジェクトを削除
 	m_pList->DelList(m_iterator);
 
@@ -120,8 +105,6 @@ void CRailManager::Uninit(void)
 		// リストマネージャーの破棄
 		m_pList->Release(m_pList);
 	}
-
-	CObjectX::Uninit();
 }
 
 //====================================================================
@@ -158,103 +141,6 @@ void CRailManager::Update(void)
 void CRailManager::Draw(void)
 {
 
-}
-
-//====================================================================
-//前のモデルの設定
-//====================================================================
-void CRailManager::PrevSet(RAIL_POS Set)
-{
-	//引数で設定した方向にレールを置く
-	m_bRailManager[Set] = true;
-
-	//真ん中からのレールを設置する
-	if (m_pRailManagerModel[0] == nullptr)
-	{
-		m_pRailManagerModel[0] = CObjectX::Create("data\\MODEL\\TestRailManager.x");
-		m_pRailManagerModel[0]->SetPos(CMapSystem::GRID(m_nMapWidth, m_nMapHeight).ToWorld());
-		m_pRailManagerModel[0]->SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
-		//m_pRailManagerModel[0]->SetMultiMatrix(true);
-
-		switch (Set)
-		{
-		case CRailManager::RAIL_POS_UP:	// 上
-			m_pRailManagerModel[0]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.0f, 0.0f));
-			break;
-		case CRailManager::RAIL_POS_DOWN:	// 下
-			m_pRailManagerModel[0]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 1.0f, 0.0f));
-			break;
-		case CRailManager::RAIL_POS_LEFT:	// 左
-			m_pRailManagerModel[0]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
-			break;
-		case CRailManager::RAIL_POS_RIGHT:	// 右
-			m_pRailManagerModel[0]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
-			break;
-		default:
-			break;
-		}
-	}
-}
-
-//====================================================================
-//次のモデルの設定
-//====================================================================
-void CRailManager::NextSet(RAIL_POS Set)
-{
-	//引数で設定した方向にレールを置く
-	m_bRailManager[Set] = true;
-	m_bNextNumber = Set;
-
-	//真ん中までのレールを設置する
-	if (m_pRailManagerModel[1] == nullptr)
-	{
-		m_pRailManagerModel[1] = CObjectX::Create("data\\MODEL\\TestRailManager.x");
-		m_pRailManagerModel[1]->SetPos(CMapSystem::GRID(m_nMapWidth, m_nMapHeight).ToWorld());
-		m_pRailManagerModel[1]->SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
-		//m_pRailManagerModel[1]->SetMultiMatrix(true);
-
-		//伸ばす前のレールの位置を取得する
-		int nMapWight = GetWightNumber();
-		int nMapHeight = GetHeightNumber();
-
-		//引数で設定した方向にレールの向き、番号を設定
-		switch (Set)
-		{
-		case CRailManager::RAIL_POS_UP:	// 上
-			m_pRailManagerModel[1]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.0f, 0.0f));
-			Set = RAIL_POS_DOWN;
-			nMapHeight = GetHeightNumber() - 1;
-			break;
-
-		case CRailManager::RAIL_POS_DOWN:	// 下
-			m_pRailManagerModel[1]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 1.0f, 0.0f));
-			Set = RAIL_POS_UP;
-			nMapHeight = GetHeightNumber() + 1;
-			break;
-
-		case CRailManager::RAIL_POS_LEFT:	// 左
-			m_pRailManagerModel[1]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
-			Set = RAIL_POS_RIGHT;
-			nMapWight = GetWightNumber() - 1;
-			break;
-
-		case CRailManager::RAIL_POS_RIGHT:	// 右
-			m_pRailManagerModel[1]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
-			Set = RAIL_POS_LEFT;
-			nMapWight = GetWightNumber() + 1;
-			break;
-
-		default:
-			break;
-		}
-
-		//次のレールを設定する
-		m_pNext = CRailManager::Create();
-		m_pNext->SetWightNumber(nMapWight);
-		m_pNext->SetHeightNumber(nMapHeight);
-		m_pNext->SetPrevRailManager(this);
-		m_pNext->PrevSet(Set);
-	}
 }
 
 //====================================================================

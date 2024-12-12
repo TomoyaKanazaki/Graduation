@@ -14,21 +14,12 @@
 class CObjGauge2D;
 
 //オブジェクトプレイヤークラス
-class CRailManager : public CObjectX
+class CRailManager
 {
 public:
 
-	CRailManager(int nPriority = 3);
+	CRailManager();
 	~CRailManager();
-
-	enum RAIL_POS
-	{
-		RAIL_POS_UP = 0,
-		RAIL_POS_DOWN,
-		RAIL_POS_LEFT,
-		RAIL_POS_RIGHT,
-		RAIL_POS_MAX,
-	};
 
 	static CRailManager* Create();
 
@@ -37,9 +28,6 @@ public:
 	void SetNULL(void);
 	void Update(void);
 	void Draw(void);
-
-	void PrevSet(RAIL_POS Set);
-	void NextSet(RAIL_POS Set);
 
 	void SetWightNumber(int Number) { m_nMapWidth = Number; }
 	int GetWightNumber(void) { return m_nMapWidth; }
@@ -51,8 +39,6 @@ public:
 	void SetNextRailManager(CRailManager* Set) { m_pNext = Set; }
 	CRailManager* GetNextRailManager(void) { return m_pNext; }
 
-	void SetRailManagerOK(int nCnt, bool Set) { m_bRailManager[nCnt] = Set; }
-	bool GetRailManagerOK(int nCnt) { return m_bRailManager[nCnt]; }
 	int GetNextNumber(void) { return m_bNextNumber; }
 
 	// 静的メンバ関数
@@ -61,7 +47,6 @@ public:
 private:
 
 	CObjectX* m_pRailManagerModel[2];
-	bool m_bRailManager[RAIL_POS_MAX];
 	int m_bNextNumber;
 
 	int m_nMapWidth;	// マップの横番号
