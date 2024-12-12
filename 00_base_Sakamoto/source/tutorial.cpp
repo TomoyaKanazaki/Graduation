@@ -56,7 +56,8 @@ namespace
 	const int STENCIL_REF_PLAYER = 2;		// プレイヤーのステンシルの参照値
 	const int STENCIL_REF_ITEM = 4;			// アイテムのステンシルの参照値
 	const int STENCIL_REF_MEDAMAN = 102;	// メダマンのステンシルの参照値
-	const int WAVE_MAX = 4;					// チュートリアル最大段階
+	const int WAVE_MIDDLE = 4;				// チュートリアル4段階目
+	const int WAVE_MAX = 6;					// チュートリアル最大段階
 
 	const char* BOTTOM_FIELD_TEX = "data\\TEXTURE\\Field\\outside.jpg";		// 下床のテクスチャ
 	const char* SCROLL_DEVICE_MODEL = "data\\TXT\\MOTION\\02_staging\\00_ScrollDevice\\motion_scrolldevice.txt";
@@ -268,6 +269,7 @@ void CTutorial::Update(void)
 	CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
 
 	DebugProc::Print(DebugProc::POINT_LEFT, "ゲームスピード : %f\n", CManager::GetInstance()->GetGameSpeed());
+	DebugProc::Print(DebugProc::POINT_CENTER, "チュートリアル段階 : %d\n", m_nTutorialWave);
 
 	// マップシステムの更新
 	CMapSystem::GetInstance()->Update();
@@ -306,6 +308,9 @@ void CTutorial::Update(void)
 			CTutorialCheck::Create(CHECK_POS[TYPE_BIBLE]);
 			
 			m_bCheck[TYPE_BIBLE] = true;
+
+			// チュートリアル段階を進める
+			m_nTutorialWave += 1;
 		}
 	}
 
@@ -329,7 +334,7 @@ void CTutorial::Update(void)
 		m_nTutorialWave += 1;
 	}
 
-	if (m_nTutorialWave == WAVE_MAX)
+	if (m_nTutorialWave == WAVE_MIDDLE)
 	{// チュートリアルが4段階目まで進んだら
 		if (CBible::GetList() == nullptr)
 		{// 1つだけ聖書の生成
@@ -340,7 +345,7 @@ void CTutorial::Update(void)
 #if _DEBUG
 	if (pInputKeyboard->GetTrigger(DIK_3) == true)
 	{// チュートリアル段階を4にする
-		m_nTutorialWave = WAVE_MAX;
+		m_nTutorialWave = WAVE_MIDDLE;
 	}
 
 	if (pInputKeyboard->GetTrigger(DIK_0) == true)
@@ -413,8 +418,9 @@ void CTutorial::Update(void)
 		if (m_bTutorialEnd == true)
 		{
 			if (m_bTutorialEnd == true
-				&& pInputKeyboard->GetTrigger(DIK_RETURN))
-			{// 好きなタイミングでチュートリアル抜ける
+				&& pInputKeyboard->GetTrigger(DIK_RETURN)
+				&& m_nTutorialWave == WAVE_MAX)
+			{// 好きなタイミングでゲームに遷移
 				CFade::SetFade(CScene::MODE_GAME);
 			}
 			else
@@ -499,11 +505,11 @@ void CTutorial::NextStage(void)
 //====================================================================
 void CTutorial::DeleteCross(void)
 {
-	// デビルホールのリスト構造が無ければ抜ける
+	// 十字架のリスト構造が無ければ抜ける
 	if (CCross::GetList() == nullptr) { return; }
 	std::list<CCross*> list = CCross::GetList()->GetList();    // リストを取得
 
-	// デビルホールリストの中身を確認する
+	// 十字架リストの中身を確認する
 	for (CCross* pCross : list)
 	{
 		pCross->Uninit();
