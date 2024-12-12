@@ -590,6 +590,10 @@ void CMapSystem::Load(const char* pFilename)
 								// 経路探索用情報の設定
 								generator->addCollision(grid.ToAStar()); // 通過不可地点を追加
 							}
+							else if (str == "11")
+							{ // レール
+
+							}
 							else
 							{ // ボワボワの生成
 								if (BOWABOWA_RATE <= 0) { assert(false); }

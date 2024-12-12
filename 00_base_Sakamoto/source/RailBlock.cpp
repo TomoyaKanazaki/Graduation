@@ -16,6 +16,7 @@
 #include "debugproc.h"
 #include "player.h"
 #include "MapMove.h"
+#include "move.h"
 
 //==========================================
 //  定数定義
@@ -35,7 +36,8 @@ CListManager<CRailBlock>* CRailBlock::m_pList = nullptr; // オブジェクトリスト
 //====================================================================
 CRailBlock::CRailBlock(int nPriority) :CObjectX(nPriority),
 m_Grid(0, 0),
-m_OldGrid(0, 0)
+m_OldGrid(0, 0),
+m_pMoveState(nullptr)
 {
 	m_pTop = nullptr;		// 先頭のレールへのポインタ
 	m_pCur = nullptr;		// 最後尾のレールへのポインタ
@@ -51,7 +53,8 @@ m_OldGrid(0, 0)
 //====================================================================
 CRailBlock::CRailBlock(int nPriority, CMapSystem::GRID gridCenter) : CObjectX(nPriority),
 m_Grid(gridCenter),
-m_OldGrid(gridCenter)
+m_OldGrid(gridCenter),
+m_pMoveState(nullptr)
 {
 }
 
@@ -114,6 +117,13 @@ HRESULT CRailBlock::Init(char* pModelName)
 		RailCheck();
 	}*/
 
+	// 移動状態設定
+	if (m_pMoveState == nullptr)
+	{ // 移動状態設定
+		m_pMoveState = new CStateRoll();		// 転がる状態
+		m_pMoveState->SetRotState(CMoveState::ROTSTATE_MAX);		// 移動向きの状態を設定
+	}
+
 	if (m_pList == nullptr)
 	{// リストマネージャー生成
 		m_pList = CListManager<CRailBlock>::Create();
@@ -134,6 +144,14 @@ HRESULT CRailBlock::Init(char* pModelName)
 //====================================================================
 void CRailBlock::Uninit(void)
 {
+	// 移動状態の破棄
+	if (m_pMoveState != nullptr)
+	{
+		m_pMoveState->Release();		// 破棄
+		delete m_pMoveState;
+		m_pMoveState = nullptr;
+	}
+
 	// リストから自身のオブジェクトを削除
 	m_pList->DelList(m_iterator);
 
@@ -221,17 +239,20 @@ void CRailBlock::Move(D3DXVECTOR3* Pos)
 	// グリッド情報を保存
 	m_OldGrid = m_Grid;
 
-	D3DXVECTOR3 TestPos = INITVECTOR3;
+	/*D3DXVECTOR3 TestPos = INITVECTOR3;
 
 	D3DXVECTOR3 SlopeMove = INITVECTOR3;
 	D3DXVECTOR3 SlopeRot = INITVECTOR3;
-	SlopeRot = CMapMove::GetListTop()->GetDevilRot();
+	SlopeRot = CMapMove::GetListTop()->GetDevilRot();*/
 	//D3DXVECTOR3 GritPos = CMapSystem::GRID(GetWightNumber(), GetHeightNumber()).ToWorld();
 	//D3DXVECTOR3 GritDistance = *Pos - GritPos;	//グリットの中心とした時の相対位置、差分
 
 	//傾きによる移動量設定
-	SlopeMove.x = -SlopeRot.z * 10.0f;
-	SlopeMove.z = SlopeRot.x * 10.0f;
+	/*SlopeMove.x = -SlopeRot.z * 10.0f;
+	SlopeMove.z = SlopeRot.x * 10.0f;*/
+
+	// 移動処理
+	m_pMoveState->Move(this, *Pos, INITVECTOR3);
 
 	//if (useful::CollisionCircle(GritPos, D3DXVECTOR3(Pos->x, GritPos.y, Pos->z), RAIL_WIGHT) == true)
 	//{// ブロックの中心にある時に上下か左右のどちらかになるまでに移動する
@@ -373,7 +394,7 @@ void CRailBlock::Move(D3DXVECTOR3* Pos)
 	/*DebugProc::Print(DebugProc::POINT_LEFT, "[レールブロック]横番号 %d \n", GetWightNumber());
 	DebugProc::Print(DebugProc::POINT_LEFT, "[レールブロック]縦番号 %d \n", GetHeightNumber());
 	DebugProc::Print(DebugProc::POINT_LEFT, "[レールブロック]差分 %f : %f \n", GritDistance.x, GritDistance.z);*/
-	DebugProc::Print(DebugProc::POINT_LEFT, "[テストブロック]差分 %f : %f \n", TestPos.x, TestPos.z);
+	//DebugProc::Print(DebugProc::POINT_LEFT, "[テストブロック]差分 %f : %f \n", TestPos.x, TestPos.z);
 }
 
 //====================================================================
@@ -691,6 +712,22 @@ void CRailBlock::RailDelete(void)
 int CRailBlock::GetRailMove(int nCnt)
 {
 	return m_nMove[nCnt];
+}
+
+//==========================================
+// 移動状態変更処理
+//==========================================
+void CRailBlock::ChangeMoveState(CMoveState* pMoveState)
+{
+	if (m_pMoveState != nullptr)
+	{
+		m_pMoveState->Release();
+		delete m_pMoveState;
+		m_pMoveState = nullptr;
+	}
+
+	m_pMoveState = pMoveState;
+	m_pMoveState->Init();
 }
 
 //====================================================================
