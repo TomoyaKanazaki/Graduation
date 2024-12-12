@@ -16,6 +16,7 @@
 #include "motion.h"
 #include "effect.h"
 #include "timer.h"
+#include "cross.h"
 
 //静的メンバ変数宣言
 
@@ -168,7 +169,7 @@ void CEventMovie::StartMovie(void)
 }
 
 //====================================================================
-//開始時演出
+//第二形態変化演出
 //====================================================================
 void CEventMovie::StageChangeMovie(void)
 {
@@ -184,7 +185,7 @@ void CEventMovie::StageChangeMovie(void)
 	switch (m_nWave)
 	{
 	case 0:		//初期化
-
+		pCamera->SetBib(false);	//カメラを振動状態に設定
 		pCamera->SetCameraMode(CCamera::CAMERAMODE_EVENTBOSS);	//カメラをイベント用に変更
 		CGame::GetInstance()->GetTime()->SetStopTime(true);	//タイムの進行を止める
 
@@ -258,10 +259,13 @@ void CEventMovie::StageChangeMovie(void)
 
 	case 5:		//カメラが上を向き、オブジェクトが上に飛んでいく
 
+		//プレイヤー上移動
 		PlayerPos = pPlayer->GetPos();
 		PlayerPos.y += 50.0f;
 		pPlayer->SetPos(PlayerPos);
 
+		//クロス上移動
+		ShootUpCross();
 
 		if (m_nCount >= 60)
 		{
@@ -270,10 +274,16 @@ void CEventMovie::StageChangeMovie(void)
 			PlayerPos = D3DXVECTOR3(0.0f, 1700.0f, -400.0f);
 			pPlayer->SetPos(PlayerPos);
 
+			//十字架の位置設定
+			SetPosCross(D3DXVECTOR3(
+				PlayerPos.x + (-100.0f + (float)(rand() % 200)),
+				PlayerPos.y,
+				PlayerPos.z + (+200.0f + (float)(rand() % 300))));
+
 			//カメラの指定位置を設定
 			pCamera->SetCameraPosMode(
-				D3DXVECTOR3(pPlayer->GetPos().x, pPlayer->GetPos().y + 400.0f, -800.0f),
-				D3DXVECTOR3(pPlayer->GetPos().x, pPlayer->GetPos().y + 400.0f, pPlayer->GetPos().z));
+				D3DXVECTOR3(pPlayer->GetPos().x, pPlayer->GetPos().y + 350.0f, -800.0f),
+				D3DXVECTOR3(pPlayer->GetPos().x, pPlayer->GetPos().y + 350.0f, pPlayer->GetPos().z));
 			pCamera->SetHomingSpeed(0.9f);	//カメラの目標までのホーミング速度を設定
 			m_fSinFloat = pPlayer->GetPos().y;		//サインカーブ用の初期位置設
 
@@ -304,12 +314,18 @@ void CEventMovie::StageChangeMovie(void)
 		pPlayer->SetPos(PlayerPos);
 		pPlayer->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
+		SetPosYCross(PlayerPos.y);
+
 		if (m_nCount >= 120)
 		{
 			pCamera->SetCameraPosMode(
 				D3DXVECTOR3(pPlayer->GetPos().x, pPlayer->GetPos().y + 400.0f, -800.0f),
 				D3DXVECTOR3(INITVECTOR3));	//カメラの指定位置を設定
 			pCamera->SetHomingSpeed(0.05f);	//カメラの目標までのホーミング速度を設定
+
+			//pPlayer->SetState(CPlayer::STATE_EGG);
+			pPlayer->Reivel(PlayerPos);
+			pPlayer->SetPos(PlayerPos);
 
 			m_nCount = 0;		//カウントリセット
 			m_nWave++;
@@ -331,6 +347,7 @@ void CEventMovie::StageChangeMovie(void)
 
 	default:
 
+		CGame::GetInstance()->NextStage();
 		CGame::GetInstance()->GetTime()->SetStopTime(false);	//タイムの進行を進める
 		pCamera->SetCameraMode(CCamera::CAMERAMODE_DOWNVIEW);
 		CGame::GetInstance()->SetEvent(false);
@@ -338,4 +355,56 @@ void CEventMovie::StageChangeMovie(void)
 	}
 
 	m_nCount++;
+}
+
+//====================================================================
+//十字架を打ち上げる処理
+//====================================================================
+void CEventMovie::ShootUpCross(void)
+{
+	// 敵のリスト構造が無ければ抜ける
+	if (CCross::GetList() == nullptr) { return; }
+	std::list<CCross*> list = CCross::GetList()->GetList();    // リストを取得
+
+	// 敵のリストの中身を確認する
+	for (CCross* pCorss : list)
+	{
+		D3DXVECTOR3 pos = pCorss->GetPos();
+		pos.y += 40.0f;
+		pCorss->SetPos(pos);
+	}
+}
+
+//====================================================================
+//十字架の位置設定
+//====================================================================
+void CEventMovie::SetPosYCross(float Pos)
+{
+	// 敵のリスト構造が無ければ抜ける
+	if (CCross::GetList() == nullptr) { return; }
+	std::list<CCross*> list = CCross::GetList()->GetList();    // リストを取得
+
+	// 敵のリストの中身を確認する
+	for (CCross* pCorss : list)
+	{
+		D3DXVECTOR3 Mypos = pCorss->GetPos();
+		pCorss->SetPos(D3DXVECTOR3(Mypos.x, Mypos.y + Pos, Mypos.z));
+		DebugProc::Print(DebugProc::POINT_RIGHT, "%f\n", Mypos.y + Pos);
+	}
+}
+
+//====================================================================
+//十字架の位置設定
+//====================================================================
+void CEventMovie::SetPosCross(D3DXVECTOR3 Pos)
+{
+	// 敵のリスト構造が無ければ抜ける
+	if (CCross::GetList() == nullptr) { return; }
+	std::list<CCross*> list = CCross::GetList()->GetList();    // リストを取得
+
+	// 敵のリストの中身を確認する
+	for (CCross* pCorss : list)
+	{
+		pCorss->SetPos(D3DXVECTOR3(Pos.x, (float)(rand() % 100), Pos.z));
+	}
 }
