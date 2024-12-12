@@ -123,6 +123,12 @@ HRESULT CMapMove::Init(void)
 {
 	m_ScrollType = (SCROLL_TYPE)CManager::GetInstance()->GetScrollType();
 
+	//ó‘ÔŠÖ˜A‚Ì‰Šú‰»
+	m_State = MOVE_WAIT;
+	m_SlopeOld = MOVE_WAIT;
+	m_nStateCount = 0;
+	m_bSlope = false;
+
 	//–îˆó‚Ì¶¬
 	SignalCreate();
 
