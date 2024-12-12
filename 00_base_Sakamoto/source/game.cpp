@@ -435,7 +435,8 @@ void CGame::NextStage(void)
 	m_bEvent = true;
 
 	// マップの生成
-	CMapMove::GetListTop()->Init();
+	
+	CMapSystem::GetInstance()->GetMove()->Init();
 	CObjmeshField::GetListTop()->SetRot(INITVECTOR3);
 
 	if(m_pEventMovie != nullptr)
@@ -480,8 +481,8 @@ void CGame::DeleteCross(void)
 void CGame::CreateBible(void)
 {
 	//グリッド最大・最小位置取得
-	CMapSystem::GRID GMax = CMapMove::GetListTop()->GetMaxGrid();
-	CMapSystem::GRID GMin = CMapMove::GetListTop()->GetMinGrid();
+	CMapSystem::GRID GMax = CMapSystem::GetInstance()->GetMove()->GetMaxGrid();
+	CMapSystem::GRID GMin = CMapSystem::GetInstance()->GetMove()->GetMinGrid();
 
 	// 聖書生成
 	CItem::Create(CItem::TYPE_BIBLE, CMapSystem::GRID(GMin.x + BIBLE_OUTGRIT, GMin.z + BIBLE_OUTGRIT));
