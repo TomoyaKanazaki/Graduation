@@ -55,7 +55,7 @@ namespace
 	const D3DXCOLOR MASK_MEDAMAN_COLOR = D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f);			// メダマンのステンシルカラー(ピンク)
 	const D3DXCOLOR MASK_BONBON_COLOR = D3DXCOLOR(1.0f, 0.5f, 0.0f, 1.0f);			// ボンンボンのステンシルカラー(オレンジ)
 	const D3DXCOLOR MASK_YUNGDEVIL_COLOR = D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f);		// 子デビルのステンシルカラー(青)
-	const D3DXCOLOR MASK_ITEM_COLOR = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);			// 子デビルのステンシルカラー(青)
+	const D3DXCOLOR MASK_ITEM_COLOR = D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f);			// アイテムのステンシルカラー(青)
 }
 
 //静的メンバ変数宣言
@@ -140,20 +140,10 @@ HRESULT CGame::Init(void)
 		m_pPause = CPause::Create();
 	}
 
-	if (m_pPlayerMask == nullptr)
-	{// プレイヤーマスクの生成
-		m_pPlayerMask = CMask::Create(2, MASK_PLAYER_COLOR);
-	}
-
-	if (m_pItemMask == nullptr)
-	{// アイテムマスク
-		m_pItemMask = CMask::Create(4, MASK_ITEM_COLOR);
-	}
-
-	if (m_pEnemyMask == nullptr)
-	{// 敵マスク
-		m_pEnemyMask = CMask::Create(102, MASK_MEDAMAN_COLOR);
-	}
+	// プレイヤー・アイテム・メダマンのステンシルカラーの設定
+	CMask::Create(2, MASK_PLAYER_COLOR);
+	CMask::Create(4, MASK_ITEM_COLOR);
+	CMask::Create(102, MASK_MEDAMAN_COLOR);
 
 	//クリアフラグのデフォルトをオンにしておく
 	m_bGameClear = true;

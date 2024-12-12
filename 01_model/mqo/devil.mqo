@@ -4,8 +4,8 @@ Format Text Ver 1.0
 Scene {
 	pos 17.1472 -6.8135 5960.4663
 	lookat 38.1601 -15.7971 1.5001
-	head 282.9701
-	pich 0.4808
+	head 282.6700
+	pich 0.3208
 	bank 0.0100
 	ortho 0
 	zoom2 1.2581
@@ -2513,7 +2513,7 @@ Object "ÇœÇÒÇøÇ„" {
 }
 Object "âEòrÇP" {
 	visible 0
-	locking 0
+	locking 1
 	shading 1
 	facet 59.5
 	color 0.898 0.498 0.698
@@ -2615,7 +2615,7 @@ Object "âEòrÇP" {
 }
 Object "âEòr2" {
 	visible 0
-	locking 0
+	locking 1
 	shading 1
 	facet 59.5
 	color 0.898 0.498 0.698
@@ -3513,7 +3513,7 @@ Object "R_3rd_joint" {
 }
 Object "ç∂òr1" {
 	visible 0
-	locking 0
+	locking 1
 	shading 1
 	facet 59.5
 	color 0.898 0.498 0.698
@@ -3615,7 +3615,7 @@ Object "ç∂òr1" {
 }
 Object "ç∂òrÇQ" {
 	visible 0
-	locking 0
+	locking 1
 	shading 1
 	facet 59.5
 	color 0.898 0.498 0.698
@@ -4513,7 +4513,7 @@ Object "L_3rd_joint" {
 }
 Object "Ç”Ç∆Ç‡Ç‡" {
 	visible 0
-	locking 0
+	locking 1
 	shading 1
 	facet 59.5
 	color 0.898 0.498 0.698
@@ -4593,7 +4593,7 @@ Object "Ç”Ç∆Ç‡Ç‡" {
 }
 Object "Ç–Ç¥" {
 	visible 0
-	locking 0
+	locking 1
 	shading 1
 	facet 59.5
 	color 0.898 0.498 0.698
@@ -4673,7 +4673,7 @@ Object "Ç–Ç¥" {
 }
 Object "Ç≠Ç¬" {
 	visible 0
-	locking 0
+	locking 1
 	shading 1
 	facet 59.5
 	color 0.898 0.498 0.698
@@ -5583,7 +5583,7 @@ Object "Ç≠Ç¬" {
 }
 Object "Ç§ÇÊÇ≠1" {
 	visible 0
-	locking 0
+	locking 1
 	shading 1
 	facet 59.5
 	color 0.898 0.498 0.698
@@ -5962,7 +5962,7 @@ Object "Ç§ÇÊÇ≠1" {
 }
 Object "Ç§ÇÊÇ≠2" {
 	visible 15
-	locking 0
+	locking 1
 	shading 1
 	facet 59.5
 	color 0.898 0.498 0.698
