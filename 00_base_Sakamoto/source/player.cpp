@@ -1568,7 +1568,7 @@ void CPlayer::PosUpdate(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D3DXVECTO
 		fSpeed = m_pSlow->GetValue();
 	}
 
-	CMapMove* pMapMove = CMapMove::GetListTop();
+	CMapMove* pMapMove = CMapSystem::GetInstance()->GetMove();
 
 	//YŽ²‚ÌˆÊ’uXV
 	posThis.y += m_move.y * CManager::GetInstance()->GetGameSpeed() * fSpeed;

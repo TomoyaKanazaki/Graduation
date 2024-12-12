@@ -13,6 +13,7 @@
 #include "MapSystem.h"
 #include "game.h"
 #include "objmeshField.h"
+#include "objectX.h"
 
 //==========================================
 //  定数定義
@@ -21,6 +22,7 @@ namespace
 {
 	const D3DXVECTOR3 SAMPLE_SIZE = D3DXVECTOR3(20.0f, 20.0f, 20.0f);		//当たり判定
 	const char* FILE_PASS = "data\\MODEL\\fireball.x"; // モデルパス
+	const int MAX_RAIL = 2;		// 1マスが持つレールの数
 }
 
 //====================================================================
@@ -31,10 +33,13 @@ CListManager<CRail>* CRail::m_pList = nullptr; // オブジェクトリスト
 //====================================================================
 //コンストラクタ
 //====================================================================
-CRail::CRail(int nPriority) : CObjectX(nPriority)
+CRail::CRail(int nPriority) : CObject(nPriority)
 {
-	m_pRailModel[0] = nullptr;
-	m_pRailModel[1] = nullptr;
+	// レールモデル
+	for (int nCnt = 0; nCnt < MAX_RAIL; nCnt++)
+	{
+		m_pRailModel[nCnt] = nullptr;
+	}
 
 	for (int nCnt = 0; nCnt < RAIL_POS_MAX; nCnt++)
 	{
@@ -58,21 +63,21 @@ CRail::~CRail()
 //====================================================================
 CRail* CRail::Create()
 {
-	CRail* pSample = nullptr;
+	CRail* pRail = nullptr;
 
-	if (pSample == nullptr)
+	if (pRail == nullptr)
 	{
-		//オブジェクト2Dの生成
-		pSample = new CRail();
+		//レールの生成
+		pRail = new CRail();
 	}
 
 	//オブジェクトの初期化処理
-	if (FAILED(pSample->Init()))
+	if (FAILED(pRail->Init()))
 	{//初期化処理が失敗した場合
 		return nullptr;
 	}
 
-	return pSample;
+	return pRail;
 }
 
 //====================================================================
@@ -80,7 +85,12 @@ CRail* CRail::Create()
 //====================================================================
 HRESULT CRail::Init()
 {
-	CObjectX::Init(FILE_PASS);
+
+	// 初期化処理
+	for (int nCnt = 0; nCnt < MAX_RAIL; nCnt++)
+	{
+		m_pRailModel[nCnt]->Init(FILE_PASS);
+	}
 
 	SetType(CObject::TYPE_RAIL);
 
@@ -106,6 +116,8 @@ void CRail::Uninit(void)
 		if (m_pRailModel[nCnt] != nullptr)
 		{
 			m_pRailModel[nCnt]->SetDeathFlag(true);
+			m_pRailModel[nCnt]->Uninit();
+
 		}
 	}
 
@@ -120,8 +132,6 @@ void CRail::Uninit(void)
 		// リストマネージャーの破棄
 		m_pList->Release(m_pList);
 	}
-
-	CObjectX::Uninit();
 }
 
 //====================================================================
