@@ -124,6 +124,9 @@ HRESULT CFire::Init(char* pModelName)
 	// リストに自身のオブジェクトを追加・イテレーターを取得
 	m_iterator = m_pList->AddList(this);
 
+	// スクロールをオンにする
+	SetMapScroll(true);
+
 	return S_OK;
 }
 
@@ -170,7 +173,7 @@ void CFire::Update(void)
 	pos += m_move;
 
 	// スクロールに合わせて移動する
-	CMapSystem::GetInstance()->GetMove()->FollowScroll(pos);
+	//CMapSystem::GetInstance()->GetMove()->FollowScroll(pos);
 
 	// 位置・移動量設定
 	SetPos(pos);

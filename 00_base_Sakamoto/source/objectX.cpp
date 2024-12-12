@@ -18,7 +18,8 @@
 //コンストラクタ
 //====================================================================
 CObjectX::CObjectX(int nPriority) :CObject(nPriority),
-m_bDisp(true)
+m_bDisp(true),
+m_Grid(0, 0)
 {
 	m_IdxModelNumber = 0;
 
@@ -34,6 +35,7 @@ m_bDisp(true)
 	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_posOld = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_size = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_Scaling = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
 	ZeroMemory(&m_StateMat,sizeof(m_StateMat));

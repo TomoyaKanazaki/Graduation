@@ -64,6 +64,7 @@ public:
 	static void ResetObjectMap(void);
 	static void ReleaseEnemy(void);
 	static void DeleteBlock(void);
+	static void ScrollAll(void);
 
 	virtual HRESULT Init(void) = 0;
 	virtual void Uninit(void) = 0;
@@ -81,6 +82,12 @@ public:
 	bool GetAppear(void) { return m_Appear; }
 	void SetDisp(bool Set) { m_bDisp = Set; }
 	bool GetDisp(void) { return m_bDisp; }
+	void SetMapScroll(bool Set) { m_bMapScroll = Set; }
+	bool GetMapScroll(void) { return m_bMapScroll; }
+
+	virtual void SetPos(D3DXVECTOR3 pos) {}
+	virtual D3DXVECTOR3 GetPos(void) { return INITVECTOR3; }
+
 	void SetIdxCamera(int nIdx) { m_nIdxCamera = nIdx; }
 
 protected:
@@ -99,6 +106,7 @@ private:
 	bool m_bLevelUI;						//レベルアップ時のUI
 	bool m_Appear;							//表示状態かどうか
 	bool m_bDisp;							//表示状態かどうか
+	bool m_bMapScroll;						//スクロール状態かどうか
 	OBJECT_TYPE m_type;						//オブジェクトの種類
 	int m_nIdxCamera;						//カメラ番号
 };

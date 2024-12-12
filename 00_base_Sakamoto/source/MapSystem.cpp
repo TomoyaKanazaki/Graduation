@@ -151,14 +151,13 @@ void CMapSystem::Update(void)
 		if (CGame::GetInstance()->GetEvent() == false &&
 			m_pMapMove != nullptr)
 		{
-			//マップの動き
+			//マップの動き設定
 			m_pMapMove->Update();
 
-			if (CManager::GetInstance()->GetPause())
-			{
-				m_pMapMove->SetMove(INITVECTOR3);
-			}
+			//その他オブジェクトのスクロール
+			CObject::ScrollAll();
 
+			//マップの位置設定
 			m_pMapMove->FollowScroll(m_MapPos);
 		}
 	}
@@ -363,6 +362,24 @@ D3DXVECTOR3 CMapSystem::GetPlayerPos(unsigned int PlayNumber)
 		pos = m_PosPlayer[PlayNumber].ToWorld();
 	}
 	return pos;
+}
+
+//==========================================
+// プレイヤーのグリッド取得
+//==========================================
+CMapSystem::GRID CMapSystem::GetPlayerGrid(unsigned int PlayNumber)
+{
+	// 位置
+	if (PlayNumber < m_PosPlayer.size())
+	{ // 読み込んだ数以内だったら
+
+		// 座標入れる
+		return m_PosPlayer[PlayNumber];
+	}
+
+	// 変なことすんな
+	assert(false);
+	return GRID();
 }
 
 //==========================================
