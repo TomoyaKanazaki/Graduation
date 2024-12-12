@@ -84,11 +84,6 @@ m_pEffect(nullptr)
 	m_HitState = HIT_STATE_NORMAL;
 	m_nHitStateCount = 0;
 
-	m_Progress.bOKL = true;
-	m_Progress.bOKR = true;
-	m_Progress.bOKU = true;
-	m_Progress.bOKD = true;
-
 	m_Grid.x = 0;
 	m_Grid.z = 0;
 

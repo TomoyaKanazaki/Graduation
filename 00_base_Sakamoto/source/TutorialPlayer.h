@@ -34,8 +34,6 @@ public:
 	void Death(void) override;
 
 private:
-	CObject2D* m_pCheckMaker;	// チェックマーカー
-
 };
 
 #endif

@@ -1,13 +1,14 @@
 //============================================
 //
-//	ゲーム画面 [game.h]
-//	Author:sakamoto kai
+//	チュートリアル画面 [tutorial.h]
+//	Author:morikawa shunya
 //
 //============================================
 #ifndef _TUTORIAL_H_
 #define _TUTORIAL_H_
 
 #include "Scene.h"
+#include "MapSystem.h"
 
 //前方宣言
 class CTutorialUI;
@@ -31,6 +32,7 @@ class CTutorialPause;
 class CDevil;
 class CMask;
 class CEventMovie;
+class CTutorialCheck;
 
 class CAim;
 
@@ -38,6 +40,18 @@ class CAim;
 class CTutorial : public CScene
 {
 public:
+	enum CHECKTYPE
+	{// チュートリアルの項目
+		TYPE_NONE = 0,	// 種類無し
+		TYPE_MOVE,		// 移動
+		TYPE_CROSS,		// 十字架
+		TYPE_ATTACK,	// 攻撃
+		TYPE_BOWABOWA,	// ボワボワ
+		TYPE_BIBLE,		// 聖書
+		TYPE_DEVILHOLE,	// デビルホール
+		TYPE_MAX
+	};
+
 	CTutorial();
 	~CTutorial();
 
@@ -88,28 +102,33 @@ private:
 	std::vector<CPlayer*> m_pPlayer;		//プレイヤーのポインタ
 	CDevil* m_pDevil;						//デビルのポインタ
 
-	int m_nNumBowabowa;						//ボワボワの数
-	bool m_bDevilHoleFinish;				//デビルホールがすべて埋まったかどうか
-	bool m_bTutorialEnd;					//チュートリアル終了状態かどうか
-	bool m_bTutorialClear;					//チュートリアルクリア状態かどうか
+	int m_nNumCross;						// 十字架の数
+	int m_nNumBowabowa;						// ボワボワの数
+	int m_nNumEnemy;						// 敵の数
+	std::vector<CMapSystem::GRID> m_gridPlayer;	// プレイヤーの初期位置
+	int m_nTutorialWave;					// チュートリアルの段階
 
-	int m_nTutorialWave;					//チュートリアルの段階
-	float m_BGColorA;						//ゲーム背景の不透明度
-	D3DXVECTOR3 m_BGRot;					//背景の回転向き
+	float m_BGColorA;						// ゲーム背景の不透明度
 
-	CPause* m_pPause;						//ポーズのポインタ
-	CTimer* m_pTime;						//タイムのポインタ
-	CObjmeshDome* m_pMeshDomeUp;			//メッシュドーム
-	CObjmeshField* m_pMapField;				//マップフィールド
-	CCubeBlock* m_pCubeBlock;				//キューブブロック
-	bool m_Wireframe;						//ワイヤーフレームのオンオフ
-	bool m_Slow;							//スロー演出のオンオフ
+	bool m_bDevilHoleFinish;				// デビルホールがすべて埋まったかどうか
+	bool m_bTutorialEnd;					// チュートリアル終了状態かどうか
+	bool m_bTutorialClear;					// チュートリアルクリア状態かどうか
+	bool m_Wireframe;						// ワイヤーフレームのオンオフ
+	bool m_Slow;							// スロー演出のオンオフ
+	bool m_bCheck[TYPE_MAX];
 
-	CObject2D* m_pTutorialGuide;	// チュートリアルガイド
+	D3DXVECTOR3 m_BGRot;					// 背景の回転向き
+	D3DXVECTOR3 InitPlayerPos;				// プレイヤーの初期位置
 
+	CPause* m_pPause;						// ポーズのポインタ
+	CTimer* m_pTime;						// タイムのポインタ
+	CObjmeshDome* m_pMeshDomeUp;			// メッシュドーム
+	CObjmeshField* m_pMapField;				// マップフィールド
+	CCubeBlock* m_pCubeBlock;				// キューブブロック
+	CObject2D* m_pTutorialGuide;			// チュートリアルガイド
 	CMask* m_pPlayerMask;	// プレイヤーマスク
 	CMask* m_pItemMask;		// アイテムマスク
 	CMask* m_pMedamanMask;	// 敵マスク
-
 };
+
 #endif

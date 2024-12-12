@@ -365,6 +365,24 @@ D3DXVECTOR3 CMapSystem::GetPlayerPos(unsigned int PlayNumber)
 }
 
 //==========================================
+// プレイヤーのグリッド取得
+//==========================================
+CMapSystem::GRID CMapSystem::GetPlayerGrid(unsigned int PlayNumber)
+{
+	// 位置
+	if (PlayNumber < m_PosPlayer.size())
+	{ // 読み込んだ数以内だったら
+
+		// 座標入れる
+		return m_PosPlayer[PlayNumber];
+	}
+
+	// 変なことすんな
+	assert(false);
+	return GRID();
+}
+
+//==========================================
 //  マップ情報の読み込み
 //==========================================
 void CMapSystem::Load(const char* pFilename)
