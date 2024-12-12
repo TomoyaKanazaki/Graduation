@@ -36,6 +36,7 @@ CCross::CCross(int nPriority) : CItem(nPriority)
 {
 	SetSize(SAMPLE_SIZE);
 	SetPos(INITVECTOR3);
+	m_EventPos = INITVECTOR3;
 }
 
 //====================================================================
@@ -56,6 +57,9 @@ HRESULT CCross::Init()
 
 	// オブジェクトの種類を設定
 	SetType(CObject::TYPE_CROSS);
+
+	// 描画をオフにする
+	SetDisp(false);
 
 	// リストマネージャーの生成
 	if (m_pList == nullptr)

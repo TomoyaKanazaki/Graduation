@@ -32,11 +32,16 @@ public:
 	// 静的メンバ関数
 	static CListManager<CCross>* GetList(void); // リスト取得
 
+	void SetEventPos(D3DXVECTOR3 pos) { m_EventPos = pos; }
+	D3DXVECTOR3 GetEventPos(void) { return m_EventPos; }
+
 private:
 
 	// メンバ関数
 	void Rotation();
 	void SetEffect() override;
+
+	D3DXVECTOR3 m_EventPos;
 
 	// 静的メンバ変数
 	static CListManager<CCross>* m_pList; // オブジェクトリスト

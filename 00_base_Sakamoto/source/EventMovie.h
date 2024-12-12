@@ -40,8 +40,8 @@ private:
 	void EndMovie(void);
 
 	void ShootUpCross(void);
-	void SetPosYCross(float PosY);
 	void SetPosCross(D3DXVECTOR3 Pos);
+	void SetPosEventCross();
 
 	STATE m_State;
 	int m_nWave;

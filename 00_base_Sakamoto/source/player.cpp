@@ -101,7 +101,6 @@ m_bPressObj(false),
 m_fCrossTimer(0.0f),
 m_pUpEgg(nullptr),
 m_pDownEgg(nullptr),
-m_EggMove(INITVECTOR3),
 m_bInvincible(true),
 m_nInvincibleCount(0),
 m_pScore(nullptr),
@@ -391,8 +390,6 @@ void CPlayer::Update(void)
 					posThis.x,
 					posThis.y + 50.0f,
 					posThis.z + 50.0f));
-
-				m_pP_NumUI->SetAppear(true);
 			}
 		}
 
@@ -493,6 +490,7 @@ void CPlayer::UI_Create(void)
 	if (m_pP_NumUI == nullptr && CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
 	{
 		m_pP_NumUI = CObjectBillboard::Create();
+		m_pP_NumUI->SetAppear(false);
 	}
 }
 
@@ -1724,7 +1722,7 @@ void CPlayer::EggMove(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis)
 		{
 			m_pDownEgg->SetPos(D3DXVECTOR3(posThis.x, posThis.y + 65.0f, posThis.z));
 		}
-		m_EggMove = INITVECTOR3;
+		SetEggMove(INITVECTOR3);
 	}
 	else
 	{
@@ -1736,15 +1734,19 @@ void CPlayer::EggMove(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis)
 
 			ColorA -= EGG_COLOR_DEL_A;
 
-			m_EggMove.y -= EGG_GRAVITY;
+			D3DXVECTOR3 EggMove = GetEggMove();
 
-			pos += m_EggMove;
+			EggMove.y -= EGG_GRAVITY;
 
-			rot.z -= m_EggMove.x * EGG_ROT;
-			rot.x += m_EggMove.z * EGG_ROT;
+			pos += EggMove;
 
-			m_EggMove.x = m_EggMove.x * EGG_MOVE_DEL;
-			m_EggMove.z = m_EggMove.z * EGG_MOVE_DEL;
+			rot.z -= EggMove.x * EGG_ROT;
+			rot.x += EggMove.z * EGG_ROT;
+
+			EggMove.x = EggMove.x * EGG_MOVE_DEL;
+			EggMove.z = EggMove.z * EGG_MOVE_DEL;
+
+			SetEggMove(EggMove);
 
 			if (pos.y < CObjmeshField::GetListTop()->GetPos().y + 30.0f)
 			{
@@ -1897,6 +1899,16 @@ void CPlayer::Reivel(D3DXVECTOR3& posThis)
 	}
 }
 
+//====================================================================
+//プレイヤー番号の表示状態
+//====================================================================
+void CPlayer::PlayerNumberDisp(bool Set)
+{
+	if (m_pP_NumUI != nullptr)
+	{
+		m_pP_NumUI->SetAppear(Set);
+	}
+}
 
 //====================================================================
 // デバッグボタン
