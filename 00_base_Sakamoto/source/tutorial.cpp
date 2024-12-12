@@ -476,7 +476,7 @@ void CTutorial::Draw(void)
 void CTutorial::NextStage(void)
 {
 	// マップの生成
-	CMapMove::GetListTop()->Init();
+	CMapSystem::GetInstance()->GetMove()->Init();
 	CObjmeshField::GetListTop()->SetRot(INITVECTOR3);
 
 	//十字架の削除
@@ -516,8 +516,8 @@ void CTutorial::DeleteCross(void)
 void CTutorial::CreateBible(void)
 {
 	//グリッド最大・最小位置取得
-	CMapSystem::GRID GMax = CMapMove::GetListTop()->GetMaxGrid();
-	CMapSystem::GRID GMin = CMapMove::GetListTop()->GetMinGrid();
+	CMapSystem::GRID GMax = CMapSystem::GetInstance()->GetMove()->GetMaxGrid();
+	CMapSystem::GRID GMin = CMapSystem::GetInstance()->GetMove()->GetMinGrid();
 
 	// 聖書生成
 	CItem::Create(CItem::TYPE_BIBLE, CMapSystem::GRID(GMin.x + BIBLE_OUTGRIT, GMin.z + BIBLE_OUTGRIT));

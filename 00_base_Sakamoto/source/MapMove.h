@@ -74,10 +74,6 @@ public:
 
 	void FollowScroll(D3DXVECTOR3& pos) { pos += m_move; }
 
-	// 静的メンバ関数
-	static CListManager<CMapMove>* GetList(void); // リスト取得
-	static CMapMove* GetListTop(void); // リスト取得
-
 private:
 
 	void StateManager(void);	//状態管理
@@ -125,11 +121,5 @@ private:
 	SCROLL_TYPE m_ScrollType;		// スクロールの種類
 	int m_SlopeType;				// スロープの種類
 	float m_fEffectTime;			// エフェクト生成タイマー
-
-	// 静的メンバ変数
-	static CListManager<CMapMove>* m_pList; // オブジェクトリスト
-
-	// メンバ変数
-	CListManager<CMapMove>::AIterator m_iterator; // イテレーター
 };
 #endif
