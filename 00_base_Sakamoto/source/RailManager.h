@@ -9,6 +9,7 @@
 
 #include "main.h"
 #include "MapSystem.h"
+#include "Rail.h"
 
 //前方宣言
 class CObjGauge2D;
@@ -21,12 +22,20 @@ public:
 	CRailManager();
 	~CRailManager();
 
-	HRESULT Init(CMapSystem::GRID grid);
+	HRESULT Init(CMapSystem::GRID& grid);
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);
 
+	void Set();		// レールの設定
+
 private:
+	// メンバ関数
+	void SetRot(CMapSystem::GRID& grid, CRail::POSTYPE& PosType0, CRail::POSTYPE& PosType1);		// モデルの向きの設定
+
+	// メンバ関数
+	bool m_bRail[CRail::POSTYPE_MAX];					// レールの置ける位置の判定
+
 
 	// 静的メンバ変数
 	static CListManager<CRailManager>* m_pList;			// オブジェクトリスト
