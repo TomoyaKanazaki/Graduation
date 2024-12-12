@@ -30,6 +30,7 @@
 #include "Cross.h"
 #include "MapMove.h"
 #include "pause.h"
+#include "SlopeDevice.h"
 
 #include "sound.h"
 #include "shadow.h"
@@ -37,6 +38,8 @@
 namespace
 {
 	const int SAMPLE_NAMESPACE = 0;
+
+	const float LETTERBOX_HEIGHT = 100.0f;		//演出時の上下の黒ポリゴンの太さ
 
 	const CMapSystem::GRID FIELD_GRID = { 64, 64 }; // 下の床のサイズ
 	const char* BOTTOM_FIELD_TEX = "data\\TEXTURE\\Field\\tile_test_02.png";		// 下床のテクスチャ
@@ -439,6 +442,17 @@ void CGame::ResetStage(void)
 	CMapSystem::GetInstance()->GetMove()->SetStateCount(200);
 	CObjmeshField::GetListTop()->SetRot(INITVECTOR3);
 
+	// 傾き装置のリスト構造が無ければ抜ける
+	if (CSlopeDevice::GetList() == nullptr) { return; }
+	std::list<CSlopeDevice*> list = CSlopeDevice::GetList()->GetList();    // リストを取得
+
+	// 傾き装置のリストの中身を確認する
+	for (CSlopeDevice* pSlopeDevice : list)
+	{
+		// 方向の傾き装置を上昇状態に変更
+		pSlopeDevice->ReSet();
+	}
+
 	if (m_pEventMovie != nullptr)
 	{
 		m_pEventMovie->SetEventType(CEventMovie::STATE_CHANGE);
@@ -542,7 +556,7 @@ void CGame::UpdateLetterBox(void)
 		{
 			D3DXVECTOR3 Height = LetterBox[nCnt]->GetSize();
 
-			if (Height.y < 200.0f)
+			if (Height.y < LETTERBOX_HEIGHT)
 			{
 				Height.y += 2.0f;
 			}
