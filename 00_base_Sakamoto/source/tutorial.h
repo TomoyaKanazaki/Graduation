@@ -102,9 +102,10 @@ private:
 	std::vector<CPlayer*> m_pPlayer;		//プレイヤーのポインタ
 	CDevil* m_pDevil;						//デビルのポインタ
 
-	int m_nNumCross;						// 十字架の数
-	int m_nNumBowabowa;						// ボワボワの数
-	int m_nNumEnemy;						// 敵の数
+	int m_nNumCross;						// 十字架の総数
+	int m_nNumBowabowa;						// ボワボワの総数
+	int m_nNumEnemy;						// 敵の総数
+	int m_nNumBible;						// 聖書の総数
 	std::vector<CMapSystem::GRID> m_gridPlayer;	// プレイヤーの初期位置
 	int m_nTutorialWave;					// チュートリアルの段階
 
@@ -126,9 +127,6 @@ private:
 	CObjmeshField* m_pMapField;				// マップフィールド
 	CCubeBlock* m_pCubeBlock;				// キューブブロック
 	CObject2D* m_pTutorialGuide;			// チュートリアルガイド
-	CMask* m_pPlayerMask;	// プレイヤーマスク
-	CMask* m_pItemMask;		// アイテムマスク
-	CMask* m_pMedamanMask;	// 敵マスク
 };
 
 #endif
