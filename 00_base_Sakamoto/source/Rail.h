@@ -8,11 +8,19 @@
 #define _Rail_H_
 
 #include "main.h"
-#include "objectX.h"
+#include "object.h"
+#include "MapSystem.h"
 
 //前方宣言
 class CObjectX;		// オブジェクトX
-class CObjGauge2D;
+
+//==========================================
+//  定数定義
+//==========================================
+namespace Rail
+{
+	const int MAX_RAIL = 2;		// 1マスが持つレールの数
+}
 
 //レールクラス
 class CRail : public CObject
@@ -22,17 +30,18 @@ public:
 	CRail(int nPriority = 3);
 	~CRail();
 
-	// レールがある向き
-	enum RAIL_POS
+	// レール位置の種類
+	enum POSTYPE
 	{
-		RAIL_POS_UP = 0,
-		RAIL_POS_DOWN,
-		RAIL_POS_LEFT,
-		RAIL_POS_RIGHT,
-		RAIL_POS_MAX,
+		POSTYPE_NONE = 0,		// どこにも無し
+		POSTYPE_UP,				// 上
+		POSTYPE_DOWN,			// 下
+		POSTYPE_LEFT,			// 左
+		POSTYPE_RIGHT,			// 右
+		POSTYPE_MAX,
 	};
 
-	static CRail* Create();
+	static CRail* Create(CMapSystem::GRID grid, POSTYPE PosType0, POSTYPE PosType1);
 
 	HRESULT Init(void);
 	void Uninit(void);
@@ -41,8 +50,8 @@ public:
 	void Draw(void);
 
 	// レールの場所
-	void PrevSet(RAIL_POS Set);		// 前
-	void NextSet(RAIL_POS Set);		// 次
+	void PrevSet(POSTYPE Set);		// 前
+	void NextSet(POSTYPE Set);		// 次
 
 	void SetWightNumber(int Number) { m_nMapWidth = Number; }
 	int GetWightNumber(void) { return m_nMapWidth; }
@@ -63,15 +72,18 @@ public:
 
 private:
 
-	CObjectX* m_pRailModel[2];
-	bool m_bRail[RAIL_POS_MAX];
-	int m_bNextNumber;
+	CObjectX* m_pRailModel[Rail::MAX_RAIL];		// レールモデルの情報
+	bool m_bRail[POSTYPE_MAX];					// レールの置ける位置の判定
+	int m_bNextNumber;				// 次のレール番号
 
 	int m_nMapWidth;	// マップの横番号
 	int m_nMapHeight;	// マップの縦番号
 								   
 	CRail* m_pPrev;		// 前のレールへのポインタ
 	CRail* m_pNext;		// 次のレールへのポインタ
+
+	CMapSystem::GRID m_Grid;			// グリッド情報
+	POSTYPE m_PosType[Rail::MAX_RAIL];	// レール位置の種類
 
 	// 静的メンバ変数
 	static CListManager<CRail>* m_pList; // オブジェクトリスト
