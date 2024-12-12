@@ -58,6 +58,8 @@ public:
 	void Update(void);
 	void Draw(void);
 
+	virtual void PlayerNumberDisp(bool Set) {}
+
 	void SetTxtCharacter(const char* pFilename, int nRef);
 
 	void SetModelColor(CModel::COLORTYPE Type, D3DXCOLOR Col);

@@ -72,6 +72,8 @@ public:
 	CMapSystem::GRID GetMinGrid(void) { return m_MinGrid; }	//マップで一番左上にあるブロックの番号
 	CMapSystem::GRID GetMaxGrid(void) { return m_MaxGrid; }	//マップで一番右下にあるブロックの番号
 
+	void SetStateCount(int Set) { m_nStateCount = Set; }
+
 	void FollowScroll(D3DXVECTOR3& pos) { pos += m_move; }
 
 private:

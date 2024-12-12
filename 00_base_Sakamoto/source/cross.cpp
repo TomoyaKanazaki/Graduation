@@ -36,6 +36,7 @@ CCross::CCross(int nPriority) : CItem(nPriority)
 {
 	SetSize(SAMPLE_SIZE);
 	SetPos(INITVECTOR3);
+	m_EventPos = INITVECTOR3;
 }
 
 //====================================================================
