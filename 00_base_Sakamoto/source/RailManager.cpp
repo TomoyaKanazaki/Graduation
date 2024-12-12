@@ -8,6 +8,7 @@
 #include "renderer.h"
 #include "manager.h"
 #include "texture.h"
+#include "MapSystem.h"
 
 //==========================================
 //  定数定義
@@ -21,18 +22,15 @@ namespace
 //====================================================================
 //静的メンバ変数宣言
 //====================================================================
-CListManager<CRailManager>* CRailManager::m_pList = nullptr; // オブジェクトリスト
+CListManager<CRailManager>* CRailManager::m_pList = nullptr;	// オブジェクトリスト
+std::vector<CMapSystem::GRID> CRailManager::m_GridPos = {};		// レールの位置を保持
 
 //====================================================================
 //コンストラクタ
 //====================================================================
 CRailManager::CRailManager()
 {
-	m_pRailManagerModel[0] = nullptr;
-	m_pRailManagerModel[1] = nullptr;
-
-	m_pPrev = nullptr;		// 前のレールへのポインタ
-	m_pNext = nullptr;		// 次のレールへのポインタ
+	
 }
 
 //====================================================================
@@ -44,41 +42,12 @@ CRailManager::~CRailManager()
 }
 
 //====================================================================
-//生成処理
-//====================================================================
-CRailManager* CRailManager::Create()
-{
-	CRailManager* pSample = nullptr;
-
-	if (pSample == nullptr)
-	{
-		//オブジェクト2Dの生成
-		pSample = new CRailManager();
-	}
-
-	//オブジェクトの初期化処理
-	if (FAILED(pSample->Init()))
-	{//初期化処理が失敗した場合
-		return nullptr;
-	}
-
-	return pSample;
-}
-
-//====================================================================
 //初期化処理
 //====================================================================
-HRESULT CRailManager::Init()
+HRESULT CRailManager::Init(CMapSystem::GRID grid)
 {
-
-	if (m_pList == nullptr)
-	{// リストマネージャー生成
-		m_pList = CListManager<CRailManager>::Create();
-		if (m_pList == nullptr) { assert(false); return E_FAIL; }
-	}
-
-	// リストに自身のオブジェクトを追加・イテレーターを取得
-	m_iterator = m_pList->AddList(this);
+	// レールの位置を保持
+	m_GridPos.push_back(grid);
 
 	return S_OK;
 }
@@ -88,37 +57,7 @@ HRESULT CRailManager::Init()
 //====================================================================
 void CRailManager::Uninit(void)
 {
-	for (int nCnt = 0; nCnt < 2; nCnt++)
-	{
-		if (m_pRailManagerModel[nCnt] != nullptr)
-		{
-			m_pRailManagerModel[nCnt]->SetDeathFlag(true);
-		}
-	}
-
-	// リストから自身のオブジェクトを削除
-	m_pList->DelList(m_iterator);
-
-	if (m_pList->GetNumAll() == 0)
-	{ // オブジェクトが一つもない場合
-
-		// リストマネージャーの破棄
-		m_pList->Release(m_pList);
-	}
-}
-
-//====================================================================
-//終了処理
-//====================================================================
-void CRailManager::SetNULL(void)
-{
-	for (int nCnt = 0; nCnt < 2; nCnt++)
-	{
-		if (m_pRailManagerModel[nCnt] != nullptr)
-		{
-			m_pRailManagerModel[nCnt] = nullptr;
-		}
-	}
+	
 }
 
 //====================================================================
@@ -126,13 +65,7 @@ void CRailManager::SetNULL(void)
 //====================================================================
 void CRailManager::Update(void)
 {
-	for (int nCnt = 0; nCnt < 2; nCnt++)
-	{
-		if (m_pRailManagerModel[nCnt] != nullptr)
-		{
-			m_pRailManagerModel[nCnt]->SetPos(CMapSystem::GRID(m_nMapWidth, m_nMapHeight).ToWorld());
-		}
-	}
+	
 }
 
 //====================================================================
@@ -141,12 +74,4 @@ void CRailManager::Update(void)
 void CRailManager::Draw(void)
 {
 
-}
-
-//====================================================================
-//リスト取得
-//====================================================================
-CListManager<CRailManager>* CRailManager::GetList(void)
-{
-	return m_pList;
 }

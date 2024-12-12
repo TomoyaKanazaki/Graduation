@@ -20,6 +20,7 @@
 #include "RollRock.h"
 #include "objmeshField.h"
 #include "MapMove.h"
+#include "RailManager.h"
 
 #ifdef _DEBUG
 #include "objmeshField.h"
@@ -216,7 +217,7 @@ D3DXVECTOR3 CMapSystem::GetGritPos(const GRID& grid)
 	D3DXVECTOR3 Pos;
 	D3DXVECTOR3 DevilPos;
 
-	DevilPos = CDevil::GetListTop()->GetDevilPos();
+	DevilPos = CMapSystem::GetInstance()->GetMove()->GetDevilPos();
 
 	// グリット番号が最大値以上や最小値以下の時、範囲内に納める処理
 	CMapSystem::GRID temp = grid;
@@ -403,6 +404,8 @@ void CMapSystem::Load(const char* pFilename)
 	// グリッド設定の判定
 	bool bGridSet = false;
 
+	CRailManager* pRailManager = new CRailManager();		// レールマネージャーを生成
+
 	// ファイルを開く
 	std::ifstream file(pFilename);	// ファイルストリーム
 	if (file.fail())
@@ -545,6 +548,9 @@ void CMapSystem::Load(const char* pFilename)
 								// レールブロックの生成
 								CRailBlock::Create(grid);
 
+								// レールの位置を保持する
+								pRailManager->Init(grid);
+
 								// グリッド設定の判定
 								bGridSet = true;
 
@@ -592,6 +598,9 @@ void CMapSystem::Load(const char* pFilename)
 							}
 							else if (str == "11")
 							{ // レール
+
+								// レールの位置を保持する
+								pRailManager->Init(grid);
 
 							}
 							else
@@ -694,7 +703,7 @@ int CMapSystem::CalcGridZ(const float posZ)
 D3DXVECTOR3 CMapSystem::GRID::ToWorld()
 {
 	D3DXVECTOR3 pos;
-	D3DXVECTOR3 DevilPos = CDevil::GetListTop()->GetDevilPos();
+	D3DXVECTOR3 DevilPos = CMapSystem::GetInstance()->GetMove()->GetDevilPos();
 	CMapSystem* map = GetInstance();
 
 	// グリット番号が最大値以上や最小値以下の時、範囲内に納める処理
