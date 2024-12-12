@@ -1425,7 +1425,8 @@ void CPlayer::CollisionPressWall(D3DXVECTOR3& posThis, int Rot)
 	case 0:
 		MyGrid.z += 1;
 
-		if (CMapSystem::GetInstance()->GetGritBool(MyGrid) == true)
+		if (CMapSystem::GetInstance()->GetGritBool(MyGrid) == true &&
+			CMapSystem::GetInstance()->GetMove()->GetMove().z > 0.0f)
 		{
 			Death();
 		}
@@ -1434,7 +1435,8 @@ void CPlayer::CollisionPressWall(D3DXVECTOR3& posThis, int Rot)
 	case 1:
 		MyGrid.z -= 1;
 
-		if (CMapSystem::GetInstance()->GetGritBool(MyGrid) == true)
+		if (CMapSystem::GetInstance()->GetGritBool(MyGrid) == true &&
+			CMapSystem::GetInstance()->GetMove()->GetMove().z < 0.0f)
 		{
 			Death();
 		}
@@ -1443,7 +1445,8 @@ void CPlayer::CollisionPressWall(D3DXVECTOR3& posThis, int Rot)
 	case 2:
 		MyGrid.x -= 1;
 
-		if (CMapSystem::GetInstance()->GetGritBool(MyGrid) == true)
+		if (CMapSystem::GetInstance()->GetGritBool(MyGrid) == true &&
+			CMapSystem::GetInstance()->GetMove()->GetMove().x > 0.0f)
 		{
 			Death();
 		}
@@ -1452,7 +1455,8 @@ void CPlayer::CollisionPressWall(D3DXVECTOR3& posThis, int Rot)
 	case 3:
 		MyGrid.x += 1;
 
-		if (CMapSystem::GetInstance()->GetGritBool(MyGrid) == true)
+		if (CMapSystem::GetInstance()->GetGritBool(MyGrid) == true &&
+			CMapSystem::GetInstance()->GetMove()->GetMove().z < 0.0f)
 		{
 			Death();
 		}
