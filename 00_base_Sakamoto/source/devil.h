@@ -26,7 +26,6 @@ class CSignal;
 class CEnemy;
 class CBoss;
 class CPlayer;
-class CSignalManager;
 class CMapMove;
 
 //オブジェクトプレイヤークラス
@@ -107,7 +106,6 @@ private:
 
 	float m_CollisionRot;			//当たり判定用の向き
 
-	CSignalManager* m_pSignalManager;	// シグナルマネージャー
 	int m_DevilArrow;				// デビルパワーの方向
 	int m_ScrollArrowOld;			// 過去のスクロールの方向
 	int m_SlopwArrowOld;			// 過去の傾きの方向
