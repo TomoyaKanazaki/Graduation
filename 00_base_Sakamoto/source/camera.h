@@ -29,6 +29,7 @@ public:
 		CAMERAMODE_FPS,				//一人称視点
 		CAMERAMODE_FPSCOMPLEMENT,	//一人称視点変更時の補完用
 		CAMERAMODE_SETPOS,			//指定位置へ移動
+		CAMERAMODE_AROUND,			//視点を中心に回転する
 		CAMERAMODE_SEAMLESS,		//シームレス
 		CAMERAMODE_MAX,
 	};
@@ -69,6 +70,11 @@ public:
 	void SetCameraCount(int nCount) { m_nCameraCount = nCount; }
 	int GetCameraCount(void) { return m_nCameraCount; }
 
+	void SetAroundRot(float Rot) { m_fAroundRot = Rot; }
+	float GetAroundRot(void) { return m_fAroundRot; }
+	void SetAroundDistance(float Distance) { m_fAroundDistance = Distance; }
+	float GetAroundDistance(void) { return m_fAroundDistance; }
+
 	// 静的メンバ関数
 	static CListManager<CCamera>* GetList(void); // リスト取得
 
@@ -82,6 +88,7 @@ private:
 	void EventBossCamera(void);
 	void FPSCamera(void);
 	void SetPosCamera(void);
+	void AroundCamera(void);
 	void TitleCamera(void);
 	void SeamlessModeChangeCamera(void);
 
@@ -107,6 +114,8 @@ private:
 	float m_CameraDistance;		//注視点とカメラの距離
 	float m_EventPosY;			//イベント時のカメラの高さ
 	float m_fHomingSpeed;		//カメラ移動のホーミング速度
+	float m_fAroundRot;			//視点中心回転カメラの向き
+	float m_fAroundDistance;	//視点中心回転カメラとの距離
 	bool m_bFollowY;			//カメラの上下追従をするかどうか
 	bool m_bBib;				//カメラが振動するかどうか
 	float m_fBibPowor;			//カメラ振動の強さ

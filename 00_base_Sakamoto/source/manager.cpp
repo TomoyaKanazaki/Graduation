@@ -229,6 +229,12 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 		m_pCharacterManager = new CCharacterManager;
 	}
 
+	// 全てのキャラクターの読み込み
+	if (FAILED(m_pCharacterManager->Load()))
+	{//読み込みが失敗した場合
+		return E_FAIL;
+	}
+
 	if (m_pFade == nullptr)
 	{
 		//フェードの生成
@@ -295,6 +301,9 @@ void CManager::Uninit(void)
 
 	if (m_pCharacterManager != nullptr)
 	{
+		// キャラクター管理データの破棄処理
+		m_pCharacterManager->Unload();
+
 		// キャラクター管理の破棄処理
 		delete m_pCharacterManager;
 		m_pCharacterManager = nullptr;
