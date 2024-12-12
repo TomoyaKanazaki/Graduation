@@ -38,6 +38,8 @@ namespace
 //静的メンバ変数宣言
 CMapSystem* CMapSystem::m_pMapSystem = nullptr;
 bool CMapSystem::m_bMapGrit[NUM_WIGHT][NUM_HEIGHT] = {false};
+bool CMapSystem::m_bMapRailGrit[NUM_WIGHT][NUM_HEIGHT] = { false };
+
 std::vector<std::tuple<>> CMapSystem::m_nData = {};	// 複数の値を保持
 std::vector<CMapSystem::GRID> CMapSystem::m_PosPlayer = {};	// プレイヤーの位置を保持
 
@@ -339,6 +341,25 @@ bool CMapSystem::GetGritBool(const GRID& grid)
 	return m_bMapGrit[grid.x][grid.z];
 }
 
+//==========================================
+//  グリッドのレールフラグを設定
+//==========================================
+void CMapSystem::SetRailGritBool(const GRID& grid, bool Set)
+{
+	if (grid.x < 0 || grid.z < 0) { return; }
+	if (grid.x >= m_MapGrid.x || grid.z >= m_MapGrid.z) { return; }
+	m_bMapRailGrit[grid.x][grid.z] = Set;
+}
+
+//==========================================
+//  グリッドのレールフラグを取得
+//==========================================
+bool CMapSystem::GetRailGritBool(const GRID& grid)
+{
+	if (grid.x < 0 || grid.z < 0) { return false; }
+	if (grid.x >= m_MapGrid.x || grid.z >= m_MapGrid.z) { return false; }
+	return m_bMapRailGrit[grid.x][grid.z];
+}
 
 //==========================================
 //  １マスのサイズを取得
@@ -403,6 +424,7 @@ void CMapSystem::Load(const char* pFilename)
 
 	// グリッド設定の判定
 	bool bGridSet = false;
+	bool bRailGridSet = false;		// レール
 
 	CRailManager* pRailManager = new CRailManager();		// レールマネージャーを生成
 
@@ -553,6 +575,7 @@ void CMapSystem::Load(const char* pFilename)
 
 								// グリッド設定の判定
 								bGridSet = true;
+								bRailGridSet = true;
 
 								// 経路探索用情報の設定
 								generator->addCollision(grid.ToAStar()); // 通過不可地点を追加
@@ -601,6 +624,7 @@ void CMapSystem::Load(const char* pFilename)
 
 								// レールの位置を保持する
 								pRailManager->Init(grid);
+								bRailGridSet = true;
 
 							}
 							else
@@ -616,6 +640,9 @@ void CMapSystem::Load(const char* pFilename)
 
 							// グリッド判定の設定
 							pMapSystem->SetGritBool(grid, bGridSet);
+
+							// グリッドのレール判定の設定
+							pMapSystem->SetRailGritBool(grid, bRailGridSet);
 
 						}
 
