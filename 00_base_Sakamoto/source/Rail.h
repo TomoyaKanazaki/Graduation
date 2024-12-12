@@ -14,14 +14,6 @@
 //前方宣言
 class CObjectX;		// オブジェクトX
 
-//==========================================
-//  定数定義
-//==========================================
-namespace Rail
-{
-	const int MAX_RAIL = 2;		// 1マスが持つレールの数
-}
-
 //レールクラス
 class CRail : public CObject
 {
@@ -33,12 +25,20 @@ public:
 	// レール位置の種類
 	enum POSTYPE
 	{
-		POSTYPE_NONE = 0,		// どこにも無し
-		POSTYPE_UP,				// 上
+		POSTYPE_UP = 0,			// 上
 		POSTYPE_DOWN,			// 下
 		POSTYPE_LEFT,			// 左
 		POSTYPE_RIGHT,			// 右
 		POSTYPE_MAX,
+		POSTYPE_NONE			// どこにも無し
+	};
+
+	// レールの位置状態列挙
+	enum POSSTATE
+	{
+		POSSTATE_FIRST = 0,		// 1番目
+		POSSTATE_SECOND,		// 2番目
+		POSSTATE_MAX
 	};
 
 	static CRail* Create(CMapSystem::GRID grid, POSTYPE PosType0, POSTYPE PosType1);
@@ -72,7 +72,7 @@ public:
 
 private:
 
-	CObjectX* m_pRailModel[Rail::MAX_RAIL];		// レールモデルの情報
+	CObjectX* m_pRailModel[POSSTATE_MAX];		// レールモデルの情報
 	bool m_bRail[POSTYPE_MAX];					// レールの置ける位置の判定
 	int m_bNextNumber;				// 次のレール番号
 
@@ -83,7 +83,7 @@ private:
 	CRail* m_pNext;		// 次のレールへのポインタ
 
 	CMapSystem::GRID m_Grid;			// グリッド情報
-	POSTYPE m_PosType[Rail::MAX_RAIL];	// レール位置の種類
+	POSTYPE m_PosType[POSSTATE_MAX];	// レール位置の種類
 
 	// 静的メンバ変数
 	static CListManager<CRail>* m_pList; // オブジェクトリスト

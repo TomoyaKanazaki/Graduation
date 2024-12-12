@@ -779,13 +779,11 @@ void CGame::SetBgObjTest(void)
 	// マップ移動装置
 	{
 		CScrollDevice* pScrollDevice = CScrollDevice::Create(SCROLL_DEVICE_MODEL, SCROLL_DEVICE_ENEMY_MODEL);
-		pScrollDevice->SetPos(D3DXVECTOR3(1300.0f, 0.0f, 0.0f));
+		pScrollDevice->SetPos(D3DXVECTOR3(1075.0f, 75.0f, 0.0f));
 
 		pScrollDevice = CScrollDevice::Create(SCROLL_DEVICE_MODEL, SCROLL_DEVICE_ENEMY_MODEL);
-		pScrollDevice->SetPos(D3DXVECTOR3(-1300.0f, 0.0f, 0.0f));
+		pScrollDevice->SetPos(D3DXVECTOR3(-1075.0f, 75.0f, 0.0f));
 	}
-
-#if 1 // 酒井のデバッグ用（テスト中でめり込むため一時停止）
 
 	// ジャッキ
 	{
@@ -809,6 +807,4 @@ void CGame::SetBgObjTest(void)
 		pSlopeDevice->SetPos(D3DXVECTOR3(-800.0f, BOTTOM_FIELD_POS.y, -450.0f));
 		pSlopeDevice->SetLocateWorldType(CSlopeDevice::LOCATE_WORLD_TYPE_BOTTOM_RIGHT);
 	}
-#endif
-
 }

@@ -81,6 +81,9 @@ public:
 	bool GetGritBool(int nWight, int nHeight);
 	bool GetGritBool(const GRID& grid);
 
+	void SetRailGritBool(const GRID& grid, bool Set);
+	bool GetRailGritBool(const GRID& grid);
+
 	CMapMove* GetMove(void) { return m_pMapMove; }
 	void SetMapPos(D3DXVECTOR3 pos) { m_MapPos = pos; }
 	D3DXVECTOR3 GetMapPos(void) { return m_MapPos; }
@@ -108,6 +111,8 @@ private:
 
 	// TODO : Load関数で動的確保する（ｻﾄﾈｼｵﾝ）
 	static bool m_bMapGrit[NUM_WIGHT][NUM_HEIGHT];	//グリットにブロックが存在していたらtrue
+	static bool m_bMapRailGrit[NUM_WIGHT][NUM_HEIGHT];	//グリットにレールが存在していたらtrue
+
 	GRID m_mapCenter;
 	D3DXVECTOR3 m_InitPos;
 	D3DXVECTOR3 m_MapPos;
