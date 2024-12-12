@@ -404,6 +404,8 @@ void CMapSystem::Load(const char* pFilename)
 	// グリッド設定の判定
 	bool bGridSet = false;
 
+	CRailManager* pRailManager = new CRailManager();		// レールマネージャーを生成
+
 	// ファイルを開く
 	std::ifstream file(pFilename);	// ファイルストリーム
 	if (file.fail())
@@ -546,6 +548,9 @@ void CMapSystem::Load(const char* pFilename)
 								// レールブロックの生成
 								CRailBlock::Create(grid);
 
+								// レールの位置を保持する
+								pRailManager->Init(grid);
+
 								// グリッド設定の判定
 								bGridSet = true;
 
@@ -593,6 +598,9 @@ void CMapSystem::Load(const char* pFilename)
 							}
 							else if (str == "11")
 							{ // レール
+
+								// レールの位置を保持する
+								pRailManager->Init(grid);
 
 							}
 							else
