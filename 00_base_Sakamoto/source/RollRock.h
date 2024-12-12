@@ -13,6 +13,7 @@
 
 //前方宣言
 class CObjGauge2D;
+class CMoveState;
 
 //転がる岩クラス
 class CRollRock : public CObjectX
@@ -32,12 +33,12 @@ public:
 
 	int GetIdx(void) { return m_nIdxTexture; }
 	int GetIdxXModel(void) { return -1; }
-	void SetMove(D3DXVECTOR3 pos) { m_move = pos; }
-	D3DXVECTOR3 GetMove(void) { return m_move; }
 
 	// マップ番号の設定
-	virtual void SetGrid(const CMapSystem::GRID& pos) { m_Grid = pos; }
-	CMapSystem::GRID GetGrid(void) { return m_Grid; }
+	void SetGrid(const CMapSystem::GRID& pos) override { m_Grid = pos; }
+	CMapSystem::GRID GetGrid(void) override { return m_Grid; }
+
+	void ChangeMoveState(CMoveState* pMoveState) override;   // 移動状態変更
 
 	// 静的メンバ関数
 	static CListManager<CRollRock>* GetList(void); // リスト取得
@@ -55,7 +56,6 @@ private:
 	int m_nIdxTexture;				//テクスチャの番号
 	int m_nStateCount;				//状態管理用変数
 	float m_Scaling;				//大きさ
-	D3DXVECTOR3 m_move;				//移動量	
 	float m_fColorA;				//不透明度
 
 	bool m_OKL;					//左への進行が許されるかどうか
@@ -64,8 +64,9 @@ private:
 	bool m_OKD;					//下への進行が許されるかどうか
 
 	CEffekseer* m_pEffect; // エフェクト
+	CMoveState* m_pMoveState;		// 移動状態
 
-		// 静的メンバ変数
+	// 静的メンバ変数
 	static CListManager<CRollRock>* m_pList; // オブジェクトリスト
 
 	// メンバ変数

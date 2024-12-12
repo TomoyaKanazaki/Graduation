@@ -64,26 +64,11 @@ CSignal* CSignal::Create(int nType)
 	// インスタンス生成
 	CSignal* pSignal = new CSignal();
 
-	switch (nType)
-	{
-	case 0:
-		// オブジェクトの初期化処理
-		if (FAILED(pSignal->Init("data\\MODEL\\00_signal.x")))
-		{// 初期化処理が失敗した場合
+	// オブジェクトの初期化処理
+	if (FAILED(pSignal->Init("data\\MODEL\\00_signal.x")))
+	{// 初期化処理が失敗した場合
 
-			return nullptr;
-		}
-		break;
-
-	case 1:
-		// オブジェクトの初期化処理
-		if (FAILED(pSignal->Init("data\\MODEL\\00_signal_slope.x")))
-		{// 初期化処理が失敗した場合
-
-			return nullptr;
-		}
-		break;
-
+		return nullptr;
 	}
 
 	return pSignal;
@@ -121,14 +106,17 @@ HRESULT CSignal::Init(const char* pModelName)
 //====================================================================
 void CSignal::Uninit()
 {
-	// リストから自身のオブジェクトを削除
-	m_pList->DelList(m_iterator);
+	if (m_pList != nullptr)
+	{
+		// リストから自身のオブジェクトを削除
+		m_pList->DelList(m_iterator);
 
-	if (m_pList->GetNumAll() == 0)
-	{ // オブジェクトが一つもない場合
+		if (m_pList->GetNumAll() == 0)
+		{ // オブジェクトが一つもない場合
 
-		// リストマネージャーの破棄
-		m_pList->Release(m_pList);
+			// リストマネージャーの破棄
+			m_pList->Release(m_pList);
+		}
 	}
 
 	// 継承クラスの終了
@@ -146,6 +134,8 @@ void CSignal::Update()
 
 	// 情報の更新
 	SetPos(D3DXVECTOR3(pos.x, 300.0f, pos.z));
+
+	DebugProc::Print(DebugProc::POINT_CENTER, "矢印 : %d\n", m_pList->GetIndex(this));
 
 	// 親クラスの更新処理
 	CObjectX::Update();

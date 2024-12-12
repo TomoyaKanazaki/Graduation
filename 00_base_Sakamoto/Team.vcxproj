@@ -98,6 +98,7 @@
     <ClCompile Include="source\timer.cpp" />
     <ClCompile Include="source\title.cpp" />
     <ClCompile Include="source\tutorial.cpp" />
+    <ClCompile Include="source\tutorialCheck.cpp" />
     <ClCompile Include="source\TutorialPlayer.cpp" />
     <ClCompile Include="source\useful.cpp" />
     <ClCompile Include="source\wall.cpp" />
@@ -183,6 +184,7 @@
     <ClInclude Include="source\timer.h" />
     <ClInclude Include="source\title.h" />
     <ClInclude Include="source\tutorial.h" />
+    <ClInclude Include="source\tutorialCheck.h" />
     <ClInclude Include="source\TutorialPlayer.h" />
     <ClInclude Include="source\useful.h" />
     <ClInclude Include="source\wall.h" />

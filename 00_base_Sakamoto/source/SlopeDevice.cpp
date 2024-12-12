@@ -26,7 +26,7 @@ namespace
 	const D3DXVECTOR3 ASCENT_ADD = D3DXVECTOR3(0.0f, 30.0f, 0.0f);		// 上昇量
 	const D3DXVECTOR3 DESCENT_DEST = D3DXVECTOR3(0.0f, 30.0f, 0.0f);	// 下降量
 
-	const D3DXVECTOR3 MAX_POS_HEIGHT = D3DXVECTOR3(0.0f, 450.0f, 0.0f);		// 縦傾きの最大上昇値
+	const D3DXVECTOR3 MAX_POS_HEIGHT = D3DXVECTOR3(0.0f, 400.0f, 0.0f);		// 縦傾きの最大上昇値
 	const D3DXVECTOR3 MAX_POS_WIDTH = D3DXVECTOR3(0.0f,550.0f,0.0f);		// 横傾きの最大上小値
 
 	const D3DXVECTOR3 MIN_POS_HEIGHT = D3DXVECTOR3(0.0f, -250.0f, 0.0f);	// 縦傾きの最小上昇値
@@ -34,6 +34,8 @@ namespace
 
 	const D3DXVECTOR3 MOVE_SPEED_HEIGHT = D3DXVECTOR3(0.0f, 1.6f, 0.0f);	// 縦傾きの昇降移動量
 	const D3DXVECTOR3 MOVE_SPEED_WIDTH = D3DXVECTOR3(0.0f, 2.25f, 0.0f);	// 横傾きの昇降移動量
+
+	const D3DXVECTOR3 LIVER_ROT_MOVE = D3DXVECTOR3(0.01f, 0.0f, 0.0f);		// レバーの移動量
 }
 
 //====================================================================
@@ -49,6 +51,9 @@ CSlopeDevice::CSlopeDevice(int nPriority) : CObjectCharacter(nPriority)
 	m_posTarget = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_posTargetDef = D3DXVECTOR3(0.0f,0.0f,0.0f);
 	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
+	m_rotleverDef = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_bleverMove = false;
 
 	m_State = STATE(0);
 	m_nStateCount = 0;
@@ -187,11 +192,11 @@ void CSlopeDevice::SetStateArrow(CScrollArrow::Arrow stateArrow)
 		if (m_LocateWorldType == LOCATE_WORLD_TYPE_BOTTOM_LEFT ||
 			m_LocateWorldType == LOCATE_WORLD_TYPE_BOTTOM_RIGHT)
 		{
-			m_State = STATE_ASCENT;
+			SetState(STATE_ASCENT);
 		}
 		else
 		{
-			m_State = STATE_DESCENT;
+			SetState(STATE_DESCENT);
 		}
 
 		break;
@@ -200,11 +205,11 @@ void CSlopeDevice::SetStateArrow(CScrollArrow::Arrow stateArrow)
 		if (m_LocateWorldType == LOCATE_WORLD_TYPE_TOP_LEFT ||
 			m_LocateWorldType == LOCATE_WORLD_TYPE_TOP_RIGHT)
 		{
-			m_State = STATE_ASCENT;
+			SetState(STATE_ASCENT);
 		}
 		else
 		{
-			m_State = STATE_DESCENT;
+			SetState(STATE_DESCENT);
 		}
 
 		break;
@@ -214,11 +219,11 @@ void CSlopeDevice::SetStateArrow(CScrollArrow::Arrow stateArrow)
 		if (m_LocateWorldType == LOCATE_WORLD_TYPE_TOP_LEFT ||
 			m_LocateWorldType == LOCATE_WORLD_TYPE_BOTTOM_LEFT)
 		{
-			m_State = STATE_ASCENT;
+			SetState(STATE_ASCENT);
 		}
 		else
 		{
-			m_State = STATE_DESCENT;
+			SetState(STATE_DESCENT);
 		}
 
 		break;
@@ -227,11 +232,11 @@ void CSlopeDevice::SetStateArrow(CScrollArrow::Arrow stateArrow)
 		if (m_LocateWorldType == LOCATE_WORLD_TYPE_TOP_RIGHT ||
 			m_LocateWorldType == LOCATE_WORLD_TYPE_BOTTOM_RIGHT)
 		{
-			m_State = STATE_ASCENT;
+			SetState(STATE_ASCENT);
 		}
 		else
 		{
-			m_State = STATE_DESCENT;
+			SetState(STATE_DESCENT);
 		}
 
 		break;
@@ -285,11 +290,11 @@ void CSlopeDevice::SetStateArrowBack(CScrollArrow::Arrow stateArrow)
 		if (m_LocateWorldType == LOCATE_WORLD_TYPE_BOTTOM_LEFT ||
 			m_LocateWorldType == LOCATE_WORLD_TYPE_BOTTOM_RIGHT)
 		{
-			m_State = STATE_DESCENT;
+			SetState(STATE_DESCENT);
 		}
 		else
 		{
-			m_State = STATE_ASCENT;
+			SetState(STATE_ASCENT);
 		}
 
 		break;
@@ -298,11 +303,11 @@ void CSlopeDevice::SetStateArrowBack(CScrollArrow::Arrow stateArrow)
 		if (m_LocateWorldType == LOCATE_WORLD_TYPE_TOP_LEFT ||
 			m_LocateWorldType == LOCATE_WORLD_TYPE_TOP_RIGHT)
 		{
-			m_State = STATE_DESCENT;
+			SetState(STATE_DESCENT);
 		}
 		else
 		{
-			m_State = STATE_ASCENT;
+			SetState(STATE_ASCENT);
 		}
 
 		break;
@@ -311,11 +316,11 @@ void CSlopeDevice::SetStateArrowBack(CScrollArrow::Arrow stateArrow)
 		if (m_LocateWorldType == LOCATE_WORLD_TYPE_TOP_LEFT ||
 			m_LocateWorldType == LOCATE_WORLD_TYPE_BOTTOM_LEFT)
 		{
-			m_State = STATE_DESCENT;
+			SetState(STATE_DESCENT);
 		}
 		else
 		{
-			m_State = STATE_ASCENT;
+			SetState(STATE_ASCENT);
 		}
 
 		break;
@@ -324,11 +329,11 @@ void CSlopeDevice::SetStateArrowBack(CScrollArrow::Arrow stateArrow)
 		if (m_LocateWorldType == LOCATE_WORLD_TYPE_TOP_RIGHT ||
 			m_LocateWorldType == LOCATE_WORLD_TYPE_BOTTOM_RIGHT)
 		{
-			m_State = STATE_DESCENT;
+			SetState(STATE_DESCENT);
 		}
 		else
 		{
-			m_State = STATE_ASCENT;
+			SetState(STATE_ASCENT);
 		}
 
 		break;
@@ -355,6 +360,9 @@ HRESULT CSlopeDevice::InitModel(const char* pModelNameSlopeDevice, const char* p
 {
 	CObjectCharacter::SetTxtCharacter(pModelNameSlopeDevice, 0);
 
+	// レバーの初期向きを取得
+	m_rotleverDef = GetModel(SETUP_TYPE_LIVER)->GetStartRot();
+
 	// デフォルト目的位置を取得・設定
 	m_posTargetDef = GetModel(SETUP_TYPE_ELEVATING_PART)->GetStartPos();
 	m_posTarget = m_posTargetDef;
@@ -365,13 +373,14 @@ HRESULT CSlopeDevice::InitModel(const char* pModelNameSlopeDevice, const char* p
 		m_pObjectCharacter->SetTxtCharacter(pModelNameEnemy, 0);
 
 		// メダマンの親を土台に変更
-		m_pObjectCharacter->GetModel(0)->SetParent(GetModel(SETUP_TYPE_JACK));
+		m_pObjectCharacter->GetModel(0)->SetParent(GetModel(SETUP_TYPE_LIVER));
+		D3DXVECTOR3 rotlever = GetModel(SETUP_TYPE_LIVER)->GetStartRot();
 
 		// メダマンの位置を取得
 		D3DXVECTOR3 pos = m_pObjectCharacter->GetModel(0)->GetStartPos();
 		D3DXVECTOR3 rot = m_pObjectCharacter->GetModel(0)->GetStartRot();
-		D3DXVECTOR3 posAdd = D3DXVECTOR3(0.0f, 0.0f, 400.0f);
-		D3DXVECTOR3 rotAdd = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		D3DXVECTOR3 posAdd = D3DXVECTOR3(0.0f, 10.0f, 150.0f);
+		D3DXVECTOR3 rotAdd = D3DXVECTOR3(0.0f, 0.0f, 0.0f) - rotlever;
 
 		// メダマンを上に
 		m_pObjectCharacter->GetModel(0)->SetStartPos(pos + posAdd);
@@ -404,11 +413,13 @@ void CSlopeDevice::StateManager(void)
 			MoveState == CMapMove::MOVE_SLOPE_DOWN)
 		{
 			Ascent(SETUP_TYPE_ELEVATING_PART);
+			leverBehavior(SETUP_TYPE_LIVER);
 		}
 		else if (MoveState == CMapMove::MOVE_SLOPE_RIGHT ||
 				 MoveState == CMapMove::MOVE_SLOPE_LEFT)
 		{
 			Ascent(SETUP_TYPE_ELEVATING_PART);
+			leverBehavior(SETUP_TYPE_LIVER);
 		}
 
 		break;
@@ -418,11 +429,13 @@ void CSlopeDevice::StateManager(void)
 			MoveState == CMapMove::MOVE_SLOPE_DOWN)
 		{
 			Descent(SETUP_TYPE_ELEVATING_PART);
+			leverBehavior(SETUP_TYPE_LIVER);
 		}
 		else if (MoveState == CMapMove::MOVE_SLOPE_RIGHT ||
 				 MoveState == CMapMove::MOVE_SLOPE_LEFT)
 		{
 			Descent(SETUP_TYPE_ELEVATING_PART);
+			leverBehavior(SETUP_TYPE_LIVER);
 		}
 
 		break;
@@ -456,6 +469,11 @@ void CSlopeDevice::Ascent(int nNldxModel)
 		// 上昇量を加算
 		pos += m_move;
 	}
+	else
+	{
+		// 通常状態に変更
+		SetState(STATE_NORMAL);
+	}
 
 	// モデルの位置更新
 	pModel->SetStartPos(pos);
@@ -483,9 +501,98 @@ void CSlopeDevice::Descent(int nNldxModel)
 		// 下降量を加算
 		pos -= m_move;
 	}
+	else
+	{
+		// 通常状態に変更
+		SetState(STATE_NORMAL);
+	}
 
 	// モデルの位置更新
 	pModel->SetStartPos(pos);
+}
+
+//====================================================================
+// レバー動作状態処理
+//====================================================================
+void CSlopeDevice::leverBehavior(int nNldxModel)
+{
+	// モデルの取得
+	CModel* pModel = GetModel(nNldxModel);
+
+	if (pModel == nullptr)
+	{
+		return;
+	}
+
+	// モデルの位置を取得
+	D3DXVECTOR3 rot = pModel->GetStartRot();
+
+	if (m_bleverMove)
+	{
+		// 下降量を加算
+		rot -= LIVER_ROT_MOVE;
+
+		// 下降最小値判定
+		if (rot.x < m_rotleverDef.x)
+		{
+			m_bleverMove = false;
+		}
+	}
+	else
+	{
+		// 上昇量を加算
+		rot += LIVER_ROT_MOVE;
+
+		// 下降最小値判定
+		if (rot.x > 0.0f)
+		{
+			m_bleverMove = true;
+		}
+	}
+
+
+	// モデルの位置更新
+	pModel->SetStartRot(rot);
+}
+
+//====================================================================
+// 下降処理
+//====================================================================
+void CSlopeDevice::SetState(STATE state)
+{
+	m_State = state;
+
+	switch (m_State)
+	{
+	case STATE_NORMAL:
+
+		if (m_pObjectCharacter != nullptr)
+		{
+			// モーション設定処理
+			m_pObjectCharacter->GetMotion()->Set(0, 5);
+		}
+
+		break;
+	case STATE_ASCENT:
+
+		if (m_pObjectCharacter != nullptr)
+		{
+			// モーション設定処理
+			m_pObjectCharacter->GetMotion()->Set(1, 5);
+		}
+
+		break;
+
+	case STATE_DESCENT:
+
+		if (m_pObjectCharacter != nullptr)
+		{
+			// モーション設定処理
+			m_pObjectCharacter->GetMotion()->Set(1, 5);
+		}
+
+		break;
+	}
 }
 
 //====================================================================

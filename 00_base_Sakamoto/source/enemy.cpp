@@ -84,11 +84,6 @@ m_pEffect(nullptr)
 	m_HitState = HIT_STATE_NORMAL;
 	m_nHitStateCount = 0;
 
-	m_Progress.bOKL = true;
-	m_Progress.bOKR = true;
-	m_Progress.bOKU = true;
-	m_Progress.bOKD = true;
-
 	m_Grid.x = 0;
 	m_Grid.z = 0;
 
@@ -189,6 +184,9 @@ HRESULT CEnemy::Init(void)
 
 	// リストに自身のオブジェクトを追加・イテレーターを取得
 	m_iterator = m_pList->AddList(this);
+
+	// スクロールをオンにする
+	SetMapScroll(true);
 
 	return S_OK;
 }
@@ -307,7 +305,7 @@ void CEnemy::Update(void)
 	m_pMoveState->Debug();		// 現在の移動状態
 
 	// スクロールに合わせて移動する
-	CMapSystem::GetInstance()->GetMove()->FollowScroll(posThis);
+	//CMapSystem::GetInstance()->GetMove()->FollowScroll(posThis);
 
 	// 値更新
 	SetPos(posThis);			// 位置
@@ -316,7 +314,7 @@ void CEnemy::Update(void)
 	SetSize(sizeThis);		// 大きさ
 
 #ifdef _DEBUG
-#if 1
+#if 0
 	if (CMapSystem::GetInstance()->GetGritBool(m_Grid))
 	{
 		MyEffekseer::EffectCreate(CMyEffekseer::TYPE_TRUE, false, useful::CalcMatrix(posThis, INITVECTOR3, *GetUseMultiMatrix()), INITVECTOR3, { 10.0f, 10.0f, 10.0f });
