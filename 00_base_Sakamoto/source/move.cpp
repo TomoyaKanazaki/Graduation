@@ -352,6 +352,8 @@ void CStateControl::UpdateMovePlayer(CObjectCharacter* pCharacter, D3DXVECTOR3& 
 			//無敵状態の設定
 			pCharacter->SetInvincible(true);
 			pCharacter->SetInvincibleCount(INVINCIBLE_TIME);
+
+			pCharacter->PlayerNumberDisp(true);
 		}
 		//移動状態にする
 		pCharacter->SetState(CObjectCharacter::STATE_WALK);
@@ -653,7 +655,6 @@ void CStateRandom::SearchWall(CItem* pItem, D3DXVECTOR3& pos)
 	CMapSystem::GRID MaxGrid;
 	MaxGrid.x = pMapSystem->GetWightMax();	// マップの横幅
 	MaxGrid.z = pMapSystem->GetHeightMax(); // マップの立幅
-	D3DXVECTOR3 MapSystemPos = pMapSystem->GetMapPos(); // スクロールでずれてる幅
 
 	/* 自身の隣接４マスのグリッド */
 	int nNumber[ROTSTATE_MAX];	// 4方向の隣接するグリッド

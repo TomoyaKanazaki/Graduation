@@ -30,6 +30,7 @@
 #include "Cross.h"
 #include "MapMove.h"
 #include "pause.h"
+#include "SlopeDevice.h"
 
 #include "sound.h"
 #include "shadow.h"
@@ -37,6 +38,8 @@
 namespace
 {
 	const int SAMPLE_NAMESPACE = 0;
+
+	const float LETTERBOX_HEIGHT = 100.0f;		//演出時の上下の黒ポリゴンの太さ
 
 	const CMapSystem::GRID FIELD_GRID = { 64, 64 }; // 下の床のサイズ
 	const char* BOTTOM_FIELD_TEX = "data\\TEXTURE\\Field\\tile_test_02.png";		// 下床のテクスチャ
@@ -435,9 +438,20 @@ void CGame::ResetStage(void)
 	m_bEvent = true;
 
 	// マップの初期化
-	
 	CMapSystem::GetInstance()->GetMove()->Init();
+	CMapSystem::GetInstance()->GetMove()->SetStateCount(200);
 	CObjmeshField::GetListTop()->SetRot(INITVECTOR3);
+
+	// 傾き装置のリスト構造が無ければ抜ける
+	if (CSlopeDevice::GetList() == nullptr) { return; }
+	std::list<CSlopeDevice*> list = CSlopeDevice::GetList()->GetList();    // リストを取得
+
+	// 傾き装置のリストの中身を確認する
+	for (CSlopeDevice* pSlopeDevice : list)
+	{
+		// 方向の傾き装置を上昇状態に変更
+		pSlopeDevice->ReSet();
+	}
 
 	if (m_pEventMovie != nullptr)
 	{
@@ -542,7 +556,7 @@ void CGame::UpdateLetterBox(void)
 		{
 			D3DXVECTOR3 Height = LetterBox[nCnt]->GetSize();
 
-			if (Height.y < 200.0f)
+			if (Height.y < LETTERBOX_HEIGHT)
 			{
 				Height.y += 2.0f;
 			}
@@ -765,13 +779,11 @@ void CGame::SetBgObjTest(void)
 	// マップ移動装置
 	{
 		CScrollDevice* pScrollDevice = CScrollDevice::Create(SCROLL_DEVICE_MODEL, SCROLL_DEVICE_ENEMY_MODEL);
-		pScrollDevice->SetPos(D3DXVECTOR3(1300.0f, 0.0f, 0.0f));
+		pScrollDevice->SetPos(D3DXVECTOR3(1075.0f, 75.0f, 0.0f));
 
 		pScrollDevice = CScrollDevice::Create(SCROLL_DEVICE_MODEL, SCROLL_DEVICE_ENEMY_MODEL);
-		pScrollDevice->SetPos(D3DXVECTOR3(-1300.0f, 0.0f, 0.0f));
+		pScrollDevice->SetPos(D3DXVECTOR3(-1075.0f, 75.0f, 0.0f));
 	}
-
-#if 1 // 酒井のデバッグ用（テスト中でめり込むため一時停止）
 
 	// ジャッキ
 	{
@@ -795,6 +807,4 @@ void CGame::SetBgObjTest(void)
 		pSlopeDevice->SetPos(D3DXVECTOR3(-800.0f, BOTTOM_FIELD_POS.y, -450.0f));
 		pSlopeDevice->SetLocateWorldType(CSlopeDevice::LOCATE_WORLD_TYPE_BOTTOM_RIGHT);
 	}
-#endif
-
 }

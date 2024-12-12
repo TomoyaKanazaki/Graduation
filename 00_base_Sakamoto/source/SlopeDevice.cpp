@@ -354,6 +354,36 @@ void CSlopeDevice::SetStateArrowBack(CScrollArrow::Arrow stateArrow)
 }
 
 //====================================================================
+// 全値リセット処理
+//====================================================================
+void CSlopeDevice::ReSet(void)
+{
+	// 昇降部位のモデルの取得
+	CModel* pModelElevatingParts = GetModel(SETUP_TYPE_ELEVATING_PART);
+	CModel* pModelLever = GetModel(SETUP_TYPE_LIVER);
+
+	if (pModelElevatingParts == nullptr && pModelLever == nullptr)
+	{
+		return;
+	}
+
+	// モデルの位置を取得
+	D3DXVECTOR3 pos = pModelElevatingParts->GetStartPos();
+	D3DXVECTOR3 rot = pModelLever->GetStartRot();
+
+	// 下降量を加算
+	pos = m_posTargetDef;
+	rot = m_rotleverDef;
+
+	// モデルの位置更新
+	pModelElevatingParts->SetStartPos(pos);
+	pModelLever->SetStartRot(rot);
+
+	// 通常状態に変更
+	SetState(STATE_NORMAL);
+}
+
+//====================================================================
 // モデル関連の初期化処理
 //====================================================================
 HRESULT CSlopeDevice::InitModel(const char* pModelNameSlopeDevice, const char* pModelNameEnemy)
@@ -556,7 +586,7 @@ void CSlopeDevice::leverBehavior(int nNldxModel)
 }
 
 //====================================================================
-// 下降処理
+// 状態設定処理
 //====================================================================
 void CSlopeDevice::SetState(STATE state)
 {
