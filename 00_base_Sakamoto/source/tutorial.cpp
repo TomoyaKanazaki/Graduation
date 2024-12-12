@@ -177,12 +177,12 @@ HRESULT CTutorial::Init(void)
 	//タイムの起動
 	CTutorial::GetTime()->SetStopTime(false);
 
-	//デビルの生成
-	m_pDevil = CDevil::Create();
-
 	// マップの生成
 	CMapSystem::GetInstance()->Init();
 	CMapSystem::Load("data\\TXT\\STAGE\\map01.csv");
+
+	//デビルの生成
+	m_pDevil = CDevil::Create();
 
 	// 十字架の総数保存
 	m_nNumCross = CCross::GetList()->GetList().size();
