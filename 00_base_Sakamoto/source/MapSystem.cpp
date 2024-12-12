@@ -20,6 +20,7 @@
 #include "RollRock.h"
 #include "objmeshField.h"
 #include "MapMove.h"
+#include "RailManager.h"
 
 #ifdef _DEBUG
 #include "objmeshField.h"

@@ -11,16 +11,18 @@
 #include "objectX.h"
 
 //前方宣言
+class CObjectX;		// オブジェクトX
 class CObjGauge2D;
 
-//オブジェクトプレイヤークラス
-class CRail : public CObjectX
+//レールクラス
+class CRail : public CObject
 {
 public:
 
 	CRail(int nPriority = 3);
 	~CRail();
 
+	// レールがある向き
 	enum RAIL_POS
 	{
 		RAIL_POS_UP = 0,
@@ -38,22 +40,23 @@ public:
 	void Update(void);
 	void Draw(void);
 
-	void PrevSet(RAIL_POS Set);
-	void NextSet(RAIL_POS Set);
+	// レールの場所
+	void PrevSet(RAIL_POS Set);		// 前
+	void NextSet(RAIL_POS Set);		// 次
 
 	void SetWightNumber(int Number) { m_nMapWidth = Number; }
 	int GetWightNumber(void) { return m_nMapWidth; }
 	void SetHeightNumber(int Number) { m_nMapHeight = Number; }
 	int GetHeightNumber(void) { return m_nMapHeight; }
 
-	void SetPrevRail(CRail *Set) { m_pPrev = Set; }
-	CRail* GetPrevRail(void) { return m_pPrev; }
-	void SetNextRail(CRail* Set) { m_pNext = Set; }
-	CRail* GetNextRail(void) { return m_pNext; }
+	void SetPrevRail(CRail *Set) { m_pPrev = Set; }		// 前のレール設定
+	CRail* GetPrevRail(void) { return m_pPrev; }		// 前のレール取得
+	void SetNextRail(CRail* Set) { m_pNext = Set; }		// 次のレール設定
+	CRail* GetNextRail(void) { return m_pNext; }		// 次のレール取得
 
 	void SetRailOK(int nCnt, bool Set) { m_bRail[nCnt] = Set; }
 	bool GetRailOK(int nCnt) { return m_bRail[nCnt]; }
-	int GetNextNumber(void) { return m_bNextNumber; }
+	int GetNextNumber(void) { return m_bNextNumber; }		// 次のモデルの番号
 
 	// 静的メンバ関数
 	static CListManager<CRail>* GetList(void); // リスト取得
