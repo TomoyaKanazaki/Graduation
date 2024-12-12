@@ -61,6 +61,9 @@ HRESULT CBowabowa::Init()
 	float time = (float)(rand() / 628) * 0.01f;
 	SetMoveTime(time);
 
+	// 描画をオフにする
+	//SetDisp(false);
+
 	// リストマネージャーの生成
 	if (m_pList == nullptr)
 	{

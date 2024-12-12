@@ -179,6 +179,14 @@ void CEventMovie::StageChangeMovie(void)
 	CPlayer* pPlayer = CGame::GetInstance()->GetPlayer(0);
 	D3DXVECTOR3 PlayerPos = INITVECTOR3;
 
+	CPlayer* pPlayer2 = nullptr;
+	D3DXVECTOR3 PlayerPos2 = INITVECTOR3;
+
+	if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
+	{
+		pPlayer2 = CGame::GetInstance()->GetPlayer(1);
+	}
+
 	//float fDistance = sqrtf((PlayerPos.x - DevilPos.x) * (PlayerPos.x - DevilPos.x) + (PlayerPos.z - DevilPos.z) * (PlayerPos.z - DevilPos.z));
 	//float fAngle = atan2f(PlayerPos.z - DevilPos.z, DevilPos.x - PlayerPos.x) + D3DX_PI * 0.5f;
 
@@ -188,6 +196,13 @@ void CEventMovie::StageChangeMovie(void)
 		pCamera->SetBib(false);	//カメラを振動状態に設定
 		pCamera->SetCameraMode(CCamera::CAMERAMODE_EVENTBOSS);	//カメラをイベント用に変更
 		CGame::GetInstance()->GetTime()->SetStopTime(true);	//タイムの進行を止める
+
+		pPlayer->PlayerNumberDisp(false);
+
+		if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
+		{
+			pPlayer2->PlayerNumberDisp(false);
+		}
 
 		if (m_nCount >= 180)
 		{
@@ -264,6 +279,13 @@ void CEventMovie::StageChangeMovie(void)
 		PlayerPos.y += 50.0f;
 		pPlayer->SetPos(PlayerPos);
 
+		if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
+		{
+			PlayerPos2 = pPlayer2->GetPos();
+			PlayerPos2.y += 50.0f;
+			pPlayer2->SetPos(PlayerPos2);
+		}
+
 		//クロス上移動
 		ShootUpCross();
 
@@ -274,16 +296,21 @@ void CEventMovie::StageChangeMovie(void)
 			PlayerPos = D3DXVECTOR3(0.0f, 1700.0f, -400.0f);
 			pPlayer->SetPos(PlayerPos);
 
+			if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
+			{
+				//プレイヤーの位置設定
+				PlayerPos2 = pPlayer2->GetPos();
+				PlayerPos2 = D3DXVECTOR3(200.0f, 1900.0f, 100.0f);
+				pPlayer2->SetPos(PlayerPos2);
+			}
+
 			//十字架の位置設定
-			SetPosCross(D3DXVECTOR3(
-				PlayerPos.x + (-100.0f + (float)(rand() % 200)),
-				PlayerPos.y,
-				PlayerPos.z + (+200.0f + (float)(rand() % 300))));
+			SetPosEventCross();
 
 			//カメラの指定位置を設定
 			pCamera->SetCameraPosMode(
-				D3DXVECTOR3(pPlayer->GetPos().x, pPlayer->GetPos().y + 350.0f, -800.0f),
-				D3DXVECTOR3(pPlayer->GetPos().x, pPlayer->GetPos().y + 350.0f, pPlayer->GetPos().z));
+				D3DXVECTOR3(pPlayer->GetPos().x + 50.0f, pPlayer->GetPos().y + 200.0f, -550.0f),
+				D3DXVECTOR3(pPlayer->GetPos().x + 50.0f, pPlayer->GetPos().y + 200.0f, pPlayer->GetPos().z));
 			pCamera->SetHomingSpeed(0.9f);	//カメラの目標までのホーミング速度を設定
 			m_fSinFloat = pPlayer->GetPos().y;		//サインカーブ用の初期位置設
 
@@ -310,11 +337,19 @@ void CEventMovie::StageChangeMovie(void)
 	case 6:		//プレイヤーにカメラを向ける
 
 		PlayerPos = pPlayer->GetPos();
-		PlayerPos.y = m_fSinFloat + sinf(D3DX_PI * ((float)m_nCount / 120)) * 400.0f;
+		PlayerPos.y = m_fSinFloat + sinf(D3DX_PI * ((float)m_nCount / 120)) * 200.0f;
 		pPlayer->SetPos(PlayerPos);
 		pPlayer->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
-		SetPosYCross(PlayerPos.y);
+		if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
+		{
+			PlayerPos2 = pPlayer2->GetPos();
+			PlayerPos2.y = (m_fSinFloat + sinf(D3DX_PI * ((float)m_nCount / 120)) * 200.0f) + 200.0f;
+			pPlayer2->SetPos(PlayerPos2);
+			pPlayer2->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+		}
+
+		SetPosCross(PlayerPos);
 
 		if (m_nCount >= 120)
 		{
@@ -326,6 +361,12 @@ void CEventMovie::StageChangeMovie(void)
 			//pPlayer->SetState(CPlayer::STATE_EGG);
 			pPlayer->Reivel(PlayerPos);
 			pPlayer->SetPos(PlayerPos);
+
+			if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
+			{
+				pPlayer2->Reivel(PlayerPos2);
+				pPlayer2->SetPos(PlayerPos2);
+			}
 
 			m_nCount = 0;		//カウントリセット
 			m_nWave++;
@@ -346,6 +387,13 @@ void CEventMovie::StageChangeMovie(void)
 		break;
 
 	default:
+
+		pPlayer->PlayerNumberDisp(true);
+
+		if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
+		{
+			pPlayer2->PlayerNumberDisp(true);
+		}
 
 		CGame::GetInstance()->NextStage();
 		CGame::GetInstance()->GetTime()->SetStopTime(false);	//タイムの進行を進める
@@ -378,24 +426,6 @@ void CEventMovie::ShootUpCross(void)
 //====================================================================
 //十字架の位置設定
 //====================================================================
-void CEventMovie::SetPosYCross(float Pos)
-{
-	// 敵のリスト構造が無ければ抜ける
-	if (CCross::GetList() == nullptr) { return; }
-	std::list<CCross*> list = CCross::GetList()->GetList();    // リストを取得
-
-	// 敵のリストの中身を確認する
-	for (CCross* pCorss : list)
-	{
-		D3DXVECTOR3 Mypos = pCorss->GetPos();
-		pCorss->SetPos(D3DXVECTOR3(Mypos.x, Mypos.y + Pos, Mypos.z));
-		DebugProc::Print(DebugProc::POINT_RIGHT, "%f\n", Mypos.y + Pos);
-	}
-}
-
-//====================================================================
-//十字架の位置設定
-//====================================================================
 void CEventMovie::SetPosCross(D3DXVECTOR3 Pos)
 {
 	// 敵のリスト構造が無ければ抜ける
@@ -405,6 +435,26 @@ void CEventMovie::SetPosCross(D3DXVECTOR3 Pos)
 	// 敵のリストの中身を確認する
 	for (CCross* pCorss : list)
 	{
-		pCorss->SetPos(D3DXVECTOR3(Pos.x, (float)(rand() % 100), Pos.z));
+		D3DXVECTOR3 MyEventpos = pCorss->GetEventPos();
+		pCorss->SetPos(D3DXVECTOR3(MyEventpos + Pos));
+	}
+}
+
+//====================================================================
+//十字架の位置設定
+//====================================================================
+void CEventMovie::SetPosEventCross()
+{
+	// 敵のリスト構造が無ければ抜ける
+	if (CCross::GetList() == nullptr) { return; }
+	std::list<CCross*> list = CCross::GetList()->GetList();    // リストを取得
+
+	// 敵のリストの中身を確認する
+	for (CCross* pCorss : list)
+	{
+		pCorss->SetEventPos(D3DXVECTOR3(
+			((float)(rand() % 400)), 
+			(float)(rand() % 500), 
+			(+400.0f + (float)(rand() % 600))));
 	}
 }

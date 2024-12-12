@@ -352,6 +352,8 @@ void CStateControl::UpdateMovePlayer(CObjectCharacter* pCharacter, D3DXVECTOR3& 
 			//–³“Gó‘Ô‚ÌÝ’è
 			pCharacter->SetInvincible(true);
 			pCharacter->SetInvincibleCount(INVINCIBLE_TIME);
+
+			pCharacter->PlayerNumberDisp(true);
 		}
 		//ˆÚ“®ó‘Ô‚É‚·‚é
 		pCharacter->SetState(CObjectCharacter::STATE_WALK);

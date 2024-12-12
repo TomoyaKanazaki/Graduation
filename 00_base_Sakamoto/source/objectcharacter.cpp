@@ -50,6 +50,7 @@ m_nRefIdx(0)
 
 	m_pMotion = nullptr;
 	m_nNumModel = 0;
+	m_nCharacterNum = -1;
 
 	m_pos = INITVECTOR3;
 	m_posOld = INITVECTOR3;
@@ -310,34 +311,18 @@ void CObjectCharacter::SetTxtCharacter(const char* pFilename, int nRef)
 		return;
 	}
 
-	int nNum = pCharacterManager->Regist(this,pFilename);
+	// キャラクター割当
+	m_nCharacterNum = pCharacterManager->Regist(this, pFilename);
+
+	// キャラクター番号正常判定
+	if (m_nCharacterNum == -1)
+	{
+		assert(("キャラクター割当失敗", false));
+		return;
+	}
 
 	// ステンシル参照値設定
 	SetRefIdx(nRef);
-
-#if 0 // 酒井のデバッグ用（モデル読み込みが正常かわかるまでコメントアウト）
-
-	strcpy(&m_aModelName[0], pFilename);
-
-	//モデルの生成
-	LoadModel(pFilename);
-
-	//モーションの生成
-	if (m_pMotion == nullptr)
-	{
-		//モーションの生成
-		m_pMotion = new CMotion;
-	}
-
-	//初期化処理
-	if (m_pMotion != nullptr)
-	{
-		m_pMotion->SetModel(&m_apModel[0], m_nNumModel);
-		m_pMotion->LoadData(pFilename);
-	}
-
-#endif
-
 }
 
 //====================================================================

@@ -435,8 +435,8 @@ void CGame::ResetStage(void)
 	m_bEvent = true;
 
 	// ƒ}ƒbƒv‚Ì‰Šú‰»
-	
 	CMapSystem::GetInstance()->GetMove()->Init();
+	CMapSystem::GetInstance()->GetMove()->SetStateCount(200);
 	CObjmeshField::GetListTop()->SetRot(INITVECTOR3);
 
 	if (m_pEventMovie != nullptr)
