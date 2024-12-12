@@ -217,7 +217,7 @@ D3DXVECTOR3 CMapSystem::GetGritPos(const GRID& grid)
 	D3DXVECTOR3 Pos;
 	D3DXVECTOR3 DevilPos;
 
-	DevilPos = CDevil::GetListTop()->GetDevilPos();
+	DevilPos = CMapSystem::GetInstance()->GetMove()->GetDevilPos();
 
 	// グリット番号が最大値以上や最小値以下の時、範囲内に納める処理
 	CMapSystem::GRID temp = grid;
@@ -703,7 +703,7 @@ int CMapSystem::CalcGridZ(const float posZ)
 D3DXVECTOR3 CMapSystem::GRID::ToWorld()
 {
 	D3DXVECTOR3 pos;
-	D3DXVECTOR3 DevilPos = CDevil::GetListTop()->GetDevilPos();
+	D3DXVECTOR3 DevilPos = CMapSystem::GetInstance()->GetMove()->GetDevilPos();
 	CMapSystem* map = GetInstance();
 
 	// グリット番号が最大値以上や最小値以下の時、範囲内に納める処理

@@ -954,38 +954,8 @@ void CPlayer::StateManager(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis)
 	case STATE_DEATH:
 		if (m_nStateCount == 0)
 		{
-			//指定位置からブロックが存在しないグリッドを検索してその場所に復活する処理
-			int WMax = CMapSystem::GetInstance()->GetWightMax();
-			int HMax = CMapSystem::GetInstance()->GetHeightMax();
-			CMapSystem::GRID ReivelPos = CMapSystem::GRID(0, 0);
-			ReivelPos.x = CMapSystem::GetInstance()->CalcGridX(RESPAWN_POS.x);
-			ReivelPos.z = CMapSystem::GetInstance()->CalcGridZ(RESPAWN_POS.z);
-
-			for (int nSetW = ReivelPos.x, nCntW = 0; nCntW < WMax; nSetW++, nCntW++)
-			{
-				if (nSetW >= WMax)
-				{
-					nSetW = nSetW - WMax;
-				}
-
-				for (int nSetH = ReivelPos.z, nCntH = 0; nCntH < HMax; nCntH++, nCntH++)
-				{
-					if (nSetH >= HMax)
-					{
-						nSetH = nSetH - HMax;
-					}
-
-					if (CMapSystem::GetInstance()->GetGritBool(nSetW, nSetH) == false)
-					{
-						SetGrid(CMapSystem::GRID(nSetW, nSetH));
-						posThis = CMapSystem::GRID(nSetW, nSetH).ToWorld();
-						posThis.y = RESPAWN_POS.y;
-						SetState(STATE_EGG);
-						return;
-					}
-
-				}
-			}
+			//復活処理
+			Reivel(posThis);
 		}
 
 		break;
@@ -1887,6 +1857,46 @@ void CPlayer::Death(void)
 		m_pP_NumUI->SetAppear(false);
 	}
 }
+
+//====================================================================
+//復活処理
+//====================================================================
+void CPlayer::Reivel(D3DXVECTOR3& posThis)
+{
+	//指定位置からブロックが存在しないグリッドを検索してその場所に復活する処理
+	int WMax = CMapSystem::GetInstance()->GetWightMax();
+	int HMax = CMapSystem::GetInstance()->GetHeightMax();
+	CMapSystem::GRID ReivelPos = CMapSystem::GRID(0, 0);
+	ReivelPos.x = CMapSystem::GetInstance()->CalcGridX(RESPAWN_POS.x);
+	ReivelPos.z = CMapSystem::GetInstance()->CalcGridZ(RESPAWN_POS.z);
+
+	for (int nSetW = ReivelPos.x, nCntW = 0; nCntW < WMax; nSetW++, nCntW++)
+	{
+		if (nSetW >= WMax)
+		{
+			nSetW = nSetW - WMax;
+		}
+
+		for (int nSetH = ReivelPos.z, nCntH = 0; nCntH < HMax; nCntH++, nCntH++)
+		{
+			if (nSetH >= HMax)
+			{
+				nSetH = nSetH - HMax;
+			}
+
+			if (CMapSystem::GetInstance()->GetGritBool(nSetW, nSetH) == false)
+			{
+				SetGrid(CMapSystem::GRID(nSetW, nSetH));
+				posThis = CMapSystem::GRID(nSetW, nSetH).ToWorld();
+				posThis.y = RESPAWN_POS.y;
+				SetState(STATE_EGG);
+				return;
+			}
+
+		}
+	}
+}
+
 
 //====================================================================
 // デバッグボタン

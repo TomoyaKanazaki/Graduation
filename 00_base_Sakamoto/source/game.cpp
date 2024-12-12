@@ -156,12 +156,12 @@ HRESULT CGame::Init(void)
 	m_pTime->SetStartTime(timeGetTime());
 	m_pTime->SetTime(0);
 
-	//デビルの生成
-	m_pDevil = CDevil::Create();
-
 	// マップの生成
 	CMapSystem::GetInstance();
 	CMapSystem::Load("data\\TXT\\STAGE\\map06.csv");
+
+	//デビルの生成
+	m_pDevil = CDevil::Create();
 
 	for (int nCnt = 0; nCnt < 2; nCnt++)
 	{
@@ -427,23 +427,31 @@ void CGame::Draw(void)
 }
 
 //====================================================================
-//ステージ進行処理
+//ステージの初期化処理
 //====================================================================
-void CGame::NextStage(void)
+void CGame::ResetStage(void)
 {
 	//イベントフラグを立てる
 	m_bEvent = true;
 
-	// マップの生成
+	// マップの初期化
 	
 	CMapSystem::GetInstance()->GetMove()->Init();
 	CObjmeshField::GetListTop()->SetRot(INITVECTOR3);
 
-	if(m_pEventMovie != nullptr)
+	if (m_pEventMovie != nullptr)
 	{
 		m_pEventMovie->SetEventType(CEventMovie::STATE_CHANGE);
 	}
 
+	m_bGameEnd = false;
+}
+
+//====================================================================
+//ステージ進行処理
+//====================================================================
+void CGame::NextStage(void)
+{
 	//十字架の削除
 	DeleteCross();
 
@@ -455,8 +463,6 @@ void CGame::NextStage(void)
 
 	//ステージ情報を進める
 	CManager::GetInstance()->SetStage(1);
-
-	m_bGameEnd = false;
 }
 
 //====================================================================
@@ -498,7 +504,7 @@ void CGame::StageClear(int Stage)
 {
 	if (Stage == 0)
 	{
-		NextStage();
+		ResetStage();
 	}
 	else
 	{

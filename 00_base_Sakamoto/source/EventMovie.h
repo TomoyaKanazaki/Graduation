@@ -39,6 +39,10 @@ private:
 	void StageChangeMovie(void);
 	void EndMovie(void);
 
+	void ShootUpCross(void);
+	void SetPosYCross(float PosY);
+	void SetPosCross(D3DXVECTOR3 Pos);
+
 	STATE m_State;
 	int m_nWave;
 	int m_nCount;
