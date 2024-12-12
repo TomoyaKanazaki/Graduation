@@ -135,7 +135,7 @@ void CMoveState::Rot(CItem* pItem, D3DXVECTOR3& rot)
 void CMoveState::UpdatePos(CObjectCharacter* pCharacter, D3DXVECTOR3& pos)
 {
 	// 変数宣言
-	CMapMove* pMapMove = CMapMove::GetListTop();
+	CMapMove* pMapMove = CMapSystem::GetInstance()->GetMove();
 	D3DXVECTOR3 move = pCharacter->GetMove();		// 移動量
 	D3DXVECTOR3 objMove = pCharacter->GetObjMove();
 
@@ -177,7 +177,7 @@ void CMoveState::UpdatePos(CObjectCharacter* pCharacter, D3DXVECTOR3& pos)
 void CMoveState::UpdatePos(CItem* pItem, D3DXVECTOR3& pos)
 {
 	// 変数宣言
-	CMapMove* pMapMove = CMapMove::GetListTop();
+	CMapMove* pMapMove = CMapSystem::GetInstance()->GetMove();
 	D3DXVECTOR3 move = pItem->GetMove();		// 移動量
 
 	float fSpeed = 1.0f;	// スロー用 default1.0fで初期化
@@ -1228,7 +1228,7 @@ void CStateRoll::RollStop(CObjectX* pObjectX)
 //==========================================
 void CStateRoll::Move(CObjectX* pObjectX, D3DXVECTOR3& pos, D3DXVECTOR3& rot)
 {
-	D3DXVECTOR3 SlopeRot = CMapMove::GetListTop()->GetDevilRot();		// マップの傾き
+	D3DXVECTOR3 SlopeRot = CMapSystem::GetInstance()->GetMove()->GetDevilRot();		// マップの傾き
 	D3DXVECTOR3 move = pObjectX->GetMove();			// 移動量
 	CMapSystem::GRID grid = pObjectX->GetGrid();	// グリッド
 

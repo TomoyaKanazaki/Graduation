@@ -395,7 +395,7 @@ HRESULT CSlopeDevice::InitModel(const char* pModelNameSlopeDevice, const char* p
 //====================================================================
 void CSlopeDevice::StateManager(void)
 {
-	CMapMove* pMapMove = CMapMove::GetListTop();
+	CMapMove* pMapMove = CMapSystem::GetInstance()->GetMove();
 	CMapMove::MOVE MoveState = CMapMove::MOVE_WAIT;
 
 	if (pMapMove != nullptr)
