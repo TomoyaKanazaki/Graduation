@@ -141,6 +141,7 @@ private:
 	CMotion* m_pMotion;
 	char m_aModelName[FILE_NAME_SIZE];
 	int m_nNumModel;
+	int m_nCharacterNum;
 
 	D3DXVECTOR3 m_pos;				//ˆÊ’u
 	D3DXVECTOR3 m_rot;				//Œü‚«
