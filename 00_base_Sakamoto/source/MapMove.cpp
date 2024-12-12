@@ -52,11 +52,6 @@ namespace
 	const float EFFECT_RANGE = 1.5f; // エフェクトの生成間隔
 }
 
-//===========================================
-// 静的メンバ変数宣言
-//===========================================
-CListManager<CMapMove>* CMapMove::m_pList = nullptr; // オブジェクトリスト
-
 //====================================================================
 //コンストラクタ
 //====================================================================
@@ -131,16 +126,6 @@ HRESULT CMapMove::Init(void)
 	//矢印の生成
 	SignalCreate();
 
-	// リストマネージャーの生成
-	if (m_pList == nullptr)
-	{
-		m_pList = CListManager<CMapMove>::Create();
-		if (m_pList == nullptr) { assert(false); return E_FAIL; }
-	}
-
-	// リストに自身のオブジェクトを追加・イテレーターを取得
-	m_iterator = m_pList->AddList(this);
-
 	return S_OK;
 }
 
@@ -149,16 +134,6 @@ HRESULT CMapMove::Init(void)
 //====================================================================
 void CMapMove::Uninit(void)
 {
-	// リストから自身のオブジェクトを削除
-	m_pList->DelList(m_iterator);
-
-	if (m_pList->GetNumAll() == 0)
-	{ // オブジェクトが一つもない場合
-
-		// リストマネージャーの破棄
-		m_pList->Release(m_pList);
-	}
-
 	// 矢印を終了
 	for (int i = 0; i < 4; ++i)
 	{
@@ -1232,24 +1207,4 @@ float CMapMove::MoveSlopeZ(float Move)
 	}
 
 	return fSlopeMove;
-}
-
-//====================================================================
-//リスト取得
-//====================================================================
-CListManager<CMapMove>* CMapMove::GetList(void)
-{
-	return m_pList;
-}
-
-//====================================================================
-//リストの先頭取得
-//====================================================================
-CMapMove* CMapMove::GetListTop(void)
-{
-	if (CMapMove::GetList() == nullptr) { return nullptr; }
-	std::list<CMapMove*> list = CMapMove::GetList()->GetList();    // リストを取得
-	CMapMove* pDevil = list.front();
-
-	return pDevil;
 }
