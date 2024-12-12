@@ -115,6 +115,9 @@ void CCross::Draw(void)
 //====================================================================
 bool CCross::Hit(CPlayer* pPlayer)
 {
+	// 既に聖書を持っていた場合関数を抜ける
+	if (pPlayer->GetItemType() == CPlayer::TYPE_BIBLE) { return false; }
+
 	// 十字架所持時間のリセット
 	pPlayer->ResetCrossTimer();
 
