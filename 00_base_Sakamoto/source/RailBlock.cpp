@@ -110,13 +110,6 @@ HRESULT CRailBlock::Init(char* pModelName)
 	// 種類の設定
 	SetType(TYPE_RAILBLOCK);
 
-	/*if (Edit == false)
-	{
-		RailSet(Max, nMove);
-
-		RailCheck();
-	}*/
-
 	// 移動状態設定
 	if (m_pMoveState == nullptr)
 	{ // 移動状態設定
@@ -191,30 +184,8 @@ void CRailBlock::Update(void)
 	D3DXVECTOR3 Pos = GetPos();
 	D3DXVECTOR3 PosOld = GetPos();
 
+	// 移動処理
 	Move(&Pos);
-
-	// 横番号が前回と一致しない時にグリットのブロックの有無を切り替える
-	//if (GetWightNumber() != CMapSystem::GetInstance()->CalcGridX(Pos.x))
-	//{
-	//	CMapSystem::GetInstance()->SetGritBool(GetWightNumber(), GetHeightNumber(), false);
-	//	SetWightNumber(CMapSystem::GetInstance()->CalcGridX(Pos.x));
-	//	CMapSystem::GetInstance()->SetGritBool(GetWightNumber(), GetHeightNumber(), true);
-
-	//	RailCheck();
-	//}
-
-	//// 縦番号が前回と一致しない時にグリットのブロックの有無を切り替える
-	//if (GetHeightNumber() != CMapSystem::GetInstance()->CalcGridZ(Pos.z))
-	//{
-	//	CMapSystem::GetInstance()->SetGritBool(GetWightNumber(), GetHeightNumber(), false);
-	//	SetHeightNumber(CMapSystem::GetInstance()->CalcGridZ(Pos.z));
-	//	CMapSystem::GetInstance()->SetGritBool(GetWightNumber(), GetHeightNumber(), true);
-
-	//	RailCheck();
-	//}
-
-	// スクロールに合わせて移動する
-	//CMapSystem::GetInstance()->GetMove()->FollowScroll(Pos);
 
 	// 位置設定
 	SetPos(Pos);
@@ -239,6 +210,10 @@ void CRailBlock::Move(D3DXVECTOR3* Pos)
 	// グリッド情報を保存
 	m_OldGrid = m_Grid;
 
+	// 移動処理
+	m_pMoveState->Move(this, *Pos, INITVECTOR3);
+
+#if 0
 	/*D3DXVECTOR3 TestPos = INITVECTOR3;
 
 	D3DXVECTOR3 SlopeMove = INITVECTOR3;
@@ -250,9 +225,6 @@ void CRailBlock::Move(D3DXVECTOR3* Pos)
 	//傾きによる移動量設定
 	/*SlopeMove.x = -SlopeRot.z * 10.0f;
 	SlopeMove.z = SlopeRot.x * 10.0f;*/
-
-	// 移動処理
-	m_pMoveState->Move(this, *Pos, INITVECTOR3);
 
 	// 左右のグリットの番号がエラー番号(マップ外)に飛び出てる時
 	//if (CMapSystem::GetInstance()->CalcGridX(Pos->x) == -1)
@@ -318,17 +290,38 @@ void CRailBlock::Move(D3DXVECTOR3* Pos)
 	//	Pos->z = GritPos.z;
 	//}
 
+#endif
+
 	// グリッド情報を設定
 	m_Grid = CMapSystem::GetInstance()->CMapSystem::CalcGrid(*Pos);
 
 	// A*判定を設定
 	Coodinate();
 
+	// 横番号が前回と一致しない時にグリットのブロックの有無を切り替える
+	//if (GetWightNumber() != CMapSystem::GetInstance()->CalcGridX(Pos.x))
+	//{
+	//	CMapSystem::GetInstance()->SetGritBool(GetWightNumber(), GetHeightNumber(), false);
+	//	SetWightNumber(CMapSystem::GetInstance()->CalcGridX(Pos.x));
+	//	CMapSystem::GetInstance()->SetGritBool(GetWightNumber(), GetHeightNumber(), true);
+
+	//	RailCheck();
+	//}
+
+	//// 縦番号が前回と一致しない時にグリットのブロックの有無を切り替える
+	//if (GetHeightNumber() != CMapSystem::GetInstance()->CalcGridZ(Pos.z))
+	//{
+	//	CMapSystem::GetInstance()->SetGritBool(GetWightNumber(), GetHeightNumber(), false);
+	//	SetHeightNumber(CMapSystem::GetInstance()->CalcGridZ(Pos.z));
+	//	CMapSystem::GetInstance()->SetGritBool(GetWightNumber(), GetHeightNumber(), true);
+
+	//	RailCheck();
+	//}
+
+	// スクロールに合わせて移動する
+	//CMapSystem::GetInstance()->GetMove()->FollowScroll(Pos);
+
 	DebugProc::Print(DebugProc::POINT_LEFT, "[レールブロック]位置 %f : %f : %f\n", Pos->x, Pos->y, Pos->z);
-	/*DebugProc::Print(DebugProc::POINT_LEFT, "[レールブロック]横番号 %d \n", GetWightNumber());
-	DebugProc::Print(DebugProc::POINT_LEFT, "[レールブロック]縦番号 %d \n", GetHeightNumber());
-	DebugProc::Print(DebugProc::POINT_LEFT, "[レールブロック]差分 %f : %f \n", GritDistance.x, GritDistance.z);*/
-	//DebugProc::Print(DebugProc::POINT_LEFT, "[テストブロック]差分 %f : %f \n", TestPos.x, TestPos.z);
 }
 
 //====================================================================
