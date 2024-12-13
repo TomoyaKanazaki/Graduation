@@ -1232,6 +1232,7 @@ void CStateRoll::Move(CObjectX* pObjectX, D3DXVECTOR3& pos, D3DXVECTOR3& rot)
 	D3DXVECTOR3 SlopeRot = CMapSystem::GetInstance()->GetMove()->GetDevilRot();		// マップの傾き
 	D3DXVECTOR3 move = pObjectX->GetMove();			// 移動量
 	CMapSystem::GRID grid = pObjectX->GetGrid();	// グリッド
+	CObject::OBJECT_TYPE type = pObjectX->GetType();	// オブジェクトの種類
 
 	// 傾きによる移動量設定
 	move.x = -SlopeRot.z * 10.0f;
@@ -1286,8 +1287,11 @@ void CStateRoll::Move(CObjectX* pObjectX, D3DXVECTOR3& pos, D3DXVECTOR3& rot)
 		nLGridX = useful::RangeNumber(CMapSystem::GetInstance()->GetWightMax(), 0, nLGridX);
 
 		// 左右の移動判定
-		SetJudg(nRGridX, grid.z, m_Progress.bOKR);
-		SetJudg(nLGridX, grid.z, m_Progress.bOKL);
+		if (type == CObject::TYPE_ROLLROCK)
+		{ // 岩
+			SetJudg(nRGridX, grid.z, m_Progress.bOKR);
+			SetJudg(nLGridX, grid.z, m_Progress.bOKL);
+		}
 	}
 
 	if (pos.x <= MyGritPos.x + ((MapGritSize * 0.5f)) &&	//左
@@ -1303,14 +1307,29 @@ void CStateRoll::Move(CObjectX* pObjectX, D3DXVECTOR3& pos, D3DXVECTOR3& rot)
 		nDGridZ = useful::RangeNumber(CMapSystem::GetInstance()->GetHeightMax(), 0, nDGridZ);
 
 		// 上下の移動判定
-		SetJudg(grid.x, nUGridZ, m_Progress.bOKU);
-		SetJudg(grid.x, nDGridZ, m_Progress.bOKD);
+		if (type == CObject::TYPE_ROLLROCK)
+		{
+			SetJudg(grid.x, nUGridZ, m_Progress.bOKU);
+			SetJudg(grid.x, nDGridZ, m_Progress.bOKD);
+		}
 	}
 
 	// 停止処理
 	Stop(pos, MyGritPos, move);
 
 	pObjectX->SetMove(move);	// 移動量設定
+}
+
+//==========================================
+// レールがあるか確認
+//==========================================
+void CStateRoll::RailCheck(CMapSystem::GRID& grid, bool& bProgress)
+{
+	// レールブロックの上下左右にレールがあるか確認
+	if (CMapSystem::GetInstance()->GetRailGritBool(grid) == true)
+	{
+
+	}
 }
 
 //==========================================

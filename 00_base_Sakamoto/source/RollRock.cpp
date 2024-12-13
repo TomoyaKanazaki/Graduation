@@ -111,7 +111,7 @@ HRESULT CRollRock::Init(char* pModelName)
 	D3DXVECTOR3 pos = m_Grid.ToWorld();
 	pos.y = 50.0f;
 
-	SetType(CObject::TYPE_ENEMY3D);
+	SetType(CObject::TYPE_ROLLROCK);
 
 	CObjectX::Init(pModelName);
 
