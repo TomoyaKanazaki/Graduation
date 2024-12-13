@@ -1,0 +1,28 @@
+//============================================
+//
+//	チュートリアルUI [tutorialUi.h]
+//	Author:morikawa shunya
+//
+//============================================
+#ifndef _TUTORIALUI_H_
+#define _TUTORIALUI_H_
+
+#include "object2D.h"
+
+class CTutorialUi : CObject2D
+{
+public:
+	CTutorialUi();
+	~CTutorialUi();
+
+	static CTutorialUi* Create(const D3DXVECTOR3& pos);
+
+	HRESULT Init();
+	void Uninit();
+	void Update();
+	void Draw();
+
+private:
+};
+
+#endif

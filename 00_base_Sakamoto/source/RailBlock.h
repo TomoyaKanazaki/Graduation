@@ -32,19 +32,6 @@ public:
 
 	CMapSystem::GRID GetGrid(void) { return m_Grid; }	// グリッド取得
 
-	/*static CRailBlock* Create(int nMapWight, int nMapHeight, bool Edit, int Max, int *nMove);
-
-	HRESULT Init(int nMapWight, int nMapHeight, bool Edit, int Max = 0, int* nMove = 0);
-	void Uninit(void);
-	void Update(void);
-	void Draw(void);*/
-
-	void EditRailSet(int Number);
-	void EditRailUpdate(void);
-	void RailDelete();
-	int GetRailMax() { return m_nMax; }
-	int GetRailMove(int nCnt);
-
 	void ChangeMoveState(CMoveState* pMoveState) override;   // 移動状態変更
 
 	// 静的メンバ関数
@@ -53,22 +40,12 @@ public:
 private:
 
 	void Move(D3DXVECTOR3 *Pos);
-	void RailCheck();
-	void RailAddWrite();
-	void RailSet(int Max, int* nMove);
+	void CollisionOut(D3DXVECTOR3& pos);							//ステージ外との当たり判定
 	void Coodinate();
-
-	//CMapSystem::GRID m_StartGrid;	//開始時のグリット番号
 
 	CMapSystem::GRID m_Grid;	//グリット番号
 	CMapSystem::GRID m_OldGrid;	//グリット番号
 	CMoveState* m_pMoveState;	// 移動状態
-
-	bool bMoveOK[4];
-	int m_nMax;
-	int m_nMove[64];
-	CRail* m_pTop;		// 先頭のレールへのポインタ
-	CRail* m_pCur;		// 最後尾のレールへのポインタ
 
 	// 静的メンバ変数
 	static CListManager<CRailBlock>* m_pList; // オブジェクトリスト

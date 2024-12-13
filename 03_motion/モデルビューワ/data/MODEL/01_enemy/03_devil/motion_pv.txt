@@ -1,3 +1,228 @@
+#==============================================================================
+#
+# 『モーションビューワ』スクリプトファイル [motion.txt]
+# Author : AKIRA TANAKA
+#
+#==============================================================================
+SCRIPT			# この行は絶対消さないこと！
+
+#------------------------------------------------------------------------------
+# モデル数
+#------------------------------------------------------------------------------
+NUM_MODEL = 24
+
+#------------------------------------------------------------------------------
+# モデルファイル名
+#------------------------------------------------------------------------------
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/04_waist.x	# [0]腰
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/03_body.x	# [1]体
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/02_neck.x	# [2]首
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/01_jaw.x	# [3]顎
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/00_head.x	# [4]頭
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/05_R_upper_arm.x	# [5]右上腕
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/06_R_fore_arm.x	# [6]右下腕
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/07_R_hand.x	# [7]右手
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/08_R_1st_joint.x	# [8]第一関節
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/09_R_2nd_joint.x	# [9]第二関節
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/10_R_3rd_joint.x	# [10]第三関節
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/11_L_upper_arm.x	# [11]左上腕
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/12_L_fore_arm.x	# [12]左下腕
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/13_L_hand.x	# [13]左手
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/14_L_1st_joint.x	# [14]第一関節
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/15_L_2nd_joint.x	# [15]第二関節
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/16_L_3rd_joint.x	# [16]第三関節
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/17_R_thighs.x	# [17]右腿
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/18_R_kness.x	# [18]右脚
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/19_R_feet.x	# [19]右足
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/20_L_thighs.x	# [20]左腿
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/21_L_kness.x	# [21]左脚
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/22_L_feet.x	# [22]左足
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/25_devil`s_house.x	# [25]デビルの部屋
+#------------------------------------------------------------------------------
+# キャラクター情報
+#------------------------------------------------------------------------------
+CHARACTERSET
+	MOVE = 3.0					# 移動量
+	JUMP = 10.25					# ジャンプ量
+	RADIUS = 20.0					# 半径
+	NUM_PARTS = 24					# パーツ数
+
+	PARTSSET
+		INDEX = 0
+		PARENT = 0
+		POS = 0.00 153.13 0.00
+		ROT = 0.00 0.00 0.00
+	END_PARTSSET
+
+	PARTSSET
+		INDEX = 1
+		PARENT = 0
+		POS = 0.00 -5.86 0.00
+		ROT = 0.00 0.00 0.00
+	END_PARTSSET
+
+	PARTSSET
+		INDEX = 2
+		PARENT = 1
+		POS = 0.00 72.36 -0.32
+		ROT = 0.00 0.00 0.00
+	END_PARTSSET
+
+	PARTSSET
+		INDEX = 3
+		PARENT = 2
+		POS = 0.00 11.67 5.37
+		ROT = 0.00 0.00 0.00
+	END_PARTSSET
+
+	PARTSSET
+		INDEX = 4
+		PARENT = 1
+		POS = 0.00 80.26 -2.89
+		ROT = 0.00 0.00 0.00
+	END_PARTSSET
+
+	PARTSSET
+		INDEX = 5
+		PARENT = 1
+		POS = -48.95 49.25 0.00
+		ROT = 0.00 0.00 0.00
+	END_PARTSSET
+
+	PARTSSET
+		INDEX = 6
+		PARENT = 5
+		POS = -36.80 0.00 0.00
+		ROT = 0.00 0.00 0.00
+	END_PARTSSET
+
+	PARTSSET
+		INDEX = 7
+		PARENT = 6
+		POS = -36.45 1.10 0.00
+		ROT = 0.00 0.00 0.00
+	END_PARTSSET
+
+	PARTSSET
+		INDEX = 8
+		PARENT = 7
+		POS = -13.25 0.55 -5.30
+		ROT = 0.00 0.00 0.00
+	END_PARTSSET
+
+	PARTSSET
+		INDEX = 9
+		PARENT = 8
+		POS = -6.40 0.00 0.00
+		ROT = 0.00 0.00 0.00
+	END_PARTSSET
+
+	PARTSSET
+		INDEX = 10
+		PARENT = 9
+		POS = -4.30 0.00 0.00
+		ROT = 0.00 0.00 0.00
+	END_PARTSSET
+
+	PARTSSET
+		INDEX = 11
+		PARENT = 1
+		POS = 46.95 47.60 0.00
+		ROT = 0.00 0.00 0.00
+	END_PARTSSET
+
+	PARTSSET
+		INDEX = 12
+		PARENT = 11
+		POS = 38.30 0.00 0.00
+		ROT = 0.00 0.00 0.00
+	END_PARTSSET
+
+	PARTSSET
+		INDEX = 13
+		PARENT = 12
+		POS = 37.15 0.55 0.00
+		ROT = 0.00 0.00 0.00
+	END_PARTSSET
+
+	PARTSSET
+		INDEX = 14
+		PARENT = 13
+		POS = 14.25 0.55 -5.80
+		ROT = 0.00 0.00 0.00
+	END_PARTSSET
+
+	PARTSSET
+		INDEX = 15
+		PARENT = 14
+		POS = 6.40 0.00 0.00
+		ROT = 0.00 0.00 0.00
+	END_PARTSSET
+
+	PARTSSET
+		INDEX = 16
+		PARENT = 15
+		POS = 4.80 0.00 0.00
+		ROT = 0.00 0.00 0.00
+	END_PARTSSET
+
+	PARTSSET
+		INDEX = 17
+		PARENT = 0
+		POS = -20.55 -26.20 0.00
+		ROT = 0.00 0.00 0.00
+	END_PARTSSET
+
+	PARTSSET
+		INDEX = 18
+		PARENT = 17
+		POS = 0.00 -43.15 0.00
+		ROT = 0.00 0.00 0.00
+	END_PARTSSET
+
+	PARTSSET
+		INDEX = 19
+		PARENT = 18
+		POS = 0.00 -48.75 0.00
+		ROT = 0.00 0.00 0.00
+	END_PARTSSET
+
+	PARTSSET
+		INDEX = 20
+		PARENT = 0
+		POS = 19.75 -26.20 0.00
+		ROT = 0.00 0.00 0.00
+	END_PARTSSET
+
+	PARTSSET
+		INDEX = 21
+		PARENT = 20
+		POS = 0.00 -43.15 0.00
+		ROT = 0.00 0.00 0.00
+	END_PARTSSET
+
+	PARTSSET
+		INDEX = 22
+		PARENT = 21
+		POS = 0.00 -48.75 0.00
+		ROT = 0.00 0.00 0.00
+	END_PARTSSET
+	
+		PARTSSET
+		INDEX = 23
+		PARENT = -1
+		POS = 0.00 0.00 0.00
+		ROT = 0.00 0.00 0.00
+	END_PARTSSET
+
+END_CHARACTERSET
+
+#------------------------------------------------------------------------------
+# モーション情報
+#------------------------------------------------------------------------------
+#---------------------------------------
+# [0] ニュートラルモーション
+#---------------------------------------
 #========================================
 #
 # モーション情報
@@ -747,4 +972,4 @@ MOTIONSET
 		END_KEY
 	END_KEYSET
 END_MOTIONSET
-
+END_SCRIPT		# この行は絶対消さないこと！

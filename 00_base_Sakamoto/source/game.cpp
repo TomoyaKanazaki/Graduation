@@ -59,6 +59,10 @@ namespace
 	const D3DXCOLOR MASK_BONBON_COLOR = D3DXCOLOR(1.0f, 0.5f, 0.0f, 1.0f);			// ボンンボンのステンシルカラー(オレンジ)
 	const D3DXCOLOR MASK_YUNGDEVIL_COLOR = D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f);		// 子デビルのステンシルカラー(青)
 	const D3DXCOLOR MASK_ITEM_COLOR = D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f);			// アイテムのステンシルカラー(青)
+
+	const int PLAYER_REF = 2;
+	const int ITEM_REF = 4;
+	const int MEDAMAN_REF = 102;
 }
 
 //静的メンバ変数宣言
@@ -144,9 +148,9 @@ HRESULT CGame::Init(void)
 	}
 
 	// プレイヤー・アイテム・メダマンのステンシルカラーの設定
-	CMask::Create(2, MASK_PLAYER_COLOR);
-	CMask::Create(4, MASK_ITEM_COLOR);
-	CMask::Create(102, MASK_MEDAMAN_COLOR);
+	CMask::Create(PLAYER_REF, MASK_PLAYER_COLOR);
+	CMask::Create(ITEM_REF, MASK_ITEM_COLOR);
+	CMask::Create(MEDAMAN_REF, MASK_MEDAMAN_COLOR);
 
 	//クリアフラグのデフォルトをオンにしておく
 	m_bGameClear = true;
@@ -162,7 +166,7 @@ HRESULT CGame::Init(void)
 
 	// マップの生成
 	CMapSystem::GetInstance();
-	CMapSystem::Load("data\\TXT\\STAGE\\map06.csv");
+	CMapSystem::Load("data\\TXT\\STAGE\\map99.csv");
 
 	//デビルの生成
 	m_pDevil = CDevil::Create();

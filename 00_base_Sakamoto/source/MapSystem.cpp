@@ -656,6 +656,13 @@ void CMapSystem::Load(const char* pFilename)
 	// レールの向き設定
 	pRailManager->Set();
 
+	// レールマネージャーの破棄
+	if (pRailManager != nullptr)
+	{
+		delete pRailManager;
+		pRailManager = nullptr;
+	}
+
 	// ファイルを閉じる
 	file.close();
 }

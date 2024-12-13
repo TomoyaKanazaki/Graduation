@@ -42,7 +42,7 @@ public:
 		TYPE_FRIEDEGG,			// –Ú‹ÊÄ‚«
 		TYPE_TILE,				// °
 		TYPE_SIGNAL,			// –îˆó
-		TYPE_ROLLROCK,
+		TYPE_ROLLROCK,			// Šâ
 		TYPE_MAX,
 	};
 
