@@ -32,13 +32,6 @@ public:
 
 	CMapSystem::GRID GetGrid(void) { return m_Grid; }	// グリッド取得
 
-	/*static CRailBlock* Create(int nMapWight, int nMapHeight, bool Edit, int Max, int *nMove);
-
-	HRESULT Init(int nMapWight, int nMapHeight, bool Edit, int Max = 0, int* nMove = 0);
-	void Uninit(void);
-	void Update(void);
-	void Draw(void);*/
-
 	void EditRailSet(int Number);
 	void EditRailUpdate(void);
 	void RailDelete();
@@ -57,8 +50,6 @@ private:
 	void RailAddWrite();
 	void RailSet(int Max, int* nMove);
 	void Coodinate();
-
-	//CMapSystem::GRID m_StartGrid;	//開始時のグリット番号
 
 	CMapSystem::GRID m_Grid;	//グリット番号
 	CMapSystem::GRID m_OldGrid;	//グリット番号

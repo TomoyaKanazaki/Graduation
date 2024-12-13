@@ -190,32 +190,19 @@ void CRail::Update(void)
 
 	D3DXVECTOR3 SlopeRot = CMapSystem::GetInstance()->GetMove()->GetDevilRot();		// マップの傾き
 	
-
+	// それぞれレール２つの更新
 	for (int nCnt = 0; nCnt < POSSTATE_MAX; nCnt++)
 	{
 		if (m_pRailModel[nCnt] != nullptr)
 		{
-			//// 取得
-			//pos = m_pRailModel[nCnt]->GetPos();					// 位置
-			//posOld = m_pRailModel[nCnt]->GetPosOld();			// 前回の位置
 			rot = m_pRailModel[nCnt]->GetRot();					// 向き
-
-			//// 傾きによる移動量設定
-			//move.x = -SlopeRot.z;
-			//move.z = SlopeRot.x;
-
-			//pos.x += move.x;
-			//pos.z += move.z;
 
 			m_pRailModel[nCnt]->SetPos(m_Grid.ToWorld());		// 位置設定
 			m_pRailModel[nCnt]->SetRot(rot);					// 向き設定
 
-			//m_pRailModel[nCnt]->SetPosOld(posOld);				// 位置
-			m_pRailModel[nCnt]->Update();
+			m_pRailModel[nCnt]->Update();		// ObjectXの更新処理
 		}
 	}
-
-	DebugProc::Print(DebugProc::POINT_CENTER, "Rail : %d, %d\n", m_Grid.x, m_Grid.z);
 }
 
 //====================================================================
@@ -225,106 +212,6 @@ void CRail::Draw(void)
 {
 	
 }
-
-#if 0	// まだ消さないで
-//====================================================================
-//前のモデルの設定
-//====================================================================
-void CRail::PrevSet(POSTYPE Set)
-{
-	//引数で設定した方向にレールを置く
-	m_bRail[Set] = true;
-
-	//真ん中からのレールを設置する
-	if (m_pRailModel[0] == nullptr)
-	{
-		m_pRailModel[0] = CObjectX::Create("data\\MODEL\\TestRail.x");
-		m_pRailModel[0]->SetPos(CMapSystem::GRID(m_nMapWidth, m_nMapHeight).ToWorld());
-		m_pRailModel[0]->SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
-		//m_pRailModel[0]->SetMultiMatrix(true);
-
-		switch (Set)
-		{
-		case CRail::POSTYPE_UP:	// 上
-			m_pRailModel[0]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.0f, 0.0f));
-			break;
-		case CRail::POSTYPE_DOWN:	// 下
-			m_pRailModel[0]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 1.0f, 0.0f));
-			break;
-		case CRail::POSTYPE_LEFT:	// 左
-			m_pRailModel[0]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
-			break;
-		case CRail::POSTYPE_RIGHT:	// 右
-			m_pRailModel[0]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
-			break;
-		default:
-			break;
-		}
-	}
-}
-
-//====================================================================
-//次のモデルの設定
-//====================================================================
-void CRail::NextSet(POSTYPE Set)
-{
-	//引数で設定した方向にレールを置く
-	m_bRail[Set] = true;
-	m_bNextNumber = Set;
-
-	//真ん中までのレールを設置する
-	if (m_pRailModel[1] == nullptr)
-	{
-		m_pRailModel[1] = CObjectX::Create("data\\MODEL\\TestRail.x");
-		m_pRailModel[1]->SetPos(CMapSystem::GRID(m_nMapWidth, m_nMapHeight).ToWorld());
-		m_pRailModel[1]->SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
-		//m_pRailModel[1]->SetMultiMatrix(true);
-
-		//伸ばす前のレールの位置を取得する：grid
-		int nMapWight = GetWightNumber();
-		int nMapHeight = GetHeightNumber();
-
-		//引数で設定した方向にレールの向き、番号を設定
-		switch (Set)
-		{
-		case CRail::POSTYPE_UP:	// 上
-			m_pRailModel[1]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.0f, 0.0f));
-			Set = POSTYPE_DOWN;
-			nMapHeight = GetHeightNumber() - 1;
-			break;
-
-		case CRail::POSTYPE_DOWN:	// 下
-			m_pRailModel[1]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 1.0f, 0.0f));
-			Set = POSTYPE_UP;
-			nMapHeight = GetHeightNumber() + 1;
-			break;
-
-		case CRail::POSTYPE_LEFT:	// 左
-			m_pRailModel[1]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
-			Set = POSTYPE_RIGHT;
-			nMapWight = GetWightNumber() - 1;
-			break;
-
-		case CRail::POSTYPE_RIGHT:	// 右
-			m_pRailModel[1]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
-			Set = POSTYPE_LEFT;
-			nMapWight = GetWightNumber() + 1;
-			break;
-
-		default:
-			break;
-		}
-
-		//次のレールを設定する
-		/*m_pNext = CRail::Create(, Set);
-		m_pNext->SetWightNumber(nMapWight);
-		m_pNext->SetHeightNumber(nMapHeight);
-		m_pNext->SetPrevRail(this);
-		m_pNext->PrevSet(Set);*/
-	}
-}
-
-#endif
 
 //====================================================================
 //リスト取得

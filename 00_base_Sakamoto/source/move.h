@@ -263,9 +263,10 @@ public:
     void Move(CObjectX* pObjectX, D3DXVECTOR3& pos, D3DXVECTOR3& rot) override;      // キャラクターの移動処理
 
 private:
-    void SetJudg(int& nGridPosX, int& nGridPosZ, bool& bProgress);                  // 転がるか判断する
-    void Stop(D3DXVECTOR3& pos, D3DXVECTOR3& GridPos, D3DXVECTOR3& move);           // 転がらないときの位置
+    void SetJudg(int& nGridPosX, int& nGridPosZ, bool& bProgress);                  // 転がるか確認
+    void RailCheck(CMapSystem::GRID& grid, bool& bProgress);                        // レールがあるか確認
 
+    void Stop(D3DXVECTOR3& pos, D3DXVECTOR3& GridPos, D3DXVECTOR3& move);           // 転がらないときの位置
 };
 
 #endif
