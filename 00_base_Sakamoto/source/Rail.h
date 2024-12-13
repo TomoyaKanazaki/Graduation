@@ -25,12 +25,12 @@ public:
 	// レール位置の種類
 	enum POSTYPE
 	{
-		POSTYPE_UP = 0,			// 上
-		POSTYPE_DOWN,			// 下
-		POSTYPE_LEFT,			// 左
-		POSTYPE_RIGHT,			// 右
+		POSTYPE_DOWN = 0,	// 下
+		POSTYPE_RIGHT,		// 右
+		POSTYPE_UP,			// 上
+		POSTYPE_LEFT,		// 左
 		POSTYPE_MAX,
-		POSTYPE_NONE			// どこにも無し
+		POSTYPE_NONE		// どこにも無し
 	};
 
 	// レールの位置状態列挙

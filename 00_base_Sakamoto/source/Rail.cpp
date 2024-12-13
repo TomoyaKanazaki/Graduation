@@ -108,6 +108,8 @@ HRESULT CRail::Init()
 		m_pRailModel[nCnt]->SetType(CObject::TYPE_RAIL);
 
 		// Ý’u‚·‚éŒü‚«
+		rot.y = D3DX_PI * 0.5f * m_PosType[nCnt];
+		/*
 		switch (m_PosType[nCnt])
 		{
 		case CRail::POSTYPE_UP:		// ã
@@ -129,6 +131,7 @@ HRESULT CRail::Init()
 		default:
 			break;
 		}
+		*/
 
 		// Œü‚«Ý’è
 		m_pRailModel[nCnt]->SetRot(rot);
@@ -228,6 +231,8 @@ void CRail::Update(void)
 			m_pRailModel[nCnt]->Update();
 		}
 	}
+
+	DebugProc::Print(DebugProc::POINT_CENTER, "Rail : %d, %d\n", m_Grid.x, m_Grid.z);
 }
 
 //====================================================================
