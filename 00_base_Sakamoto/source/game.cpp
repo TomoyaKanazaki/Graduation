@@ -158,6 +158,7 @@ HRESULT CGame::Init(void)
 	m_pTime = CTimer::Create();
 	m_pTime->SetStartTime(timeGetTime());
 	m_pTime->SetTime(0);
+	m_pTime->SetStopTime(true);	//タイムの進行を止める
 
 	// マップの生成
 	CMapSystem::GetInstance();
@@ -166,11 +167,14 @@ HRESULT CGame::Init(void)
 	//デビルの生成
 	m_pDevil = CDevil::Create();
 
+	// イベントの開始
+	//m_bEvent = true;
+
 	for (int nCnt = 0; nCnt < 2; nCnt++)
 	{
 		LetterBox[nCnt] = CObject2D::Create();
 		LetterBox[nCnt]->SetPos(D3DXVECTOR3(640.0f, nCnt * 720.0f, 0.0f));
-		LetterBox[nCnt]->SetSize(D3DXVECTOR3(1280.0f, 0.0f, 0.0f));
+		LetterBox[nCnt]->SetSize(D3DXVECTOR3(1280.0f, LETTERBOX_HEIGHT, 0.0f));
 		LetterBox[nCnt]->SetColor(D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
 		LetterBox[nCnt]->SetTexture("data\\TEXTURE\\Test.jpg");
 	}
@@ -184,9 +188,6 @@ HRESULT CGame::Init(void)
 
 	// 背景モデル設定処理
 	SetBgObjTest();
-
-	// イベントの開始
-	//m_bEvent = true;
 
 	if (m_pEventMovie == nullptr)
 	{
@@ -468,6 +469,12 @@ void CGame::NextStage(void)
 {
 	//十字架の削除
 	DeleteCross();
+
+	////マップの削除
+	//CMapSystem::MapDelete();
+
+	//// マップの生成
+	//CMapSystem::Load("data\\TXT\\STAGE\\map06.csv");
 
 	// ソフトクリームの生成
 	CItem::Create(CItem::TYPE_SOFTCREAM, CMapSystem::GetInstance()->GetCenter());

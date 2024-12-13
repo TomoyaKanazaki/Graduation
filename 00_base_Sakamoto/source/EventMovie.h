@@ -9,6 +9,7 @@
 
 //前方宣言
 class CObject2D;
+class CObjectX;
 
 //レベルアップクラス
 class CEventMovie
@@ -47,5 +48,7 @@ private:
 	int m_nWave;
 	int m_nCount;
 	float m_fSinFloat;
+
+	CObjectX* m_pEventModel;
 };
 #endif

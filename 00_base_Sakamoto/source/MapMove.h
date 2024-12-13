@@ -100,11 +100,13 @@ private:
 	float m_fActionCount;			//行動のカウント
 	MOVE m_State;					//状態
 	MOVE m_SlopeOld;				//一個前の傾き状態
+	MOVE m_SetState;				//確定行動用の次の状態
 	int m_nStateCount;				//状態管理用カウント
 	int m_nStateNum;				//状態カウント
 	bool m_bSlope;					//傾き状態かどうか
 
 	float m_fScrollMove;			//スクロールが移動した量
+	float m_fScrollEndLine;			//スクロール終了位置
 	bool m_bScrollOK;				//スクロールが完了したかどうか
 
 	CMapSystem::GRID m_MinGrid;		//マップで一番左上にあるブロックの番号
