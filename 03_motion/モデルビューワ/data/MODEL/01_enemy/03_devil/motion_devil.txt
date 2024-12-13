@@ -9,7 +9,7 @@ SCRIPT			# この行は絶対消さないこと！
 #------------------------------------------------------------------------------
 # モデル数
 #------------------------------------------------------------------------------
-NUM_MODEL = 25
+NUM_MODEL = 24
 
 #------------------------------------------------------------------------------
 # モデルファイル名
@@ -37,9 +37,7 @@ MODEL_FILENAME = data/MODEL/01_enemy/03_devil/19_R_feet.x	# [19]右足
 MODEL_FILENAME = data/MODEL/01_enemy/03_devil/20_L_thighs.x	# [20]左腿
 MODEL_FILENAME = data/MODEL/01_enemy/03_devil/21_L_kness.x	# [21]左脚
 MODEL_FILENAME = data/MODEL/01_enemy/03_devil/22_L_feet.x	# [22]左足
-MODEL_FILENAME = data/MODEL/01_enemy/03_devil/23_R_feather.x	# [23]左翼
-MODEL_FILENAME = data/MODEL/01_enemy/03_devil/24_L_feather.x	# [24]右翼
-
+MODEL_FILENAME = data/MODEL/01_enemy/03_devil/25_devil`s_house.x	# [25]デビルの部屋
 #------------------------------------------------------------------------------
 # キャラクター情報
 #------------------------------------------------------------------------------
@@ -47,11 +45,11 @@ CHARACTERSET
 	MOVE = 3.0					# 移動量
 	JUMP = 10.25					# ジャンプ量
 	RADIUS = 20.0					# 半径
-	NUM_PARTS = 25					# パーツ数
+	NUM_PARTS = 24					# パーツ数
 
 	PARTSSET
 		INDEX = 0
-		PARENT = -1
+		PARENT = 0
 		POS = 0.00 153.13 0.00
 		ROT = 0.00 0.00 0.00
 	END_PARTSSET
@@ -209,20 +207,14 @@ CHARACTERSET
 		POS = 0.00 -48.75 0.00
 		ROT = 0.00 0.00 0.00
 	END_PARTSSET
-
-	PARTSSET
+	
+		PARTSSET
 		INDEX = 23
-		PARENT = 1
-		POS = -22.50 14.85 17.00
+		PARENT = -1
+		POS = 0.00 0.00 0.00
 		ROT = 0.00 0.00 0.00
 	END_PARTSSET
 
-	PARTSSET
-		INDEX = 24
-		PARENT = 1
-		POS = 18.50 14.85 17.55
-		ROT = 0.00 0.00 0.00
-	END_PARTSSET
 END_CHARACTERSET
 
 #------------------------------------------------------------------------------

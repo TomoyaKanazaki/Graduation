@@ -110,32 +110,10 @@ HRESULT CRail::Init()
 			m_pRailModel[nCnt]->SetPos(pos);					// 位置設定
 			m_pRailModel[nCnt]->SetPosOld(pos);					// 前回の位置設定
 			m_pRailModel[nCnt]->SetType(CObject::TYPE_RAIL);
-
-			//マップとのマトリックスの掛け合わせをオンにする
 			m_pRailModel[nCnt]->SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
 
 			// 設置する向き
-			switch (m_PosType[nCnt])
-			{
-			case CRail::POSTYPE_UP:		// 上
-				rot.y = D3DX_PI * 1.0f;
-				break;
-
-			case CRail::POSTYPE_DOWN:	// 下
-				rot.y = D3DX_PI * 0.0f;
-				break;
-
-			case CRail::POSTYPE_LEFT:	// 左
-				rot.y = D3DX_PI * 0.5f;
-				break;
-
-			case CRail::POSTYPE_RIGHT:	// 右
-				rot.y = D3DX_PI * -0.5f;
-				break;
-
-			default:
-				break;
-			}
+			rot.y = -D3DX_PI * 0.5f * m_PosType[nCnt];
 
 			// 向き設定
 			m_pRailModel[nCnt]->SetRot(rot);
@@ -236,6 +214,8 @@ void CRail::Update(void)
 			m_pRailModel[nCnt]->Update();
 		}
 	}
+
+	DebugProc::Print(DebugProc::POINT_CENTER, "Rail : %d, %d\n", m_Grid.x, m_Grid.z);
 }
 
 //====================================================================
