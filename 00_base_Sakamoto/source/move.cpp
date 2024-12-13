@@ -1292,6 +1292,11 @@ void CStateRoll::Move(CObjectX* pObjectX, D3DXVECTOR3& pos, D3DXVECTOR3& rot)
 			SetJudg(nRGridX, grid.z, m_Progress.bOKR);
 			SetJudg(nLGridX, grid.z, m_Progress.bOKL);
 		}
+		else if (type == CObject::TYPE_RAILBLOCK)
+		{ // レールブロック
+			RailCheck(CMapSystem::GRID(nRGridX, grid.z), m_Progress.bOKR);
+			RailCheck(CMapSystem::GRID(nLGridX, grid.z), m_Progress.bOKL);
+		}
 	}
 
 	if (pos.x <= MyGritPos.x + ((MapGritSize * 0.5f)) &&	//左
@@ -1312,6 +1317,11 @@ void CStateRoll::Move(CObjectX* pObjectX, D3DXVECTOR3& pos, D3DXVECTOR3& rot)
 			SetJudg(grid.x, nUGridZ, m_Progress.bOKU);
 			SetJudg(grid.x, nDGridZ, m_Progress.bOKD);
 		}
+		else if (type == CObject::TYPE_RAILBLOCK)
+		{ // レールブロック
+			RailCheck(CMapSystem::GRID(grid.x, nUGridZ), m_Progress.bOKU);
+			RailCheck(CMapSystem::GRID(grid.x, nDGridZ), m_Progress.bOKD);
+		}
 	}
 
 	// 停止処理
@@ -1325,10 +1335,14 @@ void CStateRoll::Move(CObjectX* pObjectX, D3DXVECTOR3& pos, D3DXVECTOR3& rot)
 //==========================================
 void CStateRoll::RailCheck(CMapSystem::GRID& grid, bool& bProgress)
 {
-	// レールブロックの上下左右にレールがあるか確認
+	// レールブロックがあるか判定を取る
 	if (CMapSystem::GetInstance()->GetRailGritBool(grid) == true)
 	{
-
+		bProgress = true;		// 転がることが出来る
+	}
+	else
+	{
+		bProgress = false;		// 転がることが出来ない
 	}
 }
 
