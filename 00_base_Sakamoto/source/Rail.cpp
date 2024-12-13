@@ -97,45 +97,28 @@ HRESULT CRail::Init()
 {
 	D3DXVECTOR3 pos = m_Grid.ToWorld();
 	D3DXVECTOR3 rot = INITVECTOR3;
+
 	// レールモデル
 	for (int nCnt = 0; nCnt < POSSTATE_MAX; nCnt++)
 	{
-		m_pRailModel[nCnt] = CObjectX::Create(FILE_PASS);	// 生成処理
-		m_pRailModel[nCnt]->SetGrid(m_Grid);				// グリッド設定
-		m_pRailModel[nCnt]->SetPos(pos);					// 位置設定
-		m_pRailModel[nCnt]->SetPosOld(pos);					// 前回の位置設定
+		if (m_PosType[nCnt] == POSTYPE_NONE) { continue; }		// レールに向きが無い場合生成しない
+		else if (m_PosType[nCnt] != POSTYPE_NONE)
+		{ // レールに向きがある場合
 
-		m_pRailModel[nCnt]->SetType(CObject::TYPE_RAIL);
+			m_pRailModel[nCnt] = CObjectX::Create(FILE_PASS);	// 生成処理
+			m_pRailModel[nCnt]->SetGrid(m_Grid);				// グリッド設定
+			m_pRailModel[nCnt]->SetPos(pos);					// 位置設定
+			m_pRailModel[nCnt]->SetPosOld(pos);					// 前回の位置設定
+			m_pRailModel[nCnt]->SetType(CObject::TYPE_RAIL);
+			m_pRailModel[nCnt]->SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
 
-		// 設置する向き
-		rot.y = D3DX_PI * 0.5f * m_PosType[nCnt];
-		/*
-		switch (m_PosType[nCnt])
-		{
-		case CRail::POSTYPE_UP:		// 上
-			rot.y = D3DX_PI * 1.0f;
-			break;
+			// 設置する向き
+			rot.y = -D3DX_PI * 0.5f * m_PosType[nCnt];
 
-		case CRail::POSTYPE_DOWN:	// 下
-			rot.y = D3DX_PI * 0.0f;
-			break;
-
-		case CRail::POSTYPE_LEFT:	// 左
-			rot.y = D3DX_PI * 0.5f;
-			break;
-
-		case CRail::POSTYPE_RIGHT:	// 右
-			rot.y = D3DX_PI * -0.5f;
-			break;
-
-		default:
-			break;
+			// 向き設定
+			m_pRailModel[nCnt]->SetRot(rot);
+			rot = INITVECTOR3;
 		}
-		*/
-
-		// 向き設定
-		m_pRailModel[nCnt]->SetRot(rot);
-		rot = INITVECTOR3;
 	}
 
 	SetType(CObject::TYPE_RAIL);
