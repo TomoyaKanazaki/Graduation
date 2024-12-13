@@ -44,12 +44,12 @@ namespace
 	const D3DXVECTOR3 CHECK_POS[]
 	{
 		{ 0.0f, 0.0f, 0.0f },	 // NONEの座標
-		{ 50.0f, 110.0f, 0.0f }, // 移動の座標
-		{ 50.0f, 160.0f, 0.0f }, // 十字架座標
-		{ 50.0f, 200.0f, 0.0f }, // 攻撃動の座標
-		{ 50.0f, 250.0f, 0.0f }, // ボワボワの座標
-		{ 50.0f, 295.0f, 0.0f }, // 聖書の座標
-		{ 50.0f, 360.0f, 0.0f }, // デビルホールの座標
+		{ 62.5f, 105.0f, 0.0f }, // 移動の座標
+		{ 62.5f, 150.0f, 0.0f }, // 十字架座標
+		{ 62.5f, 197.5f, 0.0f }, // 攻撃動の座標
+		{ 62.5f, 242.5f, 0.0f }, // ボワボワの座標
+		{ 62.5f, 282.5f, 0.0f }, // 聖書の座標
+		{ 62.5f, 325.0f, 0.0f }, // デビルホールの座標
 	};
 
 	const int BIBLE_OUTGRIT = 2;			// 聖書がマップの外側から何マス内側にいるか
@@ -113,7 +113,8 @@ m_Wireframe(false),			// ワイヤーフレーム切り替え
 m_Slow(false),				// スロー演出フラグ
 m_pTutorialGuide(nullptr),	// チュートリアルガイドのポインタ
 InitPlayerPos(D3DXVECTOR3()),	// プレイヤーの初期位置
-m_nNumBible(0)				// 聖書の総数
+m_nNumBible(0),				// 聖書の総数
+m_bSet(false)
 {
 	for (int nCnt = 0; nCnt < NUM_CAMERA; ++nCnt)
 	{// カメラ分回す
@@ -193,8 +194,11 @@ HRESULT CTutorial::Init(void)
 	// 敵の総数保存
 	m_nNumEnemy = CEnemy::GetList()->GetList().size();
 
+	// デビルホール埋めてない
+	m_bSet = false;
+
 	for (int i = 0; i < TYPE_MAX; ++i)
-	{
+	{// チェックマーカー非表示
 		m_bCheck[i] = false;
 	}
 	
@@ -276,7 +280,11 @@ void CTutorial::Update(void)
 	
 	// プレイヤーリストを取得
 	if (CPlayer::GetList() == nullptr) { assert(false); }
-	std::list<CPlayer*> list = CPlayer::GetList()->GetList();    // リストを取得
+	std::list<CPlayer*> list = CPlayer::GetList()->GetList();
+
+	// デビルホールリストを取得
+	if (CDevilHole::GetList() == nullptr) { assert(false); }
+	std::list<CDevilHole*> DevilHolelist = CDevilHole::GetList()->GetList();
 
 	int nNumPlayer = 0;
 
@@ -342,6 +350,20 @@ void CTutorial::Update(void)
 		}
 	}
 
+	for (CDevilHole* pDevilHole : DevilHolelist)
+	{// デビルホールの中身を確認
+		m_bSet = pDevilHole->IsSet();
+
+		if (pDevilHole->IsSet())
+		{// デビルホールのどこか1箇所埋まった
+			CTutorialCheck::Create(CHECK_POS[TYPE_DEVILHOLE]);
+			m_bCheck[TYPE_DEVILHOLE] = true;
+
+			// チュートリアル段階を進める
+			m_nTutorialWave + 1;
+		}
+	}
+
 #if _DEBUG
 	if (pInputKeyboard->GetTrigger(DIK_3) == true)
 	{// チュートリアル段階を4にする
@@ -399,16 +421,8 @@ void CTutorial::Update(void)
 		switch (CManager::GetInstance()->GetStage())
 		{
 		case 0:
-			// ボワボワのリスト構造が無ければ抜ける
-			if (CBowabowa::GetList() == nullptr)
-			{
-				m_bTutorialEnd = true;
-			}
-			break;
-
-		case 1:
-			if (m_bDevilHoleFinish == true)
-			{
+			if (m_nTutorialWave == WAVE_MAX)
+			{// 6段階目のとき
 				m_bTutorialEnd = true;
 			}
 			break;
@@ -417,33 +431,9 @@ void CTutorial::Update(void)
 		//ステージクリア時の処理
 		if (m_bTutorialEnd == true)
 		{
-			if (m_bTutorialEnd == true
-				&& pInputKeyboard->GetTrigger(DIK_RETURN)
-				&& m_nTutorialWave == WAVE_MAX)
+			if (pInputKeyboard->GetTrigger(DIK_RETURN))
 			{// 好きなタイミングでゲームに遷移
 				CFade::SetFade(CScene::MODE_GAME);
-			}
-			else
-			{
-				CFade::SetFade(CScene::MODE_RESULT);
-
-				int EndScore = 0;
-
-				for (unsigned int nCnt = 0; nCnt < m_pPlayer.size(); nCnt++)
-				{
-					if (m_pPlayer.at(nCnt) != nullptr)
-					{
-						EndScore += m_pPlayer.at(nCnt)->GetScore()->GetScore();
-					}
-				}
-
-				CManager::GetInstance()->SetEndScore(EndScore);
-
-				if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
-				{
-					CManager::GetInstance()->SetEnd1PScore(m_pPlayer.at(0)->GetScore()->GetScore());
-					CManager::GetInstance()->SetEnd2PScore(m_pPlayer.at(1)->GetScore()->GetScore());
-				}
 			}
 		}
 

@@ -43,6 +43,8 @@ public:
 	int GetIdx(void) { return m_nIdxTexture; }
 	int GetIdxXModel(void) { return -1; }
 
+	bool IsSet();
+
 	// É}ÉbÉvî‘çÜÇÃê›íË
 	virtual void SetGrid(const CMapSystem::GRID& pos) { m_Grid = pos; }
 	CMapSystem::GRID GetGrid(void) { return m_Grid; }

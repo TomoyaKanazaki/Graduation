@@ -190,32 +190,19 @@ void CRail::Update(void)
 
 	D3DXVECTOR3 SlopeRot = CMapSystem::GetInstance()->GetMove()->GetDevilRot();		// マップの傾き
 	
-
+	// それぞれレール２つの更新
 	for (int nCnt = 0; nCnt < POSSTATE_MAX; nCnt++)
 	{
 		if (m_pRailModel[nCnt] != nullptr)
 		{
-			//// 取得
-			//pos = m_pRailModel[nCnt]->GetPos();					// 位置
-			//posOld = m_pRailModel[nCnt]->GetPosOld();			// 前回の位置
 			rot = m_pRailModel[nCnt]->GetRot();					// 向き
-
-			//// 傾きによる移動量設定
-			//move.x = -SlopeRot.z;
-			//move.z = SlopeRot.x;
-
-			//pos.x += move.x;
-			//pos.z += move.z;
 
 			m_pRailModel[nCnt]->SetPos(m_Grid.ToWorld());		// 位置設定
 			m_pRailModel[nCnt]->SetRot(rot);					// 向き設定
 
-			//m_pRailModel[nCnt]->SetPosOld(posOld);				// 位置
-			m_pRailModel[nCnt]->Update();
+			m_pRailModel[nCnt]->Update();		// ObjectXの更新処理
 		}
 	}
-
-	DebugProc::Print(DebugProc::POINT_CENTER, "Rail : %d, %d\n", m_Grid.x, m_Grid.z);
 }
 
 //====================================================================
