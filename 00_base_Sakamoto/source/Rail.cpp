@@ -203,8 +203,6 @@ void CRail::Update(void)
 			m_pRailModel[nCnt]->Update();		// ObjectX‚ÌXVˆ—
 		}
 	}
-
-	DebugProc::Print(DebugProc::POINT_CENTER, "Rail : %d, %d\n", m_Grid.x, m_Grid.z);
 }
 
 //====================================================================

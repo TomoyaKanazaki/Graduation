@@ -298,6 +298,7 @@ void CRailBlock::Move(D3DXVECTOR3* Pos)
 	// A*判定を設定
 	Coodinate();
 
+#if 0
 	// 横番号が前回と一致しない時にグリットのブロックの有無を切り替える
 	//if (GetWightNumber() != CMapSystem::GetInstance()->CalcGridX(Pos.x))
 	//{
@@ -320,6 +321,7 @@ void CRailBlock::Move(D3DXVECTOR3* Pos)
 
 	// スクロールに合わせて移動する
 	//CMapSystem::GetInstance()->GetMove()->FollowScroll(Pos);
+#endif
 
 	DebugProc::Print(DebugProc::POINT_LEFT, "[レールブロック]位置 %f : %f : %f\n", Pos->x, Pos->y, Pos->z);
 }
@@ -327,6 +329,7 @@ void CRailBlock::Move(D3DXVECTOR3* Pos)
 //====================================================================
 //レールの有無を設定する
 //====================================================================
+#if 0
 void CRailBlock::RailCheck(void)
 {
 	CRail* pRail = m_pTop;
@@ -353,6 +356,12 @@ void CRailBlock::RailCheck(void)
 
 	//	pRail = pRail->GetNextRail();
 	//}
+}
+#endif
+
+void CRailBlock::RailCheck(void)
+{
+
 }
 
 //====================================================================
