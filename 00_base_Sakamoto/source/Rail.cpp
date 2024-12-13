@@ -97,6 +97,7 @@ HRESULT CRail::Init()
 {
 	D3DXVECTOR3 pos = m_Grid.ToWorld();
 	D3DXVECTOR3 rot = INITVECTOR3;
+
 	// レールモデル
 	for (int nCnt = 0; nCnt < POSSTATE_MAX; nCnt++)
 	{
@@ -104,8 +105,10 @@ HRESULT CRail::Init()
 		m_pRailModel[nCnt]->SetGrid(m_Grid);				// グリッド設定
 		m_pRailModel[nCnt]->SetPos(pos);					// 位置設定
 		m_pRailModel[nCnt]->SetPosOld(pos);					// 前回の位置設定
-
 		m_pRailModel[nCnt]->SetType(CObject::TYPE_RAIL);
+
+		//マップとのマトリックスの掛け合わせをオンにする
+		m_pRailModel[nCnt]->SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
 
 		// 設置する向き
 		switch (m_PosType[nCnt])
