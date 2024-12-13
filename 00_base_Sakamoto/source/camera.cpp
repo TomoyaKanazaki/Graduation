@@ -24,8 +24,8 @@
 namespace
 {
 	const float CAMERA_DISTANCE = 100.0f;							//視点と注視点の距離
-	const float CAMERA_DISTANCE_EVENT = 350.0f;						//イベント時の視点と注視点の距離
-	const float CAMERA_HEIGHT_EVENT = 50.0f;						//イベント時の視点の高さ
+	const float CAMERA_DISTANCE_EVENT = 450.0f;						//イベント時の視点と注視点の距離
+	const float CAMERA_HEIGHT_EVENT = 75.0f;						//イベント時の視点の高さ
 
 	const float MODEL_DISTANCE = 10.0f;								//モデルと注視点の距離
 	const float CAMERA_SPEED = 9.0f;								//カメラの移動スピード
@@ -80,6 +80,9 @@ CCamera::CCamera()
 	m_viewport.Height = 720;		// 画面の高さ
 	m_viewport.MinZ = 0.0f;
 	m_viewport.MaxZ = 1.0f;
+
+	m_fAroundRot = 0.0f;
+	m_fAroundDistance = 0.0f;
 	
 #ifdef _DEBUG
 	CameraMode = CAMERAMODE_CONTROL;
@@ -216,8 +219,11 @@ void CCamera::Update(void)
 		case CAMERAMODE_FPSCOMPLEMENT:		//一人称変更時の補完用カメラ
 			FPSComplementCamera();
 			break;
-		case CAMERAMODE_SETPOS:	//術発動中のプレイヤー見下ろし視点
+		case CAMERAMODE_SETPOS:	//指定位置カメラ
 			SetPosCamera();
+			break;
+		case CAMERAMODE_AROUND:	//ぐるっと一周
+			AroundCamera();
 			break;
 		case CAMERAMODE_SEAMLESS:
 			SeamlessModeChangeCamera();
@@ -784,6 +790,17 @@ void CCamera::SetPosCamera(void)
 		m_posV.y += (m_posVDest.y - m_posV.y) * m_fHomingSpeed;
 		m_posV.z += (m_posVDest.z - m_posV.z) * m_fHomingSpeed;
 	}
+}
+
+//====================================================================
+// 視点を中心にぐるっと一周するカメラ
+//====================================================================
+void CCamera::AroundCamera(void)
+{
+	//視点の情報を出力する
+	m_posV.x = m_posR.x + sinf(m_fAroundRot) * -cosf(D3DX_PI * -0.9f) * m_fAroundDistance;
+	m_posV.y = m_posR.y + sinf(-D3DX_PI * -0.9f) * m_fAroundDistance;
+	m_posV.z = m_posR.z + cosf(m_fAroundRot) * -cosf(D3DX_PI * -0.9f) * m_fAroundDistance;
 }
 
 //====================================================================
