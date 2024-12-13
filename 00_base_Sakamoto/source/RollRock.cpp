@@ -49,11 +49,6 @@ m_pMoveState(nullptr)
 	m_fColorA = 0.0f;
 	m_Grid.x = 0;
 	m_Grid.z = 0;
-
-	m_OKL = false;
-	m_OKR = false;
-	m_OKU = false;
-	m_OKD = false;
 }
 
 //====================================================================
@@ -73,11 +68,6 @@ m_pMoveState(nullptr)
 	m_nStateCount = 0;
 	m_Scaling = 1.0f;
 	m_fColorA = 0.0f;
-
-	m_OKL = false;
-	m_OKR = false;
-	m_OKU = false;
-	m_OKD = false;
 }
 
 //====================================================================
@@ -240,10 +230,10 @@ void CRollRock::Update(void)
 	CObjectX::Update();
 
 	DebugProc::Print(DebugProc::POINT_RIGHT, "[ä‚]â° %d : èc %d\n", m_Grid.x, m_Grid.z);
-	DebugProc::Print(DebugProc::POINT_RIGHT, "[ä‚]ç∂ %d\n", m_OKL);
+	/*DebugProc::Print(DebugProc::POINT_RIGHT, "[ä‚]ç∂ %d\n", m_OKL);
 	DebugProc::Print(DebugProc::POINT_RIGHT, "[ä‚]âE %d\n", m_OKR);
 	DebugProc::Print(DebugProc::POINT_RIGHT, "[ä‚]è„ %d\n", m_OKU);
-	DebugProc::Print(DebugProc::POINT_RIGHT, "[ä‚]â∫ %d\n", m_OKD);
+	DebugProc::Print(DebugProc::POINT_RIGHT, "[ä‚]â∫ %d\n", m_OKD);*/
 }
 
 //====================================================================

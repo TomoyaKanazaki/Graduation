@@ -55,6 +55,10 @@ public:
 	void Update(void);
 	void Draw(void);
 
+	virtual void Death(void);	//死亡処理
+	void Reivel(D3DXVECTOR3& posThis);	//復活処理
+	void PlayerNumberDisp(bool Set);	//プレイヤー番号UIの表示状態処理
+
 	void SetPlayNumber(int Number) { m_nPlayNumber = Number; }
 	int GetPlayNumber(void) { return m_nPlayNumber; }
 
@@ -83,9 +87,6 @@ public:
 	bool GetGritCenter() { return m_bGritCenter; }
 	
 	void ChangeMoveState(CMoveState* pMoveState) override;		// 移動状態変更
-	D3DXVECTOR3 GetEggMove() override { return m_EggMove; }		// 卵の移動量取得
-
-	virtual void Death(void);
 
 	void SetItemType(ITEM_TYPE eType);
 	ITEM_TYPE GetItemType() { return m_eItemType; }		// アイテムの種類取得
@@ -112,7 +113,7 @@ private:
 	void CollisionMoveRock(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR3& sizeMy, useful::COLLISION XYZ);	//動いている岩との当たり判定
 	void SearchWall(D3DXVECTOR3& posMy);							//壁のサーチ判定
 	void CollisionDevilHole(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR3& sizeMy, useful::COLLISION XYZ);	//デビルホールとの当たり判定
-	void CollisionEnemy(D3DXVECTOR3& posMy);						// 敵との当たり判定
+	void CollisionEnemy(D3DXVECTOR3& posMy);					// 敵との当たり判定
 	void CollisionStageOut(D3DXVECTOR3& posMy);					// ステージ外の当たり判定
 	bool CollisionStageIn(D3DXVECTOR3& posMy);					// ステージ内にいるかどうか
 	void CollisionPressStageOut(D3DXVECTOR3& posMy);			// ステージ外の圧死判定
@@ -167,7 +168,6 @@ private:
 
 	CObjectX* m_pUpEgg;				//卵モデルの上
 	CObjectX* m_pDownEgg;			//卵モデルの下
-	D3DXVECTOR3 m_EggMove;			//卵の動き
 
 	CLifeUi* m_pLifeUi;				//体力UI
 	CObjectBillboard* m_pP_NumUI;	//プレイヤー番号UI		

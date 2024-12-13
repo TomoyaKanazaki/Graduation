@@ -32,6 +32,22 @@ CCharacterManager::~CCharacterManager()
 }
 
 //====================================================================
+//読み込み
+//====================================================================
+HRESULT CCharacterManager::Load(void)
+{
+	return S_OK;
+}
+
+//====================================================================
+//破棄
+//====================================================================
+void CCharacterManager::Unload(void)
+{
+
+}
+
+//====================================================================
 // キャラクターの番号指定
 //====================================================================
 int CCharacterManager::Regist(CObjectCharacter* pObjCharacter, const char* pFilename)
@@ -52,11 +68,13 @@ int CCharacterManager::Regist(CObjectCharacter* pObjCharacter, const char* pFile
 	// 読み込み割当処理
 	if (m_nNumAll < MAX_CHARACTER)
 	{
+		int nCharacterNum = m_nNumAll;
+
 		// モデル読み込み
-		if (LoadModel(pFilename, m_nNumAll))
+		if (LoadModel(pFilename, nCharacterNum))
 		{
 			// モデル割当処理
-			SetModelData(pObjCharacter,m_nNumAll);
+			SetModelData(pObjCharacter, nCharacterNum);
 		}
 		else
 		{
@@ -68,10 +86,10 @@ int CCharacterManager::Regist(CObjectCharacter* pObjCharacter, const char* pFile
 		int nNumModel = pObjCharacter->GetNumModel();
 
 		// モーション読み込み
-		if (LoadMotion(pFilename, nNumModel, m_nNumAll))
+		if (LoadMotion(pFilename, nNumModel, nCharacterNum))
 		{
 			// モーション割当処理
-			SetMotionData(pObjCharacter, m_nNumAll);
+			SetMotionData(pObjCharacter, nCharacterNum);
 		}
 		else
 		{
@@ -82,6 +100,8 @@ int CCharacterManager::Regist(CObjectCharacter* pObjCharacter, const char* pFile
 		strcpy(&m_aCharacterInfo[m_nNumAll].acFileName[0], pFilename);
 
 		m_nNumAll++;
+
+		return nCharacterNum;
 	}
 	else
 	{

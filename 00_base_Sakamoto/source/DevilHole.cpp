@@ -282,7 +282,7 @@ void CDevilHole::CollisionOpen(D3DXVECTOR3& pos)
 	for (CPlayer* pPlayer : list)
 	{
 		// プレイヤーの位置・オブジェクトXサイズ取得
-		D3DXVECTOR3 playerPos = pPlayer->GetPos();
+		CMapSystem::GRID PlayerGrid = pPlayer->GetGrid();
 		D3DXVECTOR3 ObjXSize = GetSize();
 
 		if (pPlayer->GetItemType() != CPlayer::TYPE_BIBLE)
@@ -292,27 +292,31 @@ void CDevilHole::CollisionOpen(D3DXVECTOR3& pos)
 
 		for (int nCnt = 0; nCnt < DIRECTION; nCnt++)
 		{
+			CMapSystem::GRID CollsionGrid = m_Grid;
 			switch (nCnt)
 			{
 			case 0:	//上
-				pos.z += 200.0f;
+				CollsionGrid.z -= 2;
 				break;
 
 			case 1:	//下
-				pos.z -= 200.0f;
+				CollsionGrid.z += 2;
 				break;
 
 			case 2:	//右
-				pos.x += 200.0f;
+				CollsionGrid.x += 2;
 				break;
 
 			case 3:	//左
-				pos.x -= 200.0f;
+				CollsionGrid.x -= 2;
 				break;
 			}
 
+			useful::RangeNumber(CMapSystem::GetInstance()->GetWightMax(), 0, CollsionGrid.x);
+			useful::RangeNumber(CMapSystem::GetInstance()->GetHeightMax(), 0, CollsionGrid.z);
+
 			// 矩形の当たり判定
-			if (useful::PointSquareXZ(playerPos, pos, ObjXSize) == true &&
+			if (PlayerGrid == CollsionGrid &&
 				m_bSet[nCnt] == false)
 			{
 				m_pHoleKey[nCnt] = CObjectX::Create("data\\MODEL\\04_devilhole\\devil_hole_fence.x");

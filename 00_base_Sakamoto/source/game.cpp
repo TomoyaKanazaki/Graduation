@@ -30,6 +30,7 @@
 #include "Cross.h"
 #include "MapMove.h"
 #include "pause.h"
+#include "SlopeDevice.h"
 
 #include "sound.h"
 #include "shadow.h"
@@ -37,6 +38,8 @@
 namespace
 {
 	const int SAMPLE_NAMESPACE = 0;
+
+	const float LETTERBOX_HEIGHT = 100.0f;		//演出時の上下の黒ポリゴンの太さ
 
 	const CMapSystem::GRID FIELD_GRID = { 64, 64 }; // 下の床のサイズ
 	const char* BOTTOM_FIELD_TEX = "data\\TEXTURE\\Field\\tile_test_02.png";		// 下床のテクスチャ
@@ -55,7 +58,7 @@ namespace
 	const D3DXCOLOR MASK_MEDAMAN_COLOR = D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f);			// メダマンのステンシルカラー(ピンク)
 	const D3DXCOLOR MASK_BONBON_COLOR = D3DXCOLOR(1.0f, 0.5f, 0.0f, 1.0f);			// ボンンボンのステンシルカラー(オレンジ)
 	const D3DXCOLOR MASK_YUNGDEVIL_COLOR = D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f);		// 子デビルのステンシルカラー(青)
-	const D3DXCOLOR MASK_ITEM_COLOR = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);			// 子デビルのステンシルカラー(青)
+	const D3DXCOLOR MASK_ITEM_COLOR = D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f);			// アイテムのステンシルカラー(青)
 }
 
 //静的メンバ変数宣言
@@ -140,20 +143,10 @@ HRESULT CGame::Init(void)
 		m_pPause = CPause::Create();
 	}
 
-	if (m_pPlayerMask == nullptr)
-	{// プレイヤーマスクの生成
-		m_pPlayerMask = CMask::Create(2, MASK_PLAYER_COLOR);
-	}
-
-	if (m_pItemMask == nullptr)
-	{// アイテムマスク
-		m_pItemMask = CMask::Create(4, MASK_ITEM_COLOR);
-	}
-
-	if (m_pEnemyMask == nullptr)
-	{// 敵マスク
-		m_pEnemyMask = CMask::Create(102, MASK_MEDAMAN_COLOR);
-	}
+	// プレイヤー・アイテム・メダマンのステンシルカラーの設定
+	CMask::Create(2, MASK_PLAYER_COLOR);
+	CMask::Create(4, MASK_ITEM_COLOR);
+	CMask::Create(102, MASK_MEDAMAN_COLOR);
 
 	//クリアフラグのデフォルトをオンにしておく
 	m_bGameClear = true;
@@ -166,12 +159,12 @@ HRESULT CGame::Init(void)
 	m_pTime->SetStartTime(timeGetTime());
 	m_pTime->SetTime(0);
 
-	//デビルの生成
-	m_pDevil = CDevil::Create();
-
 	// マップの生成
 	CMapSystem::GetInstance();
-	CMapSystem::Load("data\\TXT\\STAGE\\map06.csv");
+	CMapSystem::Load("data\\TXT\\STAGE\\map99.csv");
+
+	//デビルの生成
+	m_pDevil = CDevil::Create();
 
 	for (int nCnt = 0; nCnt < 2; nCnt++)
 	{
@@ -437,22 +430,42 @@ void CGame::Draw(void)
 }
 
 //====================================================================
-//ステージ進行処理
+//ステージの初期化処理
 //====================================================================
-void CGame::NextStage(void)
+void CGame::ResetStage(void)
 {
 	//イベントフラグを立てる
 	m_bEvent = true;
 
-	// マップの生成
-	CMapMove::GetListTop()->Init();
+	// マップの初期化
+	CMapSystem::GetInstance()->GetMove()->Init();
+	CMapSystem::GetInstance()->GetMove()->SetStateCount(200);
 	CObjmeshField::GetListTop()->SetRot(INITVECTOR3);
 
-	if(m_pEventMovie != nullptr)
+	// 傾き装置のリスト構造が無ければ抜ける
+	if (CSlopeDevice::GetList() == nullptr) { return; }
+	std::list<CSlopeDevice*> list = CSlopeDevice::GetList()->GetList();    // リストを取得
+
+	// 傾き装置のリストの中身を確認する
+	for (CSlopeDevice* pSlopeDevice : list)
+	{
+		// 方向の傾き装置を上昇状態に変更
+		pSlopeDevice->ReSet();
+	}
+
+	if (m_pEventMovie != nullptr)
 	{
 		m_pEventMovie->SetEventType(CEventMovie::STATE_CHANGE);
 	}
 
+	m_bGameEnd = false;
+}
+
+//====================================================================
+//ステージ進行処理
+//====================================================================
+void CGame::NextStage(void)
+{
 	//十字架の削除
 	DeleteCross();
 
@@ -464,8 +477,6 @@ void CGame::NextStage(void)
 
 	//ステージ情報を進める
 	CManager::GetInstance()->SetStage(1);
-
-	m_bGameEnd = false;
 }
 
 //====================================================================
@@ -490,8 +501,8 @@ void CGame::DeleteCross(void)
 void CGame::CreateBible(void)
 {
 	//グリッド最大・最小位置取得
-	CMapSystem::GRID GMax = CMapMove::GetListTop()->GetMaxGrid();
-	CMapSystem::GRID GMin = CMapMove::GetListTop()->GetMinGrid();
+	CMapSystem::GRID GMax = CMapSystem::GetInstance()->GetMove()->GetMaxGrid();
+	CMapSystem::GRID GMin = CMapSystem::GetInstance()->GetMove()->GetMinGrid();
 
 	// 聖書生成
 	CItem::Create(CItem::TYPE_BIBLE, CMapSystem::GRID(GMin.x + BIBLE_OUTGRIT, GMin.z + BIBLE_OUTGRIT));
@@ -507,7 +518,7 @@ void CGame::StageClear(int Stage)
 {
 	if (Stage == 0)
 	{
-		NextStage();
+		ResetStage();
 	}
 	else
 	{
@@ -545,7 +556,7 @@ void CGame::UpdateLetterBox(void)
 		{
 			D3DXVECTOR3 Height = LetterBox[nCnt]->GetSize();
 
-			if (Height.y < 200.0f)
+			if (Height.y < LETTERBOX_HEIGHT)
 			{
 				Height.y += 2.0f;
 			}
@@ -768,13 +779,11 @@ void CGame::SetBgObjTest(void)
 	// マップ移動装置
 	{
 		CScrollDevice* pScrollDevice = CScrollDevice::Create(SCROLL_DEVICE_MODEL, SCROLL_DEVICE_ENEMY_MODEL);
-		pScrollDevice->SetPos(D3DXVECTOR3(1300.0f, 0.0f, 0.0f));
+		pScrollDevice->SetPos(D3DXVECTOR3(1075.0f, 75.0f, 0.0f));
 
 		pScrollDevice = CScrollDevice::Create(SCROLL_DEVICE_MODEL, SCROLL_DEVICE_ENEMY_MODEL);
-		pScrollDevice->SetPos(D3DXVECTOR3(-1300.0f, 0.0f, 0.0f));
+		pScrollDevice->SetPos(D3DXVECTOR3(-1075.0f, 75.0f, 0.0f));
 	}
-
-#if 1 // 酒井のデバッグ用（テスト中でめり込むため一時停止）
 
 	// ジャッキ
 	{
@@ -798,6 +807,4 @@ void CGame::SetBgObjTest(void)
 		pSlopeDevice->SetPos(D3DXVECTOR3(-800.0f, BOTTOM_FIELD_POS.y, -450.0f));
 		pSlopeDevice->SetLocateWorldType(CSlopeDevice::LOCATE_WORLD_TYPE_BOTTOM_RIGHT);
 	}
-#endif
-
 }

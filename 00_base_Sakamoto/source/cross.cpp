@@ -36,6 +36,7 @@ CCross::CCross(int nPriority) : CItem(nPriority)
 {
 	SetSize(SAMPLE_SIZE);
 	SetPos(INITVECTOR3);
+	m_EventPos = INITVECTOR3;
 }
 
 //====================================================================
@@ -56,6 +57,9 @@ HRESULT CCross::Init()
 
 	// オブジェクトの種類を設定
 	SetType(CObject::TYPE_CROSS);
+
+	// 描画をオフにする
+	SetDisp(false);
 
 	// リストマネージャーの生成
 	if (m_pList == nullptr)
@@ -115,6 +119,9 @@ void CCross::Draw(void)
 //====================================================================
 bool CCross::Hit(CPlayer* pPlayer)
 {
+	// 既に聖書を持っていた場合関数を抜ける
+	if (pPlayer->GetItemType() == CPlayer::TYPE_BIBLE) { return false; }
+
 	// 十字架所持時間のリセット
 	pPlayer->ResetCrossTimer();
 

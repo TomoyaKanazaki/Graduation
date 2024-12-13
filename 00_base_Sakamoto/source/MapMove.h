@@ -12,7 +12,6 @@
 
 //前方宣言
 class CObject2D;
-class CSignalManager;
 class CSignal;
 class CPlayer;
 
@@ -72,11 +71,9 @@ public:
 	CMapSystem::GRID GetMinGrid(void) { return m_MinGrid; }	//マップで一番左上にあるブロックの番号
 	CMapSystem::GRID GetMaxGrid(void) { return m_MaxGrid; }	//マップで一番右下にあるブロックの番号
 
-	void FollowScroll(D3DXVECTOR3& pos) { pos += m_move; }
+	void SetStateCount(int Set) { m_nStateCount = Set; }
 
-	// 静的メンバ関数
-	static CListManager<CMapMove>* GetList(void); // リスト取得
-	static CMapMove* GetListTop(void); // リスト取得
+	void FollowScroll(D3DXVECTOR3& pos) { pos += m_move; }
 
 private:
 
@@ -117,7 +114,6 @@ private:
 
 	float m_CollisionRot;			//当たり判定用の向き
 
-	CSignalManager* m_pSignalManager;	// シグナルマネージャー
 	D3DXVECTOR3 m_DevilRot;			// デビルパワーによって傾く値
 	int m_DevilArrow;				// 方向[0:上][1:下][2:左][3:右]
 	int m_ScrollArrowOld;			// 過去のスクロールの方向
@@ -125,11 +121,5 @@ private:
 	SCROLL_TYPE m_ScrollType;		// スクロールの種類
 	int m_SlopeType;				// スロープの種類
 	float m_fEffectTime;			// エフェクト生成タイマー
-
-	// 静的メンバ変数
-	static CListManager<CMapMove>* m_pList; // オブジェクトリスト
-
-	// メンバ変数
-	CListManager<CMapMove>::AIterator m_iterator; // イテレーター
 };
 #endif

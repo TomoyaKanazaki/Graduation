@@ -67,6 +67,8 @@ public:
 
 	void SetStateArrow(CScrollArrow::Arrow stateArrow);
 	void SetStateArrowBack(CScrollArrow::Arrow stateArrow);
+
+	void ReSet(void);
 	
 	void SetLocateWorldType(LOCATE_WORLD_TYPE LocateWorldType) { m_LocateWorldType = LocateWorldType ;}
 

@@ -101,7 +101,6 @@ m_bPressObj(false),
 m_fCrossTimer(0.0f),
 m_pUpEgg(nullptr),
 m_pDownEgg(nullptr),
-m_EggMove(INITVECTOR3),
 m_bInvincible(true),
 m_nInvincibleCount(0),
 m_pScore(nullptr),
@@ -391,8 +390,6 @@ void CPlayer::Update(void)
 					posThis.x,
 					posThis.y + 50.0f,
 					posThis.z + 50.0f));
-
-				m_pP_NumUI->SetAppear(true);
 			}
 		}
 
@@ -493,6 +490,7 @@ void CPlayer::UI_Create(void)
 	if (m_pP_NumUI == nullptr && CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
 	{
 		m_pP_NumUI = CObjectBillboard::Create();
+		m_pP_NumUI->SetAppear(false);
 	}
 }
 
@@ -954,38 +952,8 @@ void CPlayer::StateManager(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis)
 	case STATE_DEATH:
 		if (m_nStateCount == 0)
 		{
-			//指定位置からブロックが存在しないグリッドを検索してその場所に復活する処理
-			int WMax = CMapSystem::GetInstance()->GetWightMax();
-			int HMax = CMapSystem::GetInstance()->GetHeightMax();
-			CMapSystem::GRID ReivelPos = CMapSystem::GRID(0, 0);
-			ReivelPos.x = CMapSystem::GetInstance()->CalcGridX(RESPAWN_POS.x);
-			ReivelPos.z = CMapSystem::GetInstance()->CalcGridZ(RESPAWN_POS.z);
-
-			for (int nSetW = ReivelPos.x, nCntW = 0; nCntW < WMax; nSetW++, nCntW++)
-			{
-				if (nSetW >= WMax)
-				{
-					nSetW = nSetW - WMax;
-				}
-
-				for (int nSetH = ReivelPos.z, nCntH = 0; nCntH < HMax; nCntH++, nCntH++)
-				{
-					if (nSetH >= HMax)
-					{
-						nSetH = nSetH - HMax;
-					}
-
-					if (CMapSystem::GetInstance()->GetGritBool(nSetW, nSetH) == false)
-					{
-						SetGrid(CMapSystem::GRID(nSetW, nSetH));
-						posThis = CMapSystem::GRID(nSetW, nSetH).ToWorld();
-						posThis.y = RESPAWN_POS.y;
-						SetState(STATE_EGG);
-						return;
-					}
-
-				}
-			}
+			//復活処理
+			Reivel(posThis);
 		}
 
 		break;
@@ -1457,7 +1425,8 @@ void CPlayer::CollisionPressWall(D3DXVECTOR3& posThis, int Rot)
 	case 0:
 		MyGrid.z += 1;
 
-		if (CMapSystem::GetInstance()->GetGritBool(MyGrid) == true)
+		if (CMapSystem::GetInstance()->GetGritBool(MyGrid) == true &&
+			CMapSystem::GetInstance()->GetMove()->GetMove().z > 0.0f)
 		{
 			Death();
 		}
@@ -1466,7 +1435,8 @@ void CPlayer::CollisionPressWall(D3DXVECTOR3& posThis, int Rot)
 	case 1:
 		MyGrid.z -= 1;
 
-		if (CMapSystem::GetInstance()->GetGritBool(MyGrid) == true)
+		if (CMapSystem::GetInstance()->GetGritBool(MyGrid) == true &&
+			CMapSystem::GetInstance()->GetMove()->GetMove().z < 0.0f)
 		{
 			Death();
 		}
@@ -1475,7 +1445,8 @@ void CPlayer::CollisionPressWall(D3DXVECTOR3& posThis, int Rot)
 	case 2:
 		MyGrid.x -= 1;
 
-		if (CMapSystem::GetInstance()->GetGritBool(MyGrid) == true)
+		if (CMapSystem::GetInstance()->GetGritBool(MyGrid) == true &&
+			CMapSystem::GetInstance()->GetMove()->GetMove().x > 0.0f)
 		{
 			Death();
 		}
@@ -1484,7 +1455,8 @@ void CPlayer::CollisionPressWall(D3DXVECTOR3& posThis, int Rot)
 	case 3:
 		MyGrid.x += 1;
 
-		if (CMapSystem::GetInstance()->GetGritBool(MyGrid) == true)
+		if (CMapSystem::GetInstance()->GetGritBool(MyGrid) == true &&
+			CMapSystem::GetInstance()->GetMove()->GetMove().z < 0.0f)
 		{
 			Death();
 		}
@@ -1598,7 +1570,7 @@ void CPlayer::PosUpdate(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D3DXVECTO
 		fSpeed = m_pSlow->GetValue();
 	}
 
-	CMapMove* pMapMove = CMapMove::GetListTop();
+	CMapMove* pMapMove = CMapSystem::GetInstance()->GetMove();
 
 	//Y軸の位置更新
 	posThis.y += m_move.y * CManager::GetInstance()->GetGameSpeed() * fSpeed;
@@ -1754,7 +1726,7 @@ void CPlayer::EggMove(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis)
 		{
 			m_pDownEgg->SetPos(D3DXVECTOR3(posThis.x, posThis.y + 65.0f, posThis.z));
 		}
-		m_EggMove = INITVECTOR3;
+		SetEggMove(INITVECTOR3);
 	}
 	else
 	{
@@ -1766,15 +1738,19 @@ void CPlayer::EggMove(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis)
 
 			ColorA -= EGG_COLOR_DEL_A;
 
-			m_EggMove.y -= EGG_GRAVITY;
+			D3DXVECTOR3 EggMove = GetEggMove();
 
-			pos += m_EggMove;
+			EggMove.y -= EGG_GRAVITY;
 
-			rot.z -= m_EggMove.x * EGG_ROT;
-			rot.x += m_EggMove.z * EGG_ROT;
+			pos += EggMove;
 
-			m_EggMove.x = m_EggMove.x * EGG_MOVE_DEL;
-			m_EggMove.z = m_EggMove.z * EGG_MOVE_DEL;
+			rot.z -= EggMove.x * EGG_ROT;
+			rot.x += EggMove.z * EGG_ROT;
+
+			EggMove.x = EggMove.x * EGG_MOVE_DEL;
+			EggMove.z = EggMove.z * EGG_MOVE_DEL;
+
+			SetEggMove(EggMove);
 
 			if (pos.y < CObjmeshField::GetListTop()->GetPos().y + 30.0f)
 			{
@@ -1885,6 +1861,56 @@ void CPlayer::Death(void)
 	if (m_pP_NumUI != nullptr)
 	{
 		m_pP_NumUI->SetAppear(false);
+	}
+}
+
+//====================================================================
+//復活処理
+//====================================================================
+void CPlayer::Reivel(D3DXVECTOR3& posThis)
+{
+	//指定位置からブロックが存在しないグリッドを検索してその場所に復活する処理
+	int WMax = CMapSystem::GetInstance()->GetWightMax();
+	int HMax = CMapSystem::GetInstance()->GetHeightMax();
+	CMapSystem::GRID ReivelPos = CMapSystem::GRID(0, 0);
+	ReivelPos.x = CMapSystem::GetInstance()->CalcGridX(RESPAWN_POS.x);
+	ReivelPos.z = CMapSystem::GetInstance()->CalcGridZ(RESPAWN_POS.z);
+
+	for (int nSetW = ReivelPos.x, nCntW = 0; nCntW < WMax; nSetW++, nCntW++)
+	{
+		if (nSetW >= WMax)
+		{
+			nSetW = nSetW - WMax;
+		}
+
+		for (int nSetH = ReivelPos.z, nCntH = 0; nCntH < HMax; nCntH++, nCntH++)
+		{
+			if (nSetH >= HMax)
+			{
+				nSetH = nSetH - HMax;
+			}
+
+			if (CMapSystem::GetInstance()->GetGritBool(nSetW, nSetH) == false)
+			{
+				SetGrid(CMapSystem::GRID(nSetW, nSetH));
+				posThis = CMapSystem::GRID(nSetW, nSetH).ToWorld();
+				posThis.y = RESPAWN_POS.y;
+				SetState(STATE_EGG);
+				return;
+			}
+
+		}
+	}
+}
+
+//====================================================================
+//プレイヤー番号の表示状態
+//====================================================================
+void CPlayer::PlayerNumberDisp(bool Set)
+{
+	if (m_pP_NumUI != nullptr)
+	{
+		m_pP_NumUI->SetAppear(Set);
 	}
 }
 

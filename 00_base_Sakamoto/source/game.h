@@ -71,11 +71,12 @@ public:
 	CObjmeshField* GetMapField(void) { return m_pMapField; }
 	
 	void DeleteMap(void);
+	void NextStage(void);		//ステージの進行
 
 	bool GetSlow(void) { return m_Slow; }
 
 private:
-	void NextStage(void);
+	void ResetStage(void);		//ステージの初期化
 	void DeleteCross(void);
 	void CreateBible(void);
 

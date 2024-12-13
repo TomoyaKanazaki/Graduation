@@ -31,6 +31,7 @@
 #include "MapMove.h"
 #include "pause.h"
 #include "tutorialCheck.h"
+#include "bible.h"
 
 #include "sound.h"
 #include "shadow.h"
@@ -45,9 +46,9 @@ namespace
 		{ 0.0f, 0.0f, 0.0f },	 // NONEの座標
 		{ 50.0f, 110.0f, 0.0f }, // 移動の座標
 		{ 50.0f, 160.0f, 0.0f }, // 十字架座標
-		{ 50.0f, 210.0f, 0.0f }, // 攻撃動の座標
-		{ 50.0f, 260.0f, 0.0f }, // ボワボワの座標
-		{ 50.0f, 360.0f, 0.0f }, // 聖書の座標
+		{ 50.0f, 200.0f, 0.0f }, // 攻撃動の座標
+		{ 50.0f, 250.0f, 0.0f }, // ボワボワの座標
+		{ 50.0f, 295.0f, 0.0f }, // 聖書の座標
 		{ 50.0f, 360.0f, 0.0f }, // デビルホールの座標
 	};
 
@@ -55,6 +56,8 @@ namespace
 	const int STENCIL_REF_PLAYER = 2;		// プレイヤーのステンシルの参照値
 	const int STENCIL_REF_ITEM = 4;			// アイテムのステンシルの参照値
 	const int STENCIL_REF_MEDAMAN = 102;	// メダマンのステンシルの参照値
+	const int WAVE_MIDDLE = 4;				// チュートリアル4段階目
+	const int WAVE_MAX = 6;					// チュートリアル最大段階
 
 	const char* BOTTOM_FIELD_TEX = "data\\TEXTURE\\Field\\outside.jpg";		// 下床のテクスチャ
 	const char* SCROLL_DEVICE_MODEL = "data\\TXT\\MOTION\\02_staging\\00_ScrollDevice\\motion_scrolldevice.txt";
@@ -65,11 +68,21 @@ namespace
 	const char* CHECK_MARKER_TEX = "data\\TEXTURE\\UI\\tutorial_check.png";	// チェックマーカーテクスチャ
 
 	const CMapSystem::GRID FIELD_GRID = { 64, 64 }; // 下の床のサイズ
+	const CMapSystem::GRID BIBLE_POS = { 11, 10 };	// 聖書の位置
+
 	const D3DXVECTOR3 BOTTOM_FIELD_POS = D3DXVECTOR3(0.0f, -1000.0f, 0.0f);	// 下床の位置
 	const D3DXVECTOR3 GUIDE_POS = D3DXVECTOR3(200.0f, 225.0f, 0.0f);	// チュートリアルガイドの位置
 	const D3DXVECTOR3 GUIDE_SIZE = D3DXVECTOR3(420.0f, 360.0f, 0.0f);	// チュートリアルガイドのサイズ
 	const D3DXVECTOR3 MARKER_POS = D3DXVECTOR3(50.0f, 160.0f, 0.0f);	// マーカー位置
 	const D3DXVECTOR3 MARKER_SIZE = D3DXVECTOR3(50.0f, 50.0f, 0.0f);	// マーカーサイズ
+
+	const D3DXCOLOR MASK_DEFAULT_COLOR = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);			// 通常のステンシルカラー(白)
+	const D3DXCOLOR MASK_PLAYER_COLOR = D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f);			// タマゴンのステンシルカラー(緑)
+	const D3DXCOLOR MASK_MULTI_PLAYER_COLOR = D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f);	// 2Pタマゴンのステンシルカラー(水色)
+	const D3DXCOLOR MASK_MEDAMAN_COLOR = D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f);			// メダマンのステンシルカラー(ピンク)
+	const D3DXCOLOR MASK_BONBON_COLOR = D3DXCOLOR(1.0f, 0.5f, 0.0f, 1.0f);			// ボンンボンのステンシルカラー(オレンジ)
+	const D3DXCOLOR MASK_YUNGDEVIL_COLOR = D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f);		// 子デビルのステンシルカラー(青)
+	const D3DXCOLOR MASK_ITEM_COLOR = D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f);			// アイテムのステンシルカラー(青)
 }
 
 //==========================================
@@ -95,14 +108,12 @@ m_nNumCross(0),				// 十字架の総数
 m_nNumEnemy(0),				// 敵の総数
 m_pPause(nullptr),			// ポーズのポインタ
 m_pDevil(nullptr),			// デビルのポインタ
-m_pPlayerMask(nullptr),		// プレイヤーマスクのポインタ
-m_pMedamanMask(nullptr),	// メダマンマスクのポインタ
-m_pItemMask(nullptr),		// アイテムマスクのポインタ
 m_bTutorialClear(false),	// ゲームクリアのフラグ
 m_Wireframe(false),			// ワイヤーフレーム切り替え
 m_Slow(false),				// スロー演出フラグ
 m_pTutorialGuide(nullptr),	// チュートリアルガイドのポインタ
-InitPlayerPos(D3DXVECTOR3())	// プレイヤーの初期位置
+InitPlayerPos(D3DXVECTOR3()),	// プレイヤーの初期位置
+m_nNumBible(0)				// 聖書の総数
 {
 	for (int nCnt = 0; nCnt < NUM_CAMERA; ++nCnt)
 	{// カメラ分回す
@@ -144,20 +155,10 @@ HRESULT CTutorial::Init(void)
 		m_pPause = CPause::Create();
 	}
 
-	if (m_pPlayerMask == nullptr)
-	{// プレイヤーマスクの生成
-		m_pPlayerMask = CMask::Create(STENCIL_REF_PLAYER, D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
-	}
-
-	if (m_pItemMask == nullptr)
-	{// アイテムマスク
-		m_pItemMask = CMask::Create(STENCIL_REF_ITEM, D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
-	}
-
-	if (m_pMedamanMask == nullptr)
-	{// 敵マスク
-		m_pMedamanMask = CMask::Create(STENCIL_REF_MEDAMAN, D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f));
-	}
+	// プレイヤー・アイテム・メダマンのステンシルカラーの設定
+	CMask::Create(2, MASK_PLAYER_COLOR);
+	CMask::Create(4, MASK_ITEM_COLOR);
+	CMask::Create(102, MASK_MEDAMAN_COLOR);
 
 	if (m_pTutorialGuide == nullptr)
 	{// チュートリアルガイドの生成
@@ -176,12 +177,12 @@ HRESULT CTutorial::Init(void)
 	//タイムの起動
 	CTutorial::GetTime()->SetStopTime(false);
 
-	//デビルの生成
-	m_pDevil = CDevil::Create();
-
 	// マップの生成
 	CMapSystem::GetInstance()->Init();
 	CMapSystem::Load("data\\TXT\\STAGE\\map01.csv");
+
+	//デビルの生成
+	m_pDevil = CDevil::Create();
 
 	// 十字架の総数保存
 	m_nNumCross = CCross::GetList()->GetList().size();
@@ -205,26 +206,6 @@ HRESULT CTutorial::Init(void)
 
 	// 背景モデル設定処理
 	SetBgObjTest();
-
-	//ステージの読み込み
-	switch (CManager::GetInstance()->GetStage())
-	{
-	case 0:
-		// ソフトクリームの生成
-		CItem::Create(CItem::TYPE_SOFTCREAM, CMapSystem::GetInstance()->GetCenter());
-
-		break;
-
-	case 1:
-
-		// 聖書生成
-		CItem::Create(CItem::TYPE_BIBLE, CMapSystem::GRID(BIBLE_OUTGRIT - 1, BIBLE_OUTGRIT - 1));
-		CItem::Create(CItem::TYPE_BIBLE, CMapSystem::GRID(NUM_WIGHT - BIBLE_OUTGRIT, BIBLE_OUTGRIT - 1));
-		CItem::Create(CItem::TYPE_BIBLE, CMapSystem::GRID(BIBLE_OUTGRIT - 1, NUM_HEIGHT - BIBLE_OUTGRIT));
-		CItem::Create(CItem::TYPE_BIBLE, CMapSystem::GRID(NUM_WIGHT - BIBLE_OUTGRIT, NUM_HEIGHT - BIBLE_OUTGRIT));
-
-		break;
-	}
 
 	// プレイヤーを生成する
 	for (int i = 0; i < CManager::GetInstance()->GetGameMode(); ++i)
@@ -288,6 +269,7 @@ void CTutorial::Update(void)
 	CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
 
 	DebugProc::Print(DebugProc::POINT_LEFT, "ゲームスピード : %f\n", CManager::GetInstance()->GetGameSpeed());
+	DebugProc::Print(DebugProc::POINT_CENTER, "チュートリアル段階 : %d\n", m_nTutorialWave);
 
 	// マップシステムの更新
 	CMapSystem::GetInstance()->Update();
@@ -298,41 +280,74 @@ void CTutorial::Update(void)
 
 	int nNumPlayer = 0;
 
-	// 各プレイヤーに向けた最短経路を取得
 	for (CPlayer* player : list)
 	{
-		if (m_gridPlayer.at(nNumPlayer) != player->GetGrid() && m_bCheck[TYPE_MOVE] == false)
+		if (m_gridPlayer.at(nNumPlayer) != player->GetGrid()
+			&& m_bCheck[TYPE_MOVE] == false)
 		{// 座標が一致しなかったら
 			CTutorialCheck::Create(CHECK_POS[TYPE_MOVE]);
 			m_bCheck[TYPE_MOVE] = true;
+
+			// チュートリアル段階を進める
+			m_nTutorialWave += 1;
 		}
 
-		if (player->GetItemType() == CPlayer::TYPE_CROSS && m_bCheck[TYPE_CROSS] == false)
-		{// 十字架
+		if (player->GetItemType() == CPlayer::TYPE_CROSS
+			&& m_bCheck[TYPE_CROSS] == false)
+		{// 十字架取得
 			CTutorialCheck::Create(CHECK_POS[TYPE_CROSS]);
 			m_bCheck[TYPE_CROSS] = true;
+
+			// チュートリアル段階を進める
+			m_nTutorialWave += 1;
 		}
 
-		if (player->GetItemType() == CPlayer::TYPE_BIBLE && m_bCheck[TYPE_BIBLE] == false)
-		{// 聖書
+		if (player->GetItemType() == CPlayer::TYPE_BIBLE
+			&& m_bCheck[TYPE_BIBLE] == false)
+		{// 聖書取得
 			CTutorialCheck::Create(CHECK_POS[TYPE_BIBLE]);
+			
 			m_bCheck[TYPE_BIBLE] = true;
+
+			// チュートリアル段階を進める
+			m_nTutorialWave += 1;
 		}
 	}
 
-	if (m_nNumEnemy != CEnemy::GetList()->GetList().size() && m_bCheck[TYPE_ATTACK] == false)
+	if (m_nNumEnemy != CEnemy::GetList()->GetList().size()
+		&& m_bCheck[TYPE_ATTACK] == false)
 	{// 敵の総数減少
 		CTutorialCheck::Create(CHECK_POS[TYPE_ATTACK]);
 		m_bCheck[TYPE_ATTACK] = true;
+
+		// チュートリアル段階を進める
+		m_nTutorialWave += 1;
 	}
 
-	if (m_nNumBowabowa != CBowabowa::GetList()->GetList().size() && m_bCheck[TYPE_BOWABOWA] == false)
+	if (m_nNumBowabowa != CBowabowa::GetList()->GetList().size()
+		&& m_bCheck[TYPE_BOWABOWA] == false)
 	{// ボワボワの総数減少
 		CTutorialCheck::Create(CHECK_POS[TYPE_BOWABOWA]);
 		m_bCheck[TYPE_BOWABOWA] = true;
+
+		// チュートリアル段階を進める
+		m_nTutorialWave += 1;
+	}
+
+	if (m_nTutorialWave == WAVE_MIDDLE)
+	{// チュートリアルが4段階目まで進んだら
+		if (CBible::GetList() == nullptr)
+		{// 1つだけ聖書の生成
+			CItem::Create(CItem::TYPE_BIBLE, CMapSystem::GRID(BIBLE_POS));
+		}
 	}
 
 #if _DEBUG
+	if (pInputKeyboard->GetTrigger(DIK_3) == true)
+	{// チュートリアル段階を4にする
+		m_nTutorialWave = WAVE_MIDDLE;
+	}
+
 	if (pInputKeyboard->GetTrigger(DIK_0) == true)
 	{
 		m_Wireframe = (m_Wireframe == true) ? false : true;
@@ -403,8 +418,9 @@ void CTutorial::Update(void)
 		if (m_bTutorialEnd == true)
 		{
 			if (m_bTutorialEnd == true
-				&& pInputKeyboard->GetTrigger(DIK_RETURN))
-			{// 好きなタイミングでチュートリアル抜ける
+				&& pInputKeyboard->GetTrigger(DIK_RETURN)
+				&& m_nTutorialWave == WAVE_MAX)
+			{// 好きなタイミングでゲームに遷移
 				CFade::SetFade(CScene::MODE_GAME);
 			}
 			else
@@ -466,7 +482,7 @@ void CTutorial::Draw(void)
 void CTutorial::NextStage(void)
 {
 	// マップの生成
-	CMapMove::GetListTop()->Init();
+	CMapSystem::GetInstance()->GetMove()->Init();
 	CObjmeshField::GetListTop()->SetRot(INITVECTOR3);
 
 	//十字架の削除
@@ -489,11 +505,11 @@ void CTutorial::NextStage(void)
 //====================================================================
 void CTutorial::DeleteCross(void)
 {
-	// デビルホールのリスト構造が無ければ抜ける
+	// 十字架のリスト構造が無ければ抜ける
 	if (CCross::GetList() == nullptr) { return; }
 	std::list<CCross*> list = CCross::GetList()->GetList();    // リストを取得
 
-	// デビルホールリストの中身を確認する
+	// 十字架リストの中身を確認する
 	for (CCross* pCross : list)
 	{
 		pCross->Uninit();
@@ -506,8 +522,8 @@ void CTutorial::DeleteCross(void)
 void CTutorial::CreateBible(void)
 {
 	//グリッド最大・最小位置取得
-	CMapSystem::GRID GMax = CMapMove::GetListTop()->GetMaxGrid();
-	CMapSystem::GRID GMin = CMapMove::GetListTop()->GetMinGrid();
+	CMapSystem::GRID GMax = CMapSystem::GetInstance()->GetMove()->GetMaxGrid();
+	CMapSystem::GRID GMin = CMapSystem::GetInstance()->GetMove()->GetMinGrid();
 
 	// 聖書生成
 	CItem::Create(CItem::TYPE_BIBLE, CMapSystem::GRID(GMin.x + BIBLE_OUTGRIT, GMin.z + BIBLE_OUTGRIT));

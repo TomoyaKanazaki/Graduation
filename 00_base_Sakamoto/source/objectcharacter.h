@@ -58,6 +58,8 @@ public:
 	void Update(void);
 	void Draw(void);
 
+	virtual void PlayerNumberDisp(bool Set) {}
+
 	void SetTxtCharacter(const char* pFilename, int nRef);
 
 	void SetModelColor(CModel::COLORTYPE Type, D3DXCOLOR Col);
@@ -141,6 +143,7 @@ private:
 	CMotion* m_pMotion;
 	char m_aModelName[FILE_NAME_SIZE];
 	int m_nNumModel;
+	int m_nCharacterNum;
 
 	D3DXVECTOR3 m_pos;				//ˆÊ’u
 	D3DXVECTOR3 m_rot;				//Œü‚«

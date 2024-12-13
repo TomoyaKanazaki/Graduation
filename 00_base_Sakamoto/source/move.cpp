@@ -135,7 +135,7 @@ void CMoveState::Rot(CItem* pItem, D3DXVECTOR3& rot)
 void CMoveState::UpdatePos(CObjectCharacter* pCharacter, D3DXVECTOR3& pos)
 {
 	// 変数宣言
-	CMapMove* pMapMove = CMapMove::GetListTop();
+	CMapMove* pMapMove = CMapSystem::GetInstance()->GetMove();
 	D3DXVECTOR3 move = pCharacter->GetMove();		// 移動量
 	D3DXVECTOR3 objMove = pCharacter->GetObjMove();
 
@@ -177,7 +177,7 @@ void CMoveState::UpdatePos(CObjectCharacter* pCharacter, D3DXVECTOR3& pos)
 void CMoveState::UpdatePos(CItem* pItem, D3DXVECTOR3& pos)
 {
 	// 変数宣言
-	CMapMove* pMapMove = CMapMove::GetListTop();
+	CMapMove* pMapMove = CMapSystem::GetInstance()->GetMove();
 	D3DXVECTOR3 move = pItem->GetMove();		// 移動量
 
 	float fSpeed = 1.0f;	// スロー用 default1.0fで初期化
@@ -352,6 +352,8 @@ void CStateControl::UpdateMovePlayer(CObjectCharacter* pCharacter, D3DXVECTOR3& 
 			//無敵状態の設定
 			pCharacter->SetInvincible(true);
 			pCharacter->SetInvincibleCount(INVINCIBLE_TIME);
+
+			pCharacter->PlayerNumberDisp(true);
 		}
 		//移動状態にする
 		pCharacter->SetState(CObjectCharacter::STATE_WALK);
@@ -653,7 +655,6 @@ void CStateRandom::SearchWall(CItem* pItem, D3DXVECTOR3& pos)
 	CMapSystem::GRID MaxGrid;
 	MaxGrid.x = pMapSystem->GetWightMax();	// マップの横幅
 	MaxGrid.z = pMapSystem->GetHeightMax(); // マップの立幅
-	D3DXVECTOR3 MapSystemPos = pMapSystem->GetMapPos(); // スクロールでずれてる幅
 
 	/* 自身の隣接４マスのグリッド */
 	int nNumber[ROTSTATE_MAX];	// 4方向の隣接するグリッド
@@ -1228,7 +1229,7 @@ void CStateRoll::RollStop(CObjectX* pObjectX)
 //==========================================
 void CStateRoll::Move(CObjectX* pObjectX, D3DXVECTOR3& pos, D3DXVECTOR3& rot)
 {
-	D3DXVECTOR3 SlopeRot = CMapMove::GetListTop()->GetDevilRot();		// マップの傾き
+	D3DXVECTOR3 SlopeRot = CMapSystem::GetInstance()->GetMove()->GetDevilRot();		// マップの傾き
 	D3DXVECTOR3 move = pObjectX->GetMove();			// 移動量
 	CMapSystem::GRID grid = pObjectX->GetGrid();	// グリッド
 

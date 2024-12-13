@@ -232,9 +232,6 @@
     <ClCompile Include="source\signal.cpp">
       <Filter>ソース ファイル\Map\Object</Filter>
     </ClCompile>
-    <ClCompile Include="source\signalmanager.cpp">
-      <Filter>ソース ファイル\Map\Object</Filter>
-    </ClCompile>
     <ClCompile Include="source\SlopeDevice.cpp">
       <Filter>ソース ファイル\Map\Object</Filter>
     </ClCompile>
@@ -288,6 +285,9 @@
     </ClCompile>
     <ClCompile Include="source\tutorialCheck.cpp">
       <Filter>ソース ファイル\Ui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\RailManager.cpp">
+      <Filter>ソース ファイル\Map\Object</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -480,9 +480,6 @@
     <ClInclude Include="source\signal.h">
       <Filter>ソース ファイル\Map\Object</Filter>
     </ClInclude>
-    <ClInclude Include="source\signalmanager.h">
-      <Filter>ソース ファイル\Map\Object</Filter>
-    </ClInclude>
     <ClInclude Include="source\SlopeDevice.h">
       <Filter>ソース ファイル\Map\Object</Filter>
     </ClInclude>
@@ -536,6 +533,9 @@
     </ClInclude>
     <ClInclude Include="source\tutorialCheck.h">
       <Filter>ソース ファイル\Ui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\RailManager.h">
+      <Filter>ソース ファイル\Map\Object</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
