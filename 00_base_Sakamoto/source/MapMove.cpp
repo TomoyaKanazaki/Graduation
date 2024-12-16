@@ -41,7 +41,7 @@ namespace
 	const float SCROOL_SPEED_02 = (CMapSystem::GetGritSize() * SCROOL_MOVEGRID_02) / SCROOL_COUNT_02;			// ƒXƒNƒ[ƒ‹‚ÌˆÚ“®‘¬“x
 
 	const int SLOPE_TIME = 300;						// ŒX‚«‘€ìŽžŠÔ
-	const int SLOPE_RAND = 0;						// ŒX‚«”­¶Šm—¦
+	const int SLOPE_RAND = 50;						// ŒX‚«”­¶Šm—¦
 	float STAGE_ROT_LIMIT = D3DX_PI * 0.15f;		// ŒX‚«‚ÌŠp“x§ŒÀ
 
 	const float SLOPE_SPEED01 = 0.00075f;			// ŒX‚«‚ÌˆÚ“®‘¬“x
@@ -1189,7 +1189,7 @@ void CMapMove::CollisionPressPlayer(CPlayer* pPlayer, D3DXVECTOR3 pos, D3DXVECTO
 //====================================================================
 //ŒX‚«’†‚ÌˆÚ“®—Ê•Ï“®
 //====================================================================
-float CMapMove::MoveSlopeX(float Move)
+float CMapMove::MoveSlopeX(float Move, SPEED& Speed)
 {
 	float fSlopeMove = 1.0f;
 
@@ -1204,13 +1204,22 @@ float CMapMove::MoveSlopeX(float Move)
 		fSlopeMove = (D3DX_PI / (D3DX_PI - DevilRot.z));
 	}
 
+	if (fSlopeMove > 1.0f)
+	{
+		Speed = SPEED_UP;
+	}
+	else if (fSlopeMove < 1.0f)
+	{
+		Speed = SPEED_DOWN;
+	}
+
 	return fSlopeMove;
 }
 
 //====================================================================
 //ŒX‚«’†‚ÌˆÚ“®—Ê•Ï“®
 //====================================================================
-float CMapMove::MoveSlopeZ(float Move)
+float CMapMove::MoveSlopeZ(float Move, SPEED& Speed)
 {
 	float fSlopeMove = 1.0f;
 
@@ -1223,6 +1232,15 @@ float CMapMove::MoveSlopeZ(float Move)
 	else if (Move < 0.0f)
 	{
 		fSlopeMove = (D3DX_PI / (D3DX_PI + DevilRot.x));
+	}
+
+	if (fSlopeMove > 1.0f)
+	{
+		Speed = SPEED_UP;
+	}
+	else if (fSlopeMove < 1.0f)
+	{
+		Speed = SPEED_DOWN;
 	}
 
 	return fSlopeMove;

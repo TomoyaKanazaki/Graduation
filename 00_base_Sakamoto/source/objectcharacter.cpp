@@ -40,7 +40,8 @@ m_pShadow(nullptr),
 m_bUseShadow(true),
 m_State(STATE_WAIT),
 m_OldState(STATE_WAIT),
-m_nRefIdx(0)
+m_nRefIdx(0),
+m_SpeedState(CMapMove::SPEED_NONE)
 {
 	for (int nCnt = 0; nCnt < MODEL_NUM; nCnt++)
 	{
@@ -173,6 +174,9 @@ void CObjectCharacter::Update(void)
 {
 	D3DXVECTOR3 pos = GetPos();
 
+	//加減速状態の管理
+	SpeedStateManager();
+
 	if (m_pMotion != nullptr)
 	{
 		//モーションの更新
@@ -279,6 +283,30 @@ void CObjectCharacter::Draw(void)
 
 	//ステンシルバッファ無効
 	pDevice->SetRenderState(D3DRS_STENCILENABLE, FALSE);
+}
+
+//==========================================
+// 加減速状態の管理
+//==========================================
+void CObjectCharacter::SpeedStateManager()
+{
+	switch (m_SpeedState)
+	{
+	case CMapMove::SPEED_UP:	//加速状態
+
+		DebugProc::Print(DebugProc::POINT_RIGHT, "加速\n");
+
+		break;
+
+	case CMapMove::SPEED_DOWN:	//減速状態
+
+		DebugProc::Print(DebugProc::POINT_RIGHT, "減速\n");
+
+		break;
+
+	case CMapMove::SPEED_NONE:	//通常状態
+		break;
+	}
 }
 
 //==========================================

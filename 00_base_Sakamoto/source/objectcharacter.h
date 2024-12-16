@@ -10,6 +10,7 @@
 #include "object.h"
 #include "Model.h"
 #include "MapSystem.h"
+#include "MapMove.h"
 
 class CModel;
 class CMotion;
@@ -123,6 +124,9 @@ public:
 	void SetRefIdx(int nRefIdx) { m_nRefIdx = nRefIdx; }
 	int GetRefIdx() { return m_nRefIdx; }
 
+	void SetSpeedState(CMapMove::SPEED State) { m_SpeedState = State; }	//速度
+	CMapMove::SPEED GetSpeedState(void) { return m_SpeedState; }	//速度
+
 protected:
 
 	CShadow* m_pShadow;
@@ -137,6 +141,7 @@ protected:
 
 private:
 
+	void SpeedStateManager(void);
 	void LoadModel(const char* pFilename);
 
 	CModel* m_apModel[MODEL_NUM];
@@ -149,6 +154,8 @@ private:
 	D3DXVECTOR3 m_rot;				//向き
 	D3DXVECTOR3 m_posOld;			//過去の位置
 	D3DXVECTOR3 m_size;				//大きさ
+
+	CMapMove::SPEED m_SpeedState;	//速度
 
 	// マトリックス情報
 	D3DXMATRIX m_mtxWorld;			// ワールドマトリックス

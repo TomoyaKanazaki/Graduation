@@ -45,6 +45,16 @@ public:
 		MOVE_MAX,			//Å‘å
 	};
 
+
+	//‰ÁŒ¸‘¬ó‘Ô
+	enum SPEED
+	{
+		SPEED_NONE = 0,		//‘Ò‹@
+		SPEED_UP,			//‰Á‘¬
+		SPEED_DOWN,			//Œ¸‘¬
+		SPEED_MAX,			//Å‘å
+	};
+
 	static CMapMove* Create();
 
 	HRESULT Init(void);
@@ -52,8 +62,8 @@ public:
 	void Update(void);
 	void Draw(void);
 
-	float MoveSlopeX(float Move);		//ŒX‚«’†‚ÌˆÚ“®—Ê•Ï“®
-	float MoveSlopeZ(float Move);		//ŒX‚«’†‚ÌˆÚ“®—Ê•Ï“®
+	float MoveSlopeX(float Move, SPEED& Speed);		//ŒX‚«’†‚ÌˆÚ“®—Ê•Ï“®
+	float MoveSlopeZ(float Move, SPEED& Speed);		//ŒX‚«’†‚ÌˆÚ“®—Ê•Ï“®
 
 	void SetMove(D3DXVECTOR3 move) { m_move = move; }
 	D3DXVECTOR3 GetMove(void) { return m_move; }

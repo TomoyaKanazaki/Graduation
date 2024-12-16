@@ -1038,6 +1038,12 @@ void CPlayer::StateManager(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis)
 		break;
 	}
 
+	if (state != STATE_WALK)
+	{
+		//加減速状態の設定
+		SetSpeedState(CMapMove::SPEED_NONE);
+	}
+
 	if (m_nStateCount > 0)
 	{
 		m_nStateCount--;
@@ -1599,8 +1605,11 @@ void CPlayer::PosUpdate(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D3DXVECTO
 	CollisionWall(posThis,posOldThis,sizeThis,useful::COLLISION_Y);
 	CollisionDevilHole(posThis, posOldThis, sizeThis, useful::COLLISION_Y);
 
+	// 加減速状態の取得
+	CMapMove::SPEED Speed = GetSpeedState();
+
 	//X軸の位置更新
-	posThis.x += m_move.x * CManager::GetInstance()->GetGameSpeed() * fSpeed * pMapMove->MoveSlopeX(m_move.x);
+	posThis.x += m_move.x * CManager::GetInstance()->GetGameSpeed() * fSpeed * pMapMove->MoveSlopeX(m_move.x, Speed);
 
 	// 壁との当たり判定
 	CollisionWall(posThis, posOldThis, sizeThis, useful::COLLISION_X);
@@ -1609,7 +1618,10 @@ void CPlayer::PosUpdate(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D3DXVECTO
 	CollisionWaitRock(posThis, posOldThis, sizeThis, useful::COLLISION_X);
 
 	//Z軸の位置更新
-	posThis.z += m_move.z * CManager::GetInstance()->GetGameSpeed() * fSpeed * pMapMove->MoveSlopeZ(m_move.z);
+	posThis.z += m_move.z * CManager::GetInstance()->GetGameSpeed() * fSpeed * pMapMove->MoveSlopeZ(m_move.z, Speed);
+
+	//加減速状態の設定
+	SetSpeedState(Speed);
 
 	// 壁との当たり判定
 	CollisionWall(posThis, posOldThis, sizeThis, useful::COLLISION_Z);
