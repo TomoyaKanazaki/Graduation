@@ -26,11 +26,8 @@
 #include "signal.h"
 #include "pause.h"
 #include "EventMovie.h"
-#include "objmeshField.h"
 #include "Cross.h"
 #include "MapMove.h"
-#include "pause.h"
-#include "SlopeDevice.h"
 
 #include "sound.h"
 #include "shadow.h"
@@ -165,7 +162,7 @@ HRESULT CGame::Init(void)
 
 	// マップの生成
 	CMapSystem::GetInstance();
-	CMapSystem::Load("data\\TXT\\STAGE\\map99.csv");
+	CMapSystem::Load("data\\TXT\\STAGE\\map05.csv");
 
 	//デビルの生成
 	m_pDevil = CDevil::Create();

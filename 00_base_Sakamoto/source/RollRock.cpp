@@ -17,6 +17,7 @@
 #include "wall.h"
 #include "MapMove.h"
 #include "move.h"
+#include "shadow.h"
 
 //==========================================
 //  定数定義
@@ -24,7 +25,8 @@
 namespace
 {
 	const D3DXVECTOR3 SAMPLE_SIZE = D3DXVECTOR3(40.0f, 40.0f, 40.0f);		//当たり判定
-	const float GRIT_OK = 45.0f;			//移動可能なグリットの範囲内
+	const float GRIT_OK = 45.0f;				//移動可能なグリットの範囲内
+	const float SHADOW_SIZE = 100.0f;			// 丸影の大きさ
 }
 
 //====================================================================
@@ -37,7 +39,8 @@ CListManager<CRollRock>* CRollRock::m_pList = nullptr; // オブジェクトリスト
 //====================================================================
 CRollRock::CRollRock(int nPriority) : CObjectX(nPriority),
 m_pEffect(nullptr),
-m_pMoveState(nullptr)
+m_pMoveState(nullptr),
+m_pShadow(nullptr)
 {
 	SetSize(SAMPLE_SIZE);
 	SetPos(INITVECTOR3);
@@ -58,7 +61,8 @@ CRollRock::CRollRock(int nPriority, CMapSystem::GRID gridCenter) : CObjectX(nPri
 m_Grid(gridCenter),
 m_OldGrid(gridCenter),
 m_pEffect(nullptr),
-m_pMoveState(nullptr)
+m_pMoveState(nullptr),
+m_pShadow(nullptr)
 {
 	SetSize(SAMPLE_SIZE);
 	SetPos(INITVECTOR3);
@@ -115,6 +119,11 @@ HRESULT CRollRock::Init(char* pModelName)
 
 	CObjectX::Init(pModelName);
 
+	if (m_pShadow == nullptr)
+	{// 影生成
+		m_pShadow = CShadow::Create(pos, D3DXVECTOR3(SHADOW_SIZE, 0.0f, SHADOW_SIZE));
+	}
+
 	//マップとのマトリックスの掛け合わせをオンにする
 	SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
 
@@ -159,6 +168,13 @@ void CRollRock::Uninit(void)
 		m_pMoveState->Release();		// 破棄
 		delete m_pMoveState;
 		m_pMoveState = nullptr;
+	}
+
+	// 影の終了
+	if (m_pShadow != nullptr)
+	{
+		m_pShadow->Uninit();
+		m_pShadow = nullptr;
 	}
 
 	// リストから自身のオブジェクトを削除
@@ -219,6 +235,12 @@ void CRollRock::Update(void)
 
 	// スクロールに合わせて移動する
 	//CMapSystem::GetInstance()->GetMove()->FollowScroll(posThis);
+
+	if (m_pShadow != nullptr)
+	{// シャドウの更新
+		m_pShadow->SetPos(D3DXVECTOR3(posThis.x, 1.0f, posThis.z));
+		//m_pShadow->SetBaseHeight(pos.y);
+	}
 
 	// 値更新
 	SetPos(posThis);		// 位置
