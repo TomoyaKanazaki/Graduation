@@ -44,10 +44,25 @@ CRailManager::~CRailManager()
 //====================================================================
 //初期化処理
 //====================================================================
-HRESULT CRailManager::Init(CMapSystem::GRID& grid)
+HRESULT CRailManager::Init(void)
 {
-	// レールの位置を保持
-	m_GridPos.push_back(grid);
+	int nMax = m_GridPos.size();
+	int nCnt = 0;
+
+	while (nCnt < nMax)
+	{ // グリッドの数分まわす
+
+		// 何もない状態にする
+		CRail::POSTYPE PosType[CRail::POSSTATE_MAX] = { CRail::POSTYPE::POSTYPE_NONE, CRail::POSTYPE::POSTYPE_NONE };
+
+		//モデルの向き設定
+		SetRot(m_GridPos[nCnt], PosType[CRail::POSSTATE_FIRST], PosType[CRail::POSSTATE_SECOND]);
+
+		// レールの生成
+		CRail::Create(m_GridPos[nCnt], PosType[CRail::POSSTATE_FIRST], PosType[CRail::POSSTATE_SECOND]);
+
+		nCnt++;
+	}
 
 	return S_OK;
 }
@@ -79,25 +94,10 @@ void CRailManager::Draw(void)
 //====================================================================
 // レールの設定
 //====================================================================
-void CRailManager::Set(void)
+void CRailManager::Set(CMapSystem::GRID& grid)
 {
-	int nMax = m_GridPos.size();
-	int nCnt = 0;
-
-	while (nCnt < nMax)
-	{ // グリッドの数分まわす
-
-		// 何もない状態にする
-		CRail::POSTYPE PosType[CRail::POSSTATE_MAX] = { CRail::POSTYPE::POSTYPE_NONE, CRail::POSTYPE::POSTYPE_NONE };
-
-		//モデルの向き設定
-		SetRot(m_GridPos[nCnt], PosType[CRail::POSSTATE_FIRST], PosType[CRail::POSSTATE_SECOND]);
-
-		// レールの生成
-		CRail::Create(m_GridPos[nCnt], PosType[CRail::POSSTATE_FIRST], PosType[CRail::POSSTATE_SECOND]);
-
-		nCnt++;
-	}
+	// レールの位置を保持
+	m_GridPos.push_back(grid);
 }
 
 //====================================================================
