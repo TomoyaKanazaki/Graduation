@@ -12,7 +12,7 @@
 class CTutorialUi : CObject2D
 {
 public:
-	CTutorialUi();
+	CTutorialUi(int nPriority = 6);
 	~CTutorialUi();
 
 	static CTutorialUi* Create(const D3DXVECTOR3& pos, const D3DXVECTOR3& size, const char* pFilename);
