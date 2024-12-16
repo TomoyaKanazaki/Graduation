@@ -15,7 +15,7 @@ public:
 	CTutorialUi(int nPriority = 6);
 	~CTutorialUi();
 
-	static CTutorialUi* Create(const D3DXVECTOR3& pos, const D3DXVECTOR3& size, const char* pFilename);
+	static CTutorialUi* Create(const D3DXVECTOR3& pos, const D3DXVECTOR3& size, std::string pFilename);
 
 	HRESULT Init();
 	void Uninit();

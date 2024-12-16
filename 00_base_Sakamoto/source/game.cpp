@@ -619,10 +619,10 @@ void CGame::DeleteMap(void)
 //====================================================================
 // レールブロックの読み込み配置
 //====================================================================
-void CGame::LoadStageRailBlock(const char* pFilename)
+void CGame::LoadStageRailBlock(std::string pFilename)
 {
 	//ファイルを開く
-	FILE* pFile = fopen(pFilename, "r");
+	FILE* pFile = fopen(pFilename.c_str(), "r");
 
 	if (pFile != nullptr)
 	{//ファイルが開けた場合
@@ -685,7 +685,7 @@ void CGame::LoadStageRailBlock(const char* pFilename)
 //====================================================================
 // モデルの読み込み配置
 //====================================================================
-void CGame::LoadStageMapModel(const char* pFilename)
+void CGame::LoadStageMapModel(std::string pFilename)
 {
 	////ファイルを開く
 	//FILE* pFile = fopen(pFilename, "r");

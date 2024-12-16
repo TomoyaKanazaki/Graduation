@@ -50,12 +50,12 @@ void CCharacterManager::Unload(void)
 //====================================================================
 // キャラクターの番号指定
 //====================================================================
-int CCharacterManager::Regist(CObjectCharacter* pObjCharacter, const char* pFilename)
+int CCharacterManager::Regist(CObjectCharacter* pObjCharacter, std::string pFilename)
 {
 	// キャラクターファイル検索処理
 	for (int nCntCharacter = 0; nCntCharacter < m_nNumAll; nCntCharacter++)
 	{
-		if (strcmp(&m_aCharacterInfo[nCntCharacter].acFileName[0], pFilename) == 0)
+		if (strcmp(&m_aCharacterInfo[nCntCharacter].acFileName[0], pFilename.c_str()) == 0)
 		{
 			// モデル・モーション割当処理
 			SetModelData(pObjCharacter, nCntCharacter);
@@ -97,7 +97,7 @@ int CCharacterManager::Regist(CObjectCharacter* pObjCharacter, const char* pFile
 			assert(("モーション読み込み失敗", false));
 		}
 
-		strcpy(&m_aCharacterInfo[m_nNumAll].acFileName[0], pFilename);
+		strcpy(&m_aCharacterInfo[m_nNumAll].acFileName[0], pFilename.c_str());
 
 		m_nNumAll++;
 
@@ -219,10 +219,10 @@ void CCharacterManager::SetMotionData(CObjectCharacter* pObjCharacter, int nNumC
 //====================================================================
 // モデルロード処理
 //====================================================================
-bool CCharacterManager::LoadModel(const char* pFileName,int nNumCharacter)
+bool CCharacterManager::LoadModel(std::string pFilename,int nNumCharacter)
 {
 	//ファイルを開く
-	FILE* pFile = fopen(pFileName, "r");
+	FILE* pFile = fopen(pFilename.c_str(), "r");
 
 	if (pFile != nullptr)
 	{//ファイルが開けた場合
@@ -351,10 +351,10 @@ bool CCharacterManager::LoadModel(const char* pFileName,int nNumCharacter)
 //====================================================================
 // モーションのロード処理
 //====================================================================
-bool CCharacterManager::LoadMotion(const char* pFileName, int nNumModel, int nNumCharacter)
+bool CCharacterManager::LoadMotion(std::string pFileName, int nNumModel, int nNumCharacter)
 {
 	//ファイルを開く
-	FILE* pFile = fopen(pFileName, "r");
+	FILE* pFile = fopen(pFileName.c_str(), "r");
 
 	if (pFile != nullptr)
 	{//ファイルが開けた場合

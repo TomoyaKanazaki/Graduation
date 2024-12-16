@@ -597,10 +597,10 @@ void CTutorial::DeleteMap(void)
 //====================================================================
 // レールブロックの読み込み配置
 //====================================================================
-void CTutorial::LoadStageRailBlock(const char* pFilename)
+void CTutorial::LoadStageRailBlock(std::string pFilename)
 {
 	//ファイルを開く
-	FILE* pFile = fopen(pFilename, "r");
+	FILE* pFile = fopen(pFilename.c_str(), "r");
 
 	if (pFile != nullptr)
 	{//ファイルが開けた場合

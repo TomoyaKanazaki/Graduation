@@ -404,7 +404,7 @@ CMapSystem::GRID CMapSystem::GetPlayerGrid(unsigned int PlayNumber)
 //==========================================
 //  マップ情報の読み込み
 //==========================================
-void CMapSystem::Load(const char* pFilename)
+void CMapSystem::Load(std::string pFilename)
 {
 	// 経路探索用の情報を取得
 	auto generator = AStar::Generator::Create();

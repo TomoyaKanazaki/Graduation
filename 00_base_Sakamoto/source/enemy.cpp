@@ -345,7 +345,7 @@ bool CEnemy::Hit(void)
 //====================================================================
 // モデル関連の初期化処理
 //====================================================================
-HRESULT CEnemy::InitModel(const char* pFilename, int nRef)
+HRESULT CEnemy::InitModel(std::string pFilename, int nRef)
 {
 	// キャラクターテキスト読み込み処理
 	CObjectCharacter::SetTxtCharacter(pFilename, nRef);

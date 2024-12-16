@@ -208,12 +208,12 @@ void CMotion::SetModel(CModel **ppModel, int nNumModel)
 //====================================================================
 //モーションのロード処理
 //====================================================================
-void CMotion::LoadData(const char *pFilename)
+void CMotion::LoadData(std::string pFilename)
 {
 	FILE *pFile; //ファイルポインタを宣言
 
 	//ファイルを開く
-	pFile = fopen(pFilename, "r");
+	pFile = fopen(pFilename.c_str(), "r");
 
 	if (pFile != nullptr)
 	{//ファイルが開けた場合
