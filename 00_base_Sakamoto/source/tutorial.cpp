@@ -43,13 +43,33 @@
 namespace
 {
 	const D3DXVECTOR3 CHECK_POS[]
-	{
+	{// それぞれの位置
 		{ 80.0f, 60.0f, 0.0f },	 // 移動の座標
 		{ 80.0f, 115.0f, 0.0f }, // 十字架座標
 		{ 80.0f, 170.0f, 0.0f }, // ボワボワの座標
 		{ 80.0f, 225.0f, 0.0f }, // 攻撃の座標
 		{ 80.0f, 280.0f, 0.0f }, // 聖書の座標
 		{ 80.0f, 334.0f, 0.0f }, // デビルホールの座標
+	};
+
+	const char* TUTORIAL_TEX[]
+	{// チュートリアルテキストのテクスチャパス
+		{ "data\\TEXTURE\\UI\\tutorial_text_00.png" },	// 移動のテキスト
+		{ "data\\TEXTURE\\UI\\tutorial_text_001.png" },	// 十字架座標
+		{ "data\\TEXTURE\\UI\\tutorial_text_003.png" },	// ボワボワの座標
+		{ "data\\TEXTURE\\UI\\tutorial_text_002.png" },	// 攻撃の座標
+		{ "data\\TEXTURE\\UI\\tutorial_text_004.png" },	// 聖書の座標
+		{ "data\\TEXTURE\\UI\\tutorial_text_005.png" },	// デビルホールの座標
+	};
+
+	const D3DXVECTOR3 TEXT_SIZE[]
+	{// それぞれのテキストのサイズ
+		{ D3DXVECTOR3(250.0f, 100.0f, 0.0f) },	// 移動のテキスト
+		{ D3DXVECTOR3(250.0f, 50.0f, 0.0f) },	// 十字架座標
+		{ D3DXVECTOR3(250.0f, 50.0f, 0.0f) },	// ボワボワの座標
+		{ D3DXVECTOR3(250.0f, 50.0f, 0.0f) },	// 攻撃の座標
+		{ D3DXVECTOR3(250.0f, 50.0f, 0.0f) },	// 聖書の座標
+		{ D3DXVECTOR3(250.0f, 50.0f, 0.0f) },	// デビルホールの座標
 	};
 
 	const int BIBLE_OUTGRIT = 2;			// 聖書がマップの外側から何マス内側にいるか
@@ -72,12 +92,8 @@ namespace
 
 	const char* CHECKBOX_TEX = "data\\TEXTURE\\UI\\tutorial_check_box.png";			// チェックボックスのテクスチャ
 	const char* TUTORIAL_FRAME_TEX = "data\\TEXTURE\\UI\\tutorial_frame.png";		// チュートリアルガイドの外枠のテクスチャ
-	const char* TUTORIAL_MOVE_TEX = "data\\TEXTURE\\UI\\tutorial_text_00.png";		// 移動ガイドテキストのテクスチャ
-	const char* TUTORIAL_CROSS_TEX = "data\\TEXTURE\\UI\\tutorial_text_001.png";		// 十字架ガイドテキストのテクスチャ
-	const char* TUTORIAL_ATTACK_TEX = "data\\TEXTURE\\UI\\tutorial_text_002.png";	// 攻撃テキストのテクスチャ
-	const char* TUTORIAL_BOWABOWA_TEX = "data\\TEXTURE\\UI\\tutorial_text_003.png";	// ボワボワテキストのテクスチャ
-	const char* TUTORIAL_BIBLE_TEX = "data\\TEXTURE\\UI\\tutorial_text_004.png";		// 聖書テキストのテクスチャ
-	const char* TUTORIAL_DEVILHOLE_TEX = "data\\TEXTURE\\UI\\tutorial_text_005.png";	// ガイドテキストのテクスチャ
+
+	const float TEXT_POSX = 240.0f;			// テキストのX座標
 
 	const CMapSystem::GRID FIELD_GRID = { 64, 64 }; // 下の床のサイズ
 	const CMapSystem::GRID BIBLE_POS = { 11, 10 };	// 聖書の位置
@@ -90,8 +106,6 @@ namespace
 	const D3DXVECTOR3 MARKER_SIZE = D3DXVECTOR3(50.0f, 50.0f, 0.0f);	// マーカーサイズ
 	const D3DXVECTOR3 BUTTON_POS = D3DXVECTOR3(1100.0f, 650.0f, 0.0f);	// 遷移ボタンの位置
 	const D3DXVECTOR3 BUTTON_SIZE = D3DXVECTOR3(300.0f, 250.0f, 0.0f);	// 遷移ボタンのサイズ
-	const D3DXVECTOR3 TEXT_MOVE_SIZE = D3DXVECTOR3(250.0f, 100.0f, 0.0f);	// 移動テキストのサイズ
-	const D3DXVECTOR3 TEXT_SIZE = D3DXVECTOR3(250.0f, 50.0f, 0.0f);			// テキストのサイズ
 
 	const D3DXCOLOR MASK_DEFAULT_COLOR = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);			// 通常のステンシルカラー(白)
 	const D3DXCOLOR MASK_PLAYER_COLOR = D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f);			// タマゴンのステンシルカラー(緑)
@@ -106,6 +120,8 @@ namespace
 //  静的警告処理
 //==========================================
 static_assert(NUM_ARRAY(CHECK_POS) == CTutorial::TYPE_MAX, "ERROR : Type Count Missmatch");
+static_assert(NUM_ARRAY(TUTORIAL_TEX) == CTutorial::TYPE_MAX, "ERROR : Type Count Missmatch");
+static_assert(NUM_ARRAY(TEXT_SIZE) == CTutorial::TYPE_MAX, "ERROR : Type Count Missmatch");
 
 //====================================================================
 // 静的メンバ変数宣言
@@ -212,13 +228,10 @@ HRESULT CTutorial::Init(void)
 		CTutorialUi::Create(D3DXVECTOR3(410.0f, CHECK_POS[i].y, CHECK_POS[i].z), BOX_SIZE, CHECKBOX_TEX);
 	}
 
-	// テキストの生成
-	CTutorialUi::Create(D3DXVECTOR3(240.0f, CHECK_POS[TYPE_MOVE].y, CHECK_POS[TYPE_MOVE].z), TEXT_MOVE_SIZE, TUTORIAL_MOVE_TEX);
-	CTutorialUi::Create(D3DXVECTOR3(240.0f, CHECK_POS[TYPE_CROSS].y, CHECK_POS[TYPE_CROSS].z), TEXT_SIZE, TUTORIAL_CROSS_TEX);
-	CTutorialUi::Create(D3DXVECTOR3(240.0f, CHECK_POS[TYPE_BOWABOWA].y, CHECK_POS[TYPE_BOWABOWA].z), TEXT_SIZE, TUTORIAL_BOWABOWA_TEX);
-	CTutorialUi::Create(D3DXVECTOR3(245.0f, CHECK_POS[TYPE_ATTACK].y, CHECK_POS[TYPE_ATTACK].z), TEXT_SIZE, TUTORIAL_ATTACK_TEX);
-	CTutorialUi::Create(D3DXVECTOR3(240.0f, CHECK_POS[TYPE_BIBLE].y, CHECK_POS[TYPE_BIBLE].z), TEXT_SIZE, TUTORIAL_BIBLE_TEX);
-	CTutorialUi::Create(D3DXVECTOR3(240.0f, CHECK_POS[TYPE_DEVILHOLE].y, CHECK_POS[TYPE_DEVILHOLE].z), TEXT_SIZE, TUTORIAL_DEVILHOLE_TEX);
+	for (int i = 0; i < TYPE_MAX; ++i)
+	{// テキストの生成
+		CTutorialUi::Create(D3DXVECTOR3(TEXT_POSX, CHECK_POS[i].y, CHECK_POS[i].z), TEXT_SIZE[i], TUTORIAL_TEX[i]);
+	}
 
 	// 遷移ボタンの生成
 	CTutorialUi::Create(BUTTON_POS, BUTTON_SIZE, BUTTON_TEX);
@@ -237,9 +250,8 @@ HRESULT CTutorial::Init(void)
 	// 背景モデル設定処理
 	SetBgObjTest();
 
-	// プレイヤーを生成する
 	for (int i = 0; i < CManager::GetInstance()->GetGameMode(); ++i)
-	{
+	{// プレイヤーを生成する
 		m_pPlayer.push_back(CTutorialPlayer::Create(i));
 		m_gridPlayer.push_back(m_pPlayer.at(i)->GetGrid());
 	}
