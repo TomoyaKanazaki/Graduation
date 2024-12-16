@@ -38,7 +38,7 @@ CRailManager::CRailManager()
 //====================================================================
 CRailManager::~CRailManager()
 {
-
+	m_GridPos.clear();
 }
 
 //====================================================================
@@ -126,12 +126,6 @@ void CRailManager::SetRot(CMapSystem::GRID& grid, CRail::POSTYPE& PosType0, CRai
 		// 配置情報の更新
 		m_bRail[i] = pMapSystem->GetRailGritBool(nNumber[i]);
 	}
-
-	// 隣接４マスがレール配置可能か判断する
-	//m_bRail[CRail::POSTYPE_LEFT] = pMapSystem->GetRailGritBool(CMapSystem::GRID(nNumber[CRail::POSTYPE_LEFT], grid.z));
-	//m_bRail[CRail::POSTYPE_RIGHT] = pMapSystem->GetRailGritBool(CMapSystem::GRID(nNumber[CRail::POSTYPE_RIGHT], grid.z));
-	//m_bRail[CRail::POSTYPE_UP] = pMapSystem->GetRailGritBool(CMapSystem::GRID(grid.x, nNumber[CRail::POSTYPE_UP]));
-	//m_bRail[CRail::POSTYPE_DOWN] = pMapSystem->GetRailGritBool(CMapSystem::GRID(grid.x, nNumber[CRail::POSTYPE_DOWN]));
 
 	// レールの配置場所設定
 	for (int nCnt = 0; nCnt < CRail::POSTYPE_MAX; nCnt++)
