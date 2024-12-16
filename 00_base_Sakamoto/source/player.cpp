@@ -67,6 +67,7 @@ namespace
 	const float EGG_COLOR_DEL_A = 0.01f;		//不透明度の減衰速度
 
 	const float SHADOW_SIZE = 50.0f;			// 丸影の大きさ
+	const float EFFECT_HEIGHT = 50.0f;			// エフェクトの高さ
 
 	const D3DXVECTOR2 NUMBER_SIZE = { 280.0f , 170.0f };
 }
@@ -433,11 +434,30 @@ void CPlayer::Update(void)
 	//卵の動き
 	EggMove(posThis, rotThis);
 
-	// キャラクタークラスの更新（継承）
-	CObjectCharacter::Update();
-
 	//モーションの管理
 	ActionState();
+
+	// エフェクトの操作
+	SpeedEffect(posThis, rotThis);
+	ControlEffect(m_pEffectEgg);	// 卵のエフェクト
+	D3DXVECTOR3 temp = posThis;
+	temp.y += EFFECT_HEIGHT;
+	ControlEffect(m_pEffectSpeed, &temp);	// 加減速のエフェクト
+	ControlEffect(m_pEffectItem);	// アイテム所持エフェクト
+	if (m_pShadow != nullptr)
+	{
+		ControlEffect(m_pEffectGuide, &m_pShadow->GetPos()); // 復活位置のガイドエフェクト
+	}
+	PrintFoot(rotThis);
+
+	// 値更新
+	SetPos(posThis);		// 位置
+	SetPosOld(posOldThis);	// 前回の位置
+	SetRot(rotThis);		// 向き
+	SetSize(sizeThis);		// 大きさ
+
+	// キャラクタークラスの更新（継承）
+	CObjectCharacter::Update();
 
 	//デバッグ表示
 	DebugProc::Print(DebugProc::POINT_LEFT, "[自分]位置 %f : %f : %f\n", posThis.x, posThis.y, posThis.z);
@@ -447,22 +467,6 @@ void CPlayer::Update(void)
 	auto str = magic_enum::enum_name(state);
 	DebugProc::Print(DebugProc::POINT_LEFT, str.data());
 	DebugProc::Print(DebugProc::POINT_LEFT, "\n");
-
-	// 値更新
-	SetPos(posThis);		// 位置
-	SetPosOld(posOldThis);	// 前回の位置
-	SetRot(rotThis);		// 向き
-	SetSize(sizeThis);		// 大きさ
-
-	// エフェクトの操作
-	ControlEffect(m_pEffectEgg);	// 卵のエフェクト
-	ControlEffect(m_pEffectSpeed);	// 加減速のエフェクト
-	ControlEffect(m_pEffectItem);	// アイテム所持エフェクト
-	if (m_pShadow != nullptr)
-	{
-		ControlEffect(m_pEffectGuide, &m_pShadow->GetPos()); // 復活位置のガイドエフェクト
-	}
-	PrintFoot(rotThis);
 }
 
 //====================================================================
@@ -1773,6 +1777,7 @@ void CPlayer::RotationEffect(CEffekseer* pTarget)
 
 	// 向きにマトリックスを反映
 	D3DXVECTOR3 rot = useful::CalcMatrixToRot(mat);
+	rot += GetRot();
 
 	// エフェクトに情報を適用
 	pTarget->SetRotation(rot);
@@ -1797,6 +1802,47 @@ void CPlayer::MoveEffect(CEffekseer* pTarget, const D3DXVECTOR3* pPos)
 
 	// エフェクトに情報を適用
 	pTarget->SetPosition(pos);
+}
+
+//==========================================
+//  加減速のエフェクトを生成
+//==========================================
+void CPlayer::SpeedEffect(const D3DXVECTOR3& pos, const D3DXVECTOR3& rot)
+{
+	DebugProc::Print(DebugProc::POINT_CENTER, "プレイヤーの向き : %f\n", rot.y);
+
+	// 前回の状態と一致していたら関数を抜ける
+	CMapMove::SPEED speed = GetSpeedState();
+	if (speed == GetOldSpeedState()) { return; }
+
+	// エフェクトを削除
+	if (m_pEffectSpeed != nullptr)
+	{
+		m_pEffectSpeed->SetDeath();
+		m_pEffectSpeed = nullptr;
+	}
+
+	// 通常状態の場合関数を抜ける
+	if (speed == CMapMove::SPEED_NONE) { return; }
+
+	// 生成位置を算出
+	D3DXMATRIX mat = *GetUseMultiMatrix();
+	D3DXVECTOR3 temp = pos;
+	temp.y += EFFECT_HEIGHT;
+	D3DXVECTOR3 ef = useful::CalcMatrix(temp, rot, mat);
+
+	// 新しいエフェクトを設定する
+	switch (speed)
+	{
+	case CMapMove::SPEED_DOWN:
+		m_pEffectSpeed = MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DROP, true, ef, rot);
+		break;
+	case CMapMove::SPEED_UP:
+		m_pEffectSpeed = MyEffekseer::EffectCreate(CMyEffekseer::TYPE_ACCELE, true, ef, rot);
+		break;
+	default:
+		break;
+	}
 }
 
 //====================================================================

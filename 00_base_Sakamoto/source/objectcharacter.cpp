@@ -41,7 +41,8 @@ m_bUseShadow(true),
 m_State(STATE_WAIT),
 m_OldState(STATE_WAIT),
 m_nRefIdx(0),
-m_SpeedState(CMapMove::SPEED_NONE)
+m_SpeedState(CMapMove::SPEED_NONE),
+m_OldSpeedState(CMapMove::SPEED_NONE)
 {
 	for (int nCnt = 0; nCnt < MODEL_NUM; nCnt++)
 	{
@@ -172,6 +173,7 @@ void CObjectCharacter::Uninit(void)
 //====================================================================
 void CObjectCharacter::Update(void)
 {
+	m_OldSpeedState = m_SpeedState;
 	D3DXVECTOR3 pos = GetPos();
 
 	//‰ÁŒ¸‘¬ó‘Ô‚ÌŠÇ—
