@@ -45,8 +45,8 @@ public:
 		TYPE_NONE = 0,	// 種類無し
 		TYPE_MOVE,		// 移動
 		TYPE_CROSS,		// 十字架
-		TYPE_ATTACK,	// 攻撃
 		TYPE_BOWABOWA,	// ボワボワ
+		TYPE_ATTACK,	// 攻撃
 		TYPE_BIBLE,		// 聖書
 		TYPE_DEVILHOLE,	// デビルホール
 		TYPE_MAX
