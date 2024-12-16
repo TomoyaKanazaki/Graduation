@@ -209,8 +209,8 @@ HRESULT CPlayer::Init(int PlayNumber)
 		m_pMoveState = new CStateStop();	// 停止状態
 		m_pMoveState->ControlStop(this);	// 操作状態にする
 	}
-	// 向き状態の設定
-	m_pMoveState->SetRotState(CMoveState::ROTSTATE_WAIT);
+	//// 向き状態の設定
+	//m_pMoveState->SetRotState(CMoveState::ROTSTATE_WAIT);
 
 	// リストマネージャーの生成
 	if (m_pList == nullptr)
@@ -306,7 +306,7 @@ void CPlayer::Update(void)
 		SearchWall(posThis);
 
 		if (
-			(state != STATE_EGG && CollisionStageIn(posThis) == true &&
+			(state != STATE_EGG &&
 				CMapSystem::GetInstance()->GetGritBool(m_Grid.x, m_Grid.z) == false) ||
 			(state == STATE_EGG && CollisionStageIn(posThis) == true &&
 				CMapSystem::GetInstance()->GetGritBool(m_Grid.x, m_Grid.z) == false &&
@@ -327,12 +327,14 @@ void CPlayer::Update(void)
 				{
 					// 移動処理
 					m_pMoveState->Move(this, posThis, rotThis);
+					state = GetState();				// 状態
 				}
 			}
 			else
 			{
 				// 移動処理
 				m_pMoveState->Move(this, posThis, rotThis);
+				state = GetState();				// 状態
 			}
 
 			// モデルを描画する
