@@ -400,14 +400,3 @@ void CObject2D::SetTexture(const char *name)
 	CTexture *pTexture = CManager::GetInstance()->GetTexture();
 	m_nIdxTexture = pTexture->Regist(name);
 }
-
-//====================================================================
-//テクスチャの取得
-//====================================================================
-const char *CObject2D::GetTexture(void)
-{
-	CTexture* pTexture = CManager::GetInstance()->GetTexture();
-	const char* Name = pTexture->GetTextureName(m_nIdxTexture);
-
-	return Name;
-}

@@ -1,180 +1,136 @@
-//============================================
+//========================================
 //
-//	テクスチャの管理 [texture.cpp]
-//	Author:sakamoto kai
+// テクスチャ管理[texture.h]
+// Author：森川駿弥
 //
-//============================================
+//========================================
+
 #include "texture.h"
 #include "renderer.h"
 #include "manager.h"
-#include "Xmodel.h"
 
-//静的メンバ変数宣言
-int CTexture::m_NumAll = 0;
+//========================================
+//定数定義
+//========================================
+namespace
+{
+	// テクスチャ一括管理
+	const char* str[] =
+	{ "data\\texture\\Player.png" };
+}
 
-char CTexture::c_apTexturename[MAX_TEXTURE][128] = {};
+//========================================
+//静的メンバ変数
+//========================================
+int CTexture::m_nNumAll = 0;
 
-//====================================================================
+//========================================
 //コンストラクタ
-//====================================================================
+//========================================
 CTexture::CTexture()
 {
 	for (int nCntTex = 0; nCntTex < MAX_TEXTURE; nCntTex++)
 	{
-		m_apTexture[nCntTex] = nullptr;
+		m_apTexture[nCntTex] = {};	//テクスチャのポインタ
+		m_apPath[nCntTex] = "\0";
 	}
 }
 
-//====================================================================
+//========================================
 //デストラクタ
-//====================================================================
+//========================================
 CTexture::~CTexture()
 {
 
 }
 
-//====================================================================
-//読み込み
-//====================================================================
+//========================================
+//テクスチャ一括読み込み
+//========================================
 HRESULT CTexture::Load(void)
 {
-	////デバイスの取得
-	//LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
+	//デバイスの取得
+	CRenderer* pRenderer = CManager::GetInstance()->GetRenderer();
+	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 
-	//for (int nCntTex = 0; nCntTex < MAX_TEXTURE; nCntTex++)
-	//{
-	//	//テクスチャの読み込み
-	//	if (FAILED(D3DXCreateTextureFromFile(pDevice,
-	//		c_apTexturename[nCntTex],
-	//		&m_apTexture[nCntTex])))
-	//	{
-	//		if (c_apTexturename[nCntTex] == nullptr)
-	//		{
-	//			m_NumAll = nCntTex;
-	//			return S_OK;
-	//		}
-	//		else
-	//		{
-	//			return E_FAIL;
-	//		}
-	//	}
-	//	else
-	//	{
-	//		int a = 0;
-	//	}
-	//}
+	//指定のテクスチャの読み込み
+	//D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\NULL.png", &m_apTexture[0]);
+
+	//総数をカウントアップ
+	//m_nNumAll++;
 
 	return S_OK;
 }
 
-//====================================================================
-//破棄
-//====================================================================
+//========================================
+//テクスチャ破棄
+//========================================
 void CTexture::Unload(void)
 {
-	for (int nCntTex = 0; nCntTex < m_NumAll; nCntTex++)
-	{
-		//テクスチャの破棄
+	for (int nCntTex = 0; nCntTex < m_nNumAll; nCntTex++)
+	{//テクスチャの終了処理
 		if (m_apTexture[nCntTex] != nullptr)
-		{
+		{//m_apTexture[nCntTex]がnullptrじゃないとき
 			m_apTexture[nCntTex]->Release();
 			m_apTexture[nCntTex] = nullptr;
 		}
 	}
 }
 
-//====================================================================
-//テクスチャの番号指定
-//====================================================================
-int CTexture::Regist(const char *pFilename)
+//========================================
+//テクスチャ個別割り当て
+//========================================
+int CTexture::Regist(std::string pfile)
 {
-	for (int nCntTex = 0; nCntTex < m_NumAll; nCntTex++)
+	for (int nCntTex = 0; nCntTex < MAX_TEXTURE; nCntTex++)
 	{
-		if (strcmp(&c_apTexturename[nCntTex][0], pFilename) == 0)
-		{
+		if (m_apPath[nCntTex] == pfile)
+		{//ファイル名が一致したとき
+			//nCntTex番目を返す
+			return nCntTex;
+		}
+
+		if (m_apTexture[nCntTex] == nullptr)
+		{//nullptrの時
+			//CRenderer型のポインタ
+			CRenderer* pRenderer = CManager::GetInstance()->GetRenderer();
+
+			//デバイスの取得
+			LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
+
+			//指定のテクスチャの読み込み
+			D3DXCreateTextureFromFile(pDevice, pfile.c_str(), &m_apTexture[nCntTex]);
+
+			//ファイル名を入れる
+			m_apPath[nCntTex] = pfile;
+
+			//総数をカウントアップ
+			m_nNumAll++;
+
+			//nCntTex番目を返す
 			return nCntTex;
 		}
 	}
 
-	//デバイスの取得
-	LPDIRECT3DDEVICE9 m_pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
-
-		//テクスチャの読み込み
-	if (SUCCEEDED(D3DXCreateTextureFromFile(m_pDevice,
-		pFilename,
-		&m_apTexture[m_NumAll])))
-	{
-		if (strcmp(&c_apTexturename[m_NumAll][0], "") == 0)
-		{
-			strcpy(&c_apTexturename[m_NumAll][0], pFilename);
-			m_NumAll++;
-			return m_NumAll - 1;
-		}
-		else
-		{
-			return -1;
-		}
+	if (m_nNumAll > MAX_TEXTURE)
+	{// 総数がテクスチャの最大数を超えたら
+		assert(false);
 	}
 
+	// -1を返す
 	return -1;
 }
 
-//====================================================================
-//テクスチャの番号指定
-//====================================================================
-void CTexture::XModelRegist(int *nTexIdx, int nXModelIdx)
-{
-	int nCheck = -1;
-
-	//デバイスの取得
-	LPDIRECT3DDEVICE9 m_pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
-	D3DXMATERIAL *pMat;	//マテリアルへのポインタ
-
-	//Xモデルの取得
-	CXModel::XModel *pXmodel = CManager::GetInstance()->GetXModel()->GetXModel(nXModelIdx);
-
-	//マテリアル情報に対するポインタを所得
-	pMat = (D3DXMATERIAL*)pXmodel->m_pBuffMat->GetBufferPointer();
-
-	for (int nCntMat = 0; nCntMat < (int)pXmodel->m_dwNumMat; nCntMat++)
-	{
-		nCheck = -1;
-		if (pMat[nCntMat].pTextureFilename != nullptr)
-		{
-			for (int nCntTex = 0; nCntTex < m_NumAll; nCntTex++)
-			{
-				if (strcmp(&c_apTexturename[nCntTex][0], pMat[nCntMat].pTextureFilename) == 0)
-				{
-					nTexIdx[nCntMat] = nCntTex;
-					nCheck = nCntTex;
-				}
-			}
-
-			if (nTexIdx[nCntMat] != nCheck)
-			{
-				//テクスチャの読み込み
-				if (SUCCEEDED(D3DXCreateTextureFromFile(m_pDevice,
-					pMat[nCntMat].pTextureFilename,
-					&m_apTexture[m_NumAll])))
-				{
-					strcpy(&c_apTexturename[m_NumAll][0], pMat[nCntMat].pTextureFilename);
-					m_NumAll++;
-					nTexIdx[nCntMat] = m_NumAll - 1;
-				}
-			}
-		}
-		else
-		{
-			m_apTexture[m_NumAll] = nullptr;
-			nTexIdx[nCntMat] = -1;
-		}
-	}
-}
-
-//====================================================================
-//指定のテクスチャを返す
-//====================================================================
+//========================================
+//テクスチャのアドレス取得
+//========================================
 LPDIRECT3DTEXTURE9 CTexture::GetAddress(int nIdx)
 {
-	return m_apTexture[nIdx];
+	if (nIdx >= 0 && nIdx <= m_nNumAll)
+	{
+		return m_apTexture[nIdx];
+	}
+
+	//nullptrを返す
+	return nullptr;
 }
