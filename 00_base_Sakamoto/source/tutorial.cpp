@@ -44,7 +44,6 @@ namespace
 {
 	const D3DXVECTOR3 CHECK_POS[]
 	{
-		{ 0.0f, 0.0f, 0.0f },	 // NONEの座標
 		{ 80.0f, 60.0f, 0.0f },	 // 移動の座標
 		{ 80.0f, 115.0f, 0.0f }, // 十字架座標
 		{ 80.0f, 170.0f, 0.0f }, // ボワボワの座標
@@ -74,11 +73,11 @@ namespace
 	const char* CHECKBOX_TEX = "data\\TEXTURE\\UI\\tutorial_check_box.png";			// チェックボックスのテクスチャ
 	const char* TUTORIAL_FRAME_TEX = "data\\TEXTURE\\UI\\tutorial_frame.png";		// チュートリアルガイドの外枠のテクスチャ
 	const char* TUTORIAL_MOVE_TEX = "data\\TEXTURE\\UI\\tutorial_text_00.png";		// 移動ガイドテキストのテクスチャ
-	const char* TUTORIAL_CROSS_TEX = "data\\TEXTURE\\UI\\tutorial_text_01.png";		// 十字架ガイドテキストのテクスチャ
-	const char* TUTORIAL_ATTACK_TEX = "data\\TEXTURE\\UI\\tutorial_text_02.png";	// 攻撃テキストのテクスチャ
-	const char* TUTORIAL_BOWABOWA_TEX = "data\\TEXTURE\\UI\\tutorial_text_03.png";	// ボワボワテキストのテクスチャ
-	const char* TUTORIAL_BIBLE_TEX = "data\\TEXTURE\\UI\\tutorial_text_04.png";		// 聖書テキストのテクスチャ
-	const char* TUTORIAL_DEVILHOLE_TEX = "data\\TEXTURE\\UI\\tutorial_text_05.png";	// ガイドテキストのテクスチャ
+	const char* TUTORIAL_CROSS_TEX = "data\\TEXTURE\\UI\\tutorial_text_001.png";		// 十字架ガイドテキストのテクスチャ
+	const char* TUTORIAL_ATTACK_TEX = "data\\TEXTURE\\UI\\tutorial_text_002.png";	// 攻撃テキストのテクスチャ
+	const char* TUTORIAL_BOWABOWA_TEX = "data\\TEXTURE\\UI\\tutorial_text_003.png";	// ボワボワテキストのテクスチャ
+	const char* TUTORIAL_BIBLE_TEX = "data\\TEXTURE\\UI\\tutorial_text_004.png";		// 聖書テキストのテクスチャ
+	const char* TUTORIAL_DEVILHOLE_TEX = "data\\TEXTURE\\UI\\tutorial_text_005.png";	// ガイドテキストのテクスチャ
 
 	const CMapSystem::GRID FIELD_GRID = { 64, 64 }; // 下の床のサイズ
 	const CMapSystem::GRID BIBLE_POS = { 11, 10 };	// 聖書の位置
@@ -91,7 +90,8 @@ namespace
 	const D3DXVECTOR3 MARKER_SIZE = D3DXVECTOR3(50.0f, 50.0f, 0.0f);	// マーカーサイズ
 	const D3DXVECTOR3 BUTTON_POS = D3DXVECTOR3(1100.0f, 650.0f, 0.0f);	// 遷移ボタンの位置
 	const D3DXVECTOR3 BUTTON_SIZE = D3DXVECTOR3(300.0f, 250.0f, 0.0f);	// 遷移ボタンのサイズ
-	const D3DXVECTOR3 TEXT_SIZE = D3DXVECTOR3(500.0f, 50.0f, 0.0f);		// テキストのサイズ
+	const D3DXVECTOR3 TEXT_MOVE_SIZE = D3DXVECTOR3(250.0f, 100.0f, 0.0f);	// 移動テキストのサイズ
+	const D3DXVECTOR3 TEXT_SIZE = D3DXVECTOR3(250.0f, 50.0f, 0.0f);			// テキストのサイズ
 
 	const D3DXCOLOR MASK_DEFAULT_COLOR = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);			// 通常のステンシルカラー(白)
 	const D3DXCOLOR MASK_PLAYER_COLOR = D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f);			// タマゴンのステンシルカラー(緑)
@@ -186,7 +186,7 @@ HRESULT CTutorial::Init(void)
 
 	// マップの生成
 	CMapSystem::GetInstance()->Init();
-	CMapSystem::Load("data\\TXT\\STAGE\\map01.csv");
+	CMapSystem::Load("data\\TXT\\STAGE\\map02.csv");
 
 	//デビルの生成
 	m_pDevil = CDevil::Create();
@@ -209,15 +209,16 @@ HRESULT CTutorial::Init(void)
 	for (int i = 0; i < TYPE_MAX; ++i)
 	{// 列挙分チェックボックスの生成
 		CTutorialUi::Create(CHECK_POS[i], BOX_SIZE, CHECKBOX_TEX);
+		CTutorialUi::Create(D3DXVECTOR3(410.0f, CHECK_POS[i].y, CHECK_POS[i].z), BOX_SIZE, CHECKBOX_TEX);
 	}
 
 	// テキストの生成
-	CTutorialUi::Create(D3DXVECTOR3(345.0f, CHECK_POS[TYPE_MOVE].y, CHECK_POS[TYPE_MOVE].z), TEXT_SIZE, TUTORIAL_MOVE_TEX);
-	CTutorialUi::Create(D3DXVECTOR3(350.0f, CHECK_POS[TYPE_CROSS].y, CHECK_POS[TYPE_CROSS].z), TEXT_SIZE, TUTORIAL_CROSS_TEX);
-	CTutorialUi::Create(D3DXVECTOR3(350.0f, CHECK_POS[TYPE_BOWABOWA].y, CHECK_POS[TYPE_BOWABOWA].z), TEXT_SIZE, TUTORIAL_BOWABOWA_TEX);
-	CTutorialUi::Create(D3DXVECTOR3(345.0f, CHECK_POS[TYPE_ATTACK].y, CHECK_POS[TYPE_ATTACK].z), TEXT_SIZE, TUTORIAL_ATTACK_TEX);
-	CTutorialUi::Create(D3DXVECTOR3(350.0f, CHECK_POS[TYPE_BIBLE].y, CHECK_POS[TYPE_BIBLE].z), TEXT_SIZE, TUTORIAL_BIBLE_TEX);
-	CTutorialUi::Create(D3DXVECTOR3(350.0f, CHECK_POS[TYPE_DEVILHOLE].y, CHECK_POS[TYPE_DEVILHOLE].z), TEXT_SIZE, TUTORIAL_DEVILHOLE_TEX);
+	CTutorialUi::Create(D3DXVECTOR3(240.0f, CHECK_POS[TYPE_MOVE].y, CHECK_POS[TYPE_MOVE].z), TEXT_MOVE_SIZE, TUTORIAL_MOVE_TEX);
+	CTutorialUi::Create(D3DXVECTOR3(240.0f, CHECK_POS[TYPE_CROSS].y, CHECK_POS[TYPE_CROSS].z), TEXT_SIZE, TUTORIAL_CROSS_TEX);
+	CTutorialUi::Create(D3DXVECTOR3(240.0f, CHECK_POS[TYPE_BOWABOWA].y, CHECK_POS[TYPE_BOWABOWA].z), TEXT_SIZE, TUTORIAL_BOWABOWA_TEX);
+	CTutorialUi::Create(D3DXVECTOR3(245.0f, CHECK_POS[TYPE_ATTACK].y, CHECK_POS[TYPE_ATTACK].z), TEXT_SIZE, TUTORIAL_ATTACK_TEX);
+	CTutorialUi::Create(D3DXVECTOR3(240.0f, CHECK_POS[TYPE_BIBLE].y, CHECK_POS[TYPE_BIBLE].z), TEXT_SIZE, TUTORIAL_BIBLE_TEX);
+	CTutorialUi::Create(D3DXVECTOR3(240.0f, CHECK_POS[TYPE_DEVILHOLE].y, CHECK_POS[TYPE_DEVILHOLE].z), TEXT_SIZE, TUTORIAL_DEVILHOLE_TEX);
 
 	// 遷移ボタンの生成
 	CTutorialUi::Create(BUTTON_POS, BUTTON_SIZE, BUTTON_TEX);
@@ -648,103 +649,6 @@ void CTutorial::LoadStageRailBlock(const char* pFilename)
 }
 
 //====================================================================
-// モデルの読み込み配置
-//====================================================================
-void CTutorial::LoadStageMapModel(const char* pFilename)
-{
-	////ファイルを開く
-	//FILE* pFile = fopen(pFilename, "r");
-
-	//if (pFile != nullptr)
-	//{//ファイルが開けた場合
-
-	//	char Getoff[32] = {};
-	//	char boolLife[32] = {};
-	//	char aString[128] = {};			//ゴミ箱
-	//	char aStartMessage[32] = {};	//スタートメッセージ
-	//	char aSetMessage[32] = {};		//セットメッセージ
-	//	char aEndMessage[32] = {};		//終了メッセージ
-	//	char aBool[8] = {};				//bool型メッセージ
-	//	bool Loop = false;
-
-	//	fscanf(pFile, "%s", &aStartMessage[0]);
-	//	if (strcmp(&aStartMessage[0], "STARTSETSTAGE") == 0)
-	//	{
-	//		while (1)
-	//		{
-	//			fscanf(pFile, "%s", &aSetMessage[0]);
-	//			if (strcmp(&aSetMessage[0], "STARTSETXMODEL") == 0)
-	//			{
-	//				char aModelName[64] = {};		//モデルのパス名
-	//				D3DXVECTOR3 pos;
-	//				D3DXVECTOR3 rot;
-	//				int nEditIndex = 0;
-
-	//				fscanf(pFile, "%s", &aString[0]);
-	//				fscanf(pFile, "%s", &aModelName[0]);
-
-	//				fscanf(pFile, "%s", &aString[0]);
-	//				fscanf(pFile, "%d", &nEditIndex);
-
-	//				fscanf(pFile, "%s", &aString[0]);
-	//				fscanf(pFile, "%f", &pos.x);
-	//				fscanf(pFile, "%f", &pos.y);
-	//				fscanf(pFile, "%f", &pos.z);
-
-	//				fscanf(pFile, "%s", &aString[0]);
-	//				fscanf(pFile, "%f", &rot.x);
-	//				fscanf(pFile, "%f", &rot.y);
-	//				fscanf(pFile, "%f", &rot.z);
-
-	//				fscanf(pFile, "%s", &aString[0]);
-	//				fscanf(pFile, "%s", &aBool[0]);	//ループするかどうかを設定
-	//				Loop = (strcmp(&aBool[0], "1") == 0 ? true : false);			//bool型の書き方
-
-	//				CMapModel* pModel = CMapModel::Create(&aModelName[0]);
-	//				pModel->SetPos(pos);
-	//				pModel->SetRot(rot);
-	//				pModel->SetEditIdx(nEditIndex);
-
-	//				if (rot.y < 1.57f)
-	//				{
-
-	//				}
-	//				else if (rot.y < 3.14f)
-	//				{
-	//					pModel->SwapSize();
-	//				}
-	//				else if (rot.y < 4.71f)
-	//				{
-
-	//				}
-	//				else
-	//				{
-	//					pModel->SwapSize();
-	//				}
-
-	//				pModel->SetCollision(Loop);
-
-	//				fscanf(pFile, "%s", &aEndMessage[0]);
-	//				if (strcmp(&aEndMessage[0], "ENDSETXMODEL") != 0)
-	//				{
-	//					break;
-	//				}
-	//			}
-	//			else if (strcmp(&aSetMessage[0], "ENDSETSTAGE") == 0)
-	//			{
-	//				break;
-	//			}
-	//		}
-	//	}
-	//	fclose(pFile);
-	//}
-	//else
-	//{//ファイルが開けなかった場合
-	//	printf("***ファイルを開けませんでした***\n");
-	//}
-}
-
-//====================================================================
 // テスト用背景オブジェクト設定処理
 //====================================================================
 void CTutorial::SetBgObjTest(void)
@@ -758,31 +662,4 @@ void CTutorial::SetBgObjTest(void)
 		pScrollDevice = CScrollDevice::Create(SCROLL_DEVICE_MODEL, SCROLL_DEVICE_ENEMY_MODEL);
 		pScrollDevice->SetPos(D3DXVECTOR3(-1300.0f, 0.0f, 0.0f));
 	}
-
-#if 0 // 酒井のデバッグ用（テスト中でめり込むため一時停止）
-
-	// ジャッキ
-	{
-		CSlopeDevice* pSlopeDevice = CSlopeDevice::Create(SLOPE_DEVICE_MODEL, SLOPE_DEVICE_ENEMY_MODEL);
-		pSlopeDevice->SetPos(D3DXVECTOR3(900.0f, BOTTOM_FIELD_POS.y, 500.0f));
-		pSlopeDevice->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
-		pSlopeDevice->SetLocateWorldType(CSlopeDevice::LOCATE_WORLD_TYPE_TOP_LEFT);
-
-		pSlopeDevice = CSlopeDevice::Create(SLOPE_DEVICE_MODEL, SLOPE_DEVICE_ENEMY_MODEL);
-		pSlopeDevice->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
-		pSlopeDevice->SetPos(D3DXVECTOR3(-900.0f, BOTTOM_FIELD_POS.y, 500.0f));
-		pSlopeDevice->SetLocateWorldType(CSlopeDevice::LOCATE_WORLD_TYPE_TOP_RIGHT);
-
-		pSlopeDevice = CSlopeDevice::Create(SLOPE_DEVICE_MODEL, SLOPE_DEVICE_ENEMY_MODEL);
-		pSlopeDevice->SetPos(D3DXVECTOR3(900.0f, BOTTOM_FIELD_POS.y, -500.0f));
-		pSlopeDevice->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
-		pSlopeDevice->SetLocateWorldType(CSlopeDevice::LOCATE_WORLD_TYPE_BOTTOM_LEFT);
-
-		pSlopeDevice = CSlopeDevice::Create(SLOPE_DEVICE_MODEL, SLOPE_DEVICE_ENEMY_MODEL);
-		pSlopeDevice->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
-		pSlopeDevice->SetPos(D3DXVECTOR3(-900.0f, BOTTOM_FIELD_POS.y, -500.0f));
-		pSlopeDevice->SetLocateWorldType(CSlopeDevice::LOCATE_WORLD_TYPE_BOTTOM_RIGHT);
-	}
-#endif
-
 }

@@ -130,6 +130,8 @@ private:
 	void RotationEffect(CEffekseer* pTarget); // エフェクトの操作
 	void MoveEffect(CEffekseer* pTarget, const D3DXVECTOR3* pPos = nullptr); // エフェクトの操作
 
+	void SpeedEffect(const D3DXVECTOR3& pos, const D3DXVECTOR3& rot);
+
 	int m_nPlayNumber;				//プレイ用番号
 	ACTION_TYPE m_Action;
 	ACTION_TYPE m_AtkAction;		//攻撃状態記録用変数

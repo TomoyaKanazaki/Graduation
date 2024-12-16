@@ -126,6 +126,7 @@ public:
 
 	void SetSpeedState(CMapMove::SPEED State) { m_SpeedState = State; }	//速度
 	CMapMove::SPEED GetSpeedState(void) { return m_SpeedState; }	//速度
+	CMapMove::SPEED GetOldSpeedState(void) { return m_OldSpeedState; }	//速度
 
 protected:
 
@@ -156,6 +157,7 @@ private:
 	D3DXVECTOR3 m_size;				//大きさ
 
 	CMapMove::SPEED m_SpeedState;	//速度
+	CMapMove::SPEED m_OldSpeedState;	//速度
 
 	// マトリックス情報
 	D3DXMATRIX m_mtxWorld;			// ワールドマトリックス

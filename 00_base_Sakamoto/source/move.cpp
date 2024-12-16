@@ -268,7 +268,7 @@ void CStateControl::Move(CObjectCharacter* pCharacter, D3DXVECTOR3& pos, D3DXVEC
 		break;
 
 	case CObject::TYPE_ENEMY3D:			// 敵
-		NormarizeMove = InputKey(pCharacter, pos, rot, NormarizeMove, ENEMY_SPEED);
+		//NormarizeMove = InputKey(pCharacter, pos, rot, NormarizeMove, ENEMY_SPEED);
 		UpdateMoveEnemy(pCharacter, NormarizeMove);			// 移動更新
 
 		// 移動方向処理
@@ -384,6 +384,11 @@ D3DXVECTOR3 CStateControl::InputKey(CObjectCharacter* pCharacter, D3DXVECTOR3& p
 	// 移動の進行許可状況
 	CObjectCharacter::PROGGRESS progress = pCharacter->GetProgress();
 	bool bGridCenter = pCharacter->GetGritCenter();		// グリッド座標の中心にいるか
+
+	if (pInputKeyboard->GetPress(DIK_D))
+	{
+		int a = 0;
+	}
 
 	//キーボードの移動処理
 	if ((pInputKeyboard->GetPress(DIK_W) && progress.bOKU && bGridCenter) ||

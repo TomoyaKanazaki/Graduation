@@ -67,6 +67,7 @@ namespace
 	const float EGG_COLOR_DEL_A = 0.01f;		//不透明度の減衰速度
 
 	const float SHADOW_SIZE = 50.0f;			// 丸影の大きさ
+	const float EFFECT_HEIGHT = 50.0f;			// エフェクトの高さ
 
 	const D3DXVECTOR2 NUMBER_SIZE = { 280.0f , 170.0f };
 }
@@ -209,8 +210,8 @@ HRESULT CPlayer::Init(int PlayNumber)
 		m_pMoveState = new CStateStop();	// 停止状態
 		m_pMoveState->ControlStop(this);	// 操作状態にする
 	}
-	// 向き状態の設定
-	m_pMoveState->SetRotState(CMoveState::ROTSTATE_WAIT);
+	//// 向き状態の設定
+	//m_pMoveState->SetRotState(CMoveState::ROTSTATE_WAIT);
 
 	// リストマネージャーの生成
 	if (m_pList == nullptr)
@@ -306,7 +307,7 @@ void CPlayer::Update(void)
 		SearchWall(posThis);
 
 		if (
-			(state != STATE_EGG && CollisionStageIn(posThis) == true &&
+			(state != STATE_EGG &&
 				CMapSystem::GetInstance()->GetGritBool(m_Grid.x, m_Grid.z) == false) ||
 			(state == STATE_EGG && CollisionStageIn(posThis) == true &&
 				CMapSystem::GetInstance()->GetGritBool(m_Grid.x, m_Grid.z) == false &&
@@ -327,12 +328,14 @@ void CPlayer::Update(void)
 				{
 					// 移動処理
 					m_pMoveState->Move(this, posThis, rotThis);
+					state = GetState();				// 状態
 				}
 			}
 			else
 			{
 				// 移動処理
 				m_pMoveState->Move(this, posThis, rotThis);
+				state = GetState();				// 状態
 			}
 
 			// モデルを描画する
@@ -433,11 +436,30 @@ void CPlayer::Update(void)
 	//卵の動き
 	EggMove(posThis, rotThis);
 
-	// キャラクタークラスの更新（継承）
-	CObjectCharacter::Update();
-
 	//モーションの管理
 	ActionState();
+
+	// エフェクトの操作
+	SpeedEffect(posThis, rotThis);
+	ControlEffect(m_pEffectEgg);	// 卵のエフェクト
+	D3DXVECTOR3 temp = posThis;
+	temp.y += EFFECT_HEIGHT;
+	ControlEffect(m_pEffectSpeed, &temp);	// 加減速のエフェクト
+	ControlEffect(m_pEffectItem);	// アイテム所持エフェクト
+	if (m_pShadow != nullptr)
+	{
+		ControlEffect(m_pEffectGuide, &m_pShadow->GetPos()); // 復活位置のガイドエフェクト
+	}
+	PrintFoot(rotThis);
+
+	// 値更新
+	SetPos(posThis);		// 位置
+	SetPosOld(posOldThis);	// 前回の位置
+	SetRot(rotThis);		// 向き
+	SetSize(sizeThis);		// 大きさ
+
+	// キャラクタークラスの更新（継承）
+	CObjectCharacter::Update();
 
 	//デバッグ表示
 	DebugProc::Print(DebugProc::POINT_LEFT, "[自分]位置 %f : %f : %f\n", posThis.x, posThis.y, posThis.z);
@@ -447,22 +469,6 @@ void CPlayer::Update(void)
 	auto str = magic_enum::enum_name(state);
 	DebugProc::Print(DebugProc::POINT_LEFT, str.data());
 	DebugProc::Print(DebugProc::POINT_LEFT, "\n");
-
-	// 値更新
-	SetPos(posThis);		// 位置
-	SetPosOld(posOldThis);	// 前回の位置
-	SetRot(rotThis);		// 向き
-	SetSize(sizeThis);		// 大きさ
-
-	// エフェクトの操作
-	ControlEffect(m_pEffectEgg);	// 卵のエフェクト
-	ControlEffect(m_pEffectSpeed);	// 加減速のエフェクト
-	ControlEffect(m_pEffectItem);	// アイテム所持エフェクト
-	if (m_pShadow != nullptr)
-	{
-		ControlEffect(m_pEffectGuide, &m_pShadow->GetPos()); // 復活位置のガイドエフェクト
-	}
-	PrintFoot(rotThis);
 }
 
 //====================================================================
@@ -889,6 +895,34 @@ void CPlayer::StateManager(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis)
 		break;
 
 	case STATE_EGG:
+
+		//卵の画面外ワープ処理
+		if (m_Grid.x == -1)
+		{//X軸ワープ
+			if (posThis.x <= 0.0f)
+			{
+				m_Grid.x = CMapSystem::GetInstance()->GetMove()->GetMaxGrid().x;
+				posThis = CMapSystem::GetInstance()->GetGritPos(m_Grid);
+			}
+			else
+			{
+				m_Grid.x = CMapSystem::GetInstance()->GetMove()->GetMinGrid().x;
+				posThis = CMapSystem::GetInstance()->GetGritPos(m_Grid);
+			}
+		}
+		else if(m_Grid.z == -1)
+		{//Z軸ワープ
+			if (posThis.z > 0.0f)
+			{
+				m_Grid.z = CMapSystem::GetInstance()->GetMove()->GetMaxGrid().z;
+				posThis = CMapSystem::GetInstance()->GetGritPos(m_Grid);
+			}
+			else
+			{
+				m_Grid.z = CMapSystem::GetInstance()->GetMove()->GetMinGrid().z;
+				posThis = CMapSystem::GetInstance()->GetGritPos(m_Grid);
+			}
+		}
 
 		// モデル数の取得
 		int nNumModel = GetNumModel();
@@ -1773,6 +1807,7 @@ void CPlayer::RotationEffect(CEffekseer* pTarget)
 
 	// 向きにマトリックスを反映
 	D3DXVECTOR3 rot = useful::CalcMatrixToRot(mat);
+	rot += GetRot();
 
 	// エフェクトに情報を適用
 	pTarget->SetRotation(rot);
@@ -1797,6 +1832,47 @@ void CPlayer::MoveEffect(CEffekseer* pTarget, const D3DXVECTOR3* pPos)
 
 	// エフェクトに情報を適用
 	pTarget->SetPosition(pos);
+}
+
+//==========================================
+//  加減速のエフェクトを生成
+//==========================================
+void CPlayer::SpeedEffect(const D3DXVECTOR3& pos, const D3DXVECTOR3& rot)
+{
+	DebugProc::Print(DebugProc::POINT_CENTER, "プレイヤーの向き : %f\n", rot.y);
+
+	// 前回の状態と一致していたら関数を抜ける
+	CMapMove::SPEED speed = GetSpeedState();
+	if (speed == GetOldSpeedState()) { return; }
+
+	// エフェクトを削除
+	if (m_pEffectSpeed != nullptr)
+	{
+		m_pEffectSpeed->SetDeath();
+		m_pEffectSpeed = nullptr;
+	}
+
+	// 通常状態の場合関数を抜ける
+	if (speed == CMapMove::SPEED_NONE) { return; }
+
+	// 生成位置を算出
+	D3DXMATRIX mtx = *GetUseMultiMatrix();
+	D3DXVECTOR3 temp = pos;
+	temp.y += EFFECT_HEIGHT;
+	D3DXVECTOR3 ef = useful::CalcMatrix(temp, rot, mtx);
+
+	// 新しいエフェクトを設定する
+	switch (speed)
+	{
+	case CMapMove::SPEED_DOWN:
+		m_pEffectSpeed = MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DROP, true, ef, useful::CalcMatrixToRot(mtx));
+		break;
+	case CMapMove::SPEED_UP:
+		m_pEffectSpeed = MyEffekseer::EffectCreate(CMyEffekseer::TYPE_ACCELE, true, ef, useful::CalcMatrixToRot(mtx));
+		break;
+	default:
+		break;
+	}
 }
 
 //====================================================================
