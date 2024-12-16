@@ -32,6 +32,7 @@
 #include "pause.h"
 #include "tutorialCheck.h"
 #include "bible.h"
+#include "tutorialUi.h"
 
 #include "sound.h"
 #include "shadow.h"
@@ -44,12 +45,12 @@ namespace
 	const D3DXVECTOR3 CHECK_POS[]
 	{
 		{ 0.0f, 0.0f, 0.0f },	 // NONEの座標
-		{ 62.5f, 105.0f, 0.0f }, // 移動の座標
-		{ 62.5f, 150.0f, 0.0f }, // 十字架座標
-		{ 62.5f, 197.5f, 0.0f }, // 攻撃動の座標
-		{ 62.5f, 242.5f, 0.0f }, // ボワボワの座標
-		{ 62.5f, 282.5f, 0.0f }, // 聖書の座標
-		{ 62.5f, 325.0f, 0.0f }, // デビルホールの座標
+		{ 62.5f, 60.0f, 0.0f }, // 移動の座標
+		{ 62.5f, 105.0f, 0.0f }, // 十字架座標
+		{ 62.5f, 150.0f, 0.0f }, // 攻撃動の座標
+		{ 62.5f, 197.5f, 0.0f }, // ボワボワの座標
+		{ 62.5f, 240.0f, 0.0f }, // 聖書の座標
+		{ 62.5f, 284.0f, 0.0f }, // デビルホールの座標
 	};
 
 	const int BIBLE_OUTGRIT = 2;			// 聖書がマップの外側から何マス内側にいるか
@@ -66,15 +67,18 @@ namespace
 	const char* SLOPE_DEVICE_ENEMY_MODEL = "data\\TXT\\MOTION\\01_enemy\\motion_medaman.txt";
 	const char* TUTORIAL_GUIDE = "data\\TEXTURE\\UI\\tutorial_guid.png";	// チュートリアルガイドのテクスチャ
 	const char* CHECK_MARKER_TEX = "data\\TEXTURE\\UI\\tutorial_check.png";	// チェックマーカーテクスチャ
+	const char* BUTTON_TEX = "data\\TEXTURE\\UI\\return_title.png";	// 遷移ボタンテクスチャ
 
 	const CMapSystem::GRID FIELD_GRID = { 64, 64 }; // 下の床のサイズ
 	const CMapSystem::GRID BIBLE_POS = { 11, 10 };	// 聖書の位置
 
 	const D3DXVECTOR3 BOTTOM_FIELD_POS = D3DXVECTOR3(0.0f, -1000.0f, 0.0f);	// 下床の位置
-	const D3DXVECTOR3 GUIDE_POS = D3DXVECTOR3(200.0f, 225.0f, 0.0f);	// チュートリアルガイドの位置
+	const D3DXVECTOR3 GUIDE_POS = D3DXVECTOR3(200.0f, 175.0f, 0.0f);	// チュートリアルガイドの位置
 	const D3DXVECTOR3 GUIDE_SIZE = D3DXVECTOR3(420.0f, 360.0f, 0.0f);	// チュートリアルガイドのサイズ
 	const D3DXVECTOR3 MARKER_POS = D3DXVECTOR3(50.0f, 160.0f, 0.0f);	// マーカー位置
 	const D3DXVECTOR3 MARKER_SIZE = D3DXVECTOR3(50.0f, 50.0f, 0.0f);	// マーカーサイズ
+	const D3DXVECTOR3 BUTTON_POS = D3DXVECTOR3(1100.0f, 650.0f, 0.0f);		// 遷移ボタンの位置
+	const D3DXVECTOR3 BUTTON_SIZE = D3DXVECTOR3(250.0f, 250.0f, 0.0f);		// 遷移ボタンのサイズ
 
 	const D3DXCOLOR MASK_DEFAULT_COLOR = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);			// 通常のステンシルカラー(白)
 	const D3DXCOLOR MASK_PLAYER_COLOR = D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f);			// タマゴンのステンシルカラー(緑)
@@ -82,7 +86,7 @@ namespace
 	const D3DXCOLOR MASK_MEDAMAN_COLOR = D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f);			// メダマンのステンシルカラー(ピンク)
 	const D3DXCOLOR MASK_BONBON_COLOR = D3DXCOLOR(1.0f, 0.5f, 0.0f, 1.0f);			// ボンンボンのステンシルカラー(オレンジ)
 	const D3DXCOLOR MASK_YUNGDEVIL_COLOR = D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f);		// 子デビルのステンシルカラー(青)
-	const D3DXCOLOR MASK_ITEM_COLOR = D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f);			// アイテムのステンシルカラー(青)
+	const D3DXCOLOR MASK_ITEM_COLOR = D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f);			// アイテムのステンシルカラー(黄)
 }
 
 //==========================================
@@ -196,6 +200,9 @@ HRESULT CTutorial::Init(void)
 
 	// デビルホール埋めてない
 	m_bSet = false;
+
+	// 遷移ボタンの生成
+	CTutorialUi::Create(BUTTON_POS, BUTTON_SIZE, BUTTON_TEX);
 
 	for (int i = 0; i < TYPE_MAX; ++i)
 	{// チェックマーカー非表示
@@ -360,8 +367,13 @@ void CTutorial::Update(void)
 			m_bCheck[TYPE_DEVILHOLE] = true;
 
 			// チュートリアル段階を進める
-			m_nTutorialWave + 1;
+			m_nTutorialWave += 1;
 		}
+	}
+
+	if (m_nTutorialWave >= WAVE_MAX)
+	{// 値がWAVE_MAX超えないように
+		m_nTutorialWave = WAVE_MAX;
 	}
 
 #if _DEBUG

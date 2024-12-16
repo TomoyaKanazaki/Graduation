@@ -16,7 +16,6 @@
 class CSlowManager;
 class CLifeUi;
 class CObjectX;
-class CScore;
 
 //オブジェクトプレイヤークラス
 class CTutorialPlayer : public CPlayer

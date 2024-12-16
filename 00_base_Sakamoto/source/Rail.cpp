@@ -203,6 +203,8 @@ void CRail::Update(void)
 			m_pRailModel[nCnt]->Update();		// ObjectX‚ÌXVˆ—
 		}
 	}
+
+	DebugProc::Print(DebugProc::POINT_CENTER, "ƒŒ[ƒ‹”Ô† : %d\n", m_pList->GetIndex(this));
 }
 
 //====================================================================

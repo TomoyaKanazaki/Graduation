@@ -58,9 +58,6 @@ namespace
 
 	const D3DXVECTOR3 COLLISION_SIZE = D3DXVECTOR3(35.0f, 40.0f, 35.0f);		//横の当たり判定
 
-	const D3DXVECTOR3 LIFE_POS00 = D3DXVECTOR3(50.0f, 650.0f, 0.0f);
-	const D3DXVECTOR3 LIFE_POS01 = D3DXVECTOR3(900.0f, 650.0f, 0.0f);
-
 	const float CROSS_TIME = 10.0f; // 十字架を所持していられる時間
 
 	const float EGG_GRAVITY = 0.98f;	 //移動量の減衰速度
@@ -88,12 +85,10 @@ m_bJump(false),
 m_nActionCount(0),
 m_Action(ACTION_WAIT),
 m_AtkAction(ACTION_WAIT),
-//state(STATE_EGG),
 m_nStateCount(0),
 m_AtkPos(INITVECTOR3),
 m_CollisionRot(0.0f),
 m_bInput(false),
-m_pLifeUi(nullptr),
 m_nLife(0),
 m_eItemType(TYPE_NONE),
 m_OldGrid(0, 0),
@@ -192,9 +187,6 @@ HRESULT CPlayer::Init(int PlayNumber)
 
 	//所持するUIの生成
 	UI_Create();
-
-	//所持するUIの初期化
-	UI_Init();
 
 	// アイテム状態を設定
 	SetItemType(CPlayer::TYPE_NONE);
@@ -447,9 +439,6 @@ void CPlayer::Update(void)
 	//モーションの管理
 	ActionState();
 
-	//デバッグキーの処理と設定
-	DebugKey();
-
 	//デバッグ表示
 	DebugProc::Print(DebugProc::POINT_LEFT, "[自分]位置 %f : %f : %f\n", posThis.x, posThis.y, posThis.z);
 	DebugProc::Print(DebugProc::POINT_LEFT, "[自分]向き %f : %f : %f\n", rotThis.x, rotThis.y, rotThis.z);
@@ -490,86 +479,11 @@ void CPlayer::Draw(void)
 //====================================================================
 void CPlayer::UI_Create(void)
 {
-	//体力UIの生成
-	if (m_pLifeUi == nullptr)
-	{
-		m_pLifeUi = CLifeUi::Create();
-	}
-
-	//スコアの生成
-	if (m_pScore == nullptr)
-	{
-		m_pScore = CScore::Create();
-	}
-
 	//プレイヤー番号UIの生成
 	if (m_pP_NumUI == nullptr && CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
 	{
 		m_pP_NumUI = CObjectBillboard::Create();
 		m_pP_NumUI->SetAppear(false);
-	}
-}
-
-//====================================================================
-//所持するUIの初期化
-//====================================================================
-void CPlayer::UI_Init(void)
-{
-	switch (m_nPlayNumber)
-	{
-	case 0:
-		if (m_pLifeUi != nullptr)
-		{
-			// 数字の位置
-			m_pLifeUi->GetNumber()->SetPos(D3DXVECTOR3(LIFE_POS00.x + 200.0f, LIFE_POS00.y, LIFE_POS00.z));
-
-			// 体力
-			m_pLifeUi->SetPos(LIFE_POS00);
-			m_pLifeUi->GetNumber()->SetNumber(m_nLife);
-		}
-
-		if (m_pScore != nullptr)
-		{
-			m_pScore->SetPos(D3DXVECTOR3(50.0f, 40.0f, 0.0f));
-		}
-
-		if (m_pP_NumUI != nullptr)
-		{
-			m_pP_NumUI->SetPos(GetPos());
-			m_pP_NumUI->SetWidth(NUMBER_SIZE.x);
-			m_pP_NumUI->SetHeight(NUMBER_SIZE.y);
-			m_pP_NumUI->SetTexture("data\\TEXTURE\\UI\\1p.png");
-		}
-
-		break;
-
-	case 1:
-
-		if (m_pLifeUi != nullptr)
-		{
-			// 数字の位置
-			m_pLifeUi->GetNumber()->SetPos(D3DXVECTOR3(LIFE_POS01.x + 200.0f, LIFE_POS01.y, LIFE_POS01.z));
-
-			// 体力
-			m_pLifeUi->SetPos(LIFE_POS01);
-			m_pLifeUi->GetNumber()->SetNumber(m_nLife);
-		}
-
-		if (m_pScore != nullptr)
-		{
-			m_pScore->SetPos(D3DXVECTOR3(1050.0f, 40.0f, 0.0f));
-		}
-
-		if (m_pP_NumUI != nullptr)
-		{
-			m_pP_NumUI->SetPos(GetPos());
-			m_pP_NumUI->SetPos(GetPos());
-			m_pP_NumUI->SetWidth(NUMBER_SIZE.x);
-			m_pP_NumUI->SetHeight(NUMBER_SIZE.y);
-			m_pP_NumUI->SetTexture("data\\TEXTURE\\UI\\2p.png");
-		}
-
-		break;
 	}
 }
 
@@ -1953,30 +1867,6 @@ void CPlayer::PlayerNumberDisp(bool Set)
 	{
 		m_pP_NumUI->SetAppear(Set);
 	}
-}
-
-//====================================================================
-// デバッグボタン
-//====================================================================
-void CPlayer::DebugKey(void)
-{
-#ifdef _DEBUG
-
-	CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
-
-	//キーボードの移動処理
-	if (pInputKeyboard->GetTrigger(DIK_3))
-	{
-		m_nLife++;
-		m_pLifeUi->GetNumber()->SetNumber(m_nLife);
-	}
-	if (pInputKeyboard->GetTrigger(DIK_4))
-	{
-		m_nLife--;
-		m_pLifeUi->GetNumber()->SetNumber(m_nLife);
-	}
-
-#endif // !_DEBUG
 }
 
 //====================================================================

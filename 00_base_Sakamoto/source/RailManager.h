@@ -22,12 +22,12 @@ public:
 	CRailManager();
 	~CRailManager();
 
-	HRESULT Init(CMapSystem::GRID& grid);
+	HRESULT Init();
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);
 
-	void Set();		// ƒŒ[ƒ‹‚Ìİ’è
+	void Set(CMapSystem::GRID& grid);		// ƒŒ[ƒ‹‚Ìİ’è
 
 private:
 	// ƒƒ“ƒoŠÖ”

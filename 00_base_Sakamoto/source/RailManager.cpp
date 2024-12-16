@@ -38,16 +38,31 @@ CRailManager::CRailManager()
 //====================================================================
 CRailManager::~CRailManager()
 {
-
+	m_GridPos.clear();
 }
 
 //====================================================================
 //初期化処理
 //====================================================================
-HRESULT CRailManager::Init(CMapSystem::GRID& grid)
+HRESULT CRailManager::Init(void)
 {
-	// レールの位置を保持
-	m_GridPos.push_back(grid);
+	int nMax = m_GridPos.size();
+	int nCnt = 0;
+
+	while (nCnt < nMax)
+	{ // グリッドの数分まわす
+
+		// 何もない状態にする
+		CRail::POSTYPE PosType[CRail::POSSTATE_MAX] = { CRail::POSTYPE::POSTYPE_NONE, CRail::POSTYPE::POSTYPE_NONE };
+
+		//モデルの向き設定
+		SetRot(m_GridPos[nCnt], PosType[CRail::POSSTATE_FIRST], PosType[CRail::POSSTATE_SECOND]);
+
+		// レールの生成
+		CRail::Create(m_GridPos[nCnt], PosType[CRail::POSSTATE_FIRST], PosType[CRail::POSSTATE_SECOND]);
+
+		nCnt++;
+	}
 
 	return S_OK;
 }
@@ -79,25 +94,10 @@ void CRailManager::Draw(void)
 //====================================================================
 // レールの設定
 //====================================================================
-void CRailManager::Set(void)
+void CRailManager::Set(CMapSystem::GRID& grid)
 {
-	int nMax = m_GridPos.size();
-	int nCnt = 0;
-
-	while (nCnt < nMax)
-	{ // グリッドの数分まわす
-
-		// 何もない状態にする
-		CRail::POSTYPE PosType[CRail::POSSTATE_MAX] = { CRail::POSTYPE::POSTYPE_NONE, CRail::POSTYPE::POSTYPE_NONE };
-
-		//モデルの向き設定
-		SetRot(m_GridPos[nCnt], PosType[CRail::POSSTATE_FIRST], PosType[CRail::POSSTATE_SECOND]);
-
-		// レールの生成
-		CRail::Create(m_GridPos[nCnt], PosType[CRail::POSSTATE_FIRST], PosType[CRail::POSSTATE_SECOND]);
-
-		nCnt++;
-	}
+	// レールの位置を保持
+	m_GridPos.push_back(grid);
 }
 
 //====================================================================
@@ -126,12 +126,6 @@ void CRailManager::SetRot(CMapSystem::GRID& grid, CRail::POSTYPE& PosType0, CRai
 		// 配置情報の更新
 		m_bRail[i] = pMapSystem->GetRailGritBool(nNumber[i]);
 	}
-
-	// 隣接４マスがレール配置可能か判断する
-	//m_bRail[CRail::POSTYPE_LEFT] = pMapSystem->GetRailGritBool(CMapSystem::GRID(nNumber[CRail::POSTYPE_LEFT], grid.z));
-	//m_bRail[CRail::POSTYPE_RIGHT] = pMapSystem->GetRailGritBool(CMapSystem::GRID(nNumber[CRail::POSTYPE_RIGHT], grid.z));
-	//m_bRail[CRail::POSTYPE_UP] = pMapSystem->GetRailGritBool(CMapSystem::GRID(grid.x, nNumber[CRail::POSTYPE_UP]));
-	//m_bRail[CRail::POSTYPE_DOWN] = pMapSystem->GetRailGritBool(CMapSystem::GRID(grid.x, nNumber[CRail::POSTYPE_DOWN]));
 
 	// レールの配置場所設定
 	for (int nCnt = 0; nCnt < CRail::POSTYPE_MAX; nCnt++)

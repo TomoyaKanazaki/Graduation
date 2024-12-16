@@ -17,6 +17,7 @@
 #include "effect.h"
 #include "timer.h"
 #include "cross.h"
+#include "GamePlayer.h"
 
 //Ã“Iƒƒ“ƒo•Ï”éŒ¾
 

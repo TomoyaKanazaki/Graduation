@@ -79,8 +79,6 @@ public:
 	void SetStateCount(int Set) { m_nStateCount = Set; }
 	int GetStateCount(void) { return m_nStateCount; }
 
-	CLifeUi* GetLifeUI(void) { return m_pLifeUi; }
-
 	void SetUseItem(bool bUse) { m_UseItem = bUse; }
 	bool GetbUseItem() { return m_UseItem; }
 
@@ -127,13 +125,10 @@ private:
 	void PrintFoot(const D3DXVECTOR3& rotThis);			// 足跡の設置
 
 	void UI_Create(void);			//所持するUIの生成
-	void UI_Init(void);				//所持するUIの初期化
 
 	void ControlEffect(CEffekseer* pTarget, const D3DXVECTOR3* pPos = nullptr); // エフェクトの操作
 	void RotationEffect(CEffekseer* pTarget); // エフェクトの操作
 	void MoveEffect(CEffekseer* pTarget, const D3DXVECTOR3* pPos = nullptr); // エフェクトの操作
-
-	void DebugKey(void);			//デバッグキー
 
 	int m_nPlayNumber;				//プレイ用番号
 	ACTION_TYPE m_Action;
@@ -169,7 +164,6 @@ private:
 	CObjectX* m_pUpEgg;				//卵モデルの上
 	CObjectX* m_pDownEgg;			//卵モデルの下
 
-	CLifeUi* m_pLifeUi;				//体力UI
 	CObjectBillboard* m_pP_NumUI;	//プレイヤー番号UI		
 
 	CMoveState* m_pMoveState;		// 移動状態

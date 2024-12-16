@@ -569,7 +569,7 @@ void CMapSystem::Load(const char* pFilename)
 								CRailBlock::Create(grid);
 
 								// レールの位置を保持する
-								pRailManager->Init(grid);
+								pRailManager->Set(grid);
 
 								// グリッド設定の判定
 								bGridSet = true;
@@ -621,7 +621,7 @@ void CMapSystem::Load(const char* pFilename)
 							{ // レール
 
 								// レールの位置を保持する
-								pRailManager->Init(grid);
+								pRailManager->Set(grid);
 								bRailGridSet = true;
 
 							}
@@ -654,7 +654,7 @@ void CMapSystem::Load(const char* pFilename)
 	}
 
 	// レールの向き設定
-	pRailManager->Set();
+	pRailManager->Init();
 
 	// レールマネージャーの破棄
 	if (pRailManager != nullptr)
