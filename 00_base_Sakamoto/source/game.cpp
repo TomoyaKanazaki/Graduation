@@ -57,9 +57,9 @@ namespace
 	const D3DXCOLOR MASK_YUNGDEVIL_COLOR = D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f);		// 子デビルのステンシルカラー(青)
 	const D3DXCOLOR MASK_ITEM_COLOR = D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f);			// アイテムのステンシルカラー(青)
 
-	const int PLAYER_REF = 2;
-	const int ITEM_REF = 4;
-	const int MEDAMAN_REF = 102;
+	const int PLAYER_REF = 2;		// プレイヤーのステンシル参照値
+	const int ITEM_REF = 4;			// アイテムのステンシル参照値
+	const int MEDAMAN_REF = 102;	// メダマンのステンシル参照値
 }
 
 //静的メンバ変数宣言
