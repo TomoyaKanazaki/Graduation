@@ -20,6 +20,7 @@
 #include "shadow.h"
 #include "devil.h"
 #include "MapMove.h"
+#include "GamePlayer.h"
 
 //==========================================
 //  定数定義
@@ -350,6 +351,10 @@ bool CItem::CollisionPlayer()
 
 		// 取得に失敗した場合次に進む
 		if (!Hit(player)) { continue; }
+
+		// スコアがない
+		if (player->GetScore() == nullptr)
+		{ continue; }
 
 		// スコアを加算する
 		player->GetScore()->AddScore(ITEM_SCORE[m_eType]);

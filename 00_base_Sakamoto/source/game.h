@@ -31,6 +31,7 @@ class CGamePause;
 class CDevil;
 class CMask;
 class CEventMovie;
+class CGamePlayer;
 
 class CAim;
 
@@ -48,7 +49,7 @@ public:
 	virtual void Update(void);
 	virtual void Draw(void);
 
-	CPlayer* GetPlayer(int Num) { return m_pPlayer.at(Num); }
+	CGamePlayer* GetPlayer(int Num) { return m_pPlayer.at(Num); }
 	CDevil* GetDevil(void) { return m_pDevil; }
 	CPause* GetPause(void) { return m_pPause; }
 	CTimer* GetTime(void) { return m_pTime; }
@@ -91,7 +92,7 @@ private:
 	static CGame* m_pGame;
 
 	//インゲーム用変数
-	std::vector<CPlayer*> m_pPlayer;		//プレイヤーのポインタ
+	std::vector<CGamePlayer*> m_pPlayer;		//プレイヤーのポインタ
 	CDevil* m_pDevil;						//デビルのポインタ
 
 	int m_nNumBowabowa;						//ボワボワの数

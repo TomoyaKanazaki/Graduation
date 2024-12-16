@@ -43,7 +43,6 @@ public:
 	static void SetMode(MODE mode);
 	static MODE GetMode(void) { return m_mode; }
 
-	virtual CPlayer* GetPlayer(int Num) { return nullptr; }
 	virtual CDevil* GetDevil(void) { return nullptr; }
 	virtual CObjmeshField* GetMapField(void) { return nullptr; }
 

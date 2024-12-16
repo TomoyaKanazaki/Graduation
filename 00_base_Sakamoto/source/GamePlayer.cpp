@@ -13,19 +13,27 @@
 #include "game.h"
 #include "LifeUi.h"
 #include "number.h"
+#include "score.h"
+#include "objectBillboard.h"
 
 //===========================================
 // 定数定義
 //===========================================
 namespace
 {
+	const D3DXVECTOR2 NUMBER_SIZE = { 280.0f , 170.0f };
 
+	const D3DXVECTOR3 LIFE_POS00 = D3DXVECTOR3(50.0f, 650.0f, 0.0f);
+	const D3DXVECTOR3 LIFE_POS01 = D3DXVECTOR3(900.0f, 650.0f, 0.0f);
 }
 
 //====================================================================
 //コンストラクタ
 //====================================================================
-CGamePlayer::CGamePlayer(int nPriority) : CPlayer(nPriority)
+CGamePlayer::CGamePlayer(int nPriority) : CPlayer(nPriority),
+m_pScore(nullptr),
+m_pLifeUi(nullptr),
+m_pP_NumUI(nullptr)
 {
 	m_Grid.x = 0;
 	m_Grid.z = 0;
@@ -67,6 +75,21 @@ HRESULT CGamePlayer::Init(int PlayNumber)
 {
 	CPlayer::Init(PlayNumber);
 
+	//体力UIの生成
+	if (m_pLifeUi == nullptr)
+	{
+		m_pLifeUi = CLifeUi::Create();
+	}
+
+	//体力UIの生成
+	if (m_pScore == nullptr)
+	{
+		m_pScore = CScore::Create();
+	}
+
+	//所持するUIの初期化
+	InitUI();
+
 	return S_OK;
 }
 
@@ -77,6 +100,18 @@ void CGamePlayer::Uninit(void)
 {
 	// キャラクタークラスの終了（継承）
 	CPlayer::Uninit();
+
+	// スコアの削除
+	if (m_pScore != nullptr)
+	{
+		m_pScore = nullptr;
+	}
+
+	// スコアの削除
+	if (m_pScore != nullptr)
+	{
+		m_pScore = nullptr;
+	}
 }
 
 //====================================================================
@@ -85,6 +120,9 @@ void CGamePlayer::Uninit(void)
 void CGamePlayer::Update(void)
 {
 	CPlayer::Update();
+
+	//デバッグキーの処理と設定
+	DebugKey();
 }
 
 //====================================================================
@@ -148,4 +186,93 @@ void CGamePlayer::Death(void)
 		// アイテムを所持していない状態にする
 		SetItemType(TYPE_NONE);
 	}
+}
+
+//====================================================================
+// UIの初期化
+//====================================================================
+void CGamePlayer::InitUI()
+{
+	switch (GetPlayNumber())
+	{
+	case 0:
+		if (m_pLifeUi != nullptr)
+		{
+			// 数字の位置
+			m_pLifeUi->GetNumber()->SetPos(D3DXVECTOR3(LIFE_POS00.x + 200.0f, LIFE_POS00.y, LIFE_POS00.z));
+
+			// 体力
+			m_pLifeUi->SetPos(LIFE_POS00);
+			m_pLifeUi->GetNumber()->SetNumber(GetLife());
+		}
+
+		if (m_pScore != nullptr)
+		{
+			m_pScore->SetPos(D3DXVECTOR3(50.0f, 40.0f, 0.0f));
+		}
+
+		if (m_pP_NumUI != nullptr)
+		{
+			m_pP_NumUI->SetPos(GetPos());
+			m_pP_NumUI->SetWidth(NUMBER_SIZE.x);
+			m_pP_NumUI->SetHeight(NUMBER_SIZE.y);
+			m_pP_NumUI->SetTexture("data\\TEXTURE\\UI\\1p.png");
+		}
+
+		break;
+
+	case 1:
+
+		if (m_pLifeUi != nullptr)
+		{
+			// 数字の位置
+			m_pLifeUi->GetNumber()->SetPos(D3DXVECTOR3(LIFE_POS01.x + 200.0f, LIFE_POS01.y, LIFE_POS01.z));
+
+			// 体力
+			m_pLifeUi->SetPos(LIFE_POS01);
+			m_pLifeUi->GetNumber()->SetNumber(GetLife());
+		}
+
+		if (m_pScore != nullptr)
+		{
+			m_pScore->SetPos(D3DXVECTOR3(1050.0f, 40.0f, 0.0f));
+		}
+
+		if (m_pP_NumUI != nullptr)
+		{
+			m_pP_NumUI->SetPos(GetPos());
+			m_pP_NumUI->SetPos(GetPos());
+			m_pP_NumUI->SetWidth(NUMBER_SIZE.x);
+			m_pP_NumUI->SetHeight(NUMBER_SIZE.y);
+			m_pP_NumUI->SetTexture("data\\TEXTURE\\UI\\2p.png");
+		}
+
+		break;
+	}
+}
+
+//====================================================================
+// デバッグボタン
+//====================================================================
+void CGamePlayer::DebugKey(void)
+{
+#ifdef _DEBUG
+
+	int nLife = GetLife();
+
+	CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
+
+	//キーボードの移動処理
+	if (pInputKeyboard->GetTrigger(DIK_3))
+	{
+		++nLife;
+		m_pLifeUi->GetNumber()->SetNumber(nLife);
+	}
+	if (pInputKeyboard->GetTrigger(DIK_4))
+	{
+		--nLife;
+		m_pLifeUi->GetNumber()->SetNumber(nLife);
+	}
+
+#endif // !_DEBUG
 }
