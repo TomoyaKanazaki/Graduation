@@ -17,7 +17,7 @@ namespace
 //============================================
 // コンストラクタ
 //============================================
-CTutorialUi::CTutorialUi()
+CTutorialUi::CTutorialUi(int nPriority) : CObject2D(nPriority)
 {
 }
 
