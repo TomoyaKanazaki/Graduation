@@ -34,11 +34,19 @@ public:
 
 	void Death(void) override;
 
+	void InitUI();
+	void DebugKey(void);
+
+	CScore* GetScore(void) { return m_pScore; }
+	CLifeUi* GetLifeUI(void) { return m_pLifeUi; }
+
 private:
 
 	CMapSystem::GRID m_Grid;		// グリッドの情報
 	
-
+	CScore* m_pScore;				// スコアのポインタ
+	CLifeUi* m_pLifeUi;				//体力UI
+	CObjectBillboard* m_pP_NumUI;	//プレイヤー番号UI		
 };
 
 #endif

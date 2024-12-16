@@ -17,6 +17,7 @@
 #include "Scene.h"
 #include "sound.h"
 #include "Devil.h"
+#include "GamePlayer.h"
 
 //==========================================
 //  ’è”’è‹`

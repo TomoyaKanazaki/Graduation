@@ -1,6 +1,6 @@
 //============================================
 //
-//	チュートリアルUI [tutorialUi.h]
+//	チュートリアルUI [tutorialUi.cpp]
 //	Author:morikawa shunya
 //
 //============================================
@@ -12,8 +12,6 @@
 //============================================
 namespace
 {
-	const char* CHECK_MARKER_TEX = "data\\TEXTURE\\UI\\tutorial_check.png";	// チェックマーカーテクスチャ
-	const D3DXVECTOR3 MARKER_SIZE = D3DXVECTOR3(50.0f, 50.0f, 0.0f);	// マーカーサイズ
 }
 
 //============================================
@@ -33,7 +31,7 @@ CTutorialUi::~CTutorialUi()
 //============================================
 // 生成
 //============================================
-CTutorialUi* CTutorialUi::Create(const D3DXVECTOR3& pos)
+CTutorialUi* CTutorialUi::Create(const D3DXVECTOR3& pos, const D3DXVECTOR3& size, const char* pFilename)
 {
 	CTutorialUi* pTutorialUi = new CTutorialUi();
 
@@ -43,8 +41,10 @@ CTutorialUi* CTutorialUi::Create(const D3DXVECTOR3& pos)
 		return nullptr;
 	}
 
-	// 位置・サイズ設定
+	// 位置・サイズ・テクスチャ設定
 	pTutorialUi->SetPos(pos);
+	pTutorialUi->SetSize(size);
+	pTutorialUi->SetTexture(pFilename);
 
 	return pTutorialUi;
 }
@@ -54,12 +54,6 @@ CTutorialUi* CTutorialUi::Create(const D3DXVECTOR3& pos)
 //============================================
 HRESULT CTutorialUi::Init()
 {
-	// サイズ設定
-	SetSize(MARKER_SIZE);
-
-	// テクスチャ設定
-	SetTexture(CHECK_MARKER_TEX);
-
 	//オブジェクトの初期化処理
 	if (FAILED(CObject2D::Init()))
 	{//初期化処理が失敗した場合
