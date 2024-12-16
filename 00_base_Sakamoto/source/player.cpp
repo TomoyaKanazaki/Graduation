@@ -894,6 +894,34 @@ void CPlayer::StateManager(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis)
 
 	case STATE_EGG:
 
+		//卵の画面外ワープ処理
+		if (m_Grid.x == -1)
+		{//X軸ワープ
+			if (posThis.x <= 0.0f)
+			{
+				m_Grid.x = CMapSystem::GetInstance()->GetMove()->GetMaxGrid().x;
+				posThis = CMapSystem::GetInstance()->GetGritPos(m_Grid);
+			}
+			else
+			{
+				m_Grid.x = CMapSystem::GetInstance()->GetMove()->GetMinGrid().x;
+				posThis = CMapSystem::GetInstance()->GetGritPos(m_Grid);
+			}
+		}
+		else if(m_Grid.z == -1)
+		{//Z軸ワープ
+			if (posThis.z > 0.0f)
+			{
+				m_Grid.z = CMapSystem::GetInstance()->GetMove()->GetMaxGrid().z;
+				posThis = CMapSystem::GetInstance()->GetGritPos(m_Grid);
+			}
+			else
+			{
+				m_Grid.z = CMapSystem::GetInstance()->GetMove()->GetMinGrid().z;
+				posThis = CMapSystem::GetInstance()->GetGritPos(m_Grid);
+			}
+		}
+
 		// モデル数の取得
 		int nNumModel = GetNumModel();
 

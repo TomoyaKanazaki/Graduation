@@ -526,7 +526,7 @@ void CEnemy::HitStateManager(D3DXVECTOR3& posMy)
 
 	case CEnemy::HIT_STATE_DAMAGE:
 
-		SetModelColor(CModel::COLORTYPE_TRUE_ALL, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+		SetModelColor(CModel::COLORTYPE_TRUE_ALL, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
 
 		m_move = INITVECTOR3;
 

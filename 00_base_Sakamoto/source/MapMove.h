@@ -78,6 +78,9 @@ public:
 	void SetScrollType(SCROLL_TYPE Rot) { m_ScrollType = Rot; }
 	SCROLL_TYPE GetScrollType(void) { return m_ScrollType; }
 
+	void SetScroolSetState(MOVE Set) { m_SetState = Set; }
+	MOVE GetScroolSetState(void) { return m_SetState; }
+
 	CMapSystem::GRID GetMinGrid(void) { return m_MinGrid; }	//マップで一番左上にあるブロックの番号
 	CMapSystem::GRID GetMaxGrid(void) { return m_MaxGrid; }	//マップで一番右下にあるブロックの番号
 
@@ -96,6 +99,7 @@ private:
 	void SignalCreate(void);
 	void SignalManager(void);
 
+	void ScrollReset();		//スクロールのずれ修正
 	void GritScroll();		//グリットのスクロール
 	void CollisionPressPlayer(CPlayer* pPlayer, D3DXVECTOR3 pos, D3DXVECTOR3 Size);	//プレイヤーが潰される時の処理
 

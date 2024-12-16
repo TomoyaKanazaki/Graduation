@@ -274,5 +274,7 @@ void CGamePlayer::DebugKey(void)
 		m_pLifeUi->GetNumber()->SetNumber(nLife);
 	}
 
+	SetLife(nLife);
+
 #endif // !_DEBUG
 }

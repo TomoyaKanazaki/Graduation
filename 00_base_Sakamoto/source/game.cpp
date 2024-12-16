@@ -57,9 +57,9 @@ namespace
 	const D3DXCOLOR MASK_YUNGDEVIL_COLOR = D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f);		// 子デビルのステンシルカラー(青)
 	const D3DXCOLOR MASK_ITEM_COLOR = D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f);			// アイテムのステンシルカラー(青)
 
-	const int PLAYER_REF = 2;
-	const int ITEM_REF = 4;
-	const int MEDAMAN_REF = 102;
+	const int PLAYER_REF = 2;		// プレイヤーのステンシル参照値
+	const int ITEM_REF = 4;			// アイテムのステンシル参照値
+	const int MEDAMAN_REF = 102;	// メダマンのステンシル参照値
 }
 
 //静的メンバ変数宣言
@@ -302,12 +302,6 @@ void CGame::Update(void)
 		CManager::GetInstance()->SetGameSpeed(Speed);
 	}
 
-	if (pInputKeyboard->GetTrigger(DIK_3) == true)
-	{
-		m_pTime->SetStartTime(0);
-		m_pTime->SetTime(0);
-	}
-
 	if (CManager::GetInstance()->GetGameSpeed() <= 1.0f)
 	{
 		m_Slow = true;
@@ -438,6 +432,12 @@ void CGame::ResetStage(void)
 {
 	//イベントフラグを立てる
 	m_bEvent = true;
+
+	//現在のスクロール状態を保存する
+	CMapSystem::GetInstance()->GetMove()->SetScroolSetState(CMapSystem::GetInstance()->GetMove()->GetState());
+
+	//保存したスクロール状態を確認する用の変数
+	//CMapMove::MOVE m_Scrool = CMapSystem::GetInstance()->GetMove()->GetScroolSetState();
 
 	// マップの初期化
 	CMapSystem::GetInstance()->GetMove()->Init();
