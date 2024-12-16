@@ -302,12 +302,6 @@ void CGame::Update(void)
 		CManager::GetInstance()->SetGameSpeed(Speed);
 	}
 
-	if (pInputKeyboard->GetTrigger(DIK_3) == true)
-	{
-		m_pTime->SetStartTime(0);
-		m_pTime->SetTime(0);
-	}
-
 	if (CManager::GetInstance()->GetGameSpeed() <= 1.0f)
 	{
 		m_Slow = true;
@@ -438,6 +432,12 @@ void CGame::ResetStage(void)
 {
 	//イベントフラグを立てる
 	m_bEvent = true;
+
+	//現在のスクロール状態を保存する
+	CMapSystem::GetInstance()->GetMove()->SetScroolSetState(CMapSystem::GetInstance()->GetMove()->GetState());
+
+	//保存したスクロール状態を確認する用の変数
+	//CMapMove::MOVE m_Scrool = CMapSystem::GetInstance()->GetMove()->GetScroolSetState();
 
 	// マップの初期化
 	CMapSystem::GetInstance()->GetMove()->Init();

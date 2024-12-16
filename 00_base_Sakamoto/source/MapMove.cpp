@@ -41,7 +41,7 @@ namespace
 	const float SCROOL_SPEED_02 = (CMapSystem::GetGritSize() * SCROOL_MOVEGRID_02) / SCROOL_COUNT_02;			// スクロールの移動速度
 
 	const int SLOPE_TIME = 300;						// 傾き操作時間
-	const int SLOPE_RAND = 50;						// 傾き発生確率
+	const int SLOPE_RAND = 0;						// 傾き発生確率
 	float STAGE_ROT_LIMIT = D3DX_PI * 0.15f;		// 傾きの角度制限
 
 	const float SLOPE_SPEED01 = 0.00075f;			// 傾きの移動速度
@@ -245,82 +245,497 @@ void CMapMove::Draw(void)
 }
 
 //====================================================================
+//状態管理
+//====================================================================
+void CMapMove::StateManager(void)
+{
+	D3DXVECTOR3 MapPos = CMapSystem::GetInstance()->GetMapPos();
+
+	switch (m_State)
+	{
+	case MOVE_WAIT:
+
+		// 状態終了時
+		if (m_nStateCount <= 0)
+		{
+			if (m_SetState == MOVE_SCROLL_UP ||
+				m_SetState == MOVE_SCROLL_DOWN ||
+				m_SetState == MOVE_SCROLL_LEFT ||
+				m_SetState == MOVE_SCROLL_RIGHT)
+			{
+				if (m_SetState == MOVE_SCROLL_UP ||
+					m_SetState == MOVE_SCROLL_DOWN)
+				{
+					MapPos.z = useful::RoundUp2(MapPos.z);
+
+					if (MapPos.z < 0.0f)
+					{
+						m_fScrollEndLine = MapPos.z + 100.0f;
+						m_State = MOVE_SCROLL_UP;
+						m_DevilArrow = 0;
+					}
+					else
+					{
+						m_fScrollEndLine = MapPos.z - 100.0f;
+						m_State = MOVE_SCROLL_DOWN;
+						m_DevilArrow = 1;
+					}
+				}
+				else
+				{
+					MapPos.x = useful::RoundUp2(MapPos.x);
+
+					if (MapPos.x >= 0.0f)
+					{
+						m_fScrollEndLine = MapPos.x - 100.0f;
+						m_State = MOVE_SCROLL_LEFT;
+						m_DevilArrow = 2;
+					}
+					else
+					{
+						m_fScrollEndLine = MapPos.x + 100.0f;
+						m_State = MOVE_SCROLL_RIGHT;
+						m_DevilArrow = 3;
+					}
+				}
+				m_bScrollOK = false;
+				m_nStateCount = SCROOL_TIME;
+			}
+			else
+			{
+				// 100％のrand()をまわす
+				int nRand = rand() % 101;
+
+				// 傾きの指定％の時
+				if (nRand <= SLOPE_RAND)
+				{
+					// 傾いている状態かどうかを切り替える
+					m_bSlope = !m_bSlope;
+
+					if (m_bSlope)
+					{// 傾き状態の時
+
+						//傾き方向指定処理
+						m_DevilArrow = rand() % 2;
+
+						if (m_SlopwArrowOld == 0 || m_SlopwArrowOld == 1)
+						{// 前回の傾き方向が左右だった場合
+
+							// 今回の傾き方向は上下にする
+							if (m_DevilArrow == 0)
+							{
+								m_DevilArrow = 2;
+							}
+							else if (m_DevilArrow == 1)
+							{
+								m_DevilArrow = 3;
+							}
+						}
+
+						// 今回の傾き方向を記録する
+						m_SlopwArrowOld = m_DevilArrow;
+
+						m_nStateCount = SLOPE_TIME;
+
+						m_nStateNum = m_DevilArrow;
+
+						// 状態設定
+						switch (m_DevilArrow)
+						{
+						case 0:
+							m_State = MOVE_SLOPE_UP;
+
+							m_fScrollEndLine = 100.0f;
+							break;
+						case 1:
+							m_State = MOVE_SLOPE_DOWN;
+							break;
+						case 2:
+							m_State = MOVE_SLOPE_LEFT;
+							break;
+						case 3:
+							m_State = MOVE_SLOPE_RIGHT;
+							break;
+						}
+
+						//カメラを振動させる
+						CManager::GetInstance()->GetCamera(0)->SetBib(true);
+
+						// 傾き装置のリスト構造が無ければ抜ける
+						if (CSlopeDevice::GetList() == nullptr) { return; }
+						std::list<CSlopeDevice*> list = CSlopeDevice::GetList()->GetList();    // リストを取得
+
+						// 傾き装置のリストの中身を確認する
+						for (CSlopeDevice* pSlopeDevice : list)
+						{
+							// 方向の傾き装置を上昇状態に変更
+							pSlopeDevice->SetStateArrow((CScrollArrow::Arrow)m_DevilArrow);
+						}
+					}
+					else
+					{// 傾き戻し状態の時
+
+						// 傾きを戻す時だけ倍の時間を指定し、戻り切ったら傾き状態を終了とする
+						m_nStateCount = SLOPE_TIME * 2;
+
+						m_State = m_SlopeOld;
+
+						//カメラを振動させる
+						CManager::GetInstance()->GetCamera(0)->SetBib(true);
+
+						// 傾き装置のリスト構造が無ければ抜ける
+						if (CSlopeDevice::GetList() == nullptr) { return; }
+						std::list<CSlopeDevice*> list = CSlopeDevice::GetList()->GetList();    // リストを取得
+
+						// 傾き装置のリストの中身を確認する
+						for (CSlopeDevice* pSlopeDevice : list)
+						{
+							// 方向の傾き装置を上昇状態に変更
+							pSlopeDevice->SetStateArrowBack((CScrollArrow::Arrow)m_SlopwArrowOld);
+						}
+					}
+				}
+				else
+				{// 傾きの指定％じゃない時
+
+					// スクロール時間設定
+					m_nStateCount = SCROOL_TIME * 2;
+
+					// スクロール方向指定
+					m_DevilArrow = rand() % 2;
+
+					if (m_ScrollArrowOld == 0 || m_ScrollArrowOld == 1)
+					{// 前回の傾き方向が左右だった場合
+
+						// 今回の傾き方向は上下にする
+						if (m_DevilArrow == 0)
+						{
+							m_DevilArrow = 2;
+						}
+						else if (m_DevilArrow == 1)
+						{
+							m_DevilArrow = 3;
+						}
+					}
+
+					// 状態設定
+					switch (m_DevilArrow)
+					{
+					case 0:
+						m_State = MOVE_SCROLL_UP;
+						break;
+					case 1:
+						m_State = MOVE_SCROLL_DOWN;
+						break;
+					case 2:
+						m_State = MOVE_SCROLL_LEFT;
+						break;
+					case 3:
+						m_State = MOVE_SCROLL_RIGHT;
+						break;
+					}
+
+					m_ScrollArrowOld = m_DevilArrow;
+					m_nStateNum = m_DevilArrow;
+
+					// マップ移動装置のリスト構造が無ければ抜ける
+					if (CScrollDevice::GetList() == nullptr) { return; }
+					std::list<CScrollDevice*> list = CScrollDevice::GetList()->GetList();    // リストを取得
+
+					// マップ移動装置のリストの中身を確認する
+					for (CScrollDevice* pScrollDevice : list)
+					{
+						// 回転状態に変更
+						pScrollDevice->SetState(CScrollDevice::STATE_ROTATE);
+					}
+
+					m_bScrollOK = false;
+				}
+			}
+		}
+
+		break;
+
+	case MOVE_SCROLL_UP:
+	case MOVE_SCROLL_DOWN:
+	case MOVE_SCROLL_RIGHT:
+	case MOVE_SCROLL_LEFT:
+
+		switch (m_ScrollType)
+		{
+		case CMapMove::SCROLL_TYPE_NORMAL:
+			Move(m_DevilArrow);
+			break;
+
+		case CMapMove::SCROLL_TYPE_RETRO:
+
+			if (m_nStateCount % (SCROOL_TIME / SCROOL_COUNT_02) == 0)
+			{
+				Move(m_DevilArrow);
+			}
+
+			break;
+
+		default:
+
+			break;
+		}
+
+		if (m_bScrollOK == true)
+		{
+			m_State = MOVE_WAIT;
+			m_nStateCount = 120;
+
+			// マップ移動装置のリスト構造が無ければ抜ける
+			if (CScrollDevice::GetList() == nullptr) { return; }
+			std::list<CScrollDevice*> list = CScrollDevice::GetList()->GetList();    // リストを取得
+
+			// マップ移動装置のリストの中身を確認する
+			for (CScrollDevice* pScrollDevice : list)
+			{
+				// 通常状態に変更
+				pScrollDevice->SetState(CScrollDevice::STATE_NORMAL);
+			}
+		}
+
+		break;
+
+	case MOVE_SLOPE_UP:
+	case MOVE_SLOPE_DOWN:
+	case MOVE_SLOPE_RIGHT:
+	case MOVE_SLOPE_LEFT:
+
+		switch (m_ScrollType)
+		{
+		case CMapMove::SCROLL_TYPE_NORMAL:
+
+			if (m_bSlope)
+			{
+				Slope(m_DevilArrow);
+
+				// 矢印傾き
+				SignalManager();
+			}
+			else
+			{
+				BackSlope();
+			}
+			break;
+
+		case CMapMove::SCROLL_TYPE_RETRO:
+
+			if (m_nStateCount % 25 == 0)
+			{
+				if (m_bSlope)
+				{
+					Slope(m_DevilArrow);
+				}
+				else
+				{
+					BackSlope();
+				}
+			}
+			break;
+
+		default:
+
+			break;
+		}
+
+		if (m_nStateCount < 0)
+		{
+			m_State = MOVE_WAIT;
+			m_nStateCount = 120;
+		}
+
+		break;
+	}
+
+	if (m_nStateCount >= 0)
+	{
+		m_nStateCount--;
+	}
+}
+
+//====================================================================
 //移動処理
 //====================================================================
 void CMapMove::Move(int Arroow)
 {
-	switch (m_ScrollType)
+	if (m_fScrollEndLine > 0.0f || m_fScrollEndLine < 0.0f)
 	{
-	case CMapMove::SCROLL_TYPE_NORMAL:
-		switch (Arroow)
+		D3DXVECTOR3 MapPos = CMapSystem::GetInstance()->GetMapPos();
+
+		switch (m_ScrollType)
 		{
-		case 0:
-			m_move.z = SCROOL_SPEED_01;
+		case CMapMove::SCROLL_TYPE_NORMAL:
+
+			switch (Arroow)
+			{
+			case 0:
+				m_move.z = SCROOL_SPEED_01;
+				if (m_fScrollEndLine <= MapPos.z)
+				{
+					m_bScrollOK = true;
+				}
+				break;
+
+			case 1:
+				m_move.z = -SCROOL_SPEED_01;
+				if (m_fScrollEndLine >= MapPos.z)
+				{
+					m_bScrollOK = true;
+				}
+				break;
+
+			case 2:
+				m_move.x = -SCROOL_SPEED_01;
+				if (m_fScrollEndLine >= MapPos.x)
+				{
+					m_bScrollOK = true;
+				}
+				break;
+
+			case 3:
+				m_move.x = SCROOL_SPEED_01;
+				if (m_fScrollEndLine <= MapPos.x)
+				{
+					m_bScrollOK = true;
+				}
+				break;
+			}
 			break;
-		case 1:
-			m_move.z = -SCROOL_SPEED_01;
+
+		case CMapMove::SCROLL_TYPE_RETRO:
+
+			switch (Arroow)
+			{
+			case 0:
+				m_move.z = SCROOL_SPEED_02;
+				if (m_fScrollEndLine <= MapPos.z)
+				{
+					m_bScrollOK = true;
+				}
+				break;
+
+			case 1:
+				m_move.z = -SCROOL_SPEED_02;
+				if (m_fScrollEndLine >= MapPos.z)
+				{
+					m_bScrollOK = true;
+				}
+				break;
+
+			case 2:
+				m_move.x = -SCROOL_SPEED_02;
+				if (m_fScrollEndLine >= MapPos.x)
+				{
+					m_bScrollOK = true;
+				}
+				break;
+
+			case 3:
+				m_move.x = SCROOL_SPEED_02;
+				if (m_fScrollEndLine <= MapPos.x)
+				{
+					m_bScrollOK = true;
+				}
+				break;
+			}
 			break;
-		case 2:
-			m_move.x = -SCROOL_SPEED_01;
-			break;
-		case 3:
-			m_move.x = SCROOL_SPEED_01;
+
+		default:
 			break;
 		}
 
-		m_fScrollMove += SCROOL_SPEED_01;
-		if (m_fScrollMove >= (SCROOL_MOVEGRID_01 * 100))
+		if (m_bScrollOK == true)
 		{
-			D3DXVECTOR3 MapPos = CMapSystem::GetInstance()->GetMapPos();
-
 			MapPos.x = useful::RoundUp2(MapPos.x);
 			MapPos.z = useful::RoundUp2(MapPos.z);
 
 			CMapSystem::GetInstance()->SetMapPos(MapPos);
 
-			m_bScrollOK = true;
 			m_fScrollMove = 0.0f;
+			m_fScrollEndLine = 0.0f;
+			m_SetState = MOVE_WAIT;
 			m_move = INITVECTOR3;
 		}
-
-		break;
-
-	case CMapMove::SCROLL_TYPE_RETRO:
-		switch (Arroow)
+	}
+	else
+	{
+		switch (m_ScrollType)
 		{
-		case 0:
-			m_move.z = SCROOL_SPEED_02;
+		case CMapMove::SCROLL_TYPE_NORMAL:
+			switch (Arroow)
+			{
+			case 0:
+				m_move.z = SCROOL_SPEED_01;
+				break;
+			case 1:
+				m_move.z = -SCROOL_SPEED_01;
+				break;
+			case 2:
+				m_move.x = -SCROOL_SPEED_01;
+				break;
+			case 3:
+				m_move.x = SCROOL_SPEED_01;
+				break;
+			}
+
+			m_fScrollMove += SCROOL_SPEED_01;
+			if (m_fScrollMove >= (SCROOL_MOVEGRID_01 * 100))
+			{
+				D3DXVECTOR3 MapPos = CMapSystem::GetInstance()->GetMapPos();
+
+				MapPos.x = useful::RoundUp2(MapPos.x);
+				MapPos.z = useful::RoundUp2(MapPos.z);
+
+				CMapSystem::GetInstance()->SetMapPos(MapPos);
+
+				m_bScrollOK = true;
+				m_fScrollMove = 0.0f;
+				m_move = INITVECTOR3;
+			}
+
 			break;
-		case 1:
-			m_move.z = -SCROOL_SPEED_02;
+
+		case CMapMove::SCROLL_TYPE_RETRO:
+			switch (Arroow)
+			{
+			case 0:
+				m_move.z = SCROOL_SPEED_02;
+				break;
+			case 1:
+				m_move.z = -SCROOL_SPEED_02;
+				break;
+			case 2:
+				m_move.x = -SCROOL_SPEED_02;
+				break;
+			case 3:
+				m_move.x = SCROOL_SPEED_02;
+				break;
+			}
+
+			m_fScrollMove += SCROOL_SPEED_02;
+			if (m_fScrollMove > (SCROOL_MOVEGRID_02 * 100))
+			{
+				D3DXVECTOR3 MapPos = CMapSystem::GetInstance()->GetMapPos();
+
+				MapPos.x = useful::RoundUp2(MapPos.x);
+				MapPos.z = useful::RoundUp2(MapPos.z);
+
+				CMapSystem::GetInstance()->SetMapPos(MapPos);
+
+				m_bScrollOK = true;
+				m_fScrollMove = 0.0f;
+				m_move = INITVECTOR3;
+			}
+
 			break;
-		case 2:
-			m_move.x = -SCROOL_SPEED_02;
-			break;
-		case 3:
-			m_move.x = SCROOL_SPEED_02;
+
+		default:
 			break;
 		}
-
-		m_fScrollMove += SCROOL_SPEED_02;
-		if (m_fScrollMove > (SCROOL_MOVEGRID_02 * 100))
-		{
-			D3DXVECTOR3 MapPos = CMapSystem::GetInstance()->GetMapPos();
-
-			MapPos.x = useful::RoundUp2(MapPos.x);
-			MapPos.z = useful::RoundUp2(MapPos.z);
-
-			CMapSystem::GetInstance()->SetMapPos(MapPos);
-
-			m_bScrollOK = true;
-			m_fScrollMove = 0.0f;
-			m_move = INITVECTOR3;
-		}
-
-		break;
-
-	default:
-		break;
 	}
 
 	// マップを動かす
@@ -661,280 +1076,6 @@ void CMapMove::CollisionOut()
 }
 
 //====================================================================
-//状態管理
-//====================================================================
-void CMapMove::StateManager(void)
-{
-	switch (m_State)
-	{
-	case MOVE_WAIT:
-
-		// 状態終了時
-		if (m_nStateCount <= 0)
-		{
-			if (m_SetState == MOVE_SCROLL_UP ||
-				m_SetState == MOVE_SCROLL_DOWN || 
-				m_SetState == MOVE_SCROLL_LEFT || 
-				m_SetState == MOVE_SCROLL_RIGHT)
-			{
-				m_State = m_SetState;
-				m_nStateCount = SCROOL_TIME;
-			}
-			else
-			{
-				// 100％のrand()をまわす
-				int nRand = rand() % 101;
-
-				// 傾きの指定％の時
-				if (nRand <= SLOPE_RAND)
-				{
-					// 傾いている状態かどうかを切り替える
-					m_bSlope = !m_bSlope;
-
-					if (m_bSlope)
-					{// 傾き状態の時
-
-						//傾き方向指定処理
-						m_DevilArrow = rand() % 2;
-
-						if (m_SlopwArrowOld == 0 || m_SlopwArrowOld == 1)
-						{// 前回の傾き方向が左右だった場合
-
-							// 今回の傾き方向は上下にする
-							if (m_DevilArrow == 0)
-							{
-								m_DevilArrow = 2;
-							}
-							else if (m_DevilArrow == 1)
-							{
-								m_DevilArrow = 3;
-							}
-						}
-
-						// 今回の傾き方向を記録する
-						m_SlopwArrowOld = m_DevilArrow;
-
-						m_nStateCount = SLOPE_TIME;
-
-						m_nStateNum = m_DevilArrow;
-
-						// 状態設定
-						switch (m_DevilArrow)
-						{
-						case 0:
-							m_State = MOVE_SLOPE_UP;
-							break;
-						case 1:
-							m_State = MOVE_SLOPE_DOWN;
-							break;
-						case 2:
-							m_State = MOVE_SLOPE_LEFT;
-							break;
-						case 3:
-							m_State = MOVE_SLOPE_RIGHT;
-							break;
-						}
-
-						//カメラを振動させる
-						CManager::GetInstance()->GetCamera(0)->SetBib(true);
-
-						// 傾き装置のリスト構造が無ければ抜ける
-						if (CSlopeDevice::GetList() == nullptr) { return; }
-						std::list<CSlopeDevice*> list = CSlopeDevice::GetList()->GetList();    // リストを取得
-
-						// 傾き装置のリストの中身を確認する
-						for (CSlopeDevice* pSlopeDevice : list)
-						{
-							// 方向の傾き装置を上昇状態に変更
-							pSlopeDevice->SetStateArrow((CScrollArrow::Arrow)m_DevilArrow);
-						}
-					}
-					else
-					{// 傾き戻し状態の時
-
-						// 傾きを戻す時だけ倍の時間を指定し、戻り切ったら傾き状態を終了とする
-						m_nStateCount = SLOPE_TIME * 2;
-
-						m_State = m_SlopeOld;
-
-						//カメラを振動させる
-						CManager::GetInstance()->GetCamera(0)->SetBib(true);
-
-						// 傾き装置のリスト構造が無ければ抜ける
-						if (CSlopeDevice::GetList() == nullptr) { return; }
-						std::list<CSlopeDevice*> list = CSlopeDevice::GetList()->GetList();    // リストを取得
-
-						// 傾き装置のリストの中身を確認する
-						for (CSlopeDevice* pSlopeDevice : list)
-						{
-							// 方向の傾き装置を上昇状態に変更
-							pSlopeDevice->SetStateArrowBack((CScrollArrow::Arrow)m_SlopwArrowOld);
-						}
-					}
-				}
-				else
-				{// 傾きの指定％じゃない時
-
-					// スクロール時間設定
-					m_nStateCount = SCROOL_TIME * 2;
-
-					// スクロール方向指定
-					m_DevilArrow = rand() % 2;
-
-					if (m_ScrollArrowOld == 0 || m_ScrollArrowOld == 1)
-					{// 前回の傾き方向が左右だった場合
-
-						// 今回の傾き方向は上下にする
-						if (m_DevilArrow == 0)
-						{
-							m_DevilArrow = 2;
-						}
-						else if (m_DevilArrow == 1)
-						{
-							m_DevilArrow = 3;
-						}
-					}
-
-					// 状態設定
-					switch (m_DevilArrow)
-					{
-					case 0:
-						m_State = MOVE_SCROLL_UP;
-						break;
-					case 1:
-						m_State = MOVE_SCROLL_DOWN;
-						break;
-					case 2:
-						m_State = MOVE_SCROLL_LEFT;
-						break;
-					case 3:
-						m_State = MOVE_SCROLL_RIGHT;
-						break;
-					}
-
-					m_ScrollArrowOld = m_DevilArrow;
-					m_nStateNum = m_DevilArrow;
-
-					// マップ移動装置のリスト構造が無ければ抜ける
-					if (CScrollDevice::GetList() == nullptr) { return; }
-					std::list<CScrollDevice*> list = CScrollDevice::GetList()->GetList();    // リストを取得
-
-					// マップ移動装置のリストの中身を確認する
-					for (CScrollDevice* pScrollDevice : list)
-					{
-						// 回転状態に変更
-						pScrollDevice->SetState(CScrollDevice::STATE_ROTATE);
-					}
-
-					m_bScrollOK = false;
-				}
-			}
-		}
-
-		break;
-
-	case MOVE_SCROLL_UP:
-	case MOVE_SCROLL_DOWN:
-	case MOVE_SCROLL_RIGHT:
-	case MOVE_SCROLL_LEFT:
-
-		switch (m_ScrollType)
-		{
-		case CMapMove::SCROLL_TYPE_NORMAL:
-			Move(m_DevilArrow);
-			break;
-
-		case CMapMove::SCROLL_TYPE_RETRO:
-
-			if (m_nStateCount % (SCROOL_TIME / SCROOL_COUNT_02) == 0)
-			{
-				Move(m_DevilArrow);
-			}
-
-			break;
-
-		default:
-
-			break;
-		}
-
-		if (m_bScrollOK == true)
-		{
-			m_State = MOVE_WAIT;
-			m_nStateCount = 120;
-
-			// マップ移動装置のリスト構造が無ければ抜ける
-			if (CScrollDevice::GetList() == nullptr) { return; }
-			std::list<CScrollDevice*> list = CScrollDevice::GetList()->GetList();    // リストを取得
-
-			// マップ移動装置のリストの中身を確認する
-			for (CScrollDevice* pScrollDevice : list)
-			{
-				// 通常状態に変更
-				pScrollDevice->SetState(CScrollDevice::STATE_NORMAL);
-			}
-		}
-
-		break;
-
-	case MOVE_SLOPE_UP:
-	case MOVE_SLOPE_DOWN:
-	case MOVE_SLOPE_RIGHT:
-	case MOVE_SLOPE_LEFT:
-
-		switch (m_ScrollType)
-		{
-		case CMapMove::SCROLL_TYPE_NORMAL:
-
-			if (m_bSlope)
-			{
-				Slope(m_DevilArrow);
-
-				// 矢印傾き
-				SignalManager();
-			}
-			else
-			{
-				BackSlope();
-			}
-			break;
-
-		case CMapMove::SCROLL_TYPE_RETRO:
-
-			if (m_nStateCount % 25 == 0)
-			{
-				if (m_bSlope)
-				{
-					Slope(m_DevilArrow);
-				}
-				else
-				{
-					BackSlope();
-				}
-			}
-			break;
-
-		default:
-
-			break;
-		}
-
-		if (m_nStateCount < 0)
-		{
-			m_State = MOVE_WAIT;
-			m_nStateCount = 120;
-		}
-
-		break;
-	}
-
-	if (m_nStateCount >= 0)
-	{
-		m_nStateCount--;
-	}
-}
-
-//====================================================================
 // デバッグボタン
 //====================================================================
 void CMapMove::DebugKey(void)
@@ -1014,6 +1155,14 @@ void CMapMove::DebugKey(void)
 		Slope(3);
 	}
 #endif // !_DEBUG
+}
+
+//====================================================================
+// スクロールのずれ修正
+//====================================================================
+void CMapMove::ScrollReset()
+{
+
 }
 
 //====================================================================
