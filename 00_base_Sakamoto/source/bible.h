@@ -36,6 +36,7 @@ private:
 
 	// ƒƒ“ƒoŠÖ”
 	void Move(D3DXVECTOR3& pos) override;
+	void Rotation();
 	void SetEffect() override;
 
 	// ƒƒ“ƒo•Ï”

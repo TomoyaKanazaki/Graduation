@@ -45,6 +45,16 @@ public:
 		MOVE_MAX,			//最大
 	};
 
+
+	//加減速状態
+	enum SPEED
+	{
+		SPEED_NONE = 0,		//待機
+		SPEED_UP,			//加速
+		SPEED_DOWN,			//減速
+		SPEED_MAX,			//最大
+	};
+
 	static CMapMove* Create();
 
 	HRESULT Init(void);
@@ -52,8 +62,8 @@ public:
 	void Update(void);
 	void Draw(void);
 
-	float MoveSlopeX(float Move);		//傾き中の移動量変動
-	float MoveSlopeZ(float Move);		//傾き中の移動量変動
+	float MoveSlopeX(float Move, SPEED& Speed);		//傾き中の移動量変動
+	float MoveSlopeZ(float Move, SPEED& Speed);		//傾き中の移動量変動
 
 	void SetMove(D3DXVECTOR3 move) { m_move = move; }
 	D3DXVECTOR3 GetMove(void) { return m_move; }
@@ -100,11 +110,13 @@ private:
 	float m_fActionCount;			//行動のカウント
 	MOVE m_State;					//状態
 	MOVE m_SlopeOld;				//一個前の傾き状態
+	MOVE m_SetState;				//確定行動用の次の状態
 	int m_nStateCount;				//状態管理用カウント
 	int m_nStateNum;				//状態カウント
 	bool m_bSlope;					//傾き状態かどうか
 
 	float m_fScrollMove;			//スクロールが移動した量
+	float m_fScrollEndLine;			//スクロール終了位置
 	bool m_bScrollOK;				//スクロールが完了したかどうか
 
 	CMapSystem::GRID m_MinGrid;		//マップで一番左上にあるブロックの番号

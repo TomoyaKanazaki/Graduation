@@ -799,9 +799,13 @@ void CCamera::SetPosCamera(void)
 void CCamera::AroundCamera(void)
 {
 	//éãì_ÇÃèÓïÒÇèoóÕÇ∑ÇÈ
-	m_posV.x = m_posR.x + sinf(m_fAroundRot) * -cosf(D3DX_PI * -0.9f) * m_fAroundDistance;
-	m_posV.y = m_posR.y + sinf(-D3DX_PI * -0.9f) * m_fAroundDistance;
-	m_posV.z = m_posR.z + cosf(m_fAroundRot) * -cosf(D3DX_PI * -0.9f) * m_fAroundDistance;
+	m_posVDest.x = m_posR.x + sinf(m_fAroundRot) * -cosf(D3DX_PI * -0.9f) * m_fAroundDistance;
+	m_posVDest.y = m_posR.y + sinf(-D3DX_PI * -0.9f) * m_fAroundDistance;
+	m_posVDest.z = m_posR.z + cosf(m_fAroundRot) * -cosf(D3DX_PI * -0.9f) * m_fAroundDistance;
+
+	m_posV.x += (m_posVDest.x - m_posV.x) * m_fHomingSpeed;
+	m_posV.y += (m_posVDest.y - m_posV.y) * m_fHomingSpeed;
+	m_posV.z += (m_posVDest.z - m_posV.z) * m_fHomingSpeed;
 }
 
 //====================================================================

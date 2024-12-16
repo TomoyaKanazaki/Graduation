@@ -20,8 +20,10 @@
 namespace
 {
 	const D3DXVECTOR3 SAMPLE_SIZE = D3DXVECTOR3(20.0f, 20.0f, 20.0f);		//当たり判定
-	const char* MODEL_PASS = "data\\MODEL\\02_item\\holybible.x"; // モデルパス
+	const char* MODEL_PASS = "data\\MODEL\\key.x"; // モデルパス
 	const float MOVE_SCALE = sqrtf(50.0f * 50.0f * 2.0f); // 移動幅
+	const D3DXVECTOR3 ADD_ROT = D3DXVECTOR3(0.0f, 0.05f, 0.0f); // 回転量
+
 }
 
 //===========================================
@@ -97,6 +99,9 @@ void CBible::Uninit(void)
 //====================================================================
 void CBible::Update(void)
 {
+	// 回転
+	Rotation();
+
 	//親クラスの更新
 	CItem::Update();
 }
@@ -142,6 +147,21 @@ void CBible::Move(D3DXVECTOR3& pos)
 
 	// グリッドを設定
 	SetGrid(CMapSystem::GetInstance()->CalcGrid(pos));
+}
+
+//==========================================
+//  回転する処理
+//==========================================
+void CBible::Rotation()
+{
+	// 現在の向きを取得する
+	D3DXVECTOR3 rot = GetRot();
+
+	// 向きを加算
+	rot += ADD_ROT;
+
+	// 向きを適用
+	SetRot(rot);
 }
 
 //==========================================

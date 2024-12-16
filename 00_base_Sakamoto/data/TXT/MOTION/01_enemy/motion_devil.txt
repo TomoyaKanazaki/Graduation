@@ -4672,7 +4672,7 @@ MOTIONSET
 	END_KEYSET
 
 	KEYSET			# --- << KEY : 4 / 7 >> ---
-		FRAME = 40
+		FRAME = 20
 		KEY	# ----- [ 0 ] -----
 			POS = 0.00 -1.90 -45.40
 			ROT = 0.00 0.00 0.00
@@ -4800,7 +4800,7 @@ MOTIONSET
 	END_KEYSET
 
 	KEYSET			# --- << KEY : 5 / 7 >> ---
-		FRAME = 40
+		FRAME = 5
 		KEY	# ----- [ 0 ] -----
 			POS = 0.00 -1.90 -45.40
 			ROT = 0.00 0.00 0.00
@@ -4928,7 +4928,7 @@ MOTIONSET
 	END_KEYSET
 
 	KEYSET			# --- << KEY : 6 / 7 >> ---
-		FRAME = 40
+		FRAME = 5
 		KEY	# ----- [ 0 ] -----
 			POS = 0.00 -1.90 -45.40
 			ROT = 0.00 0.00 0.00

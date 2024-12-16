@@ -48,7 +48,8 @@ namespace
 {
 	const int LIFE_MAX = 2;	//初期ライフ数
 	const int FIRE_STOPTIME = 30;	//攻撃時の移動停止時間
-	const D3DXVECTOR3 RESPAWN_POS = D3DXVECTOR3(-100.0f, 2000.0f, 100.0f); // 復活位置
+	const D3DXVECTOR3 RESPAWN_POS01 = D3DXVECTOR3(-200.0f, 2000.0f, 100.0f); // 復活位置(1P)
+	const D3DXVECTOR3 RESPAWN_POS02 = D3DXVECTOR3(+200.0f, 2000.0f, 100.0f); // 復活位置(2P)
 	const float RESPAWN_GRAVITY = 0.03f;			//卵の重力
 	const int INVINCIBLE_TIME = 120;			//無敵時間(後で消す)
 
@@ -316,8 +317,23 @@ void CPlayer::Update(void)
 			// 操作状態
 			//m_pMoveState->ControlStop(this);
 
-			// 移動処理
-			m_pMoveState->Move(this, posThis, rotThis);
+			if (CScene::GetMode() == CScene::MODE_GAME)
+			{
+				if (CGame::GetInstance()->GetEvent() == true)
+				{
+
+				}
+				else
+				{
+					// 移動処理
+					m_pMoveState->Move(this, posThis, rotThis);
+				}
+			}
+			else
+			{
+				// 移動処理
+				m_pMoveState->Move(this, posThis, rotThis);
+			}
 
 			// モデルを描画する
 			if (GetState() != STATE_EGG && oldstate == STATE_EGG)
@@ -929,7 +945,17 @@ void CPlayer::StateManager(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis)
 				break;
 			}
 		}
+		if (m_pP_NumUI != nullptr)
+		{
+			m_pP_NumUI->SetAppear(false);
+		}
 		break;
+	}
+
+	if (state != STATE_WALK)
+	{
+		//加減速状態の設定
+		SetSpeedState(CMapMove::SPEED_NONE);
 	}
 
 	if (m_nStateCount > 0)
@@ -951,7 +977,6 @@ void CPlayer::CollisionWall(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D3DXV
 	for (CWall* pWall : list)
 	{
 		D3DXVECTOR3 pos = pWall->GetPos();
-		CMapSystem::GetInstance()->GetMove()->FollowScroll(pos);
 		D3DXVECTOR3 Move = D3DXVECTOR3(0.0f,0.0f,0.0f);
 		D3DXVECTOR3 Size = pWall->GetSize();
 
@@ -1327,6 +1352,7 @@ void CPlayer::CollisionPressWall(D3DXVECTOR3& posThis, int Rot)
 	D3DXVECTOR3 ScorllPos = posThis;
 	CMapSystem::GetInstance()->GetMove()->FollowScroll(ScorllPos);
 
+	//スクロールしていないときはこの関数は作用しない
 	if (posThis == ScorllPos)
 	{
 		return;
@@ -1493,8 +1519,11 @@ void CPlayer::PosUpdate(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D3DXVECTO
 	CollisionWall(posThis,posOldThis,sizeThis,useful::COLLISION_Y);
 	CollisionDevilHole(posThis, posOldThis, sizeThis, useful::COLLISION_Y);
 
+	// 加減速状態の取得
+	CMapMove::SPEED Speed = GetSpeedState();
+
 	//X軸の位置更新
-	posThis.x += m_move.x * CManager::GetInstance()->GetGameSpeed() * fSpeed * pMapMove->MoveSlopeX(m_move.x);
+	posThis.x += m_move.x * CManager::GetInstance()->GetGameSpeed() * fSpeed * pMapMove->MoveSlopeX(m_move.x, Speed);
 
 	// 壁との当たり判定
 	CollisionWall(posThis, posOldThis, sizeThis, useful::COLLISION_X);
@@ -1503,7 +1532,10 @@ void CPlayer::PosUpdate(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D3DXVECTO
 	CollisionWaitRock(posThis, posOldThis, sizeThis, useful::COLLISION_X);
 
 	//Z軸の位置更新
-	posThis.z += m_move.z * CManager::GetInstance()->GetGameSpeed() * fSpeed * pMapMove->MoveSlopeZ(m_move.z);
+	posThis.z += m_move.z * CManager::GetInstance()->GetGameSpeed() * fSpeed * pMapMove->MoveSlopeZ(m_move.z, Speed);
+
+	//加減速状態の設定
+	SetSpeedState(Speed);
 
 	// 壁との当たり判定
 	CollisionWall(posThis, posOldThis, sizeThis, useful::COLLISION_Z);
@@ -1787,8 +1819,17 @@ void CPlayer::Reivel(D3DXVECTOR3& posThis)
 	int WMax = CMapSystem::GetInstance()->GetWightMax();
 	int HMax = CMapSystem::GetInstance()->GetHeightMax();
 	CMapSystem::GRID ReivelPos = CMapSystem::GRID(0, 0);
-	ReivelPos.x = CMapSystem::GetInstance()->CalcGridX(RESPAWN_POS.x);
-	ReivelPos.z = CMapSystem::GetInstance()->CalcGridZ(RESPAWN_POS.z);
+
+	if (m_nPlayNumber == 0)
+	{
+		ReivelPos.x = CMapSystem::GetInstance()->CalcGridX(RESPAWN_POS01.x);
+		ReivelPos.z = CMapSystem::GetInstance()->CalcGridZ(RESPAWN_POS01.z);
+	}
+	else
+	{
+		ReivelPos.x = CMapSystem::GetInstance()->CalcGridX(RESPAWN_POS02.x);
+		ReivelPos.z = CMapSystem::GetInstance()->CalcGridZ(RESPAWN_POS02.z);
+	}
 
 	for (int nSetW = ReivelPos.x, nCntW = 0; nCntW < WMax; nSetW++, nCntW++)
 	{
@@ -1808,7 +1849,7 @@ void CPlayer::Reivel(D3DXVECTOR3& posThis)
 			{
 				SetGrid(CMapSystem::GRID(nSetW, nSetH));
 				posThis = CMapSystem::GRID(nSetW, nSetH).ToWorld();
-				posThis.y = RESPAWN_POS.y;
+				posThis.y = RESPAWN_POS01.y;
 				SetState(STATE_EGG);
 				return;
 			}

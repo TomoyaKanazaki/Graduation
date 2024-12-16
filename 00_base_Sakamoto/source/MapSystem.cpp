@@ -159,9 +159,6 @@ void CMapSystem::Update(void)
 
 			//その他オブジェクトのスクロール
 			CObject::ScrollAll();
-
-			//マップの位置設定
-			m_pMapMove->FollowScroll(m_MapPos);
 		}
 	}
 
@@ -572,7 +569,7 @@ void CMapSystem::Load(const char* pFilename)
 								CRailBlock::Create(grid);
 
 								// レールの位置を保持する
-								pRailManager->Init(grid);
+								pRailManager->Set(grid);
 
 								// グリッド設定の判定
 								bGridSet = true;
@@ -624,7 +621,7 @@ void CMapSystem::Load(const char* pFilename)
 							{ // レール
 
 								// レールの位置を保持する
-								pRailManager->Init(grid);
+								pRailManager->Set(grid);
 								bRailGridSet = true;
 
 							}
@@ -657,7 +654,7 @@ void CMapSystem::Load(const char* pFilename)
 	}
 
 	// レールの向き設定
-	pRailManager->Set();
+	pRailManager->Init();
 
 	// レールマネージャーの破棄
 	if (pRailManager != nullptr)
@@ -668,6 +665,39 @@ void CMapSystem::Load(const char* pFilename)
 
 	// ファイルを閉じる
 	file.close();
+}
+
+//==========================================
+//  マップの削除
+//==========================================
+void CMapSystem::MapDelete()
+{
+	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
+	{
+		//オブジェクトを取得
+		CObject* pObj = CObject::GetTop(nCntPriority);
+
+		while (pObj != nullptr)
+		{
+			CObject* pObjNext = pObj->GetNext();
+
+			CObject::OBJECT_TYPE type = pObj->GetType();			//種類を取得
+
+			if (type == CObject::TYPE_TILE ||
+				type == CObject::TYPE_CROSS ||
+				type == CObject::TYPE_DEVILHOLE ||
+				type == CObject::TYPE_RAILBLOCK ||
+				type == CObject::TYPE_RAIL ||
+				type == CObject::TYPE_ENEMY3D ||
+				type == CObject::TYPE_ROLLROCK
+				)
+			{//種類がマップ関連の時
+				pObj->Uninit();
+			}
+
+			pObj = pObjNext;
+		}
+	}
 }
 
 //==========================================

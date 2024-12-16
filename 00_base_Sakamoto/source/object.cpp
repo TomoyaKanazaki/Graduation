@@ -117,41 +117,28 @@ void CObject::UpdateAll(void)
 
 		while (pObject != nullptr)
 		{
-			CObject *pObjectNext = pObject->m_pNext;	//次のオブジェクトを保存
+			CObject* pObjectNext = pObject->m_pNext;	//次のオブジェクトを保存
 
-			if ((m_bLevelStop == false && pObject->m_bLevelUI == false) ||
-				(m_bLevelStop == true && pObject->m_bLevelUI == true))
+			if (pObject->GetDeathFlag() == true)
 			{
-				if (CManager::GetInstance()->GetPause() == true)
+				pObject = pObjectNext;
+				continue;
+			}
+
+			if (CManager::GetInstance()->GetPause() == true)
+			{
+				if (pObject->m_type == TYPE_TUTORIALUI)
 				{
-					if (pObject->m_type == TYPE_TUTORIALUI)
-					{
-						//更新処理
-						pObject->Update();
-					}
+					//更新処理
+					pObject->Update();
 				}
-				else if (CScene::GetMode() == CScene::MODE_GAME)
+			}
+			else if (CScene::GetMode() == CScene::MODE_GAME)
+			{
+				if (CGame::GetInstance()->GetEvent() == true)
 				{
-					if (CGame::GetInstance()->GetEvent() == true)
-					{
-						if (pObject->m_type != TYPE_ENEMY3D &&
-							pObject->m_type != TYPE_SOFTCREAM)
-						{
-							//更新処理
-							pObject->Update();
-						}
-					}
-					else if (pObject->m_Appear == true)
-					{
-						//更新処理
-						pObject->Update();
-					}
-				}
-				else if(CManager::GetInstance()->GetEdit() == true)
-				{
-					if (pObject->m_type != TYPE_PLAYER3D && 
-						pObject->m_type != TYPE_DEVIL &&
-						pObject->m_type != TYPE_ENEMY3D)
+					if (pObject->m_type != TYPE_ENEMY3D &&
+						pObject->m_type != TYPE_SOFTCREAM)
 					{
 						//更新処理
 						pObject->Update();
@@ -162,6 +149,21 @@ void CObject::UpdateAll(void)
 					//更新処理
 					pObject->Update();
 				}
+			}
+			else if (CManager::GetInstance()->GetEdit() == true)
+			{
+				if (pObject->m_type != TYPE_PLAYER3D &&
+					pObject->m_type != TYPE_DEVIL &&
+					pObject->m_type != TYPE_ENEMY3D)
+				{
+					//更新処理
+					pObject->Update();
+				}
+			}
+			else if (pObject->m_Appear == true)
+			{
+				//更新処理
+				pObject->Update();
 			}
 
 			pObject = pObjectNext;

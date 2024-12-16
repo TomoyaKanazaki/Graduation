@@ -99,6 +99,7 @@ public:
 	GRID GetMapGrid(void) { return m_MapGrid; }
 
 	static void Load(const char* pFilename); // マップ情報の読み込み
+	static void MapDelete(); // マップの削除
 	static float GetGritSize();
 
 private:

@@ -134,40 +134,38 @@ void CMoveState::Rot(CItem* pItem, D3DXVECTOR3& rot)
 //====================================================================
 void CMoveState::UpdatePos(CObjectCharacter* pCharacter, D3DXVECTOR3& pos)
 {
-	// 変数宣言
-	CMapMove* pMapMove = CMapSystem::GetInstance()->GetMove();
-	D3DXVECTOR3 move = pCharacter->GetMove();		// 移動量
-	D3DXVECTOR3 objMove = pCharacter->GetObjMove();
+	//// 変数宣言
+	//CMapMove* pMapMove = CMapSystem::GetInstance()->GetMove();
+	//D3DXVECTOR3 move = pCharacter->GetMove();		// 移動量
+	//D3DXVECTOR3 objMove = pCharacter->GetObjMove();
 
-	float fSpeed = 1.0f;	// スロー用 default1.0fで初期化
+	////重力
+	//move.y -= 0.5f;
+	//pCharacter->SetMove(move);		// 移動量
 
-	//重力
-	move.y -= 0.5f;
-	pCharacter->SetMove(move);		// 移動量
+	////Y軸の位置更新
+	//pos.y += move.y * CManager::GetInstance()->GetGameSpeed();
+	//pos.y += objMove.y * CManager::GetInstance()->GetGameSpeed();
 
-	//Y軸の位置更新
-	pos.y += move.y * CManager::GetInstance()->GetGameSpeed() * fSpeed;
-	pos.y += objMove.y * CManager::GetInstance()->GetGameSpeed() * fSpeed;
+	//// 壁との当たり判定
+	////CollisionWall(pos,posOldMy,sizeMy,useful::COLLISION_Y);
+	////CollisionDevilHole(useful::COLLISION_Y);
 
-	// 壁との当たり判定
-	//CollisionWall(pos,posOldMy,sizeMy,useful::COLLISION_Y);
-	//CollisionDevilHole(useful::COLLISION_Y);
+	////X軸の位置更新
+	//pos.x += move.x * CManager::GetInstance()->GetGameSpeed() * pMapMove->MoveSlopeX(move.x);
+	//pos.x += objMove.x * CManager::GetInstance()->GetGameSpeed() * pMapMove->MoveSlopeX(move.x);
 
-	//X軸の位置更新
-	pos.x += move.x * CManager::GetInstance()->GetGameSpeed() * fSpeed * pMapMove->MoveSlopeX(move.x);
-	pos.x += objMove.x * CManager::GetInstance()->GetGameSpeed() * fSpeed * pMapMove->MoveSlopeX(move.x);
+	//// 壁との当たり判定
+	////CollisionWall(pos, posOldMy, sizeMy, useful::COLLISION_X);
+	////CollisionDevilHole(useful::COLLISION_X);
 
-	// 壁との当たり判定
-	//CollisionWall(pos, posOldMy, sizeMy, useful::COLLISION_X);
-	//CollisionDevilHole(useful::COLLISION_X);
+	////Z軸の位置更新
+	//pos.z += move.z * CManager::GetInstance()->GetGameSpeed() * pMapMove->MoveSlopeZ(move.z);
+	//pos.z += objMove.z * CManager::GetInstance()->GetGameSpeed() * pMapMove->MoveSlopeZ(move.z);
 
-	//Z軸の位置更新
-	pos.z += move.z * CManager::GetInstance()->GetGameSpeed() * fSpeed * pMapMove->MoveSlopeZ(move.z);
-	pos.z += objMove.z * CManager::GetInstance()->GetGameSpeed() * fSpeed * pMapMove->MoveSlopeZ(move.z);
-
-	// 壁との当たり判定
-	//CollisionWall(pos, posOldMy, sizeMy, useful::COLLISION_Z);
-	//CollisionDevilHole(useful::COLLISION_Z);
+	//// 壁との当たり判定
+	////CollisionWall(pos, posOldMy, sizeMy, useful::COLLISION_Z);
+	////CollisionDevilHole(useful::COLLISION_Z);
 
 }
 
@@ -176,20 +174,18 @@ void CMoveState::UpdatePos(CObjectCharacter* pCharacter, D3DXVECTOR3& pos)
 //====================================================================
 void CMoveState::UpdatePos(CItem* pItem, D3DXVECTOR3& pos)
 {
-	// 変数宣言
-	CMapMove* pMapMove = CMapSystem::GetInstance()->GetMove();
-	D3DXVECTOR3 move = pItem->GetMove();		// 移動量
+	//// 変数宣言
+	//CMapMove* pMapMove = CMapSystem::GetInstance()->GetMove();
+	//D3DXVECTOR3 move = pItem->GetMove();		// 移動量
 
-	float fSpeed = 1.0f;	// スロー用 default1.0fで初期化
+	////重力
+	//move.y -= 0.5f;
+	//pItem->SetMove(move);		// 移動量
 
-	//重力
-	move.y -= 0.5f;
-	pItem->SetMove(move);		// 移動量
-
-	//位置更新
-	pos.x += move.x * CManager::GetInstance()->GetGameSpeed() * fSpeed * pMapMove->MoveSlopeX(move.x);
-	pos.y += move.y * CManager::GetInstance()->GetGameSpeed() * fSpeed;
-	pos.z += move.z * CManager::GetInstance()->GetGameSpeed() * fSpeed * pMapMove->MoveSlopeZ(move.z);
+	////位置更新
+	//pos.x += move.x * CManager::GetInstance()->GetGameSpeed() * pMapMove->MoveSlopeX(move.x);
+	//pos.y += move.y * CManager::GetInstance()->GetGameSpeed();
+	//pos.z += move.z * CManager::GetInstance()->GetGameSpeed() * pMapMove->MoveSlopeZ(move.z);
 }
 
 //**********************************************************************************************************

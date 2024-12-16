@@ -30,6 +30,7 @@ CEventMovie::CEventMovie()
 	m_nWave = 0;
 	m_nCount = 0;
 	m_fSinFloat = 0.0f;
+	m_pEventModel = nullptr;
 }
 
 //====================================================================
@@ -119,7 +120,6 @@ void CEventMovie::Draw(void)
 void CEventMovie::StartMovie(void)
 {
 	CCamera* pCamera = CManager::GetInstance()->GetCamera(0);
-	CObjectX* pChair = nullptr;
 	CDevil* pDevil = CDevil::GetListTop();
 	D3DXVECTOR3 DevilPos = pDevil->GetPos();
 	float CameraDistance = 0.0f;
@@ -137,6 +137,7 @@ void CEventMovie::StartMovie(void)
 		//カメラの初期位置を設定
 		pCamera->SetCameraMode(CCamera::CAMERAMODE_SETPOS);
 		pCamera->SetCameraPosMode(D3DXVECTOR3(0.0f, 1000.0f, -3000.0f), DevilPos);
+		pCamera->SetHomingSpeed(0.1f);
 
 		m_nCount = 0;	
 		m_nWave++;
@@ -147,7 +148,7 @@ void CEventMovie::StartMovie(void)
 
 		pDevil->SetModelColor(CModel::COLORTYPE_TRUE_A, D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f));
 
-		if (m_nCount >= 60)
+		if (m_nCount >= 20)
 		{
 			//カメラの初期位置を設定
 			pCamera->SetCameraMode(CCamera::CAMERAMODE_AROUND);
@@ -177,58 +178,68 @@ void CEventMovie::StartMovie(void)
 
 		break;
 
-	//case 0:		//初期の玉座モーション
-	//	pCamera->SetCameraMode(CCamera::CAMERAMODE_EVENTBOSS);
-	//	pCamera->SetHomingSpeed(0.2f);
+	case 3:		//初期の玉座モーション
+		pCamera->SetCameraMode(CCamera::CAMERAMODE_EVENTBOSS);
+		pCamera->SetHomingSpeed(0.05f);
 
-	//	if (m_nCount >= 180)
-	//	{
-	//		pDevil->SetAction(CDevil::ACTION_KING, 0);
-	//		pDevil->SetModelColor(CModel::COLORTYPE_FALSE, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-	//		m_nWave++;
-	//	}
+		if (m_nCount >= 80)
+		{
+			pDevil->SetAction(CDevil::ACTION_KING, 0);
+			pDevil->SetModelColor(CModel::COLORTYPE_FALSE, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+			m_nWave++;
+		}
 
-	//	break;
+		break;
 
-	//case 1:		//ボスの出現
+	case 4:		//ボスの出現
 
-	//	pCamera->SetCameraMode(CCamera::CAMERAMODE_EVENTBOSS);
-	//	pCamera->SetHomingSpeed(0.2f);
+		pCamera->SetCameraMode(CCamera::CAMERAMODE_EVENTBOSS);
+		pCamera->SetHomingSpeed(0.2f);
 
-	//	pChair = CObjectX::Create("data\\MODEL\\01_enemy\\03_devil\\chair.x");
-	//	pChair->SetPos(pDevil->GetPos());
+		if (m_pEventModel == nullptr)
+		{
+			m_pEventModel = CObjectX::Create("data\\MODEL\\01_enemy\\03_devil\\chair.x");
+			m_pEventModel->SetPos(pDevil->GetPos());
+		}
 
-	//	if (pDevil->GetMotion()->GetFinish())
-	//	{
-	//		pDevil->SetAction(CDevil::ACTION_NEUTRAL, 120);
-	//		m_nWave++;
-	//		m_nCount = 0;
-	//	}
+		if (pDevil->GetMotion()->GetFinish())
+		{
+			if (m_pEventModel != nullptr)
+			{
+				m_pEventModel->Uninit();
+				m_pEventModel = nullptr;
+			}
 
-	//	break;
+			pCamera->SetCameraMode(CCamera::CAMERAMODE_SETPOS);
+			pCamera->SetCameraPosMode(
+				D3DXVECTOR3(0.0f, 1600.0f, -900.0f),
+				D3DXVECTOR3(INITVECTOR3));	//カメラの指定位置を設定
+			pCamera->SetHomingSpeed(0.02f);	//カメラの目標までのホーミング速度を設定
 
-	//case 2:		//ボスの出現
+			pDevil->SetAction(CDevil::ACTION_NEUTRAL, 120);
+			m_nWave++;
+			m_nCount = 0;
+		}
 
-	//	DevilPos = pDevil->GetPos();
-	//	DevilPos.z -= 1.0f;
-	//	pDevil->SetPos(DevilPos);
+		break;
 
-	//	if (m_nCount >= 120)
-	//	{
-	//		m_nCount = 0;
-	//		m_nWave++;
-	//	}
+	case 5:		//
 
-	//	break;
+		if (m_nCount >= 150)
+		{
+			pCamera->SetCameraMode(CCamera::CAMERAMODE_DOWNVIEW);
+
+			m_nCount = 0;
+			m_nWave++;
+		}
+
+		break;
 
 	default:
 
-		//pCamera->SetCameraMode(CCamera::CAMERAMODE_FPS);
-		//SetEvent(false);
-		//m_pPlayer->SetModelDisp(false);
-		//m_pBoss->EventJump(60);
-		//m_nWave = 0;
-		//m_nEventNumber++;
+		CGame::GetInstance()->GetTime()->SetStopTime(false);	//タイムの進行を進める
+		CGame::GetInstance()->SetEvent(false);
+		m_nWave = 0;
 		break;
 	}
 
