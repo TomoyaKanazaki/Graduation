@@ -73,11 +73,11 @@ namespace
 	const char* CHECKBOX_TEX = "data\\TEXTURE\\UI\\tutorial_check_box.png";			// チェックボックスのテクスチャ
 	const char* TUTORIAL_FRAME_TEX = "data\\TEXTURE\\UI\\tutorial_frame.png";		// チュートリアルガイドの外枠のテクスチャ
 	const char* TUTORIAL_MOVE_TEX = "data\\TEXTURE\\UI\\tutorial_text_00.png";		// 移動ガイドテキストのテクスチャ
-	const char* TUTORIAL_CROSS_TEX = "data\\TEXTURE\\UI\\tutorial_text_01.png";		// 十字架ガイドテキストのテクスチャ
-	const char* TUTORIAL_ATTACK_TEX = "data\\TEXTURE\\UI\\tutorial_text_02.png";	// 攻撃テキストのテクスチャ
-	const char* TUTORIAL_BOWABOWA_TEX = "data\\TEXTURE\\UI\\tutorial_text_03.png";	// ボワボワテキストのテクスチャ
-	const char* TUTORIAL_BIBLE_TEX = "data\\TEXTURE\\UI\\tutorial_text_04.png";		// 聖書テキストのテクスチャ
-	const char* TUTORIAL_DEVILHOLE_TEX = "data\\TEXTURE\\UI\\tutorial_text_05.png";	// ガイドテキストのテクスチャ
+	const char* TUTORIAL_CROSS_TEX = "data\\TEXTURE\\UI\\tutorial_text_001.png";		// 十字架ガイドテキストのテクスチャ
+	const char* TUTORIAL_ATTACK_TEX = "data\\TEXTURE\\UI\\tutorial_text_002.png";	// 攻撃テキストのテクスチャ
+	const char* TUTORIAL_BOWABOWA_TEX = "data\\TEXTURE\\UI\\tutorial_text_003.png";	// ボワボワテキストのテクスチャ
+	const char* TUTORIAL_BIBLE_TEX = "data\\TEXTURE\\UI\\tutorial_text_004.png";		// 聖書テキストのテクスチャ
+	const char* TUTORIAL_DEVILHOLE_TEX = "data\\TEXTURE\\UI\\tutorial_text_005.png";	// ガイドテキストのテクスチャ
 
 	const CMapSystem::GRID FIELD_GRID = { 64, 64 }; // 下の床のサイズ
 	const CMapSystem::GRID BIBLE_POS = { 11, 10 };	// 聖書の位置
@@ -90,8 +90,8 @@ namespace
 	const D3DXVECTOR3 MARKER_SIZE = D3DXVECTOR3(50.0f, 50.0f, 0.0f);	// マーカーサイズ
 	const D3DXVECTOR3 BUTTON_POS = D3DXVECTOR3(1100.0f, 650.0f, 0.0f);	// 遷移ボタンの位置
 	const D3DXVECTOR3 BUTTON_SIZE = D3DXVECTOR3(300.0f, 250.0f, 0.0f);	// 遷移ボタンのサイズ
-	const D3DXVECTOR3 TEXT_MOVE_SIZE = D3DXVECTOR3(250.0f, 100.0f, 0.0f);		// テキストのサイズ
-	const D3DXVECTOR3 TEXT_SIZE = D3DXVECTOR3(500.0f, 50.0f, 0.0f);		// テキストのサイズ
+	const D3DXVECTOR3 TEXT_MOVE_SIZE = D3DXVECTOR3(250.0f, 100.0f, 0.0f);	// 移動テキストのサイズ
+	const D3DXVECTOR3 TEXT_SIZE = D3DXVECTOR3(250.0f, 50.0f, 0.0f);			// テキストのサイズ
 
 	const D3DXCOLOR MASK_DEFAULT_COLOR = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);			// 通常のステンシルカラー(白)
 	const D3DXCOLOR MASK_PLAYER_COLOR = D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f);			// タマゴンのステンシルカラー(緑)
@@ -214,11 +214,11 @@ HRESULT CTutorial::Init(void)
 
 	// テキストの生成
 	CTutorialUi::Create(D3DXVECTOR3(240.0f, CHECK_POS[TYPE_MOVE].y, CHECK_POS[TYPE_MOVE].z), TEXT_MOVE_SIZE, TUTORIAL_MOVE_TEX);
-	CTutorialUi::Create(D3DXVECTOR3(350.0f, CHECK_POS[TYPE_CROSS].y, CHECK_POS[TYPE_CROSS].z), TEXT_SIZE, TUTORIAL_CROSS_TEX);
-	CTutorialUi::Create(D3DXVECTOR3(350.0f, CHECK_POS[TYPE_BOWABOWA].y, CHECK_POS[TYPE_BOWABOWA].z), TEXT_SIZE, TUTORIAL_BOWABOWA_TEX);
-	CTutorialUi::Create(D3DXVECTOR3(345.0f, CHECK_POS[TYPE_ATTACK].y, CHECK_POS[TYPE_ATTACK].z), TEXT_SIZE, TUTORIAL_ATTACK_TEX);
-	CTutorialUi::Create(D3DXVECTOR3(350.0f, CHECK_POS[TYPE_BIBLE].y, CHECK_POS[TYPE_BIBLE].z), TEXT_SIZE, TUTORIAL_BIBLE_TEX);
-	CTutorialUi::Create(D3DXVECTOR3(350.0f, CHECK_POS[TYPE_DEVILHOLE].y, CHECK_POS[TYPE_DEVILHOLE].z), TEXT_SIZE, TUTORIAL_DEVILHOLE_TEX);
+	CTutorialUi::Create(D3DXVECTOR3(240.0f, CHECK_POS[TYPE_CROSS].y, CHECK_POS[TYPE_CROSS].z), TEXT_SIZE, TUTORIAL_CROSS_TEX);
+	CTutorialUi::Create(D3DXVECTOR3(240.0f, CHECK_POS[TYPE_BOWABOWA].y, CHECK_POS[TYPE_BOWABOWA].z), TEXT_SIZE, TUTORIAL_BOWABOWA_TEX);
+	CTutorialUi::Create(D3DXVECTOR3(245.0f, CHECK_POS[TYPE_ATTACK].y, CHECK_POS[TYPE_ATTACK].z), TEXT_SIZE, TUTORIAL_ATTACK_TEX);
+	CTutorialUi::Create(D3DXVECTOR3(240.0f, CHECK_POS[TYPE_BIBLE].y, CHECK_POS[TYPE_BIBLE].z), TEXT_SIZE, TUTORIAL_BIBLE_TEX);
+	CTutorialUi::Create(D3DXVECTOR3(240.0f, CHECK_POS[TYPE_DEVILHOLE].y, CHECK_POS[TYPE_DEVILHOLE].z), TEXT_SIZE, TUTORIAL_DEVILHOLE_TEX);
 
 	// 遷移ボタンの生成
 	CTutorialUi::Create(BUTTON_POS, BUTTON_SIZE, BUTTON_TEX);
