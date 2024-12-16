@@ -114,11 +114,6 @@ void CTutorialPlayer::Death(void)
 			CItem::Create(CItem::TYPE_BIBLE, CMapSystem::GRID(GetGrid()));
 		}
 
-		if (GetLifeUI() != nullptr)
-		{
-			GetLifeUI()->GetNumber()->SetNumber(GetLife());
-		}
-
 		SetState(STATE_DEATH);
 		SetMove(INITVECTOR3);
 		SetObjMoveX(0.0f);

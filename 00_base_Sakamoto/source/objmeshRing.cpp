@@ -11,6 +11,7 @@
 #include "game.h"
 #include "texture.h"
 #include "player.h"
+#include "GamePlayer.h"
 
 //==========================================
 //  定数定義
@@ -212,7 +213,7 @@ void CObjmeshRing::Update(void)
 {
 	m_Radius += m_RadiusMove;
 
-	CPlayer *pPlayer = CGame::GetInstance()->GetPlayer(0);
+	CGamePlayer *pPlayer = CGame::GetInstance()->GetPlayer(0);
 
 	//ダメージウェーブとプレイヤーの当たり判定
 	if (CollisionRing(pPlayer->GetPos(), m_pos, m_Radius + 15.0f, m_Radius - m_Radius * 0.1f, 0.0f, pPlayer->GetSize().y) == true)

@@ -26,11 +26,8 @@
 #include "signal.h"
 #include "pause.h"
 #include "EventMovie.h"
-#include "objmeshField.h"
 #include "Cross.h"
 #include "MapMove.h"
-#include "pause.h"
-#include "SlopeDevice.h"
 
 #include "sound.h"
 #include "shadow.h"

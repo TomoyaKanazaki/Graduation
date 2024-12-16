@@ -60,6 +60,7 @@ private:
 
 	CEffekseer* m_pEffect; // エフェクト
 	CMoveState* m_pMoveState;		// 移動状態
+	CShadow* m_pShadow;				// 影
 
 	// 静的メンバ変数
 	static CListManager<CRollRock>* m_pList; // オブジェクトリスト

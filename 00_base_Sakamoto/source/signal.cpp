@@ -135,8 +135,6 @@ void CSignal::Update()
 	// 情報の更新
 	SetPos(D3DXVECTOR3(pos.x, 300.0f, pos.z));
 
-	DebugProc::Print(DebugProc::POINT_CENTER, "矢印 : %d\n", m_pList->GetIndex(this));
-
 	// 親クラスの更新処理
 	CObjectX::Update();
 }
