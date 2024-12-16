@@ -1854,19 +1854,19 @@ void CPlayer::SpeedEffect(const D3DXVECTOR3& pos, const D3DXVECTOR3& rot)
 	if (speed == CMapMove::SPEED_NONE) { return; }
 
 	// 生成位置を算出
-	D3DXMATRIX mat = *GetUseMultiMatrix();
+	D3DXMATRIX mtx = *GetUseMultiMatrix();
 	D3DXVECTOR3 temp = pos;
 	temp.y += EFFECT_HEIGHT;
-	D3DXVECTOR3 ef = useful::CalcMatrix(temp, rot, mat);
+	D3DXVECTOR3 ef = useful::CalcMatrix(temp, rot, mtx);
 
 	// 新しいエフェクトを設定する
 	switch (speed)
 	{
 	case CMapMove::SPEED_DOWN:
-		m_pEffectSpeed = MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DROP, true, ef, rot);
+		m_pEffectSpeed = MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DROP, true, ef, useful::CalcMatrixToRot(mtx));
 		break;
 	case CMapMove::SPEED_UP:
-		m_pEffectSpeed = MyEffekseer::EffectCreate(CMyEffekseer::TYPE_ACCELE, true, ef, rot);
+		m_pEffectSpeed = MyEffekseer::EffectCreate(CMyEffekseer::TYPE_ACCELE, true, ef, useful::CalcMatrixToRot(mtx));
 		break;
 	default:
 		break;
