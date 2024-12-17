@@ -397,7 +397,7 @@ void CObjmeshField::SetColor(D3DXCOLOR col)
 //====================================================================
 //’¸“_ƒJƒ‰[‚ÌÝ’è
 //====================================================================
-void CObjmeshField::SetTexture(std::string name)
+void CObjmeshField::SetTexture(const std::string name)
 {
 	CTexture* pTexture = CManager::GetInstance()->GetTexture();
 	m_nIdxTexture = pTexture->Regist(name);

@@ -348,6 +348,11 @@ void CTutorial::Update(void)
 			CTutorialCheck::Create(CHECK_POS[TYPE_CROSS]);
 			m_bCheck[TYPE_CROSS] = true;
 
+			if (m_bCheck[TYPE_CROSS] == true)
+			{// テキストの不透明度を下げる
+				SetUIAlpha(TYPE_CROSS, 0.5f);
+			}
+
 			// チュートリアル段階を進める
 			m_nTutorialWave += 1;
 		}
@@ -358,6 +363,11 @@ void CTutorial::Update(void)
 			CTutorialCheck::Create(CHECK_POS[TYPE_BIBLE]);
 			
 			m_bCheck[TYPE_BIBLE] = true;
+
+			if (m_bCheck[TYPE_BIBLE] == true)
+			{// テキストの不透明度を下げる
+				SetUIAlpha(TYPE_BIBLE, 0.5f);
+			}
 
 			// チュートリアル段階を進める
 			m_nTutorialWave += 1;
@@ -370,6 +380,11 @@ void CTutorial::Update(void)
 		CTutorialCheck::Create(CHECK_POS[TYPE_ATTACK]);
 		m_bCheck[TYPE_ATTACK] = true;
 
+		if (m_bCheck[TYPE_ATTACK] == true)
+		{// テキストの不透明度を下げる
+			SetUIAlpha(TYPE_ATTACK, 0.5f);
+		}
+
 		// チュートリアル段階を進める
 		m_nTutorialWave += 1;
 	}
@@ -379,6 +394,11 @@ void CTutorial::Update(void)
 	{// ボワボワの総数減少
 		CTutorialCheck::Create(CHECK_POS[TYPE_BOWABOWA]);
 		m_bCheck[TYPE_BOWABOWA] = true;
+
+		if (m_bCheck[TYPE_BOWABOWA] == true)
+		{// テキストの不透明度を下げる
+			SetUIAlpha(TYPE_BOWABOWA, 0.5f);
+		}
 
 		// チュートリアル段階を進める
 		m_nTutorialWave += 1;
@@ -400,6 +420,11 @@ void CTutorial::Update(void)
 		{// デビルホールの4箇所の内1箇所埋まった
 			CTutorialCheck::Create(CHECK_POS[TYPE_DEVILHOLE]);
 			m_bCheck[TYPE_DEVILHOLE] = true;
+
+			if (m_bCheck[TYPE_DEVILHOLE] == true)
+			{// テキストの不透明度を下げる
+				SetUIAlpha(TYPE_DEVILHOLE, 0.5f);
+			}
 
 			// チュートリアル段階を進める
 			m_nTutorialWave += 1;

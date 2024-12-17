@@ -37,7 +37,7 @@ public:
 	HRESULT Load(void);		//テクスチャ読み込み
 	void Unload(void);		//テクスチャ破棄
 
-	int Regist(std::string pfile);			//テクスチャ割り当て
+	int Regist(const std::string pfile);			//テクスチャ割り当て
 	LPDIRECT3DTEXTURE9 GetAddress(int nIdx);	//テクスチャのアドレス取得
 
 private:
