@@ -71,7 +71,7 @@ public:
 	void SetPartsDisp(int nParts, bool Set);
 	void SetPressObj(bool Set) { m_bPressObj = Set; }
 	bool GetPressObj(void) { return m_bPressObj; }
-	CScore* GetScore(void) { return m_pScore; }
+	virtual CScore* GetScore(void) { return nullptr; }
 
 	void SetLife(int Set) { m_nLife = Set; }
 	int GetLife(void) { return m_nLife; }
@@ -161,7 +161,6 @@ private:
 	CSlowManager* m_pSlow;			// スロー
 
 	ITEM_TYPE m_eItemType;			// 持ってるアイテムの種類
-	CScore* m_pScore;				// スコアのポインタ
 
 	CObjectX* m_pUpEgg;				//卵モデルの上
 	CObjectX* m_pDownEgg;			//卵モデルの下

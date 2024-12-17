@@ -11,7 +11,7 @@
 
 //マクロ定義
 #define NUM_SCROLLTYPE (2)
-#define NUM_STAGE (3)
+#define NUM_STAGE (11)
 #define MAX_TITLEUI (3)
 #define NUM_SCROLL (2)
 
@@ -21,6 +21,7 @@ class CObjmeshDome;
 class CPlayer;
 class CCubeBlock;
 class CCursorUI;
+class CNumber;
 
 // タイトルクラス
 class CSelect : public CScene
@@ -36,6 +37,14 @@ private:
 		D3DXCOLOR color;	// 色情報
 
 		CObject2D* pObj2d;	// 2Dオブジェクト
+	};
+
+	// 2Dの情報
+	struct SStageSelect
+	{
+		CObject2D* m_pSelectUI;
+		CNumber* m_pSelectNumber01;
+		CNumber* m_pSelectNumber10;
 	};
 
 public:
@@ -67,7 +76,7 @@ private:
 
 	float m_fCountFade;
 
-	CObject2D* m_pStageSelect[NUM_STAGE];		//ステージセレクト
+	SStageSelect m_pStageSelect[NUM_STAGE];	//ステージセレクト
 	CObject2D* m_pScrollSelect[NUM_SCROLLTYPE];	//スクロールセレクト
 	CObject2D* m_pTitleButton;					//ボタン入力UIのポリゴン
 	CObject2D* m_pTexScroll[NUM_SCROLL];		// テクスチャスクロール

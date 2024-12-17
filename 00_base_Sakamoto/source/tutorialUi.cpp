@@ -31,7 +31,7 @@ CTutorialUi::~CTutorialUi()
 //============================================
 // ê∂ê¨
 //============================================
-CTutorialUi* CTutorialUi::Create(const D3DXVECTOR3& pos, const D3DXVECTOR3& size, const char* pFilename)
+CTutorialUi* CTutorialUi::Create(const D3DXVECTOR3& pos, const D3DXVECTOR3& size, std::string pFilename, float ColorA)
 {
 	CTutorialUi* pTutorialUi = new CTutorialUi();
 

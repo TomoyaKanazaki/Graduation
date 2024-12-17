@@ -385,11 +385,6 @@ D3DXVECTOR3 CStateControl::InputKey(CObjectCharacter* pCharacter, D3DXVECTOR3& p
 	CObjectCharacter::PROGGRESS progress = pCharacter->GetProgress();
 	bool bGridCenter = pCharacter->GetGritCenter();		// グリッド座標の中心にいるか
 
-	if (pInputKeyboard->GetPress(DIK_D))
-	{
-		int a = 0;
-	}
-
 	//キーボードの移動処理
 	if ((pInputKeyboard->GetPress(DIK_W) && progress.bOKU && bGridCenter) ||
 		(pInputKeyboard->GetPress(DIK_W) && m_RotState == ROTSTATE_DOWN))
