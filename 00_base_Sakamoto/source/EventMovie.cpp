@@ -99,6 +99,8 @@ void CEventMovie::Update(void)
 		break;
 
 	case CEventMovie::STATE_END:
+		//終了時演出
+		EndMovie();
 		break;
 	default:
 		assert(false);
@@ -171,7 +173,6 @@ void CEventMovie::StartMovie(void)
 
 		if (m_nCount >= 240)
 		{
-
 			m_nCount = 0;
 			m_nWave++;
 		}
@@ -181,6 +182,14 @@ void CEventMovie::StartMovie(void)
 	case 3:		//初期の玉座モーション
 		pCamera->SetCameraMode(CCamera::CAMERAMODE_EVENTBOSS);
 		pCamera->SetHomingSpeed(0.05f);
+
+		if (m_nCount == 5)
+		{
+			// エフェクトの生成
+			D3DXMATRIX mat = {};
+			D3DXVECTOR3 ef = useful::CalcMatrix(DevilPos, pDevil->GetRot(), mat);
+			CEffekseer* pEffect = MyEffekseer::EffectCreate((CMyEffekseer::TYPE)((int)CMyEffekseer::TYPE_SPAWN_DEVIL), false, DevilPos, pDevil->GetRot(), D3DXVECTOR3(50.0f, 50.0f, 50.0f));
+		}
 
 		if (m_nCount >= 80)
 		{
@@ -204,12 +213,6 @@ void CEventMovie::StartMovie(void)
 
 		if (pDevil->GetMotion()->GetFinish())
 		{
-			if (m_pEventModel != nullptr)
-			{
-				m_pEventModel->Uninit();
-				m_pEventModel = nullptr;
-			}
-
 			pCamera->SetCameraMode(CCamera::CAMERAMODE_SETPOS);
 			pCamera->SetCameraPosMode(
 				D3DXVECTOR3(0.0f, 1600.0f, -900.0f),
@@ -224,6 +227,18 @@ void CEventMovie::StartMovie(void)
 		break;
 
 	case 5:		//
+
+		if (m_pEventModel != nullptr)
+		{
+			m_pEventModel->SetScaling(D3DXVECTOR3(m_pEventModel->GetScaling().x - 0.015f, m_pEventModel->GetScaling().y - 0.015f, m_pEventModel->GetScaling().z - 0.015f));
+			//m_pEventModel->SetPos(D3DXVECTOR3(m_pEventModel->GetPos().x, m_pEventModel->GetPos().y + 3.0f, m_pEventModel->GetPos().z + 5.0f));
+
+			if (m_pEventModel->GetScaling().x <= 0.0f)
+			{
+				m_pEventModel->Uninit();
+				m_pEventModel = nullptr;
+			}
+		}
 
 		if (m_nCount >= 150)
 		{
@@ -392,20 +407,6 @@ void CEventMovie::StageChangeMovie(void)
 			pCamera->SetHomingSpeed(0.9f);	//カメラの目標までのホーミング速度を設定
 			m_fSinFloat = pPlayer->GetPos().y;		//サインカーブ用の初期位置設
 
-			//動き確認用(デバッグ)===========================
-			for (int TestX = 0; TestX < 10; TestX++)
-			{
-				for (int TestY = 0; TestY < 10; TestY++)
-				{
-					CEffect *pEffect = CEffect::Create();
-					pEffect->SetPos(D3DXVECTOR3(PlayerPos.x - 500.0f + TestX * 100.0f, PlayerPos.y - 500.0f + TestY * 100.0f, PlayerPos.z));
-					pEffect->SetRadius(50.0f);
-					pEffect->SetDel(0.0f);
-					pEffect->SetLife(500);
-				}
-			}
-			//===============================================
-
 			m_nCount = 0;		//カウントリセット
 			m_nWave++;
 		}
@@ -477,6 +478,132 @@ void CEventMovie::StageChangeMovie(void)
 		CGame::GetInstance()->GetTime()->SetStopTime(false);	//タイムの進行を進める
 		pCamera->SetCameraMode(CCamera::CAMERAMODE_DOWNVIEW);
 		CGame::GetInstance()->SetEvent(false);
+		break;
+	}
+
+	m_nCount++;
+}
+
+//====================================================================
+//開始時演出
+//====================================================================
+void CEventMovie::EndMovie(void)
+{
+	CCamera* pCamera = CManager::GetInstance()->GetCamera(0);
+	CDevil* pDevil = CDevil::GetListTop();
+	D3DXVECTOR3 DevilPos = pDevil->GetPos();
+	float CameraDistance = 0.0f;
+	float a;
+
+	//float fDistance = sqrtf((PlayerPos.x - DevilPos.x) * (PlayerPos.x - DevilPos.x) + (PlayerPos.z - DevilPos.z) * (PlayerPos.z - DevilPos.z));
+	//float fAngle = atan2f(PlayerPos.z - DevilPos.z, DevilPos.x - PlayerPos.x) + D3DX_PI * 0.5f;
+
+	switch (m_nWave)
+	{
+	case 0:		//初期化
+
+		//カメラの初期位置を設定
+		pCamera->SetBib(true);									//カメラを振動状態に設定
+		pCamera->SetCameraMode(CCamera::CAMERAMODE_EVENTBOSS);	//カメラをイベント用に変更
+		pCamera->SetCameraPosMode(D3DXVECTOR3(0.0f, 1000.0f, -3000.0f), DevilPos);
+		pCamera->SetHomingSpeed(0.1f);
+
+		m_nCount = 0;
+		m_nWave++;
+
+		break;
+
+	case 1:		//
+
+		if (m_nCount >= 120)
+		{
+			pCamera->SetBib(false);									//カメラを振動状態に設定
+			pCamera->SetCameraMode(CCamera::CAMERAMODE_SETPOS);
+			pCamera->SetCameraPosMode(pCamera->GetPosV(), DevilPos);
+			pCamera->SetHomingSpeed(0.5f);
+
+			m_fSinFloat = DevilPos.y;
+
+			//デビルのモーション変更
+			pDevil->SetAction(CDevil::ACTION_RUN, 0);
+
+			// エフェクトの生成
+			D3DXMATRIX mat = {};
+			D3DXVECTOR3 ef = useful::CalcMatrix(DevilPos, pDevil->GetRot(), mat);
+			CEffekseer* pEffect = MyEffekseer::EffectCreate((CMyEffekseer::TYPE)((int)CMyEffekseer::TYPE_SPAWN_DEVIL), false, DevilPos, pDevil->GetRot(), D3DXVECTOR3(50.0f, 50.0f, 50.0f));
+
+			m_nCount = 0;
+			m_nWave++;
+		}
+
+		break;
+
+	case 2:		//
+
+		a = m_fSinFloat + (sinf(D3DX_PI * (float)m_nCount / 120) * 800.0f);
+
+		pDevil->SetRot(D3DXVECTOR3(pDevil->GetRot().x + 0.2f, pDevil->GetRot().y, pDevil->GetRot().z));
+		pDevil->SetPos(D3DXVECTOR3(pDevil->GetPos().x, a, pDevil->GetPos().z));
+		pCamera->SetCameraPosMode(pCamera->GetPosV(), DevilPos);
+
+		if (m_nCount >= 120)
+		{
+			pDevil->SetRot(D3DXVECTOR3(D3DX_PI * 1.0f, 0.0f, 0.0f));
+			pDevil->SetPos(D3DXVECTOR3(pDevil->GetPos().x, pDevil->GetPos().y + 100.0f, pDevil->GetPos().z));
+
+			//デビルの非表示
+			pDevil->SetAction(CDevil::ACTION_NEUTRAL, 0);
+
+			m_nCount = 0;
+			m_nWave++;
+		}
+
+		break;
+
+
+	case 3:		//
+
+		if (m_nCount >= 120)
+		{
+			pDevil->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
+
+			//デビルの非表示
+			pDevil->SetAction(CDevil::ACTION_RUN, 0);
+
+			m_nCount = 0;
+			m_nWave++;
+
+			// エフェクトの生成
+			D3DXMATRIX mat = {};
+			D3DXVECTOR3 ef = useful::CalcMatrix(DevilPos, pDevil->GetRot(), mat);
+			CEffekseer* pEffect = MyEffekseer::EffectCreate((CMyEffekseer::TYPE)((int)CMyEffekseer::TYPE_SPAWN_DEVIL), false, DevilPos, pDevil->GetRot(), D3DXVECTOR3(25.0f, 25.0f, 25.0f));
+		}
+
+		break;
+
+	case 4:		//
+		
+		pDevil->SetPos(D3DXVECTOR3(pDevil->GetPos().x + 10.0f, pDevil->GetPos().y, pDevil->GetPos().z));
+		pCamera->SetCameraPosMode(pCamera->GetPosV(), DevilPos);
+
+		if (m_nCount >= 120)
+		{
+			//デビルの非表示
+			pDevil->SetAction(CDevil::ACTION_NEUTRAL, 0);
+
+			CEffekseer* pEffect = MyEffekseer::EffectCreate((CMyEffekseer::TYPE)((int)CMyEffekseer::TYPE_SPAWN_DEVIL), false, DevilPos, pDevil->GetRot(), D3DXVECTOR3(50.0f, 50.0f, 50.0f));
+
+			m_nCount = 0;
+			m_nWave++;
+		}
+
+		break;
+
+	default:
+
+		//CGame::GetInstance()->GetTime()->SetStopTime(false);	//タイムの進行を進める
+		//CGame::GetInstance()->SetEvent(false);
+		//m_nWave = 0;
 		break;
 	}
 

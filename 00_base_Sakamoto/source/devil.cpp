@@ -192,6 +192,10 @@ void CDevil::Update(void)
 	// キャラクタークラスの更新（継承）
 	CObjectCharacter::Update();
 
+	// グリッドに沿った座標を取得、設定
+	D3DXVECTOR3 pos = GetPos();
+	D3DXVECTOR3 posGrid = m_Grid.ToWorld();
+
 	//イベントモーション
 	if (CScene::GetMode() == CScene::MODE_GAME)
 	{
@@ -199,19 +203,20 @@ void CDevil::Update(void)
 		{
 			//モーションの管理
 			ActionState();
+
+			pos.x = posGrid.x;
+			pos.z = posGrid.z;
 		}
 	}
 	else
 	{
 		//モーションの管理
 		ActionState();
+
+		pos.x = posGrid.x;
+		pos.z = posGrid.z;
 	}
 
-	// グリッドに沿った座標を取得、設定
-	D3DXVECTOR3 pos = GetPos();
-	D3DXVECTOR3 posGrid = m_Grid.ToWorld();
-	pos.x = posGrid.x;
-	pos.z = posGrid.z;
 	SetPos(pos);
 
 	// 影を設定
