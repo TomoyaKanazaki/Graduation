@@ -15,6 +15,7 @@
 #include "Devil.h"
 #include "MapMove.h"
 #include "sound.h"
+#include "number.h"
 
 // 定数定義
 namespace
@@ -23,7 +24,7 @@ namespace
 	const char* MAP_XMODEL_PASS("data\\TXT\\STAGE\\XModel_Tutorial_000.txt");
 	const char* MAP_GIMMICK_PASS("data\\TXT\\STAGE\\Gimmick_Tutorial_000.txt");
 
-	const D3DXVECTOR3 STAGE_POS = D3DXVECTOR3(240.0f, 250.0f, 0.0f);		// 選択項目の位置
+	const D3DXVECTOR3 STAGE_POS = D3DXVECTOR3(640.0f, 250.0f, 0.0f);		// 選択項目の位置
 	const D3DXVECTOR2 STAGE_SIZE = D3DXVECTOR2(300.0f, 300.0f);				// 選択項目の大きさ
 	const D3DXVECTOR2 STAGE_DISTANCE = D3DXVECTOR2(50.0f + (STAGE_SIZE.x * 1.0f), 0.0f + (STAGE_SIZE.y * 0.0f));	// 選択項目の幅
 
@@ -53,7 +54,9 @@ CSelect::CSelect()
 {
 	for (int nCnt = 0; nCnt < NUM_STAGE; nCnt++)
 	{
-		m_pStageSelect[nCnt] = nullptr;
+		m_pStageSelect[nCnt].m_pSelectUI = nullptr;
+		m_pStageSelect[nCnt].m_pSelectNumber01 = nullptr;
+		m_pStageSelect[nCnt].m_pSelectNumber10 = nullptr;
 	}
 
 	for (int nCnt = 0; nCnt < NUM_SCROLLTYPE; nCnt++)
@@ -111,26 +114,48 @@ HRESULT CSelect::Init(void)
 
 	for (int nCnt = 0; nCnt < NUM_STAGE; nCnt++)
 	{
-		if (m_pStageSelect[nCnt] == nullptr)
+		if (m_pStageSelect[nCnt].m_pSelectUI == nullptr)
 		{
 			// ボタン
-			m_pStageSelect[nCnt] = CObject2D::Create();
-			m_pStageSelect[nCnt]->SetPos(D3DXVECTOR3(STAGE_POS.x + (SCROOL_DISTANCE.x * nCnt), STAGE_POS.y + (SCROOL_DISTANCE.y * nCnt), STAGE_POS.z));
-			m_pStageSelect[nCnt]->SetSize(D3DXVECTOR3(500.0f, STAGE_SIZE.y, 0.0f));
+			m_pStageSelect[nCnt].m_pSelectUI = CObject2D::Create();
+			m_pStageSelect[nCnt].m_pSelectUI->SetPos(D3DXVECTOR3(STAGE_POS.x + (STAGE_DISTANCE.x * nCnt), STAGE_POS.y + (STAGE_DISTANCE.y * nCnt), STAGE_POS.z));
+			m_pStageSelect[nCnt].m_pSelectUI->SetSize(D3DXVECTOR3(500.0f, STAGE_SIZE.y, 0.0f));
 		}
 
-		if (m_pStageSelect[nCnt] != nullptr)
+		if (m_pStageSelect[nCnt].m_pSelectNumber01 == nullptr)
+		{
+			m_pStageSelect[nCnt].m_pSelectNumber01 = CNumber::Create();
+			m_pStageSelect[nCnt].m_pSelectNumber01->SetPos(D3DXVECTOR3(
+				m_pStageSelect[nCnt].m_pSelectUI->GetPos().x + 100.0f,
+				m_pStageSelect[nCnt].m_pSelectUI->GetPos().y,
+				m_pStageSelect[nCnt].m_pSelectUI->GetPos().z));
+			m_pStageSelect[nCnt].m_pSelectNumber01->SetSize(D3DXVECTOR3(50.0f, 50.0f, 0.0f));
+			m_pStageSelect[nCnt].m_pSelectNumber01->SetNumber(nCnt + 1);
+		}
+
+		if (m_pStageSelect[nCnt].m_pSelectNumber10 == nullptr)
+		{
+			m_pStageSelect[nCnt].m_pSelectNumber10 = CNumber::Create();
+			m_pStageSelect[nCnt].m_pSelectNumber10->SetPos(D3DXVECTOR3(
+				m_pStageSelect[nCnt].m_pSelectUI->GetPos().x + 50.0f,
+				m_pStageSelect[nCnt].m_pSelectUI->GetPos().y,
+				m_pStageSelect[nCnt].m_pSelectUI->GetPos().z));
+			m_pStageSelect[nCnt].m_pSelectNumber10->SetSize(D3DXVECTOR3(50.0f, 50.0f, 0.0f));
+			m_pStageSelect[nCnt].m_pSelectNumber10->SetNumber((nCnt + 1) / 10);
+		}
+
+		if (m_pStageSelect[nCnt].m_pSelectUI != nullptr)
 		{
 			switch (nCnt)
 			{
 			case 0:
-				m_pStageSelect[nCnt]->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\stage00.png"));
+				m_pStageSelect[nCnt].m_pSelectUI->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\stage00.png"));
 				break;
 			case 1:
-				m_pStageSelect[nCnt]->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\stage01.png"));
+				m_pStageSelect[nCnt].m_pSelectUI->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\stage01.png"));
 				break;
 			case 2:
-				m_pStageSelect[nCnt]->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\stage02.png"));
+				m_pStageSelect[nCnt].m_pSelectUI->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\stage02.png"));
 				break;
 			}
 		}
@@ -142,7 +167,7 @@ HRESULT CSelect::Init(void)
 		{
 			// ボタン
 			m_pScrollSelect[nCnt] = CObject2D::Create();
-			m_pScrollSelect[nCnt]->SetPos(D3DXVECTOR3(300.0f + (500.0f * nCnt), SCROOL_POS.y + (STAGE_DISTANCE.y * nCnt), SCROOL_POS.z));
+			m_pScrollSelect[nCnt]->SetPos(D3DXVECTOR3(300.0f + (500.0f * nCnt), SCROOL_POS.y + (SCROOL_DISTANCE.y * nCnt), SCROOL_POS.z));
 			m_pScrollSelect[nCnt]->SetSize(D3DXVECTOR3(400.0f, 200.0f, 0.0f));
 			m_pScrollSelect[nCnt]->SetColor(SELECT_COLOR_FALSE);
 		}
@@ -166,7 +191,7 @@ HRESULT CSelect::Init(void)
 		{
 			// スクロール
 			m_pTexScroll[nCnt] = CObject2D::Create();
-			m_pTexScroll[nCnt]->SetPos(D3DXVECTOR3(550.0f+ (470.0f * nCnt), SCROOL_POS.y + (STAGE_DISTANCE.y * nCnt), SCROOL_POS.z));
+			m_pTexScroll[nCnt]->SetPos(D3DXVECTOR3(550.0f+ (470.0f * nCnt), SCROOL_POS.y + (SCROOL_DISTANCE.y * nCnt), SCROOL_POS.z));
 			m_pTexScroll[nCnt]->SetSize(D3DXVECTOR3(100.0f, 100.0f, 0.0f));
 		}
 		// スクロール
@@ -307,17 +332,46 @@ void CSelect::StageSelect(void)
 
 	for (int nCnt = 0; nCnt < NUM_STAGE; nCnt++)
 	{
-		if (m_pStageSelect[nCnt] != nullptr)
+		if (m_pStageSelect[nCnt].m_pSelectUI != nullptr)
 		{
 			if (m_nSelect == nCnt)
 			{
-				m_pStageSelect[nCnt]->SetColor(SELECT_COLOR_TRUE);
+				m_pStageSelect[nCnt].m_pSelectUI->SetColor(SELECT_COLOR_TRUE);
 			}
 			else
 			{
-				m_pStageSelect[nCnt]->SetColor(SELECT_COLOR_FALSE);
+				m_pStageSelect[nCnt].m_pSelectUI->SetColor(SELECT_COLOR_FALSE);
 			}
 		}
+	}
+
+	for (int nCnt = 0; nCnt < NUM_STAGE; nCnt++)
+	{
+		//if (m_nSelect - 2 <= nCnt && nCnt <= m_nSelect + 2)
+		//{//重くなった時用
+			if (m_pStageSelect[nCnt].m_pSelectUI != nullptr)
+			{
+				// ボタン
+				m_pStageSelect[nCnt].m_pSelectUI->SetPos(D3DXVECTOR3(STAGE_POS.x + (STAGE_DISTANCE.x * (nCnt - m_nSelect)), STAGE_POS.y + (STAGE_DISTANCE.y * nCnt), STAGE_POS.z));
+				//m_pStageSelect[nCnt].m_pSelectUI->SetSize(D3DXVECTOR3(500.0f, STAGE_SIZE.y, 0.0f));
+			}
+
+			if (m_pStageSelect[nCnt].m_pSelectNumber01 != nullptr)
+			{
+				m_pStageSelect[nCnt].m_pSelectNumber01->SetPos(D3DXVECTOR3(
+					m_pStageSelect[nCnt].m_pSelectUI->GetPos().x + 100.0f,
+					m_pStageSelect[nCnt].m_pSelectUI->GetPos().y,
+					m_pStageSelect[nCnt].m_pSelectUI->GetPos().z));
+			}
+
+			if (m_pStageSelect[nCnt].m_pSelectNumber10 != nullptr)
+			{
+				m_pStageSelect[nCnt].m_pSelectNumber10->SetPos(D3DXVECTOR3(
+					m_pStageSelect[nCnt].m_pSelectUI->GetPos().x + 50.0f,
+					m_pStageSelect[nCnt].m_pSelectUI->GetPos().y,
+					m_pStageSelect[nCnt].m_pSelectUI->GetPos().z));
+			}
+		//}
 	}
 }
 
