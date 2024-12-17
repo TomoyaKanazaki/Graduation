@@ -1361,6 +1361,10 @@ float CMapMove::MoveSlopeX(float Move, SPEED& Speed)
 	{
 		Speed = SPEED_DOWN;
 	}
+	else
+	{
+		Speed = SPEED_NONE;
+	}
 
 	return fSlopeMove;
 }
@@ -1390,6 +1394,10 @@ float CMapMove::MoveSlopeZ(float Move, SPEED& Speed)
 	else if (fSlopeMove < 1.0f)
 	{
 		Speed = SPEED_DOWN;
+	}
+	else
+	{
+		Speed = SPEED_NONE;
 	}
 
 	return fSlopeMove;
