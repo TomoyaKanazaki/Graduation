@@ -44,12 +44,12 @@ namespace
 {
 	const D3DXVECTOR3 CHECK_POS[]
 	{// それぞれの位置
-		{ 80.0f, 60.0f, 0.0f },	 // 移動の座標
-		{ 80.0f, 115.0f, 0.0f }, // 十字架座標
-		{ 80.0f, 170.0f, 0.0f }, // ボワボワの座標
-		{ 80.0f, 225.0f, 0.0f }, // 攻撃の座標
-		{ 80.0f, 280.0f, 0.0f }, // 聖書の座標
-		{ 80.0f, 334.0f, 0.0f }, // デビルホールの座標
+		{ 170.0f, 60.0f, 0.0f },  // 移動の座標
+		{ 170.0f, 115.0f, 0.0f }, // 十字架座標
+		{ 170.0f, 170.0f, 0.0f }, // ボワボワの座標
+		{ 170.0f, 225.0f, 0.0f }, // 攻撃の座標
+		{ 170.0f, 280.0f, 0.0f }, // 聖書の座標
+		{ 170.0f, 334.0f, 0.0f }, // デビルホールの座標
 	};
 
 	const char* TUTORIAL_TEX[]
@@ -91,20 +91,18 @@ namespace
 	const std::string CHECKBOX_TEX = "data\\TEXTURE\\UI\\tutorial_check_box.png";			// チェックボックスのテクスチャ
 	const std::string TUTORIAL_FRAME_TEX = "data\\TEXTURE\\UI\\tutorial_frame.png";		// チュートリアルガイドの外枠のテクスチャ
 
-	const float TEXT_POSX = 240.0f;			// テキストのX座標
+	const float CHECK_POS_Y = 200.0f;		// チェックマーカーのy座標
 
 	const CMapSystem::GRID FIELD_GRID = { 64, 64 }; // 下の床のサイズ
 	const CMapSystem::GRID BIBLE_POS = { 11, 10 };	// 聖書の位置
 
 	const D3DXVECTOR3 BOTTOM_FIELD_POS = D3DXVECTOR3(0.0f, -1000.0f, 0.0f);	// 下床の位置
-	const D3DXVECTOR3 GUIDE_POS = D3DXVECTOR3(250.0f, 200.0f, 0.0f);	// チュートリアルガイドの位置
 	const D3DXVECTOR3 GUIDE_SIZE = D3DXVECTOR3(420.0f, 360.0f, 0.0f);	// チュートリアルガイドのサイズ
 	const D3DXVECTOR3 BOX_SIZE = D3DXVECTOR3(50.0f, 50.0f, 0.0f);		// チェックボックスのサイズ
-	const D3DXVECTOR3 MARKER_POS = D3DXVECTOR3(50.0f, 160.0f, 0.0f);	// マーカー位置
-	const D3DXVECTOR3 MARKER_2P_POS = D3DXVECTOR3(410.0f, 160.0f, 0.0f);	// 2Pのマーカー位置
 	const D3DXVECTOR3 MARKER_SIZE = D3DXVECTOR3(50.0f, 50.0f, 0.0f);	// マーカーサイズ
 	const D3DXVECTOR3 BUTTON_POS = D3DXVECTOR3(1100.0f, 650.0f, 0.0f);	// 遷移ボタンの位置
 	const D3DXVECTOR3 BUTTON_SIZE = D3DXVECTOR3(300.0f, 250.0f, 0.0f);	// 遷移ボタンのサイズ
+	const D3DXVECTOR3 TEXTURE_CENTER_POS = D3DXVECTOR3(225.0f, 200.0f, 0.0f);	// テクスチャの中心座標
 
 	const D3DXCOLOR MASK_DEFAULT_COLOR = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);			// 通常のステンシルカラー(白)
 	const D3DXCOLOR MASK_PLAYER_COLOR = D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f);			// タマゴンのステンシルカラー(緑)
@@ -218,17 +216,23 @@ HRESULT CTutorial::Init(void)
 	m_bSet = false;
 
 	// チュートリアルガイドの外枠
-	CTutorialUi::Create(GUIDE_POS, GUIDE_SIZE, TUTORIAL_FRAME_TEX, 1.0f);
+	CTutorialUi::Create(TEXTURE_CENTER_POS, GUIDE_SIZE, TUTORIAL_FRAME_TEX, 1.0f);
 	
 	for (int i = 0; i < TYPE_MAX; ++i)
 	{// 列挙分チェックボックスの生成
-		CTutorialUi::Create(CHECK_POS[i], BOX_SIZE, CHECKBOX_TEX, 1.0f);
-		CTutorialUi::Create(D3DXVECTOR3(CHECK_POS[i].x, CHECK_POS[i].y, CHECK_POS[i].z), BOX_SIZE, CHECKBOX_TEX, 1.0f);
+		CTutorialUi::Create(D3DXVECTOR3(TEXTURE_CENTER_POS.x - CHECK_POS[i].x,
+							TEXTURE_CENTER_POS.y + CHECK_POS[i].y - CHECK_POS_Y, TEXTURE_CENTER_POS.z),
+							BOX_SIZE, CHECKBOX_TEX, 1.0f);
+
+		CTutorialUi::Create(D3DXVECTOR3(TEXTURE_CENTER_POS.x + CHECK_POS[i].x,
+							TEXTURE_CENTER_POS.y + CHECK_POS[i].y - CHECK_POS_Y, TEXTURE_CENTER_POS.z),
+							BOX_SIZE, CHECKBOX_TEX, 1.0f);
 	}
 
 	for (int i = 0; i < TYPE_MAX; ++i)
 	{// テキストの生成
-		m_pText.push_back(CTutorialUi::Create(D3DXVECTOR3(TEXT_POSX, CHECK_POS[i].y, CHECK_POS[i].z), TEXT_SIZE[i], TUTORIAL_TEX[i], 1.0f));
+		m_pText.push_back(CTutorialUi::Create(D3DXVECTOR3(TEXTURE_CENTER_POS.x, CHECK_POS[i].y, CHECK_POS[i].z), 
+												TEXT_SIZE[i], TUTORIAL_TEX[i], 1.0f));
 	}
 
 	// 遷移ボタンの生成
