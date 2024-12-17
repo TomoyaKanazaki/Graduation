@@ -200,6 +200,13 @@ void CObject::DrawAll(int nCnt)
 
 	for (int nCntPriority = 0; nCntPriority < PRIORITY_MAX; nCntPriority++)
 	{
+		// エフェクトを描画する
+		if (nCntPriority == 5)
+		{
+			// エフェクシアの描画
+			CManager::GetInstance()->GetEffect()->Draw();
+		}
+
 		CObject* pObject = m_pTop[nCntPriority];	//先頭オブジェクトを代入
 
 		while (pObject != nullptr)

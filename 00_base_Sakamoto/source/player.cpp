@@ -100,7 +100,6 @@ m_pUpEgg(nullptr),
 m_pDownEgg(nullptr),
 m_bInvincible(true),
 m_nInvincibleCount(0),
-m_pScore(nullptr),
 m_nTime(0),
 m_pEffectEgg(nullptr),
 m_pEffectSpeed(nullptr),
@@ -246,12 +245,6 @@ void CPlayer::Uninit(void)
 
 	// キャラクタークラスの終了（継承）
 	CObjectCharacter::Uninit();
-
-	// スコアの削除
-	if (m_pScore != nullptr)
-	{
-		m_pScore = nullptr;
-	}
 
 	// 移動状態の破棄
 	if (m_pMoveState != nullptr)

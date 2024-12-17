@@ -58,7 +58,7 @@ public:
 		SETUP_TYPE_MAX,				// ç≈ëÂ
 	};
 
-	static CSlopeDevice* Create(const char* pModelNameSlopeDevice, const char* pModelNameEnemy);
+	static CSlopeDevice* Create(const std::string pModelNameSlopeDevice, const std::string pModelNameEnemy);
 
 	HRESULT Init(void);
 	void Uninit(void);
@@ -76,7 +76,7 @@ public:
 	static CListManager<CSlopeDevice>* GetList(void); // ÉäÉXÉgéÊìæ
 
 private:
-	HRESULT InitModel(const char* pModelNameSlopeDevice, const char* pModelNameEnemy);
+	HRESULT InitModel(const std::string pModelNameSlopeDevice, const std::string pModelNameEnemy);
 
 	void StateManager(void);
 

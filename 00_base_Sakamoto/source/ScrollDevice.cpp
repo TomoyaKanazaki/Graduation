@@ -49,7 +49,7 @@ CScrollDevice::~CScrollDevice()
 //====================================================================
 //生成処理
 //====================================================================
-CScrollDevice* CScrollDevice::Create(const char* pModelNameSlopeDevice, const char* pModelNameEnemy)
+CScrollDevice* CScrollDevice::Create(const std::string pModelNameSlopeDevice, const std::string pModelNameEnemy)
 {
 	// オブジェクトの生成処理
 	CScrollDevice* pInstance = new CScrollDevice();
@@ -197,7 +197,7 @@ void CScrollDevice::SetState(STATE state)
 //====================================================================
 // モデル関連の初期化処理
 //====================================================================
-HRESULT CScrollDevice::InitModel(const char* pModelNameScrollDevice, const char* pModelNameEnemy)
+HRESULT CScrollDevice::InitModel(const std::string pModelNameScrollDevice, const std::string pModelNameEnemy)
 {
 	CObjectCharacter::SetTxtCharacter(pModelNameScrollDevice, 0);
 

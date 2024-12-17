@@ -44,12 +44,12 @@ namespace
 {
 	const D3DXVECTOR3 CHECK_POS[]
 	{// それぞれの位置
-		{ 80.0f, 60.0f, 0.0f },	 // 移動の座標
-		{ 80.0f, 115.0f, 0.0f }, // 十字架座標
-		{ 80.0f, 170.0f, 0.0f }, // ボワボワの座標
-		{ 80.0f, 225.0f, 0.0f }, // 攻撃の座標
-		{ 80.0f, 280.0f, 0.0f }, // 聖書の座標
-		{ 80.0f, 334.0f, 0.0f }, // デビルホールの座標
+		{ 170.0f, 60.0f, 0.0f },  // 移動の座標
+		{ 170.0f, 115.0f, 0.0f }, // 十字架座標
+		{ 170.0f, 170.0f, 0.0f }, // ボワボワの座標
+		{ 170.0f, 225.0f, 0.0f }, // 攻撃の座標
+		{ 170.0f, 280.0f, 0.0f }, // 聖書の座標
+		{ 170.0f, 334.0f, 0.0f }, // デビルホールの座標
 	};
 
 	const char* TUTORIAL_TEX[]
@@ -82,30 +82,27 @@ namespace
 	const int ITEM_REF = 4;			// アイテムのステンシル参照値
 	const int MEDAMAN_REF = 102;	// メダマンのステンシル参照値
 
-	const char* BOTTOM_FIELD_TEX = "data\\TEXTURE\\Field\\outside.jpg";		// 下床のテクスチャ
-	const char* SCROLL_DEVICE_MODEL = "data\\TXT\\MOTION\\02_staging\\00_ScrollDevice\\motion_scrolldevice.txt";
-	const char* SCROLL_DEVICE_ENEMY_MODEL = "data\\TXT\\MOTION\\01_enemy\\motion_medaman.txt";
-	const char* SLOPE_DEVICE_MODEL = "data\\TXT\\MOTION\\02_staging\\01_SlopeDevice\\motion_slopedevice.txt";
-	const char* SLOPE_DEVICE_ENEMY_MODEL = "data\\TXT\\MOTION\\01_enemy\\motion_medaman.txt";
-	const char* CHECK_MARKER_TEX = "data\\TEXTURE\\UI\\tutorial_check.png";	// チェックマーカーテクスチャ
-	const char* BUTTON_TEX = "data\\TEXTURE\\UI\\return_title.png";	// 遷移ボタンテクスチャ
+	const std::string BOTTOM_FIELD_TEX = "data\\TEXTURE\\Field\\outside.jpg";		// 下床のテクスチャ
+	const std::string SCROLL_DEVICE_MODEL = "data\\TXT\\MOTION\\02_staging\\00_ScrollDevice\\motion_scrolldevice.txt";
+	const std::string SCROLL_DEVICE_ENEMY_MODEL = "data\\TXT\\MOTION\\01_enemy\\motion_medaman.txt";
+	const std::string CHECK_MARKER_TEX = "data\\TEXTURE\\UI\\tutorial_check.png";	// チェックマーカーテクスチャ
+	const std::string BUTTON_TEX = "data\\TEXTURE\\UI\\return_title.png";	// 遷移ボタンテクスチャ
 
-	const char* CHECKBOX_TEX = "data\\TEXTURE\\UI\\tutorial_check_box.png";			// チェックボックスのテクスチャ
-	const char* TUTORIAL_FRAME_TEX = "data\\TEXTURE\\UI\\tutorial_frame.png";		// チュートリアルガイドの外枠のテクスチャ
+	const std::string CHECKBOX_TEX = "data\\TEXTURE\\UI\\tutorial_check_box.png";			// チェックボックスのテクスチャ
+	const std::string TUTORIAL_FRAME_TEX = "data\\TEXTURE\\UI\\tutorial_frame.png";		// チュートリアルガイドの外枠のテクスチャ
 
-	const float TEXT_POSX = 240.0f;			// テキストのX座標
+	const float CHECK_POS_Y = 200.0f;		// チェックマーカーのy座標
 
 	const CMapSystem::GRID FIELD_GRID = { 64, 64 }; // 下の床のサイズ
 	const CMapSystem::GRID BIBLE_POS = { 11, 10 };	// 聖書の位置
 
 	const D3DXVECTOR3 BOTTOM_FIELD_POS = D3DXVECTOR3(0.0f, -1000.0f, 0.0f);	// 下床の位置
-	const D3DXVECTOR3 GUIDE_POS = D3DXVECTOR3(250.0f, 200.0f, 0.0f);	// チュートリアルガイドの位置
 	const D3DXVECTOR3 GUIDE_SIZE = D3DXVECTOR3(420.0f, 360.0f, 0.0f);	// チュートリアルガイドのサイズ
 	const D3DXVECTOR3 BOX_SIZE = D3DXVECTOR3(50.0f, 50.0f, 0.0f);		// チェックボックスのサイズ
-	const D3DXVECTOR3 MARKER_POS = D3DXVECTOR3(50.0f, 160.0f, 0.0f);	// マーカー位置
 	const D3DXVECTOR3 MARKER_SIZE = D3DXVECTOR3(50.0f, 50.0f, 0.0f);	// マーカーサイズ
 	const D3DXVECTOR3 BUTTON_POS = D3DXVECTOR3(1100.0f, 650.0f, 0.0f);	// 遷移ボタンの位置
 	const D3DXVECTOR3 BUTTON_SIZE = D3DXVECTOR3(300.0f, 250.0f, 0.0f);	// 遷移ボタンのサイズ
+	const D3DXVECTOR3 TEXTURE_CENTER_POS = D3DXVECTOR3(225.0f, 200.0f, 0.0f);	// テクスチャの中心座標
 
 	const D3DXCOLOR MASK_DEFAULT_COLOR = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);			// 通常のステンシルカラー(白)
 	const D3DXCOLOR MASK_PLAYER_COLOR = D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f);			// タマゴンのステンシルカラー(緑)
@@ -144,7 +141,6 @@ m_pDevil(nullptr),			// デビルのポインタ
 m_bTutorialClear(false),	// ゲームクリアのフラグ
 m_Wireframe(false),			// ワイヤーフレーム切り替え
 m_Slow(false),				// スロー演出フラグ
-m_pTutorialGuide(nullptr),	// チュートリアルガイドのポインタ
 InitPlayerPos(D3DXVECTOR3()),	// プレイヤーの初期位置
 m_nNumBible(0),				// 聖書の総数
 m_bSet(false)
@@ -220,21 +216,27 @@ HRESULT CTutorial::Init(void)
 	m_bSet = false;
 
 	// チュートリアルガイドの外枠
-	CTutorialUi::Create(GUIDE_POS, GUIDE_SIZE, TUTORIAL_FRAME_TEX);
+	CTutorialUi::Create(TEXTURE_CENTER_POS, GUIDE_SIZE, TUTORIAL_FRAME_TEX, 1.0f);
 	
 	for (int i = 0; i < TYPE_MAX; ++i)
 	{// 列挙分チェックボックスの生成
-		CTutorialUi::Create(CHECK_POS[i], BOX_SIZE, CHECKBOX_TEX);
-		CTutorialUi::Create(D3DXVECTOR3(410.0f, CHECK_POS[i].y, CHECK_POS[i].z), BOX_SIZE, CHECKBOX_TEX);
+		CTutorialUi::Create(D3DXVECTOR3(TEXTURE_CENTER_POS.x - CHECK_POS[i].x,
+							TEXTURE_CENTER_POS.y + CHECK_POS[i].y - CHECK_POS_Y, TEXTURE_CENTER_POS.z),
+							BOX_SIZE, CHECKBOX_TEX, 1.0f);
+
+		CTutorialUi::Create(D3DXVECTOR3(TEXTURE_CENTER_POS.x + CHECK_POS[i].x,
+							TEXTURE_CENTER_POS.y + CHECK_POS[i].y - CHECK_POS_Y, TEXTURE_CENTER_POS.z),
+							BOX_SIZE, CHECKBOX_TEX, 1.0f);
 	}
 
 	for (int i = 0; i < TYPE_MAX; ++i)
 	{// テキストの生成
-		CTutorialUi::Create(D3DXVECTOR3(TEXT_POSX, CHECK_POS[i].y, CHECK_POS[i].z), TEXT_SIZE[i], TUTORIAL_TEX[i]);
+		m_pText.push_back(CTutorialUi::Create(D3DXVECTOR3(TEXTURE_CENTER_POS.x, CHECK_POS[i].y, CHECK_POS[i].z), 
+												TEXT_SIZE[i], TUTORIAL_TEX[i], 1.0f));
 	}
 
 	// 遷移ボタンの生成
-	CTutorialUi::Create(BUTTON_POS, BUTTON_SIZE, BUTTON_TEX);
+	CTutorialUi::Create(BUTTON_POS, BUTTON_SIZE, BUTTON_TEX, 1.0f);
 
 	for (int i = 0; i < TYPE_MAX; ++i)
 	{// チェックマーカー非表示
@@ -335,6 +337,11 @@ void CTutorial::Update(void)
 			CTutorialCheck::Create(CHECK_POS[TYPE_MOVE]);
 			m_bCheck[TYPE_MOVE] = true;
 
+			if (m_bCheck[TYPE_MOVE] == true)
+			{// テキストの不透明度を下げる
+				SetUIAlpha(TYPE_MOVE, 0.5f);
+			}
+
 			// チュートリアル段階を進める
 			m_nTutorialWave += 1;
 		}
@@ -344,6 +351,11 @@ void CTutorial::Update(void)
 		{// 十字架取得
 			CTutorialCheck::Create(CHECK_POS[TYPE_CROSS]);
 			m_bCheck[TYPE_CROSS] = true;
+
+			if (m_bCheck[TYPE_CROSS] == true)
+			{// テキストの不透明度を下げる
+				SetUIAlpha(TYPE_CROSS, 0.5f);
+			}
 
 			// チュートリアル段階を進める
 			m_nTutorialWave += 1;
@@ -356,6 +368,11 @@ void CTutorial::Update(void)
 			
 			m_bCheck[TYPE_BIBLE] = true;
 
+			if (m_bCheck[TYPE_BIBLE] == true)
+			{// テキストの不透明度を下げる
+				SetUIAlpha(TYPE_BIBLE, 0.5f);
+			}
+
 			// チュートリアル段階を進める
 			m_nTutorialWave += 1;
 		}
@@ -367,6 +384,11 @@ void CTutorial::Update(void)
 		CTutorialCheck::Create(CHECK_POS[TYPE_ATTACK]);
 		m_bCheck[TYPE_ATTACK] = true;
 
+		if (m_bCheck[TYPE_ATTACK] == true)
+		{// テキストの不透明度を下げる
+			SetUIAlpha(TYPE_ATTACK, 0.5f);
+		}
+
 		// チュートリアル段階を進める
 		m_nTutorialWave += 1;
 	}
@@ -376,6 +398,11 @@ void CTutorial::Update(void)
 	{// ボワボワの総数減少
 		CTutorialCheck::Create(CHECK_POS[TYPE_BOWABOWA]);
 		m_bCheck[TYPE_BOWABOWA] = true;
+
+		if (m_bCheck[TYPE_BOWABOWA] == true)
+		{// テキストの不透明度を下げる
+			SetUIAlpha(TYPE_BOWABOWA, 0.5f);
+		}
 
 		// チュートリアル段階を進める
 		m_nTutorialWave += 1;
@@ -397,6 +424,11 @@ void CTutorial::Update(void)
 		{// デビルホールの4箇所の内1箇所埋まった
 			CTutorialCheck::Create(CHECK_POS[TYPE_DEVILHOLE]);
 			m_bCheck[TYPE_DEVILHOLE] = true;
+
+			if (m_bCheck[TYPE_DEVILHOLE] == true)
+			{// テキストの不透明度を下げる
+				SetUIAlpha(TYPE_DEVILHOLE, 0.5f);
+			}
 
 			// チュートリアル段階を進める
 			m_nTutorialWave += 1;
@@ -597,7 +629,7 @@ void CTutorial::DeleteMap(void)
 //====================================================================
 // レールブロックの読み込み配置
 //====================================================================
-void CTutorial::LoadStageRailBlock(std::string pFilename)
+void CTutorial::LoadStageRailBlock(const std::string pFilename)
 {
 	//ファイルを開く
 	FILE* pFile = fopen(pFilename.c_str(), "r");
@@ -674,4 +706,12 @@ void CTutorial::SetBgObjTest(void)
 		pScrollDevice = CScrollDevice::Create(SCROLL_DEVICE_MODEL, SCROLL_DEVICE_ENEMY_MODEL);
 		pScrollDevice->SetPos(D3DXVECTOR3(-1300.0f, 0.0f, 0.0f));
 	}
+}
+
+//==========================================
+//  UIの透明度を変更
+//==========================================
+void CTutorial::SetUIAlpha(const CHECKTYPE type, const float fAlpha)
+{
+	m_pText.at(type)->SetAlpha(fAlpha);
 }

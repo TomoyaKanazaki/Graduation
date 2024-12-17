@@ -31,8 +31,8 @@ public:
 	void SetAnimTex(const int nPattern, const int nWidthPtrn, const int nHeightPtrn);
 	void SetScroll(D3DXVECTOR2 Tex);			//テクスチャ座標の設定
 	void SetColor(D3DXCOLOR col);				//頂点カラーの設定
-	void SetColorA(float A);					//頂点カラーの設定
-	void SetTexture(std::string name);
+	void SetAlpha(float A);					//頂点カラーの設定
+	void SetTexture(const std::string name);
 
 	void SetPos(D3DXVECTOR3 pos) { m_pos = pos; }
 	D3DXVECTOR3 GetPos(void) { return m_pos; }

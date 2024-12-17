@@ -53,7 +53,7 @@ public:
 	void Update(void);
 	void SetModel(CModel** ppModel, int nNumModel);
 	void SetSlowVaule(float fValue) { m_fSlowVaule = fValue; }
-	void LoadData(std::string pFilename);
+	void LoadData(const std::string pFilename);
 	int GetType(void) { return m_nType; }
 	int GetKey(void) { return m_nKey; }
 	float GetCounter(void) { return m_fCounter; }

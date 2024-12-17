@@ -37,7 +37,7 @@ public:
 	void InitUI();
 	void DebugKey(void);
 
-	CScore* GetScore(void) { return m_pScore; }
+	CScore* GetScore(void) override { return m_pScore; }
 	CLifeUi* GetLifeUI(void) { return m_pLifeUi; }
 
 private:

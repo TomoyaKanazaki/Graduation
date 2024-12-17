@@ -31,7 +31,7 @@ public:
 	void SetAnim(D3DXVECTOR2 Tex);															//テクスチャ座標の設定
 	void SetColor(D3DXCOLOR col);															//頂点カラーの設定
 	void SetAlpha(float A) { m_Color.a = A; SetColor(m_Color); }							//頂点不透明度の設定
-	void SetTexture(const char* name);
+	void SetTexture(const std::string name);
 	void SetVtxSize(int vtxWidth, int vtxHeight);
 
 	void SetPos(D3DXVECTOR3 pos) { m_pos = pos; }

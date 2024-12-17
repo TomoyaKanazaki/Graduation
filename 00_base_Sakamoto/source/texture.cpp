@@ -80,7 +80,7 @@ void CTexture::Unload(void)
 //========================================
 //テクスチャ個別割り当て
 //========================================
-int CTexture::Regist(std::string pfile)
+int CTexture::Regist(const std::string pfile)
 {
 	for (int nCntTex = 0; nCntTex < MAX_TEXTURE; nCntTex++)
 	{

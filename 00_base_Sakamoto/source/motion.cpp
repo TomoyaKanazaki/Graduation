@@ -208,7 +208,7 @@ void CMotion::SetModel(CModel **ppModel, int nNumModel)
 //====================================================================
 //モーションのロード処理
 //====================================================================
-void CMotion::LoadData(std::string pFilename)
+void CMotion::LoadData(const std::string pFilename)
 {
 	FILE *pFile; //ファイルポインタを宣言
 
