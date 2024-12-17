@@ -33,6 +33,7 @@ class CDevil;
 class CMask;
 class CEventMovie;
 class CTutorialCheck;
+class CTutorialUi;
 
 class CAim;
 
@@ -125,7 +126,7 @@ private:
 	CObjmeshDome* m_pMeshDomeUp;			// メッシュドーム
 	CObjmeshField* m_pMapField;				// マップフィールド
 	CCubeBlock* m_pCubeBlock;				// キューブブロック
-	CObject2D* m_pTutorialGuide;			// チュートリアルガイド
+	CTutorialUi* m_pTutorialUI;
 };
 
 #endif

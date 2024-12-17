@@ -103,6 +103,7 @@ namespace
 	const D3DXVECTOR3 GUIDE_SIZE = D3DXVECTOR3(420.0f, 360.0f, 0.0f);	// チュートリアルガイドのサイズ
 	const D3DXVECTOR3 BOX_SIZE = D3DXVECTOR3(50.0f, 50.0f, 0.0f);		// チェックボックスのサイズ
 	const D3DXVECTOR3 MARKER_POS = D3DXVECTOR3(50.0f, 160.0f, 0.0f);	// マーカー位置
+	const D3DXVECTOR3 MARKER_2P_POS = D3DXVECTOR3(410.0f, 160.0f, 0.0f);	// 2Pのマーカー位置
 	const D3DXVECTOR3 MARKER_SIZE = D3DXVECTOR3(50.0f, 50.0f, 0.0f);	// マーカーサイズ
 	const D3DXVECTOR3 BUTTON_POS = D3DXVECTOR3(1100.0f, 650.0f, 0.0f);	// 遷移ボタンの位置
 	const D3DXVECTOR3 BUTTON_SIZE = D3DXVECTOR3(300.0f, 250.0f, 0.0f);	// 遷移ボタンのサイズ
@@ -144,7 +145,6 @@ m_pDevil(nullptr),			// デビルのポインタ
 m_bTutorialClear(false),	// ゲームクリアのフラグ
 m_Wireframe(false),			// ワイヤーフレーム切り替え
 m_Slow(false),				// スロー演出フラグ
-m_pTutorialGuide(nullptr),	// チュートリアルガイドのポインタ
 InitPlayerPos(D3DXVECTOR3()),	// プレイヤーの初期位置
 m_nNumBible(0),				// 聖書の総数
 m_bSet(false)
@@ -220,21 +220,21 @@ HRESULT CTutorial::Init(void)
 	m_bSet = false;
 
 	// チュートリアルガイドの外枠
-	CTutorialUi::Create(GUIDE_POS, GUIDE_SIZE, TUTORIAL_FRAME_TEX);
+	CTutorialUi::Create(GUIDE_POS, GUIDE_SIZE, TUTORIAL_FRAME_TEX, 1.0f);
 	
 	for (int i = 0; i < TYPE_MAX; ++i)
 	{// 列挙分チェックボックスの生成
-		CTutorialUi::Create(CHECK_POS[i], BOX_SIZE, CHECKBOX_TEX);
-		CTutorialUi::Create(D3DXVECTOR3(410.0f, CHECK_POS[i].y, CHECK_POS[i].z), BOX_SIZE, CHECKBOX_TEX);
+		CTutorialUi::Create(CHECK_POS[i], BOX_SIZE, CHECKBOX_TEX, 1.0f);
+		CTutorialUi::Create(D3DXVECTOR3(CHECK_POS[i].x, CHECK_POS[i].y, CHECK_POS[i].z), BOX_SIZE, CHECKBOX_TEX, 1.0f);
 	}
 
 	for (int i = 0; i < TYPE_MAX; ++i)
-	{// テキストの生成
-		CTutorialUi::Create(D3DXVECTOR3(TEXT_POSX, CHECK_POS[i].y, CHECK_POS[i].z), TEXT_SIZE[i], TUTORIAL_TEX[i]);
+	{// 列挙分テキストの生成
+		CTutorialUi::Create(D3DXVECTOR3(TEXT_POSX, CHECK_POS[i].y, CHECK_POS[i].z), TEXT_SIZE[i], TUTORIAL_TEX[i], 1.0f);
 	}
 
 	// 遷移ボタンの生成
-	CTutorialUi::Create(BUTTON_POS, BUTTON_SIZE, BUTTON_TEX);
+	CTutorialUi::Create(BUTTON_POS, BUTTON_SIZE, BUTTON_TEX, 1.0f);
 
 	for (int i = 0; i < TYPE_MAX; ++i)
 	{// チェックマーカー非表示
@@ -334,6 +334,11 @@ void CTutorial::Update(void)
 		{// 座標が一致しなかったら
 			CTutorialCheck::Create(CHECK_POS[TYPE_MOVE]);
 			m_bCheck[TYPE_MOVE] = true;
+
+			if (m_bCheck[TYPE_MOVE] == true)
+			{// テキストの不透明度を下げる
+
+			}
 
 			// チュートリアル段階を進める
 			m_nTutorialWave += 1;
