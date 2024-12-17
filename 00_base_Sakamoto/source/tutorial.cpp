@@ -231,8 +231,9 @@ HRESULT CTutorial::Init(void)
 
 	for (int i = 0; i < TYPE_MAX; ++i)
 	{// テキストの生成
-		m_pText.push_back(CTutorialUi::Create(D3DXVECTOR3(TEXTURE_CENTER_POS.x, CHECK_POS[i].y, CHECK_POS[i].z), 
-												TEXT_SIZE[i], TUTORIAL_TEX[i], 1.0f));
+		m_pText.push_back(CTutorialUi::Create(
+			D3DXVECTOR3(TEXTURE_CENTER_POS.x, CHECK_POS[i].y, CHECK_POS[i].z), 
+			TEXT_SIZE[i], TUTORIAL_TEX[i], 1.0f));
 	}
 
 	// 遷移ボタンの生成
@@ -334,7 +335,8 @@ void CTutorial::Update(void)
 		if (m_gridPlayer.at(nNumPlayer) != player->GetGrid()
 			&& m_bCheck[TYPE_MOVE] == false)
 		{// 座標が一致しなかったら
-			CTutorialCheck::Create(CHECK_POS[TYPE_MOVE]);
+			CTutorialCheck::Create(D3DXVECTOR3(TEXTURE_CENTER_POS.x - CHECK_POS[TYPE_MOVE].x, 
+									TEXTURE_CENTER_POS.y + CHECK_POS[TYPE_MOVE].y - CHECK_POS_Y, TEXTURE_CENTER_POS.z));
 			m_bCheck[TYPE_MOVE] = true;
 
 			if (m_bCheck[TYPE_MOVE] == true)
@@ -349,7 +351,8 @@ void CTutorial::Update(void)
 		if (player->GetItemType() == CPlayer::TYPE_CROSS
 			&& m_bCheck[TYPE_CROSS] == false)
 		{// 十字架取得
-			CTutorialCheck::Create(CHECK_POS[TYPE_CROSS]);
+			CTutorialCheck::Create(D3DXVECTOR3(TEXTURE_CENTER_POS.x - CHECK_POS[TYPE_CROSS].x,
+				TEXTURE_CENTER_POS.y + CHECK_POS[TYPE_CROSS].y - CHECK_POS_Y, TEXTURE_CENTER_POS.z));
 			m_bCheck[TYPE_CROSS] = true;
 
 			if (m_bCheck[TYPE_CROSS] == true)
@@ -364,8 +367,8 @@ void CTutorial::Update(void)
 		if (player->GetItemType() == CPlayer::TYPE_BIBLE
 			&& m_bCheck[TYPE_BIBLE] == false)
 		{// 聖書取得
-			CTutorialCheck::Create(CHECK_POS[TYPE_BIBLE]);
-			
+			CTutorialCheck::Create(D3DXVECTOR3(TEXTURE_CENTER_POS.x - CHECK_POS[TYPE_BIBLE].x,
+				TEXTURE_CENTER_POS.y + CHECK_POS[TYPE_BIBLE].y - CHECK_POS_Y, TEXTURE_CENTER_POS.z));
 			m_bCheck[TYPE_BIBLE] = true;
 
 			if (m_bCheck[TYPE_BIBLE] == true)
@@ -381,7 +384,8 @@ void CTutorial::Update(void)
 	if (m_nNumEnemy != CEnemy::GetList()->GetList().size()
 		&& m_bCheck[TYPE_ATTACK] == false)
 	{// 敵の総数減少
-		CTutorialCheck::Create(CHECK_POS[TYPE_ATTACK]);
+		CTutorialCheck::Create(D3DXVECTOR3(TEXTURE_CENTER_POS.x - CHECK_POS[TYPE_ATTACK].x,
+			TEXTURE_CENTER_POS.y + CHECK_POS[TYPE_ATTACK].y - CHECK_POS_Y, TEXTURE_CENTER_POS.z));
 		m_bCheck[TYPE_ATTACK] = true;
 
 		if (m_bCheck[TYPE_ATTACK] == true)
@@ -396,7 +400,8 @@ void CTutorial::Update(void)
 	if (m_nNumBowabowa != CBowabowa::GetList()->GetList().size()
 		&& m_bCheck[TYPE_BOWABOWA] == false)
 	{// ボワボワの総数減少
-		CTutorialCheck::Create(CHECK_POS[TYPE_BOWABOWA]);
+		CTutorialCheck::Create(D3DXVECTOR3(TEXTURE_CENTER_POS.x - CHECK_POS[TYPE_BOWABOWA].x,
+			TEXTURE_CENTER_POS.y + CHECK_POS[TYPE_BOWABOWA].y - CHECK_POS_Y, TEXTURE_CENTER_POS.z));
 		m_bCheck[TYPE_BOWABOWA] = true;
 
 		if (m_bCheck[TYPE_BOWABOWA] == true)
@@ -422,7 +427,8 @@ void CTutorial::Update(void)
 
 		if (pDevilHole->IsSet())
 		{// デビルホールの4箇所の内1箇所埋まった
-			CTutorialCheck::Create(CHECK_POS[TYPE_DEVILHOLE]);
+			CTutorialCheck::Create(D3DXVECTOR3(TEXTURE_CENTER_POS.x - CHECK_POS[TYPE_DEVILHOLE].x,
+				TEXTURE_CENTER_POS.y + CHECK_POS[TYPE_DEVILHOLE].y - CHECK_POS_Y, TEXTURE_CENTER_POS.z));
 			m_bCheck[TYPE_DEVILHOLE] = true;
 
 			if (m_bCheck[TYPE_DEVILHOLE] == true)
