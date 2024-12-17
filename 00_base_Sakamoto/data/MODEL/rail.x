@@ -281,7 +281,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\team\\Graduation\\00_base_Sakamoto\\data\\TEXTURE\\Field\\floor.jpg";
+    "data\\TEXTURE\\Field\\floor.jpg";
    }
   }
   Material {
@@ -290,7 +290,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\team\\Graduation\\00_base_Sakamoto\\data\\TEXTURE\\Field\\floor.jpg";
+    "data\\TEXTURE\\Field\\floor.jpg";
    }
   }
   Material {
@@ -299,7 +299,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\team\\Graduation\\00_base_Sakamoto\\data\\TEXTURE\\Field\\floor.jpg";
+    "data\\TEXTURE\\Field\\floor.jpg";
    }
   }
  }

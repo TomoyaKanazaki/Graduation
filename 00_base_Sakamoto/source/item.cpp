@@ -352,9 +352,8 @@ bool CItem::CollisionPlayer()
 		// 取得に失敗した場合次に進む
 		if (!Hit(player)) { continue; }
 
-		// スコアがない
-		if (player->GetScore() == nullptr)
-		{ continue; }
+		// スコアが存在しない場合次に進む
+		if (player->GetScore() == nullptr) { continue; }
 
 		// スコアを加算する
 		player->GetScore()->AddScore(ITEM_SCORE[m_eType]);
