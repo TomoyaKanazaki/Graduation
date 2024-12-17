@@ -395,19 +395,8 @@ void CObject2D::SetColorA(float A)
 //====================================================================
 //テクスチャの設定
 //====================================================================
-void CObject2D::SetTexture(const char *name)
+void CObject2D::SetTexture(std::string name)
 {
 	CTexture *pTexture = CManager::GetInstance()->GetTexture();
 	m_nIdxTexture = pTexture->Regist(name);
-}
-
-//====================================================================
-//テクスチャの取得
-//====================================================================
-const char *CObject2D::GetTexture(void)
-{
-	CTexture* pTexture = CManager::GetInstance()->GetTexture();
-	const char* Name = pTexture->GetTextureName(m_nIdxTexture);
-
-	return Name;
 }

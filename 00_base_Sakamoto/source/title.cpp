@@ -287,7 +287,7 @@ void CTitle::Button(void)
 		case 2:
 			// チュートリアル遷移
 			CFade::SetFade(CScene::MODE_TUTORIAL);
-			CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_SINGLE);
+			CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_MULTI);
 			CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_BGM_TITLE);
 			break;
 		case 3:
@@ -324,7 +324,7 @@ void CTitle::Button(void)
 			// チュートリアル遷移
 			CManager::GetInstance()->GetSound()->Stop();
 			CFade::SetFade(CScene::MODE_TUTORIAL);
-			CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_SINGLE);
+			CManager::GetInstance()->SetGameMode(CManager::GAME_MODE::MODE_MULTI);
 			CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_BGM_TITLE);
 			break;
 		case 3:

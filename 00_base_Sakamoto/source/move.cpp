@@ -268,7 +268,7 @@ void CStateControl::Move(CObjectCharacter* pCharacter, D3DXVECTOR3& pos, D3DXVEC
 		break;
 
 	case CObject::TYPE_ENEMY3D:			// “G
-		NormarizeMove = InputKey(pCharacter, pos, rot, NormarizeMove, ENEMY_SPEED);
+		//NormarizeMove = InputKey(pCharacter, pos, rot, NormarizeMove, ENEMY_SPEED);
 		UpdateMoveEnemy(pCharacter, NormarizeMove);			// ˆÚ“®XV
 
 		// ˆÚ“®•ûŒüˆ—

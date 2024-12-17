@@ -209,8 +209,8 @@ HRESULT CPlayer::Init(int PlayNumber)
 		m_pMoveState = new CStateStop();	// 停止状態
 		m_pMoveState->ControlStop(this);	// 操作状態にする
 	}
-	// 向き状態の設定
-	m_pMoveState->SetRotState(CMoveState::ROTSTATE_WAIT);
+	//// 向き状態の設定
+	//m_pMoveState->SetRotState(CMoveState::ROTSTATE_WAIT);
 
 	// リストマネージャーの生成
 	if (m_pList == nullptr)
@@ -300,7 +300,7 @@ void CPlayer::Update(void)
 		SearchWall(posThis);
 
 		if (
-			(state != STATE_EGG && CollisionStageIn(posThis) == true &&
+			(state != STATE_EGG &&
 				CMapSystem::GetInstance()->GetGritBool(m_Grid.x, m_Grid.z) == false) ||
 			(state == STATE_EGG && CollisionStageIn(posThis) == true &&
 				CMapSystem::GetInstance()->GetGritBool(m_Grid.x, m_Grid.z) == false &&
@@ -321,12 +321,14 @@ void CPlayer::Update(void)
 				{
 					// 移動処理
 					m_pMoveState->Move(this, posThis, rotThis);
+					state = GetState();				// 状態
 				}
 			}
 			else
 			{
 				// 移動処理
 				m_pMoveState->Move(this, posThis, rotThis);
+				state = GetState();				// 状態
 			}
 
 			// モデルを描画する
@@ -1548,7 +1550,10 @@ void CPlayer::PosUpdate(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D3DXVECTO
 	CMapMove::SPEED Speed = GetSpeedState();
 
 	//X軸の位置更新
-	posThis.x += m_move.x * CManager::GetInstance()->GetGameSpeed() * fSpeed * pMapMove->MoveSlopeX(m_move.x, Speed);
+	if (m_move.x > 0.0f || m_move.x < 0.0f)
+	{
+		posThis.x += m_move.x * CManager::GetInstance()->GetGameSpeed() * fSpeed * pMapMove->MoveSlopeX(m_move.x, Speed);
+	}
 
 	// 壁との当たり判定
 	CollisionWall(posThis, posOldThis, sizeThis, useful::COLLISION_X);
@@ -1557,7 +1562,10 @@ void CPlayer::PosUpdate(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D3DXVECTO
 	CollisionWaitRock(posThis, posOldThis, sizeThis, useful::COLLISION_X);
 
 	//Z軸の位置更新
-	posThis.z += m_move.z * CManager::GetInstance()->GetGameSpeed() * fSpeed * pMapMove->MoveSlopeZ(m_move.z, Speed);
+	if (m_move.z > 0.0f || m_move.z < 0.0f)
+	{
+		posThis.z += m_move.z * CManager::GetInstance()->GetGameSpeed() * fSpeed * pMapMove->MoveSlopeZ(m_move.z, Speed);
+	}
 
 	//加減速状態の設定
 	SetSpeedState(Speed);
