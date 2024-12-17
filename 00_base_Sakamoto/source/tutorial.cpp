@@ -82,16 +82,14 @@ namespace
 	const int ITEM_REF = 4;			// アイテムのステンシル参照値
 	const int MEDAMAN_REF = 102;	// メダマンのステンシル参照値
 
-	const char* BOTTOM_FIELD_TEX = "data\\TEXTURE\\Field\\outside.jpg";		// 下床のテクスチャ
-	const char* SCROLL_DEVICE_MODEL = "data\\TXT\\MOTION\\02_staging\\00_ScrollDevice\\motion_scrolldevice.txt";
-	const char* SCROLL_DEVICE_ENEMY_MODEL = "data\\TXT\\MOTION\\01_enemy\\motion_medaman.txt";
-	const char* SLOPE_DEVICE_MODEL = "data\\TXT\\MOTION\\02_staging\\01_SlopeDevice\\motion_slopedevice.txt";
-	const char* SLOPE_DEVICE_ENEMY_MODEL = "data\\TXT\\MOTION\\01_enemy\\motion_medaman.txt";
-	const char* CHECK_MARKER_TEX = "data\\TEXTURE\\UI\\tutorial_check.png";	// チェックマーカーテクスチャ
-	const char* BUTTON_TEX = "data\\TEXTURE\\UI\\return_title.png";	// 遷移ボタンテクスチャ
+	const std::string BOTTOM_FIELD_TEX = "data\\TEXTURE\\Field\\outside.jpg";		// 下床のテクスチャ
+	const std::string SCROLL_DEVICE_MODEL = "data\\TXT\\MOTION\\02_staging\\00_ScrollDevice\\motion_scrolldevice.txt";
+	const std::string SCROLL_DEVICE_ENEMY_MODEL = "data\\TXT\\MOTION\\01_enemy\\motion_medaman.txt";
+	const std::string CHECK_MARKER_TEX = "data\\TEXTURE\\UI\\tutorial_check.png";	// チェックマーカーテクスチャ
+	const std::string BUTTON_TEX = "data\\TEXTURE\\UI\\return_title.png";	// 遷移ボタンテクスチャ
 
-	const char* CHECKBOX_TEX = "data\\TEXTURE\\UI\\tutorial_check_box.png";			// チェックボックスのテクスチャ
-	const char* TUTORIAL_FRAME_TEX = "data\\TEXTURE\\UI\\tutorial_frame.png";		// チュートリアルガイドの外枠のテクスチャ
+	const std::string CHECKBOX_TEX = "data\\TEXTURE\\UI\\tutorial_check_box.png";			// チェックボックスのテクスチャ
+	const std::string TUTORIAL_FRAME_TEX = "data\\TEXTURE\\UI\\tutorial_frame.png";		// チュートリアルガイドの外枠のテクスチャ
 
 	const float TEXT_POSX = 240.0f;			// テキストのX座標
 
@@ -230,7 +228,7 @@ HRESULT CTutorial::Init(void)
 
 	for (int i = 0; i < TYPE_MAX; ++i)
 	{// テキストの生成
-		m_pText.push_back(CTutorialUi::Create(D3DXVECTOR3(TEXT_POSX, CHECK_POS[i].y, CHECK_POS[i].z), TEXT_SIZE[i], TUTORIAL_TEX[i]));
+		m_pText.push_back(CTutorialUi::Create(D3DXVECTOR3(TEXT_POSX, CHECK_POS[i].y, CHECK_POS[i].z), TEXT_SIZE[i], TUTORIAL_TEX[i], 1.0f));
 	}
 
 	// 遷移ボタンの生成
@@ -337,7 +335,7 @@ void CTutorial::Update(void)
 
 			if (m_bCheck[TYPE_MOVE] == true)
 			{// テキストの不透明度を下げる
-
+				SetUIAlpha(TYPE_MOVE, 0.5f);
 			}
 
 			// チュートリアル段階を進める
@@ -602,7 +600,7 @@ void CTutorial::DeleteMap(void)
 //====================================================================
 // レールブロックの読み込み配置
 //====================================================================
-void CTutorial::LoadStageRailBlock(std::string pFilename)
+void CTutorial::LoadStageRailBlock(const std::string pFilename)
 {
 	//ファイルを開く
 	FILE* pFile = fopen(pFilename.c_str(), "r");

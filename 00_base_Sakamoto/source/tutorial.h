@@ -91,7 +91,7 @@ private:
 	void DeleteCross(void);
 	void CreateBible(void);
 
-	void LoadStageRailBlock(std::string pFilename);
+	void LoadStageRailBlock(const std::string pFilename);
 
 	void SetBgObjTest(void);
 

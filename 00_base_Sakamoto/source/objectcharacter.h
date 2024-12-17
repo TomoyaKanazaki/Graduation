@@ -61,7 +61,7 @@ public:
 
 	virtual void PlayerNumberDisp(bool Set) {}
 
-	void SetTxtCharacter(std::string pFilename, int nRef);
+	void SetTxtCharacter(const std::string pFilename, int nRef);
 
 	void SetModelColor(CModel::COLORTYPE Type, D3DXCOLOR Col);
 
@@ -143,7 +143,7 @@ protected:
 private:
 
 	void SpeedStateManager(void);
-	void LoadModel(std::string pFilename);
+	void LoadModel(const std::string pFilename);
 
 	CModel* m_apModel[MODEL_NUM];
 	CMotion* m_pMotion;

@@ -395,7 +395,7 @@ void CObject2D::SetAlpha(float A)
 //====================================================================
 //テクスチャの設定
 //====================================================================
-void CObject2D::SetTexture(std::string name)
+void CObject2D::SetTexture(const std::string name)
 {
 	CTexture *pTexture = CManager::GetInstance()->GetTexture();
 	m_nIdxTexture = pTexture->Regist(name);

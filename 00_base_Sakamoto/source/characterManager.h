@@ -20,7 +20,7 @@ public:
 	HRESULT Load(void);
 	void Unload(void);
 
-	int Regist(CObjectCharacter* pObjCharacter, std::string pFilename);
+	int Regist(CObjectCharacter* pObjCharacter, const std::string pFilename);
 	const char* GetCharacterName(int Idx) { return &m_aCharacterInfo[Idx].acFileName[0]; }
 
 private:
@@ -92,8 +92,8 @@ private:
 	void SetModelData(CObjectCharacter* pObjCharacter, int nNumCharacter);
 	void SetMotionData(CObjectCharacter* pObjCharacter, int nNumCharacter);
 
-	bool LoadModel(std::string pFileName, int nNumCharacter);
-	bool LoadMotion(std::string pFileName, int nNumModel, int nNumCharacter);
+	bool LoadModel(const std::string pFileName, int nNumCharacter);
+	bool LoadMotion(const std::string pFileName, int nNumModel, int nNumCharacter);
 
 	CharacterInfo m_aCharacterInfo[MAX_CHARACTER];
 	int m_nNumAll;						// キャラクターの使用数

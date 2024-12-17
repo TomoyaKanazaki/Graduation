@@ -329,7 +329,7 @@ void CObjectCharacter::ChangeMoveState(CMoveState* pMoveState)
 //====================================================================
 // キャラクターテキスト設定処理
 //====================================================================
-void CObjectCharacter::SetTxtCharacter(std::string pFilename, int nRef)
+void CObjectCharacter::SetTxtCharacter(const std::string pFilename, int nRef)
 {
 	strcpy(&m_aModelName[0], pFilename.c_str());
 
@@ -436,7 +436,7 @@ CMotion* CObjectCharacter::GetMotion(void)
 //====================================================================
 // モデルロード処理
 //====================================================================
-void CObjectCharacter::LoadModel(std::string pFilename)
+void CObjectCharacter::LoadModel(const std::string pFilename)
 {
 	//ファイルを開く
 	FILE* pFile = fopen(pFilename.c_str(), "r");

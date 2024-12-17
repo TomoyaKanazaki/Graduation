@@ -50,7 +50,7 @@ void CCharacterManager::Unload(void)
 //====================================================================
 // キャラクターの番号指定
 //====================================================================
-int CCharacterManager::Regist(CObjectCharacter* pObjCharacter, std::string pFilename)
+int CCharacterManager::Regist(CObjectCharacter* pObjCharacter, const std::string pFilename)
 {
 	// キャラクターファイル検索処理
 	for (int nCntCharacter = 0; nCntCharacter < m_nNumAll; nCntCharacter++)
@@ -219,7 +219,7 @@ void CCharacterManager::SetMotionData(CObjectCharacter* pObjCharacter, int nNumC
 //====================================================================
 // モデルロード処理
 //====================================================================
-bool CCharacterManager::LoadModel(std::string pFilename,int nNumCharacter)
+bool CCharacterManager::LoadModel(const std::string pFilename,int nNumCharacter)
 {
 	//ファイルを開く
 	FILE* pFile = fopen(pFilename.c_str(), "r");
@@ -351,7 +351,7 @@ bool CCharacterManager::LoadModel(std::string pFilename,int nNumCharacter)
 //====================================================================
 // モーションのロード処理
 //====================================================================
-bool CCharacterManager::LoadMotion(std::string pFileName, int nNumModel, int nNumCharacter)
+bool CCharacterManager::LoadMotion(const std::string pFileName, int nNumModel, int nNumCharacter)
 {
 	//ファイルを開く
 	FILE* pFile = fopen(pFileName.c_str(), "r");

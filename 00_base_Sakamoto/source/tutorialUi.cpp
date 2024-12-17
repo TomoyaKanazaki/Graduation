@@ -45,7 +45,6 @@ CTutorialUi* CTutorialUi::Create(const D3DXVECTOR3& pos, const D3DXVECTOR3& size
 	pTutorialUi->SetPos(pos);
 	pTutorialUi->SetSize(size);
 	pTutorialUi->SetTexture(pFilename);
-	pTutorialUi->SetColorA(ColorA);
 
 	return pTutorialUi;
 }
