@@ -230,7 +230,7 @@ HRESULT CTutorial::Init(void)
 
 	for (int i = 0; i < TYPE_MAX; ++i)
 	{// テキストの生成
-		CTutorialUi::Create(D3DXVECTOR3(TEXT_POSX, CHECK_POS[i].y, CHECK_POS[i].z), TEXT_SIZE[i], TUTORIAL_TEX[i]);
+		m_pText.push_back(CTutorialUi::Create(D3DXVECTOR3(TEXT_POSX, CHECK_POS[i].y, CHECK_POS[i].z), TEXT_SIZE[i], TUTORIAL_TEX[i]));
 	}
 
 	// 遷移ボタンの生成
@@ -674,4 +674,12 @@ void CTutorial::SetBgObjTest(void)
 		pScrollDevice = CScrollDevice::Create(SCROLL_DEVICE_MODEL, SCROLL_DEVICE_ENEMY_MODEL);
 		pScrollDevice->SetPos(D3DXVECTOR3(-1300.0f, 0.0f, 0.0f));
 	}
+}
+
+//==========================================
+//  UIの透明度を変更
+//==========================================
+void CTutorial::SetUIAlpha(const CHECKTYPE type, const float fAlpha)
+{
+	m_pText.at(type)->SetAlpha(fAlpha);
 }

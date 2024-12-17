@@ -9,6 +9,7 @@
 
 #include "Scene.h"
 #include "MapSystem.h"
+#include "tutorialUi.h"
 
 //前方宣言
 class CTutorialUI;
@@ -93,6 +94,8 @@ private:
 
 	void SetBgObjTest(void);
 
+	void SetUIAlpha(const CHECKTYPE type, const float fAlpha = 1.0f);
+
 	// シングルトン
 	static CTutorial* m_pTutorial;
 
@@ -126,6 +129,7 @@ private:
 	CObjmeshField* m_pMapField;				// マップフィールド
 	CCubeBlock* m_pCubeBlock;				// キューブブロック
 	CObject2D* m_pTutorialGuide;			// チュートリアルガイド
+	std::vector<CTutorialUi*> m_pText;		// チュートリアルテキストのポインタ
 };
 
 #endif
