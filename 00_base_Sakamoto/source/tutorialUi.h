@@ -9,7 +9,7 @@
 
 #include "object2D.h"
 
-class CTutorialUi : CObject2D
+class CTutorialUi : public CObject2D
 {
 public:
 	CTutorialUi(int nPriority = 6);
