@@ -262,17 +262,8 @@ void CScrollDevice::Rotate(D3DXVECTOR3& rotMy,int nNldxModel,D3DXVECTOR3 rotate)
 	// ƒ‚ƒfƒ‹‚Ì‰ñ“]²‚ğæ“¾
 	D3DXVECTOR3 rot = pModel->GetStartRot();
 	
-	// –{‘Ì‚ÌŒü‚«”»’è
-	if (rotMy.y == 0.0f)
-	{
-		// ‰ñ“]—Ê‰ÁZ
-		rot += rotate;
-	}
-	else if (rotMy.y == D3DX_PI)
-	{
-		// ‰ñ“]—ÊŒ¸Z
-		rot -= rotate;
-	}
+	// ‰ñ“]—Ê‰ÁZ
+	rot += rotate;
 
 	// Šp“x‚Ì³‹K‰»
 	useful::NormalizeAngle(&rot);
