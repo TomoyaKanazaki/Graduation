@@ -119,7 +119,6 @@ private:
 	bool m_Wireframe;						// ワイヤーフレームのオンオフ
 	bool m_Slow;							// スロー演出のオンオフ
 	bool m_bCheck[TYPE_MAX];				// チェックマーカー表示
-	bool m_bSet;
 
 	D3DXVECTOR3 m_BGRot;					// 背景の回転向き
 	D3DXVECTOR3 InitPlayerPos;				// プレイヤーの初期位置

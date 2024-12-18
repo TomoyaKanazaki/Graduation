@@ -276,10 +276,10 @@ void CManager::Uninit(void)
 		m_pScene = nullptr;
 	}
 
+	CMapSystem::GetInstance()->Uninit();
+
 	//全てのオブジェクトの破棄
 	CObject::ReleaseAll();
-
-	CMapSystem::GetInstance()->Uninit();
 
 	if (m_pTexture != nullptr)
 	{

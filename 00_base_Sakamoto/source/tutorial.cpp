@@ -142,8 +142,7 @@ m_bTutorialClear(false),	// ゲームクリアのフラグ
 m_Wireframe(false),			// ワイヤーフレーム切り替え
 m_Slow(false),				// スロー演出フラグ
 InitPlayerPos(D3DXVECTOR3()),	// プレイヤーの初期位置
-m_nNumBible(0),				// 聖書の総数
-m_bSet(false)
+m_nNumBible(0)				// 聖書の総数
 {
 	for (int nCnt = 0; nCnt < NUM_CAMERA; ++nCnt)
 	{// カメラ分回す
@@ -212,9 +211,6 @@ HRESULT CTutorial::Init(void)
 	// 敵の総数保存
 	m_nNumEnemy = CEnemy::GetList()->GetList().size();
 
-	// デビルホール埋めてない
-	m_bSet = false;
-
 	// チュートリアルガイドの外枠
 	CTutorialUi::Create(TEXTURE_CENTER_POS, GUIDE_SIZE, TUTORIAL_FRAME_TEX, 1.0f);
 	
@@ -233,7 +229,7 @@ HRESULT CTutorial::Init(void)
 	{// テキストの生成
 		m_pText.push_back(CTutorialUi::Create(
 			D3DXVECTOR3(TEXTURE_CENTER_POS.x, CHECK_POS[i].y, CHECK_POS[i].z), 
-			TEXT_SIZE[i], TUTORIAL_TEX[i], 1.0f));
+						TEXT_SIZE[i], TUTORIAL_TEX[i], 1.0f));
 	}
 
 	// 遷移ボタンの生成
@@ -423,7 +419,6 @@ void CTutorial::Update(void)
 
 	for (CDevilHole* pDevilHole : DevilHolelist)
 	{// デビルホールの中身を確認
-		m_bSet = pDevilHole->IsSet();
 
 		if (pDevilHole->IsSet())
 		{// デビルホールの4箇所の内1箇所埋まった
