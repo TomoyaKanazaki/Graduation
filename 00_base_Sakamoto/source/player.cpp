@@ -1277,6 +1277,9 @@ void CPlayer::CollisionDevilHole(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, 
 		// 矩形の当たり判定
 		if (useful::CollisionBlock(pos, pos, INITVECTOR3, Size, &posThis, posOldThis, &m_move, &m_Objmove, sizeThis, &m_bJump, XYZ) == true)
 		{
+			//サウンド生成
+			CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_UNLOCK);
+
 			//待機状態にする
 			SetState(STATE_WAIT);
 			// 向き状態の設定

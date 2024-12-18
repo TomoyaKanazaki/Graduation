@@ -33,6 +33,8 @@ public:
 		SOUND_LABEL_SE_GET_BOWA,	// ぼあぼあ
 		SOUND_LABEL_SE_SELECT,		// 選択
 		SOUND_LABEL_SE_ENTER,		// 決定
+		SOUND_LABEL_SE_GET_ICECREAM,// アイスクリーム取得時
+		SOUND_LABEL_SE_UNLOCK,		// 鍵をデビルホールに差し込む
 
 		// BGM
 		SOUND_LABEL_BGM_TITLE,	// タイトルbgm

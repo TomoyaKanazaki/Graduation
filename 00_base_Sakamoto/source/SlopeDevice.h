@@ -71,6 +71,7 @@ public:
 	void ReSet(void);
 	
 	void SetLocateWorldType(LOCATE_WORLD_TYPE LocateWorldType) { m_LocateWorldType = LocateWorldType ;}
+	void SetUseRetroMove(bool bRetroMove) { m_bUseRetroMove = bRetroMove; }
 
 	// 静的メンバ関数
 	static CListManager<CSlopeDevice>* GetList(void); // リスト取得
@@ -82,7 +83,7 @@ private:
 
 	void Ascent(int nNldxModel);
 	void Descent(int nNldxModel);
-	void leverBehavior(int nNldxModel);
+	void ActiveLever(int nNldxModel);
 
 	void SetState(STATE state);
 
@@ -94,8 +95,9 @@ private:
 	bool m_bleverMove;						// レバー移動方向[True = 加算:False = 減算]
 	
 	STATE m_State;							// 状態
-	int m_nStateCount;						// 状態管理用変数
 	LOCATE_WORLD_TYPE m_LocateWorldType;	// 世界からの設置位置
+
+	bool m_bUseRetroMove;					// レトロタイプの移動の有無
 
 	CObjectCharacter* m_pObjectCharacter;	// オブジェクトキャラクターのポインタ
 
