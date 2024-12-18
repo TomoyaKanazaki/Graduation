@@ -152,6 +152,9 @@ HRESULT CGame::Init(void)
 	//クリアフラグのデフォルトをオンにしておく
 	m_bGameClear = true;
 
+	//ステージ情報を0にする
+	CManager::GetInstance()->SetStage(0);
+
 	//タイムの起動
 	CGame::GetTime()->SetStopTime(false);
 
@@ -169,7 +172,7 @@ HRESULT CGame::Init(void)
 	m_pDevil = CDevil::Create();
 
 	// イベントの開始
-	m_bEvent = true;
+	//m_bEvent = true;
 
 	for (int nCnt = 0; nCnt < 2; nCnt++)
 	{

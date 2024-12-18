@@ -520,15 +520,6 @@ void CTutorial::Update(void)
 		{
 			m_pPause->Update();
 		}
-
-#ifdef _DEBUG
-
-		if (pInputKeyboard->GetTrigger(DIK_F6) == true)
-		{// チュートリアル最初から
-			CFade::SetFade(CScene::MODE_TUTORIAL);
-		}
-
-#endif // _DEBUG
 	}
 }
 
