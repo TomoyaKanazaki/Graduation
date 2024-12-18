@@ -15,8 +15,15 @@
 namespace
 {
 	// テクスチャ一括管理
-	const char* str[] =
-	{ "data\\texture\\Player.png" };
+	const std::string str[]
+	{
+		{ "data\\TEXTURE\\UI\\tutorial_text_00.png" },	// 移動のテキスト
+		{ "data\\TEXTURE\\UI\\tutorial_text_001.png" },	// 十字架座標
+		{ "data\\TEXTURE\\UI\\tutorial_text_003.png" },	// ボワボワの座標
+		{ "data\\TEXTURE\\UI\\tutorial_text_002.png" },	// 攻撃の座標
+		{ "data\\TEXTURE\\UI\\tutorial_text_004.png" },	// 聖書の座標
+		{ "data\\TEXTURE\\UI\\tutorial_text_005.png" },	// デビルホールの座標
+	};
 }
 
 //========================================
@@ -49,9 +56,9 @@ CTexture::~CTexture()
 //========================================
 HRESULT CTexture::Load(void)
 {
-	//デバイスの取得
-	CRenderer* pRenderer = CManager::GetInstance()->GetRenderer();
-	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
+	////デバイスの取得
+	//CRenderer* pRenderer = CManager::GetInstance()->GetRenderer();
+	//LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 
 	//指定のテクスチャの読み込み
 	//D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\NULL.png", &m_apTexture[0]);

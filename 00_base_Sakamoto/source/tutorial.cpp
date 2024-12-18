@@ -52,7 +52,7 @@ namespace
 		{ 170.0f, 334.0f, 0.0f }, // デビルホールの座標
 	};
 
-	const char* TUTORIAL_TEX[]
+	const std::string TUTORIAL_TEX[]
 	{// チュートリアルテキストのテクスチャパス
 		{ "data\\TEXTURE\\UI\\tutorial_text_00.png" },	// 移動のテキスト
 		{ "data\\TEXTURE\\UI\\tutorial_text_001.png" },	// 十字架座標
@@ -86,10 +86,11 @@ namespace
 	const std::string SCROLL_DEVICE_MODEL = "data\\TXT\\MOTION\\02_staging\\00_ScrollDevice\\motion_scrolldevice.txt";
 	const std::string SCROLL_DEVICE_ENEMY_MODEL = "data\\TXT\\MOTION\\01_enemy\\motion_medaman.txt";
 	const std::string CHECK_MARKER_TEX = "data\\TEXTURE\\UI\\tutorial_check.png";	// チェックマーカーテクスチャ
-	const std::string BUTTON_TEX = "data\\TEXTURE\\UI\\return_title.png";	// 遷移ボタンテクスチャ
+	const std::string BUTTON_TEX = "data\\TEXTURE\\UI\\return_title.png";			// 遷移ボタンテクスチャ
 
-	const std::string CHECKBOX_TEX = "data\\TEXTURE\\UI\\tutorial_check_box.png";			// チェックボックスのテクスチャ
+	const std::string CHECKBOX_TEX = "data\\TEXTURE\\UI\\tutorial_check_box.png";		// チェックボックスのテクスチャ
 	const std::string TUTORIAL_FRAME_TEX = "data\\TEXTURE\\UI\\tutorial_frame.png";		// チュートリアルガイドの外枠のテクスチャ
+	const std::string ACHIEVEMENT_TEX = "data\\TEXTURE\\UI\\tutorial_achievement.png";	// 項目達成のテクスチャ
 
 	const float CHECK_POS_Y = 200.0f;		// チェックマーカーのy座標
 
@@ -103,6 +104,7 @@ namespace
 	const D3DXVECTOR3 BUTTON_POS = D3DXVECTOR3(1100.0f, 650.0f, 0.0f);	// 遷移ボタンの位置
 	const D3DXVECTOR3 BUTTON_SIZE = D3DXVECTOR3(300.0f, 250.0f, 0.0f);	// 遷移ボタンのサイズ
 	const D3DXVECTOR3 TEXTURE_CENTER_POS = D3DXVECTOR3(225.0f, 200.0f, 0.0f);	// テクスチャの中心座標
+	const D3DXVECTOR3 ACHIEVEMENT_SIZE = D3DXVECTOR3(300.0f, 100.0f, 0.0f);	// テクスチャの中心座標
 
 	const D3DXCOLOR MASK_DEFAULT_COLOR = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);			// 通常のステンシルカラー(白)
 	const D3DXCOLOR MASK_PLAYER_COLOR = D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f);			// タマゴンのステンシルカラー(緑)
@@ -333,6 +335,8 @@ void CTutorial::Update(void)
 		{// 座標が一致しなかったら
 			CTutorialCheck::Create(D3DXVECTOR3(TEXTURE_CENTER_POS.x - CHECK_POS[TYPE_MOVE].x, 
 									TEXTURE_CENTER_POS.y + CHECK_POS[TYPE_MOVE].y - CHECK_POS_Y, TEXTURE_CENTER_POS.z));
+
+			// マーカー表示
 			m_bCheck[TYPE_MOVE] = true;
 
 			if (m_bCheck[TYPE_MOVE] == true)
@@ -348,7 +352,9 @@ void CTutorial::Update(void)
 			&& m_bCheck[TYPE_CROSS] == false)
 		{// 十字架取得
 			CTutorialCheck::Create(D3DXVECTOR3(TEXTURE_CENTER_POS.x - CHECK_POS[TYPE_CROSS].x,
-				TEXTURE_CENTER_POS.y + CHECK_POS[TYPE_CROSS].y - CHECK_POS_Y, TEXTURE_CENTER_POS.z));
+									TEXTURE_CENTER_POS.y + CHECK_POS[TYPE_CROSS].y - CHECK_POS_Y, TEXTURE_CENTER_POS.z));
+
+			// マーカー表示
 			m_bCheck[TYPE_CROSS] = true;
 
 			if (m_bCheck[TYPE_CROSS] == true)
@@ -364,7 +370,9 @@ void CTutorial::Update(void)
 			&& m_bCheck[TYPE_BIBLE] == false)
 		{// 聖書取得
 			CTutorialCheck::Create(D3DXVECTOR3(TEXTURE_CENTER_POS.x - CHECK_POS[TYPE_BIBLE].x,
-				TEXTURE_CENTER_POS.y + CHECK_POS[TYPE_BIBLE].y - CHECK_POS_Y, TEXTURE_CENTER_POS.z));
+									TEXTURE_CENTER_POS.y + CHECK_POS[TYPE_BIBLE].y - CHECK_POS_Y, TEXTURE_CENTER_POS.z));
+
+			// マーカー表示
 			m_bCheck[TYPE_BIBLE] = true;
 
 			if (m_bCheck[TYPE_BIBLE] == true)
@@ -381,7 +389,9 @@ void CTutorial::Update(void)
 		&& m_bCheck[TYPE_ATTACK] == false)
 	{// 敵の総数減少
 		CTutorialCheck::Create(D3DXVECTOR3(TEXTURE_CENTER_POS.x - CHECK_POS[TYPE_ATTACK].x,
-			TEXTURE_CENTER_POS.y + CHECK_POS[TYPE_ATTACK].y - CHECK_POS_Y, TEXTURE_CENTER_POS.z));
+								TEXTURE_CENTER_POS.y + CHECK_POS[TYPE_ATTACK].y - CHECK_POS_Y, TEXTURE_CENTER_POS.z));
+
+		// マーカー表示
 		m_bCheck[TYPE_ATTACK] = true;
 
 		if (m_bCheck[TYPE_ATTACK] == true)
@@ -397,7 +407,9 @@ void CTutorial::Update(void)
 		&& m_bCheck[TYPE_BOWABOWA] == false)
 	{// ボワボワの総数減少
 		CTutorialCheck::Create(D3DXVECTOR3(TEXTURE_CENTER_POS.x - CHECK_POS[TYPE_BOWABOWA].x,
-			TEXTURE_CENTER_POS.y + CHECK_POS[TYPE_BOWABOWA].y - CHECK_POS_Y, TEXTURE_CENTER_POS.z));
+								TEXTURE_CENTER_POS.y + CHECK_POS[TYPE_BOWABOWA].y - CHECK_POS_Y, TEXTURE_CENTER_POS.z));
+
+		// マーカー表示
 		m_bCheck[TYPE_BOWABOWA] = true;
 
 		if (m_bCheck[TYPE_BOWABOWA] == true)
@@ -419,11 +431,12 @@ void CTutorial::Update(void)
 
 	for (CDevilHole* pDevilHole : DevilHolelist)
 	{// デビルホールの中身を確認
-
 		if (pDevilHole->IsSet())
 		{// デビルホールの4箇所の内1箇所埋まった
 			CTutorialCheck::Create(D3DXVECTOR3(TEXTURE_CENTER_POS.x - CHECK_POS[TYPE_DEVILHOLE].x,
-				TEXTURE_CENTER_POS.y + CHECK_POS[TYPE_DEVILHOLE].y - CHECK_POS_Y, TEXTURE_CENTER_POS.z));
+									TEXTURE_CENTER_POS.y + CHECK_POS[TYPE_DEVILHOLE].y - CHECK_POS_Y, TEXTURE_CENTER_POS.z));
+
+			// マーカー表示
 			m_bCheck[TYPE_DEVILHOLE] = true;
 
 			if (m_bCheck[TYPE_DEVILHOLE] == true)
@@ -437,7 +450,11 @@ void CTutorial::Update(void)
 	}
 
 	if (m_nTutorialWave >= WAVE_MAX)
-	{// 値がWAVE_MAX超えないように
+	{
+		// 項目達成テクスチャ表示
+		CTutorialUi::Create(TEXTURE_CENTER_POS, ACHIEVEMENT_SIZE, ACHIEVEMENT_TEX, 1.0f);
+
+		// 値がWAVE_MAX超えないように
 		m_nTutorialWave = WAVE_MAX;
 	}
 
