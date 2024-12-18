@@ -9,6 +9,7 @@
 
 #include "Scene.h"
 #include "MapSystem.h"
+#include "tutorialUi.h"
 
 //前方宣言
 class CTutorialUI;
@@ -33,6 +34,7 @@ class CDevil;
 class CMask;
 class CEventMovie;
 class CTutorialCheck;
+class CTutorialUi;
 
 class CAim;
 
@@ -89,9 +91,11 @@ private:
 	void DeleteCross(void);
 	void CreateBible(void);
 
-	void LoadStageRailBlock(const char* pFilename);
+	void LoadStageRailBlock(const std::string pFilename);
 
 	void SetBgObjTest(void);
+
+	void SetUIAlpha(const CHECKTYPE type, const float fAlpha = 1.0f);
 
 	// シングルトン
 	static CTutorial* m_pTutorial;
@@ -115,7 +119,6 @@ private:
 	bool m_Wireframe;						// ワイヤーフレームのオンオフ
 	bool m_Slow;							// スロー演出のオンオフ
 	bool m_bCheck[TYPE_MAX];				// チェックマーカー表示
-	bool m_bSet;
 
 	D3DXVECTOR3 m_BGRot;					// 背景の回転向き
 	D3DXVECTOR3 InitPlayerPos;				// プレイヤーの初期位置
@@ -125,7 +128,8 @@ private:
 	CObjmeshDome* m_pMeshDomeUp;			// メッシュドーム
 	CObjmeshField* m_pMapField;				// マップフィールド
 	CCubeBlock* m_pCubeBlock;				// キューブブロック
-	CObject2D* m_pTutorialGuide;			// チュートリアルガイド
+	CTutorialUi* m_pTutorialUI;
+	std::vector<CTutorialUi*> m_pText;		// チュートリアルテキストのポインタ
 };
 
 #endif

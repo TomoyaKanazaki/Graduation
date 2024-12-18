@@ -329,9 +329,9 @@ void CObjectCharacter::ChangeMoveState(CMoveState* pMoveState)
 //====================================================================
 // キャラクターテキスト設定処理
 //====================================================================
-void CObjectCharacter::SetTxtCharacter(const char* pFilename, int nRef)
+void CObjectCharacter::SetTxtCharacter(const std::string pFilename, int nRef)
 {
-	strcpy(&m_aModelName[0], pFilename);
+	strcpy(&m_aModelName[0], pFilename.c_str());
 
 	CCharacterManager* pCharacterManager = CManager::GetInstance()->GetCharacterManager();
 
@@ -436,10 +436,10 @@ CMotion* CObjectCharacter::GetMotion(void)
 //====================================================================
 // モデルロード処理
 //====================================================================
-void CObjectCharacter::LoadModel(const char* pFilename)
+void CObjectCharacter::LoadModel(const std::string pFilename)
 {
 	//ファイルを開く
-	FILE* pFile = fopen(pFilename, "r");
+	FILE* pFile = fopen(pFilename.c_str(), "r");
 
 	if (pFile != nullptr)
 	{//ファイルが開けた場合

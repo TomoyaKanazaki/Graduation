@@ -74,7 +74,7 @@ CSlopeDevice::~CSlopeDevice()
 //====================================================================
 //生成処理
 //====================================================================
-CSlopeDevice* CSlopeDevice::Create(const char* pModelNameSlopeDevice, const char* pModelNameEnemy)
+CSlopeDevice* CSlopeDevice::Create(const std::string pModelNameSlopeDevice, const std::string pModelNameEnemy)
 {
 	// オブジェクトの生成処理
 	CSlopeDevice* pInstance = new CSlopeDevice();
@@ -386,7 +386,7 @@ void CSlopeDevice::ReSet(void)
 //====================================================================
 // モデル関連の初期化処理
 //====================================================================
-HRESULT CSlopeDevice::InitModel(const char* pModelNameSlopeDevice, const char* pModelNameEnemy)
+HRESULT CSlopeDevice::InitModel(const std::string pModelNameSlopeDevice, const std::string pModelNameEnemy)
 {
 	CObjectCharacter::SetTxtCharacter(pModelNameSlopeDevice, 0);
 

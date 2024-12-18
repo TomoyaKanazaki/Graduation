@@ -100,7 +100,6 @@ m_pUpEgg(nullptr),
 m_pDownEgg(nullptr),
 m_bInvincible(true),
 m_nInvincibleCount(0),
-m_pScore(nullptr),
 m_nTime(0),
 m_pEffectEgg(nullptr),
 m_pEffectSpeed(nullptr),
@@ -246,12 +245,6 @@ void CPlayer::Uninit(void)
 
 	// キャラクタークラスの終了（継承）
 	CObjectCharacter::Uninit();
-
-	// スコアの削除
-	if (m_pScore != nullptr)
-	{
-		m_pScore = nullptr;
-	}
 
 	// 移動状態の破棄
 	if (m_pMoveState != nullptr)
@@ -1557,7 +1550,10 @@ void CPlayer::PosUpdate(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D3DXVECTO
 	CMapMove::SPEED Speed = GetSpeedState();
 
 	//X軸の位置更新
-	posThis.x += m_move.x * CManager::GetInstance()->GetGameSpeed() * fSpeed * pMapMove->MoveSlopeX(m_move.x, Speed);
+	if (m_move.x > 0.0f || m_move.x < 0.0f)
+	{
+		posThis.x += m_move.x * CManager::GetInstance()->GetGameSpeed() * fSpeed * pMapMove->MoveSlopeX(m_move.x, Speed);
+	}
 
 	// 壁との当たり判定
 	CollisionWall(posThis, posOldThis, sizeThis, useful::COLLISION_X);
@@ -1566,7 +1562,10 @@ void CPlayer::PosUpdate(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D3DXVECTO
 	CollisionWaitRock(posThis, posOldThis, sizeThis, useful::COLLISION_X);
 
 	//Z軸の位置更新
-	posThis.z += m_move.z * CManager::GetInstance()->GetGameSpeed() * fSpeed * pMapMove->MoveSlopeZ(m_move.z, Speed);
+	if (m_move.z > 0.0f || m_move.z < 0.0f)
+	{
+		posThis.z += m_move.z * CManager::GetInstance()->GetGameSpeed() * fSpeed * pMapMove->MoveSlopeZ(m_move.z, Speed);
+	}
 
 	//加減速状態の設定
 	SetSpeedState(Speed);

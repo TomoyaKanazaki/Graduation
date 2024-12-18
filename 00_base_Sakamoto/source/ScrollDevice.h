@@ -42,7 +42,7 @@ public:
 		SETUP_TYPE_MAX,				// ç≈ëÂ
 	};
 
-	static CScrollDevice* Create(const char* pModelNameSlopeDevice, const char* pModelNameEnemy);
+	static CScrollDevice* Create(const std::string pModelNameSlopeDevice, const std::string pModelNameEnemy);
 
 	HRESULT Init(void);
 	void Uninit(void);
@@ -55,7 +55,7 @@ public:
 	static CListManager<CScrollDevice>* GetList(void); // ÉäÉXÉgéÊìæ
 
 private:
-	HRESULT InitModel(const char* pModelNameScrollDevice, const char* pModelNameEnemy);
+	HRESULT InitModel(const std::string pModelNameScrollDevice, const std::string pModelNameEnemy);
 
 	void StateManager(D3DXVECTOR3& rotMy);
 	void Rotate(D3DXVECTOR3& rotMy,int nNldxModel, D3DXVECTOR3 rotate);

@@ -54,6 +54,7 @@ public:
 	void SetMatAlpha(float SetAlpha) { m_StateMat.MatD3D.Diffuse.a = SetAlpha; }
 	void SetDefColor(void) { m_bUseColor = false; }
 	void SetScaling(D3DXVECTOR3 Scaling) { m_Scaling = Scaling; }
+	D3DXVECTOR3 GetScaling(void) { return m_Scaling; }
 
 	void SetXModelIdx(int Idx);
 	int GetXModelIdx(void) { return m_IdxModelNumber; }

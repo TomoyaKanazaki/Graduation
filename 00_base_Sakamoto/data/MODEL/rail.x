@@ -291,7 +291,7 @@ Mesh {
    0.340000;0.340000;0.340000;;
    0.130000;0.109070;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\team\\Graduation\\00_base_Sakamoto\\data\\TEXTURE\\key_metal.jpg";
+    "data\\TEXTURE\\Field\\floor.jpg";
    }
   }
   Material {
@@ -300,7 +300,7 @@ Mesh {
    0.310000;0.310000;0.310000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\team\\Graduation\\00_base_Sakamoto\\data\\TEXTURE\\key_metal.jpg";
+    "data\\TEXTURE\\Field\\floor.jpg";
    }
   }
   Material {
@@ -308,6 +308,9 @@ Mesh {
    0.000000;
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
+   TextureFilename {
+    "data\\TEXTURE\\Field\\floor.jpg";
+   }
   }
  }
  MeshNormals {

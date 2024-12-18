@@ -373,7 +373,7 @@ void CObject2D::SetColor(D3DXCOLOR col)
 //====================================================================
 //頂点カラー（アルファ値）の設定
 //====================================================================
-void CObject2D::SetColorA(float A)
+void CObject2D::SetAlpha(float A)
 {
 	m_Color.a = A;
 
@@ -395,19 +395,8 @@ void CObject2D::SetColorA(float A)
 //====================================================================
 //テクスチャの設定
 //====================================================================
-void CObject2D::SetTexture(const char *name)
+void CObject2D::SetTexture(const std::string name)
 {
 	CTexture *pTexture = CManager::GetInstance()->GetTexture();
 	m_nIdxTexture = pTexture->Regist(name);
-}
-
-//====================================================================
-//テクスチャの取得
-//====================================================================
-const char *CObject2D::GetTexture(void)
-{
-	CTexture* pTexture = CManager::GetInstance()->GetTexture();
-	const char* Name = pTexture->GetTextureName(m_nIdxTexture);
-
-	return Name;
 }

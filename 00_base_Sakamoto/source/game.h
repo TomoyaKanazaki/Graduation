@@ -83,8 +83,8 @@ private:
 
 	void UpdateLetterBox(void);
 	void StageClear(int Stage);
-	void LoadStageRailBlock(const char* pFilename);
-	void LoadStageMapModel(const char* pFilename);
+	void LoadStageRailBlock(const std::string pFilename);
+	void LoadStageMapModel(const std::string pFilename);
 
 	void SetBgObjTest(void);
 
