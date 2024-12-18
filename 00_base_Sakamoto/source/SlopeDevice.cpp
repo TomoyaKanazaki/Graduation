@@ -35,6 +35,9 @@ namespace
 	const D3DXVECTOR3 MOVE_SPEED_HEIGHT = D3DXVECTOR3(0.0f, 1.6f, 0.0f);	// 縦傾きの昇降移動量
 	const D3DXVECTOR3 MOVE_SPEED_WIDTH = D3DXVECTOR3(0.0f, 2.25f, 0.0f);	// 横傾きの昇降移動量
 
+	const D3DXVECTOR3 MOVE_SPEED_HEIGHT_RETRO = D3DXVECTOR3(0.0f, 28.0f, 0.0f);	// 縦傾きの昇降移動量（レトロ状態）
+	const D3DXVECTOR3 MOVE_SPEED_WIDTH_RETRO = D3DXVECTOR3(0.0f, 34.5f, 0.0f);	// 横傾きの昇降移動量（レトロ状態）
+
 	const D3DXVECTOR3 LIVER_ROT_MOVE = D3DXVECTOR3(0.01f, 0.0f, 0.0f);		// レバーの移動量
 }
 
@@ -56,10 +59,11 @@ CSlopeDevice::CSlopeDevice(int nPriority) : CObjectCharacter(nPriority)
 	m_bleverMove = false;
 
 	m_State = STATE(0);
-	m_nStateCount = 0;
 
 	m_LocateWorldType = LOCATE_WORLD_TYPE(0);
 
+	m_bUseRetroMove = false;
+		
 	m_pObjectCharacter = nullptr;
 }
 
@@ -242,11 +246,31 @@ void CSlopeDevice::SetStateArrow(CScrollArrow::Arrow stateArrow)
 		break;
 	}
 
+	// マップ移動取得処理
+	CMapMove* pMapMove = CMapSystem::GetInstance()->GetMove();
+
+	// 状態取得用変数
+	CMapMove::SCROLL_TYPE MoveType = CMapMove::SCROLL_TYPE_NORMAL;
+
+	if (pMapMove != nullptr)
+	{
+		// マップ移動モード取得処理
+		MoveType = pMapMove->GetScrollType();
+	}
+
 	if (stateArrow == CScrollArrow::STATE_UP ||
 		stateArrow == CScrollArrow::STATE_DOWN)
 	{
-		// 昇降移動量を設定
-		m_move = MOVE_SPEED_HEIGHT;
+		if (MoveType == CMapMove::SCROLL_TYPE_NORMAL)
+		{
+			// 昇降移動量を設定
+			m_move = MOVE_SPEED_HEIGHT;
+		}
+		else if (MoveType == CMapMove::SCROLL_TYPE_RETRO)
+		{
+			// 昇降移動量を設定（レトロ）
+			m_move = MOVE_SPEED_HEIGHT_RETRO;
+		}
 
 		if (m_State == STATE_ASCENT)
 		{
@@ -262,8 +286,16 @@ void CSlopeDevice::SetStateArrow(CScrollArrow::Arrow stateArrow)
 	else if (stateArrow == CScrollArrow::STATE_LEFT ||
 			 stateArrow == CScrollArrow::STATE_RIGHT)
 	{
-		// 昇降移動量を設定
-		m_move = MOVE_SPEED_WIDTH;
+		if (MoveType == CMapMove::SCROLL_TYPE_NORMAL)
+		{
+			// 昇降移動量を設定
+			m_move = MOVE_SPEED_WIDTH;
+		}
+		else if (MoveType == CMapMove::SCROLL_TYPE_RETRO)
+		{
+			// 昇降移動量を設定（レトロ）
+			m_move = MOVE_SPEED_WIDTH_RETRO;
+		}
 
 		if (m_State == STATE_ASCENT)
 		{
@@ -421,59 +453,92 @@ HRESULT CSlopeDevice::InitModel(const std::string pModelNameSlopeDevice, const s
 }
 
 //====================================================================
-//状態管理
+// 通常状態の状態管理
 //====================================================================
 void CSlopeDevice::StateManager(void)
 {
+	// マップ移動取得処理
 	CMapMove* pMapMove = CMapSystem::GetInstance()->GetMove();
-	CMapMove::MOVE MoveState = CMapMove::MOVE_WAIT;
+
+	// 状態取得用変数
+	CMapMove::SCROLL_TYPE MoveType = CMapMove::SCROLL_TYPE_NORMAL;
+	CMapMove::MOVE MoveState = CMapMove::MOVE_WAIT;	
 
 	if (pMapMove != nullptr)
 	{
+		// マップ移動モード取得処理
+		MoveType = pMapMove->GetScrollType();
+
+		// マップ状態取得
 		MoveState = pMapMove->GetState();
 	}
 
+	if (MoveType == CMapMove::SCROLL_TYPE_RETRO &&
+		m_bUseRetroMove == false)
+	{
+		return;
+	}
+	
+	// 状態判定
 	switch (m_State)
 	{
 	case STATE_NORMAL:
 		break;
+
+		// 上昇状態
 	case STATE_ASCENT:
 
+		// 移動状態判定（上 or 下）
 		if (MoveState == CMapMove::MOVE_SLOPE_UP ||
 			MoveState == CMapMove::MOVE_SLOPE_DOWN)
 		{
+			// 上昇処理
 			Ascent(SETUP_TYPE_ELEVATING_PART);
-			leverBehavior(SETUP_TYPE_LIVER);
+			
+			// レバー動作処理
+			ActiveLever(SETUP_TYPE_LIVER);
 		}
+		// 移動状態判定（右 or 左）
 		else if (MoveState == CMapMove::MOVE_SLOPE_RIGHT ||
 				 MoveState == CMapMove::MOVE_SLOPE_LEFT)
 		{
+			// 上昇処理
 			Ascent(SETUP_TYPE_ELEVATING_PART);
-			leverBehavior(SETUP_TYPE_LIVER);
+
+			// レバー動作処理
+			ActiveLever(SETUP_TYPE_LIVER);
 		}
 
 		break;
 	case STATE_DESCENT:
 
+		// 移動状態判定（上 or 下）
 		if (MoveState == CMapMove::MOVE_SLOPE_UP ||
 			MoveState == CMapMove::MOVE_SLOPE_DOWN)
 		{
+			// 下降処理
 			Descent(SETUP_TYPE_ELEVATING_PART);
-			leverBehavior(SETUP_TYPE_LIVER);
+
+			// レバー動作処理
+			ActiveLever(SETUP_TYPE_LIVER);
 		}
+		// 移動状態判定（右 or 左）
 		else if (MoveState == CMapMove::MOVE_SLOPE_RIGHT ||
 				 MoveState == CMapMove::MOVE_SLOPE_LEFT)
 		{
+			// 下降処理
 			Descent(SETUP_TYPE_ELEVATING_PART);
-			leverBehavior(SETUP_TYPE_LIVER);
+
+			// レバー動作処理
+			ActiveLever(SETUP_TYPE_LIVER);
 		}
 
 		break;
 	}
 
-	if (m_nStateCount > 0)
+	if (m_bUseRetroMove == true)
 	{
-		m_nStateCount--;
+		m_bUseRetroMove = false;
 	}
 }
 
@@ -544,7 +609,7 @@ void CSlopeDevice::Descent(int nNldxModel)
 //====================================================================
 // レバー動作状態処理
 //====================================================================
-void CSlopeDevice::leverBehavior(int nNldxModel)
+void CSlopeDevice::ActiveLever(int nNldxModel)
 {
 	// モデルの取得
 	CModel* pModel = GetModel(nNldxModel);
