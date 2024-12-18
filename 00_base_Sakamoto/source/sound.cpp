@@ -21,6 +21,8 @@ CSound::SOUNDINFO CSound::m_aSoundInfo[SOUND_LABEL_MAX] =
 	{ "data/SE/15_SE_getboa.wav", 0 },				// ぼあ
 	{ "data/SE/16_SE_select.wav", 0 },				// 選択
 	{ "data/SE/17_SE_enter.wav", 0 },				// 決定
+	{"data/SE/18_SE_get_icecream.wav", 0 },			// アイスクリーム取得時
+	{"data/SE/19_SE_unlock.wav", 0 },				// デビルホールに差し込む
 
 	// BGM
 	{ "data/BGM/00_BGM_title.wav", -1 },				// タイトル
