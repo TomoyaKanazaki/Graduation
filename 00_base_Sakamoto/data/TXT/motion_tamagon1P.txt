@@ -24,7 +24,7 @@ MODEL_FILENAME = data/MODEL/00_player/1P/06_L_foot.x	# [2]頭
 MODEL_FILENAME = data/MODEL/00_player/1P/07_R_feather.x	# [2]頭
 MODEL_FILENAME = data/MODEL/00_player/1P/08_L_feather.x	# [2]頭
 MODEL_FILENAME = data/MODEL/00_player/1P/09_cross.x	# [2]頭
-MODEL_FILENAME = data/MODEL/00_player/1P/10_book.x	# [2]頭
+MODEL_FILENAME = data/MODEL/00_player/1P/11_key.x	# [2]頭
 
 #------------------------------------------------------------------------------
 # キャラクター情報
