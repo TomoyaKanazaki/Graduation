@@ -534,6 +534,17 @@ void CMapMove::StateManager(void)
 				{
 					BackSlope();
 				}
+
+				// 傾き装置のリスト構造が無ければ抜ける
+				if (CSlopeDevice::GetList() == nullptr) { return; }
+				std::list<CSlopeDevice*> list = CSlopeDevice::GetList()->GetList();    // リストを取得
+
+				// 傾き移動装置のリストの中身を確認する
+				for (CSlopeDevice* pSlopeDevice : list)
+				{
+					// レトロ用の傾き移動をオン
+					pSlopeDevice->SetUseRetroMove(true);
+				}
 			}
 			break;
 
