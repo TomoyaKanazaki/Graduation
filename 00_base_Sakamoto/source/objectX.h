@@ -16,7 +16,7 @@
 class CObjectX : public CObject
 {
 public:
-	CObjectX(int nPriority = 7);
+	CObjectX(int nPriority = 4);
 	~CObjectX();
 
 	static CObjectX *Create(const char *pModelName);

@@ -32,8 +32,7 @@ class CDevil;
 class CMask;
 class CEventMovie;
 class CGamePlayer;
-
-class CAim;
+class CObjectCharacter;
 
 //シーンクラス
 class CGame : public CScene
@@ -118,6 +117,9 @@ private:
 	bool m_Slow;							//スロー演出のオンオフ
 
 	CObject2D* LetterBox[2];				//イベント時の背景表示
+
+	CObjectCharacter* m_pBGCharacter[4];	// 背景キャラクターのポインタ
+	int m_nBGCount;							// 背景の動き用のカウント
 
 	CMask* m_pPlayerMask;	// プレイヤーマスク
 	CMask* m_pEnemyMask;	// 敵マスク

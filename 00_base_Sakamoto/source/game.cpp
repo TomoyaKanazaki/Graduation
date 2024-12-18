@@ -28,6 +28,7 @@
 #include "EventMovie.h"
 #include "Cross.h"
 #include "MapMove.h"
+#include "Motion.h"
 
 #include "sound.h"
 #include "shadow.h"
@@ -84,6 +85,12 @@ CGame::CGame()
 		CManager::GetInstance()->GetCamera(nCnt)->SetBib(false);
 		CManager::GetInstance()->GetCamera(nCnt)->SetCameraMode(CCamera::CAMERAMODE_DOWNVIEW);
 	}
+
+	for (int nCnt = 0; nCnt < 4; nCnt++)
+	{
+		m_pBGCharacter[nCnt] = nullptr;
+	}
+	m_nBGCount = 0;
 
 	m_pPause = nullptr;
 	m_pTime = nullptr;
@@ -208,6 +215,45 @@ HRESULT CGame::Init(void)
 		m_pPlayer.push_back(CGamePlayer::Create(i));
 	}
 
+	//背景オブジェクトの生成
+
+	//右山
+	CObjectX* pRMountain = CObjectX::Create("data\\MODEL\\RightMountain.x");
+	pRMountain->SetPos(D3DXVECTOR3(2000.0f, -1000.0f, 2000.0f));
+
+	//左山
+	CObjectX* pLMountain = CObjectX::Create("data\\MODEL\\LeftMountain.x");
+	pLMountain->SetPos(D3DXVECTOR3(-1900.0f, -1000.0f, 1500.0f));
+
+	//マグマ
+	CObject3D* pMaguma = CObject3D::Create();
+	pMaguma->SetPos(D3DXVECTOR3(0.0f, -950.0f, 0.0f));
+	pMaguma->SetSize(D3DXVECTOR3(3000.0f, 0.0f, 6500.0f));
+	pMaguma->SetScrollSpeed(D3DXVECTOR2(0.0f, -0.0001f));
+	pMaguma->SetTexture("data\\TEXTURE\\MAGUMA.png");
+
+	//メダマン
+	for (int nCnt = 0; nCnt < 4; nCnt++)
+	{
+		if (m_pBGCharacter[nCnt] == nullptr)
+		{
+			m_pBGCharacter[nCnt] = CObjectCharacter::Create(false);
+			m_pBGCharacter[nCnt]->SetTxtCharacter(SCROLL_DEVICE_ENEMY_MODEL, 0);
+
+			m_pBGCharacter[nCnt]->SetPos(D3DXVECTOR3(
+				-1975.0f + sinf(D3DX_PI * (0.5f * nCnt)) * 400.0f,
+				-200.0f,
+				1500.0f + cosf(D3DX_PI * (0.5f * nCnt)) * 250.0f));
+
+			m_pBGCharacter[nCnt]->SetRot(D3DXVECTOR3(
+				0.0f,
+				sinf(D3DX_PI * (0.5f * (nCnt - 1))),
+				0.0f));
+
+			m_pBGCharacter[nCnt]->GetMotion()->Set(1, 0);
+		}
+	}
+
 	return S_OK;
 }
 
@@ -269,6 +315,24 @@ void CGame::Update(void)
 	DebugProc::Print(DebugProc::POINT_LEFT, "ゲームスピード : %f\n", CManager::GetInstance()->GetGameSpeed());
 
 	CMapSystem::GetInstance()->Update();
+
+	m_nBGCount++;
+
+	for (int nCnt = 0; nCnt < 4; nCnt++)
+	{
+		if (m_pBGCharacter[nCnt] != nullptr)
+		{
+			m_pBGCharacter[nCnt]->SetPos(D3DXVECTOR3(
+				-1975.0f + sinf(D3DX_PI * (0.5f * (nCnt + (float)m_nBGCount * 0.005f))) * 400.0f,
+				-200.0f,
+				1500.0f + cosf(D3DX_PI * (0.5f * (nCnt + (float)m_nBGCount * 0.005f))) * 250.0f));
+
+			m_pBGCharacter[nCnt]->SetRot(D3DXVECTOR3(
+				0.0f,
+				sinf(D3DX_PI * (0.5f * ((nCnt - 1) + (float)m_nBGCount * 0.005f))),
+				0.0f));
+		}
+	}
 
 #if _DEBUG
 	if (pInputKeyboard->GetTrigger(DIK_0) == true)
