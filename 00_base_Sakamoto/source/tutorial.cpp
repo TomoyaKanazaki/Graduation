@@ -338,18 +338,23 @@ void CTutorial::Update(void)
 	if (CDevilHole::GetList() == nullptr) { assert(false); }
 	std::list<CDevilHole*> DevilHolelist = CDevilHole::GetList()->GetList();
 
-	int nNumPlayer = 0;
-
 	for (CPlayer* player : list)
 	{
+		int nNumPlayer = player->GetPlayNumber();
+
 		if (m_gridPlayer.at(nNumPlayer) != player->GetGrid()
 			&& m_bCheck[TYPE_MOVE] == false)
 		{// 座標が一致しなかったら
-			CTutorialCheck::Create(D3DXVECTOR3(TEXTURE_CENTER_POS.x - CHECK_POS[TYPE_MOVE].x, 
-									TEXTURE_CENTER_POS.y + CHECK_POS[TYPE_MOVE].y - CHECK_POS_Y, TEXTURE_CENTER_POS.z));
-
-			CTutorialCheck::Create(D3DXVECTOR3(TEXTURE_CENTER_POS.x + CHECK_POS[TYPE_MOVE].x,
-				TEXTURE_CENTER_POS.y + CHECK_POS[TYPE_MOVE].y - CHECK_POS_Y, TEXTURE_CENTER_POS.z));
+			if (nNumPlayer == 0)
+			{
+				CTutorialCheck::Create(D3DXVECTOR3(TEXTURE_CENTER_POS.x - CHECK_POS[TYPE_MOVE].x,
+					TEXTURE_CENTER_POS.y + CHECK_POS[TYPE_MOVE].y - CHECK_POS_Y, TEXTURE_CENTER_POS.z));
+			}
+			if (nNumPlayer == 1)
+			{
+				CTutorialCheck::Create(D3DXVECTOR3(TEXTURE_CENTER_POS.x + CHECK_POS[TYPE_MOVE].x,
+					TEXTURE_CENTER_POS.y + CHECK_POS[TYPE_MOVE].y - CHECK_POS_Y, TEXTURE_CENTER_POS.z));
+			}
 
 			// マーカー表示
 			m_bCheck[TYPE_MOVE] = true;
