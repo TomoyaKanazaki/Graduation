@@ -20,18 +20,19 @@
 #include "RailBlock.h"
 #include "RollRock.h"
 #include "bowabowa.h"
-#include "ScrollDevice.h"
-#include "SlopeDevice.h"
 #include "mask.h"
 #include "signal.h"
 #include "pause.h"
 #include "EventMovie.h"
+#include "SlopeDevice.h"
 #include "Cross.h"
 #include "MapMove.h"
 #include "Motion.h"
 
 #include "sound.h"
 #include "shadow.h"
+
+#include "BgObj.h"
 
 namespace
 {
@@ -191,15 +192,11 @@ HRESULT CGame::Init(void)
 		LetterBox[nCnt]->SetTexture("data\\TEXTURE\\Test.jpg");
 	}
 
-	// 下床の生成
+	// 背景オブジェクトの生成処理
 	auto grid = FIELD_GRID;
-	CObjmeshField* pBottonField = CObjmeshField::Create(grid);
-	pBottonField->SetTexture(BOTTOM_FIELD_TEX);
-	pBottonField->SetPos(BOTTOM_FIELD_POS);
-	m_bGameEnd = false;
+	BgObj::SetGame(grid);
 
-	// 背景モデル設定処理
-	SetBgObjTest();
+	m_bGameEnd = false;
 
 	if (m_pEventMovie == nullptr)
 	{
@@ -845,60 +842,4 @@ void CGame::LoadStageMapModel(const std::string pFilename)
 	//{//ファイルが開けなかった場合
 	//	printf("***ファイルを開けませんでした***\n");
 	//}
-}
-
-//====================================================================
-// テスト用背景オブジェクト設定処理
-//====================================================================
-void CGame::SetBgObjTest(void)
-{
-	// マップ移動装置
-	{
-		// 左右
-		CScrollDevice* pScrollDevice = CScrollDevice::Create(SCROLL_DEVICE_MODEL_WIDTH, SCROLL_DEVICE_ENEMY_MODEL);
-		pScrollDevice->SetPos(D3DXVECTOR3(1075.0f, 75.0f, 0.0f));
-		pScrollDevice->SetLocateWorldType(CScrollDevice::LOCATE_WORLD_TYPE_LEFT);
-		pScrollDevice->SetState(CScrollDevice::STATE_NORMAL);
-
-		pScrollDevice = CScrollDevice::Create(SCROLL_DEVICE_MODEL_WIDTH, SCROLL_DEVICE_ENEMY_MODEL);
-		pScrollDevice->SetPos(D3DXVECTOR3(-1075.0f, 75.0f, 0.0f));
-		pScrollDevice->SetLocateWorldType(CScrollDevice::LOCATE_WORLD_TYPE_RIGHT);
-		pScrollDevice->SetState(CScrollDevice::STATE_NORMAL);
-
-		// 上下
-		pScrollDevice = CScrollDevice::Create(SCROLL_DEVICE_MODEL_HEIGHT, SCROLL_DEVICE_ENEMY_MODEL);
-		pScrollDevice->SetPos(D3DXVECTOR3(0.0f, 75.0f, 700.0f));
-		pScrollDevice->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
-		pScrollDevice->SetLocateWorldType(CScrollDevice::LOCATE_WORLD_TYPE_TOP);
-		pScrollDevice->SetState(CScrollDevice::STATE_NORMAL);
-
-		pScrollDevice = CScrollDevice::Create(SCROLL_DEVICE_MODEL_HEIGHT, SCROLL_DEVICE_ENEMY_MODEL);
-		pScrollDevice->SetPos(D3DXVECTOR3(0.0f, 75.0f, -700.0f));
-		pScrollDevice->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
-		pScrollDevice->SetLocateWorldType(CScrollDevice::LOCATE_WORLD_TYPE_BOTTOM);
-		pScrollDevice->SetState(CScrollDevice::STATE_NORMAL);
-	}
-
-	// ジャッキ
-	{
-		CSlopeDevice* pSlopeDevice = CSlopeDevice::Create(SLOPE_DEVICE_MODEL, SLOPE_DEVICE_ENEMY_MODEL);
-		pSlopeDevice->SetPos(D3DXVECTOR3(800.0f, BOTTOM_FIELD_POS.y, 450.0f));
-		pSlopeDevice->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
-		pSlopeDevice->SetLocateWorldType(CSlopeDevice::LOCATE_WORLD_TYPE_TOP_LEFT);
-
-		pSlopeDevice = CSlopeDevice::Create(SLOPE_DEVICE_MODEL, SLOPE_DEVICE_ENEMY_MODEL);
-		pSlopeDevice->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
-		pSlopeDevice->SetPos(D3DXVECTOR3(-800.0f, BOTTOM_FIELD_POS.y, 450.0f));
-		pSlopeDevice->SetLocateWorldType(CSlopeDevice::LOCATE_WORLD_TYPE_TOP_RIGHT);
-
-		pSlopeDevice = CSlopeDevice::Create(SLOPE_DEVICE_MODEL, SLOPE_DEVICE_ENEMY_MODEL);
-		pSlopeDevice->SetPos(D3DXVECTOR3(800.0f, BOTTOM_FIELD_POS.y, -450.0f));
-		pSlopeDevice->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
-		pSlopeDevice->SetLocateWorldType(CSlopeDevice::LOCATE_WORLD_TYPE_BOTTOM_LEFT);
-
-		pSlopeDevice = CSlopeDevice::Create(SLOPE_DEVICE_MODEL, SLOPE_DEVICE_ENEMY_MODEL);
-		pSlopeDevice->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
-		pSlopeDevice->SetPos(D3DXVECTOR3(-800.0f, BOTTOM_FIELD_POS.y, -450.0f));
-		pSlopeDevice->SetLocateWorldType(CSlopeDevice::LOCATE_WORLD_TYPE_BOTTOM_RIGHT);
-	}
 }

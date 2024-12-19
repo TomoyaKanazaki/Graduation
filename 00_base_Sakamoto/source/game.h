@@ -85,8 +85,6 @@ private:
 	void LoadStageRailBlock(const std::string pFilename);
 	void LoadStageMapModel(const std::string pFilename);
 
-	void SetBgObjTest(void);
-
 	// ƒVƒ“ƒOƒ‹ƒgƒ“
 	static CGame* m_pGame;
 
