@@ -344,8 +344,6 @@ void CMapMove::StateManager(void)
 						{
 						case 0:
 							m_State = MOVE_SLOPE_UP;
-
-							m_fScrollEndLine = 100.0f;
 							break;
 						case 1:
 							m_State = MOVE_SLOPE_DOWN;
