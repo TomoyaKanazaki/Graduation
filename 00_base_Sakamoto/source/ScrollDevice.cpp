@@ -20,7 +20,7 @@
 namespace
 {
 	const D3DXVECTOR3 ROTATE_ADD_TOP = D3DXVECTOR3(0.0f, 0.0f, -0.05f);		// 上
-	const D3DXVECTOR3 ROTATE_ADD_BOTTOM = D3DXVECTOR3(0.0f, 0.0f, -0.05f);	// 下
+	const D3DXVECTOR3 ROTATE_ADD_BOTTOM = D3DXVECTOR3(0.0f, 0.0f, 0.05f);	// 下
 	const D3DXVECTOR3 ROTATE_ADD_LEFT = D3DXVECTOR3(0.0f, 0.0f, 0.05f);		// 左
 	const D3DXVECTOR3 ROTATE_ADD_RIGHT = D3DXVECTOR3(0.0f, 0.0f, -0.05f);	// 右
 
@@ -31,8 +31,8 @@ namespace
 
 	const D3DXVECTOR3 MEDAMAN_ROT_TOP = D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f);
 	const D3DXVECTOR3 MEDAMAN_ROT_BOTTOM = D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f);
-	const D3DXVECTOR3 MEDAMAN_ROT_LEFT = D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f);
-	const D3DXVECTOR3 MEDAMAN_ROT_RIGHT = D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f);
+	const D3DXVECTOR3 MEDAMAN_ROT_LEFT = D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f);
+	const D3DXVECTOR3 MEDAMAN_ROT_RIGHT = D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f);
 }
 
 //====================================================================
@@ -196,34 +196,8 @@ void CScrollDevice::SetState(STATE state)
 			m_pObjectCharacter->GetMotion()->Set(0, 5);
 		}
 
-		if (m_pObjectCharacter == nullptr)
-		{
-			return;
-		}
-
-		switch (m_LocateWorldType)
-		{
-		case CScrollDevice::LOCATE_WORLD_TYPE_TOP:
-			
-			m_pObjectCharacter->GetModel(0)->SetStartRot(MEDAMAN_ROT_TOP_NOR);
-			
-			break;
-		case CScrollDevice::LOCATE_WORLD_TYPE_BOTTOM:
-
-			m_pObjectCharacter->GetModel(0)->SetStartRot(MEDAMAN_ROT_BOTTOM_NOR);
-
-			break;
-		case CScrollDevice::LOCATE_WORLD_TYPE_LEFT:
-
-			m_pObjectCharacter->GetModel(0)->SetStartRot(MEDAMAN_ROT_LEFT_NOR);
-
-			break;
-		case CScrollDevice::LOCATE_WORLD_TYPE_RIGHT:
-
-			m_pObjectCharacter->GetModel(0)->SetStartRot(MEDAMAN_ROT_RIGHT_NOR);
-
-			break;
-		}
+		// メダマンの向き設定
+		SetRotMedaman();
 
 		break;
 	case CScrollDevice::STATE_ROTATE:
@@ -237,15 +211,13 @@ void CScrollDevice::SetState(STATE state)
 		break;
 	}
 }
+
 //====================================================================
 // 特定条件（傾き）の状態設定処理
 //====================================================================
 void CScrollDevice::SetStateArrow(CScrollArrow::Arrow stateArrow)
 {
-	if (m_pObjectCharacter == nullptr)
-	{
-		return;
-	}
+	m_rotMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
 	switch (stateArrow)
 	{
@@ -258,7 +230,10 @@ void CScrollDevice::SetStateArrow(CScrollArrow::Arrow stateArrow)
 			m_rotMove = ROTATE_ADD_TOP;
 
 			// 方向
-			m_pObjectCharacter->GetModel(0)->SetStartRot(MEDAMAN_ROT_TOP);
+			SetState(STATE_ROTATE);
+
+			// メダマンの向き設定
+			SetRotMedaman(stateArrow);
 		}
 
 		break;
@@ -271,7 +246,10 @@ void CScrollDevice::SetStateArrow(CScrollArrow::Arrow stateArrow)
 			m_rotMove = ROTATE_ADD_BOTTOM;
 
 			// 方向
-			m_pObjectCharacter->GetModel(0)->SetStartRot(MEDAMAN_ROT_BOTTOM);
+			SetState(STATE_ROTATE);
+
+			// メダマンの向き設定
+			SetRotMedaman(stateArrow);
 		}
 
 		break;
@@ -285,7 +263,10 @@ void CScrollDevice::SetStateArrow(CScrollArrow::Arrow stateArrow)
 			m_rotMove = ROTATE_ADD_LEFT;
 
 			// 方向
-			m_pObjectCharacter->GetModel(0)->SetStartRot(MEDAMAN_ROT_LEFT);
+			SetState(STATE_ROTATE);
+
+			// メダマンの向き設定
+			SetRotMedaman(stateArrow);
 		}
 
 		break;
@@ -298,11 +279,16 @@ void CScrollDevice::SetStateArrow(CScrollArrow::Arrow stateArrow)
 			m_rotMove = ROTATE_ADD_RIGHT;
 
 			// 方向
-			m_pObjectCharacter->GetModel(0)->SetStartRot(MEDAMAN_ROT_RIGHT);
+			SetState(STATE_ROTATE);
+
+			// メダマンの向き設定
+			SetRotMedaman(stateArrow);
 		}
 
 		break;
 	}
+
+
 }
 
 //====================================================================
@@ -374,6 +360,76 @@ void CScrollDevice::Rotate(D3DXVECTOR3& rotMy,int nNldxModel)
 
 	// モデルの回転設定
 	pModel->SetStartRot(rot);
+}
+
+//====================================================================
+// 状態設定処理
+//====================================================================
+void CScrollDevice::SetRotMedaman(CScrollArrow::Arrow stateArrow)
+{
+	if (m_pObjectCharacter == nullptr)
+	{
+		return;
+	}
+
+	switch (m_State)
+	{
+	case CScrollDevice::STATE_NORMAL:
+
+		switch (m_LocateWorldType)
+		{
+		case CScrollDevice::LOCATE_WORLD_TYPE_TOP:
+
+			m_pObjectCharacter->GetModel(0)->SetStartRot(MEDAMAN_ROT_TOP_NOR);
+
+			break;
+		case CScrollDevice::LOCATE_WORLD_TYPE_BOTTOM:
+
+			m_pObjectCharacter->GetModel(0)->SetStartRot(MEDAMAN_ROT_BOTTOM_NOR);
+
+			break;
+		case CScrollDevice::LOCATE_WORLD_TYPE_LEFT:
+
+			m_pObjectCharacter->GetModel(0)->SetStartRot(MEDAMAN_ROT_LEFT_NOR);
+
+			break;
+		case CScrollDevice::LOCATE_WORLD_TYPE_RIGHT:
+
+			m_pObjectCharacter->GetModel(0)->SetStartRot(MEDAMAN_ROT_RIGHT_NOR);
+
+			break;
+		}
+
+		break;
+
+	case CScrollDevice::STATE_ROTATE:
+
+		switch (stateArrow)
+		{
+		case CScrollArrow::STATE_UP:
+
+			m_pObjectCharacter->GetModel(0)->SetStartRot(MEDAMAN_ROT_TOP);
+
+			break;
+		case CScrollArrow::STATE_DOWN:
+
+			m_pObjectCharacter->GetModel(0)->SetStartRot(MEDAMAN_ROT_BOTTOM);
+
+			break;
+		case CScrollArrow::STATE_LEFT:
+
+			m_pObjectCharacter->GetModel(0)->SetStartRot(MEDAMAN_ROT_LEFT);
+
+			break;
+		case CScrollArrow::STATE_RIGHT:
+
+			m_pObjectCharacter->GetModel(0)->SetStartRot(MEDAMAN_ROT_RIGHT);
+
+			break;
+		}
+
+		break;
+	}
 }
 
 //====================================================================
