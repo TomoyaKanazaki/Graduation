@@ -292,6 +292,9 @@
     <ClCompile Include="source\tutorialUi.cpp">
       <Filter>ソース ファイル\Ui</Filter>
     </ClCompile>
+    <ClCompile Include="source\bgObj.cpp">
+      <Filter>ソース ファイル\Map\Object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\object.h">
@@ -542,6 +545,9 @@
     </ClInclude>
     <ClInclude Include="source\tutorialUi.h">
       <Filter>ソース ファイル\Ui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\bgObj.h">
+      <Filter>ソース ファイル\Map\Object</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

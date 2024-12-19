@@ -199,6 +199,9 @@ void CFire::Update(void)
 		m_nLife < 0
 		)
 	{
+		// エフェクトを生成
+		MyEffekseer::EffectCreate(CMyEffekseer::TYPE_HITTHEWALL, false, useful::CalcMatrix(pos, rot, *GetUseMultiMatrix()), rot, D3DXVECTOR3(25.0f, 25.0f, 25.0f));
+
 		Uninit();
 	}
 }

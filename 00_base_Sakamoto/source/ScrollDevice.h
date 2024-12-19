@@ -66,6 +66,7 @@ public:
 
 	void SetLocateWorldType(LOCATE_WORLD_TYPE LocateWorldType) { m_LocateWorldType = LocateWorldType; }
 
+
 	// 静的メンバ関数
 	static CListManager<CScrollDevice>* GetList(void); // リスト取得
 
@@ -74,6 +75,8 @@ private:
 
 	void StateManager(D3DXVECTOR3& rotMy);
 	void Rotate(D3DXVECTOR3& rotMy,int nNldxModel);
+
+	void SetRotMedaman(CScrollArrow::Arrow stateArrow = CScrollArrow::Arrow(0));
 
 	STATE m_State;					//状態
 	int m_nStateCount;				//状態管理用変数
