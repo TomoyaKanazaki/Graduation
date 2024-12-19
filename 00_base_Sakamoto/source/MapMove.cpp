@@ -464,8 +464,8 @@ void CMapMove::StateManager(void)
 					// マップ移動装置のリストの中身を確認する
 					for (CScrollDevice* pScrollDevice : list)
 					{
-						// 回転状態に変更
-						pScrollDevice->SetState(CScrollDevice::STATE_ROTATE);
+						// 方向指定状態設定（一致だと回転）
+						pScrollDevice->SetStateArrow((CScrollArrow::Arrow)m_DevilArrow);
 					}
 
 					m_bScrollOK = false;

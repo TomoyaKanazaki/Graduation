@@ -55,21 +55,32 @@ namespace
 	const std::string TUTORIAL_TEX[]
 	{// チュートリアルテキストのテクスチャパス
 		{ "data\\TEXTURE\\UI\\tutorial_text_00.png" },	// 移動のテキスト
-		{ "data\\TEXTURE\\UI\\tutorial_text_001.png" },	// 十字架座標
-		{ "data\\TEXTURE\\UI\\tutorial_text_003.png" },	// ボワボワの座標
-		{ "data\\TEXTURE\\UI\\tutorial_text_002.png" },	// 攻撃の座標
-		{ "data\\TEXTURE\\UI\\tutorial_text_004.png" },	// 聖書の座標
-		{ "data\\TEXTURE\\UI\\tutorial_text_005.png" },	// デビルホールの座標
+		{ "data\\TEXTURE\\UI\\tutorial_text_01.png" },	// 十字架座標
+		{ "data\\TEXTURE\\UI\\tutorial_text_03.png" },	// ボワボワの座標
+		{ "data\\TEXTURE\\UI\\tutorial_text_02.png" },	// 攻撃の座標
+		{ "data\\TEXTURE\\UI\\tutorial_text_04.png" },	// 聖書の座標
+		{ "data\\TEXTURE\\UI\\tutorial_text_05.png" },	// デビルホールの座標
+	};
+
+	const D3DXVECTOR3 TEXT_POS[]
+	{// テキストの位置
+		{ D3DXVECTOR3(5.0f, 200.0f, 0.0f) },	// 移動のテキスト
+		{ D3DXVECTOR3(115.0f, 50.0f, 0.0f) },	// 十字架座標
+		{ D3DXVECTOR3(115.0f, 50.0f, 0.0f) },	// ボワボワの座標
+		{ D3DXVECTOR3(107.5f, 50.0f, 0.0f) },	// 攻撃の座標
+		{ D3DXVECTOR3(115.0f, 50.0f, 0.0f) },	// 聖書の座標
+		{ D3DXVECTOR3(115.0f, 50.0f, 0.0f) },	// デビルホールの座標
+
 	};
 
 	const D3DXVECTOR3 TEXT_SIZE[]
 	{// それぞれのテキストのサイズ
 		{ D3DXVECTOR3(250.0f, 100.0f, 0.0f) },	// 移動のテキスト
-		{ D3DXVECTOR3(250.0f, 50.0f, 0.0f) },	// 十字架座標
-		{ D3DXVECTOR3(250.0f, 50.0f, 0.0f) },	// ボワボワの座標
-		{ D3DXVECTOR3(250.0f, 50.0f, 0.0f) },	// 攻撃の座標
-		{ D3DXVECTOR3(250.0f, 50.0f, 0.0f) },	// 聖書の座標
-		{ D3DXVECTOR3(250.0f, 50.0f, 0.0f) },	// デビルホールの座標
+		{ D3DXVECTOR3(500.0f, 50.0f, 0.0f) },	// 十字架座標
+		{ D3DXVECTOR3(500.0f, 50.0f, 0.0f) },	// ボワボワの座標
+		{ D3DXVECTOR3(500.0f, 50.0f, 0.0f) },	// 攻撃の座標
+		{ D3DXVECTOR3(500.0f, 50.0f, 0.0f) },	// 聖書の座標
+		{ D3DXVECTOR3(500.0f, 50.0f, 0.0f) },	// デビルホールの座標
 	};
 
 	const int BIBLE_OUTGRIT = 2;			// 聖書がマップの外側から何マス内側にいるか
@@ -120,6 +131,7 @@ namespace
 //==========================================
 static_assert(NUM_ARRAY(CHECK_POS) == CTutorial::TYPE_MAX, "ERROR : Type Count Missmatch");
 static_assert(NUM_ARRAY(TUTORIAL_TEX) == CTutorial::TYPE_MAX, "ERROR : Type Count Missmatch");
+static_assert(NUM_ARRAY(TEXT_POS) == CTutorial::TYPE_MAX, "ERROR : Type Count Missmatch");
 static_assert(NUM_ARRAY(TEXT_SIZE) == CTutorial::TYPE_MAX, "ERROR : Type Count Missmatch");
 
 //====================================================================
@@ -230,7 +242,7 @@ HRESULT CTutorial::Init(void)
 	for (int i = 0; i < TYPE_MAX; ++i)
 	{// テキストの生成
 		m_pText.push_back(CTutorialUi::Create(
-			D3DXVECTOR3(TEXTURE_CENTER_POS.x, CHECK_POS[i].y, CHECK_POS[i].z), 
+			D3DXVECTOR3(TEXTURE_CENTER_POS.x + TEXT_POS[i].x, CHECK_POS[i].y, CHECK_POS[i].z),
 						TEXT_SIZE[i], TUTORIAL_TEX[i], 1.0f));
 	}
 
@@ -335,6 +347,9 @@ void CTutorial::Update(void)
 		{// 座標が一致しなかったら
 			CTutorialCheck::Create(D3DXVECTOR3(TEXTURE_CENTER_POS.x - CHECK_POS[TYPE_MOVE].x, 
 									TEXTURE_CENTER_POS.y + CHECK_POS[TYPE_MOVE].y - CHECK_POS_Y, TEXTURE_CENTER_POS.z));
+
+			CTutorialCheck::Create(D3DXVECTOR3(TEXTURE_CENTER_POS.x + CHECK_POS[TYPE_MOVE].x,
+				TEXTURE_CENTER_POS.y + CHECK_POS[TYPE_MOVE].y - CHECK_POS_Y, TEXTURE_CENTER_POS.z));
 
 			// マーカー表示
 			m_bCheck[TYPE_MOVE] = true;
@@ -455,7 +470,7 @@ void CTutorial::Update(void)
 		m_nTutorialWave = WAVE_MAX;
 
 		// 項目達成テクスチャ表示
-		CTutorialUi::Create(TEXTURE_CENTER_POS, ACHIEVEMENT_SIZE, ACHIEVEMENT_TEX, 1.0f);
+		//CTutorialUi::Create(TEXTURE_CENTER_POS, ACHIEVEMENT_SIZE, ACHIEVEMENT_TEX, 1.0f);
 	}
 
 #if _DEBUG
@@ -526,8 +541,8 @@ void CTutorial::Update(void)
 		if (m_bTutorialEnd == true)
 		{
 			if (pInputKeyboard->GetTrigger(DIK_RETURN))
-			{// 好きなタイミングでゲームに遷移
-				CFade::SetFade(CScene::MODE_GAME);
+			{// 好きなタイミングで遷移
+				CFade::SetFade(CScene::MODE_TITLE);
 			}
 		}
 
