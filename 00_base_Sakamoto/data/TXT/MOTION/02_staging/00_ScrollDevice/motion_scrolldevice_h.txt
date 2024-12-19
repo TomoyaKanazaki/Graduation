@@ -15,7 +15,7 @@ NUM_MODEL = 5
 # モデルファイル名
 #------------------------------------------------------------------------------
 MODEL_FILENAME = data/MODEL/03_staging/00_ScrollDevice/00_body.x			# [0]体（非表示）
-MODEL_FILENAME = data/MODEL/03_staging/00_ScrollDevice/01_roller.x			# [1]ローラー
+MODEL_FILENAME = data/MODEL/03_staging/00_ScrollDevice/01_roller_h.x		# [1]ローラー
 MODEL_FILENAME = data/MODEL/03_staging/00_ScrollDevice/02_mawasiguruma.x	# [2]回し車
 MODEL_FILENAME = data/MODEL/03_staging/00_ScrollDevice/03_head.x			# [3]先っぽ1
 MODEL_FILENAME = data/MODEL/03_staging/00_ScrollDevice/03_head.x			# [4]先っぽ2
@@ -53,14 +53,14 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 3
 		PARENT = 0
-		POS = 0.00 0.00 750.00
+		POS = 0.00 0.00 1150.00
 		ROT = 0.00 0.00 0.00
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 4
 		PARENT = 0
-		POS = 0.00 0.00 -750.00
+		POS = 0.00 0.00 -1150.00
 		ROT = 0.00 3.14 0.00
 	END_PARTSSET
 	
