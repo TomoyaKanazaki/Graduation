@@ -1260,7 +1260,10 @@ void CPlayer::SearchWall(D3DXVECTOR3& posThis)
 
 		if (m_bGritCenter == false)
 		{
+			float MyPosY = posThis.y;
 			posThis = CMapSystem::GetInstance()->GetGritPos(m_Grid);
+			posThis.y = MyPosY;
+
 			m_bGritCenter = true;
 		}
 	}
