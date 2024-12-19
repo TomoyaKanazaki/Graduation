@@ -16,6 +16,7 @@
 #include "MapSystem.h"
 #include "MyEffekseer.h"
 #include "Scene.h"
+#include "game.h"
 
 #ifdef _DEBUG
 #define SET_MODE (CScene::MODE_TITLE)
@@ -440,8 +441,19 @@ void CManager::Update(void)
 		m_PauseOK == true &&
 		m_pFade->GetFade() == CFade::FADE_NONE)
 	{
-		//条件？ 処理１：処理２;
-		m_Pause = m_Pause ? false : true;
+		if (CScene::GetMode() == CScene::MODE_GAME)
+		{
+			if (CGame::GetInstance()->GetEvent() == false)
+			{
+				//条件？ 処理１：処理２;
+				m_Pause = m_Pause ? false : true;
+			}
+		}
+		else if (CScene::GetMode() == CScene::MODE_TUTORIAL)
+		{
+			//条件？ 処理１：処理２;
+			m_Pause = m_Pause ? false : true;
+		}
 	}
 
 	//シーンの更新処理
