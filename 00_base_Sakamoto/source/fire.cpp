@@ -1,6 +1,6 @@
 //============================================
 //
-//	オブジェクトＸモデルのサンプル [SampleObjX.cpp]
+//	弾の処理 [fire.cpp]
 //	Author:morikawa shunya
 //
 //============================================
@@ -21,7 +21,7 @@
 //==========================================
 namespace
 {
-	const int FIRE_LIFE = 120;			// 炎の体力
+	const int FIRE_LIFE = 60;			// 炎の体力
 	const float FIRE_SPEED = 10.0f;		// 炎の速度
 	const float FIRE_HEIGHT = 50.0f;	// 炎の高さ
 	const D3DXVECTOR3 SAMPLE_SIZE = D3DXVECTOR3(20.0f, 20.0f, 20.0f);		//当たり判定

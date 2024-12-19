@@ -451,11 +451,11 @@ void CTutorial::Update(void)
 
 	if (m_nTutorialWave >= WAVE_MAX)
 	{
-		// 項目達成テクスチャ表示
-		CTutorialUi::Create(TEXTURE_CENTER_POS, ACHIEVEMENT_SIZE, ACHIEVEMENT_TEX, 1.0f);
-
 		// 値がWAVE_MAX超えないように
 		m_nTutorialWave = WAVE_MAX;
+
+		// 項目達成テクスチャ表示
+		CTutorialUi::Create(TEXTURE_CENTER_POS, ACHIEVEMENT_SIZE, ACHIEVEMENT_TEX, 1.0f);
 	}
 
 #if _DEBUG
@@ -708,11 +708,11 @@ void CTutorial::SetBgObjTest(void)
 
 	// マップ移動装置
 	{
-		CScrollDevice* pScrollDevice = CScrollDevice::Create(SCROLL_DEVICE_MODEL, SCROLL_DEVICE_ENEMY_MODEL);
-		pScrollDevice->SetPos(D3DXVECTOR3(1300.0f, 0.0f, 0.0f));
+		//CScrollDevice* pScrollDevice = CScrollDevice::Create(SCROLL_DEVICE_MODEL, SCROLL_DEVICE_ENEMY_MODEL);
+		//pScrollDevice->SetPos(D3DXVECTOR3(1300.0f, 0.0f, 0.0f));
 
-		pScrollDevice = CScrollDevice::Create(SCROLL_DEVICE_MODEL, SCROLL_DEVICE_ENEMY_MODEL);
-		pScrollDevice->SetPos(D3DXVECTOR3(-1300.0f, 0.0f, 0.0f));
+		//pScrollDevice = CScrollDevice::Create(SCROLL_DEVICE_MODEL, SCROLL_DEVICE_ENEMY_MODEL);
+		//pScrollDevice->SetPos(D3DXVECTOR3(-1300.0f, 0.0f, 0.0f));
 	}
 }
 
