@@ -9,6 +9,8 @@
 
 #include "objectcharacter.h"
 
+#include "scrollarrow.h"
+
 // マップ移動装置クラス
 class CScrollDevice : public CObjectCharacter
 {
@@ -25,6 +27,16 @@ public:
 		STATE_MAX,
 	};
 
+	// 世界からの設置場所
+	enum LOCATE_WORLD_TYPE
+	{
+		LOCATE_WORLD_TYPE_TOP = 0,	// 上
+		LOCATE_WORLD_TYPE_BOTTOM,	// 下
+		LOCATE_WORLD_TYPE_LEFT,		// 左
+		LOCATE_WORLD_TYPE_RIGHT,	// 右
+		LOCATE_WORLD_TYPE_MAX
+	};
+
 	// モーション
 	enum ACTION_TYPE
 	{
@@ -32,7 +44,7 @@ public:
 		ACTION_MAX,			// 最大
 	};
 
-	// モーション
+	// パーツ構成
 	enum SETUP_TYPE
 	{
 		SETUP_TYPE_FOUNDATION = 0,	// 土台
@@ -50,6 +62,9 @@ public:
 	void Draw(void);
 
 	void SetState(STATE state);
+	void SetStateArrow(CScrollArrow::Arrow stateArrow);
+
+	void SetLocateWorldType(LOCATE_WORLD_TYPE LocateWorldType) { m_LocateWorldType = LocateWorldType; }
 
 	// 静的メンバ関数
 	static CListManager<CScrollDevice>* GetList(void); // リスト取得
@@ -58,10 +73,14 @@ private:
 	HRESULT InitModel(const std::string pModelNameScrollDevice, const std::string pModelNameEnemy);
 
 	void StateManager(D3DXVECTOR3& rotMy);
-	void Rotate(D3DXVECTOR3& rotMy,int nNldxModel, D3DXVECTOR3 rotate);
+	void Rotate(D3DXVECTOR3& rotMy,int nNldxModel);
 
 	STATE m_State;					//状態
 	int m_nStateCount;				//状態管理用変数
+
+	LOCATE_WORLD_TYPE m_LocateWorldType;	// 世界からの設置位置
+
+	D3DXVECTOR3 m_rotMove;					// 向きの移動量
 
 	CObjectCharacter* m_pObjectCharacter;	// オブジェクトキャラクターのポインタ
 
