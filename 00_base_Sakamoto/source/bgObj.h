@@ -13,8 +13,12 @@
 //==========================================
 namespace BgObj
 {
+	void Init(void);
+	void Update(void);
+
 	void SetGame(CMapSystem::GRID& grid);
 	void SetFieldBotton(CMapSystem::GRID& grid);
 	void SetScrollDevice(void);
 	void SetSlopeDevice(void);
+	void SetMountain(void);
 }

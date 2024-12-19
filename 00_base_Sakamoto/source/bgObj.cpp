@@ -12,6 +12,21 @@
 #include "ScrollDevice.h"
 #include "SlopeDevice.h"
 
+#include "objectX.h"
+#include "object3D.h"
+
+#include "objectcharacter.h"
+#include "motion.h"
+
+//==========================================
+//  無名名前空間
+//==========================================
+namespace
+{
+	CObjectCharacter* m_pBGCharacter[4];	// 背景キャラクターのポインタ
+	int m_nCount;							// カウント
+}
+
 // 定数定義
 namespace
 {
@@ -27,6 +42,43 @@ namespace
 }
 
 //==========================================
+//  初期化処理
+//==========================================
+void BgObj::Init(void)
+{
+	for (int nCnt = 0; nCnt < 4; nCnt++)
+	{
+		m_pBGCharacter[nCnt] = nullptr;
+	}
+
+	m_nCount = 0;
+}
+
+//==========================================
+//  更新処理
+//==========================================
+void BgObj::Update(void)
+{
+	m_nCount++;
+
+	for (int nCnt = 0; nCnt < 4; nCnt++)
+	{
+		if (m_pBGCharacter[nCnt] != nullptr)
+		{
+			m_pBGCharacter[nCnt]->SetPos(D3DXVECTOR3(
+				-1975.0f + sinf(D3DX_PI * (0.5f * (nCnt + (float)m_nCount * 0.005f))) * 400.0f,
+				-200.0f,
+				1500.0f + cosf(D3DX_PI * (0.5f * (nCnt + (float)m_nCount * 0.005f))) * 250.0f));
+
+			m_pBGCharacter[nCnt]->SetRot(D3DXVECTOR3(
+				0.0f,
+				sinf(D3DX_PI * (0.5f * ((nCnt - 1) + (float)m_nCount * 0.005f))),
+				0.0f));
+		}
+	}
+}
+
+//==========================================
 //  ゲームでの設置処理
 //==========================================
 void BgObj::SetGame(CMapSystem::GRID& grid)
@@ -37,6 +89,9 @@ void BgObj::SetGame(CMapSystem::GRID& grid)
 	// マップ移動・傾き装置の設置処理
 	SetScrollDevice();
 	SetSlopeDevice();
+
+	// 山オブジェクトの設置処理
+	SetMountain();
 }
 
 //==========================================
@@ -104,4 +159,49 @@ void BgObj::SetSlopeDevice(void)
 	pSlopeDevice->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
 	pSlopeDevice->SetPos(D3DXVECTOR3(-800.0f, BOTTOM_FIELD_POS.y, -450.0f));
 	pSlopeDevice->SetLocateWorldType(CSlopeDevice::LOCATE_WORLD_TYPE_BOTTOM_RIGHT);
+}
+
+//==========================================
+//  山オブジェクトの設置処理
+//==========================================
+void BgObj::SetMountain(void)
+{
+	//背景オブジェクトの生成
+
+	//右山
+	CObjectX* pRMountain = CObjectX::Create("data\\MODEL\\RightMountain.x");
+	pRMountain->SetPos(D3DXVECTOR3(2000.0f, -1000.0f, 2000.0f));
+
+	//左山
+	CObjectX* pLMountain = CObjectX::Create("data\\MODEL\\LeftMountain.x");
+	pLMountain->SetPos(D3DXVECTOR3(-1900.0f, -1000.0f, 1500.0f));
+
+	//マグマ
+	CObject3D* pMaguma = CObject3D::Create();
+	pMaguma->SetPos(D3DXVECTOR3(0.0f, -950.0f, 0.0f));
+	pMaguma->SetSize(D3DXVECTOR3(3000.0f, 0.0f, 6500.0f));
+	pMaguma->SetScrollSpeed(D3DXVECTOR2(0.0f, -0.0001f));
+	pMaguma->SetTexture("data\\TEXTURE\\MAGUMA.png");
+
+	//メダマン
+	for (int nCnt = 0; nCnt < 4; nCnt++)
+	{
+		if (m_pBGCharacter[nCnt] == nullptr)
+		{
+			m_pBGCharacter[nCnt] = CObjectCharacter::Create(false);
+			m_pBGCharacter[nCnt]->SetTxtCharacter(SCROLL_DEVICE_ENEMY_MODEL, 0);
+
+			m_pBGCharacter[nCnt]->SetPos(D3DXVECTOR3(
+				-1975.0f + sinf(D3DX_PI * (0.5f * nCnt)) * 400.0f,
+				-200.0f,
+				1500.0f + cosf(D3DX_PI * (0.5f * nCnt)) * 250.0f));
+
+			m_pBGCharacter[nCnt]->SetRot(D3DXVECTOR3(
+				0.0f,
+				sinf(D3DX_PI * (0.5f * (nCnt - 1))),
+				0.0f));
+
+			m_pBGCharacter[nCnt]->GetMotion()->Set(1, 0);
+		}
+	}
 }
