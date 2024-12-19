@@ -35,6 +35,10 @@ public:
 		SOUND_LABEL_SE_ENTER,		// 決定
 		SOUND_LABEL_SE_GET_ICECREAM,// アイスクリーム取得時
 		SOUND_LABEL_SE_UNLOCK,		// 鍵をデビルホールに差し込む
+		SOUND_LABEL_SE_SIGN_UP,		// デビルボイス上
+		SOUND_LABEL_SE_SIGN_RIGHT,	// デビルボイス右
+		SOUND_LABEL_SE_SIGN_LEFT,	// デビルボイス左
+		SOUND_LABEL_SE_SIGN_DOWN,	// デビルボイス下
 
 		// BGM
 		SOUND_LABEL_BGM_TITLE,	// タイトルbgm
