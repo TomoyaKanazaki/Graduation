@@ -431,9 +431,7 @@ void CMapMove::StateManager(void)
 						m_State = MOVE_SCROLL_UP;
 
 						// サウンド再生
-						CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_SIGN_UP);
-
-				
+						CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_SIGN_UP);		
 						break;
 
 					case 1:
@@ -441,7 +439,6 @@ void CMapMove::StateManager(void)
 
 						// サウンド再生
 						CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_SIGN_DOWN);
-						
 						break;
 
 					case 2:
@@ -449,7 +446,6 @@ void CMapMove::StateManager(void)
 
 						// サウンド再生
 						CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_SIGN_LEFT);
-
 						break;
 
 					case 3:
@@ -457,7 +453,6 @@ void CMapMove::StateManager(void)
 
 						// サウンド再生
 						CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_SIGN_RIGHT);
-
 						break;
 					}
 
