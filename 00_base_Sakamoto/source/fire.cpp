@@ -21,7 +21,7 @@
 //==========================================
 namespace
 {
-	const int FIRE_LIFE = 300;			// ‰Š‚Ì‘Ì—Í
+	const int FIRE_LIFE = 120;			// ‰Š‚Ì‘Ì—Í
 	const float FIRE_SPEED = 10.0f;		// ‰Š‚Ì‘¬“x
 	const float FIRE_HEIGHT = 50.0f;	// ‰Š‚Ì‚‚³
 	const D3DXVECTOR3 SAMPLE_SIZE = D3DXVECTOR3(20.0f, 20.0f, 20.0f);		//“–‚½‚è”»’è
