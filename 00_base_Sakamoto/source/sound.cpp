@@ -23,10 +23,10 @@ CSound::SOUNDINFO CSound::m_aSoundInfo[SOUND_LABEL_MAX] =
 	{ "data/SE/17_SE_enter.wav", 0 },				// 決定
 	{"data/SE/18_SE_get_icecream.wav", 0 },			// アイスクリーム取得時
 	{"data/SE/19_SE_unlock.wav", 0 },				// デビルホールに差し込む
-	{"data/SE/20_SE_sign_up.wav", 0 },				// デビルボイス上
-	{"data/SE/21_SE_sign_right.wav", 0 },			// デビルボイス右
-	{"data/SE/22_SE_sign_left.wav", 0 },			// デビルボイス左
-	{"data/SE/23_SE_sign_down.wav", 0 },			// デビルボイス下
+	{"data/SE/20_SE_sign_up.wav", -1 },				// デビルボイス上
+	{"data/SE/21_SE_sign_right.wav", -1 },			// デビルボイス右
+	{"data/SE/22_SE_sign_left.wav", -1 },			// デビルボイス左
+	{"data/SE/23_SE_sign_down.wav", -1 },			// デビルボイス下
 
 	// BGM
 	{ "data/BGM/00_BGM_title.wav", -1 },				// タイトル

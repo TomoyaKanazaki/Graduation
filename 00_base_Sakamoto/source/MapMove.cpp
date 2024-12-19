@@ -41,7 +41,7 @@ namespace
 	const float SCROOL_SPEED_02 = (CMapSystem::GetGritSize() * SCROOL_MOVEGRID_02) / SCROOL_COUNT_02;			// スクロールの移動速度
 
 	const int SLOPE_TIME = 300;						// 傾き操作時間
-	const int SLOPE_RAND = 50;						// 傾き発生確率
+	const int SLOPE_RAND = 0;						// 傾き発生確率
 	float STAGE_ROT_LIMIT = D3DX_PI * 0.15f;		// 傾きの角度制限
 
 	const float SLOPE_SPEED01 = 0.00075f;			// 傾きの移動速度
@@ -258,6 +258,12 @@ void CMapMove::StateManager(void)
 		// 状態終了時
 		if (m_nStateCount <= 0)
 		{
+			// サウンドの停止
+			CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_SE_SIGN_UP);
+			CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_SE_SIGN_DOWN);
+			CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_SE_SIGN_RIGHT);
+			CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_SE_SIGN_LEFT);
+
 			if (m_SetState == MOVE_SCROLL_UP ||
 				m_SetState == MOVE_SCROLL_DOWN ||
 				m_SetState == MOVE_SCROLL_LEFT ||
@@ -423,15 +429,35 @@ void CMapMove::StateManager(void)
 					{
 					case 0:
 						m_State = MOVE_SCROLL_UP;
+
+						// サウンド再生
+						CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_SIGN_UP);
+
+				
 						break;
+
 					case 1:
 						m_State = MOVE_SCROLL_DOWN;
+
+						// サウンド再生
+						CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_SIGN_DOWN);
+						
 						break;
+
 					case 2:
 						m_State = MOVE_SCROLL_LEFT;
+
+						// サウンド再生
+						CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_SIGN_LEFT);
+
 						break;
+
 					case 3:
 						m_State = MOVE_SCROLL_RIGHT;
+
+						// サウンド再生
+						CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_SIGN_RIGHT);
+
 						break;
 					}
 
