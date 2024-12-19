@@ -533,7 +533,6 @@ void CTutorial::Update(void)
 
 		//ポーズの更新処理
 		if (m_pPause != nullptr)
-
 		{
 			m_pPause->Update();
 		}
