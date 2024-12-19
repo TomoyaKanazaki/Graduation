@@ -116,9 +116,6 @@ private:
 
 	CObject2D* LetterBox[2];				//イベント時の背景表示
 
-	CObjectCharacter* m_pBGCharacter[4];	// 背景キャラクターのポインタ
-	int m_nBGCount;							// 背景の動き用のカウント
-
 	CMask* m_pPlayerMask;	// プレイヤーマスク
 	CMask* m_pEnemyMask;	// 敵マスク
 	CMask* m_pItemMask;		// アイテムマスク
