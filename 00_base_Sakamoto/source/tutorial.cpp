@@ -336,6 +336,9 @@ void CTutorial::Update(void)
 			CTutorialCheck::Create(D3DXVECTOR3(TEXTURE_CENTER_POS.x - CHECK_POS[TYPE_MOVE].x, 
 									TEXTURE_CENTER_POS.y + CHECK_POS[TYPE_MOVE].y - CHECK_POS_Y, TEXTURE_CENTER_POS.z));
 
+			CTutorialCheck::Create(D3DXVECTOR3(TEXTURE_CENTER_POS.x + CHECK_POS[TYPE_MOVE].x,
+				TEXTURE_CENTER_POS.y + CHECK_POS[TYPE_MOVE].y - CHECK_POS_Y, TEXTURE_CENTER_POS.z));
+
 			// マーカー表示
 			m_bCheck[TYPE_MOVE] = true;
 
@@ -455,7 +458,7 @@ void CTutorial::Update(void)
 		m_nTutorialWave = WAVE_MAX;
 
 		// 項目達成テクスチャ表示
-		CTutorialUi::Create(TEXTURE_CENTER_POS, ACHIEVEMENT_SIZE, ACHIEVEMENT_TEX, 1.0f);
+		//CTutorialUi::Create(TEXTURE_CENTER_POS, ACHIEVEMENT_SIZE, ACHIEVEMENT_TEX, 1.0f);
 	}
 
 #if _DEBUG
@@ -526,8 +529,8 @@ void CTutorial::Update(void)
 		if (m_bTutorialEnd == true)
 		{
 			if (pInputKeyboard->GetTrigger(DIK_RETURN))
-			{// 好きなタイミングでゲームに遷移
-				CFade::SetFade(CScene::MODE_GAME);
+			{// 好きなタイミングで遷移
+				CFade::SetFade(CScene::MODE_TITLE);
 			}
 		}
 
