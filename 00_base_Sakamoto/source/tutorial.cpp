@@ -163,6 +163,11 @@ m_nNumBible(0)				// 聖書の総数
 		CManager::GetInstance()->GetCamera(nCnt)->SetBib(false);
 		CManager::GetInstance()->GetCamera(nCnt)->SetCameraMode(CCamera::CAMERAMODE_DOWNVIEW);
 	}
+
+	for (int nCnt = 0; nCnt >= TYPE_MAX; nCnt++)
+	{
+		m_bSound[nCnt] = false;
+	}
 }
 
 //====================================================================
@@ -365,6 +370,14 @@ void CTutorial::Update(void)
 			// マーカー表示
 			m_bCheck[TYPE_MOVE] = true;
 
+			if (m_bCheck[TYPE_MOVE] == true && m_bSound[TYPE_MOVE] == false)
+			{
+				// サウンド再生
+				CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_CHECK);
+
+				m_bSound[TYPE_MOVE] = true;
+			}
+
 			if (m_bCheck[TYPE_MOVE] == true)
 			{// テキストの不透明度を下げる
 				SetUIAlpha(TYPE_MOVE, 0.5f);
@@ -383,6 +396,14 @@ void CTutorial::Update(void)
 			// マーカー表示
 			m_bCheck[TYPE_CROSS] = true;
 
+			if (m_bCheck[TYPE_CROSS] == true && m_bSound[TYPE_CROSS] == false)
+			{
+				// サウンド再生
+				CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_CHECK);
+
+				m_bSound[TYPE_CROSS] = true;
+			}
+
 			if (m_bCheck[TYPE_CROSS] == true)
 			{// テキストの不透明度を下げる
 				SetUIAlpha(TYPE_CROSS, 0.5f);
@@ -400,6 +421,14 @@ void CTutorial::Update(void)
 
 			// マーカー表示
 			m_bCheck[TYPE_BIBLE] = true;
+
+			if (m_bCheck[TYPE_BIBLE] == true && m_bSound[TYPE_BIBLE] == false)
+			{
+				// サウンド再生
+				CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_CHECK);
+
+				m_bSound[TYPE_BIBLE] = true;
+			}
 
 			if (m_bCheck[TYPE_BIBLE] == true)
 			{// テキストの不透明度を下げる
@@ -420,6 +449,14 @@ void CTutorial::Update(void)
 		// マーカー表示
 		m_bCheck[TYPE_ATTACK] = true;
 
+		if (m_bCheck[TYPE_ATTACK] == true && m_bSound[TYPE_ATTACK] == false)
+		{
+			// サウンド再生
+			CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_CHECK);
+
+			m_bSound[TYPE_ATTACK] = true;
+		}
+
 		if (m_bCheck[TYPE_ATTACK] == true)
 		{// テキストの不透明度を下げる
 			SetUIAlpha(TYPE_ATTACK, 0.5f);
@@ -437,6 +474,14 @@ void CTutorial::Update(void)
 
 		// マーカー表示
 		m_bCheck[TYPE_BOWABOWA] = true;
+
+		if (m_bCheck[TYPE_BOWABOWA] == true && m_bSound[TYPE_BOWABOWA] == false)
+		{
+			// サウンド再生
+			CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_CHECK);
+
+			m_bSound[TYPE_BOWABOWA] = true;
+		}
 
 		if (m_bCheck[TYPE_BOWABOWA] == true)
 		{// テキストの不透明度を下げる
@@ -464,6 +509,14 @@ void CTutorial::Update(void)
 
 			// マーカー表示
 			m_bCheck[TYPE_DEVILHOLE] = true;
+
+			if (m_bCheck[TYPE_DEVILHOLE] == true && m_bSound[TYPE_DEVILHOLE] == false)
+			{
+				// サウンド再生
+				CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_CHECK);
+
+				m_bSound[TYPE_DEVILHOLE] = true;
+			}
 
 			if (m_bCheck[TYPE_DEVILHOLE] == true)
 			{// テキストの不透明度を下げる
