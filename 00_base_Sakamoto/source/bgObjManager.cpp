@@ -45,6 +45,8 @@ CBgObjManager::CBgObjManager()
 		m_pBGCharacter[nCnt] = nullptr;
 	}
 
+	m_pAirShip = nullptr;
+
 	m_nCount = 0;
 }
 
@@ -92,6 +94,12 @@ void CBgObjManager::Uninit(void)
 		}
 	}
 
+	if (m_pAirShip != nullptr)
+	{
+		m_pAirShip->Uninit();
+		m_pAirShip = nullptr;
+	}
+
 	if (m_pBgObj != nullptr)
 	{
 		delete m_pBgObj;
@@ -124,6 +132,29 @@ void CBgObjManager::Update(void)
 				0.0f));
 		}
 	}
+
+	if (m_pAirShip != nullptr)
+	{
+		D3DXVECTOR3 posAirShip = m_pAirShip->GetPos();
+		D3DXVECTOR3 rotAirShip = m_pAirShip->GetRot();
+
+		rotAirShip.y += D3DX_PI * 0.001f;
+
+		float f1 = sinf(rotAirShip.y);
+		float f2 = cosf(rotAirShip.y);
+
+		posAirShip += D3DXVECTOR3
+		(
+			f1 * 3.0f,
+			0.0f,
+			f2 * 3.0f
+		);
+
+		useful::NormalizeAngle(&rotAirShip);
+
+		m_pAirShip->SetPos(posAirShip);
+		m_pAirShip->SetRot(rotAirShip);
+	}
 }
 
 //==========================================
@@ -140,6 +171,9 @@ void CBgObjManager::SetGame(CMapSystem::GRID& grid)
 
 	// 山オブジェクトの設置処理
 	SetMountain();
+
+	// 飛空艇の設置処理
+	SetAirShip();
 }
 
 //==========================================
@@ -258,4 +292,13 @@ void CBgObjManager::SetMountain(void)
 			m_pBGCharacter[nCnt]->GetMotion()->Set(1, 0);
 		}
 	}
+}
+
+//==========================================
+//  飛空艇オブジェクトの設置処理
+//==========================================
+void CBgObjManager::SetAirShip(void)
+{
+	m_pAirShip = CObjectX::Create("data\\MODEL\\airship.x");
+	m_pAirShip->SetPos(D3DXVECTOR3(750.0f, -400.0f, 1800.0f));
 }
