@@ -50,5 +50,6 @@ private:
 	float m_fSinFloat;
 
 	CObjectX* m_pEventModel;
+	CObject2D* m_pStartPolygon;
 };
 #endif

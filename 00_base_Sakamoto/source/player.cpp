@@ -482,7 +482,20 @@ void CPlayer::UI_Create(void)
 	if (m_pP_NumUI == nullptr && CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
 	{
 		m_pP_NumUI = CObjectBillboard::Create();
+		m_pP_NumUI->SetWidth(150.0f);
+		m_pP_NumUI->SetHeight(150.0f);
 		m_pP_NumUI->SetAppear(false);
+
+		switch (m_nPlayNumber)
+		{
+		case 0:
+			m_pP_NumUI->SetTexture("data\\TEXTURE\\UI\\1p.png");
+			break;
+
+		case 1:
+			m_pP_NumUI->SetTexture("data\\TEXTURE\\UI\\2p.png");
+			break;
+		}
 	}
 }
 
@@ -1245,7 +1258,14 @@ void CPlayer::SearchWall(D3DXVECTOR3& posThis)
 		m_Progress.bOKU = OKU;	//ã
 		m_Progress.bOKD = OKD;	//‰º
 
-		m_bGritCenter = true;
+		if (m_bGritCenter == false)
+		{
+			float MyPosY = posThis.y;
+			posThis = CMapSystem::GetInstance()->GetGritPos(m_Grid);
+			posThis.y = MyPosY;
+
+			m_bGritCenter = true;
+		}
 	}
 	else
 	{
