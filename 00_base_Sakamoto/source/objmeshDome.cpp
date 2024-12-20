@@ -115,27 +115,27 @@ HRESULT CObjmeshDome::Init(void)
 		//頂点カラーの設定
 		pVtx[nCnt].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 
-		////テクスチャ座標の設定
-		//if (nCenterW % 2 == 0)
-		//{
-		//	pVtx[nCnt].tex.x = 0.0f;
-		//}
-		//else
-		//{
-		//	pVtx[nCnt].tex.x = 1.0f;
-		//}
-		//if (nCenterH % 2 == 0)
-		//{
-		//	pVtx[nCnt].tex.y = 0.0f;
-		//}
-		//else
-		//{
-		//	pVtx[nCnt].tex.y = 1.0f;
-		//}
-
 		//テクスチャ座標の設定
-		pVtx[nCnt].tex.x = 1.0f / (WAIGHT_SIZE - 1) * nCenterW;
-		pVtx[nCnt].tex.y = 1.0f / (HEIGHT_SIZE - 1) * nCenterH;
+		if (nCenterW % 2 == 0)
+		{
+			pVtx[nCnt].tex.x = 0.0f;
+		}
+		else
+		{
+			pVtx[nCnt].tex.x = 1.0f;
+		}
+		if (nCenterH % 2 == 0)
+		{
+			pVtx[nCnt].tex.y = 0.0f;
+		}
+		else
+		{
+			pVtx[nCnt].tex.y = 1.0f;
+		}
+
+		////テクスチャ座標の設定
+		//pVtx[nCnt].tex.x = 1.0f / (WAIGHT_SIZE - 1) * nCenterW;
+		//pVtx[nCnt].tex.y = 1.0f / (HEIGHT_SIZE - 1) * nCenterH;
 
 
 		if ((nCnt - nCenterH) % (WAIGHT_SIZE - 1) == 0 && nCnt != 0 && nCnt != (WAIGHT_SIZE - 1) * nCenterH + nCenterH)

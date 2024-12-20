@@ -158,7 +158,7 @@ HRESULT CGame::Init(void)
 
 	m_pMeshDomeUp = CObjmeshDome::Create();
 	m_pMeshDomeUp->SetPos(D3DXVECTOR3(0.0f, -1000.0f, 0.0f));
-	m_pMeshDomeUp->SetTexture("data\\TEXTURE\\Field\\maguma_00.jpg");
+	m_pMeshDomeUp->SetTexture("data\\TEXTURE\\Field\\mesh_doom_00.png");
 
 	//ステージ情報を0にする
 	CManager::GetInstance()->SetStage(0);
