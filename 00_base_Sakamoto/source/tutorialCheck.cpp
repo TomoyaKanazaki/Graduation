@@ -19,7 +19,7 @@ namespace
 //============================================
 // コンストラクタ
 //============================================
-CTutorialCheck::CTutorialCheck()
+CTutorialCheck::CTutorialCheck(int nPriority) : CObject2D(nPriority)
 {
 }
 
