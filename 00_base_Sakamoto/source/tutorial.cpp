@@ -58,7 +58,7 @@ namespace
 		{ "data\\TEXTURE\\UI\\tutorial_text_01.png" },	// 十字架座標
 		{ "data\\TEXTURE\\UI\\tutorial_text_03.png" },	// ボワボワの座標
 		{ "data\\TEXTURE\\UI\\tutorial_text_02.png" },	// 攻撃の座標
-		{ "data\\TEXTURE\\UI\\tutorial_text_04.png" },	// 聖書の座標
+		{ "data\\TEXTURE\\UI\\tutorial_text_004.png" },	// 聖書の座標
 		{ "data\\TEXTURE\\UI\\tutorial_text_05.png" },	// デビルホールの座標
 	};
 
@@ -68,9 +68,8 @@ namespace
 		{ D3DXVECTOR3(115.0f, 50.0f, 0.0f) },	// 十字架座標
 		{ D3DXVECTOR3(115.0f, 50.0f, 0.0f) },	// ボワボワの座標
 		{ D3DXVECTOR3(107.5f, 50.0f, 0.0f) },	// 攻撃の座標
-		{ D3DXVECTOR3(115.0f, 50.0f, 0.0f) },	// 聖書の座標
+		{ D3DXVECTOR3(10.0f, 0.0f, 0.0f) },		// 聖書の座標
 		{ D3DXVECTOR3(115.0f, 50.0f, 0.0f) },	// デビルホールの座標
-
 	};
 
 	const D3DXVECTOR3 TEXT_SIZE[]
@@ -79,7 +78,7 @@ namespace
 		{ D3DXVECTOR3(500.0f, 50.0f, 0.0f) },	// 十字架座標
 		{ D3DXVECTOR3(500.0f, 50.0f, 0.0f) },	// ボワボワの座標
 		{ D3DXVECTOR3(500.0f, 50.0f, 0.0f) },	// 攻撃の座標
-		{ D3DXVECTOR3(500.0f, 50.0f, 0.0f) },	// 聖書の座標
+		{ D3DXVECTOR3(275.0f, 100.0f, 0.0f) },	// 聖書の座標
 		{ D3DXVECTOR3(500.0f, 50.0f, 0.0f) },	// デビルホールの座標
 	};
 
@@ -167,6 +166,11 @@ m_nNumBible(0)				// 聖書の総数
 	for (int nCnt = 0; nCnt >= TYPE_MAX; nCnt++)
 	{
 		m_bSound[nCnt] = false;
+	}
+
+	for (int i = 0; i < TYPE_MAX; ++i)
+	{// マーカー表示
+		m_bCheck[i] = false;
 	}
 }
 
@@ -356,11 +360,8 @@ void CTutorial::Update(void)
 		if (player->GetState() == CPlayer::STATE_WALK
 			&& m_bCheck[TYPE_MOVE] == false)
 		{// 座標が一致しなかったら
-			if (nNumPlayer == 0)
-			{
-				CTutorialCheck::Create(D3DXVECTOR3(TEXTURE_CENTER_POS.x - CHECK_POS[TYPE_MOVE].x,
-					TEXTURE_CENTER_POS.y + CHECK_POS[TYPE_MOVE].y - CHECK_POS_Y, TEXTURE_CENTER_POS.z));
-			}
+			CTutorialCheck::Create(D3DXVECTOR3(TEXTURE_CENTER_POS.x - CHECK_POS[TYPE_MOVE].x,
+				TEXTURE_CENTER_POS.y + CHECK_POS[TYPE_MOVE].y - CHECK_POS_Y, TEXTURE_CENTER_POS.z));
 
 			// マーカー表示
 			m_bCheck[TYPE_MOVE] = true;

@@ -12,6 +12,7 @@
 
 // 前方宣言
 class CObjectCharacter;
+class CObjectX;
 
 // 背景オブジェクト管理クラス
 class CBgObjManager
@@ -38,8 +39,10 @@ private:
 	void SetScrollDevice(void);
 	void SetSlopeDevice(void);
 	void SetMountain(void);
+	void SetAirShip(void);
 
 	CObjectCharacter* m_pBGCharacter[MOUNTAIN_OBJ_NUM];	// 背景キャラクターのポインタ
+	CObjectX* m_pAirShip;								// 飛空艇
 	int m_nCount;										// カウント
 
 	static CBgObjManager* m_pBgObj;
