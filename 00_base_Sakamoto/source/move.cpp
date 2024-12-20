@@ -263,12 +263,13 @@ void CStateControl::Move(CObjectCharacter* pCharacter, D3DXVECTOR3& pos, D3DXVEC
 	{
 	case CObject::TYPE_PLAYER3D:		// プレイヤー
 		NormarizeMove = InputKey(pCharacter, pos, rot, NormarizeMove, PLAYER_SPEED);
+		NormarizeMove = MoveInputPadStick(pCharacter, pos, rot, NormarizeMove, PLAYER_SPEED);
 		UpdateMovePlayer(pCharacter, NormarizeMove);		// 移動更新
 
 		break;
 
 	case CObject::TYPE_ENEMY3D:			// 敵
-		//NormarizeMove = InputKey(pCharacter, pos, rot, NormarizeMove, ENEMY_SPEED);
+		NormarizeMove = InputKey(pCharacter, pos, rot, NormarizeMove, ENEMY_SPEED);
 		UpdateMoveEnemy(pCharacter, NormarizeMove);			// 移動更新
 
 		// 移動方向処理
@@ -423,6 +424,65 @@ D3DXVECTOR3 CStateControl::InputKey(CObjectCharacter* pCharacter, D3DXVECTOR3& p
 
 		m_bInput = true;
 		m_RotState = ROTSTATE_RIGHT;
+	}
+
+	return Move;
+}
+
+//====================================================================
+//移動入力パッドスティック
+//====================================================================
+D3DXVECTOR3 CStateControl::MoveInputPadStick(CObjectCharacter* pCharacter, D3DXVECTOR3& pos, D3DXVECTOR3& rot, D3DXVECTOR3 Move, float fSpeed)
+{
+	CInputJoypad* pInputJoypad = CManager::GetInstance()->GetInputJoyPad();
+
+	// 移動の進行許可状況
+	CObjectCharacter::PROGGRESS progress = pCharacter->GetProgress();
+	bool bGridCenter = pCharacter->GetGritCenter();		// グリッド座標の中心にいるか
+	int nPlayNumber = pCharacter->GetPlayNumber();		// プレイヤーのナンバーを取得する
+
+	for (int nCnt = 0; nCnt < MAX_PLAYER; nCnt++)
+	{
+		if (nCnt == nPlayNumber)
+		{
+			//スティックの移動処理
+			if ((pInputJoypad->Get_Stick_Left(nCnt).y > 0.0f && progress.bOKU && bGridCenter) ||
+				(pInputJoypad->Get_Stick_Left(nCnt).y > 0.0f && m_RotState == ROTSTATE_DOWN))
+			{
+				Move.z += 1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
+				Move.x += 1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
+
+				m_bInput = true;
+				m_RotState = ROTSTATE_UP;
+			}
+			else if (((pInputJoypad->Get_Stick_Left(nCnt).y < 0.0f && progress.bOKD && bGridCenter) ||
+				(pInputJoypad->Get_Stick_Left(nCnt).y < 0.0f && m_RotState == ROTSTATE_UP)))
+			{
+				Move.z += -1.0f * cosf(D3DX_PI * 0.0f) * fSpeed;
+				Move.x += -1.0f * sinf(D3DX_PI * 0.0f) * fSpeed;
+
+				m_bInput = true;
+				m_RotState = ROTSTATE_DOWN;
+			}
+			else if ((pInputJoypad->Get_Stick_Left(nCnt).x < 0.0f && progress.bOKL && bGridCenter) ||
+				(pInputJoypad->Get_Stick_Left(nCnt).x < 0.0f && m_RotState == ROTSTATE_RIGHT))
+			{
+				Move.x += -1.0f * cosf(D3DX_PI * 0.0f) * fSpeed;
+				Move.z -= -1.0f * sinf(D3DX_PI * 0.0f) * fSpeed;
+
+				m_bInput = true;
+				m_RotState = ROTSTATE_LEFT;
+			}
+			else if (((pInputJoypad->Get_Stick_Left(nCnt).x > 0.0f && progress.bOKR && bGridCenter) ||
+				(pInputJoypad->Get_Stick_Left(nCnt).x > 0.0f && m_RotState == ROTSTATE_LEFT)))
+			{
+				Move.x += 1.0f * cosf(D3DX_PI * 0.0f) * fSpeed;
+				Move.z -= 1.0f * sinf(D3DX_PI * 0.0f) * fSpeed;
+
+				m_bInput = true;
+				m_RotState = ROTSTATE_RIGHT;
+			}
+		}
 	}
 
 	return Move;
