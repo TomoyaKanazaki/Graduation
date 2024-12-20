@@ -32,7 +32,7 @@
 #include "sound.h"
 #include "shadow.h"
 
-#include "BgObj.h"
+#include "BgObjManager.h"
 
 namespace
 {
@@ -188,7 +188,7 @@ HRESULT CGame::Init(void)
 
 	// 背景オブジェクトのゲーム設置処理
 	auto grid = FIELD_GRID;
-	CBgObj::GetInstance()->SetGame(grid);
+	CBgObjManager::GetInstance()->SetGame(grid);
 
 	m_bGameEnd = false;
 
@@ -244,7 +244,7 @@ void CGame::Uninit(void)
 	CMapSystem::GetInstance()->Uninit();
 
 	// 背景オブジェクトの終了処理
-	CBgObj::GetInstance()->Uninit();
+	CBgObjManager::GetInstance()->Uninit();
 
 	//全てのオブジェクトの破棄
 	CObject::ReleaseAll();
@@ -272,7 +272,7 @@ void CGame::Update(void)
 	CMapSystem::GetInstance()->Update();
 
 	// 背景モデルの更新処理
-	CBgObj::GetInstance()->Update();
+	CBgObjManager::GetInstance()->Update();
 
 #if _DEBUG
 	if (pInputKeyboard->GetTrigger(DIK_0) == true)

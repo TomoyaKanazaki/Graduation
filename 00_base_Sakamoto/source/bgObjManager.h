@@ -1,27 +1,27 @@
 //============================================
 //
-//	背景オブジェクト [bjObj.h]
+//	背景オブジェクト管理 [bjObjManager.h]
 //	Author:sakai minato
 //
 //============================================
 
-#ifndef _BG_OBJ_H_
-#define _BG_OBJ_H_
+#ifndef _BG_OBJ_MANAGER_H_
+#define _BG_OBJ_MANAGER_H_
 
 #include "MapSystem.h"
 
 // 前方宣言
 class CObjectCharacter;
 
-// 背景オブジェクトクラス
-class CBgObj
+// 背景オブジェクト管理クラス
+class CBgObjManager
 {
 public:
 
-	CBgObj();
-	~CBgObj();
+	CBgObjManager();
+	~CBgObjManager();
 
-	static CBgObj* GetInstance();
+	static CBgObjManager* GetInstance();
 
 	HRESULT Init(void);
 	void Uninit(void);
@@ -42,7 +42,7 @@ private:
 	CObjectCharacter* m_pBGCharacter[MOUNTAIN_OBJ_NUM];	// 背景キャラクターのポインタ
 	int m_nCount;										// カウント
 
-	static CBgObj* m_pBgObj;
+	static CBgObjManager* m_pBgObj;
 
 };
 
