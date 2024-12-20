@@ -39,6 +39,7 @@ public:
 		SOUND_LABEL_SE_SIGN_RIGHT,	// デビルボイス右
 		SOUND_LABEL_SE_SIGN_LEFT,	// デビルボイス左
 		SOUND_LABEL_SE_SIGN_DOWN,	// デビルボイス下
+		SOUND_LABEL_SE_CHECK,		// チュートリアルチェック
 
 		// BGM
 		SOUND_LABEL_BGM_TITLE,	// タイトルbgm

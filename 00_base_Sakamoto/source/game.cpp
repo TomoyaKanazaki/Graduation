@@ -183,12 +183,9 @@ HRESULT CGame::Init(void)
 		LetterBox[nCnt]->SetTexture("data\\TEXTURE\\Test.jpg");
 	}
 
-	// 背景オブジェクトの初期化処理
-	BgObj::Init();
-
 	// 背景オブジェクトのゲーム設置処理
 	auto grid = FIELD_GRID;
-	BgObj::SetGame(grid);
+	CBgObj::GetInstance()->SetGame(grid);
 
 	m_bGameEnd = false;
 
@@ -243,6 +240,9 @@ void CGame::Uninit(void)
 	// マップシステムの終了
 	CMapSystem::GetInstance()->Uninit();
 
+	// 背景オブジェクトの終了処理
+	CBgObj::GetInstance()->Uninit();
+
 	//全てのオブジェクトの破棄
 	CObject::ReleaseAll();
 
@@ -269,7 +269,7 @@ void CGame::Update(void)
 	CMapSystem::GetInstance()->Update();
 
 	// 背景モデルの更新処理
-	BgObj::Update();
+	CBgObj::GetInstance()->Update();
 
 #if _DEBUG
 	if (pInputKeyboard->GetTrigger(DIK_0) == true)

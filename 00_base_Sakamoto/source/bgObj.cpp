@@ -18,15 +18,6 @@
 #include "objectcharacter.h"
 #include "motion.h"
 
-//==========================================
-//  無名名前空間
-//==========================================
-namespace
-{
-	CObjectCharacter* m_pBGCharacter[4];	// 背景キャラクターのポインタ
-	int m_nCount;							// カウント
-}
-
 // 定数定義
 namespace
 {
@@ -41,12 +32,15 @@ namespace
 	const std::string SLOPE_DEVICE_ENEMY_MODEL = "data\\TXT\\MOTION\\01_enemy\\motion_medaman.txt";
 }
 
-//==========================================
-//  初期化処理
-//==========================================
-void BgObj::Init(void)
+// 静的メンバ変数宣言
+CBgObj* CBgObj::m_pBgObj = nullptr;
+
+//====================================================================
+//コンストラクタ
+//====================================================================
+CBgObj::CBgObj()
 {
-	for (int nCnt = 0; nCnt < 4; nCnt++)
+	for (int nCnt = 0; nCnt < MOUNTAIN_OBJ_NUM; nCnt++)
 	{
 		m_pBGCharacter[nCnt] = nullptr;
 	}
@@ -54,14 +48,68 @@ void BgObj::Init(void)
 	m_nCount = 0;
 }
 
+//====================================================================
+//デストラクタ
+//====================================================================
+CBgObj::~CBgObj()
+{
+
+}
+
+//====================================================================
+//インスタンス取得
+//====================================================================
+CBgObj* CBgObj::GetInstance(void)
+{
+	if (m_pBgObj == nullptr)
+	{
+		m_pBgObj = new CBgObj;
+		m_pBgObj->Init();
+	}
+
+	return m_pBgObj;
+}
+
+//==========================================
+//  初期化処理
+//==========================================
+HRESULT CBgObj::Init(void)
+{
+	return S_OK;
+}
+
+//==========================================
+//  終了処理
+//==========================================
+void CBgObj::Uninit(void)
+{
+	for (int nCnt = 0; nCnt < MOUNTAIN_OBJ_NUM; nCnt++)
+	{
+		if (m_pBGCharacter[nCnt] != nullptr)
+		{
+			m_pBGCharacter[nCnt]->Uninit();
+			m_pBGCharacter[nCnt] = nullptr;
+		}
+	}
+
+	if (m_pBgObj != nullptr)
+	{
+		delete m_pBgObj;
+		m_pBgObj = nullptr;
+	}
+
+}
+
 //==========================================
 //  更新処理
 //==========================================
-void BgObj::Update(void)
+void CBgObj::Update(void)
 {
+	// カウント加算
 	m_nCount++;
 
-	for (int nCnt = 0; nCnt < 4; nCnt++)
+	// 山の更新処理
+	for (int nCnt = 0; nCnt < MOUNTAIN_OBJ_NUM; nCnt++)
 	{
 		if (m_pBGCharacter[nCnt] != nullptr)
 		{
@@ -81,7 +129,7 @@ void BgObj::Update(void)
 //==========================================
 //  ゲームでの設置処理
 //==========================================
-void BgObj::SetGame(CMapSystem::GRID& grid)
+void CBgObj::SetGame(CMapSystem::GRID& grid)
 {
 	// 下床の設置処理
 	SetFieldBotton(grid);
@@ -97,7 +145,7 @@ void BgObj::SetGame(CMapSystem::GRID& grid)
 //==========================================
 //  下床設置処理
 //==========================================
-void BgObj::SetFieldBotton(CMapSystem::GRID& grid)
+void CBgObj::SetFieldBotton(CMapSystem::GRID& grid)
 {
 	// 下床の生成
 	CObjmeshField* pBottonField = CObjmeshField::Create(grid);
@@ -108,7 +156,7 @@ void BgObj::SetFieldBotton(CMapSystem::GRID& grid)
 //==========================================
 //  マップ移動装置の設置処理
 //==========================================
-void BgObj::SetScrollDevice(void)
+void CBgObj::SetScrollDevice(void)
 {
 	// 上下
 	CScrollDevice* pScrollDevice = CScrollDevice::Create(SCROLL_DEVICE_MODEL_HEIGHT, SCROLL_DEVICE_ENEMY_MODEL);
@@ -138,7 +186,7 @@ void BgObj::SetScrollDevice(void)
 //==========================================
 //  傾き装置の設置処理
 //==========================================
-void BgObj::SetSlopeDevice(void)
+void CBgObj::SetSlopeDevice(void)
 {
 	CSlopeDevice* pSlopeDevice = CSlopeDevice::Create(SLOPE_DEVICE_MODEL, SLOPE_DEVICE_ENEMY_MODEL);
 	pSlopeDevice->SetPos(D3DXVECTOR3(800.0f, BOTTOM_FIELD_POS.y, 450.0f));
@@ -164,10 +212,8 @@ void BgObj::SetSlopeDevice(void)
 //==========================================
 //  山オブジェクトの設置処理
 //==========================================
-void BgObj::SetMountain(void)
+void CBgObj::SetMountain(void)
 {
-	//背景オブジェクトの生成
-
 	//右山
 	CObjectX* pRMountain = CObjectX::Create("data\\MODEL\\RightMountain.x");
 	pRMountain->SetPos(D3DXVECTOR3(2000.0f, -1000.0f, 2000.0f));
@@ -192,7 +238,7 @@ void BgObj::SetMountain(void)
 	pMaguma00->SetTexture("data\\TEXTURE\\Field\\maguma_00.jpg");
 
 	//メダマン
-	for (int nCnt = 0; nCnt < 4; nCnt++)
+	for (int nCnt = 0; nCnt < MOUNTAIN_OBJ_NUM; nCnt++)
 	{
 		if (m_pBGCharacter[nCnt] == nullptr)
 		{
