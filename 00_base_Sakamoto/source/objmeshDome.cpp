@@ -21,7 +21,7 @@ namespace
 	const float WAIGHT_CENTER = 0.5f;		//â°ÇÃå¥ì_(0.0fÅ`1.0f)
 	const float HEIGHT_CENTER = 1.0f;		//ècÇÃå¥ì_(0.0fÅ`1.0f)
 	const float CYLINDER_HEIGHT = 750.0f;	//ï«àÍñáÇÃçÇÇ≥
-	const float CYLINDER_RADIUS = 6000.0f;	//â~ÇÃîºåa
+	const float CYLINDER_RADIUS = 5000.0f;	//â~ÇÃîºåa
 }
 
 //====================================================================
