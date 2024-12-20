@@ -49,7 +49,7 @@ namespace
 
 	const D3DXVECTOR3 MULTI_1P_TEX_POS(D3DXVECTOR3(200.0f, 160.0f, 0.0f));									//スコアの位置
 	const D3DXVECTOR3 MULTI_2P_TEX_POS(D3DXVECTOR3(800.0f, 160.0f, 0.0f));									//スコアの位置
-	const D3DXVECTOR3 MULTI_PLAYER_TEX_SIZE(D3DXVECTOR3(200.0f, 80.0f, 0.0f));								//スコアの大きさ
+	const D3DXVECTOR3 MULTI_PLAYER_TEX_SIZE(D3DXVECTOR3(300.0f, 160.0f, 0.0f));								//スコアの大きさ
 	const D3DXVECTOR3 MULTI_1P_VALUE_POS(D3DXVECTOR3(MULTI_1P_TEX_POS.x + 105.0f, MULTI_1P_TEX_POS.y, 0.0f));		//スコアの値の位置
 	const D3DXVECTOR3 MULTI_2P_VALUE_POS(D3DXVECTOR3(MULTI_2P_TEX_POS.x + 105.0f, MULTI_2P_TEX_POS.y, 0.0f));		//スコアの値の位置
 
@@ -217,6 +217,7 @@ HRESULT CResult::Init(void)
 		m_p1PTex = CObject2D::Create();
 		m_p1PTex->SetPos(MULTI_1P_TEX_POS);
 		m_p1PTex->SetSize(MULTI_PLAYER_TEX_SIZE);
+		m_p1PTex->SetTexture("data\\TEXTURE\\UI\\1p.png");
 
 		//今回のスコア
 		for (int nCntObject = 0; nCntObject < 6; nCntObject++)
@@ -239,6 +240,7 @@ HRESULT CResult::Init(void)
 		m_p2PTex = CObject2D::Create();
 		m_p2PTex->SetPos(MULTI_2P_TEX_POS);
 		m_p2PTex->SetSize(MULTI_PLAYER_TEX_SIZE);
+		m_p2PTex->SetTexture("data\\TEXTURE\\UI\\2p.png");
 
 		//今回のスコア
 		for (int nCntObject = 0; nCntObject < 6; nCntObject++)
@@ -247,7 +249,7 @@ HRESULT CResult::Init(void)
 			m_ap2P[nCntObject] = CNumber::Create();
 			m_ap2P[nCntObject]->SetPos(D3DXVECTOR3(MULTI_2P_VALUE_POS.x + (nCntObject * 45.0f), MULTI_2P_VALUE_POS.y, MULTI_2P_VALUE_POS.z));
 			m_ap2P[nCntObject]->SetSize(D3DXVECTOR3(60.0f, 72.0f, 0.0f));
-			m_ap2P[nCntObject]->SetColor(D3DXCOLOR(1.0f, 0.5f, 0.5f, 1.0f));
+			m_ap2P[nCntObject]->SetColor(D3DXCOLOR(0.3f, 0.7f, 1.0f, 1.0f));
 		}
 
 		m_ap2P[0]->SetNumber(m_2PData % 1000000 / 100000);
