@@ -356,7 +356,10 @@ void CGame::Update(void)
 		{
 			if (m_bGameClear == true)
 			{
-				StageClear(CManager::GetInstance()->GetStage());
+				if (m_bEvent == false)
+				{
+					StageClear(CManager::GetInstance()->GetStage());
+				}
 			}
 			else
 			{
@@ -438,7 +441,11 @@ void CGame::ResetStage(void)
 	//イベントフラグを立てる
 	m_bEvent = true;
 
-	//現在のスクロール状態を保存する
+	////現在のスクロール状態を保存する
+	//CMapMove* pMapMove = CMapSystem::GetInstance()->GetMove();
+	//CMapMove::MOVE ScrollMove = pMapMove->GetState();
+	//ScrollMove = pMapMove->GetState();
+
 	CMapSystem::GetInstance()->GetMove()->SetScroolSetState(CMapSystem::GetInstance()->GetMove()->GetState());
 
 	//保存したスクロール状態を確認する用の変数
@@ -490,6 +497,8 @@ void CGame::NextStage(void)
 
 	//ステージ情報を進める
 	CManager::GetInstance()->SetStage(1);
+
+	m_bGameEnd = false;
 }
 
 //====================================================================

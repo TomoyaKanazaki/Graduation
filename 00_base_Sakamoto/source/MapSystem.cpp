@@ -31,7 +31,7 @@ namespace
 {
 	float GRID_SIZE = 100.0f;	// グリッドのサイズ
 	D3DXVECTOR3 MAP_SIZE = D3DXVECTOR3(750.0f, 0.0f, 550.0f);		// 横の当たり判定
-	int BOWABOWA_RATE = 2; // ボワボワの生成率 ( 0以下でエラー )
+	int BOWABOWA_RATE = 50; // ボワボワの生成率 ( 0以下でエラー )
 	const D3DXVECTOR3 EFFECT_SIZE = { 103.5f, 25.0f, 67.5f }; // エフェクトの倍率
 }
 
