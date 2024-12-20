@@ -36,14 +36,14 @@ CObject2D::~CObject2D()
 //====================================================================
 //生成処理
 //====================================================================
-CObject2D *CObject2D::Create()
+CObject2D *CObject2D::Create(int nPriority)
 {
 	CObject2D *pObject2D = nullptr;
 
 	if (pObject2D == nullptr)
 	{
 		//オブジェクト2Dの生成
-		pObject2D = new CObject2D();
+		pObject2D = new CObject2D(nPriority);
 	}
 
 	//オブジェクトの初期化処理

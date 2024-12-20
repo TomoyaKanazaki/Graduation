@@ -14,10 +14,10 @@
 class CObject2D : public CObject
 {
 public:
-	CObject2D(int nPriority = 6);
+	CObject2D(int nPriority = 5);
 	~CObject2D();
 
-	static CObject2D *Create();
+	static CObject2D *Create(int nPriority = 5);
 
 	virtual HRESULT Init(void);
 	virtual void Uninit(void);
