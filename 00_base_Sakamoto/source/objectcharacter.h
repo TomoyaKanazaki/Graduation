@@ -113,6 +113,9 @@ public:
 	virtual void SetGridOld(const CMapSystem::GRID& posOld) { m_GridOld = posOld; }
 	CMapSystem::GRID GetGridOld(void) { return m_GridOld; }
 
+	virtual void SetPlayNumber(int Number) { ; }
+	virtual int GetPlayNumber(void) { assert(false); return -1; }	//‚±‚±‚Íg—p‚³‚ê‚È‚¢
+
 	// ˆÚ“®ó‘Ô
 	virtual void ChangeMoveState(CMoveState* pMoveState);   // ˆÚ“®ó‘Ô•ÏX
 	CMoveState* GetMoveState() { return m_pMoveState; }	// ˆÚ“®ó‘Ô‚Ìî•ñæ“¾
