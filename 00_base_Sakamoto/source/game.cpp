@@ -32,7 +32,7 @@
 #include "sound.h"
 #include "shadow.h"
 
-#include "BgObj.h"
+#include "BgObjManager.h"
 
 namespace
 {
@@ -158,9 +158,6 @@ HRESULT CGame::Init(void)
 	//ステージ情報を0にする
 	CManager::GetInstance()->SetStage(0);
 
-	//タイムの起動
-	CGame::GetTime()->SetStopTime(false);
-
 	// タイムの生成
 	m_pTime = CTimer::Create();
 	m_pTime->SetStartTime(timeGetTime());
@@ -175,7 +172,7 @@ HRESULT CGame::Init(void)
 	m_pDevil = CDevil::Create();
 
 	// イベントの開始
-	m_bEvent = false;
+	m_bEvent = true;
 
 	for (int nCnt = 0; nCnt < 2; nCnt++)
 	{
@@ -188,7 +185,7 @@ HRESULT CGame::Init(void)
 
 	// 背景オブジェクトのゲーム設置処理
 	auto grid = FIELD_GRID;
-	CBgObj::GetInstance()->SetGame(grid);
+	CBgObjManager::GetInstance()->SetGame(grid);
 
 	m_bGameEnd = false;
 
@@ -244,7 +241,7 @@ void CGame::Uninit(void)
 	CMapSystem::GetInstance()->Uninit();
 
 	// 背景オブジェクトの終了処理
-	CBgObj::GetInstance()->Uninit();
+	CBgObjManager::GetInstance()->Uninit();
 
 	//全てのオブジェクトの破棄
 	CObject::ReleaseAll();
@@ -272,7 +269,7 @@ void CGame::Update(void)
 	CMapSystem::GetInstance()->Update();
 
 	// 背景モデルの更新処理
-	CBgObj::GetInstance()->Update();
+	CBgObjManager::GetInstance()->Update();
 
 #if _DEBUG
 	if (pInputKeyboard->GetTrigger(DIK_0) == true)
@@ -331,10 +328,6 @@ void CGame::Update(void)
 	if (CManager::GetInstance()->GetPause() == true)
 	{
 		m_pTime->SetStopTime(true);		//タイムの進行を止める
-	}
-	else
-	{
-		m_pTime->SetStopTime(false);	//タイムの進行を進める
 	}
 
 	if (CManager::GetInstance()->GetFade()->GetFade() == CFade::FADE_NONE)

@@ -1,11 +1,11 @@
 //============================================
 //
-//	背景オブジェクト [bjObj.cpp]
+//	背景オブジェクト管理 [bjObjManager.cpp]
 //	Author:sakai minato
 //
 //============================================
 
-#include "bgObj.h"
+#include "bgObjManager.h"
 
 #include "objmeshField.h"
 
@@ -33,12 +33,12 @@ namespace
 }
 
 // 静的メンバ変数宣言
-CBgObj* CBgObj::m_pBgObj = nullptr;
+CBgObjManager* CBgObjManager::m_pBgObj = nullptr;
 
 //====================================================================
 //コンストラクタ
 //====================================================================
-CBgObj::CBgObj()
+CBgObjManager::CBgObjManager()
 {
 	for (int nCnt = 0; nCnt < MOUNTAIN_OBJ_NUM; nCnt++)
 	{
@@ -51,7 +51,7 @@ CBgObj::CBgObj()
 //====================================================================
 //デストラクタ
 //====================================================================
-CBgObj::~CBgObj()
+CBgObjManager::~CBgObjManager()
 {
 
 }
@@ -59,11 +59,11 @@ CBgObj::~CBgObj()
 //====================================================================
 //インスタンス取得
 //====================================================================
-CBgObj* CBgObj::GetInstance(void)
+CBgObjManager* CBgObjManager::GetInstance(void)
 {
 	if (m_pBgObj == nullptr)
 	{
-		m_pBgObj = new CBgObj;
+		m_pBgObj = new CBgObjManager;
 		m_pBgObj->Init();
 	}
 
@@ -73,7 +73,7 @@ CBgObj* CBgObj::GetInstance(void)
 //==========================================
 //  初期化処理
 //==========================================
-HRESULT CBgObj::Init(void)
+HRESULT CBgObjManager::Init(void)
 {
 	return S_OK;
 }
@@ -81,7 +81,7 @@ HRESULT CBgObj::Init(void)
 //==========================================
 //  終了処理
 //==========================================
-void CBgObj::Uninit(void)
+void CBgObjManager::Uninit(void)
 {
 	for (int nCnt = 0; nCnt < MOUNTAIN_OBJ_NUM; nCnt++)
 	{
@@ -103,7 +103,7 @@ void CBgObj::Uninit(void)
 //==========================================
 //  更新処理
 //==========================================
-void CBgObj::Update(void)
+void CBgObjManager::Update(void)
 {
 	// カウント加算
 	m_nCount++;
@@ -129,7 +129,7 @@ void CBgObj::Update(void)
 //==========================================
 //  ゲームでの設置処理
 //==========================================
-void CBgObj::SetGame(CMapSystem::GRID& grid)
+void CBgObjManager::SetGame(CMapSystem::GRID& grid)
 {
 	// 下床の設置処理
 	SetFieldBotton(grid);
@@ -145,7 +145,7 @@ void CBgObj::SetGame(CMapSystem::GRID& grid)
 //==========================================
 //  下床設置処理
 //==========================================
-void CBgObj::SetFieldBotton(CMapSystem::GRID& grid)
+void CBgObjManager::SetFieldBotton(CMapSystem::GRID& grid)
 {
 	// 下床の生成
 	CObjmeshField* pBottonField = CObjmeshField::Create(grid);
@@ -156,7 +156,7 @@ void CBgObj::SetFieldBotton(CMapSystem::GRID& grid)
 //==========================================
 //  マップ移動装置の設置処理
 //==========================================
-void CBgObj::SetScrollDevice(void)
+void CBgObjManager::SetScrollDevice(void)
 {
 	// 上下
 	CScrollDevice* pScrollDevice = CScrollDevice::Create(SCROLL_DEVICE_MODEL_HEIGHT, SCROLL_DEVICE_ENEMY_MODEL);
@@ -186,7 +186,7 @@ void CBgObj::SetScrollDevice(void)
 //==========================================
 //  傾き装置の設置処理
 //==========================================
-void CBgObj::SetSlopeDevice(void)
+void CBgObjManager::SetSlopeDevice(void)
 {
 	CSlopeDevice* pSlopeDevice = CSlopeDevice::Create(SLOPE_DEVICE_MODEL, SLOPE_DEVICE_ENEMY_MODEL);
 	pSlopeDevice->SetPos(D3DXVECTOR3(800.0f, BOTTOM_FIELD_POS.y, 450.0f));
@@ -212,7 +212,7 @@ void CBgObj::SetSlopeDevice(void)
 //==========================================
 //  山オブジェクトの設置処理
 //==========================================
-void CBgObj::SetMountain(void)
+void CBgObjManager::SetMountain(void)
 {
 	//右山
 	CObjectX* pRMountain = CObjectX::Create("data\\MODEL\\RightMountain.x");
