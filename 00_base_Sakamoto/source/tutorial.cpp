@@ -64,21 +64,21 @@ namespace
 
 	const D3DXVECTOR3 TEXT_POS[]
 	{// テキストの位置
-		{ D3DXVECTOR3(5.0f, 200.0f, 0.0f) },	// 移動のテキスト
-		{ D3DXVECTOR3(115.0f, 50.0f, 0.0f) },	// 十字架座標
-		{ D3DXVECTOR3(115.0f, 50.0f, 0.0f) },	// ボワボワの座標
-		{ D3DXVECTOR3(107.5f, 50.0f, 0.0f) },	// 攻撃の座標
-		{ D3DXVECTOR3(10.0f, 0.0f, 0.0f) },		// 聖書の座標
-		{ D3DXVECTOR3(115.0f, 50.0f, 0.0f) },	// デビルホールの座標
+		{ D3DXVECTOR3(5.0f, 0.0f, 0.0f) },	// 移動のテキスト
+		{ D3DXVECTOR3(0.0f, 0.0f, 0.0f) },		// 十字架座標
+		{ D3DXVECTOR3(115.0f, 0.0f, 0.0f) },	// ボワボワの座標
+		{ D3DXVECTOR3(107.5f, 0.0f, 0.0f) },	// 攻撃の座標
+		{ D3DXVECTOR3(10.0f, 5.0f, 0.0f) },		// 聖書の座標
+		{ D3DXVECTOR3(115.0f, 0.0f, 0.0f) },	// デビルホールの座標
 	};
 
 	const D3DXVECTOR3 TEXT_SIZE[]
 	{// それぞれのテキストのサイズ
 		{ D3DXVECTOR3(250.0f, 100.0f, 0.0f) },	// 移動のテキスト
-		{ D3DXVECTOR3(500.0f, 50.0f, 0.0f) },	// 十字架座標
+		{ D3DXVECTOR3(250.0f, 40.0f, 0.0f) },	// 十字架座標
 		{ D3DXVECTOR3(500.0f, 50.0f, 0.0f) },	// ボワボワの座標
 		{ D3DXVECTOR3(500.0f, 50.0f, 0.0f) },	// 攻撃の座標
-		{ D3DXVECTOR3(275.0f, 100.0f, 0.0f) },	// 聖書の座標
+		{ D3DXVECTOR3(275.0f, 80.0f, 0.0f) },	// 聖書の座標
 		{ D3DXVECTOR3(500.0f, 50.0f, 0.0f) },	// デビルホールの座標
 	};
 
@@ -257,7 +257,7 @@ HRESULT CTutorial::Init(void)
 	for (int i = 0; i < TYPE_MAX; ++i)
 	{// テキストの生成
 		m_pText.push_back(CTutorialUi::Create(
-			D3DXVECTOR3(TEXTURE_CENTER_POS.x + TEXT_POS[i].x, CHECK_POS[i].y, CHECK_POS[i].z),
+			D3DXVECTOR3(TEXTURE_CENTER_POS.x + TEXT_POS[i].x, CHECK_POS[i].y - TEXT_POS[i].y, CHECK_POS[i].z),
 						TEXT_SIZE[i], TUTORIAL_TEX[i], 1.0f));
 	}
 
