@@ -195,6 +195,12 @@ HRESULT CTutorial::Init(void)
 
 	if (m_pPause == nullptr)
 	{// ポーズの生成
+		// サウンドの停止
+		CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_SE_SIGN_UP);
+		CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_SE_SIGN_DOWN);
+		CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_SE_SIGN_RIGHT);
+		CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_SE_SIGN_LEFT);
+
 		m_pPause = CPause::Create();
 	}
 
