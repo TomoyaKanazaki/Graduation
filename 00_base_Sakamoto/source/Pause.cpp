@@ -44,12 +44,6 @@ CPause::~CPause()
 //====================================================================
 CPause *CPause::Create()
 {
-	// ƒTƒEƒ“ƒh‚Ì’âŽ~
-	CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_SE_SIGN_UP);
-	CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_SE_SIGN_DOWN);
-	CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_SE_SIGN_RIGHT);
-	CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_SE_SIGN_LEFT);
-
 	CPause *pPause = nullptr;
 
 	if (pPause == nullptr)
