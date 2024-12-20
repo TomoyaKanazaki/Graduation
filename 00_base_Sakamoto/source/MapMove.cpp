@@ -41,7 +41,7 @@ namespace
 	const float SCROOL_SPEED_02 = (CMapSystem::GetGritSize() * SCROOL_MOVEGRID_02) / SCROOL_COUNT_02;			// スクロールの移動速度
 
 	const int SLOPE_TIME = 300;						// 傾き操作時間
-	const int SLOPE_RAND = 0;						// 傾き発生確率
+	const int SLOPE_RAND = 50;						// 傾き発生確率
 	float STAGE_ROT_LIMIT = D3DX_PI * 0.15f;		// 傾きの角度制限
 
 	const float SLOPE_SPEED01 = 0.00075f;			// 傾きの移動速度
@@ -350,15 +350,27 @@ void CMapMove::StateManager(void)
 						{
 						case 0:
 							m_State = MOVE_SLOPE_UP;
+
+							// サウンド再生
+							CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_SIGN_UP);
 							break;
 						case 1:
 							m_State = MOVE_SLOPE_DOWN;
+
+							// サウンド再生
+							CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_SIGN_DOWN);
 							break;
 						case 2:
 							m_State = MOVE_SLOPE_LEFT;
+
+							// サウンド再生
+							CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_SIGN_LEFT);
 							break;
 						case 3:
 							m_State = MOVE_SLOPE_RIGHT;
+
+							// サウンド再生
+							CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_SIGN_RIGHT);
 							break;
 						}
 
@@ -378,6 +390,12 @@ void CMapMove::StateManager(void)
 					}
 					else
 					{// 傾き戻し状態の時
+
+						// サウンドの停止
+						CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_SE_SIGN_UP);
+						CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_SE_SIGN_DOWN);
+						CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_SE_SIGN_RIGHT);
+						CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_SE_SIGN_LEFT);
 
 						// 傾きを戻す時だけ倍の時間を指定し、戻り切ったら傾き状態を終了とする
 						m_nStateCount = SLOPE_TIME * 2;

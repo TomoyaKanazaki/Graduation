@@ -15,6 +15,7 @@
 #include "tutorial.h"
 #include "devil.h"
 #include "MapMove.h"
+#include "sound.h"
 
 //==========================================
 //  定数定義
@@ -348,6 +349,9 @@ void CDevilHole::CollisionOpen(D3DXVECTOR3& pos)
 
 				m_bSet[nCnt] = true;
 				pPlayer->SetItemType(CPlayer::TYPE_NONE);
+
+				//サウンド生成
+				CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_UNLOCK);
 				return;
 			}
 		}

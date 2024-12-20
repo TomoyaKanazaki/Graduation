@@ -175,7 +175,7 @@ HRESULT CGame::Init(void)
 	m_pDevil = CDevil::Create();
 
 	// イベントの開始
-	m_bEvent = true;
+	m_bEvent = false;
 
 	for (int nCnt = 0; nCnt < 2; nCnt++)
 	{

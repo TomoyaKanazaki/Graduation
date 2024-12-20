@@ -44,6 +44,12 @@ CPause::~CPause()
 //====================================================================
 CPause *CPause::Create()
 {
+	// ƒTƒEƒ“ƒh‚Ì’âŽ~
+	CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_SE_SIGN_UP);
+	CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_SE_SIGN_DOWN);
+	CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_SE_SIGN_RIGHT);
+	CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_SE_SIGN_LEFT);
+
 	CPause *pPause = nullptr;
 
 	if (pPause == nullptr)
@@ -68,7 +74,7 @@ HRESULT CPause::Init(void)
 {
 	if (m_pPauseFG == nullptr)
 	{
-		m_pPauseFG = CObject2D::Create();
+		m_pPauseFG = CObject2D::Create(7);
 		m_pPauseFG->SetType(CObject::TYPE_TUTORIALUI);
 		m_pPauseFG->SetPos(D3DXVECTOR3(640.0f, 360.0f, 0.0f));
 		m_pPauseFG->SetSize(D3DXVECTOR3(1280.0f, 720.0f, 0.0f));
@@ -80,7 +86,7 @@ HRESULT CPause::Init(void)
 	{
 		if (m_pPauseUI[nCnt] == nullptr)
 		{
-			m_pPauseUI[nCnt] = CObject2D::Create();
+			m_pPauseUI[nCnt] = CObject2D::Create(7);
 			m_pPauseUI[nCnt]->SetPos(D3DXVECTOR3(640.0f, 200.0f + nCnt * 200.0f, 0.0f));
 			m_pPauseUI[nCnt]->SetSize(PAUSE_SIZE);
 			m_pPauseUI[nCnt]->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f));
