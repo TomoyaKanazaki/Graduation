@@ -13,6 +13,7 @@
 #include "MapSystem.h"
 #include "game.h"
 #include "objmeshField.h"
+#include "sound.h"
 
 //==========================================
 //  定数定義
@@ -141,10 +142,12 @@ void CSoftCream::Move(D3DXVECTOR3& pos)
 bool CSoftCream::Hit(CPlayer* pPlayer)
 {
 	// エフェクトを生成
-		// エフェクトを生成する
 	D3DXVECTOR3 pos = GetPos();
 	D3DXVECTOR3 rot = GetRot();
 	MyEffekseer::EffectCreate(CMyEffekseer::TYPE_GET_SOFTCREAM, false, useful::CalcMatrix(pos, rot, *GetUseMultiMatrix()), rot);
+
+	// サウンド再生
+	CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_GET_ICECREAM);
 
 	// 自身の削除
 	Uninit();
