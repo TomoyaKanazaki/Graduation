@@ -177,11 +177,19 @@ void BgObj::SetMountain(void)
 	pLMountain->SetPos(D3DXVECTOR3(-1900.0f, -1000.0f, 1500.0f));
 
 	//マグマ
-	CObject3D* pMaguma = CObject3D::Create();
-	pMaguma->SetPos(D3DXVECTOR3(0.0f, -950.0f, 0.0f));
-	pMaguma->SetSize(D3DXVECTOR3(3000.0f, 0.0f, 6500.0f));
-	pMaguma->SetScrollSpeed(D3DXVECTOR2(0.0f, -0.0001f));
-	pMaguma->SetTexture("data\\TEXTURE\\MAGUMA.png");
+	CObject3D* pMaguma01 = CObject3D::Create();
+	pMaguma01->SetPos(D3DXVECTOR3(0.0f, -950.0f, 0.0f));
+	pMaguma01->SetSize(D3DXVECTOR3(3000.0f, 0.0f, 6500.0f));
+	pMaguma01->SetScrollSpeed(D3DXVECTOR2(0.0f, 0.0002f));
+	pMaguma01->SetTexture("data\\TEXTURE\\Field\\maguma_02.jpg");
+
+	//マグマ
+	CObject3D* pMaguma00 = CObject3D::Create();
+	pMaguma00->SetPos(D3DXVECTOR3(0.0f, -940.0f, 0.0f));
+	pMaguma00->SetSize(D3DXVECTOR3(3000.0f, 0.0f, 6500.0f));
+	pMaguma00->SetScrollSpeed(D3DXVECTOR2(0.0f, -0.0003f));
+	pMaguma00->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.5f));
+	pMaguma00->SetTexture("data\\TEXTURE\\Field\\maguma_00.jpg");
 
 	//メダマン
 	for (int nCnt = 0; nCnt < 4; nCnt++)
