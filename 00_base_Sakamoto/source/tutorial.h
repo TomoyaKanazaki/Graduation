@@ -130,6 +130,7 @@ private:
 	CCubeBlock* m_pCubeBlock;				// キューブブロック
 	CTutorialUi* m_pTutorialUI;
 	std::vector<CTutorialUi*> m_pText;		// チュートリアルテキストのポインタ
+	bool m_bSound[TYPE_MAX];
 };
 
 #endif

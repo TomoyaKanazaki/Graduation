@@ -27,6 +27,7 @@ CSound::SOUNDINFO CSound::m_aSoundInfo[SOUND_LABEL_MAX] =
 	{"data/SE/21_SE_sign_right.wav", -1 },			// デビルボイス右
 	{"data/SE/22_SE_sign_left.wav", -1 },			// デビルボイス左
 	{"data/SE/23_SE_sign_down.wav", -1 },			// デビルボイス下
+	{"data/SE/24_SE_check.wav",-1},					// チェック音
 
 	// BGM
 	{ "data/BGM/00_BGM_title.wav", -1 },				// タイトル

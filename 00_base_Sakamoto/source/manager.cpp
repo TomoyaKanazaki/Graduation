@@ -17,6 +17,7 @@
 #include "MyEffekseer.h"
 #include "Scene.h"
 #include "game.h"
+#include "timer.h"
 
 #ifdef _DEBUG
 #define SET_MODE (CScene::MODE_GAME)
@@ -447,6 +448,15 @@ void CManager::Update(void)
 			{
 				//ðŒH ˆ—‚PFˆ—‚Q;
 				m_Pause = m_Pause ? false : true;
+
+				if (m_Pause)
+				{
+					CGame::GetInstance()->GetTime()->SetStopTime(true);
+				}
+				else
+				{
+					CGame::GetInstance()->GetTime()->SetStopTime(false);
+				}
 			}
 		}
 		else if (CScene::GetMode() == CScene::MODE_TUTORIAL)
