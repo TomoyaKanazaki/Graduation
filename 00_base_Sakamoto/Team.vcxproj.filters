@@ -14,9 +14,6 @@
     <Filter Include="ソース ファイル\Character">
       <UniqueIdentifier>{198b5405-4d4d-45e6-90dc-ab1c37631435}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Character\Enemy">
-      <UniqueIdentifier>{8957a4c0-4553-4e04-b523-5b7756288159}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Character\Player">
       <UniqueIdentifier>{b637ce51-20f3-4c1f-bb6e-2722031693c8}</UniqueIdentifier>
     </Filter>
@@ -43,6 +40,9 @@
     </Filter>
     <Filter Include="ソース ファイル\Scene\Event">
       <UniqueIdentifier>{4559d834-7ef3-4b5e-b8a6-1f2921f59eee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Character\Enemy">
+      <UniqueIdentifier>{8957a4c0-4553-4e04-b523-5b7756288159}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
