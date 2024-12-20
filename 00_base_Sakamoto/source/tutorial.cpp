@@ -234,9 +234,9 @@ HRESULT CTutorial::Init(void)
 							TEXTURE_CENTER_POS.y + CHECK_POS[i].y - CHECK_POS_Y, TEXTURE_CENTER_POS.z),
 							BOX_SIZE, CHECKBOX_TEX, 1.0f);
 
-		CTutorialUi::Create(D3DXVECTOR3(TEXTURE_CENTER_POS.x + CHECK_POS[i].x,
-							TEXTURE_CENTER_POS.y + CHECK_POS[i].y - CHECK_POS_Y, TEXTURE_CENTER_POS.z),
-							BOX_SIZE, CHECKBOX_TEX, 1.0f);
+		//CTutorialUi::Create(D3DXVECTOR3(TEXTURE_CENTER_POS.x + CHECK_POS[i].x,
+		//					TEXTURE_CENTER_POS.y + CHECK_POS[i].y - CHECK_POS_Y, TEXTURE_CENTER_POS.z),
+		//					BOX_SIZE, CHECKBOX_TEX, 1.0f);
 	}
 
 	for (int i = 0; i < TYPE_MAX; ++i)
@@ -338,21 +338,16 @@ void CTutorial::Update(void)
 	if (CDevilHole::GetList() == nullptr) { assert(false); }
 	std::list<CDevilHole*> DevilHolelist = CDevilHole::GetList()->GetList();
 
+	int nNumPlayer = 0;
+
 	for (CPlayer* player : list)
 	{
-		int nNumPlayer = player->GetPlayNumber();
-
-		if (m_gridPlayer.at(nNumPlayer) != player->GetGrid()
+		if (player->GetState() == CPlayer::STATE_WALK
 			&& m_bCheck[TYPE_MOVE] == false)
 		{// ç¿ïWÇ™àÍívÇµÇ»Ç©Ç¡ÇΩÇÁ
 			if (nNumPlayer == 0)
 			{
 				CTutorialCheck::Create(D3DXVECTOR3(TEXTURE_CENTER_POS.x - CHECK_POS[TYPE_MOVE].x,
-					TEXTURE_CENTER_POS.y + CHECK_POS[TYPE_MOVE].y - CHECK_POS_Y, TEXTURE_CENTER_POS.z));
-			}
-			if (nNumPlayer == 1)
-			{
-				CTutorialCheck::Create(D3DXVECTOR3(TEXTURE_CENTER_POS.x + CHECK_POS[TYPE_MOVE].x,
 					TEXTURE_CENTER_POS.y + CHECK_POS[TYPE_MOVE].y - CHECK_POS_Y, TEXTURE_CENTER_POS.z));
 			}
 
