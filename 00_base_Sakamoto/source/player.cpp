@@ -482,7 +482,20 @@ void CPlayer::UI_Create(void)
 	if (m_pP_NumUI == nullptr && CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
 	{
 		m_pP_NumUI = CObjectBillboard::Create();
+		m_pP_NumUI->SetWidth(150.0f);
+		m_pP_NumUI->SetHeight(150.0f);
 		m_pP_NumUI->SetAppear(false);
+
+		switch (m_nPlayNumber)
+		{
+		case 0:
+			m_pP_NumUI->SetTexture("data\\TEXTURE\\UI\\1p.png");
+			break;
+
+		case 1:
+			m_pP_NumUI->SetTexture("data\\TEXTURE\\UI\\2p.png");
+			break;
+		}
 	}
 }
 
@@ -1245,7 +1258,14 @@ void CPlayer::SearchWall(D3DXVECTOR3& posThis)
 		m_Progress.bOKU = OKU;	//上
 		m_Progress.bOKD = OKD;	//下
 
-		m_bGritCenter = true;
+		if (m_bGritCenter == false)
+		{
+			float MyPosY = posThis.y;
+			posThis = CMapSystem::GetInstance()->GetGritPos(m_Grid);
+			posThis.y = MyPosY;
+
+			m_bGritCenter = true;
+		}
 	}
 	else
 	{
@@ -1277,9 +1297,6 @@ void CPlayer::CollisionDevilHole(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, 
 		// 矩形の当たり判定
 		if (useful::CollisionBlock(pos, pos, INITVECTOR3, Size, &posThis, posOldThis, &m_move, &m_Objmove, sizeThis, &m_bJump, XYZ) == true)
 		{
-			//サウンド生成
-			CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_UNLOCK);
-
 			//待機状態にする
 			SetState(STATE_WAIT);
 			// 向き状態の設定

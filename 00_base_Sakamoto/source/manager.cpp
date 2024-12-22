@@ -16,9 +16,11 @@
 #include "MapSystem.h"
 #include "MyEffekseer.h"
 #include "Scene.h"
+#include "game.h"
+#include "timer.h"
 
 #ifdef _DEBUG
-#define SET_MODE (CScene::MODE_TITLE)
+#define SET_MODE (CScene::MODE_GAME)
 #define SET_PLAY_MODE (GAME_MODE::MODE_SINGLE)
 #define SET_SCROLL_TYPE (0)
 #else
@@ -440,8 +442,44 @@ void CManager::Update(void)
 		m_PauseOK == true &&
 		m_pFade->GetFade() == CFade::FADE_NONE)
 	{
-		//条件？ 処理１：処理２;
-		m_Pause = m_Pause ? false : true;
+		if (CScene::GetMode() == CScene::MODE_GAME)
+		{
+			if (CGame::GetInstance()->GetEvent() == false)
+			{
+				//条件？ 処理１：処理２;
+				m_Pause = m_Pause ? false : true;
+
+				if (m_Pause)
+				{
+					CGame::GetInstance()->GetTime()->SetStopTime(true);
+
+					// サウンドの停止
+					CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_SE_SIGN_UP);
+					CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_SE_SIGN_DOWN);
+					CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_SE_SIGN_RIGHT);
+					CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_SE_SIGN_LEFT);
+				}
+				else
+				{
+					CGame::GetInstance()->GetTime()->SetStopTime(false);
+				}
+			}
+		}
+		else if (CScene::GetMode() == CScene::MODE_TUTORIAL)
+		{
+			if (m_Pause)
+			{
+				// サウンドの停止
+				CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_SE_SIGN_UP);
+				CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_SE_SIGN_DOWN);
+				CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_SE_SIGN_RIGHT);
+				CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_SE_SIGN_LEFT);
+			}
+
+				//条件？ 処理１：処理２;
+				m_Pause = m_Pause ? false : true;
+			
+		}
 	}
 
 	//シーンの更新処理

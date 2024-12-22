@@ -12,7 +12,7 @@
 class CTutorialCheck : CObject2D
 {
 public:
-	CTutorialCheck();
+	CTutorialCheck(int nPriority = 6);
 	~CTutorialCheck();
 
 	static CTutorialCheck* Create(const D3DXVECTOR3& pos);

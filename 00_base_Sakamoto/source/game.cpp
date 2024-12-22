@@ -20,18 +20,20 @@
 #include "RailBlock.h"
 #include "RollRock.h"
 #include "bowabowa.h"
-#include "ScrollDevice.h"
-#include "SlopeDevice.h"
 #include "mask.h"
 #include "signal.h"
 #include "pause.h"
 #include "EventMovie.h"
+#include "SlopeDevice.h"
 #include "Cross.h"
 #include "MapMove.h"
 #include "Motion.h"
+#include "objmeshDome.h"
 
 #include "sound.h"
 #include "shadow.h"
+
+#include "BgObjManager.h"
 
 namespace
 {
@@ -86,12 +88,6 @@ CGame::CGame()
 		CManager::GetInstance()->GetCamera(nCnt)->SetBib(false);
 		CManager::GetInstance()->GetCamera(nCnt)->SetCameraMode(CCamera::CAMERAMODE_DOWNVIEW);
 	}
-
-	for (int nCnt = 0; nCnt < 4; nCnt++)
-	{
-		m_pBGCharacter[nCnt] = nullptr;
-	}
-	m_nBGCount = 0;
 
 	m_pPause = nullptr;
 	m_pTime = nullptr;
@@ -160,11 +156,12 @@ HRESULT CGame::Init(void)
 	//クリアフラグのデフォルトをオンにしておく
 	m_bGameClear = true;
 
+	m_pMeshDomeUp = CObjmeshDome::Create();
+	m_pMeshDomeUp->SetPos(D3DXVECTOR3(0.0f, -1000.0f, 0.0f));
+	m_pMeshDomeUp->SetTexture("data\\TEXTURE\\Field\\mesh_doom_00.png");
+
 	//ステージ情報を0にする
 	CManager::GetInstance()->SetStage(0);
-
-	//タイムの起動
-	CGame::GetTime()->SetStopTime(false);
 
 	// タイムの生成
 	m_pTime = CTimer::Create();
@@ -180,7 +177,7 @@ HRESULT CGame::Init(void)
 	m_pDevil = CDevil::Create();
 
 	// イベントの開始
-	m_bEvent = true;
+	m_bEvent = false;
 
 	for (int nCnt = 0; nCnt < 2; nCnt++)
 	{
@@ -191,15 +188,11 @@ HRESULT CGame::Init(void)
 		LetterBox[nCnt]->SetTexture("data\\TEXTURE\\Test.jpg");
 	}
 
-	// 下床の生成
+	// 背景オブジェクトのゲーム設置処理
 	auto grid = FIELD_GRID;
-	CObjmeshField* pBottonField = CObjmeshField::Create(grid);
-	pBottonField->SetTexture(BOTTOM_FIELD_TEX);
-	pBottonField->SetPos(BOTTOM_FIELD_POS);
-	m_bGameEnd = false;
+	CBgObjManager::GetInstance()->SetGame(grid);
 
-	// 背景モデル設定処理
-	SetBgObjTest();
+	m_bGameEnd = false;
 
 	if (m_pEventMovie == nullptr)
 	{
@@ -209,50 +202,10 @@ HRESULT CGame::Init(void)
 	// ソフトクリームの生成
 	CItem::Create(CItem::TYPE_SOFTCREAM, CMapSystem::GetInstance()->GetCenter());
 
-
 	// プレイヤーを生成する
 	for (int i = 0; i < CManager::GetInstance()->GetGameMode(); ++i)
 	{
 		m_pPlayer.push_back(CGamePlayer::Create(i));
-	}
-
-	//背景オブジェクトの生成
-
-	//右山
-	CObjectX* pRMountain = CObjectX::Create("data\\MODEL\\RightMountain.x");
-	pRMountain->SetPos(D3DXVECTOR3(2000.0f, -1000.0f, 2000.0f));
-
-	//左山
-	CObjectX* pLMountain = CObjectX::Create("data\\MODEL\\LeftMountain.x");
-	pLMountain->SetPos(D3DXVECTOR3(-1900.0f, -1000.0f, 1500.0f));
-
-	//マグマ
-	CObject3D* pMaguma = CObject3D::Create();
-	pMaguma->SetPos(D3DXVECTOR3(0.0f, -950.0f, 0.0f));
-	pMaguma->SetSize(D3DXVECTOR3(3000.0f, 0.0f, 6500.0f));
-	pMaguma->SetScrollSpeed(D3DXVECTOR2(0.0f, -0.0001f));
-	pMaguma->SetTexture("data\\TEXTURE\\MAGUMA.png");
-
-	//メダマン
-	for (int nCnt = 0; nCnt < 4; nCnt++)
-	{
-		if (m_pBGCharacter[nCnt] == nullptr)
-		{
-			m_pBGCharacter[nCnt] = CObjectCharacter::Create(false);
-			m_pBGCharacter[nCnt]->SetTxtCharacter(SCROLL_DEVICE_ENEMY_MODEL, 0);
-
-			m_pBGCharacter[nCnt]->SetPos(D3DXVECTOR3(
-				-1975.0f + sinf(D3DX_PI * (0.5f * nCnt)) * 400.0f,
-				-200.0f,
-				1500.0f + cosf(D3DX_PI * (0.5f * nCnt)) * 250.0f));
-
-			m_pBGCharacter[nCnt]->SetRot(D3DXVECTOR3(
-				0.0f,
-				sinf(D3DX_PI * (0.5f * (nCnt - 1))),
-				0.0f));
-
-			m_pBGCharacter[nCnt]->GetMotion()->Set(1, 0);
-		}
 	}
 
 	return S_OK;
@@ -292,6 +245,9 @@ void CGame::Uninit(void)
 	// マップシステムの終了
 	CMapSystem::GetInstance()->Uninit();
 
+	// 背景オブジェクトの終了処理
+	CBgObjManager::GetInstance()->Uninit();
+
 	//全てのオブジェクトの破棄
 	CObject::ReleaseAll();
 
@@ -317,23 +273,8 @@ void CGame::Update(void)
 
 	CMapSystem::GetInstance()->Update();
 
-	m_nBGCount++;
-
-	for (int nCnt = 0; nCnt < 4; nCnt++)
-	{
-		if (m_pBGCharacter[nCnt] != nullptr)
-		{
-			m_pBGCharacter[nCnt]->SetPos(D3DXVECTOR3(
-				-1975.0f + sinf(D3DX_PI * (0.5f * (nCnt + (float)m_nBGCount * 0.005f))) * 400.0f,
-				-200.0f,
-				1500.0f + cosf(D3DX_PI * (0.5f * (nCnt + (float)m_nBGCount * 0.005f))) * 250.0f));
-
-			m_pBGCharacter[nCnt]->SetRot(D3DXVECTOR3(
-				0.0f,
-				sinf(D3DX_PI * (0.5f * ((nCnt - 1) + (float)m_nBGCount * 0.005f))),
-				0.0f));
-		}
-	}
+	// 背景モデルの更新処理
+	CBgObjManager::GetInstance()->Update();
 
 #if _DEBUG
 	if (pInputKeyboard->GetTrigger(DIK_0) == true)
@@ -393,10 +334,6 @@ void CGame::Update(void)
 	{
 		m_pTime->SetStopTime(true);		//タイムの進行を止める
 	}
-	else
-	{
-		m_pTime->SetStopTime(false);	//タイムの進行を進める
-	}
 
 	if (CManager::GetInstance()->GetFade()->GetFade() == CFade::FADE_NONE)
 	{
@@ -424,7 +361,10 @@ void CGame::Update(void)
 		{
 			if (m_bGameClear == true)
 			{
-				StageClear(CManager::GetInstance()->GetStage());
+				if (m_bEvent == false)
+				{
+					StageClear(CManager::GetInstance()->GetStage());
+				}
 			}
 			else
 			{
@@ -456,7 +396,6 @@ void CGame::Update(void)
 
 		//ポーズの更新処理
 		if (m_pPause != nullptr)
-	
 		{
 			m_pPause->Update();
 		}
@@ -498,10 +437,20 @@ void CGame::Draw(void)
 //====================================================================
 void CGame::ResetStage(void)
 {
+	// サウンドの停止
+	CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_SE_SIGN_UP);
+	CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_SE_SIGN_DOWN);
+	CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_SE_SIGN_RIGHT);
+	CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_SE_SIGN_LEFT);
+
 	//イベントフラグを立てる
 	m_bEvent = true;
 
-	//現在のスクロール状態を保存する
+	////現在のスクロール状態を保存する
+	//CMapMove* pMapMove = CMapSystem::GetInstance()->GetMove();
+	//CMapMove::MOVE ScrollMove = pMapMove->GetState();
+	//ScrollMove = pMapMove->GetState();
+
 	CMapSystem::GetInstance()->GetMove()->SetScroolSetState(CMapSystem::GetInstance()->GetMove()->GetState());
 
 	//保存したスクロール状態を確認する用の変数
@@ -553,6 +502,8 @@ void CGame::NextStage(void)
 
 	//ステージ情報を進める
 	CManager::GetInstance()->SetStage(1);
+
+	m_bGameEnd = false;
 }
 
 //====================================================================
@@ -845,60 +796,4 @@ void CGame::LoadStageMapModel(const std::string pFilename)
 	//{//ファイルが開けなかった場合
 	//	printf("***ファイルを開けませんでした***\n");
 	//}
-}
-
-//====================================================================
-// テスト用背景オブジェクト設定処理
-//====================================================================
-void CGame::SetBgObjTest(void)
-{
-	// マップ移動装置
-	{
-		// 左右
-		CScrollDevice* pScrollDevice = CScrollDevice::Create(SCROLL_DEVICE_MODEL_WIDTH, SCROLL_DEVICE_ENEMY_MODEL);
-		pScrollDevice->SetPos(D3DXVECTOR3(1075.0f, 75.0f, 0.0f));
-		pScrollDevice->SetLocateWorldType(CScrollDevice::LOCATE_WORLD_TYPE_LEFT);
-		pScrollDevice->SetState(CScrollDevice::STATE_NORMAL);
-
-		pScrollDevice = CScrollDevice::Create(SCROLL_DEVICE_MODEL_WIDTH, SCROLL_DEVICE_ENEMY_MODEL);
-		pScrollDevice->SetPos(D3DXVECTOR3(-1075.0f, 75.0f, 0.0f));
-		pScrollDevice->SetLocateWorldType(CScrollDevice::LOCATE_WORLD_TYPE_RIGHT);
-		pScrollDevice->SetState(CScrollDevice::STATE_NORMAL);
-
-		// 上下
-		pScrollDevice = CScrollDevice::Create(SCROLL_DEVICE_MODEL_HEIGHT, SCROLL_DEVICE_ENEMY_MODEL);
-		pScrollDevice->SetPos(D3DXVECTOR3(0.0f, 75.0f, 700.0f));
-		pScrollDevice->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
-		pScrollDevice->SetLocateWorldType(CScrollDevice::LOCATE_WORLD_TYPE_TOP);
-		pScrollDevice->SetState(CScrollDevice::STATE_NORMAL);
-
-		pScrollDevice = CScrollDevice::Create(SCROLL_DEVICE_MODEL_HEIGHT, SCROLL_DEVICE_ENEMY_MODEL);
-		pScrollDevice->SetPos(D3DXVECTOR3(0.0f, 75.0f, -700.0f));
-		pScrollDevice->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
-		pScrollDevice->SetLocateWorldType(CScrollDevice::LOCATE_WORLD_TYPE_BOTTOM);
-		pScrollDevice->SetState(CScrollDevice::STATE_NORMAL);
-	}
-
-	// ジャッキ
-	{
-		CSlopeDevice* pSlopeDevice = CSlopeDevice::Create(SLOPE_DEVICE_MODEL, SLOPE_DEVICE_ENEMY_MODEL);
-		pSlopeDevice->SetPos(D3DXVECTOR3(800.0f, BOTTOM_FIELD_POS.y, 450.0f));
-		pSlopeDevice->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
-		pSlopeDevice->SetLocateWorldType(CSlopeDevice::LOCATE_WORLD_TYPE_TOP_LEFT);
-
-		pSlopeDevice = CSlopeDevice::Create(SLOPE_DEVICE_MODEL, SLOPE_DEVICE_ENEMY_MODEL);
-		pSlopeDevice->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
-		pSlopeDevice->SetPos(D3DXVECTOR3(-800.0f, BOTTOM_FIELD_POS.y, 450.0f));
-		pSlopeDevice->SetLocateWorldType(CSlopeDevice::LOCATE_WORLD_TYPE_TOP_RIGHT);
-
-		pSlopeDevice = CSlopeDevice::Create(SLOPE_DEVICE_MODEL, SLOPE_DEVICE_ENEMY_MODEL);
-		pSlopeDevice->SetPos(D3DXVECTOR3(800.0f, BOTTOM_FIELD_POS.y, -450.0f));
-		pSlopeDevice->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
-		pSlopeDevice->SetLocateWorldType(CSlopeDevice::LOCATE_WORLD_TYPE_BOTTOM_LEFT);
-
-		pSlopeDevice = CSlopeDevice::Create(SLOPE_DEVICE_MODEL, SLOPE_DEVICE_ENEMY_MODEL);
-		pSlopeDevice->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
-		pSlopeDevice->SetPos(D3DXVECTOR3(-800.0f, BOTTOM_FIELD_POS.y, -450.0f));
-		pSlopeDevice->SetLocateWorldType(CSlopeDevice::LOCATE_WORLD_TYPE_BOTTOM_RIGHT);
-	}
 }
