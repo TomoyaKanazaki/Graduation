@@ -47,6 +47,7 @@ namespace
 
 //静的メンバ変数宣言
 CSelect* CSelect::m_pSelect = nullptr;
+std::vector<CSelect::SStageSelect> CSelect::m_StageSelect = {};	// マップの情報
 
 //====================================================================
 //コンストラクタ
@@ -90,7 +91,7 @@ CSelect::CSelect()
 //====================================================================
 CSelect::~CSelect()
 {
-
+	m_StageSelect.clear();
 }
 
 
