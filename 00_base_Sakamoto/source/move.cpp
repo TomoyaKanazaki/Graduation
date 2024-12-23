@@ -1019,17 +1019,16 @@ void CStateRandom::MoveAngle(D3DXVECTOR3& moveSave, std::vector<D3DXVECTOR3>& mo
 //==========================================
 // コンストラクタ
 //==========================================
-CStateAStar::CStateAStar()
+CStateAStar::CStateAStar():
+m_EnemyType(CEnemy::ENEMY_NONE)
 {
 	m_pPath = nullptr;
-	m_EnemyType = CEnemy::ENEMY_NONE;
+	
 	m_fCoordinateTimer = COORDDINATE_RATE[m_EnemyType];
 	m_nNumCoordinate = 0;
 	m_nTargetIndex = 0;
 
 	m_State = STATE_ASTAR;			// 操作状態
-
-
 }
 
 //==========================================
@@ -1047,6 +1046,14 @@ void CStateAStar::Init()
 //==========================================
 void CStateAStar::Release()
 {
+	//while (1)
+	//{
+	//	if (!m_bStateFlag)
+	//	{// 経路探索しない場合
+	//		break;
+	//	}
+	//}
+
 	// メモリを削除
 	if (m_pPath != nullptr) { delete[] m_pPath; };
 }
@@ -1084,7 +1091,10 @@ void CStateAStar::AStarStop(CObjectCharacter* pCharacter)
 void CStateAStar::Move(CObjectCharacter* pCharacter, D3DXVECTOR3& pos, D3DXVECTOR3& rot)
 {
 	// 最短経路探索
-	Coordinate(pCharacter);
+	std::thread th(&CStateAStar::Coordinate, this, pCharacter);
+
+	// スレッド切り離し
+	th.detach();
 
 	// 最短経路をたどる
 	Route(pCharacter);
@@ -1101,13 +1111,30 @@ void CStateAStar::Move(CObjectCharacter* pCharacter, D3DXVECTOR3& pos, D3DXVECTO
 //==========================================
 void CStateAStar::Coordinate(CObjectCharacter* pCharacter)
 {
+	// フラグオンにする
+	m_bStateFlag = true;
+
 	CMapSystem::GRID grid = pCharacter->GetGrid();
 
 	// 探索タイマーを加算
 	m_fCoordinateTimer += DeltaTime::Get();
 
+	if (m_EnemyType < 0 || m_EnemyType >= CEnemy::ENEMY_MAX)
+	{
+		// フラグオフ
+		m_bStateFlag = false;
+
+		return;
+	}
+
 	// 探索のタイミングでない場合関数を抜ける
-	if (m_fCoordinateTimer < COORDDINATE_RATE[m_EnemyType]) { return; }
+	if (m_fCoordinateTimer < COORDDINATE_RATE[m_EnemyType])
+	{
+		// フラグオフ
+		m_bStateFlag = false;
+
+		return;
+	}
 
 	// 最短経路の次の目標をリセット
 	m_nTargetIndex = 1;
@@ -1130,6 +1157,9 @@ void CStateAStar::Coordinate(CObjectCharacter* pCharacter)
 	{
 		m_pPath[i] = Path.at(i);
 	}
+
+	// フラグオフ
+	m_bStateFlag = false;
 }
 
 //==========================================

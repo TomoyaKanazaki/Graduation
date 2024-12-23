@@ -171,7 +171,7 @@ HRESULT CEnemy::Init(void)
 	// ˆÚ“®ó‘Ôİ’è
 	if (m_pMoveState == nullptr)
 	{ // ˆÚ“®ó‘Ôİ’è
-		m_pMoveState = new CStateRandom();		// ƒ‰ƒ“ƒ_ƒ€ó‘Ô
+		m_pMoveState = new CStateAStar();		// ƒ‰ƒ“ƒ_ƒ€ó‘Ô
 		//m_pMoveState->ControlStop(this);		// ‘€ì‚Å‚«‚éó‘Ô
 		m_pMoveState->SetRotState(CMoveState::ROTSTATE_MAX);		// ˆÚ“®Œü‚«‚Ìó‘Ô‚ğİ’è
 		m_pMoveState->SetEnemyType(m_EnemyType);					// “G‚Ìí—Ş‚ğİ’è
