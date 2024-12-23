@@ -46,7 +46,7 @@ namespace
 	const float ULTIMATE_ROT = 0.5f;								//術発動時の向き
 
 	const D3DXVECTOR3 TITLE_POS_V = D3DXVECTOR3(-1300.0f, 550.0f, 300.0f);	//タイトルカメラの位置(視点)
-	const D3DXVECTOR3 TITLE_POS_R = D3DXVECTOR3(-0.0f, 400.0f, 0.0f);		//タイトルカメラの位置(注視点)
+	const D3DXVECTOR3 TITLE_POS_R = D3DXVECTOR3(-0.0f, 400.0f, 1700.0f);		//タイトルカメラの位置(注視点)
 	const float TTTLE_DECREASE = 0.05f;								//プレイヤー視点までの距離の減少速度
 	const float TTTLE_LENGTH = 0.01f;								//プレイヤー視点までのたどり着いた距離
 }
