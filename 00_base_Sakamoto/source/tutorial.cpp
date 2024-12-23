@@ -315,7 +315,7 @@ void CTutorial::Uninit(void)
 	CSlowManager::ReleaseAll();
 
 	// マップシステムの終了
-	CMapSystem::GetInstance()->Uninit();
+	//CMapSystem::GetInstance()->Uninit();
 
 	//全てのオブジェクトの破棄
 	CObject::ReleaseAll();
