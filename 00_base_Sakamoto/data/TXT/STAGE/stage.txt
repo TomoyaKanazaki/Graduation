@@ -7,12 +7,13 @@
 #------------------------------------------------------------------------------
 # マップ数
 #------------------------------------------------------------------------------
-NUM_MAP = 10
+NUM_MAP = 16
 
 #------------------------------------------------------------------------------
 # マップファイル名
 #------------------------------------------------------------------------------
 SETFILENAME
+data\\TXT\\STAGE\\map00.csv
 data\\TXT\\STAGE\\map01.csv
 data\\TXT\\STAGE\\map02.csv
 data\\TXT\\STAGE\\map03.csv
@@ -22,6 +23,11 @@ data\\TXT\\STAGE\\map06.csv
 data\\TXT\\STAGE\\map07.csv
 data\\TXT\\STAGE\\map08.csv
 data\\TXT\\STAGE\\map09.csv
+data\\TXT\\STAGE\\map10.csv
+data\\TXT\\STAGE\\map11.csv
+data\\TXT\\STAGE\\map12.csv
+data\\TXT\\STAGE\\map13.csv
+data\\TXT\\STAGE\\map14.csv
 data\\TXT\\STAGE\\map99.csv
 END_SETFILENAME
 
