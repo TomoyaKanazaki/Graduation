@@ -24,9 +24,10 @@ namespace
 	const char* MAP_XMODEL_PASS("data\\TXT\\STAGE\\XModel_Tutorial_000.txt");
 	const char* MAP_GIMMICK_PASS("data\\TXT\\STAGE\\Gimmick_Tutorial_000.txt");
 
-	const D3DXVECTOR3 STAGE_POS = D3DXVECTOR3(640.0f, 250.0f, 0.0f);		// 選択項目の位置
-	const D3DXVECTOR2 STAGE_SIZE = D3DXVECTOR2(300.0f, 300.0f);				// 選択項目の大きさ
-	const D3DXVECTOR2 STAGE_DISTANCE = D3DXVECTOR2(50.0f + (STAGE_SIZE.x * 1.0f), 0.0f + (STAGE_SIZE.y * 0.0f));	// 選択項目の幅
+	const D3DXVECTOR3 STAGE_POS = D3DXVECTOR3(540.0f, 250.0f, 0.0f);		// 選択項目の位置
+	const D3DXVECTOR2 STAGE_SIZE = D3DXVECTOR2(200.0f, 300.0f);				// 選択項目の大きさ
+	const D3DXVECTOR2 STAGE_DISTANCE = D3DXVECTOR2(150.0f + (STAGE_SIZE.x * 1.0f), 0.0f + (STAGE_SIZE.y * 0.0f));	// 選択項目の幅
+	const float NUMBER_DISTANCE = 110.0f;	// ステージと数字の幅
 
 	const D3DXVECTOR3 SCROOL_POS = D3DXVECTOR3(440.0f, 500.0f, 0.0f);		// 選択項目の位置
 	const D3DXVECTOR2 SCROOL_SIZE = D3DXVECTOR2(300.0f, 50.0f);				// 選択項目の大きさ
@@ -119,14 +120,14 @@ HRESULT CSelect::Init(void)
 			// ボタン
 			m_pStageSelect[nCnt].m_pSelectUI = CObject2D::Create();
 			m_pStageSelect[nCnt].m_pSelectUI->SetPos(D3DXVECTOR3(STAGE_POS.x + (STAGE_DISTANCE.x * nCnt), STAGE_POS.y + (STAGE_DISTANCE.y * nCnt), STAGE_POS.z));
-			m_pStageSelect[nCnt].m_pSelectUI->SetSize(D3DXVECTOR3(500.0f, STAGE_SIZE.y, 0.0f));
+			m_pStageSelect[nCnt].m_pSelectUI->SetSize(D3DXVECTOR3(STAGE_SIZE.x, STAGE_SIZE.y, 0.0f));
 		}
 
 		if (m_pStageSelect[nCnt].m_pSelectNumber01 == nullptr)
 		{
 			m_pStageSelect[nCnt].m_pSelectNumber01 = CNumber::Create();
 			m_pStageSelect[nCnt].m_pSelectNumber01->SetPos(D3DXVECTOR3(
-				m_pStageSelect[nCnt].m_pSelectUI->GetPos().x + 100.0f,
+				m_pStageSelect[nCnt].m_pSelectUI->GetPos().x + NUMBER_DISTANCE + 40.0f,
 				m_pStageSelect[nCnt].m_pSelectUI->GetPos().y,
 				m_pStageSelect[nCnt].m_pSelectUI->GetPos().z));
 			m_pStageSelect[nCnt].m_pSelectNumber01->SetSize(D3DXVECTOR3(50.0f, 50.0f, 0.0f));
@@ -137,7 +138,7 @@ HRESULT CSelect::Init(void)
 		{
 			m_pStageSelect[nCnt].m_pSelectNumber10 = CNumber::Create();
 			m_pStageSelect[nCnt].m_pSelectNumber10->SetPos(D3DXVECTOR3(
-				m_pStageSelect[nCnt].m_pSelectUI->GetPos().x + 50.0f,
+				m_pStageSelect[nCnt].m_pSelectUI->GetPos().x + NUMBER_DISTANCE,
 				m_pStageSelect[nCnt].m_pSelectUI->GetPos().y,
 				m_pStageSelect[nCnt].m_pSelectUI->GetPos().z));
 			m_pStageSelect[nCnt].m_pSelectNumber10->SetSize(D3DXVECTOR3(50.0f, 50.0f, 0.0f));
@@ -146,18 +147,7 @@ HRESULT CSelect::Init(void)
 
 		if (m_pStageSelect[nCnt].m_pSelectUI != nullptr)
 		{
-			switch (nCnt)
-			{
-			case 0:
-				m_pStageSelect[nCnt].m_pSelectUI->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\stage00.png"));
-				break;
-			case 1:
-				m_pStageSelect[nCnt].m_pSelectUI->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\stage01.png"));
-				break;
-			case 2:
-				m_pStageSelect[nCnt].m_pSelectUI->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\stage02.png"));
-				break;
-			}
+			m_pStageSelect[nCnt].m_pSelectUI->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\stage00.png"));
 		}
 	}
 
@@ -359,17 +349,35 @@ void CSelect::StageSelect(void)
 			if (m_pStageSelect[nCnt].m_pSelectNumber01 != nullptr)
 			{
 				m_pStageSelect[nCnt].m_pSelectNumber01->SetPos(D3DXVECTOR3(
-					m_pStageSelect[nCnt].m_pSelectUI->GetPos().x + 100.0f,
+					m_pStageSelect[nCnt].m_pSelectUI->GetPos().x + NUMBER_DISTANCE + 40.0f,
 					m_pStageSelect[nCnt].m_pSelectUI->GetPos().y,
 					m_pStageSelect[nCnt].m_pSelectUI->GetPos().z));
+
+				if (m_nSelect == nCnt)
+				{
+					m_pStageSelect[nCnt].m_pSelectNumber01->SetColor(SELECT_COLOR_TRUE);
+				}
+				else
+				{
+					m_pStageSelect[nCnt].m_pSelectNumber01->SetColor(SELECT_COLOR_FALSE);
+				}
 			}
 
 			if (m_pStageSelect[nCnt].m_pSelectNumber10 != nullptr)
 			{
 				m_pStageSelect[nCnt].m_pSelectNumber10->SetPos(D3DXVECTOR3(
-					m_pStageSelect[nCnt].m_pSelectUI->GetPos().x + 50.0f,
+					m_pStageSelect[nCnt].m_pSelectUI->GetPos().x + NUMBER_DISTANCE,
 					m_pStageSelect[nCnt].m_pSelectUI->GetPos().y,
 					m_pStageSelect[nCnt].m_pSelectUI->GetPos().z));
+
+				if (m_nSelect == nCnt)
+				{
+					m_pStageSelect[nCnt].m_pSelectNumber10->SetColor(SELECT_COLOR_TRUE);
+				}
+				else
+				{
+					m_pStageSelect[nCnt].m_pSelectNumber10->SetColor(SELECT_COLOR_FALSE);
+				}
 			}
 		//}
 	}

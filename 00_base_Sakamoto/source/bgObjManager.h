@@ -13,6 +13,7 @@
 // 前方宣言
 class CObjectCharacter;
 class CObjectX;
+class CObjmeshDome;
 
 // 背景オブジェクト管理クラス
 class CBgObjManager
@@ -29,6 +30,7 @@ public:
 	void Update(void);
 
 	void SetGame(CMapSystem::GRID& grid);
+	CObjmeshDome* GetDomeUp(void) { return m_pMeshDomeUp; }
 
 private:
 
@@ -41,6 +43,7 @@ private:
 	void SetMountain(void);
 	void SetAirShip(void);
 
+	CObjmeshDome* m_pMeshDomeUp;						// メッシュドーム
 	CObjectCharacter* m_pBGCharacter[MOUNTAIN_OBJ_NUM];	// 背景キャラクターのポインタ
 	CObjectX* m_pAirShip;								// 飛空艇
 	int m_nCount;										// カウント

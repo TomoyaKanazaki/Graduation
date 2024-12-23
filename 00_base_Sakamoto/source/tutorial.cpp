@@ -163,7 +163,7 @@ m_nNumBible(0)				// ¹‘‚Ì‘”
 		CManager::GetInstance()->GetCamera(nCnt)->SetCameraMode(CCamera::CAMERAMODE_DOWNVIEW);
 	}
 
-	for (int nCnt = 0; nCnt >= TYPE_MAX; nCnt++)
+	for (int nCnt = 0; nCnt < TYPE_MAX; nCnt++)
 	{
 		m_bSound[nCnt] = false;
 	}

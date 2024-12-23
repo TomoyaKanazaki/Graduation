@@ -1450,7 +1450,7 @@ void CPlayer::CollisionPressWall(D3DXVECTOR3& posThis, int Rot)
 		MyGrid.x += 1;
 
 		if (CMapSystem::GetInstance()->GetGritBool(MyGrid) == true &&
-			CMapSystem::GetInstance()->GetMove()->GetMove().z < 0.0f)
+			CMapSystem::GetInstance()->GetMove()->GetMove().x < 0.0f)
 		{
 			Death();
 		}
@@ -2034,7 +2034,6 @@ void CPlayer::SetItemType(ITEM_TYPE eType)
 	switch (eType)
 	{
 	case TYPE_CROSS:
-		SetPartsDisp(9, true);		// 十字架のモデル表示
 		SetPartsDisp(10, false);	// 聖書のモデル非表示
 
 		// 所持時間タイマーをリセット
@@ -2043,7 +2042,6 @@ void CPlayer::SetItemType(ITEM_TYPE eType)
 		break;
 
 	case TYPE_BIBLE:
-		SetPartsDisp(9, false);		// 十字架のモデル非表示
 		SetPartsDisp(10, true);		// 聖書のモデル表示
 
 		break;

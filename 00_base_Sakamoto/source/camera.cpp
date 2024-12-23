@@ -26,7 +26,7 @@ namespace
 {
 	const float CAMERA_DISTANCE = 100.0f;							//視点と注視点の距離
 	const float CAMERA_DISTANCE_EVENT = 450.0f;						//イベント時の視点と注視点の距離
-	const float CAMERA_HEIGHT_EVENT = 75.0f;						//イベント時の視点の高さ
+	const float CAMERA_HEIGHT_EVENT = 120.0f;						//イベント時の視点の高さ
 
 	const float MODEL_DISTANCE = 10.0f;								//モデルと注視点の距離
 	const float CAMERA_SPEED = 9.0f;								//カメラの移動スピード
