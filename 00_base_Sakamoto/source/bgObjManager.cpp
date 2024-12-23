@@ -17,6 +17,7 @@
 
 #include "objectcharacter.h"
 #include "motion.h"
+#include "objmeshDome.h"
 
 // 定数定義
 namespace
@@ -46,6 +47,7 @@ CBgObjManager::CBgObjManager()
 	}
 
 	m_pAirShip = nullptr;
+	m_pMeshDomeUp = nullptr;
 
 	m_nCount = 0;
 }
@@ -115,6 +117,11 @@ void CBgObjManager::Update(void)
 {
 	// カウント加算
 	m_nCount++;
+
+	if (m_pMeshDomeUp != nullptr)
+	{
+		m_pMeshDomeUp->SetScroll(D3DXVECTOR2(D3DX_PI * (float)m_nCount * 0.003f, 0.0f));
+	}
 
 	// 山の更新処理
 	for (int nCnt = 0; nCnt < MOUNTAIN_OBJ_NUM; nCnt++)
@@ -248,6 +255,13 @@ void CBgObjManager::SetSlopeDevice(void)
 //==========================================
 void CBgObjManager::SetMountain(void)
 {
+	if (m_pMeshDomeUp == nullptr)
+	{
+		m_pMeshDomeUp = CObjmeshDome::Create();
+		m_pMeshDomeUp->SetPos(D3DXVECTOR3(0.0f, -1000.0f, 0.0f));
+		m_pMeshDomeUp->SetTexture("data\\TEXTURE\\Field\\mesh_doom_00.png");
+	}
+
 	//右山
 	CObjectX* pRMountain = CObjectX::Create("data\\MODEL\\RightMountain.x");
 	pRMountain->SetPos(D3DXVECTOR3(2000.0f, -1000.0f, 2000.0f));

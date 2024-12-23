@@ -138,7 +138,7 @@ CEnemy* CEnemy::Create(const ENEMY_TYPE eType, const CMapSystem::GRID& grid)
 	pEnemy->m_Grid = grid;
 	//pEnemy->SetGrid(pEnemy->m_Grid);
 	D3DXVECTOR3 InitPos = CMapSystem::GetInstance()->GetGritPos(grid);
-	InitPos.y = 50.0f;
+	InitPos.y = 0.0f;
 	pEnemy->SetPos(InitPos);
 
 	// “G‚Ìƒ^ƒCƒv‚ğİ’è
