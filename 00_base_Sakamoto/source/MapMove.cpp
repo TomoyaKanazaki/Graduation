@@ -82,8 +82,6 @@ CMapMove::CMapMove() :
 	m_fScrollMove = 0.0f;
 	m_SetState = MOVE_WAIT;
 	m_fScrollEndLine = 0.0f;
-
-	memset(&m_pSignal[0], 0, sizeof(m_pSignal));	// シグナル情報
 }
 
 //====================================================================
@@ -129,9 +127,6 @@ HRESULT CMapMove::Init(void)
 	m_nStateCount = 0;
 	m_bSlope = false;
 
-	//矢印の生成
-	SignalCreate();
-
 	return S_OK;
 }
 
@@ -140,13 +135,6 @@ HRESULT CMapMove::Init(void)
 //====================================================================
 void CMapMove::Uninit(void)
 {
-	// 矢印を終了
-	for (int i = 0; i < 4; ++i)
-	{
-		if (m_pSignal[i] == nullptr) { continue; }
-		m_pSignal[i]->SetDeathFlag(true);
-	}
-
 	// 自身を削除する
 	delete this;
 }
@@ -165,9 +153,6 @@ void CMapMove::Update(void)
 
 	// マップの傾き
 	m_DevilRot = CObjmeshField::GetListTop()->GetRot();
-
-	// 矢印の回転
-	SignalManager();
 
 	//状態の管理
 	StateManager();
@@ -547,9 +532,6 @@ void CMapMove::StateManager(void)
 			if (m_bSlope)
 			{
 				Slope(m_DevilArrow);
-
-				// 矢印傾き
-				SignalManager();
 			}
 			else
 			{
@@ -1163,43 +1145,6 @@ void CMapMove::DebugKey(void)
 		pMapField->SetRot(MapRot);
 	}
 
-	if (pInputKeyboard->GetPress(DIK_6))
-	{
-		m_pSignal[0]->SetRot(D3DXVECTOR3(-1.75f, 0.0f, 0.0f));
-		m_pSignal[1]->SetRot(D3DXVECTOR3(-1.75f, 0.0f, 0.0f));
-		m_pSignal[2]->SetRot(D3DXVECTOR3(1.75f, 0.0f, 0.0f));
-		m_pSignal[3]->SetRot(D3DXVECTOR3(1.75f, 0.0f, 0.0f));
-
-		Slope(0);
-	}
-	if (pInputKeyboard->GetPress(DIK_7))
-	{
-		m_pSignal[0]->SetRot(D3DXVECTOR3(1.75f, 0.0f, 0.0f));
-		m_pSignal[1]->SetRot(D3DXVECTOR3(1.75f, 0.0f, 0.0f));
-		m_pSignal[2]->SetRot(D3DXVECTOR3(-1.75f, 0.0f, 0.0f));
-		m_pSignal[3]->SetRot(D3DXVECTOR3(-1.75f, 0.0f, 0.0f));
-
-		Slope(1);
-	}
-	if (pInputKeyboard->GetPress(DIK_8))
-	{
-		m_pSignal[0]->SetRot(D3DXVECTOR3(-1.75f, D3DX_PI * 0.5f, 0.0f));
-		m_pSignal[1]->SetRot(D3DXVECTOR3(1.75f, D3DX_PI * 0.5f, 0.0f));
-		m_pSignal[2]->SetRot(D3DXVECTOR3(-1.75f, D3DX_PI * 0.5f, 0.0f));
-		m_pSignal[3]->SetRot(D3DXVECTOR3(1.75f, D3DX_PI * 0.5f, 0.0f));
-
-		Slope(2);
-	}
-	if (pInputKeyboard->GetPress(DIK_9))
-	{
-		m_pSignal[0]->SetRot(D3DXVECTOR3(1.75f, D3DX_PI * 0.5f, 0.0f));
-		m_pSignal[1]->SetRot(D3DXVECTOR3(-1.75f, D3DX_PI * 0.5f, 0.0f));
-		m_pSignal[2]->SetRot(D3DXVECTOR3(1.75f, D3DX_PI * 0.5f, 0.0f));
-		m_pSignal[3]->SetRot(D3DXVECTOR3(-1.75f, D3DX_PI * 0.5f, 0.0f));
-
-
-		Slope(3);
-	}
 #endif // !_DEBUG
 }
 
@@ -1263,101 +1208,6 @@ void CMapMove::GritScroll()
 
 	CMapSystem::GetInstance()->SetMapPos(MapPos);
 }
-
-//====================================================================
-// 矢印の生成
-//====================================================================
-void CMapMove::SignalCreate(void)
-{
-	// 矢印生成
-	if (m_pSignal[0] == nullptr)
-	{
-		m_pSignal[0] = CSignal::Create(0);
-		m_pSignal[0]->SetPos(D3DXVECTOR3(-1000.0f, 200.0f, 500.0f));
-	}
-	if (m_pSignal[1] == nullptr)
-	{
-		m_pSignal[1] = CSignal::Create(0);
-		m_pSignal[1]->SetPos(D3DXVECTOR3(1000.0f, 200.0f, 500.0f));
-	}
-	if (m_pSignal[2] == nullptr)
-	{
-		m_pSignal[2] = CSignal::Create(0);
-		m_pSignal[2]->SetPos(D3DXVECTOR3(-1000.0f, 200.0f, -500.0f));
-	}
-	if (m_pSignal[3] == nullptr)
-	{
-		m_pSignal[3] = CSignal::Create(0);
-		m_pSignal[3]->SetPos(D3DXVECTOR3(1000.0f, 200.0f, -500.0f));
-	}
-}
-
-//====================================================================
-// 矢印の管理
-//====================================================================
-void CMapMove::SignalManager(void)
-{
-	switch (m_State)
-	{
-	case MOVE_SCROLL_UP:
-		m_pSignal[0]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
-		m_pSignal[1]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
-		m_pSignal[2]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
-		m_pSignal[3]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
-		break;
-
-	case MOVE_SCROLL_DOWN:
-		m_pSignal[0]->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-		m_pSignal[1]->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-		m_pSignal[2]->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-		m_pSignal[3]->SetRot(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-		break;
-
-	case MOVE_SCROLL_RIGHT:
-		m_pSignal[0]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
-		m_pSignal[1]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
-		m_pSignal[2]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
-		m_pSignal[3]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
-		break;
-
-	case MOVE_SCROLL_LEFT:
-		m_pSignal[0]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
-		m_pSignal[1]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
-		m_pSignal[2]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
-		m_pSignal[3]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
-		break;
-
-	case MOVE_SLOPE_UP:
-		m_pSignal[0]->SetRot(D3DXVECTOR3(-1.75f, 0.0f, 0.0f));
-		m_pSignal[1]->SetRot(D3DXVECTOR3(-1.75f, 0.0f, 0.0f));
-		m_pSignal[2]->SetRot(D3DXVECTOR3(1.75f, 0.0f, 0.0f));
-		m_pSignal[3]->SetRot(D3DXVECTOR3(1.75f, 0.0f, 0.0f));
-		break;
-
-	case MOVE_SLOPE_DOWN:
-		m_pSignal[0]->SetRot(D3DXVECTOR3(1.75f, 0.0f, 0.0f));
-		m_pSignal[1]->SetRot(D3DXVECTOR3(1.75f, 0.0f, 0.0f));
-		m_pSignal[2]->SetRot(D3DXVECTOR3(-1.75f, 0.0f, 0.0f));
-		m_pSignal[3]->SetRot(D3DXVECTOR3(-1.75f, 0.0f, 0.0f));
-		break;
-
-	case MOVE_SLOPE_LEFT:
-		m_pSignal[0]->SetRot(D3DXVECTOR3(-1.75f, D3DX_PI * 0.5f, 0.0f));
-		m_pSignal[1]->SetRot(D3DXVECTOR3(1.75f, D3DX_PI * 0.5f, 0.0f));
-		m_pSignal[2]->SetRot(D3DXVECTOR3(-1.75f, D3DX_PI * 0.5f, 0.0f));
-		m_pSignal[3]->SetRot(D3DXVECTOR3(1.75f, D3DX_PI * 0.5f, 0.0f));
-
-		break;
-
-	case MOVE_SLOPE_RIGHT:
-		m_pSignal[0]->SetRot(D3DXVECTOR3(1.75f, D3DX_PI * 0.5f, 0.0f));
-		m_pSignal[1]->SetRot(D3DXVECTOR3(-1.75f, D3DX_PI * 0.5f, 0.0f));
-		m_pSignal[2]->SetRot(D3DXVECTOR3(1.75f, D3DX_PI * 0.5f, 0.0f));
-		m_pSignal[3]->SetRot(D3DXVECTOR3(-1.75f, D3DX_PI * 0.5f, 0.0f));
-		break;
-	}
-}
-
 //====================================================================
 // プレイヤーが潰される時の処理
 //====================================================================

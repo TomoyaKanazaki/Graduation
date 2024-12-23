@@ -96,9 +96,6 @@ private:
 	void Slope(int Arroow);		//傾き処理
 	void CollisionOut();		//ステージ外にいるオブジェクトの処理
 
-	void SignalCreate(void);
-	void SignalManager(void);
-
 	void ScrollReset();		//スクロールのずれ修正
 	void GritScroll();		//グリットのスクロール
 	void CollisionPressPlayer(CPlayer* pPlayer, D3DXVECTOR3 pos, D3DXVECTOR3 Size);	//プレイヤーが潰される時の処理
@@ -125,8 +122,6 @@ private:
 
 	CMapSystem::GRID m_MinGrid;		//マップで一番左上にあるブロックの番号
 	CMapSystem::GRID m_MaxGrid;		//マップで一番右下にあるブロックの番号
-
-	CSignal* m_pSignal[4];			//矢印モデルのポインタ
 
 	float m_CollisionRot;			//当たり判定用の向き
 
