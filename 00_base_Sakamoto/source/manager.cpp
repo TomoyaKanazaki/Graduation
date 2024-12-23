@@ -20,7 +20,11 @@
 #include "timer.h"
 
 #ifdef _DEBUG
+#if 0
 #define SET_MODE (CScene::MODE_GAME)
+#else
+#define SET_MODE (CScene::MODE_TITLE)
+#endif
 #define SET_PLAY_MODE (GAME_MODE::MODE_SINGLE)
 #define SET_SCROLL_TYPE (0)
 #else
@@ -71,6 +75,7 @@ CManager::CManager() :
 	m_pSound = nullptr;
 	m_pRanking = nullptr;
 	m_pBlockManager = nullptr;
+	m_pMapSystem = nullptr;
 	m_typeInput = TYPE_INPUT::TYPE_NONE;
 	m_nStage = 0;
 	m_ScrollType = SET_SCROLL_TYPE;
@@ -237,6 +242,19 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 		return E_FAIL;
 	}
 
+	// マップシステム
+	if (m_pMapSystem == nullptr)
+	{
+		// インスタンス取得
+		m_pMapSystem = CMapSystem::GetInstance();
+	}
+
+	// 全てのマップ情報読み込み
+	if (FAILED(m_pMapSystem->LoadAll()))
+	{
+		return E_FAIL;
+	}
+
 	if (m_pFade == nullptr)
 	{
 		//フェードの生成
@@ -278,7 +296,15 @@ void CManager::Uninit(void)
 		m_pScene = nullptr;
 	}
 
-	CMapSystem::GetInstance()->Uninit();
+	//CMapSystem::GetInstance()->Uninit();
+
+	if (m_pMapSystem != nullptr)
+	{
+		// マップシステムの破棄
+		m_pMapSystem->Uninit();
+		//delete m_pMapSystem;
+		m_pMapSystem = nullptr;
+	}
 
 	//全てのオブジェクトの破棄
 	CObject::ReleaseAll();

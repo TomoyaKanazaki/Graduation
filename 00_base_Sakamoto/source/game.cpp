@@ -164,8 +164,8 @@ HRESULT CGame::Init(void)
 	m_pTime->SetStopTime(true);	//タイムの進行を止める
 
 	// マップの生成
-	CMapSystem::GetInstance();
-	CMapSystem::Load("data\\TXT\\STAGE\\map18.csv");
+	CMapSystem* pMapSystem = CMapSystem::GetInstance();
+	pMapSystem->CreateMap(pMapSystem->GetSelectMap());
 
 	//デビルの生成
 	m_pDevil = CDevil::Create();
@@ -237,7 +237,7 @@ void CGame::Uninit(void)
 	CSlowManager::ReleaseAll();
 
 	// マップシステムの終了
-	CMapSystem::GetInstance()->Uninit();
+	//CMapSystem::GetInstance()->Uninit();
 
 	// 背景オブジェクトの終了処理
 	CBgObjManager::GetInstance()->Uninit();

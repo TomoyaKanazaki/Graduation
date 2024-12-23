@@ -466,11 +466,16 @@ void CSelect::ScrollSelect(void)
 //====================================================================
 void CSelect::ScrollButton(void)
 {
+	CMapSystem* pMapSystem = CMapSystem::GetInstance();
+
 	if (CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_RETURN) == true ||
 		CManager::GetInstance()->GetInputJoyPad()->GetTrigger(CInputJoypad::BUTTON_A, 0) == true)
 	{
 		CManager::GetInstance()->SetTypeInput(CManager::GetInstance()->TYPE_MNK);	// 入力タイプ：キーマウ
 		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_ENTER);
+
+		// 指定のマップ番号を設定
+		pMapSystem->SetSelectMap(m_nSetStage);
 
 		switch (m_nSelect)
 		{
