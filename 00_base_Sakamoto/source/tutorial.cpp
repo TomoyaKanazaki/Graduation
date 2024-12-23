@@ -538,14 +538,6 @@ void CTutorial::Update(void)
 		//CTutorialUi::Create(TEXTURE_CENTER_POS, ACHIEVEMENT_SIZE, ACHIEVEMENT_TEX, 1.0f);
 	}
 
-	for (CEnemy* Enemy : Enemylist)
-	{
-		if (pInputKeyboard->GetTrigger(DIK_4) == true)
-		{// チュートリアル段階を4にする
-			Enemy->ChangeMoveState(new CStateRandom);
-		}
-	}
-
 #if _DEBUG
 	if (pInputKeyboard->GetTrigger(DIK_3) == true)
 	{// チュートリアル段階を4にする
