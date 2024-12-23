@@ -270,15 +270,15 @@ void CStateControl::Move(CObjectCharacter* pCharacter, D3DXVECTOR3& pos, D3DXVEC
 
 		break;
 
-	case CObject::TYPE_ENEMY3D:			// 敵
-		NormarizeMove = InputKey(pCharacter, pos, rot, NormarizeMove, ENEMY_SPEED);
-		UpdateMoveEnemy(pCharacter, NormarizeMove);			// 移動更新
+	//case CObject::TYPE_ENEMY3D:			// 敵
+	//	NormarizeMove = InputKey(pCharacter, pos, rot, NormarizeMove, ENEMY_SPEED);
+	//	UpdateMoveEnemy(pCharacter, NormarizeMove);			// 移動更新
 
-		// 移動方向処理
-		Rot(pCharacter, rot);
+	//	// 移動方向処理
+	//	Rot(pCharacter, rot);
 
-		// 位置更新処理
-		UpdatePos(pCharacter, pos);
+	//	// 位置更新処理
+	//	UpdatePos(pCharacter, pos);
 
 		break;
 
