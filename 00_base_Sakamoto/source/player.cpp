@@ -1448,7 +1448,7 @@ void CPlayer::CollisionPressWall(D3DXVECTOR3& posThis, int Rot)
 		MyGrid.x += 1;
 
 		if (CMapSystem::GetInstance()->GetGritBool(MyGrid) == true &&
-			CMapSystem::GetInstance()->GetMove()->GetMove().z < 0.0f)
+			CMapSystem::GetInstance()->GetMove()->GetMove().x < 0.0f)
 		{
 			Death();
 		}
