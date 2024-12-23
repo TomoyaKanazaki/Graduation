@@ -225,8 +225,9 @@ HRESULT CTutorial::Init(void)
 	CTutorial::GetTime()->SetStopTime(false);
 
 	// マップの生成
-	CMapSystem::GetInstance()->Init();
-	//CMapSystem::Load("data\\TXT\\STAGE\\map02.csv");
+	CMapSystem* pMapSystem = CMapSystem::GetInstance();
+	pMapSystem->Init();
+	pMapSystem->CreateMap(pMapSystem->GetSelectMap());
 
 	//デビルの生成
 	m_pDevil = CDevil::Create();

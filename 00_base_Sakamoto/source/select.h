@@ -77,6 +77,8 @@ private:
 	float m_fCountFade;
 
 	SStageSelect m_pStageSelect[NUM_STAGE];	//ステージセレクト
+	static std::vector<SStageSelect> m_StageSelect;		// ステージセレクト
+
 	CObject2D* m_pScrollSelect[NUM_SCROLLTYPE];	//スクロールセレクト
 	CObject2D* m_pTitleButton;					//ボタン入力UIのポリゴン
 	CObject2D* m_pTexScroll[NUM_SCROLL];		// テクスチャスクロール

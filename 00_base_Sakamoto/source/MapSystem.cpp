@@ -70,7 +70,7 @@ CMapSystem::CMapSystem() :
 	m_MapSize = D3DXVECTOR3((NUM_WIGHT - 1) * 50.0f, 0.0f, (NUM_HEIGHT - 1) * 50.0f);
 	m_pMapMove = nullptr;
 	m_nNumMap = -1;
-	m_nSelectMap = -1;
+	m_nSelectMap = 0;
 }
 
 //====================================================================
@@ -78,7 +78,7 @@ CMapSystem::CMapSystem() :
 //====================================================================
 CMapSystem::~CMapSystem()
 {
-
+	m_MapInfo.clear();
 }
 
 //====================================================================
@@ -133,8 +133,6 @@ void CMapSystem::Init()
 //====================================================================
 void CMapSystem::Uninit(void)
 {
-	m_MapInfo.clear();
-
 	if (m_pMapMove != nullptr)
 	{
 		m_pMapMove->Uninit();
@@ -549,8 +547,6 @@ HRESULT CMapSystem::LoadMap(const char* pFilename)
 	D3DXVECTOR3 size = D3DXVECTOR3(fMapSystemGritSize, 0.0f, fMapSystemGritSize);		// グリッドサイズ
 	MAPTYPE mapType;
 
-	CRailManager* pRailManager = new CRailManager();		// レールマネージャーを生成
-
 	// ファイルを開く
 	std::ifstream file(pFilename);	// ファイルストリーム
 	if (file.fail())
@@ -704,13 +700,6 @@ HRESULT CMapSystem::LoadMap(const char* pFilename)
 		}
 	}
 
-	// レールマネージャーの破棄
-	if (pRailManager != nullptr)
-	{
-		delete pRailManager;
-		pRailManager = nullptr;
-	}
-
 	// ファイルを閉じる
 	file.close();
 
@@ -778,10 +767,6 @@ HRESULT CMapSystem::CreateMap(unsigned int nSelect)
 
 			// 床の生成
 			CTile::Create(grid);
-
-			// グリッド設定の判定
-			bGridSet = false;
-			bRailGridSet = false;
 
 			// オブジェクトを生成
 			switch (m_MapInfo[nSelect].type[nNumGrid])
@@ -868,6 +853,11 @@ HRESULT CMapSystem::CreateMap(unsigned int nSelect)
 
 			// グリッドのレール判定の設定
 			pMapSystem->SetRailGritBool(grid, bRailGridSet);
+
+			// グリッド設定の判定
+			bGridSet = false;
+			bRailGridSet = false;
+
 		}
 	}
 
