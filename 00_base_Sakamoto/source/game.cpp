@@ -165,7 +165,7 @@ HRESULT CGame::Init(void)
 
 	// マップの生成
 	CMapSystem::GetInstance();
-	CMapSystem::Load("data\\TXT\\STAGE\\map19.csv");
+	CMapSystem::Load("data\\TXT\\STAGE\\map18.csv");
 
 	//デビルの生成
 	m_pDevil = CDevil::Create();
@@ -439,6 +439,13 @@ void CGame::ResetStage(void)
 
 	//イベントフラグを立てる
 	m_bEvent = true;
+
+	CGame::GetInstance()->GetPlayer(0)->SetMove(INITVECTOR3);
+
+	if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
+	{
+		CGame::GetInstance()->GetPlayer(1)->SetMove(INITVECTOR3);
+	}
 
 	////現在のスクロール状態を保存する
 	//CMapMove* pMapMove = CMapSystem::GetInstance()->GetMove();
