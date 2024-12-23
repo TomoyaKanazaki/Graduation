@@ -354,6 +354,10 @@ void CTutorial::Update(void)
 	if (CDevilHole::GetList() == nullptr) { assert(false); }
 	std::list<CDevilHole*> DevilHolelist = CDevilHole::GetList()->GetList();
 
+	// プレイヤーリストを取得
+	if (CEnemy::GetList() == nullptr) { assert(false); }
+	std::list<CEnemy*> Enemylist = CEnemy::GetList()->GetList();
+
 	int nNumPlayer = 0;
 
 	for (CPlayer* player : list)
@@ -532,6 +536,14 @@ void CTutorial::Update(void)
 
 		// 項目達成テクスチャ表示
 		//CTutorialUi::Create(TEXTURE_CENTER_POS, ACHIEVEMENT_SIZE, ACHIEVEMENT_TEX, 1.0f);
+	}
+
+	for (CEnemy* Enemy : Enemylist)
+	{
+		if (pInputKeyboard->GetTrigger(DIK_4) == true)
+		{// チュートリアル段階を4にする
+			Enemy->ChangeMoveState(new CStateRandom);
+		}
 	}
 
 #if _DEBUG

@@ -36,6 +36,7 @@
 #include <vector>		// 動的配列
 #include <list>			// リスト構造
 #include <map>			// 連想配列
+#include <thread>		// スレッド
 
 #include "useful.h"			// 便利関数
 #include "listManager.h"	// リスト管理

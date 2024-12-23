@@ -223,6 +223,7 @@ private:
     int m_nTargetIndex;         // 次に向かうべきグリッドのインデックス
     float m_fCoordinateTimer;   // 経路探索間隔
 
+    bool m_bStateFlag;          // ステートフラグ
 };
 
 //============================================
