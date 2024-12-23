@@ -228,7 +228,6 @@ HRESULT CTutorial::Init(void)
 	CMapSystem* pMapSystem = CMapSystem::GetInstance();
 	pMapSystem->Init();
 	pMapSystem->CreateMap(pMapSystem->GetSelectMap());
-	//CMapSystem::Load("data\\TXT\\STAGE\\map02.csv");
 
 	//ƒfƒrƒ‹‚Ì¶¬
 	m_pDevil = CDevil::Create();

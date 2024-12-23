@@ -70,7 +70,7 @@ CMapSystem::CMapSystem() :
 	m_MapSize = D3DXVECTOR3((NUM_WIGHT - 1) * 50.0f, 0.0f, (NUM_HEIGHT - 1) * 50.0f);
 	m_pMapMove = nullptr;
 	m_nNumMap = -1;
-	m_nSelectMap = 2;
+	m_nSelectMap = 0;
 }
 
 //====================================================================
