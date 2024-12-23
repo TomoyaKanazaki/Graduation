@@ -76,16 +76,14 @@ CMapMove::CMapMove() :
 	m_ScrollArrowOld = 0;
 	m_SlopwArrowOld = 0;
 	m_ScrollType = SCROLL_TYPE_NORMAL;
-	m_pSignal[0] = nullptr;
-	m_pSignal[1] = nullptr;
-	m_pSignal[2] = nullptr;
-	m_pSignal[3] = nullptr;
 	m_nStateNum = 0;
 	m_SlopeType = 0;
 	m_bScrollOK = false;
 	m_fScrollMove = 0.0f;
 	m_SetState = MOVE_WAIT;
 	m_fScrollEndLine = 0.0f;
+
+	memset(&m_pSignal[0], 0, sizeof(m_pSignal));	// ÉVÉOÉiÉãèÓïÒ
 }
 
 //====================================================================
