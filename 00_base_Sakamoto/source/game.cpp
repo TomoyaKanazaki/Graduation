@@ -165,7 +165,7 @@ HRESULT CGame::Init(void)
 
 	// マップの生成
 	CMapSystem::GetInstance();
-	CMapSystem::Load("data\\TXT\\STAGE\\map01.csv");
+	CMapSystem::Load("data\\TXT\\STAGE\\map19.csv");
 
 	//デビルの生成
 	m_pDevil = CDevil::Create();
