@@ -28,7 +28,6 @@
 #include "Cross.h"
 #include "MapMove.h"
 #include "Motion.h"
-#include "objmeshDome.h"
 
 #include "sound.h"
 #include "shadow.h"
@@ -91,7 +90,6 @@ CGame::CGame()
 
 	m_pPause = nullptr;
 	m_pTime = nullptr;
-	m_pMeshDomeUp = nullptr;
 	m_pMapField = nullptr;
 	m_pCubeBlock = nullptr;
 	m_pDevil = nullptr;
@@ -155,10 +153,6 @@ HRESULT CGame::Init(void)
 
 	//クリアフラグのデフォルトをオンにしておく
 	m_bGameClear = true;
-
-	m_pMeshDomeUp = CObjmeshDome::Create();
-	m_pMeshDomeUp->SetPos(D3DXVECTOR3(0.0f, -1000.0f, 0.0f));
-	m_pMeshDomeUp->SetTexture("data\\TEXTURE\\Field\\mesh_doom_00.png");
 
 	//ステージ情報を0にする
 	CManager::GetInstance()->SetStage(0);
@@ -270,7 +264,7 @@ void CGame::Update(void)
 	CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
 
 	DebugProc::Print(DebugProc::POINT_LEFT, "ゲームスピード : %f\n", CManager::GetInstance()->GetGameSpeed());
-
+	
 	CMapSystem::GetInstance()->Update();
 
 	// 背景モデルの更新処理
