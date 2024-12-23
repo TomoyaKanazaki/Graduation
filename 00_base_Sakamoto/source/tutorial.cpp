@@ -226,7 +226,7 @@ HRESULT CTutorial::Init(void)
 
 	// マップの生成
 	CMapSystem::GetInstance()->Init();
-	CMapSystem::Load("data\\TXT\\STAGE\\map02.csv");
+	//CMapSystem::Load("data\\TXT\\STAGE\\map02.csv");
 
 	//デビルの生成
 	m_pDevil = CDevil::Create();

@@ -28,6 +28,7 @@ class CRanking;
 class CBlockManager;
 class CItemManager;
 class CScene;
+class CMapSystem;
 
 #define NUM_CAMERA	(3)		//カメラの最大数
 
@@ -81,6 +82,7 @@ public:
 	CLight* GetLight(void) { return m_pLight; }
 	CBlockManager* GetBlockManager(void) { return m_pBlockManager; }
 	CMyEffekseer* GetEffect(void) { return m_pEffect; }
+	CMapSystem* GetMapSystem(void) { return m_pMapSystem; }
 	void SetLevelUP(CLevelUP *LevelUP) { m_LevelUP = LevelUP; }
 	void SetEdit(bool bEdit) { m_bEdit = bEdit; }
 	bool GetEdit(void) { return m_bEdit; }
@@ -170,6 +172,7 @@ private:
 	TYPE_INPUT m_typeInput;				//インプット種類
 	GAME_MODE m_GameMode;				//ゲームのプレイモード
 	CScene* m_pScene;					//シーンのポインタ
+	CMapSystem* m_pMapSystem;			//マップシステム
 	int m_ScrollType;	//スクロールの種類
 };												
 

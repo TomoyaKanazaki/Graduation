@@ -37,6 +37,7 @@
 #include "objectBillboard.h"
 #include "move.h"
 #include "MapMove.h"
+#include "select.h"
 
 #include "MyEffekseer.h"
 #include "footprint.h"
@@ -162,11 +163,12 @@ HRESULT CPlayer::Init(int PlayNumber)
 	CObjectCharacter::SetUseShadowMtx(true);
 
 	CMapSystem* pMapSystem = CMapSystem::GetInstance();		// マップシステムの情報
+	int nSelectMap = CMapSystem::GetInstance()->GetSelectMap();
 
 	// プレイヤーの位置取得
-	posThis = pMapSystem->GetPlayerPos(PlayNumber);
-	SetGrid(pMapSystem->GetPlayerGrid(PlayNumber));
-	SetGridOld(pMapSystem->GetPlayerGrid(PlayNumber));
+	posThis = pMapSystem->GetPlayerPos(PlayNumber, nSelectMap);
+	SetGrid(pMapSystem->GetPlayerGrid(PlayNumber, nSelectMap));
+	SetGridOld(pMapSystem->GetPlayerGrid(PlayNumber, nSelectMap));
 
 	// サイズの設定
 	sizeThis = COLLISION_SIZE;
