@@ -123,6 +123,7 @@ public:
 	HRESULT CreateMap(unsigned int nSelect);	// 指定されたマップの生成
 	static void MapDelete(); // マップの削除
 	static float GetGritSize();
+	static std::vector<MapInfo> GetMapInfo(void) { return m_MapInfo; }		// マップの情報
 
 private:
 

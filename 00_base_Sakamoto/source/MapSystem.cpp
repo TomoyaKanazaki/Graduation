@@ -479,6 +479,7 @@ HRESULT CMapSystem::LoadAll()
 				// マップ数を読込
 				iss >> comment >> nNum;
 				pMapSystem->m_nNumMap = nNum;
+
 			}
 			else if (str == "SETFILENAME")
 			{ // マップファイル名
