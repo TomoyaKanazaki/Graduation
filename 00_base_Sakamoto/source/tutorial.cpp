@@ -163,7 +163,7 @@ m_nNumBible(0)				// 聖書の総数
 		CManager::GetInstance()->GetCamera(nCnt)->SetCameraMode(CCamera::CAMERAMODE_DOWNVIEW);
 	}
 
-	for (int nCnt = 0; nCnt >= TYPE_MAX; nCnt++)
+	for (int nCnt = 0; nCnt < TYPE_MAX; nCnt++)
 	{
 		m_bSound[nCnt] = false;
 	}
@@ -369,7 +369,7 @@ void CTutorial::Update(void)
 			if (m_bCheck[TYPE_MOVE] == true && m_bSound[TYPE_MOVE] == false)
 			{
 				// サウンド再生
-				//CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_CHECK);
+				CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_CHECK);
 
 				m_bSound[TYPE_MOVE] = true;
 			}
@@ -395,7 +395,7 @@ void CTutorial::Update(void)
 			if (m_bCheck[TYPE_CROSS] == true && m_bSound[TYPE_CROSS] == false)
 			{
 				// サウンド再生
-				//CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_CHECK);
+				CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_CHECK);
 
 				m_bSound[TYPE_CROSS] = true;
 			}
@@ -421,7 +421,7 @@ void CTutorial::Update(void)
 			if (m_bCheck[TYPE_BIBLE] == true && m_bSound[TYPE_BIBLE] == false)
 			{
 				// サウンド再生
-				//CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_CHECK);
+				CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_CHECK);
 
 				m_bSound[TYPE_BIBLE] = true;
 			}
@@ -448,7 +448,7 @@ void CTutorial::Update(void)
 		if (m_bCheck[TYPE_ATTACK] == true && m_bSound[TYPE_ATTACK] == false)
 		{
 			// サウンド再生
-			//CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_CHECK);
+			CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_CHECK);
 
 			m_bSound[TYPE_ATTACK] = true;
 		}
@@ -474,7 +474,7 @@ void CTutorial::Update(void)
 		if (m_bCheck[TYPE_BOWABOWA] == true && m_bSound[TYPE_BOWABOWA] == false)
 		{
 			// サウンド再生
-			//CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_CHECK);
+			CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_CHECK);
 
 			m_bSound[TYPE_BOWABOWA] = true;
 		}
@@ -509,7 +509,7 @@ void CTutorial::Update(void)
 			if (m_bCheck[TYPE_DEVILHOLE] == true && m_bSound[TYPE_DEVILHOLE] == false)
 			{
 				// サウンド再生
-				//CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_CHECK);
+				CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_CHECK);
 
 				m_bSound[TYPE_DEVILHOLE] = true;
 			}
