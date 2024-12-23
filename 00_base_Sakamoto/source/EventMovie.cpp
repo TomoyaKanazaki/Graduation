@@ -290,6 +290,8 @@ void CEventMovie::StageChangeMovie(void)
 		pCamera->SetCameraMode(CCamera::CAMERAMODE_EVENTBOSS);	//カメラをイベント用に変更
 		CGame::GetInstance()->GetTime()->SetStopTime(true);	//タイムの進行を止める
 
+		pDevil->SetAction(CDevil::ACTION_NEUTRAL, 60);	//モーションをニュートラルに変更
+
 		pPlayer->PlayerNumberDisp(false);
 
 		if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
@@ -299,7 +301,7 @@ void CEventMovie::StageChangeMovie(void)
 
 		if (m_nCount >= 180)
 		{
-			pDevil->SetAction(CDevil::ACTION_SIGNAL_DOWN, 0);	//怒りモーションに変更
+			pDevil->SetAction(CDevil::ACTION_ANGER, 60);	//怒りモーションに変更
 			m_nWave++;
 		}
 
@@ -310,10 +312,9 @@ void CEventMovie::StageChangeMovie(void)
 		if (m_nCount >= 60)
 		{
 			pCamera->SetCameraMode(CCamera::CAMERAMODE_SETPOS);	//カメラを指定位置に移動
-			pCamera->SetCameraPosMode(D3DXVECTOR3(pDevil->GetPos().x, pDevil->GetPos().y, -1000.0f), pDevil->GetPos());	//カメラの指定位置を設定
+			pCamera->SetCameraPosMode(D3DXVECTOR3(pDevil->GetPos().x, pDevil->GetPos().y + 200.0f, -1000.0f), pDevil->GetPos());	//カメラの指定位置を設定
 			pCamera->SetHomingSpeed(0.01f);	//カメラの目標までのホーミング速度を設定
 			pCamera->SetBib(true);	//カメラを振動状態に設定
-			pDevil->SetAction(CDevil::ACTION_NEUTRAL, 120);	//モーションをニュートラルに変更
 
 			m_nCount = 0;		//カウントリセット
 			m_nWave++;
@@ -485,7 +486,7 @@ void CEventMovie::StageChangeMovie(void)
 }
 
 //====================================================================
-//開始時演出
+//終了演出
 //====================================================================
 void CEventMovie::EndMovie(void)
 {

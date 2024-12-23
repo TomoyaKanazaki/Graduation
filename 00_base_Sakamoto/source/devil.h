@@ -46,6 +46,7 @@ public:
 		ACTION_SIGNAL_UP,			// ŒX‚«M†uãv
 		ACTION_RUN,					// “¦‚°‚é
 		ACTION_KING,				// ‹ÊÀ
+		ACTION_ANGER,				// “{‚è
 		ACTION_MAX,					// Å‘å
 	};
 
