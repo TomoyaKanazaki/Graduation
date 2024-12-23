@@ -105,7 +105,10 @@ public:
 	void SetEggMove(D3DXVECTOR3 EggMove) { m_EggMove = EggMove; }	// —‘‚ÌˆÚ“®—Êİ’è
 	virtual D3DXVECTOR3 GetEggMove() { return m_EggMove; }			// —‘‚ÌˆÚ“®—Êæ“¾
 	void SetInvincible(bool bInvincible) { m_bInvincible = bInvincible; }		// –³“G‚©‚Ç‚¤‚©
+	bool GetInvincible(void) { return m_bInvincible; }		// –³“G‚©‚Ç‚¤‚©
+
 	void SetInvincibleCount(int nInvincibleCount) { m_nInvincibleCount = nInvincibleCount; }		// –³“GŠÔ
+	int GetInvincibleCount(void) { return m_nInvincibleCount; }		// –³“GŠÔ
 
 	// ƒ}ƒbƒv”Ô†‚Ìİ’è
 	virtual void SetGrid(const CMapSystem::GRID& pos) { m_Grid = pos; }

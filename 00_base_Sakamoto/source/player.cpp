@@ -98,8 +98,8 @@ m_bPressObj(false),
 m_fCrossTimer(0.0f),
 m_pUpEgg(nullptr),
 m_pDownEgg(nullptr),
-m_bInvincible(true),
-m_nInvincibleCount(0),
+//m_bInvincible(true),
+//m_nInvincibleCount(0),
 m_nTime(0),
 m_pEffectEgg(nullptr),
 m_pEffectSpeed(nullptr),
@@ -408,16 +408,21 @@ void CPlayer::Update(void)
 	//ó‘Ô‚ÌŠÇ—
 	StateManager(posThis, rotThis);
 
-	if (m_nInvincibleCount > 0)
+	int nInvincibleCount = GetInvincibleCount();
+	bool bInvincible = GetInvincible();
+
+	if (nInvincibleCount > 0)
 	{
-		m_nInvincibleCount--;
+		nInvincibleCount--;
+		SetInvincibleCount(nInvincibleCount);
 	}
 	else
 	{
-		m_bInvincible = false;
+		bInvincible = false;
+		SetInvincible(bInvincible);
 	}
 
-	if (m_bInvincible)
+	if (bInvincible)
 	{
 		SetModelColor(CModel::COLORTYPE_TRUE_ALL, D3DXCOLOR(0.5f, 0.5f, 0.5f, 0.5f));
 	}
@@ -1330,7 +1335,7 @@ void CPlayer::CollisionEnemy(D3DXVECTOR3& posThis)
 		// ‰~‚Ì“–‚½‚è”»’è
 		if (useful::CollisionCircle(posThis, pos, 30.0f) == true)
 		{
-			if (!m_bInvincible)
+			if (!GetInvincible())
 			{
 				Death();
 			}
