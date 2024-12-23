@@ -82,8 +82,6 @@ CMapMove::CMapMove() :
 	m_fScrollMove = 0.0f;
 	m_SetState = MOVE_WAIT;
 	m_fScrollEndLine = 0.0f;
-
-	memset(&m_pSignal[0], 0, sizeof(m_pSignal));	// ƒVƒOƒiƒ‹î•ñ
 }
 
 //====================================================================
