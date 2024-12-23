@@ -34,7 +34,7 @@ private:
 	void SetRot(CMapSystem::GRID& grid, CRail::POSTYPE& PosType0, CRail::POSTYPE& PosType1);		// モデルの向きの設定
 
 	// メンバ関数
-	bool m_bRail[CRail::POSTYPE_MAX];					// レールの置ける位置の判定
+	//bool m_bRail[CRail::POSTYPE_MAX];					// レールの置ける位置の判定
 
 
 	// 静的メンバ変数

@@ -109,11 +109,11 @@ void CRailManager::SetRot(CMapSystem::GRID& grid, CRail::POSTYPE& PosType0, CRai
 	CMapSystem::GRID MaxGrid;
 	MaxGrid.x = pMapSystem->GetWightMax();	// マップの横幅
 	MaxGrid.z = pMapSystem->GetHeightMax(); // マップの立幅
+	bool bRail[CRail::POSTYPE_MAX];					// レールの置ける位置の判定
 
 	/* 自身の隣接４マスのグリッド */
 	CMapSystem::GRID nNumber[CRail::POSTYPE_MAX];	// 4方向の隣接するグリッド
 
-	CMapSystem::GRID gridTemp[CRail::POSTYPE_MAX];
 	for (int i = 0; i < CRail::POSTYPE_MAX;++i)
 	{
 		// 隣接グリッドの設定
@@ -124,14 +124,15 @@ void CRailManager::SetRot(CMapSystem::GRID& grid, CRail::POSTYPE& PosType0, CRai
 		nNumber[i].z = useful::RangeNumber(MaxGrid.z, 0, nNumber[i].z);
 
 		// 配置情報の更新
-		m_bRail[i] = pMapSystem->GetRailGritBool(nNumber[i]);
+		bRail[i] = false;
+		bRail[i] = pMapSystem->GetRailGritBool(nNumber[i]);
 	}
 
 	// レールの配置場所設定
 	for (int nCnt = 0; nCnt < CRail::POSTYPE_MAX; nCnt++)
 	{
-		if (!m_bRail[nCnt]) { continue; }
-		else if (m_bRail[nCnt])
+		if (!bRail[nCnt]) { continue; }
+		else if (bRail[nCnt])
 		{ // 配置可能な場合
 
 			// 場所設定

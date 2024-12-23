@@ -225,7 +225,9 @@ HRESULT CTutorial::Init(void)
 	CTutorial::GetTime()->SetStopTime(false);
 
 	// マップの生成
-	CMapSystem::GetInstance()->Init();
+	CMapSystem* pMapSystem = CMapSystem::GetInstance();
+	pMapSystem->Init();
+	pMapSystem->CreateMap(pMapSystem->GetSelectMap());
 	//CMapSystem::Load("data\\TXT\\STAGE\\map02.csv");
 
 	//デビルの生成
