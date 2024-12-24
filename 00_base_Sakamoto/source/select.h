@@ -42,9 +42,10 @@ private:
 	// 2Dの情報
 	struct SStageSelect
 	{
-		CObject2D* m_pSelectUI;
-		CNumber* m_pSelectNumber01;
-		CNumber* m_pSelectNumber10;
+		CObject2D* m_pSelectUI;		// ボタン
+		CNumber* m_pSelectNumber01;	// １の位
+		CNumber* m_pSelectNumber10; // １０の位
+		CObject2D* m_pMapTex;		// サムネイル
 	};
 
 public:
@@ -76,11 +77,10 @@ private:
 
 	float m_fCountFade;
 
-	SStageSelect m_pStageSelect[NUM_STAGE];	//ステージセレクト
 	static std::vector<SStageSelect> m_StageSelect;		// ステージセレクト
 
-	CObject2D* m_pScrollSelect[NUM_SCROLLTYPE];	//スクロールセレクト
-	CObject2D* m_pTitleButton;					//ボタン入力UIのポリゴン
+	CObject2D* m_pScrollSelect[NUM_SCROLLTYPE];	// スクロールセレクト
+	CObject2D* m_pTitleButton;					// 決定ボタン入力UIのポリゴン
 	CObject2D* m_pTexScroll[NUM_SCROLL];		// テクスチャスクロール
 	CObjmeshDome* m_pMeshDome;					// メッシュドーム
 
