@@ -44,7 +44,11 @@ HRESULT CCharacterManager::Load(void)
 //====================================================================
 void CCharacterManager::Unload(void)
 {
-
+	for (int nCnt = 0; nCnt < m_nNumAll; nCnt++)
+	{
+		delete[] m_aCharacterInfo[nCnt].ModelManager.aModelParts;
+		m_aCharacterInfo[nCnt].ModelManager.aModelParts = nullptr;
+	}
 }
 
 //====================================================================
