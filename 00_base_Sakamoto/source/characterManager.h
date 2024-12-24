@@ -33,7 +33,7 @@ private:
 	#define MAX_KEY			(16)	// キー数の最大数
 
 	// モデルパーツ情報
-	struct ModelParts
+	struct SModelParts
 	{
 		char acModelFileName[MAX_LENGTH_TXT];	// ファイル名
 
@@ -45,46 +45,46 @@ private:
 	};
 
 	// モデル管理情報
-	struct ModelManager
+	struct SModelManager
 	{
-		int nNumModel;								// モデル数
-		ModelParts aModelParts[MAX_MODEL_PARTS];	// パーツ情報
+		int nNumModel;				// モデル数
+		SModelParts* aModelParts;	// パーツ情報
 	};
 
 	// キー情報
-	struct Key
+	struct SKey
 	{
 		D3DXVECTOR3 pos;	// 位置
 		D3DXVECTOR3 rot;	// 向き
 	};
 
 	// キー管理情報
-	struct KeyManager
+	struct SKeyManager
 	{
 		int nFrame;					// 再生フレーム
-		Key aKey[MAX_MODEL_PARTS];	// 各モデルのキー要素
+		SKey aKey[MAX_MODEL_PARTS];	// 各モデルのキー要素
 	};
 
 	// モーション情報
-	struct MotionInfo
+	struct SMotionInfo
 	{
 		bool bLoop;							// ループの有無
 		int nNumKey;						// キーの総数
-		KeyManager aKeyManager[MAX_KEY];	// キー管理情報
+		SKeyManager aKeyManager[MAX_KEY];	// キー管理情報
 	};
 
 	// モーション管理情報
-	struct MotionManager
+	struct SMotionManager
 	{
 		int nNumMotion;						// モーション数
-		MotionInfo aMotionInfo[MAX_MOTION];	// モーション情報
+		SMotionInfo aMotionInfo[MAX_MOTION];	// モーション情報
 	};
 
 	// キャラクター情報
-	struct CharacterInfo
+	struct SCharacterInfo
 	{
-		ModelManager ModelManager;			// モデル管理情報
-		MotionManager MotionManager;		// モーション管理情報
+		SModelManager ModelManager;			// モデル管理情報
+		SMotionManager MotionManager;		// モーション管理情報
 
 		char acFileName[MAX_CHARACTER];		// ファイル名
 	};
@@ -95,7 +95,7 @@ private:
 	bool LoadModel(const std::string pFileName, int nNumCharacter);
 	bool LoadMotion(const std::string pFileName, int nNumModel, int nNumCharacter);
 
-	CharacterInfo m_aCharacterInfo[MAX_CHARACTER];
+	SCharacterInfo m_aCharacterInfo[MAX_CHARACTER];
 	int m_nNumAll;						// キャラクターの使用数
 
 };
