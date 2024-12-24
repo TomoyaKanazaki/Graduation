@@ -166,6 +166,7 @@ HRESULT CGame::Init(void)
 	// マップの生成
 	CMapSystem* pMapSystem = CMapSystem::GetInstance();
 	pMapSystem->CreateMap(pMapSystem->GetSelectMap());
+	pMapSystem->GetMove()->Init();
 
 	//デビルの生成
 	m_pDevil = CDevil::Create();
