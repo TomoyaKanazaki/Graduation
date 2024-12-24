@@ -25,10 +25,13 @@ namespace
 	const char* MAP_XMODEL_PASS("data\\TXT\\STAGE\\XModel_Tutorial_000.txt");
 	const char* MAP_GIMMICK_PASS("data\\TXT\\STAGE\\Gimmick_Tutorial_000.txt");
 
-	const D3DXVECTOR3 STAGE_POS = D3DXVECTOR3(540.0f, 250.0f, 0.0f);		// 選択項目の位置
-	const D3DXVECTOR2 STAGE_SIZE = D3DXVECTOR2(200.0f, 300.0f);				// 選択項目の大きさ
-	const D3DXVECTOR2 STAGE_DISTANCE = D3DXVECTOR2(150.0f + (STAGE_SIZE.x * 1.0f), 0.0f + (STAGE_SIZE.y * 0.0f));	// 選択項目の幅
-	const float NUMBER_DISTANCE = 110.0f;	// ステージと数字の幅
+	const D3DXVECTOR3 STAGE_POS = D3DXVECTOR3(500.0f, 120.0f, 0.0f);		// 選択項目の位置
+	const D3DXVECTOR3 MAP_POS = D3DXVECTOR3(640.0f, 250.0f, 0.0f);			// サムネイルの位置
+	const D3DXVECTOR2 STAGE_SIZE = D3DXVECTOR2(130.0f, 160.0f);				// 選択項目の大きさ
+	const D3DXVECTOR2 MAP_SIZE = D3DXVECTOR2(300.0f, 200.0f);				// サムネイルの大きさ
+	const D3DXVECTOR2 NUMBER_SIZE = D3DXVECTOR2(35.0f, 35.0f);				// サムネイルの大きさ
+	const D3DXVECTOR2 STAGE_DISTANCE = D3DXVECTOR2(300.0f + (STAGE_SIZE.x * 1.0f), 0.0f + (STAGE_SIZE.y * 0.0f));	// 選択項目の幅
+	const float NUMBER_DISTANCE = 80.0f;	// ステージと数字の幅
 
 	const D3DXVECTOR3 SCROOL_POS = D3DXVECTOR3(440.0f, 500.0f, 0.0f);		// 選択項目の位置
 	const D3DXVECTOR2 SCROOL_SIZE = D3DXVECTOR2(300.0f, 50.0f);				// 選択項目の大きさ
@@ -44,6 +47,25 @@ namespace
 
 	const float SCROOL_SPEED = 0.05f; // スクロールの速度
 	const float SCROOL_SCALE = 0.1f; // スクロールの倍率
+
+	// マップサムネイルテクスチャ
+	const char* MAP_TEX[] =
+	{
+		"data\\TEXTURE\\UI\\map00.png",
+		"data\\TEXTURE\\UI\\tutorial_frame.png",
+		"data\\TEXTURE\\UI\\signal.png",
+		"data\\TEXTURE\\UI\\TitleBotton1.png",
+		"data\\TEXTURE\\UI\\signal.png",
+		"data\\TEXTURE\\UI\\tutorial_check.png",
+		"data\\TEXTURE\\UI\\tutorial_frame.png",
+		"data\\TEXTURE\\UI\\TitleBotton1.png",
+		"data\\TEXTURE\\UI\\signal.png",
+		"data\\TEXTURE\\UI\\TitleBotton1.png",
+		"data\\TEXTURE\\UI\\signal.png",
+		"data\\TEXTURE\\UI\\TitleBotton1.png",
+		"data\\TEXTURE\\UI\\tutorial_check.png",
+		"data\\TEXTURE\\UI\\tutorial_frame.png"
+	};
 }
 
 //静的メンバ変数宣言
@@ -55,13 +77,6 @@ std::vector<CSelect::SStageSelect> CSelect::m_StageSelect = {};	// マップの情報
 //====================================================================
 CSelect::CSelect()
 {
-	for (int nCnt = 0; nCnt < NUM_STAGE; nCnt++)
-	{
-		m_pStageSelect[nCnt].m_pSelectUI = nullptr;
-		m_pStageSelect[nCnt].m_pSelectNumber01 = nullptr;
-		m_pStageSelect[nCnt].m_pSelectNumber10 = nullptr;
-	}
-
 	for (int nCnt = 0; nCnt < NUM_SCROLLTYPE; nCnt++)
 	{
 		m_pScrollSelect[nCnt] = nullptr;
@@ -117,78 +132,57 @@ HRESULT CSelect::Init(void)
 	CMapSystem* pMapSystem = CMapSystem::GetInstance();
 	int nMax = pMapSystem->GetMapInfo().size();
 
-#if 0
-	for (int nCnt = 0; nCnt < NUM_STAGE; nCnt++)
-	{
-		if (m_pStageSelect[nCnt].m_pSelectUI == nullptr)
-		{
-			// ボタン
-			m_pStageSelect[nCnt].m_pSelectUI = CObject2D::Create();
-			m_pStageSelect[nCnt].m_pSelectUI->SetPos(D3DXVECTOR3(STAGE_POS.x + (STAGE_DISTANCE.x * nCnt), STAGE_POS.y + (STAGE_DISTANCE.y * nCnt), STAGE_POS.z));
-			m_pStageSelect[nCnt].m_pSelectUI->SetSize(D3DXVECTOR3(STAGE_SIZE.x, STAGE_SIZE.y, 0.0f));
-		}
-
-		if (m_pStageSelect[nCnt].m_pSelectNumber01 == nullptr)
-		{
-			m_pStageSelect[nCnt].m_pSelectNumber01 = CNumber::Create();
-			m_pStageSelect[nCnt].m_pSelectNumber01->SetPos(D3DXVECTOR3(
-				m_pStageSelect[nCnt].m_pSelectUI->GetPos().x + NUMBER_DISTANCE + 40.0f,
-				m_pStageSelect[nCnt].m_pSelectUI->GetPos().y,
-				m_pStageSelect[nCnt].m_pSelectUI->GetPos().z));
-			m_pStageSelect[nCnt].m_pSelectNumber01->SetSize(D3DXVECTOR3(50.0f, 50.0f, 0.0f));
-			m_pStageSelect[nCnt].m_pSelectNumber01->SetNumber(nCnt + 1);
-		}
-
-		if (m_pStageSelect[nCnt].m_pSelectNumber10 == nullptr)
-		{
-			m_pStageSelect[nCnt].m_pSelectNumber10 = CNumber::Create();
-			m_pStageSelect[nCnt].m_pSelectNumber10->SetPos(D3DXVECTOR3(
-				m_pStageSelect[nCnt].m_pSelectUI->GetPos().x + NUMBER_DISTANCE,
-				m_pStageSelect[nCnt].m_pSelectUI->GetPos().y,
-				m_pStageSelect[nCnt].m_pSelectUI->GetPos().z));
-			m_pStageSelect[nCnt].m_pSelectNumber10->SetSize(D3DXVECTOR3(50.0f, 50.0f, 0.0f));
-			m_pStageSelect[nCnt].m_pSelectNumber10->SetNumber((nCnt + 1) / 10);
-		}
-
-		if (m_pStageSelect[nCnt].m_pSelectUI != nullptr)
-		{
-			m_pStageSelect[nCnt].m_pSelectUI->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\stage00.png"));
-		}
-	}
-#endif
-
+	// 全てのステージ分の選択肢生成
 	for (int nCnt = 0; nCnt < nMax; nCnt++)
 	{
 		// 選択肢を一つ増やす
 		m_StageSelect.emplace_back();
+
+		// マップサムネイル
+		m_StageSelect.back().m_pMapTex = CObject2D::Create();
+		m_StageSelect.back().m_pMapTex->SetPos(D3DXVECTOR3(MAP_POS.x + (STAGE_DISTANCE.x * nCnt), MAP_POS.y + (STAGE_DISTANCE.y * nCnt), MAP_POS.z));
+		m_StageSelect.back().m_pMapTex->SetSize(D3DXVECTOR3(MAP_SIZE.x, MAP_SIZE.y, 0.0f));
+		m_StageSelect.back().m_pMapTex->SetIdx(pTexture->Regist(MAP_TEX[nCnt]));
 
 		// ボタン
 		m_StageSelect.back().m_pSelectUI = CObject2D::Create();
 		m_StageSelect.back().m_pSelectUI->SetPos(D3DXVECTOR3(STAGE_POS.x + (STAGE_DISTANCE.x * nCnt), STAGE_POS.y + (STAGE_DISTANCE.y * nCnt), STAGE_POS.z));
 		m_StageSelect.back().m_pSelectUI->SetSize(D3DXVECTOR3(STAGE_SIZE.x, STAGE_SIZE.y, 0.0f));
 
-		m_StageSelect.back().m_pSelectNumber01 = CNumber::Create();
-		m_StageSelect.back().m_pSelectNumber01->SetPos(D3DXVECTOR3(
-			m_StageSelect.back().m_pSelectUI->GetPos().x + NUMBER_DISTANCE + 40.0f,
+		// 数字(１)
+		m_StageSelect.back().m_pSelectNumber01 = CNumber::Create();		// 生成
+		m_StageSelect.back().m_pSelectNumber01->SetPos(D3DXVECTOR3(		// 位置
+			m_StageSelect.back().m_pSelectUI->GetPos().x + NUMBER_DISTANCE + 32.0f,
 			m_StageSelect.back().m_pSelectUI->GetPos().y,
 			m_StageSelect.back().m_pSelectUI->GetPos().z));
-		m_StageSelect.back().m_pSelectNumber01->SetSize(D3DXVECTOR3(50.0f, 50.0f, 0.0f));
-		m_StageSelect.back().m_pSelectNumber01->SetNumber(nCnt + 1);
+		m_StageSelect.back().m_pSelectNumber01->SetSize(D3DXVECTOR3(NUMBER_SIZE.x, NUMBER_SIZE.y, 0.0f));		// サイズ
+		m_StageSelect.back().m_pSelectNumber01->SetNumber(nCnt + 1);							// 数字
 
-		m_StageSelect.back().m_pSelectNumber10 = CNumber::Create();
-		m_StageSelect.back().m_pSelectNumber10->SetPos(D3DXVECTOR3(
+		// 数字(１０)
+		m_StageSelect.back().m_pSelectNumber10 = CNumber::Create();		// 生成
+		m_StageSelect.back().m_pSelectNumber10->SetPos(D3DXVECTOR3(		// 位置
 			m_StageSelect.back().m_pSelectUI->GetPos().x + NUMBER_DISTANCE,
 			m_StageSelect.back().m_pSelectUI->GetPos().y,
 			m_StageSelect.back().m_pSelectUI->GetPos().z));
-		m_StageSelect.back().m_pSelectNumber10->SetSize(D3DXVECTOR3(50.0f, 50.0f, 0.0f));
-		m_StageSelect.back().m_pSelectNumber10->SetNumber((nCnt + 1) / 10);
+		m_StageSelect.back().m_pSelectNumber10->SetSize(D3DXVECTOR3(NUMBER_SIZE.x, NUMBER_SIZE.y, 0.0f));		// サイズ
+		m_StageSelect.back().m_pSelectNumber10->SetNumber((nCnt + 1) / 10);						// 数字
 
 		if (m_StageSelect.back().m_pSelectUI != nullptr)
-		{
+		{ // ボタンUIが生成されてたら
+
+			// Stageテクスチャ
 			m_StageSelect.back().m_pSelectUI->SetIdx(pTexture->Regist("data\\TEXTURE\\UI\\stage00.png"));
 		}
 	}
 
+	// 最後の選択肢の番号
+	int nLast = nMax - 1;
+
+	// 最後を最初に持っていく
+	m_StageSelect[nLast].m_pMapTex->SetPos(D3DXVECTOR3(MAP_POS.x - STAGE_DISTANCE.x, MAP_POS.y - STAGE_DISTANCE.y, MAP_POS.z));
+	m_StageSelect[nLast].m_pSelectUI->SetPos(D3DXVECTOR3(STAGE_POS.x - STAGE_DISTANCE.x, STAGE_POS.y - STAGE_DISTANCE.y, STAGE_POS.z));
+
+	// モード用選択肢
 	for (int nCnt = 0; nCnt < NUM_SCROLLTYPE; nCnt++)
 	{
 		if (m_pScrollSelect[nCnt] == nullptr)
@@ -213,6 +207,7 @@ HRESULT CSelect::Init(void)
 		}
 	}
 
+	// モード用の参考画像
 	for (int nCnt = 0; nCnt < NUM_SCROLL; nCnt++)
 	{
 		if (m_pTexScroll[nCnt] == nullptr)
@@ -237,7 +232,7 @@ HRESULT CSelect::Init(void)
 		}
 	}
 
-	// ボタン
+	// 決定ボタン
 	if (m_pTitleButton == nullptr)
 	{
 		m_pTitleButton = CObject2D::Create();
@@ -330,6 +325,7 @@ void CSelect::StageSelect(void)
 {
 	int nMax = CMapSystem::GetInstance()->GetMapInfo().size();
 
+	// 右
 	if (CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_D) == true ||
 		CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_RIGHT) == true ||
 		CManager::GetInstance()->GetInputJoyPad()->GetTrigger(CInputJoypad::BUTTON_RIGHT, 0) ||
@@ -339,11 +335,13 @@ void CSelect::StageSelect(void)
 
 		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_SELECT);
 
+		// 最大越えたら最初に戻る
 		if (m_nSelect >= nMax)
 		{
 			m_nSelect = 0;
 		}
 	}
+	// 左
 	if (CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_A) == true ||
 		CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_LEFT) == true ||
 		CManager::GetInstance()->GetInputJoyPad()->GetTrigger(CInputJoypad::BUTTON_LEFT, 0) ||
@@ -353,6 +351,7 @@ void CSelect::StageSelect(void)
 
 		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_SELECT);
 
+		// 最初より小さかったら最大に戻る
 		if (m_nSelect < 0)
 		{
 			m_nSelect = nMax - 1;
@@ -364,28 +363,57 @@ void CSelect::StageSelect(void)
 		if (m_nSelect == nCnt)
 		{
 			m_StageSelect[nCnt].m_pSelectUI->SetColor(SELECT_COLOR_TRUE);
+			m_StageSelect[nCnt].m_pMapTex->SetColor(SELECT_COLOR_TRUE);
+
 		}
 		else
 		{
 			m_StageSelect[nCnt].m_pSelectUI->SetColor(SELECT_COLOR_FALSE);
+			m_StageSelect[nCnt].m_pMapTex->SetColor(SELECT_COLOR_FALSE);
 		}
 	}
 
+	int nLast = nMax - 1;		// 最後の選択肢の番号
+	int nStart = -nLast;		// 最初の選択肢の番号
+
 	for (int nCnt = 0; nCnt < nMax; nCnt++)
 	{
+		int nNumber = nCnt - m_nSelect;
 		//if (m_nSelect - 2 <= nCnt && nCnt <= m_nSelect + 2)
 		//{//重くなった時用
 			if (m_StageSelect[nCnt].m_pSelectUI != nullptr)
 			{
 				// ボタン
-				m_StageSelect[nCnt].m_pSelectUI->SetPos(D3DXVECTOR3(STAGE_POS.x + (STAGE_DISTANCE.x * (nCnt - m_nSelect)), STAGE_POS.y + (STAGE_DISTANCE.y * nCnt), STAGE_POS.z));
+				m_StageSelect[nCnt].m_pSelectUI->SetPos(D3DXVECTOR3(STAGE_POS.x + (STAGE_DISTANCE.x * (nNumber)), STAGE_POS.y + (STAGE_DISTANCE.y * nCnt), STAGE_POS.z));
 				//m_pStageSelect[nCnt].m_pSelectUI->SetSize(D3DXVECTOR3(500.0f, STAGE_SIZE.y, 0.0f));
+			}
+
+			if (m_StageSelect[nCnt].m_pMapTex != nullptr)
+			{
+				// サムネイル
+				m_StageSelect[nCnt].m_pMapTex->SetPos(D3DXVECTOR3(MAP_POS.x + (STAGE_DISTANCE.x * (nNumber)), MAP_POS.y + (STAGE_DISTANCE.y * nCnt), MAP_POS.z));
+				//m_pStageSelect[nCnt].m_pSelectUI->SetSize(D3DXVECTOR3(500.0f, STAGE_SIZE.y, 0.0f));
+				
+				if (nNumber == nLast)
+				{ // 最初が選択されてる場合、最後を最初の左に
+
+					// 最後を最初に持っていく
+					m_StageSelect[nLast].m_pMapTex->SetPos(D3DXVECTOR3(MAP_POS.x - STAGE_DISTANCE.x, MAP_POS.y - STAGE_DISTANCE.y, MAP_POS.z));
+					m_StageSelect[nLast].m_pSelectUI->SetPos(D3DXVECTOR3(STAGE_POS.x - STAGE_DISTANCE.x, STAGE_POS.y - STAGE_DISTANCE.y, STAGE_POS.z));
+				}
+				else if (nNumber == nStart)
+				{ // 最後が選択されてる場合、最初を最後の右に
+
+					// 最初を最後に持っていく
+					m_StageSelect[0].m_pMapTex->SetPos(D3DXVECTOR3(MAP_POS.x + (STAGE_DISTANCE.x * 1), MAP_POS.y + (STAGE_DISTANCE.y * nCnt), MAP_POS.z));
+					m_StageSelect[0].m_pSelectUI->SetPos(D3DXVECTOR3(STAGE_POS.x + (STAGE_DISTANCE.x * 1), STAGE_POS.y + (STAGE_DISTANCE.y * nCnt), STAGE_POS.z));
+				}
 			}
 
 			if (m_StageSelect[nCnt].m_pSelectNumber01 != nullptr)
 			{
 				m_StageSelect[nCnt].m_pSelectNumber01->SetPos(D3DXVECTOR3(
-					m_StageSelect[nCnt].m_pSelectUI->GetPos().x + NUMBER_DISTANCE + 40.0f,
+					m_StageSelect[nCnt].m_pSelectUI->GetPos().x + NUMBER_DISTANCE + 32.0f,
 					m_StageSelect[nCnt].m_pSelectUI->GetPos().y,
 					m_StageSelect[nCnt].m_pSelectUI->GetPos().z));
 
