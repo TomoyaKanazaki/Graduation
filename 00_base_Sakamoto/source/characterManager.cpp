@@ -97,6 +97,7 @@ int CCharacterManager::Regist(CObjectCharacter* pObjCharacter, const std::string
 			assert(("モーション読み込み失敗", false));
 		}
 
+		// ファイル名を代入
 		strcpy(&m_aCharacterInfo[m_nNumAll].acFileName[0], pFilename.c_str());
 
 		m_nNumAll++;
@@ -115,12 +116,9 @@ int CCharacterManager::Regist(CObjectCharacter* pObjCharacter, const std::string
 // モデル割当処理
 //====================================================================
 void CCharacterManager::SetModelData(CObjectCharacter* pObjCharacter,int nNumCharacter)
-{
-	// モデル管理を取得
-	ModelManager ModelManager = m_aCharacterInfo[nNumCharacter].ModelManager;
-	
+{	
 	// モデル使用数を取得・設定
-	int nNumModel = ModelManager.nNumModel;
+	int nNumModel = m_aCharacterInfo[nNumCharacter].ModelManager.nNumModel;
 	pObjCharacter->SetNumModel(nNumModel);
 
 	CModel* apModel[MAX_MODEL_PARTS] = {};
@@ -128,7 +126,7 @@ void CCharacterManager::SetModelData(CObjectCharacter* pObjCharacter,int nNumCha
 	for (int nCnt = 0; nCnt < nNumModel; nCnt++)
 	{
 		// パーツ情報を取得
-		ModelParts ModelParts = ModelManager.aModelParts[nCnt];
+		SModelParts ModelParts = m_aCharacterInfo[nNumCharacter].ModelManager.aModelParts[nCnt];
 
 		// モデルの生成処理
 		if (FAILED(apModel[nCnt] = CModel::Create(&ModelParts.acModelFileName[0]))) { assert(false); }
@@ -159,7 +157,7 @@ void CCharacterManager::SetModelData(CObjectCharacter* pObjCharacter,int nNumCha
 void CCharacterManager::SetMotionData(CObjectCharacter* pObjCharacter, int nNumCharacter)
 {
 	// モーション管理を取得
-	MotionManager MotionManager = m_aCharacterInfo[nNumCharacter].MotionManager;
+	SMotionManager MotionManager = m_aCharacterInfo[nNumCharacter].MotionManager;
 
 	// モーション使用数を取得・設定
 	int nNumMotion = MotionManager.nNumMotion;
@@ -181,7 +179,7 @@ void CCharacterManager::SetMotionData(CObjectCharacter* pObjCharacter, int nNumC
 	for (int nCntMotion = 0; nCntMotion < nNumMotion; nCntMotion++)
 	{
 		// パーツ情報を取得
-		MotionInfo MotionInfo = MotionManager.aMotionInfo[nCntMotion];
+		SMotionInfo MotionInfo = MotionManager.aMotionInfo[nCntMotion];
 
 		// ループ・最大キー数を設定
 		pMotion->SetInfoLoop(MotionInfo.bLoop, nCntMotion);
@@ -190,7 +188,7 @@ void CCharacterManager::SetMotionData(CObjectCharacter* pObjCharacter, int nNumC
 		for (int nCntKey = 0; nCntKey < MotionInfo.nNumKey; nCntKey++)
 		{
 			// キー管理情報を取得
-			KeyManager KeyManager = MotionInfo.aKeyManager[nCntKey];
+			SKeyManager KeyManager = MotionInfo.aKeyManager[nCntKey];
 
 			// キーごとのフレーム数を設定
 			pMotion->SetInfoKeyFrame(KeyManager.nFrame, nCntMotion, nCntKey);
@@ -198,7 +196,7 @@ void CCharacterManager::SetMotionData(CObjectCharacter* pObjCharacter, int nNumC
 			for (int nCntParts = 0; nCntParts < nNumModel; nCntParts++)
 			{
 				// キー情報を取得
-				Key Key = KeyManager.aKey[nCntParts];
+				SKey Key = KeyManager.aKey[nCntParts];
 
 				// パーツごとの位置・向きを設定
 				pMotion->SetInfoPartsPosX(Key.pos.x, nCntMotion, nCntKey, nCntParts);
@@ -230,7 +228,7 @@ bool CCharacterManager::LoadModel(const std::string pFilename,int nNumCharacter)
 		int nCntModel = 0;
 
 		int nNumModel = 0;
-		ModelParts ModelParts[MAX_MODEL_PARTS] = {};
+		SModelParts ModelParts[MAX_MODEL_PARTS] = {};
 
 		char aString[128] = {};				//ゴミ箱
 		char aMessage[128] = {};			//スタートとエンドのメッセージ
@@ -326,6 +324,9 @@ bool CCharacterManager::LoadModel(const std::string pFilename,int nNumCharacter)
 				// モデル管理に最大モデル数代入
 				m_aCharacterInfo[nNumCharacter].ModelManager.nNumModel = nNumModel;
 
+				// 動的確保
+				m_aCharacterInfo[nNumCharacter].ModelManager.aModelParts = new SModelParts[nNumModel];
+
 				for (int nCnt = 0; nCnt < nCntModel; nCnt++)
 				{
 					// モデル管理にパーツ情報代入
@@ -363,7 +364,7 @@ bool CCharacterManager::LoadMotion(const std::string pFileName, int nNumModel, i
 		int nCntKeyManager = 0;
 		int nCntParts = 0;
 
-		MotionInfo MotionInfo[MAX_MOTION] = {};
+		SMotionInfo MotionInfo[MAX_MOTION] = {};
 
 		char aString[128] = {};			//ゴミ箱
 		char aMessage[128] = {};		//スタートメッセージ
