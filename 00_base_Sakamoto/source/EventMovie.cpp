@@ -86,6 +86,19 @@ void CEventMovie::Uninit(void)
 //====================================================================
 void CEventMovie::Update(void)
 {
+	CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
+	CInputJoypad* pInputJoypad = CManager::GetInstance()->GetInputJoyPad();
+
+	for (int nCnt = 0; nCnt < MAX_PLAYER; nCnt++)
+	{
+		// ボタン押されたら演出スキップ
+		if (pInputKeyboard->GetPress(DIK_RETURN) ||
+			pInputJoypad->GetTrigger(CInputJoypad::BUTTON_START, nCnt))
+		{
+			CGame::GetInstance()->SetEvent(false);	// スキップする
+		}
+	}
+
 	switch (m_State)
 	{
 	case CEventMovie::STATE_START:
@@ -128,6 +141,13 @@ void CEventMovie::StartMovie(void)
 
 	//float fDistance = sqrtf((PlayerPos.x - DevilPos.x) * (PlayerPos.x - DevilPos.x) + (PlayerPos.z - DevilPos.z) * (PlayerPos.z - DevilPos.z));
 	//float fAngle = atan2f(PlayerPos.z - DevilPos.z, DevilPos.x - PlayerPos.x) + D3DX_PI * 0.5f;
+
+	if (CGame::GetInstance()->GetEvent() == false)
+	{ // イベントスキップされた場合
+		m_nWave = 5;
+		m_nCount = 150;
+		CGame::GetInstance()->SetEvent(true);	// スキップしない
+	}
 
 	switch (m_nWave)
 	{
@@ -278,6 +298,13 @@ void CEventMovie::StageChangeMovie(void)
 	if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
 	{
 		pPlayer2 = CGame::GetInstance()->GetPlayer(1);
+	}
+
+	if (CGame::GetInstance()->GetEvent() == false)
+	{ // イベントスキップされた場合
+		m_nWave = 6;
+		m_nCount = 120;
+		CGame::GetInstance()->SetEvent(true);	// スキップしない
 	}
 
 	//float fDistance = sqrtf((PlayerPos.x - DevilPos.x) * (PlayerPos.x - DevilPos.x) + (PlayerPos.z - DevilPos.z) * (PlayerPos.z - DevilPos.z));
@@ -498,6 +525,13 @@ void CEventMovie::EndMovie(void)
 
 	//float fDistance = sqrtf((PlayerPos.x - DevilPos.x) * (PlayerPos.x - DevilPos.x) + (PlayerPos.z - DevilPos.z) * (PlayerPos.z - DevilPos.z));
 	//float fAngle = atan2f(PlayerPos.z - DevilPos.z, DevilPos.x - PlayerPos.x) + D3DX_PI * 0.5f;
+
+	if (CGame::GetInstance()->GetEvent() == false)
+	{ // イベントスキップされた場合
+		m_nWave = 4;
+		m_nCount = 120;
+		CGame::GetInstance()->SetEvent(true);	// スキップしない
+	}
 
 	switch (m_nWave)
 	{
