@@ -233,9 +233,6 @@ void CRollRock::Update(void)
 	//大きさの設定
 	SetScaling(D3DXVECTOR3(m_Scaling, m_Scaling, m_Scaling));
 
-	// スクロールに合わせて移動する
-	//CMapSystem::GetInstance()->GetMove()->FollowScroll(posThis);
-
 	if (m_pShadow != nullptr)
 	{// シャドウの更新
 		m_pShadow->SetPos(D3DXVECTOR3(posThis.x, 1.0f, posThis.z));
@@ -252,10 +249,6 @@ void CRollRock::Update(void)
 	CObjectX::Update();
 
 	DebugProc::Print(DebugProc::POINT_RIGHT, "[岩]横 %d : 縦 %d\n", m_Grid.x, m_Grid.z);
-	/*DebugProc::Print(DebugProc::POINT_RIGHT, "[岩]左 %d\n", m_OKL);
-	DebugProc::Print(DebugProc::POINT_RIGHT, "[岩]右 %d\n", m_OKR);
-	DebugProc::Print(DebugProc::POINT_RIGHT, "[岩]上 %d\n", m_OKU);
-	DebugProc::Print(DebugProc::POINT_RIGHT, "[岩]下 %d\n", m_OKD);*/
 }
 
 //====================================================================

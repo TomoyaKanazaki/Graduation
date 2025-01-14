@@ -127,6 +127,7 @@ HRESULT CMapMove::Init(void)
 	m_nStateCount = 0;
 	m_move = INITVECTOR3;
 	m_MapDifference = INITVECTOR3;
+	m_DevilRot = INITVECTOR3;
 	m_bSlope = false;
 
 	return S_OK;

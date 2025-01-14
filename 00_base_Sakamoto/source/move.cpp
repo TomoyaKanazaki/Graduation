@@ -1401,7 +1401,7 @@ void CStateRoll::Move(CObjectX* pObjectX, D3DXVECTOR3& pos, D3DXVECTOR3& rot)
 
 		// è„â∫ÇÃà⁄ìÆîªíË
 		if (type == CObject::TYPE_ROLLROCK)
-		{
+		{ // ä‚
 			SetJudg(grid.x, nUGridZ, m_Progress.bOKU);
 			SetJudg(grid.x, nDGridZ, m_Progress.bOKD);
 		}
