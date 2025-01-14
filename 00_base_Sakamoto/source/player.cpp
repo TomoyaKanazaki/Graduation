@@ -49,9 +49,9 @@ namespace
 {
 	const int LIFE_MAX = 2;	//初期ライフ数
 	const int FIRE_STOPTIME = 30;	//攻撃時の移動停止時間
-	const D3DXVECTOR3 RESPAWN_POS01 = D3DXVECTOR3(-200.0f, 2000.0f, 100.0f); // 復活位置(1P)
-	const D3DXVECTOR3 RESPAWN_POS02 = D3DXVECTOR3(+200.0f, 2000.0f, 100.0f); // 復活位置(2P)
-	const float RESPAWN_GRAVITY = 0.03f;			//卵の重力
+	const D3DXVECTOR3 RESPAWN_POS01 = D3DXVECTOR3(-200.0f, 1700.0f, 100.0f); // 復活位置(1P)
+	const D3DXVECTOR3 RESPAWN_POS02 = D3DXVECTOR3(+200.0f, 1700.0f, 100.0f); // 復活位置(2P)
+	const float RESPAWN_GRAVITY = 0.35f;			//卵の重力
 	const int INVINCIBLE_TIME = 120;			//無敵時間(後で消す)
 
 	const float GRIT_OK = 45.0f;			//移動可能なグリットの範囲内
