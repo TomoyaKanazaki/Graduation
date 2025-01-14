@@ -718,6 +718,8 @@ HRESULT CMapSystem::CreateMap(unsigned int nSelect)
 	// 空の場合返す
 	if (m_MapInfo.empty()) { return E_FAIL; }
 
+	m_MapPos = m_InitPos;		// マップの位置初期化
+
 	// マップシステムの情報
 	CMapSystem* pMapSystem = CMapSystem::GetInstance();
 	CObjmeshField* map = nullptr;
@@ -864,8 +866,6 @@ HRESULT CMapSystem::CreateMap(unsigned int nSelect)
 
 		}
 	}
-
-	m_MapPos = m_InitPos;		// マップの位置初期化
 
 	// レールの向き設定
 	pRailManager->Init();
