@@ -29,7 +29,6 @@ private:
 	#define MAX_LENGTH_TXT	(128)	// テキストの最大文字数
 	#define MAX_CHARACTER	(128)	// キャラクターの最大数
 	#define MAX_MOTION		(32)	// モーション数の最大数
-	#define MAX_KEY			(16)	// キー数の最大数
 
 	// モデルパーツ情報
 	struct SModelParts
@@ -67,9 +66,9 @@ private:
 	// モーション情報
 	struct SMotionInfo
 	{
-		bool bLoop;							// ループの有無
-		int nNumKey;						// キーの総数
-		SKeyManager aKeyManager[MAX_KEY];	// キー管理情報
+		bool bLoop;					// ループの有無
+		int nNumKey;				// キーの総数
+		SKeyManager* apKeyManager;	// キー管理情報
 	};
 
 	// モーション管理情報
