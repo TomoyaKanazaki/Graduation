@@ -112,8 +112,10 @@ void CMapSystem::Init()
 		m_pMapMove = CMapMove::Create();
 	}
 
-	m_MapPos = D3DXVECTOR3((((m_WightMax * 0.5f) * -100.0f) + m_fGritSize * 0.5f), 0.0f, (((m_HeightMax * 0.5f) * 100.0f) - m_fGritSize * 0.5f));
-	m_InitPos = m_MapPos;
+	/*m_MapPos = D3DXVECTOR3((((m_WightMax * 0.5f) * -100.0f) + m_fGritSize * 0.5f), 0.0f, (((m_HeightMax * 0.5f) * 100.0f) - m_fGritSize * 0.5f));
+	m_InitPos = m_MapPos;*/
+
+	m_MapPos = m_InitPos;
 
 	// 経路探索用の情報を取得
 	auto generator = AStar::Generator::Create();
@@ -576,6 +578,7 @@ HRESULT CMapSystem::LoadMap(const char* pFilename)
 				// 開始位置を生成位置に設定
 				posOffset = posStart;
 				pMapSystem->m_MapPos = posStart;		// マップの位置に設定
+				pMapSystem->m_InitPos = posStart;		// 開始地点の設定
 			}
 			else if (str == "NUM_GRID")
 			{
@@ -862,6 +865,8 @@ HRESULT CMapSystem::CreateMap(unsigned int nSelect)
 		}
 	}
 
+	m_MapPos = m_InitPos;		// マップの位置初期化
+
 	// レールの向き設定
 	pRailManager->Init();
 
@@ -874,274 +879,6 @@ HRESULT CMapSystem::CreateMap(unsigned int nSelect)
 
 	return S_OK;
 }
-
-#if 0
-//==========================================
-//  マップ情報の読み込み
-//==========================================
-void CMapSystem::Load(const std::string pFilename)
-{
-	// 経路探索用の情報を取得
-	auto generator = AStar::Generator::Create();
-
-	// マップシステムの情報
-	CMapSystem* pMapSystem = CMapSystem::GetInstance();
-	float fMapSystemGritSize = pMapSystem->GetGritSize() * 0.5f;
-
-	// 読み込み用
-	D3DXVECTOR3 posOffset = D3DXVECTOR3(0.0f,0.0f,0.0f);	// グリッド生成位置
-	D3DXVECTOR3 posStart = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// グリッド開始位置
-	D3DXVECTOR2 charOffset = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// グリッドのオフセット
-	D3DXVECTOR3 size = D3DXVECTOR3(fMapSystemGritSize, 0.0f, fMapSystemGritSize);		// グリッドサイズ
-
-	// グリッド設定の判定
-	bool bGridSet = false;
-	bool bRailGridSet = false;		// レール
-
-	CRailManager* pRailManager = new CRailManager();		// レールマネージャーを生成
-
-	// ファイルを開く
-	std::ifstream file(pFilename);	// ファイルストリーム
-	if (file.fail())
-	{ // ファイルが開けなかった場合
-
-		// エラーメッセージボックス
-		MessageBox(nullptr, "ブロックセットアップの読み込みに失敗！", "警告！", MB_ICONWARNING);
-		return;
-	}
-
-	// ファイルを読込
-	std::string str;	// 読込文字列
-	while (std::getline(file, str))
-	{ // ファイルの終端ではない場合ループ
-
-		// カンマ区切りごとにデータを読込
-		std::istringstream iss(str);	// 文字列ストリーム
-		while (std::getline(iss, str, ','))
-		{
-			if (str == "START_POS")
-			{
-				// 開始位置を読込
-				iss >> posStart.x >> posStart.y >> posStart.z;
-
-				// 開始位置を生成位置に設定
-				posOffset = posStart;
-				pMapSystem->m_MapPos = posStart;		// マップの位置に設定
-			}
-			else if (str == "NUM_GRID")
-			{
-				// グリッドの行列数を読み込み
-				iss >> pMapSystem->m_MapGrid.x >> pMapSystem->m_MapGrid.z;
-
-				CObjmeshField* map = nullptr;
-
-				switch (CScene::GetMode())
-				{// 床の生成
-				case CScene::MODE_GAME:
-					CGame::GetInstance()->SetMapField(CObjmeshField::Create(pMapSystem->m_MapGrid));
-					map = CGame::GetInstance()->GetMapField();
-					break;
-
-				case CScene::MODE_TUTORIAL:
-					CTutorial::GetInstance()->SetMapField(CObjmeshField::Create(pMapSystem->m_MapGrid));
-					map = CTutorial::GetInstance()->GetMapField();
-					break;
-
-				default:
-					break;
-				}
-				
-				map->SetPos(INITVECTOR3);
-				map->SetDisp(false); // 描画をオフ
-
-				// 経路探索用情報の設定
-				generator->setWorldSize(pMapSystem->m_MapGrid.ToAStar()); // 世界の大きさ
-			}
-
-			else if (str == "STARTSETSTAGE")
-			{
-				while (std::getline(file, str))
-				{ // ファイルの終端ではない場合ループ
-
-					// 終端の場合ステージ生成を抜ける
-					if (str == "ENDSETSTAGE") { break; }
-
-					for (int nCntHeight = 0; nCntHeight < pMapSystem->m_MapGrid.z; nCntHeight++)
-					{ // 列カウント
-
-						// 横一行分の配列を拡張
-						m_nData.emplace_back();
-
-						// カンマ区切りごとにデータを読込
-						std::istringstream issChar(str);	// 文字列ストリーム
-
-						for (int nCntWidth = 0; nCntWidth < pMapSystem->m_MapGrid.x; nCntWidth++)
-						{ // 行カウント
-
-							// 1行ずつ読み込み
-							std::getline(issChar, str, ',');
-
-							// 行列数設定
-							GRID grid = GRID(nCntWidth, nCntHeight);
-							if (str == "") { continue; }	// 空白は無視する
-							else if (str == "1")
-							{ // 壁の場合
-
-								// 壁モデルの生成
-								CWall::Create(grid);
-
-								// グリッド判定の設定
-								pMapSystem->SetGritBool(grid.x, grid.z, true);
-
-								// 経路探索用情報の設定
-								generator->addCollision(grid.ToAStar()); // 通過不可地点を追加
-
-								continue;
-							}
-
-							// 床モデルの生成
-							CTile::Create(grid);
-
-							// グリッド設定の判定
-							bGridSet = false;
-							bRailGridSet = false;
-
-							// オブジェクトを設置
-							if (str == "2")
-							{ // 十字架
-
-								// 十字架の生成
-								CItem::Create(CItem::TYPE_CROSS, grid);
-							}
-							else if (str == "3")
-							{ // デビルホールの生成範囲
-
-								// グリッド設定の判定
-								bGridSet = true;
-
-								// 経路探索用情報の設定
-								generator->addCollision(grid.ToAStar()); // 通過不可地点を追加
-							}
-							else if (str == "4")
-							{ // デビルホール
-
-								// デビルホールの生成
-								CDevilHole::Create(grid);
-
-								// マップの中心に設定
-								pMapSystem->m_mapCenter = grid;
-
-								// グリッド設定の判定
-								bGridSet = true;
-
-								// 経路探索用情報の設定
-								generator->addCollision(grid.ToAStar()); // 通過不可地点を追加
-							}
-							else if (str == "5")
-							{ // レールブロック
-
-								// レールブロックの生成
-								CRailBlock::Create(grid);
-
-								// レールの位置を保持する
-								pRailManager->Set(grid);
-
-								// グリッド設定の判定
-								bGridSet = true;
-								bRailGridSet = true;
-
-								// 経路探索用情報の設定
-								generator->addCollision(grid.ToAStar()); // 通過不可地点を追加
-							}
-							else if (str == "6")
-							{ // プレイヤー
-
-								// プレイヤーのグリッド位置
-								pMapSystem->m_PosPlayer.push_back(grid);
-							}
-							else if (str == "7")
-							{ // 敵(メダマン)
-
-								// メダマン生成
-								CEnemy::Create(CEnemy::ENEMY_MEDAMAN, grid);
-
-							}
-							else if (str == "8")
-							{ // 敵(ボンボン)
-
-								// ボンボン生成
-								CEnemy::Create(CEnemy::ENEMY_BONBON, grid);
-
-							}
-							else if (str == "9")
-							{ // 敵(子デビル)
-
-								// 子デビル生成
-								CEnemy::Create(CEnemy::ENEMY_LITTLEDEVIL, grid);
-
-							}
-							else if (str == "10")
-							{ // 転がる岩
-
-								// 転がる岩生成
-								CRollRock::Create(grid);
-
-								// グリッド設定の判定
-								bGridSet = true;
-
-								// 経路探索用情報の設定
-								generator->addCollision(grid.ToAStar()); // 通過不可地点を追加
-							}
-							else if (str == "11")
-							{ // レール
-
-								// レールの位置を保持する
-								pRailManager->Set(grid);
-								bRailGridSet = true;
-
-							}
-							else
-							{ // ボワボワの生成
-								if (BOWABOWA_RATE <= 0) { assert(false); }
-
-								// ランダム生成
-								if (!(rand() % BOWABOWA_RATE))
-								{
-									CItem::Create(CItem::TYPE_BOWABOWA, grid);
-								}
-							}
-
-							// グリッド判定の設定
-							pMapSystem->SetGritBool(grid, bGridSet);
-
-							// グリッドのレール判定の設定
-							pMapSystem->SetRailGritBool(grid, bRailGridSet);
-
-						}
-
-						// 次の行読み込み
-						std::getline(file, str);
-					}
-
-				}
-			}
-		}
-	}
-
-	// レールの向き設定
-	pRailManager->Init();
-
-	// レールマネージャーの破棄
-	if (pRailManager != nullptr)
-	{
-		delete pRailManager;
-		pRailManager = nullptr;
-	}
-
-	// ファイルを閉じる
-	file.close();
-}
-#endif
 
 //==========================================
 //  マップの削除
