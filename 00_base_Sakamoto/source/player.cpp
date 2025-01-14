@@ -310,9 +310,6 @@ void CPlayer::Update(void)
 			)
 		{// ステージ内にいる かつ ブロックの無いグリッド上の時
 
-			// 操作状態
-			//m_pMoveState->ControlStop(this);
-
 			if (CScene::GetMode() == CScene::MODE_GAME)
 			{
 				if (CGame::GetInstance()->GetEvent() == true)
@@ -338,9 +335,6 @@ void CPlayer::Update(void)
 			{
 				SetItemType(TYPE_NONE);
 			}
-
-			// 移動処理
-			//Move(posThis,rotThis);
 		}
 
 		// 向き移動処理
