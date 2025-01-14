@@ -15,7 +15,7 @@
 //=======================================
 namespace
 {
-	const int MAX_TEXTURE = 128;	// テクスチャの最大数
+	const int MAX_TEXTURE = 256;	// テクスチャの最大数
 }
 
 //========================================
@@ -24,12 +24,6 @@ namespace
 class CTexture
 {
 public:
-	enum Texture
-	{// テクスチャ管理
-		TYPE_TITLE = 0,
-		TYPE_MAX
-	};
-
 	CTexture();		//コンストラクタ
 	~CTexture();	//デストラクタ
 

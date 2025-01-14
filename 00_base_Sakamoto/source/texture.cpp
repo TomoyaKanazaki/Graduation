@@ -18,11 +18,11 @@ namespace
 	const std::string str[]
 	{
 		{ "data\\TEXTURE\\UI\\tutorial_text_00.png" },	// 移動のテキスト
-		{ "data\\TEXTURE\\UI\\tutorial_text_001.png" },	// 十字架座標
-		{ "data\\TEXTURE\\UI\\tutorial_text_003.png" },	// ボワボワの座標
-		{ "data\\TEXTURE\\UI\\tutorial_text_002.png" },	// 攻撃の座標
+		{ "data\\TEXTURE\\UI\\tutorial_text_01.png" },	// 十字架座標
+		{ "data\\TEXTURE\\UI\\tutorial_text_03.png" },	// ボワボワの座標
+		{ "data\\TEXTURE\\UI\\tutorial_text_02.png" },	// 攻撃の座標
 		{ "data\\TEXTURE\\UI\\tutorial_text_004.png" },	// 聖書の座標
-		{ "data\\TEXTURE\\UI\\tutorial_text_005.png" },	// デビルホールの座標
+		{ "data\\TEXTURE\\UI\\tutorial_text_05.png" },	// デビルホールの座標
 	};
 }
 
