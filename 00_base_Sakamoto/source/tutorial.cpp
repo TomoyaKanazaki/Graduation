@@ -37,6 +37,8 @@
 #include "sound.h"
 #include "shadow.h"
 
+#include "BgObjManager.h"
+
 //====================================================================
 // 定数定義
 //====================================================================
@@ -233,9 +235,11 @@ HRESULT CTutorial::Init(void)
 	m_pDevil = CDevil::Create();
 
 	// 十字架の総数保存
+	if (CCross::GetList() == nullptr) { assert(false); }
 	m_nNumCross = CCross::GetList()->GetList().size();
 
 	// ボワボワの総数保存
+	if (CBowabowa::GetList() == nullptr) { assert(false); }
 	m_nNumBowabowa = CBowabowa::GetList()->GetList().size();
 
 	// 敵の総数保存
@@ -354,11 +358,9 @@ void CTutorial::Update(void)
 	if (CDevilHole::GetList() == nullptr) { assert(false); }
 	std::list<CDevilHole*> DevilHolelist = CDevilHole::GetList()->GetList();
 
-	// プレイヤーリストを取得
+	// エネミーリストを取得
 	if (CEnemy::GetList() == nullptr) { assert(false); }
 	std::list<CEnemy*> Enemylist = CEnemy::GetList()->GetList();
-
-	int nNumPlayer = 0;
 
 	for (CPlayer* player : list)
 	{
@@ -388,7 +390,8 @@ void CTutorial::Update(void)
 			m_nTutorialWave += 1;
 		}
 
-		if (player->GetItemType() == CPlayer::TYPE_CROSS
+		if (CCross::GetList() != nullptr
+			&& player->GetItemType() == CPlayer::TYPE_CROSS
 			&& m_bCheck[TYPE_CROSS] == false)
 		{// 十字架取得
 			CTutorialCheck::Create(D3DXVECTOR3(TEXTURE_CENTER_POS.x - CHECK_POS[TYPE_CROSS].x,
@@ -467,7 +470,8 @@ void CTutorial::Update(void)
 		m_nTutorialWave += 1;
 	}
 
-	if (m_nNumBowabowa != CBowabowa::GetList()->GetList().size()
+	if (CBowabowa::GetList() != nullptr 
+		&& m_nNumBowabowa != CBowabowa::GetList()->GetList().size()
 		&& m_bCheck[TYPE_BOWABOWA] == false)
 	{// ボワボワの総数減少
 		CTutorialCheck::Create(D3DXVECTOR3(TEXTURE_CENTER_POS.x - CHECK_POS[TYPE_BOWABOWA].x,
