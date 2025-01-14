@@ -442,6 +442,7 @@ void CEventMovie::StageChangeMovie(void)
 		break;
 
 	case 6:		//プレイヤーにカメラを向ける
+		CMapSystem::GetInstance()->ResetMap();
 
 		PlayerPos = pPlayer->GetPos();
 		PlayerPos.y = m_fSinFloat + sinf(D3DX_PI * ((float)m_nCount / 120)) * 200.0f;

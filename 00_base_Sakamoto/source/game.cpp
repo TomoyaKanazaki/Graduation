@@ -496,6 +496,9 @@ void CGame::NextStage(void)
 	//// マップの生成
 	//CMapSystem::Load("data\\TXT\\STAGE\\map06.csv");
 
+	// マップのリセット
+	CMapSystem::GetInstance()->ResetMap();
+
 	// ソフトクリームの生成
 	CItem::Create(CItem::TYPE_SOFTCREAM, CMapSystem::GetInstance()->GetCenter());
 

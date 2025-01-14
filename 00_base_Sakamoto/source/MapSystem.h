@@ -121,6 +121,7 @@ public:
 	static HRESULT LoadAll();							// 全てのマップ情報の読み込み
 	static HRESULT LoadMap(const char* pFilename);		// マップ情報の読み込み
 	HRESULT CreateMap(unsigned int nSelect);	// 指定されたマップの生成
+	void ResetMap(void) { m_MapPos = m_InitPos; }		// マップのリセット
 	static void MapDelete(); // マップの削除
 	static float GetGritSize();
 	static std::vector<MapInfo> GetMapInfo(void) { return m_MapInfo; }		// マップの情報
