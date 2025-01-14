@@ -28,9 +28,7 @@ private:
 	// マクロ定義
 	#define MAX_LENGTH_TXT	(128)	// テキストの最大文字数
 	#define MAX_CHARACTER	(128)	// キャラクターの最大数
-	#define MAX_MODEL_PARTS	(32)	// モデルパーツ数の最大数
 	#define MAX_MOTION		(32)	// モーション数の最大数
-	#define MAX_KEY			(16)	// キー数の最大数
 
 	// モデルパーツ情報
 	struct SModelParts
@@ -48,7 +46,7 @@ private:
 	struct SModelManager
 	{
 		int nNumModel;				// モデル数
-		SModelParts* aModelParts;	// パーツ情報
+		SModelParts* apModelParts;	// パーツ情報
 	};
 
 	// キー情報
@@ -61,22 +59,22 @@ private:
 	// キー管理情報
 	struct SKeyManager
 	{
-		int nFrame;					// 再生フレーム
-		SKey aKey[MAX_MODEL_PARTS];	// 各モデルのキー要素
+		int nFrame;		// 再生フレーム
+		SKey* apKey;	// 各パーツのキー要素
 	};
 
 	// モーション情報
 	struct SMotionInfo
 	{
-		bool bLoop;							// ループの有無
-		int nNumKey;						// キーの総数
-		SKeyManager aKeyManager[MAX_KEY];	// キー管理情報
+		bool bLoop;					// ループの有無
+		int nNumKey;				// キーの総数
+		SKeyManager* apKeyManager;	// キー管理情報
 	};
 
 	// モーション管理情報
 	struct SMotionManager
 	{
-		int nNumMotion;						// モーション数
+		int nNumMotion;							// モーション数
 		SMotionInfo aMotionInfo[MAX_MOTION];	// モーション情報
 	};
 

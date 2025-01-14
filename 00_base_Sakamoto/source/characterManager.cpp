@@ -14,6 +14,12 @@
 #include "model.h"
 #include "motion.h"
 
+// 定数定義
+namespace
+{
+	const int MAX_MODEL_PARTS = 32;	// モデルパーツ数の最大数
+}
+
 //====================================================================
 //コンストラクタ
 //====================================================================
@@ -46,8 +52,30 @@ void CCharacterManager::Unload(void)
 {
 	for (int nCnt = 0; nCnt < m_nNumAll; nCnt++)
 	{
-		delete[] m_aCharacterInfo[nCnt].ModelManager.aModelParts;
-		m_aCharacterInfo[nCnt].ModelManager.aModelParts = nullptr;
+		// 情報取得
+		int nMaxMotion = m_aCharacterInfo[nCnt].MotionManager.nNumMotion;	// モーション数
+		
+		// モーションパーツの開放処理
+		for (int nCntMotion = 0; nCntMotion < nMaxMotion; nCntMotion++)
+		{
+			// 情報取得
+			int nMaxKey = m_aCharacterInfo[nCnt].MotionManager.aMotionInfo[nCntMotion].nNumKey;	// キー数
+
+			for (int nCntKey = 0; nCntKey < nMaxKey; nCntKey++)
+			{
+				// キー要素の開放処理
+				delete[] m_aCharacterInfo[nCnt].MotionManager.aMotionInfo[nCntMotion].apKeyManager[nCntKey].apKey;
+				m_aCharacterInfo[nCnt].MotionManager.aMotionInfo[nCntMotion].apKeyManager[nCntKey].apKey = nullptr;
+			}
+
+			// キー情報の開放処理
+			delete[] m_aCharacterInfo[nCnt].MotionManager.aMotionInfo[nCntMotion].apKeyManager;
+			m_aCharacterInfo[nCnt].MotionManager.aMotionInfo[nCntMotion].apKeyManager = nullptr;
+		}
+
+		// モデルパーツ情報の開放処理
+		delete[] m_aCharacterInfo[nCnt].ModelManager.apModelParts;
+		m_aCharacterInfo[nCnt].ModelManager.apModelParts = nullptr;
 	}
 }
 
@@ -130,7 +158,7 @@ void CCharacterManager::SetModelData(CObjectCharacter* pObjCharacter,int nNumCha
 	for (int nCnt = 0; nCnt < nNumModel; nCnt++)
 	{
 		// パーツ情報を取得
-		SModelParts ModelParts = m_aCharacterInfo[nNumCharacter].ModelManager.aModelParts[nCnt];
+		SModelParts ModelParts = m_aCharacterInfo[nNumCharacter].ModelManager.apModelParts[nCnt];
 
 		// モデルの生成処理
 		if (FAILED(apModel[nCnt] = CModel::Create(&ModelParts.acModelFileName[0]))) { assert(false); }
@@ -192,7 +220,7 @@ void CCharacterManager::SetMotionData(CObjectCharacter* pObjCharacter, int nNumC
 		for (int nCntKey = 0; nCntKey < MotionInfo.nNumKey; nCntKey++)
 		{
 			// キー管理情報を取得
-			SKeyManager KeyManager = MotionInfo.aKeyManager[nCntKey];
+			SKeyManager KeyManager = MotionInfo.apKeyManager[nCntKey];
 
 			// キーごとのフレーム数を設定
 			pMotion->SetInfoKeyFrame(KeyManager.nFrame, nCntMotion, nCntKey);
@@ -200,7 +228,7 @@ void CCharacterManager::SetMotionData(CObjectCharacter* pObjCharacter, int nNumC
 			for (int nCntParts = 0; nCntParts < nNumModel; nCntParts++)
 			{
 				// キー情報を取得
-				SKey Key = KeyManager.aKey[nCntParts];
+				SKey Key = KeyManager.apKey[nCntParts];
 
 				// パーツごとの位置・向きを設定
 				pMotion->SetInfoPartsPosX(Key.pos.x, nCntMotion, nCntKey, nCntParts);
@@ -329,12 +357,12 @@ bool CCharacterManager::LoadModel(const std::string pFilename,int nNumCharacter)
 				m_aCharacterInfo[nNumCharacter].ModelManager.nNumModel = nNumModel;
 
 				// 動的確保
-				m_aCharacterInfo[nNumCharacter].ModelManager.aModelParts = new SModelParts[nNumModel];
+				m_aCharacterInfo[nNumCharacter].ModelManager.apModelParts = new SModelParts[nNumModel];
 
 				for (int nCnt = 0; nCnt < nCntModel; nCnt++)
 				{
 					// モデル管理にパーツ情報代入
-					m_aCharacterInfo[nNumCharacter].ModelManager.aModelParts[nCnt] = ModelParts[nCnt];
+					m_aCharacterInfo[nNumCharacter].ModelManager.apModelParts[nCnt] = ModelParts[nCnt];
 				}
 
 				break;
@@ -367,12 +395,19 @@ bool CCharacterManager::LoadMotion(const std::string pFileName, int nNumModel, i
 		int nCntMotion = 0;
 		int nCntKeyManager = 0;
 		int nCntParts = 0;
+		int nMaxParts = m_aCharacterInfo[nNumCharacter].ModelManager.nNumModel;
 
 		SMotionInfo MotionInfo[MAX_MOTION] = {};
 
 		char aString[128] = {};			//ゴミ箱
 		char aMessage[128] = {};		//スタートメッセージ
 		char aBool[128] = {};			//bool変換用メッセージ
+
+		// モデルのパーツ数の有無判定
+		if (nMaxParts == 0)
+		{
+			return false;
+		}
 
 		// 読み込み開始-----------------------------------------------------
 		while (1)
@@ -400,6 +435,10 @@ bool CCharacterManager::LoadMotion(const std::string pFileName, int nNumModel, i
 							{
 								fscanf(pFile, "%s", &aString[0]);
 								fscanf(pFile, "%d", &MotionInfo[nCntMotion].nNumKey);	//キーの総数を設定
+
+								// キー数の動的確保
+								MotionInfo[nCntMotion].apKeyManager = new SKeyManager[MotionInfo[nCntMotion].nNumKey];
+
 								break;
 							}
 						}
@@ -416,7 +455,11 @@ bool CCharacterManager::LoadMotion(const std::string pFileName, int nNumModel, i
 									if (strcmp(&aMessage[0], "FRAME") == 0)
 									{
 										fscanf(pFile, "%s", &aString[0]);
-										fscanf(pFile, "%d", &MotionInfo[nCntMotion].aKeyManager[nCntKeyManager].nFrame);	//キーフレームを設定
+										fscanf(pFile, "%d", &MotionInfo[nCntMotion].apKeyManager[nCntKeyManager].nFrame);	//キーフレームを設定
+
+										// キー要素のパーツ数動的確保
+										MotionInfo[nCntMotion].apKeyManager[nCntKeyManager].apKey = new SKey[nMaxParts];
+
 										break;
 									}
 								}
@@ -432,16 +475,16 @@ bool CCharacterManager::LoadMotion(const std::string pFileName, int nNumModel, i
 											if (strcmp(&aMessage[0], "POS") == 0)
 											{
 												fscanf(pFile, "%s", &aString[0]);
-												fscanf(pFile, "%f", &MotionInfo[nCntMotion].aKeyManager[nCntKeyManager].aKey[nCntParts].pos.x);	//位置を設定
-												fscanf(pFile, "%f", &MotionInfo[nCntMotion].aKeyManager[nCntKeyManager].aKey[nCntParts].pos.y);	//位置を設定
-												fscanf(pFile, "%f", &MotionInfo[nCntMotion].aKeyManager[nCntKeyManager].aKey[nCntParts].pos.z);	//位置を設定
+												fscanf(pFile, "%f", &MotionInfo[nCntMotion].apKeyManager[nCntKeyManager].apKey[nCntParts].pos.x);	//位置を設定
+												fscanf(pFile, "%f", &MotionInfo[nCntMotion].apKeyManager[nCntKeyManager].apKey[nCntParts].pos.y);	//位置を設定
+												fscanf(pFile, "%f", &MotionInfo[nCntMotion].apKeyManager[nCntKeyManager].apKey[nCntParts].pos.z);	//位置を設定
 											}
 											if (strcmp(&aMessage[0], "ROT") == 0)
 											{
 												fscanf(pFile, "%s", &aString[0]);
-												fscanf(pFile, "%f", &MotionInfo[nCntMotion].aKeyManager[nCntKeyManager].aKey[nCntParts].rot.x);	//向きを設定
-												fscanf(pFile, "%f", &MotionInfo[nCntMotion].aKeyManager[nCntKeyManager].aKey[nCntParts].rot.y);	//向きを設定
-												fscanf(pFile, "%f", &MotionInfo[nCntMotion].aKeyManager[nCntKeyManager].aKey[nCntParts].rot.z);	//向きを設定
+												fscanf(pFile, "%f", &MotionInfo[nCntMotion].apKeyManager[nCntKeyManager].apKey[nCntParts].rot.x);	//向きを設定
+												fscanf(pFile, "%f", &MotionInfo[nCntMotion].apKeyManager[nCntKeyManager].apKey[nCntParts].rot.y);	//向きを設定
+												fscanf(pFile, "%f", &MotionInfo[nCntMotion].apKeyManager[nCntKeyManager].apKey[nCntParts].rot.z);	//向きを設定
 												break;
 											}
 										}
