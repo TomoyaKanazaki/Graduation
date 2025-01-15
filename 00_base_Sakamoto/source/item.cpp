@@ -242,6 +242,8 @@ void CItem::Update()
 	// ˆÚ“®ˆ—
 	Move(pos);
 
+	rot = GetRot();
+
 	// Œo‰ßŠÔ‚ğæ“¾
 	m_fMoveTime += DeltaTime::Get();
 
