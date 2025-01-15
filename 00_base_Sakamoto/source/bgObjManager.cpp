@@ -115,52 +115,55 @@ void CBgObjManager::Uninit(void)
 //==========================================
 void CBgObjManager::Update(void)
 {
-	// カウント加算
-	m_nCount++;
-
-	if (m_pMeshDomeUp != nullptr)
+	if (CManager::GetInstance()->GetPause() == false)
 	{
-		m_pMeshDomeUp->SetScroll(D3DXVECTOR2(D3DX_PI * (float)m_nCount * 0.003f, 0.0f));
-	}
+		// カウント加算
+		m_nCount++;
 
-	// 山の更新処理
-	for (int nCnt = 0; nCnt < MOUNTAIN_OBJ_NUM; nCnt++)
-	{
-		if (m_pBGCharacter[nCnt] != nullptr)
+		if (m_pMeshDomeUp != nullptr)
 		{
-			m_pBGCharacter[nCnt]->SetPos(D3DXVECTOR3(
-				-1975.0f + sinf(D3DX_PI * (0.5f * (nCnt + (float)m_nCount * 0.005f))) * 400.0f,
-				-200.0f,
-				1500.0f + cosf(D3DX_PI * (0.5f * (nCnt + (float)m_nCount * 0.005f))) * 250.0f));
-
-			m_pBGCharacter[nCnt]->SetRot(D3DXVECTOR3(
-				0.0f,
-				sinf(D3DX_PI * (0.5f * ((nCnt - 1) + (float)m_nCount * 0.005f))),
-				0.0f));
+			m_pMeshDomeUp->SetScroll(D3DXVECTOR2(D3DX_PI * (float)m_nCount * 0.003f, 0.0f));
 		}
-	}
 
-	if (m_pAirShip != nullptr)
-	{
-		D3DXVECTOR3 posAirShip = m_pAirShip->GetPos();
-		D3DXVECTOR3 rotAirShip = m_pAirShip->GetRot();
+		// 山の更新処理
+		for (int nCnt = 0; nCnt < MOUNTAIN_OBJ_NUM; nCnt++)
+		{
+			if (m_pBGCharacter[nCnt] != nullptr)
+			{
+				m_pBGCharacter[nCnt]->SetPos(D3DXVECTOR3(
+					-1975.0f + sinf(D3DX_PI * (0.5f * (nCnt + (float)m_nCount * 0.005f))) * 400.0f,
+					-200.0f,
+					1500.0f + cosf(D3DX_PI * (0.5f * (nCnt + (float)m_nCount * 0.005f))) * 250.0f));
 
-		rotAirShip.y += D3DX_PI * 0.001f;
+				m_pBGCharacter[nCnt]->SetRot(D3DXVECTOR3(
+					0.0f,
+					sinf(D3DX_PI * (0.5f * ((nCnt - 1) + (float)m_nCount * 0.005f))),
+					0.0f));
+			}
+		}
 
-		float f1 = sinf(rotAirShip.y);
-		float f2 = cosf(rotAirShip.y);
+		if (m_pAirShip != nullptr)
+		{
+			D3DXVECTOR3 posAirShip = m_pAirShip->GetPos();
+			D3DXVECTOR3 rotAirShip = m_pAirShip->GetRot();
 
-		posAirShip += D3DXVECTOR3
-		(
-			f1 * 3.0f,
-			0.0f,
-			f2 * 3.0f
-		);
+			rotAirShip.y += D3DX_PI * 0.001f;
 
-		useful::NormalizeAngle(&rotAirShip);
+			float f1 = sinf(rotAirShip.y);
+			float f2 = cosf(rotAirShip.y);
 
-		m_pAirShip->SetPos(posAirShip);
-		m_pAirShip->SetRot(rotAirShip);
+			posAirShip += D3DXVECTOR3
+			(
+				f1 * 3.0f,
+				0.0f,
+				f2 * 3.0f
+			);
+
+			useful::NormalizeAngle(&rotAirShip);
+
+			m_pAirShip->SetPos(posAirShip);
+			m_pAirShip->SetRot(rotAirShip);
+		}
 	}
 }
 
