@@ -129,6 +129,20 @@ HRESULT CMapMove::Init(void)
 	m_MapDifference = INITVECTOR3;
 	m_DevilRot = INITVECTOR3;
 	m_bSlope = false;
+	m_fScrollMove = 0.0f;
+	m_fEffectTime = 0.0f;
+	m_Objmove = INITVECTOR3;
+	m_DevilPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_MinGrid = CMapSystem::GRID(0, 0);
+	m_MaxGrid = CMapSystem::GRID(NUM_WIGHT - 1, NUM_HEIGHT - 1);
+	m_DevilArrow = 0;
+	m_ScrollArrowOld = 0;
+	m_SlopwArrowOld = 0;
+	m_nStateNum = 0;
+	m_SlopeType = 0;
+	m_bScrollOK = false;
+	m_SetState = MOVE_WAIT;
+	m_fScrollEndLine = 0.0f;
 
 	return S_OK;
 }

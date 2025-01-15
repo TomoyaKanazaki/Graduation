@@ -96,7 +96,6 @@ namespace
 
 	const std::string BOTTOM_FIELD_TEX = "data\\TEXTURE\\Field\\outside.jpg";		// 下床のテクスチャ
 	const std::string SCROLL_DEVICE_MODEL = "data\\TXT\\MOTION\\02_staging\\00_ScrollDevice\\motion_scrolldevice.txt";
-	const std::string SCROLL_DEVICE_ENEMY_MODEL = "data\\TXT\\MOTION\\01_enemy\\motion_medaman.txt";
 	const std::string CHECK_MARKER_TEX = "data\\TEXTURE\\UI\\tutorial_check.png";	// チェックマーカーテクスチャ
 	const std::string BUTTON_TEX = "data\\TEXTURE\\UI\\return_title.png";			// 遷移ボタンテクスチャ
 
@@ -317,9 +316,6 @@ void CTutorial::Uninit(void)
 
 	// スロー情報の全削除
 	CSlowManager::ReleaseAll();
-
-	// マップシステムの終了
-	//CMapSystem::GetInstance()->Uninit();
 
 	//全てのオブジェクトの破棄
 	CObject::ReleaseAll();
