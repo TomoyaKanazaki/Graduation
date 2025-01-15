@@ -26,7 +26,7 @@ namespace
 	const D3DXVECTOR3 ASCENT_ADD = D3DXVECTOR3(0.0f, 30.0f, 0.0f);		// è„è∏ó 
 	const D3DXVECTOR3 DESCENT_DEST = D3DXVECTOR3(0.0f, 30.0f, 0.0f);	// â∫ç~ó 
 
-	const D3DXVECTOR3 MAX_POS_HEIGHT = D3DXVECTOR3(0.0f, 400.0f, 0.0f);		// ècåXÇ´ÇÃç≈ëÂè„è∏íl
+	const D3DXVECTOR3 MAX_POS_HEIGHT = D3DXVECTOR3(0.0f, 380.0f, 0.0f);		// ècåXÇ´ÇÃç≈ëÂè„è∏íl
 	const D3DXVECTOR3 MAX_POS_WIDTH = D3DXVECTOR3(0.0f,550.0f,0.0f);		// â°åXÇ´ÇÃç≈ëÂè„è¨íl
 
 	const D3DXVECTOR3 MIN_POS_HEIGHT = D3DXVECTOR3(0.0f, -250.0f, 0.0f);	// ècåXÇ´ÇÃç≈è¨è„è∏íl
