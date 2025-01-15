@@ -147,6 +147,7 @@ void CEventMovie::StartMovie(void)
 		m_nWave = 5;
 		m_nCount = 150;
 		CGame::GetInstance()->SetEvent(true);	// スキップしない
+		pDevil->SetModelColor(CModel::COLORTYPE_FALSE, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 	}
 
 	switch (m_nWave)
