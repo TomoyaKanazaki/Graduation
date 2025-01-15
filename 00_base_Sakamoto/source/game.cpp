@@ -479,6 +479,9 @@ void CGame::ResetStage(void)
 		m_pEventMovie->SetEventType(CEventMovie::STATE_CHANGE);
 	}
 
+	// ‘•’uŒn”wŒiƒ‚ƒfƒ‹‚Ì•\Ž¦Ý’è
+	CBgObjManager::GetInstance()->SetDeviceAppear(true);
+
 	m_bGameEnd = false;
 }
 

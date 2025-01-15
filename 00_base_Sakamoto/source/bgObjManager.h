@@ -29,6 +29,8 @@ public:
 	void Uninit(void);
 	void Update(void);
 
+	void SetDeviceAppear(bool bAppear);
+
 	void SetGame(CMapSystem::GRID& grid);
 	CObjmeshDome* GetDomeUp(void) { return m_pMeshDomeUp; }
 
@@ -42,6 +44,7 @@ private:
 	void SetSlopeDevice(void);
 	void SetMountain(void);
 	void SetAirShip(void);
+
 
 	CObjmeshDome* m_pMeshDomeUp;						// メッシュドーム
 	CObjectCharacter* m_pBGCharacter[MOUNTAIN_OBJ_NUM];	// 背景キャラクターのポインタ
