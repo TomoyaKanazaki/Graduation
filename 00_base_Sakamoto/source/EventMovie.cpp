@@ -144,15 +144,17 @@ void CEventMovie::StartMovie(void)
 
 	if (CGame::GetInstance()->GetEvent() == false)
 	{ // イベントスキップされた場合
+		CGame::GetInstance()->SetEvent(true);	// スキップしない
+
+		// 最後のフェーズにする
 		m_nWave = 5;
 		m_nCount = 150;
-		CGame::GetInstance()->SetEvent(true);	// スキップしない
-		pDevil->SetModelColor(CModel::COLORTYPE_FALSE, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+
+		pDevil->SetModelColor(CModel::COLORTYPE_FALSE, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));		// デビルの色元に戻す
+
+		// 椅子があったら消す
 		if (m_pEventModel != nullptr)
 		{
-			m_pEventModel->SetScaling(D3DXVECTOR3(m_pEventModel->GetScaling().x - 0.015f, m_pEventModel->GetScaling().y - 0.015f, m_pEventModel->GetScaling().z - 0.015f));
-			//m_pEventModel->SetPos(D3DXVECTOR3(m_pEventModel->GetPos().x, m_pEventModel->GetPos().y + 3.0f, m_pEventModel->GetPos().z + 5.0f));
-
 			m_pEventModel->Uninit();
 			m_pEventModel = nullptr;
 		}
