@@ -30,6 +30,8 @@ namespace
 	const int MOTION_BLEND_NEUTRAL = 5;	// 待機状態のモーションブレンド時間
 	const int MOTION_BLEND_MOVE = 5;	// 移動状態のモーションブレンド時間
 
+	const int MODEL_REF = 101;	// ステンシル参照値
+
 	const char* MODEL_PASS = "data\\TXT\\MOTION\\01_enemy\\motion_bonbon.txt"; // モデルパス
 }
 
@@ -65,7 +67,7 @@ HRESULT CEnemyBonbon::Init(void)
 	SetEnemyType(CEnemy::ENEMY_MEDAMAN);	//敵の種類設定
 
 	// 見た目の設定
-	InitModel(MODEL_PASS, 101);
+	InitModel(MODEL_PASS, MODEL_REF);
 
 		// リストマネージャーの生成
 	if (m_pList == nullptr)
