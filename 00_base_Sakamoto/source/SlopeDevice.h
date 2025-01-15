@@ -70,6 +70,8 @@ public:
 
 	void ReSet(void);
 	
+	void SetAppearAll(bool bAppear);
+
 	void SetLocateWorldType(LOCATE_WORLD_TYPE LocateWorldType) { m_LocateWorldType = LocateWorldType ;}
 	void SetUseRetroMove(bool bRetroMove) { m_bUseRetroMove = bRetroMove; }
 

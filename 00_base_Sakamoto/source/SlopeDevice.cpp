@@ -416,6 +416,21 @@ void CSlopeDevice::ReSet(void)
 }
 
 //====================================================================
+// 全表示設定処理
+//====================================================================
+void CSlopeDevice::SetAppearAll(bool bAppear)
+{
+	// 表示設定
+	SetAppear(bAppear);
+
+	// キャラクターの表示設定
+	if (m_pObjectCharacter != nullptr)
+	{
+		m_pObjectCharacter->SetAppear(bAppear);
+	}
+}
+
+//====================================================================
 // モデル関連の初期化処理
 //====================================================================
 HRESULT CSlopeDevice::InitModel(const std::string pModelNameSlopeDevice, const std::string pModelNameEnemy)

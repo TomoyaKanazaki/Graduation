@@ -18,6 +18,7 @@
 #include "timer.h"
 #include "cross.h"
 #include "GamePlayer.h"
+#include "bgObjManager.h"
 
 //Ã“Iƒƒ“ƒo•Ï”éŒ¾
 
@@ -343,6 +344,9 @@ void CEventMovie::StageChangeMovie(void)
 			m_nWave++;
 		}
 
+		// ‘•’uŒn”wŒiƒ‚ƒfƒ‹‚Ì”ñ•\Ž¦ˆ—
+		CBgObjManager::GetInstance()->SetDeviceAppear(false);
+
 		break;
 
 	case 1:		//“{‚èƒ‚[ƒVƒ‡ƒ“
@@ -496,6 +500,8 @@ void CEventMovie::StageChangeMovie(void)
 
 	case 7:		//ƒJƒƒ‰‚ð‰º‚ÉŒü‚¯‚é
 
+		// ‘•’uŒn”wŒiƒ‚ƒfƒ‹‚Ì”ñ•\Ž¦ˆ—
+		CBgObjManager::GetInstance()->SetDeviceAppear(true);
 
 		if (m_nCount >= 10)
 		{

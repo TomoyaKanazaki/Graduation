@@ -20,9 +20,9 @@
 namespace
 {
 	const D3DXVECTOR3 SAMPLE_SIZE = D3DXVECTOR3(20.0f, 20.0f, 20.0f);		//当たり判定
-	const char* MODEL_PASS = "data\\MODEL\\Testbowabowa.x"; // モデルパス
+	const char* MODEL_PASS = "data\\MODEL\\beef.x"; // モデルパス
 	const float MOVE_HEIGHT = 25.0f; // 移動量
-	const D3DXVECTOR3 ADD_ROT = D3DXVECTOR3(0.01f, 0.01f, 0.01f); // 回転量
+	const D3DXVECTOR3 ADD_ROT = D3DXVECTOR3(0.0f, 0.01f, 0.0f); // 回転量
 }
 
 //===========================================
@@ -177,7 +177,7 @@ void CBowabowa::SetEffect()
 	D3DXVECTOR3 pos = GetPos();
 	D3DXVECTOR3 rot = GetRot();
 
-	Effect(MyEffekseer::EffectCreate(CMyEffekseer::TYPE_BOABOA, true, useful::CalcMatrix(pos, rot, *GetUseMultiMatrix()), rot, D3DXVECTOR3(20.0f, 20.0f, 20.0f)));
+	//Effect(MyEffekseer::EffectCreate(CMyEffekseer::TYPE_BOABOA, true, useful::CalcMatrix(pos, rot, *GetUseMultiMatrix()), rot, D3DXVECTOR3(20.0f, 20.0f, 20.0f)));
 }
 
 //==========================================
