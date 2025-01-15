@@ -64,8 +64,9 @@ public:
 	void SetState(STATE state);
 	void SetStateArrow(CScrollArrow::Arrow stateArrow);
 
-	void SetLocateWorldType(LOCATE_WORLD_TYPE LocateWorldType) { m_LocateWorldType = LocateWorldType; }
+	void SetAppearAll(bool bAppear);
 
+	void SetLocateWorldType(LOCATE_WORLD_TYPE LocateWorldType) { m_LocateWorldType = LocateWorldType; }
 
 	// 静的メンバ関数
 	static CListManager<CScrollDevice>* GetList(void); // リスト取得

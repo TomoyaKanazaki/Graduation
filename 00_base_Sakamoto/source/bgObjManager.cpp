@@ -334,7 +334,7 @@ void CBgObjManager::SetDeviceAppear(bool bAppear)
 		for (CScrollDevice* pScrollDevice : list)
 		{
 			// マップ移動装置の表示設定
-			pScrollDevice->SetAppear(bAppear);
+			pScrollDevice->SetAppearAll(bAppear);
 		}
 	}
 
@@ -347,7 +347,7 @@ void CBgObjManager::SetDeviceAppear(bool bAppear)
 		for (CSlopeDevice* pSlopeDevice : list)
 		{
 			// 傾き装置の表示設定
-			pSlopeDevice->SetAppear(bAppear);
+			pSlopeDevice->SetAppearAll(bAppear);
 		}
 	}
 }

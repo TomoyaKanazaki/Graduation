@@ -287,8 +287,21 @@ void CScrollDevice::SetStateArrow(CScrollArrow::Arrow stateArrow)
 
 		break;
 	}
+}
 
+//====================================================================
+// 全表示設定処理
+//====================================================================
+void CScrollDevice::SetAppearAll(bool bAppear)
+{
+	// 表示設定
+	SetAppear(bAppear);
 
+	// キャラクターの表示設定
+	if (m_pObjectCharacter != nullptr)
+	{
+		m_pObjectCharacter->SetAppear(bAppear);
+	}
 }
 
 //====================================================================
