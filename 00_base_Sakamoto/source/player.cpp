@@ -302,10 +302,10 @@ void CPlayer::Update(void)
 		SearchWall(posThis);
 
 		if (
-			(state != STATE_EGG &&
-				CMapSystem::GetInstance()->GetGritBool(m_Grid.x, m_Grid.z) == false) ||
-			(state == STATE_EGG && CollisionStageIn(posThis) == true &&
-				CMapSystem::GetInstance()->GetGritBool(m_Grid.x, m_Grid.z) == false &&
+			(state != STATE_EGG/* &&
+				CMapSystem::GetInstance()->GetGritBool(m_Grid.x, m_Grid.z) == false*/) ||
+			(state == STATE_EGG && CollisionStageIn(posThis) == true/* &&
+				CMapSystem::GetInstance()->GetGritBool(m_Grid.x, m_Grid.z) == false*/ &&
 				m_bGritCenter == true && posThis.y <= 0.0f)
 			)
 		{// ステージ内にいる かつ ブロックの無いグリッド上の時
@@ -334,6 +334,12 @@ void CPlayer::Update(void)
 			if (GetState() != STATE_EGG && oldstate == STATE_EGG)
 			{
 				SetItemType(TYPE_NONE);
+				CMapSystem::GetInstance()->SetGritBool(m_Grid.x, m_Grid.z, false);
+
+			}
+			else if (GetState() == STATE_EGG)
+			{
+				CMapSystem::GetInstance()->SetGritBool(m_Grid.x, m_Grid.z, true);
 			}
 		}
 
@@ -371,13 +377,16 @@ void CPlayer::Update(void)
 		// カメラ更新処理
 		CameraPosUpdate(posThis);
 
+		if (state != STATE_EGG)
+		{
+			ObjPosUpdate(posThis, posOldThis, sizeThis);
+		}
+
 		if (state == STATE_WALK)
 		{
 			// 位置更新処理
-			PosUpdate(posThis,posOldThis,sizeThis);
+			PosUpdate(posThis, posOldThis, sizeThis);
 		}
-
-		ObjPosUpdate(posThis,posOldThis,sizeThis);
 
 		if (state != STATE_EGG && state != STATE_DEATH)
 		{
@@ -944,11 +953,11 @@ void CPlayer::CollisionWaitRock(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D
 		return;
 	}
 
-	// レールブロックのリスト構造が無ければ抜ける
+	// 岩のリスト構造が無ければ抜ける
 	if (CRollRock::GetList() == nullptr) { return; }
 	std::list<CRollRock*> list = CRollRock::GetList()->GetList();    // リストを取得
 
-	// レールブロックリストの中身を確認する
+	// 岩リストの中身を確認する
 	for (CRollRock* pRailBlock : list)
 	{
 		D3DXVECTOR3 pos = D3DXVECTOR3(pRailBlock->GetPos().x, 0.0f, pRailBlock->GetPos().z);
@@ -990,11 +999,11 @@ void CPlayer::CollisionWaitRock(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D
 //====================================================================
 void CPlayer::CollisionMoveRock(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D3DXVECTOR3& sizeThis, useful::COLLISION XYZ)
 {
-	// レールブロックのリスト構造が無ければ抜ける
+	// 岩のリスト構造が無ければ抜ける
 	if (CRollRock::GetList() == nullptr) { return; }
 	std::list<CRollRock*> list = CRollRock::GetList()->GetList();    // リストを取得
 
-	// レールブロックリストの中身を確認する
+	// 岩リストの中身を確認する
 	for (CRollRock* pRock : list)
 	{
 		D3DXVECTOR3 D_pos = CDevil::GetListTop()->GetDevilPos();
@@ -1394,10 +1403,10 @@ void CPlayer::PosUpdate(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D3DXVECTO
 	}
 
 	// 壁との当たり判定
-	CollisionWall(posThis, posOldThis, sizeThis, useful::COLLISION_X);
 	CollisionDevilHole(posThis, posOldThis, sizeThis, useful::COLLISION_X);
 	CollisionWaitRailBlock(posThis, posOldThis, sizeThis, useful::COLLISION_X);
 	CollisionWaitRock(posThis, posOldThis, sizeThis, useful::COLLISION_X);
+	CollisionWall(posThis, posOldThis, sizeThis, useful::COLLISION_X);
 
 	//Z軸の位置更新
 	if (m_move.z > 0.0f || m_move.z < 0.0f)
@@ -1409,10 +1418,10 @@ void CPlayer::PosUpdate(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D3DXVECTO
 	SetSpeedState(Speed);
 
 	// 壁との当たり判定
-	CollisionWall(posThis, posOldThis, sizeThis, useful::COLLISION_Z);
 	CollisionDevilHole(posThis, posOldThis, sizeThis, useful::COLLISION_Z);
 	CollisionWaitRailBlock(posThis, posOldThis, sizeThis, useful::COLLISION_Z);
 	CollisionWaitRock(posThis, posOldThis, sizeThis, useful::COLLISION_Z);
+	CollisionWall(posThis, posOldThis, sizeThis, useful::COLLISION_Z);
 }
 
 //====================================================================
@@ -1448,15 +1457,15 @@ void CPlayer::ObjPosUpdate(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D3DXVE
 	//X軸の位置更新
 	posThis.x += m_Objmove.x * CManager::GetInstance()->GetGameSpeed() * fSpeed;
 
-	// レールブロックとの当たり判定
-	CollisionMoveRailBlock(posThis, posOldThis, sizeThis, useful::COLLISION_X);
-	CollisionMoveRock(posThis, posOldThis, sizeThis, useful::COLLISION_X);
+	// 当たり判定
+	CollisionMoveRailBlock(posThis, posOldThis, sizeThis, useful::COLLISION_X);		// レールブロック
+	CollisionMoveRock(posThis, posOldThis, sizeThis, useful::COLLISION_X);			// 岩
 
 	//Z軸の位置更新
 	posThis.z += m_Objmove.z * CManager::GetInstance()->GetGameSpeed() * fSpeed;
 
-	CollisionMoveRailBlock(posThis, posOldThis, sizeThis, useful::COLLISION_Z);
-	CollisionMoveRock(posThis, posOldThis, sizeThis, useful::COLLISION_Z);
+	CollisionMoveRailBlock(posThis, posOldThis, sizeThis, useful::COLLISION_Z);		// レールブロック
+	CollisionMoveRock(posThis, posOldThis, sizeThis, useful::COLLISION_Z);			// 岩
 }
 
 //====================================================================
