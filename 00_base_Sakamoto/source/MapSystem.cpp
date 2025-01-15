@@ -881,6 +881,15 @@ HRESULT CMapSystem::CreateMap(unsigned int nSelect)
 }
 
 //==========================================
+// マップのリセット
+//==========================================
+void CMapSystem::ResetMap(void)
+{
+	// 位置を初期化
+	m_MapPos = m_InitPos;
+}
+
+//==========================================
 //  マップの削除
 //==========================================
 void CMapSystem::MapDelete()

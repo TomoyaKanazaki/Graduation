@@ -157,8 +157,8 @@ void CRailBlock::Update(void)
 	Move(&Pos);
 
 	// 位置設定
-	SetPos(Pos);
-	SetPosOld(PosOld);
+	SetPos(m_Grid.ToWorld());
+	SetPosOld(m_OldGrid.ToWorld());
 
 	CObjectX::Update();
 }
@@ -176,22 +176,26 @@ void CRailBlock::Draw(void)
 //====================================================================
 void CRailBlock::Move(D3DXVECTOR3* Pos)
 {
+	D3DXVECTOR3 pos = m_Grid.ToWorld();
+
 	// グリッド情報を保存
 	m_OldGrid = m_Grid;
 
 	// 移動処理
-	m_pMoveState->Move(this, *Pos, INITVECTOR3);
+	m_pMoveState->Move(this, pos, INITVECTOR3);
 
 	// ステージ外との当たり判定
-	CollisionOut(*Pos);
+	CollisionOut(pos);
 
 	// グリッド情報を設定
-	m_Grid = CMapSystem::GetInstance()->CMapSystem::CalcGrid(*Pos);
+	//m_Grid = CMapSystem::GetInstance()->CMapSystem::CalcGrid(*Pos);
 
 	// A*判定を設定
 	Coodinate();
 
-	DebugProc::Print(DebugProc::POINT_LEFT, "[レールブロック]位置 %f : %f : %f\n", Pos->x, Pos->y, Pos->z);
+	m_Grid.ToGrid(pos);
+
+	DebugProc::Print(DebugProc::POINT_LEFT, "[レールブロック]位置 %f : %f : %f\n", pos.x, pos.y, pos.z);
 }
 
 //====================================================================
