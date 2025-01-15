@@ -319,3 +319,35 @@ void CBgObjManager::SetAirShip(void)
 	m_pAirShip = CObjectX::Create("data\\MODEL\\airship.x");
 	m_pAirShip->SetPos(D3DXVECTOR3(750.0f, -400.0f, 1800.0f));
 }
+
+//==========================================
+//  装置系オブジェクトの表示設定処理
+//==========================================
+void CBgObjManager::SetDeviceAppear(bool bAppear)
+{
+	{
+		// マップ移動装置のリスト構造が無ければ抜ける
+		if (CScrollDevice::GetList() == nullptr) { return; }
+		std::list<CScrollDevice*> list = CScrollDevice::GetList()->GetList();    // リストを取得
+
+		// マップ移動装置のリストの中身を確認する
+		for (CScrollDevice* pScrollDevice : list)
+		{
+			// マップ移動装置の表示設定
+			pScrollDevice->SetAppear(bAppear);
+		}
+	}
+
+	{
+		// 傾き装置のリスト構造が無ければ抜ける
+		if (CSlopeDevice::GetList() == nullptr) { return; }
+		std::list<CSlopeDevice*> list = CSlopeDevice::GetList()->GetList();    // リストを取得
+
+		// 傾き装置のリストの中身を確認する
+		for (CSlopeDevice* pSlopeDevice : list)
+		{
+			// 傾き装置の表示設定
+			pSlopeDevice->SetAppear(bAppear);
+		}
+	}
+}
