@@ -230,6 +230,9 @@ HRESULT CTutorial::Init(void)
 	pMapSystem->Init();
 	pMapSystem->CreateMap(pMapSystem->GetSelectMap());
 
+	// マップの動きの初期化
+	pMapSystem->GetMove()->Init();
+
 	//デビルの生成
 	m_pDevil = CDevil::Create();
 

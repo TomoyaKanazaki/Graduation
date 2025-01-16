@@ -602,7 +602,7 @@ void CPlayer::Attack(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis)
 		CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
 		CInputJoypad* pInputJoypad = CManager::GetInstance()->GetInputJoyPad();
 
-		if (pInputKeyboard->GetTrigger(DIK_SPACE) || pInputJoypad->GetTrigger(CInputJoypad::BUTTON_B, 0))
+		if (pInputKeyboard->GetTrigger(DIK_SPACE) || pInputJoypad->GetTrigger(CInputJoypad::BUTTON_A, 0))
 		{
 			// ‰Î‰Š•úŽË
 			CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_FIRE);
