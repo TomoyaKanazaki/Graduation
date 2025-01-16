@@ -69,6 +69,7 @@ public:
 	// マップ情報
 	struct MapInfo
 	{
+		std::string texture;			// マップのサムネイル画像
 		std::vector<GRID> grid;			// オブジェクトの位置を保持
 		std::vector<MAPTYPE> type;		// マップオブジェクトの種類
 		std::vector<GRID> posPlayer;	// プレイヤーの位置を保持
@@ -132,7 +133,6 @@ private:
 
 	static CMapSystem* m_pMapSystem;
 	static std::vector<std::tuple<>> m_nData;	// 複数の値を保持
-	//static std::vector<GRID> m_PosPlayer;		// プレイヤーの位置を保持
 	static std::vector<MapInfo> m_MapInfo;		// マップの情報
 
 	// TODO : Load関数で動的確保する（ｻﾄﾈｼｵﾝ）
@@ -151,8 +151,6 @@ private:
 	int m_nSelectMap;	// 選択されたマップ
 
 	D3DXMATRIX* m_mtxStage;
-
-	//MAPTYPE m_MapType;			// マップオブジェクトの種類
 
 };
 
