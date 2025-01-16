@@ -30,8 +30,21 @@ data\\TXT\\STAGE\\map13.csv
 END_SETFILENAME
 
 #------------------------------------------------------------------------------
-# マップテクスチャ名
+# マップのサムネイルテクスチャ名
 #------------------------------------------------------------------------------
 SETTEXTURE
-data\\TEXTURE\\Field\\wall_test_02.png		// 壁
+data\\TEXTURE\\UI\\stage\\map_00.png
+data\\TEXTURE\\UI\\stage\\map_01.png
+data\\TEXTURE\\UI\\stage\\map_02.png
+data\\TEXTURE\\UI\\stage\\map_03.png
+data\\TEXTURE\\UI\\stage\\map_04.png
+data\\TEXTURE\\UI\\stage\\map_05.png
+data\\TEXTURE\\UI\\stage\\map_06.png
+data\\TEXTURE\\UI\\stage\\map_07.png
+data\\TEXTURE\\UI\\stage\\map_08.png
+data\\TEXTURE\\UI\\stage\\map_09.png
+data\\TEXTURE\\UI\\stage\\map_10.png
+data\\TEXTURE\\UI\\stage\\map_11.png
+data\\TEXTURE\\UI\\stage\\map_12.png
+data\\TEXTURE\\UI\\stage\\map_13.png
 END_SETTEXTURE

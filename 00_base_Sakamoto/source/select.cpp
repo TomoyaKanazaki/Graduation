@@ -47,25 +47,6 @@ namespace
 
 	const float SCROOL_SPEED = 0.05f; // スクロールの速度
 	const float SCROOL_SCALE = 0.1f; // スクロールの倍率
-
-	// マップサムネイルテクスチャ
-	const char* MAP_TEX[] =
-	{
-		"data\\TEXTURE\\UI\\map00.png",
-		"data\\TEXTURE\\UI\\tutorial_frame.png",
-		"data\\TEXTURE\\UI\\signal.png",
-		"data\\TEXTURE\\UI\\TitleBotton1.png",
-		"data\\TEXTURE\\UI\\signal.png",
-		"data\\TEXTURE\\UI\\tutorial_check.png",
-		"data\\TEXTURE\\UI\\tutorial_frame.png",
-		"data\\TEXTURE\\UI\\TitleBotton1.png",
-		"data\\TEXTURE\\UI\\signal.png",
-		"data\\TEXTURE\\UI\\TitleBotton1.png",
-		"data\\TEXTURE\\UI\\signal.png",
-		"data\\TEXTURE\\UI\\TitleBotton1.png",
-		"data\\TEXTURE\\UI\\tutorial_check.png",
-		"data\\TEXTURE\\UI\\tutorial_frame.png"
-	};
 }
 
 //静的メンバ変数宣言
@@ -129,8 +110,11 @@ CSelect* CSelect::GetInstance(void)
 HRESULT CSelect::Init(void)
 {
 	CTexture* pTexture = CManager::GetInstance()->GetTexture();
+
+	// マップ情報取得
 	CMapSystem* pMapSystem = CMapSystem::GetInstance();
-	int nMax = pMapSystem->GetMapInfo().size();
+	std::vector<CMapSystem::MapInfo> MapInfo = pMapSystem->GetMapInfo();
+	int nMax = MapInfo.size();
 
 	// 全てのステージ分の選択肢生成
 	for (int nCnt = 0; nCnt < nMax; nCnt++)
@@ -142,7 +126,7 @@ HRESULT CSelect::Init(void)
 		m_StageSelect.back().m_pMapTex = CObject2D::Create();
 		m_StageSelect.back().m_pMapTex->SetPos(D3DXVECTOR3(MAP_POS.x + (STAGE_DISTANCE.x * nCnt), MAP_POS.y + (STAGE_DISTANCE.y * nCnt), MAP_POS.z));
 		m_StageSelect.back().m_pMapTex->SetSize(D3DXVECTOR3(MAP_SIZE.x, MAP_SIZE.y, 0.0f));
-		m_StageSelect.back().m_pMapTex->SetIdx(pTexture->Regist(MAP_TEX[nCnt]));
+		m_StageSelect.back().m_pMapTex->SetIdx(pTexture->Regist(MapInfo[nCnt].texture));
 
 		// ボタン
 		m_StageSelect.back().m_pSelectUI = CObject2D::Create();

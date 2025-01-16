@@ -155,8 +155,7 @@ void CMapSystem::Uninit(void)
 //====================================================================
 void CMapSystem::Update(void)
 {
-	if (CScene::GetMode() == CScene::MODE_GAME &&
-		CManager::GetInstance()->GetPause() == false)
+	if (CManager::GetInstance()->GetPause() == false)
 	{
 		if (CGame::GetInstance()->GetEvent() == false &&
 			m_pMapMove != nullptr)
@@ -465,6 +464,7 @@ HRESULT CMapSystem::LoadAll()
 	CTexture* pTexture = CManager::GetInstance()->GetTexture();
 	std::string FileName;	// 読込文字列
 	int nNum = -1;			// マップ数
+	int nNumTex = 0;		// テクスチャ数
 
 	// ファイルを読込
 	std::string str, comment;	// 読込文字列
@@ -502,26 +502,30 @@ HRESULT CMapSystem::LoadAll()
 					std::getline(file, str);
 				}
 			}
-			//else if (str == "SETTEXTURE")
-			//{ // マップテクスチャ名
+			else if (str == "SETTEXTURE")
+			{ // マップテクスチャ名
 
-			//	// 次の行読み込み
-			//	std::getline(file, str);
+				// 次の行読み込み
+				std::getline(file, str);
 
-			//	while (str != "END_SETTEXTURE")
-			//	{ // テクスチャ読み込みが終わるまで
-			//		std::istringstream issTexFile(str);	// 文字列ストリーム
+				while (str != "END_SETTEXTURE")
+				{ // テクスチャ読み込みが終わるまで
+					std::istringstream issTexFile(str);	// 文字列ストリーム
 
-			//		// マップファイルのパスを読込
-			//		issTexFile >> FileName >> comment;
+					// マップファイルのパスを読込
+					issTexFile >> FileName;
 
-			//		// テクスチャの読み込み
-			//		pTexture->Regist(FileName.c_str());
+					m_MapInfo[nNumTex].texture = FileName.c_str();
 
-			//		// 次の行読み込み
-			//		std::getline(file, str);
-			//	}
-			//}
+					// テクスチャの読み込み
+					//pTexture->Regist(FileName.c_str());
+
+					// 次の行読み込み
+					std::getline(file, str);
+
+					nNumTex++;
+				}
+			}
 		}
 	}
 

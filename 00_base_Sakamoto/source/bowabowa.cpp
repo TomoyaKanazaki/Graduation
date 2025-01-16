@@ -125,7 +125,7 @@ bool CBowabowa::Hit(CPlayer* pPlayer)
 		return false;
 	}
 
-	CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_GET_BOWA);
+	CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_EAT);
 
 	// エフェクトを生成する
 	D3DXVECTOR3 pos = GetPos();
