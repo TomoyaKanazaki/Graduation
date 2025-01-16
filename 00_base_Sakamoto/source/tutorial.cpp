@@ -66,8 +66,8 @@ namespace
 
 	const D3DXVECTOR3 TEXT_POS[]
 	{// テキストの位置
-		{ D3DXVECTOR3(5.0f, 0.0f, 0.0f) },	// 移動のテキスト
-		{ D3DXVECTOR3(0.0f, 0.0f, 0.0f) },		// 十字架座標
+		{ D3DXVECTOR3(0.0f, 0.0f, 0.0f) },		// 移動のテキスト
+		{ D3DXVECTOR3(-5.0f, 0.0f, 0.0f) },		// 十字架座標
 		{ D3DXVECTOR3(115.0f, 0.0f, 0.0f) },	// ボワボワの座標
 		{ D3DXVECTOR3(107.5f, 0.0f, 0.0f) },	// 攻撃の座標
 		{ D3DXVECTOR3(10.0f, 5.0f, 0.0f) },		// 聖書の座標
