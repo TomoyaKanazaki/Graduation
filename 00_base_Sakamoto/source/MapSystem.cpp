@@ -155,8 +155,7 @@ void CMapSystem::Uninit(void)
 //====================================================================
 void CMapSystem::Update(void)
 {
-	if (CScene::GetMode() == CScene::MODE_GAME &&
-		CManager::GetInstance()->GetPause() == false)
+	if (CManager::GetInstance()->GetPause() == false)
 	{
 		if (CGame::GetInstance()->GetEvent() == false &&
 			m_pMapMove != nullptr)
