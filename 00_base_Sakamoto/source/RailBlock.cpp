@@ -151,7 +151,7 @@ void CRailBlock::Uninit(void)
 void CRailBlock::Update(void)
 {
 	D3DXVECTOR3 Pos = GetPos();
-	D3DXVECTOR3 PosOld = GetPosOld();
+	D3DXVECTOR3 PosOld = Pos;
 
 	// ƒOƒŠƒbƒhî•ñ‚ğ•Û‘¶
 	m_OldGrid = m_Grid;

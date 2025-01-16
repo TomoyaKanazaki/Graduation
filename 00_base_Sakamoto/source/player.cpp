@@ -932,7 +932,7 @@ void CPlayer::CollisionMoveRailBlock(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldTh
 
 			D3DXVECTOR3 Move = m_move;
 			bool a = false;
-
+			
 			// ‹éŒ`‚Ì“–‚½‚è”»’è
 			if (useful::CollisionBlock(Mypos, MyposOld, MyMove, D3DXVECTOR3(MySize, MySize, MySize), &posThis, posOldThis, &m_move, &m_Objmove, sizeThis, &a, XYZ) == true)
 			{
