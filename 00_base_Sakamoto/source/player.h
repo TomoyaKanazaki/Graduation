@@ -94,6 +94,9 @@ public:
 	// 静的メンバ関数
 	static CListManager<CPlayer>* GetList(void);	// リスト取得
 
+	float GetCrossStateParcent(void);		//十字架保持時間の割合取得
+
+
 private:
 
 	void ActionState(void);							//モーションと状態の管理
@@ -129,6 +132,7 @@ private:
 
 	void SpeedEffect(const D3DXVECTOR3& pos, const D3DXVECTOR3& rot);
 
+	
 	int m_nPlayNumber;				//プレイ用番号
 	ACTION_TYPE m_Action;
 	ACTION_TYPE m_AtkAction;		//攻撃状態記録用変数
