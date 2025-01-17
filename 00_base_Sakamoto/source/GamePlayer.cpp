@@ -16,6 +16,7 @@
 #include "score.h"
 #include "objectBillboard.h"
 #include "crossUI.h"
+#include "popUI.h"
 
 //===========================================
 // 定数定義
@@ -36,6 +37,7 @@ m_pScore(nullptr),
 m_pLifeUi(nullptr),
 m_pCrossUI(nullptr),
 m_pCrossUIBg(nullptr),
+m_pPopUI(nullptr),
 m_pP_NumUI(nullptr)
 {
 	m_Grid.x = 0;
@@ -101,6 +103,12 @@ HRESULT CGamePlayer::Init(int PlayNumber)
 	{
 		m_pCrossUIBg = CCrossUi::Create();
 	}
+	
+	//吹き出しUIの生成
+	if (m_pPopUI == nullptr)
+	{
+		m_pPopUI = CPopUi::Create();
+	}
 
 	//所持するUIの初期化
 	InitUI();
@@ -139,6 +147,12 @@ void CGamePlayer::Uninit(void)
 	{
 		m_pCrossUIBg = nullptr;
 	}
+
+	// 吹き出しUIの削除
+	if (m_pPopUI != nullptr)
+	{
+		m_pPopUI = nullptr;
+	}
 }
 
 //====================================================================
@@ -150,21 +164,44 @@ void CGamePlayer::Update(void)
 
 	CPlayer::Update();
 
-	if (GetItemType() != TYPE_NONE)
+	//十字架UIの更新
+	if (m_pCrossUI != nullptr && m_pCrossUIBg != nullptr)
 	{
-		fCrossStatePercent = GetCrossStateParcent();
+		if (GetItemType() != TYPE_NONE)
+		{//アイテム保持状態
+			fCrossStatePercent = GetCrossStateParcent();
+		}
+		else
+		{//アイテム非保持状態
+			fCrossStatePercent = 0.0f;
+		}
+
+		//十字架UIのゲージ減少反映処理
+		D3DXVECTOR2 SizeDef = m_pCrossUI->GetSizeDefault();
+
+		m_pCrossUI->SetSize(D3DXVECTOR3(SizeDef.x, SizeDef.y * fCrossStatePercent, 0.0f));
+		m_pCrossUI->SetPos(D3DXVECTOR3(m_posDefCrossUI.x, m_posDefCrossUI.y + (SizeDef.y - SizeDef.y * fCrossStatePercent) / 2, 0.0f));
+
+		m_pCrossUI->SetAnim(D3DXVECTOR2(0.0f, 1.0 + fCrossStatePercent), D3DXVECTOR2(1.0f, 1.0f));
 	}
-	else
+
+	//吹き出しUI
+	if (m_pPopUI != nullptr)
 	{
-		fCrossStatePercent = 0.0f;
+		D3DXVECTOR3 PlayerPos = GetPos();
+		m_pPopUI->SetPos(D3DXVECTOR3(PlayerPos.x + 20.0f, PlayerPos.y + 100.0f, PlayerPos.z));
+		
+		
+		if (GetState() == CObjectCharacter::STATE_EGG)
+		{
+			m_pPopUI->SetColorA(0.0f);
+		}
+		else
+		{
+			m_pPopUI->SetColorA(1.0f);
+		}
+		
 	}
-
-	D3DXVECTOR2 SizeDef = m_pCrossUI->GetSizeDefault();
-
-	m_pCrossUI->SetSize(D3DXVECTOR3(SizeDef.x, SizeDef.y * fCrossStatePercent, 0.0f));
-	m_pCrossUI->SetPos(D3DXVECTOR3(m_posDefCrossUI.x, m_posDefCrossUI.y + (SizeDef.y - SizeDef.y * fCrossStatePercent) / 2, 0.0f));
-
-	m_pCrossUI->SetAnim(D3DXVECTOR2(0.0f, 1.0+fCrossStatePercent), D3DXVECTOR2(1.0f, 1.0f));
 
 	//デバッグキーの処理と設定
 	DebugKey();
@@ -268,6 +305,13 @@ void CGamePlayer::InitUI()
 		{
 			m_pCrossUIBg->SetPos(D3DXVECTOR3(LIFE_POS00.x + 25, LIFE_POS00.y - 110.0f, LIFE_POS00.z));
 			m_pCrossUIBg->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.2f));
+		}
+
+		//吹き出しUI
+		if (m_pPopUI != nullptr)
+		{
+			D3DXVECTOR3 PlayerPos=GetPos();
+			m_pPopUI->SetPos(D3DXVECTOR3(PlayerPos.x+20.0f, PlayerPos.y - 100.0f, PlayerPos.z));
 		}
 
 		if (m_pP_NumUI != nullptr)

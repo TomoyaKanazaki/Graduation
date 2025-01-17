@@ -18,6 +18,7 @@ class CLifeUi;
 class CObjectX;
 class CScore;
 class CCrossUi;
+class CPopUi;
 
 //オブジェクトプレイヤークラス
 class CGamePlayer : public CPlayer
@@ -50,6 +51,7 @@ private:
 	CObjectBillboard* m_pP_NumUI;	//プレイヤー番号UI		
 	CCrossUi* m_pCrossUI;			//十字架UI
 	CCrossUi* m_pCrossUIBg;			//十字架UI背景
+	CPopUi* m_pPopUI;				//吹き出しUI
 
 	D3DXVECTOR2 m_posDefCrossUI;
 };

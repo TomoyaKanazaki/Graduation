@@ -1,13 +1,12 @@
 //============================================
 //
-//	オブジェクト2Dのサンプル [SampleObj2D.cpp]
-//	Author:sakamoto kai
+//	十字架アイテムのUI [crossUI.cpp]
+//	Author:澗口将太郎
 //
 //============================================
 #include "crossUI.h"
 #include "renderer.h"
 #include "manager.h"
-#include "number.h"
 
 //==========================================
 //  定数定義
