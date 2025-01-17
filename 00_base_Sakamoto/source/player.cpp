@@ -1925,3 +1925,12 @@ CListManager<CPlayer>* CPlayer::GetList(void)
 {
 	return m_pList;
 }
+
+//====================================================================
+// \š‰Ë•ÛŠÔ‚Ìæ“¾
+//====================================================================
+float CPlayer::GetCrossStateParcent(void)
+{
+	float StateParcent = 1.0f - m_fCrossTimer / CROSS_TIME;
+	return StateParcent;
+}

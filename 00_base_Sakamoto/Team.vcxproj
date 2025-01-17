@@ -26,6 +26,7 @@
     <ClCompile Include="source\bowabowa.cpp" />
     <ClCompile Include="source\camera.cpp" />
     <ClCompile Include="source\characterManager.cpp" />
+    <ClCompile Include="source\crossUI.cpp" />
     <ClCompile Include="source\effect.cpp" />
     <ClCompile Include="source\EventMovie.cpp" />
     <ClCompile Include="source\footprint.cpp" />
@@ -114,6 +115,7 @@
     <ClInclude Include="source\bowabowa.h" />
     <ClInclude Include="source\camera.h" />
     <ClInclude Include="source\characterManager.h" />
+    <ClInclude Include="source\crossUI.h" />
     <ClInclude Include="source\effect.h" />
     <ClInclude Include="source\EventMovie.h" />
     <ClInclude Include="source\footprint.h" />

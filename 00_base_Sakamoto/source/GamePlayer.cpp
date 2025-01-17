@@ -15,6 +15,7 @@
 #include "number.h"
 #include "score.h"
 #include "objectBillboard.h"
+#include "crossUI.h"
 
 //===========================================
 // 定数定義
@@ -33,6 +34,8 @@ namespace
 CGamePlayer::CGamePlayer(int nPriority) : CPlayer(nPriority),
 m_pScore(nullptr),
 m_pLifeUi(nullptr),
+m_pCrossUI(nullptr),
+m_pCrossUIBg(nullptr),
 m_pP_NumUI(nullptr)
 {
 	m_Grid.x = 0;
@@ -87,6 +90,18 @@ HRESULT CGamePlayer::Init(int PlayNumber)
 		m_pScore = CScore::Create();
 	}
 
+	//十字架アイテムの保持状態UIの生成
+	if (m_pCrossUI == nullptr)
+	{
+		m_pCrossUI = CCrossUi::Create();
+	}
+
+	//十字架アイテムの保持状態UI背景の生成
+	if (m_pCrossUIBg == nullptr)
+	{
+		m_pCrossUIBg = CCrossUi::Create();
+	}
+
 	//所持するUIの初期化
 	InitUI();
 
@@ -107,10 +122,22 @@ void CGamePlayer::Uninit(void)
 		m_pScore = nullptr;
 	}
 
-	// スコアの削除
-	if (m_pScore != nullptr)
+	// ライフの削除
+	if (m_pLifeUi != nullptr)
 	{
-		m_pScore = nullptr;
+		m_pLifeUi = nullptr;
+	}
+
+	// 十字架UIの削除
+	if (m_pCrossUI != nullptr)
+	{
+		m_pCrossUI = nullptr;
+	}
+
+	// 十字架UIh背景の削除
+	if (m_pCrossUIBg != nullptr)
+	{
+		m_pCrossUIBg = nullptr;
 	}
 }
 
@@ -119,7 +146,25 @@ void CGamePlayer::Uninit(void)
 //====================================================================
 void CGamePlayer::Update(void)
 {
+	float fCrossStatePercent;
+
 	CPlayer::Update();
+
+	if (GetItemType() != TYPE_NONE)
+	{
+		fCrossStatePercent = GetCrossStateParcent();
+	}
+	else
+	{
+		fCrossStatePercent = 0.0f;
+	}
+
+	D3DXVECTOR2 SizeDef = m_pCrossUI->GetSizeDefault();
+
+	m_pCrossUI->SetSize(D3DXVECTOR3(SizeDef.x, SizeDef.y * fCrossStatePercent, 0.0f));
+	m_pCrossUI->SetPos(D3DXVECTOR3(m_posDefCrossUI.x, m_posDefCrossUI.y + (SizeDef.y - SizeDef.y * fCrossStatePercent) / 2, 0.0f));
+
+	m_pCrossUI->SetAnim(D3DXVECTOR2(0.0f, 1.0+fCrossStatePercent), D3DXVECTOR2(1.0f, 1.0f));
 
 	//デバッグキーの処理と設定
 	DebugKey();
@@ -211,6 +256,20 @@ void CGamePlayer::InitUI()
 			m_pScore->SetPos(D3DXVECTOR3(50.0f, 40.0f, 0.0f));
 		}
 
+		//十字架UI
+		if (m_pCrossUI != nullptr)
+		{
+			m_pCrossUI->SetPos(D3DXVECTOR3(LIFE_POS00.x+25, LIFE_POS00.y-110.0f, LIFE_POS00.z));
+			m_posDefCrossUI = D3DXVECTOR2(LIFE_POS00.x+25, LIFE_POS00.y - 110.0f);
+		}
+
+		//十字架UI背景
+		if (m_pCrossUIBg != nullptr)
+		{
+			m_pCrossUIBg->SetPos(D3DXVECTOR3(LIFE_POS00.x + 25, LIFE_POS00.y - 110.0f, LIFE_POS00.z));
+			m_pCrossUIBg->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.2f));
+		}
+
 		if (m_pP_NumUI != nullptr)
 		{
 			m_pP_NumUI->SetPos(GetPos());
@@ -250,7 +309,6 @@ void CGamePlayer::InitUI()
 		break;
 	}
 }
-
 //====================================================================
 // デバッグボタン
 //====================================================================

@@ -295,6 +295,9 @@
     <ClCompile Include="source\bgObjManager.cpp">
       <Filter>ソース ファイル\Map\System</Filter>
     </ClCompile>
+    <ClCompile Include="source\crossUI.cpp">
+      <Filter>ソース ファイル\Ui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\object.h">
@@ -548,6 +551,9 @@
     </ClInclude>
     <ClInclude Include="source\bgObjManager.h">
       <Filter>ソース ファイル\Map\System</Filter>
+    </ClInclude>
+    <ClInclude Include="source\crossUI.h">
+      <Filter>ソース ファイル\Ui</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
