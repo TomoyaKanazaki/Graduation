@@ -957,24 +957,24 @@ void CPlayer::CollisionMoveRailBlock(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldTh
 //====================================================================
 void CPlayer::CollisionWaitRock(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D3DXVECTOR3& sizeThis, useful::COLLISION XYZ)
 {
-	if (m_bPressObj == true)
+	/*if (m_bPressObj == true)
 	{
 		return;
-	}
+	}*/
 
 	// 岩のリスト構造が無ければ抜ける
 	if (CRollRock::GetList() == nullptr) { return; }
 	std::list<CRollRock*> list = CRollRock::GetList()->GetList();    // リストを取得
 
 	// 岩リストの中身を確認する
-	for (CRollRock* pRailBlock : list)
+	for (CRollRock* pRollRock : list)
 	{
-		D3DXVECTOR3 pos = D3DXVECTOR3(pRailBlock->GetPos().x, 0.0f, pRailBlock->GetPos().z);
-		D3DXVECTOR3 posOld = pRailBlock->GetPosOld();
-		D3DXVECTOR3 Move = (pos - posOld);
-		D3DXVECTOR3 Size = pRailBlock->GetSize();
+		D3DXVECTOR3 pos = D3DXVECTOR3(pRollRock->GetPos().x, 0.0f, pRollRock->GetPos().z);
+		D3DXVECTOR3 posOld = pRollRock->GetPosOld();
+		D3DXVECTOR3 Move = pRollRock->GetMove();
+		D3DXVECTOR3 Size = pRollRock->GetSize();
 
-		switch (XYZ)
+		/*switch (XYZ)
 		{
 		case useful::COLLISION_X:
 			if (abs(Move.x) > 0.0f)
@@ -989,16 +989,16 @@ void CPlayer::CollisionWaitRock(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D
 				return;
 			}
 			break;
-		}
+		}*/
 
 		// 矩形の当たり判定
-		if (useful::CollisionBlock(pos, pos, Move, Size, &posThis, posOldThis, &m_move, &m_Objmove, sizeThis, &m_bJump, XYZ) == true)
+		if (useful::CollisionBlock(pos, posOld, Move, Size, &posThis, posOldThis, &m_move, &m_Objmove, sizeThis, &m_bJump, XYZ) == true)
 		{
 			//待機状態にする
 			SetState(STATE_WAIT);
 			// 向き状態の設定
 			m_pMoveState->SetRotState(CMoveState::ROTSTATE_WAIT);
-			posThis = m_Grid.ToWorld();
+			//posThis = m_Grid.ToWorld();
 		}
 	}
 }
