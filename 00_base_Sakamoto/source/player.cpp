@@ -379,10 +379,10 @@ void CPlayer::Update(void)
 
 		if (state != STATE_EGG)
 		{
-			ObjPosUpdate(posThis, posOldThis, sizeThis);
+			//ObjPosUpdate(posThis, posOldThis, sizeThis);
 		}
 
-		if (state == STATE_WALK)
+		if (state == STATE_WALK || state == STATE_WAIT)
 		{
 			// 位置更新処理
 			PosUpdate(posThis, posOldThis, sizeThis);
@@ -864,10 +864,10 @@ void CPlayer::CollisionWall(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D3DXV
 //====================================================================
 void CPlayer::CollisionWaitRailBlock(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D3DXVECTOR3& sizeThis, useful::COLLISION XYZ)
 {
-	if (m_bPressObj == true)
+	/*if (m_bPressObj == true)
 	{
 		return;
-	}
+	}*/
 
 	// レールブロックのリスト構造が無ければ抜ける
 	if (CRailBlock::GetList() == nullptr) { return; }
@@ -878,27 +878,28 @@ void CPlayer::CollisionWaitRailBlock(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldTh
 	{
 		D3DXVECTOR3 pos = pRailBlock->GetPos();
 		D3DXVECTOR3 posOld = pRailBlock->GetPosOld();
-		D3DXVECTOR3 Move = (pos - posOld);
+		//D3DXVECTOR3 Move = (pos - posOld);
+		D3DXVECTOR3 Move = pRailBlock->GetMove();
 		D3DXVECTOR3 Size = pRailBlock->GetSize();
 
-		if (abs(Move.x) > 0.01f)
+		/*if (abs(Move.x) > 0.01f)
 		{
 			return;
 		}
 		if (abs(Move.z) > 0.01f)
 		{
 			return;
-		}
+		}*/
 
 		// 矩形の当たり判定
-		if (useful::CollisionBlock(pos, pos, Move, Size, &posThis, posOldThis, &m_move, &m_Objmove, sizeThis, &m_bJump, XYZ) == true)
+		if (useful::CollisionBlock(pos, posOld, Move, Size, &posThis, posOldThis, &m_move, &m_Objmove, sizeThis, &m_bJump, XYZ) == true)
 		{
 			//待機状態にする
 			SetState(STATE_WAIT);
 
 			// 向き状態の設定
 			m_pMoveState->SetRotState(CMoveState::ROTSTATE_WAIT);
-			posThis = m_Grid.ToWorld();
+			//posThis = m_Grid.ToWorld();
 		}
 	}
 }
@@ -1458,14 +1459,14 @@ void CPlayer::ObjPosUpdate(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D3DXVE
 	posThis.x += m_Objmove.x * CManager::GetInstance()->GetGameSpeed() * fSpeed;
 
 	// 当たり判定
-	CollisionMoveRailBlock(posThis, posOldThis, sizeThis, useful::COLLISION_X);		// レールブロック
-	CollisionMoveRock(posThis, posOldThis, sizeThis, useful::COLLISION_X);			// 岩
+	//CollisionMoveRailBlock(posThis, posOldThis, sizeThis, useful::COLLISION_X);		// レールブロック
+	//CollisionMoveRock(posThis, posOldThis, sizeThis, useful::COLLISION_X);			// 岩
 
 	//Z軸の位置更新
 	posThis.z += m_Objmove.z * CManager::GetInstance()->GetGameSpeed() * fSpeed;
 
-	CollisionMoveRailBlock(posThis, posOldThis, sizeThis, useful::COLLISION_Z);		// レールブロック
-	CollisionMoveRock(posThis, posOldThis, sizeThis, useful::COLLISION_Z);			// 岩
+	//CollisionMoveRailBlock(posThis, posOldThis, sizeThis, useful::COLLISION_Z);		// レールブロック
+	//CollisionMoveRock(posThis, posOldThis, sizeThis, useful::COLLISION_Z);			// 岩
 }
 
 //====================================================================

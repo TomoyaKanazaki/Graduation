@@ -393,7 +393,37 @@ bool useful::CollisionBlock(
 	{
 	case useful::COLLISION_X:
 
+		// 相手の右と自分の左
 		//＋から－の面
+		if ((PosOldPair.x + SizePair.x <= pPosOldMy.x - SizeMy.x) &&	// 前回の位置同士が当たってない
+			(PosPair.x + SizePair.x > pPosMy->x - SizeMy.x) &&			// 現在の位置同士が当たってる
+
+			(PosPair.z + SizePair.z > pPosMy->z - SizeMy.z) &&			// Z軸の判定
+			(PosPair.z - SizePair.z < pPosMy->z + SizeMy.z))
+		{
+			// 位置を更新
+			pPosMy->x = PosPair.x + SizePair.x + SizeMy.x - pMoveMy->x + MovePair.x;
+			pMoveMy->x = 0.0f;
+
+			return true;
+		}
+
+		// 相手の左と自分の右
+		//－から＋の面
+		if ((PosOldPair.x - SizePair.x >= pPosOldMy.x + SizeMy.x) &&	// 前回の位置同士が当たってない
+			(PosPair.x - SizePair.x < pPosMy->x + SizeMy.x) &&			// 現在の位置同士が当たってる
+
+			(PosPair.z + SizePair.z > pPosMy->z - SizeMy.z) &&			// Z軸の判定
+			(PosPair.z - SizePair.z < pPosMy->z + SizeMy.z))
+		{
+			// 位置を更新
+			pPosMy->x = PosPair.x - SizePair.x - SizeMy.x - pMoveMy->x + MovePair.x;
+			pMoveMy->x = 0.0f;
+
+			return true;
+		}
+
+#if 0
 		if (PosPair.x + SizePair.x > pPosMy->x - SizeMy.x &&
 			(PosOldPair.x + SizePair.x <= pPosMy->x - SizeMy.x ||
 				PosPair.x + SizePair.x <= pPosOldMy.x - SizeMy.x ||
@@ -401,23 +431,23 @@ bool useful::CollisionBlock(
 					PosOldPair.x + SizePair.x <= pPosOldMy.x - SizeMy.x &&
 					PosOldPair.x + SizePair.x >= pPosMy->x - SizeMy.x)) &&
 			PosPair.z + SizePair.z > pPosMy->z - SizeMy.z &&
-			PosPair.z - SizePair.z < pPosMy->z + SizeMy.z &&
+			PosPair.z - SizePair.z < pPosMy->z + SizeMy.z/* &&
 			PosPair.y + SizePair.y > pPosMy->y &&
-			PosPair.y - SizePair.y < pPosMy->y + SizeMy.y
+			PosPair.y - SizePair.y < pPosMy->y + SizeMy.y*/
 			)
 		{
-			if (MovePair.x >= 0.0f)
-			{
-				pPosMy->x = pPosOldMy.x - SizeMy.x + SizeMy.x + MovePair.x;
+			//if (MovePair.x >= 0.0f)
+			{ // 相手が右に進んでる場合
+				pPosMy->x = pPosOldMy.x + MovePair.x + pMoveMy->x;
 			}
-			else
-			{
-				pPosMy->x = PosPair.x + SizePair.x + SizeMy.x + MovePair.x;
-			}
+			//else
+			//{ // 相手が左に進んでる場合
+			//	pPosMy->x = PosPair.x + SizePair.x + SizeMy.x + MovePair.x + pMoveMy->x;
+			//}
 			pMoveMy->x = 0.0f;
 			return true;
 		}
-
+		// 相手の左と自分の右
 		//－から＋の面
 		if (PosPair.x - SizePair.x < pPosMy->x + SizeMy.x &&
 			(PosOldPair.x - SizePair.x >= pPosMy->x + SizeMy.x ||
@@ -426,22 +456,24 @@ bool useful::CollisionBlock(
 					PosOldPair.x - SizePair.x >= pPosOldMy.x + SizeMy.x &&
 					PosOldPair.x - SizePair.x <= pPosMy->x + SizeMy.x)) &&
 			PosPair.z + SizePair.z > pPosMy->z - SizeMy.z &&
-			PosPair.z - SizePair.z < pPosMy->z + SizeMy.z &&
+			PosPair.z - SizePair.z < pPosMy->z + SizeMy.z/* &&
 			PosPair.y + SizePair.y >= pPosMy->y &&
-			PosPair.y - SizePair.y <= pPosMy->y + SizeMy.y
+			PosPair.y - SizePair.y <= pPosMy->y + SizeMy.y*/
 			)
 		{
-			if (MovePair.x <= 0.0f)
-			{
-				pPosMy->x = pPosOldMy.x + SizeMy.x - SizeMy.x + MovePair.x;
+			//if (MovePair.x <= 0.0f)
+			{ // 相手が左に進んでる場合
+				pPosMy->x = pPosOldMy.x + SizeMy.x - SizeMy.x + MovePair.x + pMoveMy->x;
 			}
-			else
-			{
-				pPosMy->x = PosPair.x - SizePair.x - SizeMy.x + MovePair.x;
-			}
+			//else
+			//{ // 相手が右に進んでる場合
+			//	pPosMy->x = PosPair.x - SizePair.x - SizeMy.x + MovePair.x + pMoveMy->x;
+			//}
 			pMoveMy->x = 0.0f;
 			return true;
 		}
+#endif // 0
+
 
 		break;
 
@@ -499,6 +531,36 @@ bool useful::CollisionBlock(
 	case useful::COLLISION_Z:
 
 		//＋から－の面
+		if ((PosOldPair.z + SizePair.z <= pPosOldMy.z - SizeMy.z) &&	// 前回の位置同士が当たってない
+			(PosPair.z + SizePair.z > pPosMy->z - SizeMy.z) &&			// 現在の位置同士が当たってる
+
+			(PosPair.x + SizePair.x > pPosMy->x - SizeMy.x) &&			// X軸の判定
+			(PosPair.x - SizePair.x < pPosMy->x + SizeMy.x))
+		{
+			// 位置を更新
+			pPosMy->z = PosPair.z + SizePair.z + SizeMy.z - pMoveMy->z + MovePair.z;
+			pMoveMy->z = 0.0f;
+
+			return true;
+		}
+
+		//-から+の面
+		if ((PosOldPair.z - SizePair.z >= pPosOldMy.z + SizeMy.z) &&	// 前回の位置同士が当たってない
+			(PosPair.z - SizePair.z < pPosMy->z + SizeMy.z) &&			// 現在の位置同士が当たってる
+
+			(PosPair.x + SizePair.x > pPosMy->x - SizeMy.x) &&			// X軸の判定
+			(PosPair.x - SizePair.x < pPosMy->x + SizeMy.x))
+		{
+			// 位置を更新
+			pPosMy->z = PosPair.z - SizePair.z - SizeMy.z - pMoveMy->z + MovePair.z;
+			pMoveMy->z = 0.0f;
+
+			return true;
+		}
+
+#if 0
+
+		//＋から－の面
 		if (PosPair.z + SizePair.z > pPosMy->z - SizeMy.z &&
 			(PosOldPair.z + SizePair.z <= pPosMy->z - SizeMy.z ||
 				PosPair.z + SizePair.z <= pPosOldMy.z - SizeMy.z ||
@@ -547,6 +609,7 @@ bool useful::CollisionBlock(
 			pMoveMy->z = 0.0f;
 			return true;
 		}
+#endif
 
 		break;
 	}
