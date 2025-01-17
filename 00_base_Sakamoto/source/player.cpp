@@ -314,7 +314,8 @@ void CPlayer::Update(void)
 			{
 				if (CGame::GetInstance()->GetEvent() == true)
 				{
-
+					// ‘Ò‹@ó‘Ô‚É‚·‚é
+					state = STATE_WAIT;
 				}
 				else
 				{
