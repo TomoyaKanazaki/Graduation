@@ -1,10 +1,10 @@
 //============================================
 //
-//	十字架アイテムのUI [crossUI.cpp]
+//	吹き出し型UI [popUI.cpp]
 //	Author:澗口将太郎
 //
 //============================================
-#include "crossUI.h"
+#include "popUI.h"
 #include "renderer.h"
 #include "manager.h"
 
@@ -14,16 +14,16 @@
 namespace
 {
 
-	const float SAMPLE_WIGHT = 125.0f;		//横幅
-	const float SAMPLE_HEIGHT = 125.0f;		//縦幅
-	const char TEXTURE_PASS[] = "data\\TEXTURE\\UI\\cross_UI.png";
+	const float SAMPLE_WIGHT = 50.0f;		//横幅
+	const float SAMPLE_HEIGHT = 50.0f;		//縦幅
+	const char TEXTURE_PASS[] = "data\\TEXTURE\\UI\\popUI.png";
 
 }
 
 //====================================================================
 //コンストラクタ
 //====================================================================
-CCrossUi::CCrossUi(int nPriority) : CObject2D(nPriority)
+CPopUi::CPopUi(int nPriority) : CObjectBillboard(nPriority)
 {
 	m_fStateCountParcent = 0.0f;
 }
@@ -31,7 +31,7 @@ CCrossUi::CCrossUi(int nPriority) : CObject2D(nPriority)
 //====================================================================
 //デストラクタ
 //====================================================================
-CCrossUi::~CCrossUi()
+CPopUi::~CPopUi()
 {
 
 }
@@ -39,14 +39,14 @@ CCrossUi::~CCrossUi()
 //====================================================================
 //生成処理
 //====================================================================
-CCrossUi* CCrossUi::Create(int nPriority)
+CPopUi* CPopUi::Create(int nPriority)
 {
-	CCrossUi* pSample2D = nullptr;
+	CPopUi* pSample2D = nullptr;
 
 	if (pSample2D == nullptr)
 	{
 		//オブジェクト2Dの生成
-		pSample2D = new CCrossUi(nPriority);
+		pSample2D = new CPopUi(nPriority);
 	}
 
 	//オブジェクトの初期化処理
@@ -61,14 +61,15 @@ CCrossUi* CCrossUi::Create(int nPriority)
 //====================================================================
 //初期化処理
 //====================================================================
-HRESULT CCrossUi::Init(void)
+HRESULT CPopUi::Init(void)
 {
-	CObject2D::Init();
+	CObjectBillboard::Init();
 
 	//テクスチャ設定
 	SetTexture(TEXTURE_PASS);
 
-	SetSize(D3DXVECTOR3(SAMPLE_WIGHT, SAMPLE_HEIGHT, 0.0f));
+	SetWidth(SAMPLE_WIGHT);
+	SetHeight(SAMPLE_HEIGHT);
 
 	return S_OK;
 }
@@ -76,19 +77,19 @@ HRESULT CCrossUi::Init(void)
 //====================================================================
 //終了処理
 //====================================================================
-void CCrossUi::Uninit(void)
+void CPopUi::Uninit(void)
 {
-	CObject2D::Uninit();
+	CObjectBillboard::Uninit();
 }
 
 //====================================================================
 //更新処理
 //====================================================================
-void CCrossUi::Update(void)
+void CPopUi::Update(void)
 {
 
 	//頂点情報の更新
-	CObject2D::Update();
+	CObjectBillboard::Update();
 
 	//----頂点情報を変更したい場合は以下のコードを使用すること-----
 	//VERTEX_2D* pVtx;	//頂点ポインタを所得
@@ -121,15 +122,7 @@ void CCrossUi::Update(void)
 //====================================================================
 //描画処理
 //====================================================================
-void CCrossUi::Draw(void)
+void CPopUi::Draw(void)
 {
-	CObject2D::Draw();
-}
-
-//====================================================================
-//UIのデフォルトのサイズ取得
-//====================================================================
-D3DXVECTOR2 CCrossUi::GetSizeDefault(void)
-{
-	return D3DXVECTOR2(SAMPLE_WIGHT,SAMPLE_HEIGHT);
+	CObjectBillboard::Draw();
 }

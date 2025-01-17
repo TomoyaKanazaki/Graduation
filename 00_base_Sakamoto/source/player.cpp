@@ -314,7 +314,8 @@ void CPlayer::Update(void)
 			{
 				if (CGame::GetInstance()->GetEvent() == true)
 				{
-
+					// 待機状態にする
+					state = STATE_WAIT;
 				}
 				else
 				{
@@ -596,24 +597,31 @@ void CPlayer::Attack(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis)
 {
 	STATE state = GetState();		// 状態
 
+	// プレイヤー番号の取得
+	int nNumPlayer = GetPlayNumber();
+
 	if (state == STATE_WALK)
 	{
 		//キーボードの取得
 		CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
 		CInputJoypad* pInputJoypad = CManager::GetInstance()->GetInputJoyPad();
 
-		if (pInputKeyboard->GetTrigger(DIK_SPACE) || pInputJoypad->GetTrigger(CInputJoypad::BUTTON_A, 0))
+		for (int i = 0; i < MAX_PLAYER; ++i)
 		{
-			// 火炎放射
-			CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_FIRE);
-			D3DXMATRIX mat = *GetUseMultiMatrix();
-			D3DXVECTOR3 ef = useful::CalcMatrix(posThis, rotThis, mat);
+			if (pInputKeyboard->GetTrigger(DIK_SPACE)
+				|| pInputJoypad->GetTrigger(CInputJoypad::BUTTON_A, i))
+			{
+				// 火炎放射
+				CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_FIRE);
+				D3DXMATRIX mat = *GetUseMultiMatrix();
+				D3DXVECTOR3 ef = useful::CalcMatrix(posThis, rotThis, mat);
 
-			MyEffekseer::EffectCreate(CMyEffekseer::TYPE_SMOKE, false, ef, rotThis);
+				MyEffekseer::EffectCreate(CMyEffekseer::TYPE_SMOKE, false, ef, rotThis);
 
-			CFire::Create("data\\model\\fireball.x", posThis, rotThis);
-			SetState(STATE_ATTACK);
-			m_nStateCount = FIRE_STOPTIME;
+				CFire::Create("data\\model\\fireball.x", posThis, rotThis);
+				SetState(STATE_ATTACK);
+				m_nStateCount = FIRE_STOPTIME;
+			}
 		}
 	}
 }
