@@ -322,33 +322,38 @@ void CDevilHole::CollisionOpen(D3DXVECTOR3& pos)
 			{
 				m_pHoleKey[nCnt] = CObjectX::Create("data\\MODEL\\04_devilhole\\devil_hole_fence.x");
 				m_pHoleKey[nCnt]->SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
-				//m_pHoleKey[nCnt]->SetMultiMatrix(true);
+				D3DXVECTOR3 posEffect = {};
 
 				switch (nCnt)
 				{
 				case 0:	//上
-					m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(pos.x, pos.y, pos.z + MODEL_SET_DISTANCE));
+					posEffect = D3DXVECTOR3(pos.x, pos.y, pos.z + MODEL_SET_DISTANCE);
+					m_pHoleKey[nCnt]->SetPos(posEffect);
 					m_pHoleKey[nCnt]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 1.0f, 0.0f));
 					break;
 
 				case 1:	//下
-					m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(pos.x, pos.y, pos.z - MODEL_SET_DISTANCE));
+					posEffect = D3DXVECTOR3(pos.x, pos.y, pos.z - MODEL_SET_DISTANCE);
+					m_pHoleKey[nCnt]->SetPos(posEffect);
 					m_pHoleKey[nCnt]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.0f, 0.0f));
 					break;
 
 				case 2:	//右
-					m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(pos.x + MODEL_SET_DISTANCE, pos.y, pos.z));
+					posEffect = D3DXVECTOR3(pos.x + MODEL_SET_DISTANCE, pos.y, pos.z);
+					m_pHoleKey[nCnt]->SetPos(posEffect);
 					m_pHoleKey[nCnt]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * -0.5f, 0.0f));
 					break;
 
 				case 3:	//左
-					m_pHoleKey[nCnt]->SetPos(D3DXVECTOR3(pos.x - MODEL_SET_DISTANCE, pos.y, pos.z));
+					posEffect = D3DXVECTOR3(pos.x - MODEL_SET_DISTANCE, pos.y, pos.z);
+					m_pHoleKey[nCnt]->SetPos(posEffect);
 					m_pHoleKey[nCnt]->SetRot(D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f));
 					break;
 				}
 
 				m_bSet[nCnt] = true;
 				pPlayer->SetItemType(CPlayer::TYPE_NONE);
+				MyEffekseer::EffectCreate(CMyEffekseer::TYPE_UNLOCKING, false, posEffect, GetRot());
 
 				//サウンド生成
 				CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_UNLOCK);

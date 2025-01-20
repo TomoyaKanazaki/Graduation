@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Root>
-  <WindowWidth>1920</WindowWidth>
-  <WindowHeight>1080</WindowHeight>
-  <WindowPosX>0</WindowPosX>
+  <WindowWidth>1888</WindowWidth>
+  <WindowHeight>1064</WindowHeight>
+  <WindowPosX>16</WindowPosX>
   <WindowPosY>0</WindowPosY>
-  <WindowIsMaximumMode>1</WindowIsMaximumMode>
+  <WindowIsMaximumMode>0</WindowIsMaximumMode>
   <Docks>
     <Effekseer.GUI.Dock.ViewerController>Open</Effekseer.GUI.Dock.ViewerController>
     <Effekseer.GUI.Dock.NodeTreeView>Open</Effekseer.GUI.Dock.NodeTreeView>
@@ -15,6 +15,5 @@
     <Effekseer.GUI.Dock.ScaleValues>Open</Effekseer.GUI.Dock.ScaleValues>
     <Effekseer.GUI.Dock.RendererCommonValues>Open</Effekseer.GUI.Dock.RendererCommonValues>
     <Effekseer.GUI.Dock.RendererValues>Open</Effekseer.GUI.Dock.RendererValues>
-    <Effekseer.GUI.Dock.Option>Open</Effekseer.GUI.Dock.Option>
   </Docks>
 </Root>
