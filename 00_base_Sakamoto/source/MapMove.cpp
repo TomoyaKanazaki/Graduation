@@ -51,7 +51,7 @@ namespace
 	const int EFFECT_NUM = 3; // 一度に生成するエフェクトの数
 	const float EFFECT_RANGE = 1.5f; // エフェクトの生成間隔
 
-	const float SLOPE_MAG = 2.0f;		// 傾き時の移動速度の倍率
+	const float SLOPE_MAG = 1.5f;		// 傾き時の移動速度の倍率
 }
 
 //====================================================================
@@ -1265,7 +1265,7 @@ float CMapMove::MoveSlopeX(float Move, SPEED& Speed)
 	}
 	else if (Move < 0.0f)
 	{
-		fSlopeMove = (D3DX_PI / (D3DX_PI - DevilRot.z)) * SLOPE_MAG;
+		fSlopeMove = (D3DX_PI / (D3DX_PI - DevilRot.z))/* * SLOPE_MAG*/;
 	}
 
 	if (fSlopeMove > 1.0f)
@@ -1280,6 +1280,8 @@ float CMapMove::MoveSlopeX(float Move, SPEED& Speed)
 	{
 		Speed = SPEED_NONE;
 	}
+
+	fSlopeMove;
 
 	return fSlopeMove;
 }
