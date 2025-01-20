@@ -1,10 +1,10 @@
 //============================================
 //
-//	吹き出し型UI [popUI.cpp]
+//	吹き出し型UI [popUIBg.cpp]
 //	Author:澗口将太郎
 //
 //============================================
-#include "popUI.h"
+#include "popUIBg.h"
 #include "renderer.h"
 #include "manager.h"
 
@@ -14,17 +14,16 @@
 namespace
 {
 
-	const float SAMPLE_WIGHT = 50.0f;		//横幅
-	const float SAMPLE_HEIGHT = 50.0f;		//縦幅
-	const char TEXPASS_CROSS[] = "data\\TEXTURE\\UI\\cross_UI.png";
-	const char TEXPASS_BOWABOWA[] = "data\\TEXTURE\\UI\\niku_manga.png";
+	const float SAMPLE_WIGHT = 75.0f;		//横幅
+	const float SAMPLE_HEIGHT = 75.0f;		//縦幅
+	const char TEXTURE_PASS[] = "data\\TEXTURE\\UI\\popUI.png";
 
 }
 
 //====================================================================
 //コンストラクタ
 //====================================================================
-CPopUi::CPopUi(int nPriority) : CObjectBillboard(nPriority)
+CPopUiBg::CPopUiBg(int nPriority) : CObjectBillboard(nPriority)
 {
 	m_fStateCountParcent = 0.0f;
 }
@@ -32,7 +31,7 @@ CPopUi::CPopUi(int nPriority) : CObjectBillboard(nPriority)
 //====================================================================
 //デストラクタ
 //====================================================================
-CPopUi::~CPopUi()
+CPopUiBg::~CPopUiBg()
 {
 
 }
@@ -40,14 +39,14 @@ CPopUi::~CPopUi()
 //====================================================================
 //生成処理
 //====================================================================
-CPopUi* CPopUi::Create(int nPriority)
+CPopUiBg* CPopUiBg::Create(int nPriority)
 {
-	CPopUi* pSample2D = nullptr;
+	CPopUiBg* pSample2D = nullptr;
 
 	if (pSample2D == nullptr)
 	{
 		//オブジェクト2Dの生成
-		pSample2D = new CPopUi(nPriority);
+		pSample2D = new CPopUiBg(nPriority);
 	}
 
 	//オブジェクトの初期化処理
@@ -62,12 +61,12 @@ CPopUi* CPopUi::Create(int nPriority)
 //====================================================================
 //初期化処理
 //====================================================================
-HRESULT CPopUi::Init(void)
+HRESULT CPopUiBg::Init(void)
 {
 	CObjectBillboard::Init();
 
 	//テクスチャ設定
-	SetTexture(TEXPASS_CROSS);
+	SetTexture(TEXTURE_PASS);
 
 	SetWidth(SAMPLE_WIGHT);
 	SetHeight(SAMPLE_HEIGHT);
@@ -78,7 +77,7 @@ HRESULT CPopUi::Init(void)
 //====================================================================
 //終了処理
 //====================================================================
-void CPopUi::Uninit(void)
+void CPopUiBg::Uninit(void)
 {
 	CObjectBillboard::Uninit();
 }
@@ -86,7 +85,7 @@ void CPopUi::Uninit(void)
 //====================================================================
 //更新処理
 //====================================================================
-void CPopUi::Update(void)
+void CPopUiBg::Update(void)
 {
 
 	//頂点情報の更新
@@ -123,28 +122,7 @@ void CPopUi::Update(void)
 //====================================================================
 //描画処理
 //====================================================================
-void CPopUi::Draw(void)
+void CPopUiBg::Draw(void)
 {
 	CObjectBillboard::Draw();
-}
-
-//====================================================================
-//表示内容変更処理
-//====================================================================
-void CPopUi::SetpopUIType(UI_TYPE type)
-{
-	switch (type)
-	{
-	case CPopUi::TYPE_CROSS:
-		SetTexture(TEXPASS_CROSS);
-		break;
-
-	case CPopUi::TYPE_BOWABOWA:
-		SetTexture(TEXPASS_BOWABOWA);
-		break;
-
-	default:
-		break;
-	}
-	
 }
