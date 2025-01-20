@@ -67,6 +67,7 @@ namespace MyEffekseer
 		"data\\EFFEKSEER\\Effect\\33_quake.efkefc",					// 揺れの破片
 		"data\\EFFEKSEER\\Effect\\34_debug_true.efkefc",			// デバッグ用true
 		"data\\EFFEKSEER\\Effect\\35_stage_limit.efkefc",			// ステージ端
+		"data\\EFFEKSEER\\Effect\\36_unlocking.efkefc",				// 解錠
 	};
 
 	//============================================
