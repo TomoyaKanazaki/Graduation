@@ -21,7 +21,7 @@ namespace
 {
 	const D3DXVECTOR3 SAMPLE_SIZE = D3DXVECTOR3(20.0f, 20.0f, 20.0f);		//“–‚½‚è”»’è
 	const char* MODEL_PASS = "data\\MODEL\\key.x"; // ƒ‚ƒfƒ‹ƒpƒX
-	const float MOVE_SCALE = sqrtf(50.0f * 50.0f * 2.0f); // ˆÚ“®•
+	const float MOVE_SCALE = sqrtf(100.0f * 100.0f * 4.0f); // ˆÚ“®•
 	const D3DXVECTOR3 ADD_ROT = D3DXVECTOR3(0.0f, 0.05f, 0.0f); // ‰ñ“]—Ê
 
 }
