@@ -871,11 +871,6 @@ void CPlayer::CollisionWall(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D3DXV
 //====================================================================
 void CPlayer::CollisionWaitRailBlock(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D3DXVECTOR3& sizeThis, useful::COLLISION XYZ)
 {
-	/*if (m_bPressObj == true)
-	{
-		return;
-	}*/
-
 	// レールブロックのリスト構造が無ければ抜ける
 	if (CRailBlock::GetList() == nullptr) { return; }
 	std::list<CRailBlock*> list = CRailBlock::GetList()->GetList();    // リストを取得
@@ -888,15 +883,6 @@ void CPlayer::CollisionWaitRailBlock(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldTh
 		//D3DXVECTOR3 Move = (pos - posOld);
 		D3DXVECTOR3 Move = pRailBlock->GetMove();
 		D3DXVECTOR3 Size = pRailBlock->GetSize();
-
-		/*if (abs(Move.x) > 0.01f)
-		{
-			return;
-		}
-		if (abs(Move.z) > 0.01f)
-		{
-			return;
-		}*/
 
 		// 矩形の当たり判定
 		if (useful::CollisionBlock(pos, posOld, Move, Size, &posThis, posOldThis, &m_move, &m_Objmove, sizeThis, &m_bJump, XYZ) == true)
@@ -936,6 +922,13 @@ void CPlayer::CollisionMoveRailBlock(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldTh
 		{
 			D3DXVECTOR3 MyposOld = pRailBlock->GetPosOld();
 			D3DXVECTOR3 MyMove = (Mypos - MyposOld);
+
+			// 移動量が過剰な場合に当たり判定を無効化する
+			if (MyMove.x * MyMove.x + MyMove.z * MyMove.z >= CMapSystem::GetInstance()->GetGritSize() * CMapSystem::GetInstance()->GetGritSize())
+			{
+				continue;
+			}
+
 			float MySize = CMapSystem::GetInstance()->GetGritSize() * 0.5f;
 
 			D3DXVECTOR3 Move = m_move;
@@ -1027,6 +1020,13 @@ void CPlayer::CollisionMoveRock(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D
 		{
 			D3DXVECTOR3 MyposOld = pRock->GetPosOld();
 			D3DXVECTOR3 MyMove = pRock->GetMove();
+
+			// 移動量が過剰な場合に当たり判定を無効化する
+			if (MyMove.x * MyMove.x + MyMove.z * MyMove.z >= CMapSystem::GetInstance()->GetGritSize() * CMapSystem::GetInstance()->GetGritSize())
+			{
+				continue;
+			}
+
 			float MySize = CMapSystem::GetInstance()->GetGritSize() * 0.5f;
 
 			D3DXVECTOR3 Move = m_move;
