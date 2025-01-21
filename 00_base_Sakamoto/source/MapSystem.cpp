@@ -877,6 +877,7 @@ HRESULT CMapSystem::CreateMap(unsigned int nSelect)
 	// レールマネージャーの破棄
 	if (pRailManager != nullptr)
 	{
+		pRailManager->Uninit();
 		delete pRailManager;
 		pRailManager = nullptr;
 	}
