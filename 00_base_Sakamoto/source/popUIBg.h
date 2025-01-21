@@ -1,30 +1,24 @@
 //============================================
 //
-//	吹き出し型UI [popUI.h]
+//	吹き出し型UI背景 [popUIBg.h]
 //	Author:澗口将太郎
 //
 //============================================
-#ifndef _POPUI_H_
-#define _POPUI_H_
+#ifndef _POPUIBG_H_
+#define _POPUIBG_H_
 
 #include "main.h"
 #include "objectBillboard.h"
 
 //オブジェクトプレイヤークラス
-class CPopUi : public CObjectBillboard
+class CPopUiBg : public CObjectBillboard
 {
 public:
 
-	CPopUi(int nPriority = 6);
-	~CPopUi();
+	CPopUiBg(int nPriority = 6);
+	~CPopUiBg();
 
-	enum UI_TYPE 
-	{
-		TYPE_CROSS=0,
-		TYPE_BOWABOWA
-	};
-
-	static CPopUi* Create(int nPriority = 6);
+	static CPopUiBg* Create(int nPriority = 6);
 
 	HRESULT Init(void);
 	void Uninit(void);
@@ -35,7 +29,6 @@ public:
 	float GetStateCount(void) { return m_fStateCountParcent; }
 	void SetStateCount(int StateCount) { m_fStateCountParcent = StateCount; }
 
-	void SetpopUIType(UI_TYPE type);
 
 private:
 	float m_fStateCountParcent;		//十字架保持状態のカウントの割合

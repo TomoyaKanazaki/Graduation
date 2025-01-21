@@ -74,6 +74,7 @@
     <ClCompile Include="source\Pause.cpp" />
     <ClCompile Include="source\player.cpp" />
     <ClCompile Include="source\popUI.cpp" />
+    <ClCompile Include="source\popUIBg.cpp" />
     <ClCompile Include="source\precompile.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -165,6 +166,7 @@
     <ClInclude Include="source\Pause.h" />
     <ClInclude Include="source\player.h" />
     <ClInclude Include="source\popUI.h" />
+    <ClInclude Include="source\popUIBg.h" />
     <ClInclude Include="source\precompile.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClInclude>

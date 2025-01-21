@@ -17,6 +17,7 @@
 #include "objectBillboard.h"
 #include "crossUI.h"
 #include "popUI.h"
+#include "popUIBg.h"
 
 //===========================================
 // 定数定義
@@ -37,11 +38,14 @@ m_pScore(nullptr),
 m_pLifeUi(nullptr),
 m_pCrossUI(nullptr),
 m_pCrossUIBg(nullptr),
+m_pPopUIBg(nullptr),
 m_pPopUI(nullptr),
 m_pP_NumUI(nullptr)
 {
 	m_Grid.x = 0;
 	m_Grid.z = 0;
+	m_fVariableSizePopUI = 0.4f;
+	m_fSizePopUI = 0.0f;
 }
 
 //====================================================================
@@ -104,6 +108,12 @@ HRESULT CGamePlayer::Init(int PlayNumber)
 		m_pCrossUIBg = CCrossUi::Create();
 	}
 	
+	//吹き出しUI背景の生成
+	if (m_pPopUIBg == nullptr)
+	{
+		m_pPopUIBg = CPopUiBg::Create();
+	}
+
 	//吹き出しUIの生成
 	if (m_pPopUI == nullptr)
 	{
@@ -148,6 +158,12 @@ void CGamePlayer::Uninit(void)
 		m_pCrossUIBg = nullptr;
 	}
 
+	// 吹き出しUI背景の削除
+	if (m_pPopUIBg != nullptr)
+	{
+		m_pPopUIBg = nullptr;
+	}
+
 	// 吹き出しUIの削除
 	if (m_pPopUI != nullptr)
 	{
@@ -185,13 +201,43 @@ void CGamePlayer::Update(void)
 		m_pCrossUI->SetAnim(D3DXVECTOR2(0.0f, 1.0 + fCrossStatePercent), D3DXVECTOR2(1.0f, 1.0f));
 	}
 
+	//吹き出しUI背景
+	if (m_pPopUIBg != nullptr)
+	{
+		//プレイヤー位置への追従更新
+		D3DXVECTOR3 PlayerPos = GetPos();
+		m_pPopUIBg->SetPos(D3DXVECTOR3(PlayerPos.x + 20.0f, PlayerPos.y + 100.0f, PlayerPos.z));
+		
+		m_fSizePopUI += m_fVariableSizePopUI;
+
+		if (m_fSizePopUI >= 15.0f|| m_fSizePopUI<=0.0f)
+		{
+			m_fVariableSizePopUI = m_fVariableSizePopUI * -1;
+		}
+		
+		m_pPopUIBg->SetHeight(75.0f + m_fSizePopUI);
+		m_pPopUIBg->SetWidth(75.0f + m_fSizePopUI);
+
+		if (GetState() == CObjectCharacter::STATE_EGG)
+		{
+			m_pPopUIBg->SetColorA(0.0f);
+		}
+		else
+		{
+			m_pPopUIBg->SetColorA(1.0f);
+		}
+		
+	}
+
 	//吹き出しUI
 	if (m_pPopUI != nullptr)
 	{
+		//プレイヤー位置への追従更新
 		D3DXVECTOR3 PlayerPos = GetPos();
 		m_pPopUI->SetPos(D3DXVECTOR3(PlayerPos.x + 20.0f, PlayerPos.y + 100.0f, PlayerPos.z));
-		
-		
+
+
+		//卵状態での透明化
 		if (GetState() == CObjectCharacter::STATE_EGG)
 		{
 			m_pPopUI->SetColorA(0.0f);
@@ -200,7 +246,17 @@ void CGamePlayer::Update(void)
 		{
 			m_pPopUI->SetColorA(1.0f);
 		}
-		
+
+
+		//表示内容の更新
+		if (GetItemType() != TYPE_NONE)
+		{//アイテム保持状態
+			m_pPopUI->SetpopUIType(CPopUi::TYPE_BOWABOWA);
+		}
+		else
+		{//アイテム非保持状態
+			m_pPopUI->SetpopUIType(CPopUi::TYPE_CROSS);
+		}
 	}
 
 	//デバッグキーの処理と設定
@@ -307,11 +363,18 @@ void CGamePlayer::InitUI()
 			m_pCrossUIBg->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.2f));
 		}
 
+		//吹き出しUI背景
+		if (m_pPopUIBg != nullptr)
+		{
+			D3DXVECTOR3 PlayerPos=GetPos();
+			m_pPopUIBg->SetPos(D3DXVECTOR3(PlayerPos.x+20.0f, PlayerPos.y - 100.0f, PlayerPos.z));
+		}
+
 		//吹き出しUI
 		if (m_pPopUI != nullptr)
 		{
-			D3DXVECTOR3 PlayerPos=GetPos();
-			m_pPopUI->SetPos(D3DXVECTOR3(PlayerPos.x+20.0f, PlayerPos.y - 100.0f, PlayerPos.z));
+			D3DXVECTOR3 PlayerPos = GetPos();
+			m_pPopUI->SetPos(D3DXVECTOR3(PlayerPos.x + 20.0f, PlayerPos.y - 100.0f, PlayerPos.z));
 		}
 
 		if (m_pP_NumUI != nullptr)
