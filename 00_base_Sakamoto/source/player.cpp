@@ -286,9 +286,9 @@ void CPlayer::Update(void)
 {
 	// 値を取得
 	D3DXVECTOR3 posThis = GetPos();			// 位置
-	D3DXVECTOR3 posOldThis = GetPosOld();		// 前回の位置
+	D3DXVECTOR3 posOldThis = GetPosOld();	// 前回の位置
 	D3DXVECTOR3 rotThis = GetRot();			// 向き
-	D3DXVECTOR3 sizeThis = GetSize();			// 大きさ
+	D3DXVECTOR3 sizeThis = GetSize();		// 大きさ
 	STATE state = GetState();				// 状態
 	STATE oldstate = GetOldState();			// 状態
 

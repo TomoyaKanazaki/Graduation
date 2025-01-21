@@ -194,9 +194,6 @@ HRESULT CGame::Init(void)
 		m_pEventMovie = CEventMovie::Create();
 	}
 
-	// ソフトクリームの生成
-	CItem::Create(CItem::TYPE_SOFTCREAM, CMapSystem::GetInstance()->GetCenter());
-
 	// プレイヤーを生成する
 	for (int i = 0; i < CManager::GetInstance()->GetGameMode(); ++i)
 	{
