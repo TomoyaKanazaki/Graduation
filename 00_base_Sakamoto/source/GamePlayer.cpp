@@ -339,15 +339,16 @@ void CGamePlayer::Death(void)
 				GetLifeUI()->GetNumber()->SetNumber(GetLife());
 			}
 
-			SetState(STATE_DEATH);
-			SetMove(INITVECTOR3);
-			SetObjMoveX(0.0f);
-			SetObjMoveZ(0.0f);
-			SetStateCount(150);
-
 			// ダメージ音(仮)
 			CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_DEATH);
 		}
+
+		// 死亡状態にする
+		SetState(STATE_DEATH);
+		SetMove(INITVECTOR3);
+		SetObjMoveX(0.0f);
+		SetObjMoveZ(0.0f);
+		SetStateCount(150);
 
 		// アイテムを所持していない状態にする
 		SetItemType(TYPE_NONE);
