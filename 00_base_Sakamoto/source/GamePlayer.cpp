@@ -19,6 +19,7 @@
 #include "popUI.h"
 #include "popUIBg.h"
 #include "bowabowa.h"
+#include "game.h"
 
 //===========================================
 // ’è”’è‹`
@@ -219,7 +220,7 @@ void CGamePlayer::Update(void)
 		m_pPopUIBg->SetHeight(75.0f + m_fSizePopUI);
 		m_pPopUIBg->SetWidth(75.0f + m_fSizePopUI);
 
-		if (GetState() == CObjectCharacter::STATE_EGG)
+		if (GetState() == CObjectCharacter::STATE_EGG||CGame::GetInstance()->GetEvent()==true)
 		{
 			m_pPopUIBg->SetColorA(0.0f);
 		}
@@ -239,7 +240,7 @@ void CGamePlayer::Update(void)
 
 
 		//—‘ó‘Ô‚Å‚Ì“§–¾‰»
-		if (GetState() == CObjectCharacter::STATE_EGG)
+		if (GetState() == CObjectCharacter::STATE_EGG || CGame::GetInstance()->GetEvent() == true)
 		{
 			m_pPopUI->SetColorA(0.0f);
 		}
