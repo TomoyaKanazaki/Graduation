@@ -21,7 +21,9 @@ public:
 	enum UI_TYPE 
 	{
 		TYPE_CROSS=0,
-		TYPE_BOWABOWA
+		TYPE_BOWABOWA,
+		TYPE_BIBLE,
+		TYPE_DEVILHOLE
 	};
 
 	static CPopUi* Create(int nPriority = 6);

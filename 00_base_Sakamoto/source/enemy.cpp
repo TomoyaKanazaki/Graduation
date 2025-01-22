@@ -315,6 +315,9 @@ void CEnemy::Update(void)
 	SetRot(rotThis);			// 向き
 	SetSize(sizeThis);		// 大きさ
 
+	// TODO 埋まった時にアサート
+	//assert(!CMapSystem::GetInstance()->GetGritBool(m_Grid));
+
 #ifdef _DEBUG
 #if 0
 	if (CMapSystem::GetInstance()->GetGritBool(m_Grid))

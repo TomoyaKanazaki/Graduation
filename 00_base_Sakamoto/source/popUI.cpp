@@ -18,6 +18,8 @@ namespace
 	const float SAMPLE_HEIGHT = 50.0f;		//ècïù
 	const char TEXPASS_CROSS[] = "data\\TEXTURE\\UI\\cross_UI.png";
 	const char TEXPASS_BOWABOWA[] = "data\\TEXTURE\\UI\\niku_manga.png";
+	const char TEXPASS_KEY[] = "data\\TEXTURE\\UI\\Key_UI.png";
+	const char TEXPASS_DEVILHOLE[] = "data\\TEXTURE\\UI\\DEVILHOLE_UI.png";
 
 }
 
@@ -141,6 +143,14 @@ void CPopUi::SetpopUIType(UI_TYPE type)
 
 	case CPopUi::TYPE_BOWABOWA:
 		SetTexture(TEXPASS_BOWABOWA);
+		break;
+
+	case CPopUi::TYPE_BIBLE:
+		SetTexture(TEXPASS_KEY);
+		break;
+
+	case CPopUi::TYPE_DEVILHOLE:
+		SetTexture(TEXPASS_DEVILHOLE);
 		break;
 
 	default:
