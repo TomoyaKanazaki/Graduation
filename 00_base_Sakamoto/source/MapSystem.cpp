@@ -565,7 +565,7 @@ HRESULT CMapSystem::LoadMap(const char* pFilename)
 	}
 
 	// ファイルを読込
-	std::string str = {};			// 読込文字列
+	std::string str = {};		// 読込文字列
 	m_MapInfo.emplace_back();	// 配列を拡張
 	while (std::getline(file, str))
 	{ // ファイルの終端ではない場合ループ
