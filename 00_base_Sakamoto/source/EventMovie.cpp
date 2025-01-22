@@ -93,7 +93,7 @@ void CEventMovie::Update(void)
 	for (int nCnt = 0; nCnt < MAX_PLAYER; nCnt++)
 	{
 		// ボタン押されたら演出スキップ
-		if (pInputKeyboard->GetPress(DIK_RETURN) ||
+		if (pInputKeyboard->GetTrigger(DIK_RETURN) ||
 			pInputJoypad->GetTrigger(CInputJoypad::BUTTON_START, nCnt))
 		{
 			CGame::GetInstance()->SetEvent(false);	// スキップする
