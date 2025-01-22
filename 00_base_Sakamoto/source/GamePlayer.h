@@ -50,12 +50,15 @@ private:
 	CScore* m_pScore;				// スコアのポインタ
 	CLifeUi* m_pLifeUi;				//体力UI
 	CObjectBillboard* m_pP_NumUI;	//プレイヤー番号UI		
-	CCrossUi* m_pCrossUI;			//十字架UI
-	CCrossUi* m_pCrossUIBg;			//十字架UI背景
+
+	CCrossUi* m_pCrossUI;
+	CCrossUi* m_pCrossUIBg;
+
 	CPopUiBg* m_pPopUIBg;			//吹き出しUI背景
 	CPopUi* m_pPopUI;				//吹き出しUI
 	float m_fSizePopUI;		//吹き出しUIのサイズ
 	float m_fVariableSizePopUI;		//吹き出しUIのサイズ可変値
+	int m_nUIFlashCount;		//UIの点滅タイミング
 
 	D3DXVECTOR2 m_posDefCrossUI;
 };
