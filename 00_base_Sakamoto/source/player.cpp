@@ -880,9 +880,14 @@ void CPlayer::CollisionWaitRailBlock(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldTh
 	{
 		D3DXVECTOR3 pos = pRailBlock->GetPos();
 		D3DXVECTOR3 posOld = pRailBlock->GetPosOld();
-		//D3DXVECTOR3 Move = (pos - posOld);
-		D3DXVECTOR3 Move = pRailBlock->GetMove();
+		D3DXVECTOR3 Move = pos - posOld;
 		D3DXVECTOR3 Size = pRailBlock->GetSize();
+
+		// ˆÚ“®—Ê‚ª‰ßè‚Èê‡‚É“–‚½‚è”»’è‚ð–³Œø‰»‚·‚é
+		if (Move.x * Move.x + Move.z * Move.z >= CMapSystem::GetInstance()->GetGritSize() * CMapSystem::GetInstance()->GetGritSize())
+		{
+			continue;
+		}
 
 		// ‹éŒ`‚Ì“–‚½‚è”»’è
 		if (useful::CollisionBlock(pos, posOld, Move, Size, &posThis, posOldThis, &m_move, &m_Objmove, sizeThis, &m_bJump, XYZ) == true)
@@ -963,25 +968,14 @@ void CPlayer::CollisionWaitRock(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D
 	{
 		D3DXVECTOR3 pos = D3DXVECTOR3(pRollRock->GetPos().x, 0.0f, pRollRock->GetPos().z);
 		D3DXVECTOR3 posOld = pRollRock->GetPosOld();
-		D3DXVECTOR3 Move = pRollRock->GetMove();
+		D3DXVECTOR3 Move = pos - posOld;
 		D3DXVECTOR3 Size = pRollRock->GetSize();
 
-		/*switch (XYZ)
+		// ˆÚ“®—Ê‚ª‰ßè‚Èê‡‚É“–‚½‚è”»’è‚ð–³Œø‰»‚·‚é
+		if (Move.x * Move.x + Move.z * Move.z >= CMapSystem::GetInstance()->GetGritSize() * CMapSystem::GetInstance()->GetGritSize())
 		{
-		case useful::COLLISION_X:
-			if (abs(Move.x) > 0.0f)
-			{
-				return;
-			}
-			break;
-
-		case useful::COLLISION_Z:
-			if (abs(Move.z) > 0.0f)
-			{
-				return;
-			}
-			break;
-		}*/
+			continue;
+		}
 
 		// ‹éŒ`‚Ì“–‚½‚è”»’è
 		if (useful::CollisionBlock(pos, posOld, Move, Size, &posThis, posOldThis, &m_move, &m_Objmove, sizeThis, &m_bJump, XYZ) == true)
