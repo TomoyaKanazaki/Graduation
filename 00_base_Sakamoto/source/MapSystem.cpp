@@ -898,22 +898,6 @@ void CMapSystem::ResetMap(void)
 {
 	// 位置を初期化
 	m_MapPos = m_InitPos;
-
-	for (int nCntHeight = 0; nCntHeight < m_MapGrid.z; nCntHeight++)
-	{ // 列カウント
-		for (int nCntWidth = 0; nCntWidth < m_MapGrid.x; nCntWidth++)
-		{ // 行カウント
-
-			int nNumGrid = nCntWidth + (nCntHeight * m_MapGrid.x);
-			GRID grid = m_MapInfo[m_nSelectMap].grid[nNumGrid];
-
-			// グリッド判定の初期化
-			SetGritBool(grid, false);
-
-			// グリッドのレール判定の初期化
-			SetRailGritBool(grid, false);
-		}
-	}
 }
 
 //==========================================
