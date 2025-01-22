@@ -346,8 +346,10 @@ void CPlayer::Update(void)
 		// Œü‚«ˆÚ“®ˆ—
 		Rot(rotThis);
 
-		if (m_eItemType != TYPE_NONE)
+		if (m_eItemType != TYPE_NONE &&
+			CGame::GetInstance()->GetEvent() == false)
 		{
+			// UŒ‚
 			Attack(posThis,rotThis);
 		}
 

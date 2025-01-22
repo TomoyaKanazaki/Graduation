@@ -1264,24 +1264,18 @@ float CMapMove::MoveSlopeX(float Move, SPEED& Speed)
 	{
 		fSlopeMove = (D3DX_PI / (D3DX_PI + DevilRot.z));
 
-		if (Speed == SPEED_UP)
+		if (Move > 0.0f
+			&& Speed == SPEED_UP)
 		{// âEÇ…åXÇ¢ÇΩéûÇÃâ¡ë¨
 			fSlopeMove = (D3DX_PI / (D3DX_PI + DevilRot.z)) * SLOPEUP_MAG;
-		}
-		if (Speed == SPEED_DOWN)
-		{// ç∂Ç…åXÇ¢ÇΩéûÇÃå∏ë¨
-			fSlopeMove = (D3DX_PI / (D3DX_PI + DevilRot.z)) * SLOPEDOWN_MAG;
 		}
 	}
 	else if (Move < 0.0f)
 	{
 		fSlopeMove = (D3DX_PI / (D3DX_PI - DevilRot.z));
 
-		if (Speed == SPEED_UP)
-		{// âEÇ…åXÇ¢ÇΩéûÇÃâ¡ë¨
-			fSlopeMove = (D3DX_PI / (D3DX_PI + DevilRot.z)) * SLOPEUP_MAG;
-		}
-		if (Speed == SPEED_DOWN)
+		if (Move < 0.0f
+			&& Speed == SPEED_DOWN)
 		{// ç∂Ç…åXÇ¢ÇΩéûÇÃå∏ë¨
 			fSlopeMove = (D3DX_PI / (D3DX_PI + DevilRot.z)) * SLOPEDOWN_MAG;
 		}
@@ -1316,26 +1310,18 @@ float CMapMove::MoveSlopeZ(float Move, SPEED& Speed)
 	{
 		fSlopeMove = (D3DX_PI / (D3DX_PI - DevilRot.x));
 
-		if (Speed == SPEED_UP)
-		{// âEÇ…åXÇ¢ÇΩéûÇÃâ¡ë¨
+		if (Move > 0.0f
+			&& Speed == SPEED_UP)
+		{// âúÇ…åXÇ¢ÇΩéûÇÃâ¡ë¨
 			fSlopeMove = (D3DX_PI / (D3DX_PI + DevilRot.x)) * SLOPEUP_MAG;
 		}
-		if (Speed == SPEED_DOWN)
-		{// ç∂Ç…åXÇ¢ÇΩéûÇÃå∏ë¨
-			fSlopeMove = (D3DX_PI / (D3DX_PI + DevilRot.x)) * SLOPEDOWN_MAG;
-		}
-
 	}
 	else if (Move < 0.0f)
 	{
 		fSlopeMove = (D3DX_PI / (D3DX_PI + DevilRot.x));
 
 		if (Speed == SPEED_DOWN)
-		{// âEÇ…åXÇ¢ÇΩéûÇÃâ¡ë¨
-			fSlopeMove = (D3DX_PI / (D3DX_PI + DevilRot.x)) * SLOPEDOWN_MAG;
-		}
-		if (Speed == SPEED_DOWN)
-		{// ç∂Ç…åXÇ¢ÇΩéûÇÃå∏ë¨
+		{// éËëOÇ…åXÇ¢ÇΩéûÇÃâ¡ë¨
 			fSlopeMove = (D3DX_PI / (D3DX_PI + DevilRot.x)) * SLOPEDOWN_MAG;
 		}
 	}

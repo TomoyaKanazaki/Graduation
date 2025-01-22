@@ -18,6 +18,7 @@
 #include "crossUI.h"
 #include "popUI.h"
 #include "popUIBg.h"
+#include "bowabowa.h"
 
 //===========================================
 // 定数定義
@@ -247,15 +248,25 @@ void CGamePlayer::Update(void)
 			m_pPopUI->SetColorA(1.0f);
 		}
 
-
 		//表示内容の更新
-		if (GetItemType() != TYPE_NONE)
+		if (GetItemType() == TYPE_CROSS)
 		{//アイテム保持状態
 			m_pPopUI->SetpopUIType(CPopUi::TYPE_BOWABOWA);
 		}
-		else
+		else if(GetItemType() == TYPE_BIBLE)
 		{//アイテム非保持状態
-			m_pPopUI->SetpopUIType(CPopUi::TYPE_CROSS);
+			m_pPopUI->SetpopUIType(CPopUi::TYPE_DEVILHOLE);
+		}
+		else
+		{
+			if (CBowabowa::GetList() != nullptr)
+			{
+				m_pPopUI->SetpopUIType(CPopUi::TYPE_CROSS);
+			}
+			else
+			{
+				m_pPopUI->SetpopUIType(CPopUi::TYPE_BIBLE);
+			}
 		}
 	}
 
