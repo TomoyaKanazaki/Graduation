@@ -276,14 +276,9 @@ HRESULT CTutorial::Init(void)
 		m_bCheck[i] = false;
 	}
 	
-	// 下床の生成
+	// 背景オブジェクトのゲーム設置処理
 	auto grid = FIELD_GRID;
-	CObjmeshField* pBottonField = CObjmeshField::Create(grid);
-	pBottonField->SetTexture(BOTTOM_FIELD_TEX);
-	pBottonField->SetPos(BOTTOM_FIELD_POS);
-
-	// 背景モデル設定処理
-	SetBgObjTest();
+	CBgObjManager::GetInstance()->SetGame(grid);
 
 	for (int i = 0; i < CManager::GetInstance()->GetGameMode(); ++i)
 	{// プレイヤーを生成する

@@ -25,10 +25,10 @@ namespace
 	const char* MAP_XMODEL_PASS("data\\TXT\\STAGE\\XModel_Tutorial_000.txt");
 	const char* MAP_GIMMICK_PASS("data\\TXT\\STAGE\\Gimmick_Tutorial_000.txt");
 
-	const D3DXVECTOR3 STAGE_POS = D3DXVECTOR3(500.0f, 120.0f, 0.0f);		// 選択項目の位置
+	const D3DXVECTOR3 STAGE_POS = D3DXVECTOR3(490.0f, 80.0f, 0.0f);		// 選択項目の位置
 	const D3DXVECTOR3 MAP_POS = D3DXVECTOR3(640.0f, 250.0f, 0.0f);			// サムネイルの位置
 	const D3DXVECTOR2 STAGE_SIZE = D3DXVECTOR2(130.0f, 160.0f);				// 選択項目の大きさ
-	const D3DXVECTOR2 MAP_SIZE = D3DXVECTOR2(300.0f, 200.0f);				// サムネイルの大きさ
+	const D3DXVECTOR2 MAP_SIZE = D3DXVECTOR2(400.0f, 300.0f);				// サムネイルの大きさ
 	const D3DXVECTOR2 NUMBER_SIZE = D3DXVECTOR2(35.0f, 35.0f);				// サムネイルの大きさ
 	const D3DXVECTOR2 STAGE_DISTANCE = D3DXVECTOR2(300.0f + (STAGE_SIZE.x * 1.0f), 0.0f + (STAGE_SIZE.y * 0.0f));	// 選択項目の幅
 	const float NUMBER_DISTANCE = 80.0f;	// ステージと数字の幅
@@ -360,6 +360,7 @@ void CSelect::StageSelect(void)
 	int nLast = nMax - 1;		// 最後の選択肢の番号
 	int nStart = -nLast;		// 最初の選択肢の番号
 
+	// 位置とか
 	for (int nCnt = 0; nCnt < nMax; nCnt++)
 	{
 		int nNumber = nCnt - m_nSelect;
