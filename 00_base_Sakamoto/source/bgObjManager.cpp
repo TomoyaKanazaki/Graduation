@@ -288,7 +288,7 @@ void CBgObjManager::SetMountain(void)
 	pMaguma00->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.5f));
 	pMaguma00->SetTexture("data\\TEXTURE\\Field\\maguma_00.jpg");
 
-	//メダマン
+	//メダマン  // TODO : モーションいじる
 	for (int nCnt = 0; nCnt < MOUNTAIN_OBJ_NUM; nCnt++)
 	{
 		if (m_pBGCharacter[nCnt] == nullptr)

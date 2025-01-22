@@ -18,6 +18,7 @@
 #include "MapMove.h"
 #include "move.h"
 #include "shadow.h"
+#include "player.h"
 
 //==========================================
 //  定数定義
@@ -343,6 +344,29 @@ void CRollRock::Coodinate()
 {
 	// 前回のグリッドと今回のグリッドが一致している場合関数を抜ける
 	if (m_Grid == m_OldGrid) { return; }
+
+	// プレイヤーのリスト構造が無ければ抜ける
+	if (CPlayer::GetList() == nullptr) { assert(false); }
+	std::list<CPlayer*> list = CPlayer::GetList()->GetList();    // リストを取得
+
+	// プレイヤーリストの中身を確認する
+	for (CPlayer* player : list)
+	{
+		// 死んでる場合は取得できない
+		if (player->GetState() == CPlayer::STATE_EGG || player->GetState() == CPlayer::STATE_DEATH)
+		{
+			continue;
+		}
+
+		// プレイヤーの座標(グリッド単位)を取得
+		CMapSystem::GRID gridPlayer = player->GetGrid();
+
+		// 存在座標が一致していた場合殺す
+		if (m_Grid == gridPlayer)
+		{
+			player->Death();
+		}
+	}
 
 	// 経路探索用の情報を取得
 	auto generator = AStar::Generator::GetInstance();

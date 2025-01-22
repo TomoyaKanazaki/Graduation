@@ -24,9 +24,6 @@ namespace
 	const char* MODEL_PASS = "data\\MODEL\\02_item\\softcream.x"; // モデルパス
 	const float MOVE_SCALE_X = 1050.0f; // 移動幅
 	const float MOVE_SCALE_Z = 650.0f; // 移動幅
-
-	// TODO : 本仕様の時に必ず消す
-	float fMove = 0;
 }
 
 //===========================================

@@ -32,7 +32,7 @@ namespace
 {
 	float GRID_SIZE = 100.0f;	// グリッドのサイズ
 	D3DXVECTOR3 MAP_SIZE = D3DXVECTOR3(750.0f, 0.0f, 550.0f);		// 横の当たり判定
-	int BOWABOWA_RATE = 5; // ボワボワの生成率 ( 0以下でエラー )
+	int BOWABOWA_RATE = 60; // ボワボワの生成率 ( 0以下でエラー )
 	const D3DXVECTOR3 EFFECT_SIZE = { 103.5f, 25.0f, 67.5f }; // エフェクトの倍率
 	const char* MAP_FILE = "data\\TXT\\STAGE\\stage.txt";		// マップファイル
 
@@ -763,6 +763,12 @@ HRESULT CMapSystem::CreateMap(unsigned int nSelect)
 			int nNumGrid = nCntWidth + (nCntHeight * m_MapGrid.x);
 			GRID grid = m_MapInfo[nSelect].grid[nNumGrid];
 
+			// グリッド判定の初期化
+			pMapSystem->SetGritBool(grid, false);
+
+			// グリッドのレール判定の初期化
+			pMapSystem->SetRailGritBool(grid, false);
+
 			if (m_MapInfo[nSelect].type[nNumGrid] == MAPTYPE_WALL)
 			{ // 壁の場合
 				CWall::Create(grid);
@@ -892,6 +898,22 @@ void CMapSystem::ResetMap(void)
 {
 	// 位置を初期化
 	m_MapPos = m_InitPos;
+
+	for (int nCntHeight = 0; nCntHeight < m_MapGrid.z; nCntHeight++)
+	{ // 列カウント
+		for (int nCntWidth = 0; nCntWidth < m_MapGrid.x; nCntWidth++)
+		{ // 行カウント
+
+			int nNumGrid = nCntWidth + (nCntHeight * m_MapGrid.x);
+			GRID grid = m_MapInfo[m_nSelectMap].grid[nNumGrid];
+
+			// グリッド判定の初期化
+			SetGritBool(grid, false);
+
+			// グリッドのレール判定の初期化
+			SetRailGritBool(grid, false);
+		}
+	}
 }
 
 //==========================================
