@@ -204,7 +204,7 @@ void CGamePlayer::Update(void)
 	{
 		//プレイヤー位置への追従更新
 		D3DXVECTOR3 PlayerPos = GetPos();
-		m_pPopUIBg->SetPos(D3DXVECTOR3(PlayerPos.x + 20.0f, PlayerPos.y + 100.0f, PlayerPos.z));
+		m_pPopUIBg->SetPos(D3DXVECTOR3(PlayerPos.x + 75.0f, PlayerPos.y + 100.0f, PlayerPos.z));
 		
 		m_fSizePopUI += m_fVariableSizePopUI;
 
@@ -232,7 +232,7 @@ void CGamePlayer::Update(void)
 	{
 		//プレイヤー位置への追従更新
 		D3DXVECTOR3 PlayerPos = GetPos();
-		m_pPopUI->SetPos(D3DXVECTOR3(PlayerPos.x + 20.0f, PlayerPos.y + 100.0f, PlayerPos.z));
+		m_pPopUI->SetPos(D3DXVECTOR3(PlayerPos.x + 75.0f, PlayerPos.y + 100.0f, PlayerPos.z));
 
 		//卵状態での透明化
 		if (GetState() == CObjectCharacter::STATE_EGG || CGame::GetInstance()->GetEvent() == true)
@@ -398,16 +398,28 @@ void CGamePlayer::InitUI()
 		if (m_pLifeUi != nullptr)
 		{
 			// 数字の位置
-			m_pLifeUi->GetNumber()->SetPos(D3DXVECTOR3(LIFE_POS01.x + 200.0f, LIFE_POS01.y, LIFE_POS01.z));
+			m_pLifeUi->GetNumber()->SetPos(D3DXVECTOR3(LIFE_POS01.x + 300.0f, LIFE_POS01.y, LIFE_POS01.z));
 
 			// 体力
-			m_pLifeUi->SetPos(LIFE_POS01);
+			m_pLifeUi->SetPos(LIFE_POS01+D3DXVECTOR3(100.0f,0.0f,0.0f));
 			m_pLifeUi->GetNumber()->SetNumber(GetLife());
 		}
 
 		if (m_pScore != nullptr)
 		{
 			m_pScore->SetPos(D3DXVECTOR3(1050.0f, 40.0f, 0.0f));
+		}
+
+		//十字架UIと背景
+		if (m_pCrossUI != nullptr)
+		{
+			m_pCrossUI->SetPos(D3DXVECTOR3(LIFE_POS01.x + 300, LIFE_POS01.y - 110.0f, LIFE_POS01.z));
+			m_posDefCrossUI = D3DXVECTOR2(LIFE_POS01.x + 300, LIFE_POS01.y - 110.0f);
+		}
+		if (m_pCrossUIBg != nullptr)
+		{
+			m_pCrossUIBg->SetPos(D3DXVECTOR3(LIFE_POS01.x + 300, LIFE_POS01.y - 110.0f, LIFE_POS01.z));
+			m_pCrossUIBg->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.2f));
 		}
 
 		//吹き出しUI背景
