@@ -48,6 +48,7 @@ m_pP_NumUI(nullptr)
 	m_Grid.z = 0;
 	m_fVariableSizePopUI = 0.4f;
 	m_fSizePopUI = 0.0f;
+	m_nUIFlashCount = 0;
 }
 
 //====================================================================
@@ -57,7 +58,6 @@ CGamePlayer::~CGamePlayer()
 {
 
 }
-
 //====================================================================
 //¶¬ˆ—
 //====================================================================
@@ -97,19 +97,17 @@ HRESULT CGamePlayer::Init(int PlayNumber)
 	{
 		m_pScore = CScore::Create();
 	}
-
-	//\Žš‰ËƒAƒCƒeƒ€‚Ì•ÛŽó‘ÔUI‚Ì¶¬
+	
+	//\Žš‰ËUI‚Æ‚»‚Ì”wŒi‚Ì¶¬
 	if (m_pCrossUI == nullptr)
 	{
 		m_pCrossUI = CCrossUi::Create();
 	}
-
-	//\Žš‰ËƒAƒCƒeƒ€‚Ì•ÛŽó‘ÔUI”wŒi‚Ì¶¬
 	if (m_pCrossUIBg == nullptr)
 	{
 		m_pCrossUIBg = CCrossUi::Create();
 	}
-	
+
 	//‚«o‚µUI”wŒi‚Ì¶¬
 	if (m_pPopUIBg == nullptr)
 	{
@@ -148,13 +146,11 @@ void CGamePlayer::Uninit(void)
 		m_pLifeUi = nullptr;
 	}
 
-	// \Žš‰ËUI‚Ìíœ
+	//\Žš‰ËUI‚Æ‚»‚Ì”wŒi‚Ìíœ
 	if (m_pCrossUI != nullptr)
 	{
 		m_pCrossUI = nullptr;
 	}
-
-	// \Žš‰ËUIh”wŒi‚Ìíœ
 	if (m_pCrossUIBg != nullptr)
 	{
 		m_pCrossUIBg = nullptr;
@@ -183,25 +179,25 @@ void CGamePlayer::Update(void)
 	CPlayer::Update();
 
 	//\Žš‰ËUI‚ÌXV
-	if (m_pCrossUI != nullptr && m_pCrossUIBg != nullptr)
-	{
+		if (m_pCrossUI != nullptr && m_pCrossUIBg != nullptr)
+		 {
 		if (GetItemType() != TYPE_NONE)
-		{//ƒAƒCƒeƒ€•ÛŽó‘Ô
+			 {//ƒAƒCƒeƒ€•ÛŽó‘Ô
 			fCrossStatePercent = GetCrossStateParcent();
-		}
-		else
-		{//ƒAƒCƒeƒ€”ñ•ÛŽó‘Ô
+			}
+		 else
+			 {//ƒAƒCƒeƒ€”ñ•ÛŽó‘Ô
 			fCrossStatePercent = 0.0f;
-		}
-
-		//\Žš‰ËUI‚ÌƒQ[ƒWŒ¸­”½‰fˆ—
-		D3DXVECTOR2 SizeDef = m_pCrossUI->GetSizeDefault();
-
-		m_pCrossUI->SetSize(D3DXVECTOR3(SizeDef.x, SizeDef.y * fCrossStatePercent, 0.0f));
+			}
+		
+					//\Žš‰ËUI‚ÌƒQ[ƒWŒ¸­”½‰fˆ—
+			D3DXVECTOR2 SizeDef = m_pCrossUI->GetSizeDefault();
+		
+			m_pCrossUI->SetSize(D3DXVECTOR3(SizeDef.x, SizeDef.y * fCrossStatePercent, 0.0f));
 		m_pCrossUI->SetPos(D3DXVECTOR3(m_posDefCrossUI.x, m_posDefCrossUI.y + (SizeDef.y - SizeDef.y * fCrossStatePercent) / 2, 0.0f));
-
-		m_pCrossUI->SetAnim(D3DXVECTOR2(0.0f, 1.0 + fCrossStatePercent), D3DXVECTOR2(1.0f, 1.0f));
-	}
+		
+			m_pCrossUI->SetAnim(D3DXVECTOR2(0.0f, 1.0 + fCrossStatePercent), D3DXVECTOR2(1.0f, 1.0f));
+		}
 
 	//‚«o‚µUI”wŒi
 	if (m_pPopUIBg != nullptr)
@@ -239,10 +235,30 @@ void CGamePlayer::Update(void)
 		m_pPopUI->SetPos(D3DXVECTOR3(PlayerPos.x + 20.0f, PlayerPos.y + 100.0f, PlayerPos.z));
 
 
+
 		//—‘ó‘Ô‚Å‚Ì“§–¾‰»
 		if (GetState() == CObjectCharacter::STATE_EGG || CGame::GetInstance()->GetEvent() == true)
 		{
 			m_pPopUI->SetColorA(0.0f);
+		}
+		else
+		{
+			m_pPopUI->SetColorA(1.0f);
+		}
+
+		//\Žš‰ËÁŽ¸‘O‚Ì“_–Åˆ—
+		if (GetCrossStateParcent() >= 0.7)
+		{
+			m_nUIFlashCount++;
+			if (m_nUIFlashCount % 25 == 0)
+			{
+				m_pPopUI->SetColorA(0.0f);
+				if (m_nUIFlashCount % 50 == 0)
+				{
+					m_pPopUI->SetColorA(1.0f);
+				}
+			}
+
 		}
 		else
 		{
@@ -362,14 +378,12 @@ void CGamePlayer::InitUI()
 			m_pScore->SetPos(D3DXVECTOR3(50.0f, 40.0f, 0.0f));
 		}
 
-		//\Žš‰ËUI
+		//\Žš‰ËUI‚Æ”wŒi
 		if (m_pCrossUI != nullptr)
 		{
-			m_pCrossUI->SetPos(D3DXVECTOR3(LIFE_POS00.x+25, LIFE_POS00.y-110.0f, LIFE_POS00.z));
-			m_posDefCrossUI = D3DXVECTOR2(LIFE_POS00.x+25, LIFE_POS00.y - 110.0f);
+			m_pCrossUI->SetPos(D3DXVECTOR3(LIFE_POS00.x + 25, LIFE_POS00.y - 110.0f, LIFE_POS00.z));
+			m_posDefCrossUI = D3DXVECTOR2(LIFE_POS00.x + 25, LIFE_POS00.y - 110.0f);
 		}
-
-		//\Žš‰ËUI”wŒi
 		if (m_pCrossUIBg != nullptr)
 		{
 			m_pCrossUIBg->SetPos(D3DXVECTOR3(LIFE_POS00.x + 25, LIFE_POS00.y - 110.0f, LIFE_POS00.z));
@@ -415,6 +429,20 @@ void CGamePlayer::InitUI()
 		if (m_pScore != nullptr)
 		{
 			m_pScore->SetPos(D3DXVECTOR3(1050.0f, 40.0f, 0.0f));
+		}
+
+		//‚«o‚µUI”wŒi
+		if (m_pPopUIBg != nullptr)
+		{
+			D3DXVECTOR3 PlayerPos = GetPos();
+			m_pPopUIBg->SetPos(D3DXVECTOR3(PlayerPos.x + 20.0f, PlayerPos.y - 100.0f, PlayerPos.z));
+		}
+
+		//‚«o‚µUI
+		if (m_pPopUI != nullptr)
+		{
+			D3DXVECTOR3 PlayerPos = GetPos();
+			m_pPopUI->SetPos(D3DXVECTOR3(PlayerPos.x + 20.0f, PlayerPos.y - 100.0f, PlayerPos.z));
 		}
 
 		if (m_pP_NumUI != nullptr)

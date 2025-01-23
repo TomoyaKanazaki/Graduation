@@ -295,13 +295,13 @@
     <ClCompile Include="source\bgObjManager.cpp">
       <Filter>ソース ファイル\Map\System</Filter>
     </ClCompile>
-    <ClCompile Include="source\crossUI.cpp">
-      <Filter>ソース ファイル\Ui</Filter>
-    </ClCompile>
     <ClCompile Include="source\popUI.cpp">
       <Filter>ソース ファイル\Ui</Filter>
     </ClCompile>
     <ClCompile Include="source\popUIBg.cpp">
+      <Filter>ソース ファイル\Ui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\crossUI.cpp">
       <Filter>ソース ファイル\Ui</Filter>
     </ClCompile>
   </ItemGroup>
@@ -558,13 +558,13 @@
     <ClInclude Include="source\bgObjManager.h">
       <Filter>ソース ファイル\Map\System</Filter>
     </ClInclude>
-    <ClInclude Include="source\crossUI.h">
-      <Filter>ソース ファイル\Ui</Filter>
-    </ClInclude>
     <ClInclude Include="source\popUI.h">
       <Filter>ソース ファイル\Ui</Filter>
     </ClInclude>
     <ClInclude Include="source\popUIBg.h">
+      <Filter>ソース ファイル\Ui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\crossUI.h">
       <Filter>ソース ファイル\Ui</Filter>
     </ClInclude>
   </ItemGroup>

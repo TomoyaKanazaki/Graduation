@@ -863,7 +863,6 @@ void CStateRandom::MoveSelect(CObjectCharacter* pCharacter)
 
 		case CMoveState::ROTSTATE_WAIT:		// ‘Ò‹@
 			// Ž~‚Ü‚é
-			fAngle = D3DX_PI * 0.0f;
 			move.push_back(D3DXVECTOR3(0.0f, moveSave.y, 0.0f));
 
 			break;
