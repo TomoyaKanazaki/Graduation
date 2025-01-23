@@ -125,6 +125,7 @@ HRESULT CResult::Init(void)
 	////BGMの再生
 	CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_BGM_RESULT);
 
+	// スコア取得
 	m_ScoreData = CManager::GetInstance()->GetEndScore();
 
 	//背景
@@ -164,7 +165,7 @@ HRESULT CResult::Init(void)
 		m_pRank->SetTexture("data\\TEXTURE\\ranking.png");
 
 		//全体ランキング(スコア)
-		m_pLifeRanking = CRanking::Create("data\\TXT\\LifeRanking.txt");
+		m_pLifeRanking = CRanking::Create("data\\TXT\\ranking.txt");
 		m_pLifeRanking->SetPos(SINGLE_RANKING_NUMBER_POS);
 		m_pLifeRanking->SetRanking(m_ScoreData);
 
@@ -267,7 +268,7 @@ HRESULT CResult::Init(void)
 		m_pRank->SetTexture("data\\TEXTURE\\ranking.png");
 
 		//全体ランキング(スコア)
-		m_pLifeRanking = CRanking::Create("data\\TXT\\LifeRanking.txt");
+		m_pLifeRanking = CRanking::Create("data\\TXT\\ranking.txt");
 		m_pLifeRanking->SetPos(MULTI_RANKING_NUMBER_POS);
 		m_pLifeRanking->SetRanking(m_ScoreData);
 
@@ -296,7 +297,7 @@ HRESULT CResult::Init(void)
 		m_pRank->SetTexture("data\\TEXTURE\\ranking.png");
 
 		//全体ランキング(スコア)
-		m_pLifeRanking = CRanking::Create("data\\TXT\\LifeRanking.txt");
+		m_pLifeRanking = CRanking::Create("data\\TXT\\ranking.txt");
 		m_pLifeRanking->SetPos(NONE_RANKING_NUMBER_POS);
 		m_pLifeRanking->SetRanking(m_ScoreData);
 
@@ -318,6 +319,7 @@ HRESULT CResult::Init(void)
 	}
 
 	CManager::GetInstance()->GetCamera(0)->SetCameraPos(D3DXVECTOR3(3500.0f, 450.0f, 0.0f));
+	CManager::GetInstance()->SetEndScore(0);		// スコア初期化
 
 	// タイマーの初期化
 	m_fTimer = 0.0f;

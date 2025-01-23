@@ -51,6 +51,7 @@ public:
 private:
 	CNumber *m_apObject[NUM_TIME][MAX_RANK];
 	D3DXVECTOR3 m_pos;
+	D3DXCOLOR m_col;
 	int m_nCount;
 	int m_StartTime;
 	int m_nTime[MAX_RANK];
@@ -60,6 +61,10 @@ private:
 	char* m_cTextName;
 	bool m_bTime;
 	int m_nRankNumber;		// ランクインした順位
+
+	// 点滅用
+	int m_nBlinkCounter;
+	bool m_bSwitchCol;
 };
 
 #endif
