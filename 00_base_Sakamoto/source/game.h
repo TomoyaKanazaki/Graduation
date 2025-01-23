@@ -65,6 +65,7 @@ public:
 	void SetBowabowa(int Bowabowa) { m_nNumBowabowa = Bowabowa; }
 	void AddBowabowa(int nNum) { m_nNumBowabowa+= nNum; }
 	void SetDevilHoleFinish(bool Set) { m_bDevilHoleFinish = Set; }
+	bool GetTrans(void) { return m_bTrans; }		// 遷移中かどうか
 
 	void SetMapField(CObjmeshField* map) { m_pMapField = map; }
 	CObjmeshField* GetMapField(void) { return m_pMapField; }
@@ -95,6 +96,7 @@ private:
 	bool m_bDevilHoleFinish;				//デビルホールがすべて埋まったかどうか
 	bool m_bGameEnd;						//ゲーム終了状態かどうか
 	bool m_bGameClear;						//ゲームクリア状態かどうか
+	bool m_bTrans;							//遷移に入ったかどうか
 
 	//イベント用変数
 	CEventMovie* m_pEventMovie;				//イベント演出

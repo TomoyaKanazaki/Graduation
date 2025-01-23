@@ -80,6 +80,7 @@ CGame::CGame()
 	m_bEvent = false;
 	m_bEventEnd = false;
 	m_bDevilHoleFinish = false;
+	m_bTrans = false;
 	m_BGColorA = 1.0f;
 	m_nTutorialWave = 0;
 	m_nNumBowabowa = 0;
@@ -361,41 +362,55 @@ void CGame::Update(void)
 			{
 				if (m_bEvent == false)
 				{
-					StageClear(CManager::GetInstance()->GetStage());
+					if (CManager::GetInstance()->GetStage() == 0)
+					{
+						ResetStage();
+					}
+					else
+					{
+						m_bTrans = true;		// ‘JˆÚ‚·‚éó‘Ô‚É‚·‚é
+					}
 				}
 			}
 			else
 			{
-				if (m_nTransCounter >= TRANS_TIME)
+				m_bTrans = true;		// ‘JˆÚ‚·‚éó‘Ô‚É‚·‚é
+			}
+		}
+
+		if (m_bTrans)
+		{ // ‘JˆÚ‚·‚éê‡
+
+			// ‘JˆÚ
+			if (m_nTransCounter >= TRANS_TIME)
+			{
+				m_nTransCounter = 0;
+
+				// ƒŠƒUƒ‹ƒg
+				CFade::SetFade(CScene::MODE_RESULT);
+				m_pTime->SetStopTime(true);
+
+				int EndScore = 0;
+
+				for (unsigned int nCnt = 0; nCnt < m_pPlayer.size(); nCnt++)
 				{
-					m_nTransCounter = 0;
-
-					// ƒŠƒUƒ‹ƒg
-					CFade::SetFade(CScene::MODE_RESULT);
-					m_pTime->SetStopTime(true);
-
-					int EndScore = 0;
-
-					for (unsigned int nCnt = 0; nCnt < m_pPlayer.size(); nCnt++)
+					if (m_pPlayer.at(nCnt) != nullptr)
 					{
-						if (m_pPlayer.at(nCnt) != nullptr)
-						{
-							EndScore += m_pPlayer.at(nCnt)->GetScore()->GetScore();
-						}
-					}
-
-					CManager::GetInstance()->SetEndScore(EndScore);
-
-					if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
-					{
-						CManager::GetInstance()->SetEnd1PScore(m_pPlayer.at(0)->GetScore()->GetScore());
-						CManager::GetInstance()->SetEnd2PScore(m_pPlayer.at(1)->GetScore()->GetScore());
+						EndScore += m_pPlayer.at(nCnt)->GetScore()->GetScore();
 					}
 				}
-				else
+
+				CManager::GetInstance()->SetEndScore(EndScore);
+
+				if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
 				{
-					m_nTransCounter++;
+					CManager::GetInstance()->SetEnd1PScore(m_pPlayer.at(0)->GetScore()->GetScore());
+					CManager::GetInstance()->SetEnd2PScore(m_pPlayer.at(1)->GetScore()->GetScore());
 				}
+			}
+			else
+			{
+				m_nTransCounter++;
 			}
 		}
 
