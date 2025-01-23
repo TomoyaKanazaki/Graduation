@@ -21,9 +21,9 @@ namespace
 	const int NUM_DIGIT = 6;				// 桁数
 
 	// 点滅用
-	const int MAX_BLINK = 2;				// 点滅するまでの時間
+	const int MAX_BLINK = 8;				// 点滅するまでの時間
 	const D3DXCOLOR COL_YELLOW = D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f);		// 黄色
-	const D3DXCOLOR COL_WHITE = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);		// 白色
+	const D3DXCOLOR COL_WHITE = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f);		// 白色
 }
 
 //静的メンバ変数宣言
