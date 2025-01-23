@@ -74,8 +74,6 @@ private:
 	void MoveStateManager(D3DXVECTOR3& posMy);				//状態更新
 	void HitStateManager(D3DXVECTOR3& posMy);				//状態更新
 	void CollisionWall(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR3& size,useful::COLLISION XYZ);			//壁との当たり判定
-	void CollisionDevilHole(useful::COLLISION XYZ);		//デビルホールとの当たり判定
-	void CollisionOut(D3DXVECTOR3& posMy);				//ステージ外との当たり判定
 
 	virtual void Death(void);							// 死亡処理
 	void Effect(); // エフェクトを生成

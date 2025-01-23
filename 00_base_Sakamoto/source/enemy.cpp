@@ -306,17 +306,62 @@ void CEnemy::Update(void)
 
 	m_pMoveState->Debug();		// 現在の移動状態
 
-	// スクロールに合わせて移動する
-	//CMapSystem::GetInstance()->GetMove()->FollowScroll(posThis);
+	// 壁のリスト構造が無ければ抜ける
+	if (CWall::GetList() == nullptr) { assert(false); }
+	std::list<CWall*> listWall = CWall::GetList()->GetList();    // リストを取得
+
+	// 壁リストの中身を確認する
+	for (CWall* pWall : listWall)
+	{
+		D3DXVECTOR3 pos = pWall->GetPos();
+		D3DXVECTOR3 Move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		D3DXVECTOR3 Size = pWall->GetSize();
+
+		// 矩形の当たり判定
+		if (useful::CollisionBlock(pos, pos, Move, Size, &posThis, posOldThis, &m_move, &m_Objmove, sizeThis, nullptr, useful::COLLISION_X) ||
+			useful::CollisionBlock(pos, pos, Move, Size, &posThis, posOldThis, &m_move, &m_Objmove, sizeThis, nullptr, useful::COLLISION_Z)
+			)
+		{
+			//待機状態にする
+			SetState(STATE_WALK);
+			// 向き状態の設定
+			m_pMoveState->SetRotState(CMoveState::ROTSTATE_WAIT);
+			posThis = m_Grid.ToWorld();
+			break;
+		}
+	}
+
+	// デビルホールのリスト構造が無ければ抜ける
+	if (CDevilHole::GetList() == nullptr) { return; }
+	std::list<CDevilHole*> listDevil = CDevilHole::GetList()->GetList();    // リストを取得
+
+	// デビルホールリストの中身を確認する
+	for (CDevilHole* pDevilHole : listDevil)
+	{
+		D3DXVECTOR3 pos = pDevilHole->GetPos();
+		D3DXVECTOR3 posOld = pDevilHole->GetPosOld();
+		D3DXVECTOR3 Size = pDevilHole->GetSize();
+
+		// 矩形の当たり判定
+		if (useful::CollisionBlock(pos, pos, pos - posOld, Size, &posThis, posOldThis, &m_move, &m_Objmove, sizeThis, nullptr, useful::COLLISION_X) ||
+			useful::CollisionBlock(pos, pos, pos - posOld, Size, &posThis, posOldThis, &m_move, &m_Objmove, sizeThis, nullptr, useful::COLLISION_Z)
+			)
+		{
+			//待機状態にする
+			SetState(STATE_WALK);
+			// 向き状態の設定
+			m_pMoveState->SetRotState(CMoveState::ROTSTATE_WAIT);
+			posThis = m_Grid.ToWorld();
+			break;
+		}
+	}
 
 	// 値更新
 	SetPos(posThis);			// 位置
-	SetPosOld(posOldThis);	// 前回の位置
+	SetPosOld(posOldThis);		// 前回の位置
 	SetRot(rotThis);			// 向き
-	SetSize(sizeThis);		// 大きさ
+	SetSize(sizeThis);			// 大きさ
 
-	// TODO 埋まった時にアサート
-	//assert(!CMapSystem::GetInstance()->GetGritBool(m_Grid));
 
 #ifdef _DEBUG
 #if 0
@@ -385,68 +430,6 @@ void CEnemy::CollisionWall(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR
 			posMy = m_Grid.ToWorld();
 		}
 	}
-}
-
-//====================================================================
-// マップモデルの当たり判定
-//====================================================================
-void CEnemy::CollisionDevilHole(useful::COLLISION XYZ)
-{
-	//// デビルホールのリスト構造が無ければ抜ける
-	//if (CDevilHole::GetList() == nullptr) { return; }
-	//std::list<CDevilHole*> list = CDevilHole::GetList()->GetList();    // リストを取得
-
-	//// デビルホールリストの中身を確認する
-	//for (CDevilHole* pDevilHole : list)
-	//{
-	//	D3DXVECTOR3 pos = pDevilHole->GetPos();
-	//	D3DXVECTOR3 posOld = pDevilHole->GetPosOld();
-	//	D3DXVECTOR3 Size = pDevilHole->GetSize();
-	//	bool bNullJump;
-
-	//	// 矩形の当たり判定
-	//	if (useful::CollisionBlock(pos, posOld, INITVECTOR3, Size, &m_pos, m_posOld, &m_move, &m_Objmove, m_size, &bNullJump, XYZ) == true)
-	//	{
-	//		//待機状態にする
-	//		m_MoveState = MOVE_STATE_WAIT;
-	//	}
-	//}
-}
-
-//====================================================================
-// ステージ外との当たり判定
-//====================================================================
-void CEnemy::CollisionOut(D3DXVECTOR3& posMy)
-{
-	// //キューブブロックのリスト構造が無ければ抜ける
-	//if (CDevil::GetList() == nullptr) { return; }
-	//std::list<CDevil*> list = CDevil::GetList()->GetList();    // リストを取得
-
-	// //キューブブロックリストの中身を確認する
-	//for (CDevil* pDevil : list)
-	//{
-	//	D3DXVECTOR3 Pos = pDevil->GetDevilPos();
-	//	D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
-	//	float GritSize = CMapSystem::GetInstance()->GetGritSize();
-
-	//	// ステージ外の当たり判定
-	//	if (Pos.x + MapSize.x < posMy.x) // 右
-	//	{
-	//		posMy.x = Pos.x -MapSize.x - GritSize;
-	//	}
-	//	if (Pos.x - MapSize.x - GritSize > posMy.x) // 左
-	//	{
-	//		posMy.x = Pos.x + MapSize.x;
-	//	}
-	//	if (Pos.z + MapSize.z + GritSize < posMy.z) // 上
-	//	{
-	//		posMy.z = Pos.z - MapSize.z;
-	//	}
-	//	if (Pos.z - MapSize.z > posMy.z) // 下
-	//	{
-	//		posMy.z = Pos.z + MapSize.z + GritSize;
-	//	}
-	//}
 }
 
 //====================================================================
