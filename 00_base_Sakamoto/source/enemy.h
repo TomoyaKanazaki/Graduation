@@ -50,6 +50,8 @@ public:
 	void Update(void);
 	void Draw(void);
 
+	void Reset(void);		// ƒŠƒZƒbƒg
+
 	virtual bool Hit(void);
 
 	void SetEnemyType(ENEMY_TYPE Type) { m_EnemyType = Type; }

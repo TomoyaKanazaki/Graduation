@@ -136,6 +136,7 @@ CEnemy* CEnemy::Create(const ENEMY_TYPE eType, const CMapSystem::GRID& grid)
 
 	// 座標を設定
 	pEnemy->m_Grid = grid;
+	pEnemy->m_SaveGrid = grid;
 	//pEnemy->SetGrid(pEnemy->m_Grid);
 	D3DXVECTOR3 InitPos = CMapSystem::GetInstance()->GetGritPos(grid);
 	InitPos.y = 0.0f;
@@ -390,6 +391,18 @@ bool CEnemy::Hit(void)
 	Death();
 
 	return true;
+}
+
+//====================================================================
+// リセット
+//====================================================================
+void CEnemy::Reset(void)
+{
+	// グリッドの位置初期化
+	m_Grid = m_SaveGrid;
+
+	// 位置設定
+	SetPos(m_Grid.ToWorld());
 }
 
 //====================================================================

@@ -63,6 +63,8 @@ namespace
 	const int PLAYER_REF = 2;		// プレイヤーのステンシル参照値
 	const int ITEM_REF = 4;			// アイテムのステンシル参照値
 	const int MEDAMAN_REF = 102;	// メダマンのステンシル参照値
+
+	const int TRANS_TIME = 60 * 3;			// 遷移するまでの時間
 }
 
 //静的メンバ変数宣言
@@ -111,6 +113,8 @@ CGame::CGame()
 
 	LetterBox[0] = nullptr;
 	LetterBox[1] = nullptr;
+
+	m_nTransCounter = 0;
 }
 
 //====================================================================
@@ -145,6 +149,8 @@ HRESULT CGame::Init(void)
 	{
 		m_pPause = CPause::Create();
 	}
+
+	m_nTransCounter = 0;
 
 	// プレイヤー・アイテム・メダマンのステンシルカラーの設定
 	CMask::Create(PLAYER_REF, MASK_PLAYER_COLOR);
@@ -360,25 +366,35 @@ void CGame::Update(void)
 			}
 			else
 			{
-				CFade::SetFade(CScene::MODE_RESULT);
-				m_pTime->SetStopTime(true);
-
-				int EndScore = 0;
-
-				for (unsigned int nCnt = 0; nCnt < m_pPlayer.size(); nCnt++)
+				if (m_nTransCounter >= TRANS_TIME)
 				{
-					if (m_pPlayer.at(nCnt) != nullptr)
+					m_nTransCounter = 0;
+
+					// リザルト
+					CFade::SetFade(CScene::MODE_RESULT);
+					m_pTime->SetStopTime(true);
+
+					int EndScore = 0;
+
+					for (unsigned int nCnt = 0; nCnt < m_pPlayer.size(); nCnt++)
 					{
-						EndScore += m_pPlayer.at(nCnt)->GetScore()->GetScore();
+						if (m_pPlayer.at(nCnt) != nullptr)
+						{
+							EndScore += m_pPlayer.at(nCnt)->GetScore()->GetScore();
+						}
+					}
+
+					CManager::GetInstance()->SetEndScore(EndScore);
+
+					if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
+					{
+						CManager::GetInstance()->SetEnd1PScore(m_pPlayer.at(0)->GetScore()->GetScore());
+						CManager::GetInstance()->SetEnd2PScore(m_pPlayer.at(1)->GetScore()->GetScore());
 					}
 				}
-
-				CManager::GetInstance()->SetEndScore(EndScore);
-
-				if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_MULTI)
+				else
 				{
-					CManager::GetInstance()->SetEnd1PScore(m_pPlayer.at(0)->GetScore()->GetScore());
-					CManager::GetInstance()->SetEnd2PScore(m_pPlayer.at(1)->GetScore()->GetScore());
+					m_nTransCounter++;
 				}
 			}
 		}
@@ -445,15 +461,7 @@ void CGame::ResetStage(void)
 		CGame::GetInstance()->GetPlayer(1)->SetMove(INITVECTOR3);
 	}
 
-	////現在のスクロール状態を保存する
-	//CMapMove* pMapMove = CMapSystem::GetInstance()->GetMove();
-	//CMapMove::MOVE ScrollMove = pMapMove->GetState();
-	//ScrollMove = pMapMove->GetState();
-
 	CMapSystem::GetInstance()->GetMove()->SetScroolSetState(CMapSystem::GetInstance()->GetMove()->GetState());
-
-	//保存したスクロール状態を確認する用の変数
-	//CMapMove::MOVE m_Scrool = CMapSystem::GetInstance()->GetMove()->GetScroolSetState();
 
 	// マップの初期化
 	CMapSystem::GetInstance()->GetMove()->Init();

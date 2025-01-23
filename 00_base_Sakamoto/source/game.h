@@ -112,6 +112,8 @@ private:
 	bool m_Wireframe;						//ワイヤーフレームのオンオフ
 	bool m_Slow;							//スロー演出のオンオフ
 
+	int m_nTransCounter;					// 遷移するまでのカウンター
+
 	CObject2D* LetterBox[2];				//イベント時の背景表示
 
 	CMask* m_pPlayerMask;	// プレイヤーマスク

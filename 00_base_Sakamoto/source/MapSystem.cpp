@@ -1004,6 +1004,20 @@ void CMapSystem::ResetMap(void)
 			pRailBlock->Reset();
 		}
 	}
+
+	// 敵のリスト構造が無ければ抜ける
+	if (CEnemy::GetList() == nullptr) { }
+	else
+	{
+		std::list<CEnemy*> list = CEnemy::GetList()->GetList();    // リストを取得
+
+		// 敵のリストの中身を確認する
+		for (CEnemy* pEnemy : list)
+		{
+			// 敵のリセット
+			pEnemy->Reset();
+		}
+	}
 }
 
 //==========================================

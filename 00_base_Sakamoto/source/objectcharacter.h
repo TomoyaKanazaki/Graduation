@@ -140,6 +140,7 @@ protected:
 	PROGGRESS m_Progress;			// 移動の進行許可状況
 	CMapSystem::GRID m_Grid;		//グリット番号
 	CMapSystem::GRID m_GridOld;		// 前回のグリット番号
+	CMapSystem::GRID m_SaveGrid;	// グリット番号(保存用)
 
 	D3DXVECTOR3 m_move;				//移動量
 	D3DXVECTOR3 m_Objmove;			//オブジェクトから影響される移動量
