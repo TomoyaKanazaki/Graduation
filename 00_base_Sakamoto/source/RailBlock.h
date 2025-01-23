@@ -30,6 +30,8 @@ public:
 	void Update(void);
 	void Draw(void);
 
+	void Reset(void);		// リセット
+
 	CMapSystem::GRID GetGrid(void) { return m_Grid; }	// グリッド取得
 
 	void ChangeMoveState(CMoveState* pMoveState) override;   // 移動状態変更
@@ -45,6 +47,8 @@ private:
 
 	CMapSystem::GRID m_Grid;	//グリット番号
 	CMapSystem::GRID m_OldGrid;	//グリット番号
+	CMapSystem::GRID m_SaveGrid;	//グリット番号(保存用)
+
 	CMoveState* m_pMoveState;	// 移動状態
 
 	// 静的メンバ変数
