@@ -234,31 +234,10 @@ void CGamePlayer::Update(void)
 		D3DXVECTOR3 PlayerPos = GetPos();
 		m_pPopUI->SetPos(D3DXVECTOR3(PlayerPos.x + 20.0f, PlayerPos.y + 100.0f, PlayerPos.z));
 
-
-
 		//—‘ó‘Ô‚Å‚Ì“§–¾‰»
 		if (GetState() == CObjectCharacter::STATE_EGG || CGame::GetInstance()->GetEvent() == true)
 		{
 			m_pPopUI->SetColorA(0.0f);
-		}
-		else
-		{
-			m_pPopUI->SetColorA(1.0f);
-		}
-
-		//\Žš‰ËÁŽ¸‘O‚Ì“_–Åˆ—
-		if (GetCrossStateParcent() >= 0.7)
-		{
-			m_nUIFlashCount++;
-			if (m_nUIFlashCount % 25 == 0)
-			{
-				m_pPopUI->SetColorA(0.0f);
-				if (m_nUIFlashCount % 50 == 0)
-				{
-					m_pPopUI->SetColorA(1.0f);
-				}
-			}
-
 		}
 		else
 		{

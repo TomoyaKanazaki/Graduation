@@ -36,6 +36,7 @@ CListManager<CRailBlock>* CRailBlock::m_pList = nullptr; // オブジェクトリスト
 CRailBlock::CRailBlock(int nPriority) :CObjectX(nPriority),
 m_Grid(0, 0),
 m_OldGrid(0, 0),
+m_SaveGrid(0, 0),
 m_pMoveState(nullptr)
 {
 	
@@ -47,6 +48,7 @@ m_pMoveState(nullptr)
 CRailBlock::CRailBlock(int nPriority, CMapSystem::GRID gridCenter) : CObjectX(nPriority),
 m_Grid(gridCenter),
 m_OldGrid(gridCenter),
+m_SaveGrid(gridCenter),
 m_pMoveState(nullptr)
 {
 }
@@ -274,6 +276,18 @@ void CRailBlock::ChangeMoveState(CMoveState* pMoveState)
 
 	m_pMoveState = pMoveState;
 	m_pMoveState->Init();
+}
+
+//==========================================
+// リセット
+//==========================================
+void CRailBlock::Reset(void)
+{
+	// グリッドの初期化
+	m_Grid = m_SaveGrid;
+
+	// 位置設定
+	SetPos(m_Grid.ToWorld());
 }
 
 //====================================================================

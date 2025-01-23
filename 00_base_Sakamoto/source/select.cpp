@@ -526,9 +526,6 @@ void CSelect::ScrollButton(void)
 		// 指定のマップ番号を設定
 		pMapSystem->SetSelectMap(m_nSetStage);
 
-		// マップのリセット
-		pMapSystem->ResetMap();
-
 		switch (m_nSelect)
 		{
 		case 0:

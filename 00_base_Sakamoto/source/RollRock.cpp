@@ -61,6 +61,7 @@ m_pShadow(nullptr)
 CRollRock::CRollRock(int nPriority, CMapSystem::GRID gridCenter) : CObjectX(nPriority),
 m_Grid(gridCenter),
 m_OldGrid(gridCenter),
+m_SaveGrid(gridCenter),
 m_pEffect(nullptr),
 m_pMoveState(nullptr),
 m_pShadow(nullptr)
@@ -258,6 +259,25 @@ void CRollRock::Update(void)
 void CRollRock::Draw(void)
 {
 	CObjectX::Draw();
+}
+
+//====================================================================
+// リセット
+//====================================================================
+void CRollRock::Reset(void)
+{
+	// グリッドの位置を初期化
+	m_Grid = m_SaveGrid;
+
+	// 位置
+	D3DXVECTOR3 pos = m_Grid.ToWorld();
+	pos.y = 50.0f;
+
+	// 位置設定
+	CObjectX::SetPos(pos);
+
+	// 移動量設定
+	CObjectX::SetMove(INITVECTOR3);
 }
 
 //====================================================================

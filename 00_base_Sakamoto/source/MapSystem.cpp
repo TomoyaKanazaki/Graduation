@@ -898,6 +898,112 @@ void CMapSystem::ResetMap(void)
 {
 	// 位置を初期化
 	m_MapPos = m_InitPos;
+
+	bool bGridSet = false;
+	bool bRailGridSet = false;
+
+	// グリッド判定の再設定
+	for (int nCntHeight = 0; nCntHeight < m_MapGrid.z; nCntHeight++)
+	{ // 列カウント
+		for (int nCntWidth = 0; nCntWidth < m_MapGrid.x; nCntWidth++)
+		{ // 行カウント
+			int nNumGrid = nCntWidth + (nCntHeight * m_MapGrid.x);
+			GRID grid = m_MapInfo[m_nSelectMap].grid[nNumGrid];
+
+			// グリッド判定の初期化
+			SetGritBool(grid, false);
+
+			// グリッドのレール判定の初期化
+			SetRailGritBool(grid, false);
+
+			if (m_MapInfo[m_nSelectMap].type[nNumGrid] == MAPTYPE_WALL)
+			{ // 壁の場合
+				// グリッド判定の設定
+				SetGritBool(grid.x, grid.z, true);
+				continue;
+			}
+
+			// オブジェクトを生成
+			switch (m_MapInfo[m_nSelectMap].type[nNumGrid])
+			{
+			case MAPTYPE_DEVILHOLLRANGE:		// デビルホールの範囲
+				// グリッド設定の判定
+				bGridSet = true;
+				break;
+
+			case MAPTYPE_DEVILHOLL:				// デビルホール
+				// マップの中心に設定
+				m_mapCenter = grid;
+				// グリッド設定の判定
+				bGridSet = true;
+
+				break;
+
+			case MAPTYPE_RAILBLOCK:				// レールブロック
+				// グリッド設定の判定
+				bGridSet = true;
+				bRailGridSet = true;
+
+				break;
+
+			case MAPTYPE_PLAYER:				// プレイヤー
+				break;
+
+			case MAPTYPE_ROLLROCK:				// 岩
+				// グリッド設定の判定
+				bGridSet = true;
+
+				break;
+
+			case MAPTYPE_RAIL:					// レール
+				bRailGridSet = true;
+
+				break;
+
+			default:
+				
+				break;
+			}
+
+			// グリッド判定の設定
+			SetGritBool(grid, bGridSet);
+
+			// グリッドのレール判定の設定
+			SetRailGritBool(grid, bRailGridSet);
+
+			// グリッド設定の判定
+			bGridSet = false;
+			bRailGridSet = false;
+		}
+	}
+
+	// 岩のリスト構造が無ければ抜ける
+	if (CRollRock::GetList() == nullptr) { /*return;*/ }
+	else
+	{
+		std::list<CRollRock*> list = CRollRock::GetList()->GetList();    // リストを取得
+
+		// 岩のリストの中身を確認する
+		for (CRollRock* pRollRock : list)
+		{
+			// 岩のリセット
+			pRollRock->Reset();
+		}
+	}
+
+	// レールブロックのリスト構造が無ければ抜ける
+	if (CRailBlock::GetList() == nullptr) { /*return;*/ }
+	else
+	{
+		std::list<CRailBlock*> list = CRailBlock::GetList()->GetList();    // リストを取得
+
+		// レールブロックのリストの中身を確認する
+		for (CRailBlock* pRailBlock : list)
+		{
+			// レールブロックのリセット
+			pRailBlock->Reset();
+		}
+	}
 }
 
 //==========================================
