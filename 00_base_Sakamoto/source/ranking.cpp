@@ -19,6 +19,11 @@ namespace
 	const float NUMBER_DISTANCE = 50.0f;		//文字同士の幅
 	const float RANKING_DISTANCE = 85.0f;	//ランキング同士の幅
 	const int NUM_DIGIT = 6;				// 桁数
+
+	// 点滅用
+	const int MAX_BLINK = 2;				// 点滅するまでの時間
+	const D3DXCOLOR COL_YELLOW = D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f);		// 黄色
+	const D3DXCOLOR COL_WHITE = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);		// 白色
 }
 
 //静的メンバ変数宣言
@@ -41,12 +46,16 @@ CRanking::CRanking(int nPriority) : CObject(nPriority)
 	}
 
 	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_col = COL_YELLOW;
 	m_nCount = 0;
 	m_StartTime = 0;
 	m_StopTime = false;
 	m_SetRanking = false;
 	m_bTime = false;
 	m_nRankNumber = MAX_RANK;
+
+	m_nBlinkCounter = 0;
+	m_bSwitchCol = false;
 }
 
 //====================================================================
@@ -214,6 +223,30 @@ void CRanking::Update(void)
 	}
 	else
 	{
+		if (m_nBlinkCounter >= MAX_BLINK)
+		{ // 点滅する時間の場合
+
+			m_nBlinkCounter = 0;
+
+			// 点滅切り替え
+			m_bSwitchCol = m_bSwitchCol ? false : true;
+
+			if (m_bSwitchCol)
+			{ // 点滅する
+
+				m_col = COL_WHITE;		// 白色
+			}
+			else if (!m_bSwitchCol)
+			{ // 元のいろに戻す
+
+				m_col = COL_YELLOW;		// 黄色
+			}
+		}
+		else
+		{ // 点滅する時間じゃない場合
+			m_nBlinkCounter++;
+		}
+
 		for (int nCntRank = 0; nCntRank < MAX_RANK; nCntRank++)
 		{
 			for (int nCntObject = 0; nCntObject < NUM_TIME; nCntObject++)
@@ -224,7 +257,7 @@ void CRanking::Update(void)
 
 					if (m_nRankNumber == nCntRank)
 					{
-						m_apObject[nCntObject][nCntRank]->SetColor(D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+						m_apObject[nCntObject][nCntRank]->SetColor(m_col);
 					}
 				}
 			}
