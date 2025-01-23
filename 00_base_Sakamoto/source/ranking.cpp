@@ -18,6 +18,7 @@ namespace
 	const D3DXVECTOR3 RANKING_SIZE = D3DXVECTOR3(70.0f, 70.0f, 0.0f);		//ランキングの大きさ
 	const float NUMBER_DISTANCE = 50.0f;		//文字同士の幅
 	const float RANKING_DISTANCE = 85.0f;	//ランキング同士の幅
+	const int NUM_DIGIT = 6;				// 桁数
 }
 
 //静的メンバ変数宣言
@@ -34,12 +35,10 @@ CRanking::CRanking(int nPriority) : CObject(nPriority)
 			m_apObject[nCntTime][nCntRank] = nullptr;
 			m_nNumber[nCntTime][nCntRank] = 0;
 		}
+
+		m_nTime[nCntRank] = NULL;
+
 	}
-	m_nTime[0] = 80000;
-	m_nTime[1] = 40000;
-	m_nTime[2] = 20000;
-	m_nTime[3] = 10000;
-	m_nTime[4] = 5000;
 
 	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_nCount = 0;
@@ -106,6 +105,7 @@ HRESULT CRanking::Init(void)
 		}
 	}
 
+	// txt読み込み
 	LoadRanking();
 
 	return S_OK;
@@ -231,14 +231,16 @@ void CRanking::Update(void)
 		}
 	}
 
+	int nDigit = 0;	
+
 	for (int nCntRank = 0; nCntRank < MAX_RANK; nCntRank++)
 	{
-		m_nNumber[0][nCntRank] = m_nTime[nCntRank] % 1000000 / 100000;
-		m_nNumber[1][nCntRank] = m_nTime[nCntRank] % 100000 / 10000;
-		m_nNumber[2][nCntRank] = m_nTime[nCntRank] % 10000 / 1000;
-		m_nNumber[3][nCntRank] = m_nTime[nCntRank] % 1000 / 100;
-		m_nNumber[4][nCntRank] = m_nTime[nCntRank] % 100 / 10;
-		m_nNumber[5][nCntRank] = m_nTime[nCntRank] % 10 / 1;
+		for (int i = 0; i < NUM_DIGIT; i++)
+		{
+			nDigit = (int)pow(10, (NUM_DIGIT - i));		//桁数
+
+			m_nNumber[i][nCntRank] = m_nTime[nCntRank] % nDigit / (nDigit * 0.1f);
+		}
 
 		for (int nCntObject = 0; nCntObject < NUM_TIME; nCntObject++)
 		{
@@ -321,6 +323,9 @@ void CRanking::SetRanking(int nRanKing)
 			}
 		}
 	}
+
+	// ランキングの保存
+	SaveRanking();
 }
 
 //====================================================================
