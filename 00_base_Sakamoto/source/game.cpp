@@ -460,6 +460,13 @@ void CGame::ResetStage(void)
 	CMapSystem::GetInstance()->GetMove()->SetStateCount(200);
 	CObjmeshField::GetListTop()->SetRot(INITVECTOR3);
 
+	if (m_pEventMovie != nullptr)
+	{
+		m_pEventMovie->SetEventType(CEventMovie::STATE_CHANGE);
+	}
+
+	m_bGameEnd = false;
+
 	// 傾き装置のリスト構造が無ければ抜ける
 	if (CSlopeDevice::GetList() == nullptr) { return; }
 	std::list<CSlopeDevice*> list = CSlopeDevice::GetList()->GetList();    // リストを取得
@@ -470,13 +477,6 @@ void CGame::ResetStage(void)
 		// 方向の傾き装置を上昇状態に変更
 		pSlopeDevice->ReSet();
 	}
-
-	if (m_pEventMovie != nullptr)
-	{
-		m_pEventMovie->SetEventType(CEventMovie::STATE_CHANGE);
-	}
-
-	m_bGameEnd = false;
 }
 
 //====================================================================

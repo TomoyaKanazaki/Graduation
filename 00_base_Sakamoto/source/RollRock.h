@@ -31,6 +31,8 @@ public:
 	void Update(void);
 	void Draw(void);
 
+	void Reset(void);		// リセット
+
 	int GetIdx(void) { return m_nIdxTexture; }
 	int GetIdxXModel(void) { return -1; }
 
@@ -50,6 +52,8 @@ private:
 
 	CMapSystem::GRID m_Grid;	//グリット番号
 	CMapSystem::GRID m_OldGrid;	//グリット番号
+	CMapSystem::GRID m_SaveGrid;//グリット番号(保存用)
+
 	int m_nIdxXModel;				//Xモデルの番号
 	D3DXVECTOR3 m_CollisionPos;		//当たり判定用の座標
 	bool m_bCollision;				//当たり判定用の座標

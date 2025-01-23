@@ -976,6 +976,21 @@ void CMapSystem::ResetMap(void)
 			bRailGridSet = false;
 		}
 	}
+
+	// 岩のリスト構造が無ければ抜ける
+	if (CRollRock::GetList() == nullptr) { /*return;*/ }
+	else
+	{
+		std::list<CRollRock*> list = CRollRock::GetList()->GetList();    // リストを取得
+
+		// 岩のリストの中身を確認する
+		for (CRollRock* pRollRock : list)
+		{
+			// 岩のリセット
+			pRollRock->Reset();
+		}
+	}
+
 }
 
 //==========================================
