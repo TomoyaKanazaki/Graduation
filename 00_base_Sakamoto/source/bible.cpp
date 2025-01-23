@@ -128,7 +128,7 @@ void CBible::Move(D3DXVECTOR3& pos)
 	D3DXVECTOR3 posField = CObjmeshField::GetListTop()->GetPos();
 
 	// 自身の座標とフィールドを結ぶ時の向きを算出
-	D3DXVECTOR3 vec = pos - posField;
+	D3DXVECTOR3 vec = base - posField;
 	float rot = atan2f(vec.z, vec.x);
 
 	// 経過時間を取得

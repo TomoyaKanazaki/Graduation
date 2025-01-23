@@ -315,6 +315,10 @@ void CTutorial::Uninit(void)
 	// スロー情報の全削除
 	CSlowManager::ReleaseAll();
 
+	// 背景オブジェクトの終了処理
+	CBgObjManager::GetInstance()->Uninit();
+
+
 	//全てのオブジェクトの破棄
 	CObject::ReleaseAll();
 
