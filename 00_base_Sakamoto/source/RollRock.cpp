@@ -273,9 +273,6 @@ void CRollRock::Reset(void)
 	D3DXVECTOR3 pos = m_Grid.ToWorld();
 	pos.y = 50.0f;
 
-	//マップとのマトリックスの掛け合わせをオンにする
-	SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
-
 	// 位置設定
 	CObjectX::SetPos(pos);
 

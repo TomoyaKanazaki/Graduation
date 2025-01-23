@@ -991,6 +991,19 @@ void CMapSystem::ResetMap(void)
 		}
 	}
 
+	// レールブロックのリスト構造が無ければ抜ける
+	if (CRailBlock::GetList() == nullptr) { /*return;*/ }
+	else
+	{
+		std::list<CRailBlock*> list = CRailBlock::GetList()->GetList();    // リストを取得
+
+		// レールブロックのリストの中身を確認する
+		for (CRailBlock* pRailBlock : list)
+		{
+			// レールブロックのリセット
+			pRailBlock->Reset();
+		}
+	}
 }
 
 //==========================================
