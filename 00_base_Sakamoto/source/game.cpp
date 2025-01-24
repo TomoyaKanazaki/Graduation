@@ -370,6 +370,12 @@ void CGame::Update(void)
 					{
 						m_bTrans = true;		// 遷移する状態にする
 					}
+
+					// プレイヤーの状態をリセット
+					for (int i = 0; i < CManager::GetInstance()->GetGameMode(); ++i)
+					{
+						m_pPlayer[i]->Reset();
+					}
 				}
 			}
 			else

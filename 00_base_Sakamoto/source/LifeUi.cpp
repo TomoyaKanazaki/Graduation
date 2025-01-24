@@ -88,33 +88,6 @@ void CLifeUi::Update(void)
 {
 	//頂点情報の更新
 	CObject2D::Update();
-
-	//----頂点情報を変更したい場合は以下のコードを使用すること-----
-	//VERTEX_2D* pVtx;	//頂点ポインタを所得
-
-	////頂点バッファをロックし、両店情報へのポインタを所得
-	//GetVtxBuff()->Lock(0, 0, (void**)&pVtx, 0);
-
-	////位置
-	//pVtx[0].pos;
-	//pVtx[1].pos;
-	//pVtx[2].pos;
-	//pVtx[3].pos;
-
-	////色
-	//pVtx[0].col;
-	//pVtx[1].col;
-	//pVtx[2].col;
-	//pVtx[3].col;
-
-	////テクスチャ
-	//pVtx[0].tex;
-	//pVtx[1].tex;
-	//pVtx[2].tex;
-	//pVtx[3].tex;
-
-	////頂点バッファをアンロックする
-	//GetVtxBuff()->Unlock();
 }
 
 //====================================================================

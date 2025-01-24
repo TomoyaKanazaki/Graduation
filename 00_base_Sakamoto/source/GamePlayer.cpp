@@ -86,40 +86,6 @@ HRESULT CGamePlayer::Init(int PlayNumber)
 {
 	CPlayer::Init(PlayNumber);
 
-	//体力UIの生成
-	if (m_pLifeUi == nullptr)
-	{
-		m_pLifeUi = CLifeUi::Create();
-	}
-
-	//体力UIの生成
-	if (m_pScore == nullptr)
-	{
-		m_pScore = CScore::Create();
-	}
-	
-	//十字架UIとその背景の生成
-	if (m_pCrossUI == nullptr)
-	{
-		m_pCrossUI = CCrossUi::Create();
-	}
-	if (m_pCrossUIBg == nullptr)
-	{
-		m_pCrossUIBg = CCrossUi::Create();
-	}
-
-	//吹き出しUI背景の生成
-	if (m_pPopUIBg == nullptr)
-	{
-		m_pPopUIBg = CPopUiBg::Create();
-	}
-
-	//吹き出しUIの生成
-	if (m_pPopUI == nullptr)
-	{
-		m_pPopUI = CPopUi::Create();
-	}
-
 	//所持するUIの初期化
 	InitUI();
 
@@ -174,97 +140,10 @@ void CGamePlayer::Uninit(void)
 //====================================================================
 void CGamePlayer::Update(void)
 {
-	float fCrossStatePercent;
-
 	CPlayer::Update();
 
-	//十字架UIの更新
-		if (m_pCrossUI != nullptr && m_pCrossUIBg != nullptr)
-		 {
-		if (GetItemType() != TYPE_NONE)
-			 {//アイテム保持状態
-			fCrossStatePercent = GetCrossStateParcent();
-			}
-		 else
-			 {//アイテム非保持状態
-			fCrossStatePercent = 0.0f;
-			}
-		
-					//十字架UIのゲージ減少反映処理
-			D3DXVECTOR2 SizeDef = m_pCrossUI->GetSizeDefault();
-		
-			m_pCrossUI->SetSize(D3DXVECTOR3(SizeDef.x, SizeDef.y * fCrossStatePercent, 0.0f));
-		m_pCrossUI->SetPos(D3DXVECTOR3(m_posDefCrossUI.x, m_posDefCrossUI.y + (SizeDef.y - SizeDef.y * fCrossStatePercent) / 2, 0.0f));
-		
-			m_pCrossUI->SetAnim(D3DXVECTOR2(0.0f, 1.0 + fCrossStatePercent), D3DXVECTOR2(1.0f, 1.0f));
-		}
-
-	//吹き出しUI背景
-	if (m_pPopUIBg != nullptr)
-	{
-		//プレイヤー位置への追従更新
-		D3DXVECTOR3 PlayerPos = GetPos();
-		m_pPopUIBg->SetPos(D3DXVECTOR3(PlayerPos.x + 75.0f, PlayerPos.y + 100.0f, PlayerPos.z));
-		
-		m_fSizePopUI += m_fVariableSizePopUI;
-
-		if (m_fSizePopUI >= 15.0f|| m_fSizePopUI<=0.0f)
-		{
-			m_fVariableSizePopUI = m_fVariableSizePopUI * -1;
-		}
-		
-		m_pPopUIBg->SetHeight(75.0f + m_fSizePopUI);
-		m_pPopUIBg->SetWidth(75.0f + m_fSizePopUI);
-
-		if (GetState() == CObjectCharacter::STATE_EGG||CGame::GetInstance()->GetEvent()==true)
-		{
-			m_pPopUIBg->SetColorA(0.0f);
-		}
-		else
-		{
-			m_pPopUIBg->SetColorA(1.0f);
-		}
-		
-	}
-
-	//吹き出しUI
-	if (m_pPopUI != nullptr)
-	{
-		//プレイヤー位置への追従更新
-		D3DXVECTOR3 PlayerPos = GetPos();
-		m_pPopUI->SetPos(D3DXVECTOR3(PlayerPos.x + 75.0f, PlayerPos.y + 100.0f, PlayerPos.z));
-
-		//卵状態での透明化
-		if (GetState() == CObjectCharacter::STATE_EGG || CGame::GetInstance()->GetEvent() == true)
-		{
-			m_pPopUI->SetColorA(0.0f);
-		}
-		else
-		{
-			m_pPopUI->SetColorA(1.0f);
-		}
-
-		//表示内容の更新
-		if (GetItemType() == TYPE_CROSS)
-		{//アイテム保持状態
-			m_pPopUI->SetpopUIType(CPopUi::TYPE_BOWABOWA);
-		}
-		else if(GetItemType() == TYPE_BIBLE)
-		{//アイテム非保持状態
-			m_pPopUI->SetpopUIType(CPopUi::TYPE_DEVILHOLE);
-		}
-		else
-		{
-			if (CBowabowa::GetList() != nullptr)
-			{
-				m_pPopUI->SetpopUIType(CPopUi::TYPE_CROSS);
-			}
-			else
-			{
-				m_pPopUI->SetpopUIType(CPopUi::TYPE_BIBLE);
-			}
-		}
-	}
+	// UIの操作
+	ControlUi();
 
 	//デバッグキーの処理と設定
 	DebugKey();
@@ -339,6 +218,40 @@ void CGamePlayer::Death(void)
 //====================================================================
 void CGamePlayer::InitUI()
 {
+	//体力UIの生成
+	if (m_pLifeUi == nullptr)
+	{
+		m_pLifeUi = CLifeUi::Create();
+	}
+
+	//体力UIの生成
+	if (m_pScore == nullptr)
+	{
+		m_pScore = CScore::Create();
+	}
+
+	//十字架UIとその背景の生成
+	if (m_pCrossUI == nullptr)
+	{
+		m_pCrossUI = CCrossUi::Create();
+	}
+	if (m_pCrossUIBg == nullptr)
+	{
+		m_pCrossUIBg = CCrossUi::Create();
+	}
+
+	//吹き出しUI背景の生成
+	if (m_pPopUIBg == nullptr)
+	{
+		m_pPopUIBg = CPopUiBg::Create();
+	}
+
+	//吹き出しUIの生成
+	if (m_pPopUI == nullptr)
+	{
+		m_pPopUI = CPopUi::Create();
+	}
+
 	switch (GetPlayNumber())
 	{
 	case 0:
@@ -474,4 +387,132 @@ void CGamePlayer::DebugKey(void)
 	SetLife(nLife);
 
 #endif // !_DEBUG
+}
+
+//==========================================
+//  状態を初期化する
+//==========================================
+void CGamePlayer::Reset()
+{
+	// UIを初期化
+	InitUI();
+
+	// エフェクトを初期化
+	if (m_pEffectEgg != nullptr)
+	{
+		m_pEffectEgg->SetDeath();
+		m_pEffectEgg = nullptr;
+	}
+	if (m_pEffectSpeed != nullptr)
+	{
+		m_pEffectSpeed->SetDeath();
+		m_pEffectSpeed = nullptr;
+	}
+	if (m_pEffectItem != nullptr)
+	{
+		m_pEffectItem->SetDeath();
+		m_pEffectItem = nullptr;
+	}
+	if (m_pEffectGuide != nullptr)
+	{
+		m_pEffectGuide->SetDeath();
+		m_pEffectGuide = nullptr;
+	}
+}
+
+//==========================================
+//  UIの操作
+//==========================================
+void CGamePlayer::ControlUi()
+{
+	// ローカル変数宣言
+	float fCrossStatePercent;
+
+	//十字架UIの更新
+	if (m_pCrossUI != nullptr && m_pCrossUIBg != nullptr)
+	{
+		if (GetItemType() != TYPE_NONE)
+		{//アイテム保持状態
+			fCrossStatePercent = GetCrossStateParcent();
+		}
+		else
+		{//アイテム非保持状態
+			fCrossStatePercent = 0.0f;
+		}
+
+		//十字架UIのゲージ減少反映処理
+		D3DXVECTOR2 SizeDef = m_pCrossUI->GetSizeDefault();
+
+		m_pCrossUI->SetSize(D3DXVECTOR3(SizeDef.x, SizeDef.y * fCrossStatePercent, 0.0f));
+		m_pCrossUI->SetPos(D3DXVECTOR3(m_posDefCrossUI.x, m_posDefCrossUI.y + (SizeDef.y - SizeDef.y * fCrossStatePercent) / 2, 0.0f));
+
+		m_pCrossUI->SetAnim(D3DXVECTOR2(0.0f, 1.0 + fCrossStatePercent), D3DXVECTOR2(1.0f, 1.0f));
+	}
+
+	//吹き出しUI背景
+	if (m_pPopUIBg != nullptr)
+	{
+		//プレイヤー位置への追従更新
+		D3DXVECTOR3 PlayerPos = GetPos();
+		m_pPopUIBg->SetPos(D3DXVECTOR3(PlayerPos.x + 75.0f, PlayerPos.y + 100.0f, PlayerPos.z));
+
+		m_fSizePopUI += m_fVariableSizePopUI;
+
+		if (m_fSizePopUI >= 15.0f || m_fSizePopUI <= 0.0f)
+		{
+			m_fVariableSizePopUI = m_fVariableSizePopUI * -1;
+		}
+
+		m_pPopUIBg->SetHeight(75.0f + m_fSizePopUI);
+		m_pPopUIBg->SetWidth(75.0f + m_fSizePopUI);
+
+		if (GetState() == CObjectCharacter::STATE_EGG || CGame::GetInstance()->GetEvent() == true)
+		{
+			m_pPopUIBg->SetColorA(0.0f);
+		}
+		else
+		{
+			m_pPopUIBg->SetColorA(1.0f);
+		}
+
+	}
+
+	//吹き出しUI
+	if (m_pPopUI != nullptr)
+	{
+		//プレイヤー位置への追従更新
+		D3DXVECTOR3 PlayerPos = GetPos();
+		m_pPopUI->SetPos(D3DXVECTOR3(PlayerPos.x + 75.0f, PlayerPos.y + 100.0f, PlayerPos.z));
+
+		//卵状態での透明化
+		if (GetState() == CObjectCharacter::STATE_EGG || CGame::GetInstance()->GetEvent() == true)
+		{
+			m_pPopUI->SetColorA(0.0f);
+		}
+		else
+		{
+			m_pPopUI->SetColorA(1.0f);
+		}
+
+		//表示内容の更新
+		if (GetItemType() == TYPE_CROSS)
+		{//アイテム保持状態
+			m_pPopUI->SetpopUIType(CPopUi::TYPE_BOWABOWA);
+		}
+		else if (GetItemType() == TYPE_BIBLE)
+		{//アイテム非保持状態
+			m_pPopUI->SetpopUIType(CPopUi::TYPE_DEVILHOLE);
+		}
+		else
+		{
+			if (CBowabowa::GetList() != nullptr)
+			{
+				m_pPopUI->SetpopUIType(CPopUi::TYPE_CROSS);
+			}
+			else
+			{
+				m_pPopUI->SetpopUIType(CPopUi::TYPE_BIBLE);
+			}
+		}
+	}
 }
