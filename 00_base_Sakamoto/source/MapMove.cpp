@@ -41,7 +41,7 @@ namespace
 	const float SCROOL_SPEED_02 = (CMapSystem::GetGritSize() * SCROOL_MOVEGRID_02) / SCROOL_COUNT_02;			// ƒXƒNƒ[ƒ‹‚ÌˆÚ“®‘¬“x
 
 	const int SLOPE_TIME = 300;						// ŒX‚«‘€ìŽžŠÔ
-	const int SLOPE_RAND = 100;						// ŒX‚«”­¶Šm—¦
+	const int SLOPE_RAND = 0;						// ŒX‚«”­¶Šm—¦
 	float STAGE_ROT_LIMIT = D3DX_PI * 0.15f;		// ŒX‚«‚ÌŠp“x§ŒÀ
 
 	const float SLOPE_SPEED01 = 0.00075f;			// ŒX‚«‚ÌˆÚ“®‘¬“x
@@ -552,85 +552,54 @@ void CMapMove::Move(int Arroow)
 	{
 		D3DXVECTOR3 MapPos = CMapSystem::GetInstance()->GetMapPos();
 
+		float fSpeed = 0.0f;
 		switch (m_ScrollType)
 		{
 		case CMapMove::SCROLL_TYPE_NORMAL:
-
-			switch (Arroow)
-			{
-			case 0:
-				m_move.z = SCROOL_SPEED_01;
-				if (m_fScrollEndLine <= MapPos.z)
-				{
-					m_bScrollOK = true;
-				}
-				break;
-
-			case 1:
-				m_move.z = -SCROOL_SPEED_01;
-				if (m_fScrollEndLine >= MapPos.z)
-				{
-					m_bScrollOK = true;
-				}
-				break;
-
-			case 2:
-				m_move.x = -SCROOL_SPEED_01;
-				if (m_fScrollEndLine >= MapPos.x)
-				{
-					m_bScrollOK = true;
-				}
-				break;
-
-			case 3:
-				m_move.x = SCROOL_SPEED_01;
-				if (m_fScrollEndLine <= MapPos.x)
-				{
-					m_bScrollOK = true;
-				}
-				break;
-			}
+			fSpeed = SCROOL_SPEED_01;
 			break;
 
 		case CMapMove::SCROLL_TYPE_RETRO:
-
-			switch (Arroow)
-			{
-			case 0:
-				m_move.z = SCROOL_SPEED_02;
-				if (m_fScrollEndLine <= MapPos.z)
-				{
-					m_bScrollOK = true;
-				}
-				break;
-
-			case 1:
-				m_move.z = -SCROOL_SPEED_02;
-				if (m_fScrollEndLine >= MapPos.z)
-				{
-					m_bScrollOK = true;
-				}
-				break;
-
-			case 2:
-				m_move.x = -SCROOL_SPEED_02;
-				if (m_fScrollEndLine >= MapPos.x)
-				{
-					m_bScrollOK = true;
-				}
-				break;
-
-			case 3:
-				m_move.x = SCROOL_SPEED_02;
-				if (m_fScrollEndLine <= MapPos.x)
-				{
-					m_bScrollOK = true;
-				}
-				break;
-			}
+			fSpeed = SCROOL_SPEED_02;
 			break;
 
 		default:
+			assert(false);
+			break;
+		}
+
+		switch (Arroow)
+		{
+		case 0:
+			m_move.z += fSpeed;
+			if (m_fScrollEndLine <= MapPos.z)
+			{
+				m_bScrollOK = true;
+			}
+			break;
+
+		case 1:
+			m_move.z -= fSpeed;
+			if (m_fScrollEndLine >= MapPos.z)
+			{
+				m_bScrollOK = true;
+			}
+			break;
+
+		case 2:
+			m_move.x -= fSpeed;
+			if (m_fScrollEndLine >= MapPos.x)
+			{
+				m_bScrollOK = true;
+			}
+			break;
+
+		case 3:
+			m_move.x += fSpeed;
+			if (m_fScrollEndLine <= MapPos.x)
+			{
+				m_bScrollOK = true;
+			}
 			break;
 		}
 
