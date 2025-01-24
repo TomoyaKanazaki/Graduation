@@ -83,7 +83,6 @@ CMapMove::CMapMove() :
 	m_SlopeType = 0;
 	m_bScrollOK = false;
 	m_fScrollMove = 0.0f;
-	m_SetState = MOVE_WAIT;
 	m_fScrollEndLine = 0.0f;
 }
 
@@ -144,7 +143,6 @@ HRESULT CMapMove::Init(void)
 	m_nStateNum = 0;
 	m_SlopeType = 0;
 	m_bScrollOK = false;
-	m_SetState = MOVE_WAIT;
 	m_fScrollEndLine = 0.0f;
 
 	//カメラを振動させない
@@ -248,7 +246,7 @@ void CMapMove::StateManager(void)
 
 	switch (m_State)
 	{
-	case MOVE_WAIT:  // 待機状態 -> 次に移動が起こる
+	case MOVE_WAIT: // 待機状態 -> 次に移動が起こる
 
 		// 状態終了時
 		if (m_nStateCount <= 0)
@@ -256,166 +254,22 @@ void CMapMove::StateManager(void)
 			// サウンドの停止
 			StopSound();
 
-			if (m_SetState == MOVE_SCROLL_UP ||
-				m_SetState == MOVE_SCROLL_DOWN ||
-				m_SetState == MOVE_SCROLL_RIGHT ||
-				m_SetState == MOVE_SCROLL_LEFT) // スクロール状態だった場合
+			// 100％のrand()をまわす
+			int nRand = rand() % 101;
+
+			// 傾きの指定％の時
+			if (nRand <= SLOPE_RAND)
 			{
-				if (m_SetState == MOVE_SCROLL_UP ||
-					m_SetState == MOVE_SCROLL_DOWN)
-				{
-					MapPos.z = useful::RoundUp2(MapPos.z);
+				// 傾いている状態かどうかを切り替える
+				m_bSlope = !m_bSlope;
 
-					if (MapPos.z < 0.0f)
-					{
-						m_fScrollEndLine = MapPos.z + 100.0f;
-						m_State = MOVE_SCROLL_UP;
-						m_DevilArrow = 0;
-					}
-					else
-					{
-						m_fScrollEndLine = MapPos.z - 100.0f;
-						m_State = MOVE_SCROLL_DOWN;
-						m_DevilArrow = 1;
-					}
-				}
-				else
-				{
-					MapPos.x = useful::RoundUp2(MapPos.x);
+				if (m_bSlope)
+				{// 傾き状態の時
 
-					if (MapPos.x >= 0.0f)
-					{
-						m_fScrollEndLine = MapPos.x - 100.0f;
-						m_State = MOVE_SCROLL_LEFT;
-						m_DevilArrow = 2;
-					}
-					else
-					{
-						m_fScrollEndLine = MapPos.x + 100.0f;
-						m_State = MOVE_SCROLL_RIGHT;
-						m_DevilArrow = 3;
-					}
-				}
-				m_bScrollOK = false;
-				m_nStateCount = SCROOL_TIME;
-			}
-			else
-			{
-				// 100％のrand()をまわす
-				int nRand = rand() % 101;
-
-				// 傾きの指定％の時
-				if (nRand <= SLOPE_RAND)
-				{
-					// 傾いている状態かどうかを切り替える
-					m_bSlope = !m_bSlope;
-
-					if (m_bSlope)
-					{// 傾き状態の時
-
-						//傾き方向指定処理
-						m_DevilArrow = rand() % 2;
-
-						if (m_SlopwArrowOld == 0 || m_SlopwArrowOld == 1)
-						{// 前回の傾き方向が左右だった場合
-
-							// 今回の傾き方向は上下にする
-							if (m_DevilArrow == 0)
-							{
-								m_DevilArrow = 2;
-							}
-							else if (m_DevilArrow == 1)
-							{
-								m_DevilArrow = 3;
-							}
-						}
-
-						// 今回の傾き方向を記録する
-						m_SlopwArrowOld = m_DevilArrow;
-
-						m_nStateCount = SLOPE_TIME;
-
-						m_nStateNum = m_DevilArrow;
-
-						// 状態設定
-						switch (m_DevilArrow)
-						{
-						case 0:
-							m_State = MOVE_SLOPE_UP;
-
-							// サウンド再生
-							CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_SIGN_UP);
-							break;
-						case 1:
-							m_State = MOVE_SLOPE_DOWN;
-
-							// サウンド再生
-							CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_SIGN_DOWN);
-							break;
-						case 2:
-							m_State = MOVE_SLOPE_LEFT;
-
-							// サウンド再生
-							CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_SIGN_LEFT);
-							break;
-						case 3:
-							m_State = MOVE_SLOPE_RIGHT;
-
-							// サウンド再生
-							CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_SIGN_RIGHT);
-							break;
-						}
-
-						//カメラを振動させる
-						CManager::GetInstance()->GetCamera(0)->SetBib(true);
-
-						// 傾き装置のリスト構造が無ければ抜ける
-						if (CSlopeDevice::GetList() == nullptr) { return; }
-						std::list<CSlopeDevice*> list = CSlopeDevice::GetList()->GetList();    // リストを取得
-
-						// 傾き装置のリストの中身を確認する
-						for (CSlopeDevice* pSlopeDevice : list)
-						{
-							// 方向の傾き装置を上昇状態に変更
-							pSlopeDevice->SetStateArrow((CScrollArrow::Arrow)m_DevilArrow);
-						}
-					}
-					else
-					{// 傾き戻し状態の時
-
-						// サウンドの停止
-						StopSound();
-
-						// 傾きを戻す時だけ倍の時間を指定し、戻り切ったら傾き状態を終了とする
-						m_nStateCount = SLOPE_TIME * 2;
-
-						m_State = m_SlopeOld;
-
-						//カメラを振動させる
-						CManager::GetInstance()->GetCamera(0)->SetBib(true);
-
-						// 傾き装置のリスト構造が無ければ抜ける
-						if (CSlopeDevice::GetList() == nullptr) { return; }
-						std::list<CSlopeDevice*> list = CSlopeDevice::GetList()->GetList();    // リストを取得
-
-						// 傾き装置のリストの中身を確認する
-						for (CSlopeDevice* pSlopeDevice : list)
-						{
-							// 方向の傾き装置を上昇状態に変更
-							pSlopeDevice->SetStateArrowBack((CScrollArrow::Arrow)m_SlopwArrowOld);
-						}
-					}
-				}
-				else
-				{// 傾きの指定％じゃない時
-
-					// スクロール時間設定
-					m_nStateCount = SCROOL_TIME * 2;
-
-					// スクロール方向指定
+					//傾き方向指定処理
 					m_DevilArrow = rand() % 2;
 
-					if (m_ScrollArrowOld == 0 || m_ScrollArrowOld == 1)
+					if (m_SlopwArrowOld == 0 || m_SlopwArrowOld == 1)
 					{// 前回の傾き方向が左右だった場合
 
 						// 今回の傾き方向は上下にする
@@ -429,54 +283,152 @@ void CMapMove::StateManager(void)
 						}
 					}
 
+					// 今回の傾き方向を記録する
+					m_SlopwArrowOld = m_DevilArrow;
+
+					m_nStateCount = SLOPE_TIME;
+
+					m_nStateNum = m_DevilArrow;
+
 					// 状態設定
 					switch (m_DevilArrow)
 					{
 					case 0:
-						m_State = MOVE_SCROLL_UP;
+						m_State = MOVE_SLOPE_UP;
 
 						// サウンド再生
-						CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_SIGN_UP);		
+						CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_SIGN_UP);
 						break;
-
 					case 1:
-						m_State = MOVE_SCROLL_DOWN;
+						m_State = MOVE_SLOPE_DOWN;
 
 						// サウンド再生
 						CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_SIGN_DOWN);
 						break;
-
 					case 2:
-						m_State = MOVE_SCROLL_LEFT;
+						m_State = MOVE_SLOPE_LEFT;
 
 						// サウンド再生
 						CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_SIGN_LEFT);
 						break;
-
 					case 3:
-						m_State = MOVE_SCROLL_RIGHT;
+						m_State = MOVE_SLOPE_RIGHT;
 
 						// サウンド再生
 						CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_SIGN_RIGHT);
 						break;
 					}
 
-					m_ScrollArrowOld = m_DevilArrow;
-					m_nStateNum = m_DevilArrow;
+					//カメラを振動させる
+					CManager::GetInstance()->GetCamera(0)->SetBib(true);
 
-					// マップ移動装置のリスト構造が無ければ抜ける
-					if (CScrollDevice::GetList() == nullptr) { return; }
-					std::list<CScrollDevice*> list = CScrollDevice::GetList()->GetList();    // リストを取得
+					// 傾き装置のリスト構造が無ければ抜ける
+					if (CSlopeDevice::GetList() == nullptr) { return; }
+					std::list<CSlopeDevice*> list = CSlopeDevice::GetList()->GetList();    // リストを取得
 
-					// マップ移動装置のリストの中身を確認する
-					for (CScrollDevice* pScrollDevice : list)
+					// 傾き装置のリストの中身を確認する
+					for (CSlopeDevice* pSlopeDevice : list)
 					{
-						// 方向指定状態設定（一致だと回転）
-						pScrollDevice->SetStateArrow((CScrollArrow::Arrow)m_DevilArrow);
+						// 方向の傾き装置を上昇状態に変更
+						pSlopeDevice->SetStateArrow((CScrollArrow::Arrow)m_DevilArrow);
 					}
-
-					m_bScrollOK = false;
 				}
+				else
+				{// 傾き戻し状態の時
+
+					// サウンドの停止
+					StopSound();
+
+					// 傾きを戻す時だけ倍の時間を指定し、戻り切ったら傾き状態を終了とする
+					m_nStateCount = SLOPE_TIME * 2;
+
+					m_State = m_SlopeOld;
+
+					//カメラを振動させる
+					CManager::GetInstance()->GetCamera(0)->SetBib(true);
+
+					// 傾き装置のリスト構造が無ければ抜ける
+					if (CSlopeDevice::GetList() == nullptr) { return; }
+					std::list<CSlopeDevice*> list = CSlopeDevice::GetList()->GetList();    // リストを取得
+
+					// 傾き装置のリストの中身を確認する
+					for (CSlopeDevice* pSlopeDevice : list)
+					{
+						// 方向の傾き装置を上昇状態に変更
+						pSlopeDevice->SetStateArrowBack((CScrollArrow::Arrow)m_SlopwArrowOld);
+					}
+				}
+			}
+			else
+			{// 傾きの指定％じゃない時
+
+				// スクロール時間設定
+				m_nStateCount = SCROOL_TIME * 2;
+
+				// スクロール方向指定
+				m_DevilArrow = rand() % 2;
+
+				if (m_ScrollArrowOld == 0 || m_ScrollArrowOld == 1)
+				{// 前回の傾き方向が左右だった場合
+
+					// 今回の傾き方向は上下にする
+					if (m_DevilArrow == 0)
+					{
+						m_DevilArrow = 2;
+					}
+					else if (m_DevilArrow == 1)
+					{
+						m_DevilArrow = 3;
+					}
+				}
+
+				// 状態設定
+				switch (m_DevilArrow)
+				{
+				case 0:
+					m_State = MOVE_SCROLL_UP;
+
+					// サウンド再生
+					CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_SIGN_UP);		
+					break;
+
+				case 1:
+					m_State = MOVE_SCROLL_DOWN;
+
+					// サウンド再生
+					CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_SIGN_DOWN);
+					break;
+
+				case 2:
+					m_State = MOVE_SCROLL_LEFT;
+
+					// サウンド再生
+					CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_SIGN_LEFT);
+					break;
+
+				case 3:
+					m_State = MOVE_SCROLL_RIGHT;
+
+					// サウンド再生
+					CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_SIGN_RIGHT);
+					break;
+				}
+
+				m_ScrollArrowOld = m_DevilArrow;
+				m_nStateNum = m_DevilArrow;
+
+				// マップ移動装置のリスト構造が無ければ抜ける
+				if (CScrollDevice::GetList() == nullptr) { return; }
+				std::list<CScrollDevice*> list = CScrollDevice::GetList()->GetList();    // リストを取得
+
+				// マップ移動装置のリストの中身を確認する
+				for (CScrollDevice* pScrollDevice : list)
+				{
+					// 方向指定状態設定（一致だと回転）
+					pScrollDevice->SetStateArrow((CScrollArrow::Arrow)m_DevilArrow);
+				}
+
+				m_bScrollOK = false;
 			}
 		}
 
@@ -591,14 +543,6 @@ void CMapMove::StateManager(void)
 	{
 		m_nStateCount--;
 	}
-
-	DebugProc::Print(DebugProc::POINT_RIGHT, "スクロール状態 : ");
-
-	auto str = magic_enum::enum_name(m_SetState);
-
-	DebugProc::Print(DebugProc::POINT_RIGHT, str.data());
-	DebugProc::Print(DebugProc::POINT_RIGHT, "\n");
-
 }
 
 //====================================================================
@@ -701,7 +645,6 @@ void CMapMove::Move(int Arroow)
 
 			m_fScrollMove = 0.0f;
 			m_fScrollEndLine = 0.0f;
-			m_SetState = MOVE_WAIT;
 			m_move = INITVECTOR3;
 		}
 	}

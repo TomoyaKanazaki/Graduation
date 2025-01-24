@@ -479,8 +479,6 @@ void CGame::ResetStage(void)
 		CGame::GetInstance()->GetPlayer(1)->SetMove(INITVECTOR3);
 	}
 
-	CMapSystem::GetInstance()->GetMove()->SetScroolSetState(CMapSystem::GetInstance()->GetMove()->GetState());
-
 	// ƒ}ƒbƒv‚Ì‰Šú‰»
 	CMapSystem::GetInstance()->GetMove()->Init();
 	CMapSystem::GetInstance()->GetMove()->SetStateCount(200);

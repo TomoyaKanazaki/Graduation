@@ -598,9 +598,6 @@ void CPlayer::Attack(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis)
 {
 	STATE state = GetState();		// 状態
 
-	// プレイヤー番号の取得
-	int nNumPlayer = GetPlayNumber();
-
 	if (state == STATE_WALK)
 	{
 		//キーボードの取得

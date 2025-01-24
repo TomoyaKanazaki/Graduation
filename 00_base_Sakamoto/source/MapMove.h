@@ -78,9 +78,6 @@ public:
 	void SetScrollType(SCROLL_TYPE Rot) { m_ScrollType = Rot; }
 	SCROLL_TYPE GetScrollType(void) { return m_ScrollType; }
 
-	void SetScroolSetState(MOVE Set) { m_SetState = Set; }
-	MOVE GetScroolSetState(void) { return m_SetState; }
-
 	CMapSystem::GRID GetMinGrid(void) { return m_MinGrid; }	//マップで一番左上にあるブロックの番号
 	CMapSystem::GRID GetMaxGrid(void) { return m_MaxGrid; }	//マップで一番右下にあるブロックの番号
 
@@ -112,7 +109,6 @@ private:
 	float m_fActionCount;			//行動のカウント
 	MOVE m_State;					//状態
 	MOVE m_SlopeOld;				//一個前の傾き状態
-	MOVE m_SetState;				//確定行動用の次の状態
 	int m_nStateCount;				//状態管理用カウント
 	int m_nStateNum;				//状態カウント
 	bool m_bSlope;					//傾き状態かどうか
