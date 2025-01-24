@@ -67,8 +67,6 @@ CMapMove::CMapMove() :
 	m_Objmove = INITVECTOR3;
 	m_AutoMoveRot = D3DXVECTOR3(0.0f, D3DX_PI * 0.5f, 0.0f);
 	m_fActionCount = 0.0f;
-	m_State = MOVE_WAIT;
-	m_SlopeOld = MOVE_WAIT;
 	m_nStateCount = 0;
 	m_CollisionRot = 0.0f;
 	m_DevilPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -77,10 +75,7 @@ CMapMove::CMapMove() :
 	m_bSlope = false;
 	m_MinGrid = CMapSystem::GRID(0, 0);
 	m_MaxGrid = CMapSystem::GRID(NUM_WIGHT - 1, NUM_HEIGHT - 1);
-	m_ScrollArrowOld = 0;
-	m_SlopwArrowOld = 0;
 	m_ScrollType = SCROLL_TYPE_NORMAL;
-	m_nStateNum = 0;
 	m_SlopeType = 0;
 	m_bScrollOK = false;
 	m_fScrollMove = 0.0f;
@@ -125,8 +120,6 @@ HRESULT CMapMove::Init(void)
 	m_ScrollType = (SCROLL_TYPE)CManager::GetInstance()->GetScrollType();
 
 	//状態関連の初期化
-	m_State = MOVE_WAIT;
-	m_SlopeOld = MOVE_WAIT;
 	m_nStateCount = SCROOL_TIME * 0.5f;
 	m_move = INITVECTOR3;
 	m_MapDifference = INITVECTOR3;
@@ -138,9 +131,6 @@ HRESULT CMapMove::Init(void)
 	m_DevilPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_MinGrid = CMapSystem::GRID(0, 0);
 	m_MaxGrid = CMapSystem::GRID(NUM_WIGHT - 1, NUM_HEIGHT - 1);
-	m_ScrollArrowOld = 0;
-	m_SlopwArrowOld = 0;
-	m_nStateNum = 0;
 	m_SlopeType = 0;
 	m_bScrollOK = false;
 	m_fScrollEndLine = 0.0f;
@@ -516,8 +506,6 @@ void CMapMove::StateManager(void)
 	DebugProc::Print(DebugProc::POINT_RIGHT, "\n");
 
 }
-
-
 #else	// いじいじしてるコード
 void CMapMove::StateManager(void)
 {
@@ -618,17 +606,6 @@ void CMapMove::StateManager(void)
 		assert(false);
 		break;
 	}
-
-//#if 1
-//
-//	DebugProc::Print(DebugProc::POINT_RIGHT, "スクロール状態 : ");
-//
-//	auto str = magic_enum::enum_name(m_State);
-//
-//	DebugProc::Print(DebugProc::POINT_RIGHT, str.data());
-//	DebugProc::Print(DebugProc::POINT_RIGHT, "\n");
-//#endif
-
 }
 #endif
 

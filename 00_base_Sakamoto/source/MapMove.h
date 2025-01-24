@@ -89,7 +89,6 @@ public:
 
 	void SetMove(D3DXVECTOR3 move) { m_move = move; }
 	D3DXVECTOR3 GetMove(void) { return m_move; }
-	/*MOVE GetState(void) { return m_State; }*/
 	void SetDevilPos(D3DXVECTOR3 size) { m_DevilPos = size; }
 	D3DXVECTOR3 GetDevilPos(void) { return m_DevilPos; }
 	void SetDifference(D3DXVECTOR3 size) { m_MapDifference = size; }
@@ -118,6 +117,7 @@ private:
 	void Slope();				//傾き処理
 	void CollisionOut();		//ステージ外にいるオブジェクトの処理
 
+
 	void SetSlopeRot(ROTTYPE& RotType);		// 傾きの向きを設定
 	void SetDeviceMap(void);	// マップ装置の設定
 
@@ -139,10 +139,7 @@ private:
 	D3DXVECTOR3 m_DevilPos;			//デビルパワーがマップのブロックにデビルスクロールする位置、テスト用
 	D3DXVECTOR3 m_MapDifference;	//マップを動かした時の差分
 	float m_fActionCount;			//行動のカウント
-	MOVE m_State;					//状態 ---------------------------------------------------------------消えろ
-	MOVE m_SlopeOld;				//一個前の傾き状態 ---------------------------------------------------消えろ
 	int m_nStateCount;				//状態管理用カウント
-	int m_nStateNum;				//状態カウント
 	bool m_bSlope;					//傾き状態かどうか
 
 	float m_fScrollMove;			//スクロールが移動した量
@@ -155,13 +152,9 @@ private:
 	float m_CollisionRot;			//当たり判定用の向き
 
 	D3DXVECTOR3 m_DevilRot;			// デビルパワーによって傾く値
-	int m_ScrollArrowOld;			// 過去のスクロールの方向
-	int m_SlopwArrowOld;			// 過去の傾きの方向
 	SCROLL_TYPE m_ScrollType;		// スクロールの種類
 	int m_SlopeType;				// スロープの種類
 	float m_fEffectTime;			// エフェクト生成タイマー
-
-
 
 
 
