@@ -241,9 +241,6 @@ void CGame::Uninit(void)
 	// スロー情報の全削除
 	CSlowManager::ReleaseAll();
 
-	// マップシステムの終了
-	//CMapSystem::GetInstance()->Uninit();
-
 	// 背景オブジェクトの終了処理
 	CBgObjManager::GetInstance()->Uninit();
 
