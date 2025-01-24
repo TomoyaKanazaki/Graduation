@@ -479,7 +479,7 @@ void CSlopeDevice::StateManager(void)
 
 	// 状態取得用変数
 	CMapMove::SCROLL_TYPE MoveType = CMapMove::SCROLL_TYPE_NORMAL;
-	CMapMove::MOVE MoveState = CMapMove::MOVE_WAIT;	
+	CMapMove::ROTTYPE MoveState = CMapMove::ROTTYPE_MAX;
 
 	if (pMapMove != nullptr)
 	{
@@ -487,7 +487,7 @@ void CSlopeDevice::StateManager(void)
 		MoveType = pMapMove->GetScrollType();
 
 		// マップ状態取得
-		MoveState = pMapMove->GetState();
+		MoveState = pMapMove->GetRotState();
 	}
 
 	if (MoveType == CMapMove::SCROLL_TYPE_RETRO &&
@@ -506,8 +506,8 @@ void CSlopeDevice::StateManager(void)
 	case STATE_ASCENT:
 
 		// 移動状態判定（上 or 下）
-		if (MoveState == CMapMove::MOVE_SLOPE_UP ||
-			MoveState == CMapMove::MOVE_SLOPE_DOWN)
+		if (MoveState == CMapMove::ROTTYPE_UP ||
+			MoveState == CMapMove::ROTTYPE_DOWN)
 		{
 			// 上昇処理
 			Ascent(SETUP_TYPE_ELEVATING_PART);
@@ -516,8 +516,8 @@ void CSlopeDevice::StateManager(void)
 			ActiveLever(SETUP_TYPE_LIVER);
 		}
 		// 移動状態判定（右 or 左）
-		else if (MoveState == CMapMove::MOVE_SLOPE_RIGHT ||
-				 MoveState == CMapMove::MOVE_SLOPE_LEFT)
+		else if (MoveState == CMapMove::ROTTYPE_RIGHT ||
+				 MoveState == CMapMove::ROTTYPE_LEFT)
 		{
 			// 上昇処理
 			Ascent(SETUP_TYPE_ELEVATING_PART);

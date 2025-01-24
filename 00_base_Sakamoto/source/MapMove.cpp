@@ -77,7 +77,6 @@ CMapMove::CMapMove() :
 	m_bSlope = false;
 	m_MinGrid = CMapSystem::GRID(0, 0);
 	m_MaxGrid = CMapSystem::GRID(NUM_WIGHT - 1, NUM_HEIGHT - 1);
-	m_DevilArrow = 0;
 	m_ScrollArrowOld = 0;
 	m_SlopwArrowOld = 0;
 	m_ScrollType = SCROLL_TYPE_NORMAL;
@@ -137,7 +136,6 @@ HRESULT CMapMove::Init(void)
 	m_DevilPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_MinGrid = CMapSystem::GRID(0, 0);
 	m_MaxGrid = CMapSystem::GRID(NUM_WIGHT - 1, NUM_HEIGHT - 1);
-	m_DevilArrow = 0;
 	m_ScrollArrowOld = 0;
 	m_SlopwArrowOld = 0;
 	m_nStateNum = 0;
@@ -186,9 +184,9 @@ void CMapMove::Update(void)
 	D3DXVECTOR3 MapPos = CMapSystem::GetInstance()->GetMapPos();
 
 	// エフェクトを生成
-	switch (m_State)
+	switch (m_MoveMode)
 	{
-	case MOVE_WAIT:
+	case MOVEMODE_WAIT:
 
 		// 生成時間をリセット
 		m_fEffectTime = EFFECT_RANGE;
@@ -673,7 +671,7 @@ void CMapMove::SetBackSlope(void)
 	// 傾きを戻す時だけ倍の時間を指定し、戻り切ったら傾き状態を終了とする
 	m_nStateCount = SLOPE_TIME * 2;
 
-	m_State = m_SlopeOld;
+	m_RotType = m_OldRotType;
 
 	//カメラを振動させる
 	CManager::GetInstance()->GetCamera(0)->SetBib(true);
@@ -686,7 +684,7 @@ void CMapMove::SetBackSlope(void)
 	for (CSlopeDevice* pSlopeDevice : list)
 	{
 		// 方向の傾き装置を上昇状態に変更
-		pSlopeDevice->SetStateArrowBack((CScrollArrow::Arrow)m_SlopwArrowOld);
+		pSlopeDevice->SetStateArrowBack((CScrollArrow::Arrow)m_SlopwArrowOld); // TODO：←この変数変えて～yamete~
 	}
 }
 
@@ -1076,8 +1074,6 @@ void CMapMove::Slope()
 	m_OldRotType = m_RotType;		// 前回の向き入れる
 
 	pMapField->SetRot(MapRot);		// 角度入れる
-
-	DebugProc::Print(DebugProc::POINT_RIGHT, "マップの角度 : %f %f %f\n", MapRot.x, MapRot.y, MapRot.z);
 }
 
 //====================================================================

@@ -60,7 +60,7 @@ public:
 
 
 
-	//移動の状態
+	//移動の状態----------------------------------------------------------お前も消えろ全ての元凶
 	enum MOVE
 	{
 		MOVE_WAIT = 0,		//待機
@@ -89,7 +89,7 @@ public:
 
 	void SetMove(D3DXVECTOR3 move) { m_move = move; }
 	D3DXVECTOR3 GetMove(void) { return m_move; }
-	MOVE GetState(void) { return m_State; }
+	/*MOVE GetState(void) { return m_State; }*/
 	void SetDevilPos(D3DXVECTOR3 size) { m_DevilPos = size; }
 	D3DXVECTOR3 GetDevilPos(void) { return m_DevilPos; }
 	void SetDifference(D3DXVECTOR3 size) { m_MapDifference = size; }
@@ -104,6 +104,9 @@ public:
 	CMapSystem::GRID GetMaxGrid(void) { return m_MaxGrid; }	//マップで一番右下にあるブロックの番号
 
 	void SetStateCount(int Set) { m_nStateCount = Set; }
+
+	ROTTYPE GetRotState(void) { return m_RotType; }			// 向き状態
+	MOVEMODE GetMoveMode(void) { return m_MoveMode; }		// 移動状態
 
 	void FollowScroll(D3DXVECTOR3& pos) { pos += m_move; }
 
@@ -152,7 +155,6 @@ private:
 	float m_CollisionRot;			//当たり判定用の向き
 
 	D3DXVECTOR3 m_DevilRot;			// デビルパワーによって傾く値
-	int m_DevilArrow;				// 方向[0:上][1:下][2:左][3:右] ------------------------------------------消す
 	int m_ScrollArrowOld;			// 過去のスクロールの方向
 	int m_SlopwArrowOld;			// 過去の傾きの方向
 	SCROLL_TYPE m_ScrollType;		// スクロールの種類

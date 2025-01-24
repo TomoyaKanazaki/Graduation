@@ -240,53 +240,53 @@ void CDevil::ActionState(void)
 {
 	if (CMapSystem::GetInstance()->GetMove() != nullptr)
 	{
-		// 上モーション
-		if (CMapSystem::GetInstance()->GetMove()->GetState() == CMapMove::MOVE_SCROLL_UP ||
-			CMapSystem::GetInstance()->GetMove()->GetState() == CMapMove::MOVE_SLOPE_UP)
-		{
-			if (m_Action != ACTION_SIGNAL_UP)
+		if (CMapSystem::GetInstance()->GetMove()->GetMoveMode() != CMapMove::MOVEMODE_WAIT)
+		{ // 待ち状態じゃない場合
+
+			// 上モーション
+			if (CMapSystem::GetInstance()->GetMove()->GetRotState() == CMapMove::ROTTYPE_UP)
 			{
-				m_Action = ACTION_SIGNAL_UP;
-				m_nStateNum = ACTION_SIGNAL_UP;
-				GetMotion()->Set(ACTION_SIGNAL_UP, 5);
+				if (m_Action != ACTION_SIGNAL_UP)
+				{
+					m_Action = ACTION_SIGNAL_UP;
+					m_nStateNum = ACTION_SIGNAL_UP;
+					GetMotion()->Set(ACTION_SIGNAL_UP, 5);
+				}
 			}
-		}
-		// 下モーション
-		else if (CMapSystem::GetInstance()->GetMove()->GetState() == CMapMove::MOVE_SCROLL_DOWN ||
-			CMapSystem::GetInstance()->GetMove()->GetState() == CMapMove::MOVE_SLOPE_DOWN)
-		{
-			if (m_Action != ACTION_SIGNAL_DOWN)
+			// 下モーション
+			else if (CMapSystem::GetInstance()->GetMove()->GetRotState() == CMapMove::ROTTYPE_DOWN)
 			{
-				m_Action = ACTION_SIGNAL_DOWN;
-				m_nStateNum = ACTION_SIGNAL_DOWN;
-				GetMotion()->Set(ACTION_SIGNAL_DOWN, 5);
+				if (m_Action != ACTION_SIGNAL_DOWN)
+				{
+					m_Action = ACTION_SIGNAL_DOWN;
+					m_nStateNum = ACTION_SIGNAL_DOWN;
+					GetMotion()->Set(ACTION_SIGNAL_DOWN, 5);
+				}
 			}
-		}
-		// 左モーション
-		else if (CMapSystem::GetInstance()->GetMove()->GetState() == CMapMove::MOVE_SCROLL_LEFT ||
-			CMapSystem::GetInstance()->GetMove()->GetState() == CMapMove::MOVE_SLOPE_LEFT)
-		{
-			if (m_Action != ACTION_SIGNAL_LEFT)
+			// 左モーション
+			else if (CMapSystem::GetInstance()->GetMove()->GetRotState() == CMapMove::ROTTYPE_LEFT)
 			{
-				m_Action = ACTION_SIGNAL_LEFT;
-				m_nStateNum = ACTION_SIGNAL_LEFT;
-				GetMotion()->Set(ACTION_SIGNAL_LEFT, 5);
+				if (m_Action != ACTION_SIGNAL_LEFT)
+				{
+					m_Action = ACTION_SIGNAL_LEFT;
+					m_nStateNum = ACTION_SIGNAL_LEFT;
+					GetMotion()->Set(ACTION_SIGNAL_LEFT, 5);
+				}
 			}
-		}
-		// 右モーション
-		else if (CMapSystem::GetInstance()->GetMove()->GetState() == CMapMove::MOVE_SCROLL_RIGHT ||
-			CMapSystem::GetInstance()->GetMove()->GetState() == CMapMove::MOVE_SLOPE_RIGHT)
-		{
-			if (m_Action != ACTION_SIGNAL_RIGHT)
+			// 右モーション
+			else if (CMapSystem::GetInstance()->GetMove()->GetRotState() == CMapMove::ROTTYPE_RIGHT)
 			{
-				m_Action = ACTION_SIGNAL_RIGHT;
-				m_nStateNum = ACTION_SIGNAL_RIGHT;
-				GetMotion()->Set(ACTION_SIGNAL_RIGHT, 5);
+				if (m_Action != ACTION_SIGNAL_RIGHT)
+				{
+					m_Action = ACTION_SIGNAL_RIGHT;
+					m_nStateNum = ACTION_SIGNAL_RIGHT;
+					GetMotion()->Set(ACTION_SIGNAL_RIGHT, 5);
+				}
 			}
 		}
 		// ニュートラルモーション
 		else
-		{
+		{ // 待ち状態の場合
 			if (m_Action != ACTION_NEUTRAL)
 			{
 				m_Action = ACTION_NEUTRAL;
