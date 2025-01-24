@@ -14,32 +14,22 @@
 //====================================================================
 float useful::RoundUp2(float Num)
 {
-	if (Num >= 0)
+	// 100’PˆÊ‚ÅlÌŒÜ“ü
+	int nNum = static_cast<int>(Num / 100.0f);
+	float remainder = fmod(Num, 100.0f);
+
+	if (remainder >= 50.0f)
 	{
-		int nNum = (int)Num / 100;
-		if (((int)Num % 100 / 10) >= 5)
-		{
-			Num = (nNum + 1) * 100.0f;
-		}
-		else
-		{
-			Num = (nNum) * 100.0f;
-		}
+		return (nNum + 1) * 100.0f;
+	}
+	else if (remainder <= -50.0f)
+	{
+		return (nNum - 1) * 100.0f;
 	}
 	else
 	{
-		int nNum = (int)Num / 100;
-		if (((int)Num % 100 / 10) <= -5)
-		{
-			Num = (nNum - 1) * 100.0f;
-		}
-		else
-		{
-			Num = (nNum) * 100.0f;
-		}
+		return nNum * 100.0f;
 	}
-
-	return Num;
 }
 
 //====================================================================

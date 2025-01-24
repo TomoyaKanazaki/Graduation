@@ -87,17 +87,15 @@ public:
 private:
 
 	void StateManager(void);	//状態管理
-	void Move(int Arroow);		//移動処理
+	void Move();		//移動処理
 	void BackSlope(void);		//傾き処理
-	void Slope(int Arroow);		//傾き処理
+	void Slope();		//傾き処理
 	void CollisionOut();		//ステージ外にいるオブジェクトの処理
 
 	void StopSound(); // 黙らせる
 
 	void ScrollReset();		//スクロールのずれ修正
 	void GritScroll();		//グリットのスクロール
-
-	void DebugKey(void);		//デバッグキー
 
 	D3DXVECTOR3 m_move;				//移動量
 	D3DXVECTOR3 m_Objmove;			//オブジェクトから影響される移動量
