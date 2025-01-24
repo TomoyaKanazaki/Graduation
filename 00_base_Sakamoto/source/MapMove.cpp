@@ -165,10 +165,6 @@ void CMapMove::Uninit(void)
 //====================================================================
 void CMapMove::Update(void)
 {
-#ifdef _DEBUG
-	//m_ScrollType = SCROLL_TYPE_MAX;
-#endif // _DEBUG
-
 	// 移動量をリセット
 	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
@@ -254,7 +250,7 @@ void CMapMove::StateManager(void)
 			// サウンドの停止
 			StopSound();
 
-			// 100％のrand()をまわす
+			// 次の行動を抽選
 			int nRand = rand() % 101;
 
 			// 傾きの指定％の時
@@ -543,6 +539,14 @@ void CMapMove::StateManager(void)
 	{
 		m_nStateCount--;
 	}
+
+	DebugProc::Print(DebugProc::POINT_RIGHT, "スクロール状態 : ");
+
+	auto str = magic_enum::enum_name(m_State);
+
+	DebugProc::Print(DebugProc::POINT_RIGHT, str.data());
+	DebugProc::Print(DebugProc::POINT_RIGHT, "\n");
+
 }
 
 //====================================================================
@@ -831,127 +835,129 @@ void CMapMove::Slope(int Arroow)
 
 	D3DXVECTOR3 MapRot = pMapField->GetRot();
 
+	float fSlopeRate = 0.0f; // スクロールの速度
+
+	// スクロールタイプによって使用する定数を設定
 	switch (m_ScrollType)
 	{
 	case CMapMove::SCROLL_TYPE_NORMAL:
-
-		switch (Arroow)
-		{
-		case 0:
-
-			MapRot.x += D3DX_PI * SLOPE_SPEED01;
-
-			if (MapRot.x > STAGE_ROT_LIMIT)
-			{
-				MapRot.x = STAGE_ROT_LIMIT;
-				CManager::GetInstance()->GetCamera(0)->SetBib(false);	//カメラの振動をオフにする
-			}
-			// 右側
-			m_SlopeType = 0;
-
-			break;
-		case 1:
-
-			MapRot.x -= D3DX_PI * SLOPE_SPEED01;
-
-			if (MapRot.x < -STAGE_ROT_LIMIT)
-			{
-				MapRot.x = -STAGE_ROT_LIMIT;
-				CManager::GetInstance()->GetCamera(0)->SetBib(false);	//カメラの振動をオフにする
-			}
-			// 左側
-			m_SlopeType = 1;
-
-			break;
-		case 2:
-
-			MapRot.z += D3DX_PI * SLOPE_SPEED01;
-
-			if (MapRot.z > STAGE_ROT_LIMIT)
-			{
-				MapRot.z = STAGE_ROT_LIMIT;
-				CManager::GetInstance()->GetCamera(0)->SetBib(false);	//カメラの振動をオフにする
-			}
-			// 奥側
-			m_SlopeType = 2;
-
-			break;
-		case 3:
-
-			MapRot.z -= D3DX_PI * SLOPE_SPEED01;
-
-			if (MapRot.z < -STAGE_ROT_LIMIT)
-			{
-				MapRot.z = -STAGE_ROT_LIMIT;
-				CManager::GetInstance()->GetCamera(0)->SetBib(false);	//カメラの振動をオフにする
-			}
-			// 手前側
-			m_SlopeType = 3;
-
-			break;
-		}
-
-		m_SlopeOld = m_State;
-
+		fSlopeRate = SLOPE_SPEED01;
 		break;
 
 	case CMapMove::SCROLL_TYPE_RETRO:
-
-		switch (Arroow)
-		{
-		case 0:
-
-			MapRot.x += D3DX_PI * SLOPE_SPEED02;
-
-			if (MapRot.x > STAGE_ROT_LIMIT)
-			{
-				MapRot.x = STAGE_ROT_LIMIT;
-				CManager::GetInstance()->GetCamera(0)->SetBib(false);	//カメラの振動をオフにする
-			}
-
-			break;
-		case 1:
-
-			MapRot.x -= D3DX_PI * SLOPE_SPEED02;
-
-			if (MapRot.x < -STAGE_ROT_LIMIT)
-			{
-				MapRot.x = -STAGE_ROT_LIMIT;
-				CManager::GetInstance()->GetCamera(0)->SetBib(false);	//カメラの振動をオフにする
-			}
-
-			break;
-		case 2:
-
-			MapRot.z += D3DX_PI * SLOPE_SPEED02;
-
-			if (MapRot.z > STAGE_ROT_LIMIT)
-			{
-				MapRot.z = STAGE_ROT_LIMIT;
-				CManager::GetInstance()->GetCamera(0)->SetBib(false);	//カメラの振動をオフにする
-			}
-
-			break;
-		case 3:
-
-			MapRot.z -= D3DX_PI * SLOPE_SPEED02;
-
-			if (MapRot.z < -STAGE_ROT_LIMIT)
-			{
-				MapRot.z = -STAGE_ROT_LIMIT;
-				CManager::GetInstance()->GetCamera(0)->SetBib(false);	//カメラの振動をオフにする
-			}
-
-			break;
-		}
-
-		m_SlopeOld = m_State;
-
+		fSlopeRate = SLOPE_SPEED02;
 		break;
 
-	default:
+	default: // スクロール状態が設定されていない場合
+		assert(false);
 		break;
 	}
+
+	switch (m_DevilArrow)
+	{
+	case 0:
+
+		MapRot.x += D3DX_PI * fSlopeRate;
+
+		if (MapRot.x > STAGE_ROT_LIMIT)
+		{
+			MapRot.x = STAGE_ROT_LIMIT;
+			CManager::GetInstance()->GetCamera(0)->SetBib(false);	//カメラの振動をオフにする
+		}
+		// 右側
+		m_SlopeType = 0;
+
+		break;
+	case 1:
+
+		MapRot.x -= D3DX_PI * fSlopeRate;
+
+		if (MapRot.x < -STAGE_ROT_LIMIT)
+		{
+			MapRot.x = -STAGE_ROT_LIMIT;
+			CManager::GetInstance()->GetCamera(0)->SetBib(false);	//カメラの振動をオフにする
+		}
+		// 左側
+		m_SlopeType = 1;
+
+		break;
+	case 2:
+
+		MapRot.z += D3DX_PI * fSlopeRate;
+
+		if (MapRot.z > STAGE_ROT_LIMIT)
+		{
+			MapRot.z = STAGE_ROT_LIMIT;
+			CManager::GetInstance()->GetCamera(0)->SetBib(false);	//カメラの振動をオフにする
+		}
+		// 奥側
+		m_SlopeType = 2;
+
+		break;
+	case 3:
+
+		MapRot.z -= D3DX_PI * fSlopeRate;
+
+		if (MapRot.z < -STAGE_ROT_LIMIT)
+		{
+			MapRot.z = -STAGE_ROT_LIMIT;
+			CManager::GetInstance()->GetCamera(0)->SetBib(false);	//カメラの振動をオフにする
+		}
+		// 手前側
+		m_SlopeType = 3;
+
+		break;
+	}
+
+	switch (m_DevilArrow)
+	{
+	case 0:
+
+		MapRot.x += D3DX_PI * fSlopeRate;
+
+		if (MapRot.x > STAGE_ROT_LIMIT)
+		{
+			MapRot.x = STAGE_ROT_LIMIT;
+			CManager::GetInstance()->GetCamera(0)->SetBib(false);	//カメラの振動をオフにする
+		}
+
+		break;
+	case 1:
+
+		MapRot.x -= D3DX_PI * fSlopeRate;
+
+		if (MapRot.x < -STAGE_ROT_LIMIT)
+		{
+			MapRot.x = -STAGE_ROT_LIMIT;
+			CManager::GetInstance()->GetCamera(0)->SetBib(false);	//カメラの振動をオフにする
+		}
+
+		break;
+	case 2:
+
+		MapRot.z += D3DX_PI * fSlopeRate;
+
+		if (MapRot.z > STAGE_ROT_LIMIT)
+		{
+			MapRot.z = STAGE_ROT_LIMIT;
+			CManager::GetInstance()->GetCamera(0)->SetBib(false);	//カメラの振動をオフにする
+		}
+
+		break;
+	case 3:
+
+		MapRot.z -= D3DX_PI * fSlopeRate;
+
+		if (MapRot.z < -STAGE_ROT_LIMIT)
+		{
+			MapRot.z = -STAGE_ROT_LIMIT;
+			CManager::GetInstance()->GetCamera(0)->SetBib(false);	//カメラの振動をオフにする
+		}
+
+		break;
+	}
+
+	m_SlopeOld = m_State;
 
 	pMapField->SetRot(MapRot);
 }

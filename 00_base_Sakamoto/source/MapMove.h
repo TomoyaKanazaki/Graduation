@@ -45,7 +45,6 @@ public:
 		MOVE_MAX,			//Н≈Се
 	};
 
-
 	//ЙЅМЄСђПуС‘
 	enum SPEED
 	{
