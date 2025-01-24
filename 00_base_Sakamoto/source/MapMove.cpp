@@ -197,6 +197,8 @@ void CMapMove::Update(void)
 
 	DebugProc::Print(DebugProc::POINT_RIGHT, "[最小番号]左 %d : 上 %d\n", m_MinGrid.x, m_MinGrid.z);
 	DebugProc::Print(DebugProc::POINT_RIGHT, "[最大番号]右 %d : 下 %d\n", m_MaxGrid.x, m_MaxGrid.z);
+	DebugProc::Print(DebugProc::POINT_RIGHT, "[マップの傾き]X：%f, Z：%f\n", m_DevilRot.x, m_DevilRot.z);
+
 
 	// エフェクトを生成
 	switch (m_State)
@@ -1264,19 +1266,25 @@ float CMapMove::MoveSlopeX(float Move, SPEED& Speed)
 	{
 		fSlopeMove = (D3DX_PI / (D3DX_PI + DevilRot.z));
 
-		if (Move > 0.0f
-			&& Speed == SPEED_UP)
-		{// 右に傾いた時の加速
-			fSlopeMove = (D3DX_PI / (D3DX_PI + DevilRot.z)) * SLOPEUP_MAG;
+		if (DevilRot.z < 0.0f)
+		{// 左に傾いた時の加速
+			fSlopeMove = (D3DX_PI / (D3DX_PI - DevilRot.z)) * SLOPEUP_MAG;
+		}
+		else if (DevilRot.z > 0.0f)
+		{// 左に傾いた時の加速
+			fSlopeMove = (D3DX_PI / (D3DX_PI + DevilRot.z)) * SLOPEDOWN_MAG;
 		}
 	}
 	else if (Move < 0.0f)
 	{
 		fSlopeMove = (D3DX_PI / (D3DX_PI - DevilRot.z));
 
-		if (Move < 0.0f
-			&& Speed == SPEED_DOWN)
-		{// 左に傾いた時の減速
+		if (DevilRot.z > 0.0f)
+		{// 右に傾いた時の加速
+			fSlopeMove = (D3DX_PI / (D3DX_PI - DevilRot.z)) * SLOPEUP_MAG;
+		}
+		else if (DevilRot.z < 0.0f)
+		{// 右に傾いた時の加速
 			fSlopeMove = (D3DX_PI / (D3DX_PI + DevilRot.z)) * SLOPEDOWN_MAG;
 		}
 	}
@@ -1308,21 +1316,28 @@ float CMapMove::MoveSlopeZ(float Move, SPEED& Speed)
 
 	if (Move > 0.0f)
 	{
-		fSlopeMove = (D3DX_PI / (D3DX_PI - DevilRot.x));
+		fSlopeMove = (D3DX_PI / (D3DX_PI + DevilRot.x));
 
-		if (Move > 0.0f
-			&& Speed == SPEED_UP)
-		{// 奥に傾いた時の加速
-			fSlopeMove = (D3DX_PI / (D3DX_PI + DevilRot.x)) * SLOPEUP_MAG;
+		if (DevilRot.x < 0.0f)
+		{// 左に傾いた時の加速
+			fSlopeMove = (D3DX_PI / (D3DX_PI + DevilRot.x)) * SLOPEDOWN_MAG;
+		}
+		else if (DevilRot.x > 0.0f)
+		{// 左に傾いた時の加速
+			fSlopeMove = (D3DX_PI / (D3DX_PI - DevilRot.x)) * SLOPEUP_MAG;
 		}
 	}
 	else if (Move < 0.0f)
 	{
-		fSlopeMove = (D3DX_PI / (D3DX_PI + DevilRot.x));
+		fSlopeMove = (D3DX_PI / (D3DX_PI - DevilRot.x));
 
-		if (Speed == SPEED_DOWN)
-		{// 手前に傾いた時の加速
+		if (DevilRot.x > 0.0f)
+		{// 右に傾いた時の加速
 			fSlopeMove = (D3DX_PI / (D3DX_PI + DevilRot.x)) * SLOPEDOWN_MAG;
+		}
+		else if (DevilRot.x < 0.0f)
+		{// 右に傾いた時の加速
+			fSlopeMove = (D3DX_PI / (D3DX_PI - DevilRot.x)) * SLOPEUP_MAG;
 		}
 	}
 
