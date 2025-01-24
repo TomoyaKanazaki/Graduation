@@ -960,6 +960,8 @@ void CMapMove::Slope(int Arroow)
 	m_SlopeOld = m_State;
 
 	pMapField->SetRot(MapRot);
+
+	DebugProc::Print(DebugProc::POINT_RIGHT, "マップの角度 : %f %f %f\n", MapRot.x, MapRot.y, MapRot.z);
 }
 
 //====================================================================
