@@ -248,7 +248,7 @@ void CMapMove::StateManager(void)
 
 	switch (m_State)
 	{
-	case MOVE_WAIT:
+	case MOVE_WAIT:  // 待機状態 -> 次に移動が起こる
 
 		// 状態終了時
 		if (m_nStateCount <= 0)
@@ -258,8 +258,8 @@ void CMapMove::StateManager(void)
 
 			if (m_SetState == MOVE_SCROLL_UP ||
 				m_SetState == MOVE_SCROLL_DOWN ||
-				m_SetState == MOVE_SCROLL_LEFT ||
-				m_SetState == MOVE_SCROLL_RIGHT)
+				m_SetState == MOVE_SCROLL_RIGHT ||
+				m_SetState == MOVE_SCROLL_LEFT) // スクロール状態だった場合
 			{
 				if (m_SetState == MOVE_SCROLL_UP ||
 					m_SetState == MOVE_SCROLL_DOWN)
@@ -482,6 +482,7 @@ void CMapMove::StateManager(void)
 
 		break;
 
+	// スクロール中の状態 -> 待機状態になる
 	case MOVE_SCROLL_UP:
 	case MOVE_SCROLL_DOWN:
 	case MOVE_SCROLL_RIGHT:
@@ -526,6 +527,7 @@ void CMapMove::StateManager(void)
 
 		break;
 
+	// 傾き中の状態 -> 待機状態になる
 	case MOVE_SLOPE_UP:
 	case MOVE_SLOPE_DOWN:
 	case MOVE_SLOPE_RIGHT:
@@ -541,7 +543,7 @@ void CMapMove::StateManager(void)
 			}
 			else
 			{
-				BackSlope();
+				BackSlope(); // 現在の傾き状態を基に戻す関数
 			}
 			break;
 
@@ -781,142 +783,90 @@ void CMapMove::Move(int Arroow)
 //====================================================================
 void CMapMove::BackSlope(void)
 {
-	CObjmeshField* pMapField = CObjmeshField::GetListTop();
-	D3DXVECTOR3 MapRot = pMapField->GetRot();
-	bool bBackOK = false;
+	// ローカル変数宣言
+	CObjmeshField* pMapField = CObjmeshField::GetListTop(); // マップの床
+	D3DXVECTOR3 MapRot = pMapField->GetRot(); // マップの傾き
+	bool bReset = false; // 傾きのリセットが完了したフラグ
+	float fSlopeRate = 0.0f; // スクロールの速度
 
+	// スクロールタイプによって使用する定数を設定
 	switch (m_ScrollType)
 	{
 	case CMapMove::SCROLL_TYPE_NORMAL:
-
-		if (MapRot.x > 0.0f)
-		{
-			MapRot.x -= D3DX_PI * SLOPE_SPEED01;
-
-			if (MapRot.x <= 0.0f)
-			{
-				MapRot.x = 0.0f;
-				bBackOK = true;
-			}
-		}
-
-		if (MapRot.x < 0.0f)
-		{
-			MapRot.x += D3DX_PI * SLOPE_SPEED01;
-
-			if (MapRot.x >= 0.0f)
-			{
-				MapRot.x = 0.0f;
-				bBackOK = true;
-			}
-		}
-
-		if (MapRot.z > 0.0f)
-		{
-			MapRot.z -= D3DX_PI * SLOPE_SPEED01;
-
-			if (MapRot.z <= 0.0f)
-			{
-				MapRot.z = 0.0f;
-				bBackOK = true;
-			}
-		}
-
-		if (MapRot.z < 0.0f)
-		{
-			MapRot.z += D3DX_PI * SLOPE_SPEED01;
-
-			if (MapRot.z >= 0.0f)
-			{
-				MapRot.z = 0.0f;
-				bBackOK = true;
-			}
-		}
-
+		fSlopeRate = SLOPE_SPEED01;
 		break;
 
 	case CMapMove::SCROLL_TYPE_RETRO:
-
-		if (MapRot.x > 0.0f)
-		{
-			MapRot.x -= D3DX_PI * SLOPE_SPEED02;
-
-			if (MapRot.x <= 0.0f)
-			{
-				MapRot.x = 0.0f;
-				bBackOK = true;
-			}
-		}
-
-		if (MapRot.x < 0.0f)
-		{
-			MapRot.x += D3DX_PI * SLOPE_SPEED02;
-
-			if (MapRot.x >= 0.0f)
-			{
-				MapRot.x = 0.0f;
-				bBackOK = true;
-			}
-		}
-
-		if (MapRot.z > 0.0f)
-		{
-			MapRot.z -= D3DX_PI * SLOPE_SPEED02;
-
-			if (MapRot.z <= 0.0f)
-			{
-				MapRot.z = 0.0f;
-				bBackOK = true;
-			}
-		}
-
-		if (MapRot.z < 0.0f)
-		{
-			MapRot.z += D3DX_PI * SLOPE_SPEED02;
-
-			if (MapRot.z >= 0.0f)
-			{
-				MapRot.z = 0.0f;
-				bBackOK = true;
-			}
-		}
-
+		fSlopeRate = SLOPE_SPEED02;
 		break;
 
-	default:
-
-		if (MapRot.x > 0.0f)
-		{
-			MapRot.x -= D3DX_PI * SLOPE_SPEED01;
-		}
-
-		if (MapRot.x < 0.0f)
-		{
-			MapRot.x += D3DX_PI * SLOPE_SPEED01;
-		}
-
-		if (MapRot.z > 0.0f)
-		{
-			MapRot.z -= D3DX_PI * SLOPE_SPEED01;
-		}
-
-		if (MapRot.z < 0.0f)
-		{
-			MapRot.z += D3DX_PI * SLOPE_SPEED01;
-		}
-
+	default: // スクロール状態が設定されていない場合
+		assert(false);
 		break;
 	}
 
-	if (bBackOK)
+	// xが正に傾いている場合
+	if (MapRot.x > 0.0f)
 	{
-		CManager::GetInstance()->GetCamera(0)->SetBib(false);	//カメラの振動をオフにする
-		MOVE_WAIT;
-		m_nStateCount = 60;
-		MapRot.x = 0.0f;
-		MapRot.z = 0.0f;
+		MapRot.x -= D3DX_PI * fSlopeRate;
+
+		// 戻り過ぎの補正
+		if (MapRot.x <= 0.0f)
+		{
+			bReset = true;
+		}
 	}
 
+	// xが負に傾いている場合
+	if (MapRot.x < 0.0f)
+	{
+		MapRot.x += D3DX_PI * fSlopeRate;
+		
+		// 戻り過ぎの補正
+		if (MapRot.x >= 0.0f)
+		{
+			bReset = true;
+		}
+	}
+	
+	// zが正に傾いている場合
+	if (MapRot.z > 0.0f)
+	{
+		MapRot.z -= D3DX_PI * fSlopeRate;
+
+		// 戻り過ぎの補正
+		if (MapRot.z <= 0.0f)
+		{
+			bReset = true;
+		}
+	}
+
+	// zが負に傾いている場合
+	if (MapRot.z < 0.0f)
+	{
+		MapRot.z += D3DX_PI * fSlopeRate;
+
+		// 戻り過ぎの補正
+		if (MapRot.z >= 0.0f)
+		{
+			bReset = true;
+		}
+	}
+
+	// 傾きの動きが終了する場合
+	if (bReset)
+	{
+		//カメラの振動をオフにする
+		CManager::GetInstance()->GetCamera(0)->SetBib(false);
+
+		// カウンターをリセットする TODO : マジックナンバー
+		m_nStateCount = 60;
+
+		// 傾きを0にする
+		MapRot.x = MapRot.z = 0.0f;
+	}
+
+	// 傾きを設定
 	pMapField->SetRot(MapRot);
 }
 
