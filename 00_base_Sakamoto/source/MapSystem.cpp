@@ -462,7 +462,6 @@ HRESULT CMapSystem::LoadAll()
 
 	// ファイル読み込み用変数
 	CMapSystem* pMapSystem = CMapSystem::GetInstance();
-	CTexture* pTexture = CManager::GetInstance()->GetTexture();
 	std::string FileName;	// 読込文字列
 	int nNum = -1;			// マップ数
 	int nNumTex = 0;		// テクスチャ数

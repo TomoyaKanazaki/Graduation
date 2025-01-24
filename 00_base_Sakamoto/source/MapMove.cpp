@@ -41,7 +41,7 @@ namespace
 	const float SCROOL_SPEED_02 = (CMapSystem::GetGritSize() * SCROOL_MOVEGRID_02) / SCROOL_COUNT_02;			// スクロールの移動速度
 
 	const int SLOPE_TIME = 300;						// 傾き操作時間
-	const int SLOPE_RAND = 100;						// 傾き発生確率
+	const int SLOPE_RAND = 50;						// 傾き発生確率
 	float STAGE_ROT_LIMIT = D3DX_PI * 0.15f;		// 傾きの角度制限
 
 	const float SLOPE_SPEED01 = 0.00075f;			// 傾きの移動速度
@@ -170,9 +170,6 @@ void CMapMove::Update(void)
 	//状態の管理
 	StateManager();
 
-	//デバッグキーの処理と設定
-	DebugKey();
-
 	//ステージ外にいるオブジェクトの処理
 	CollisionOut();
 
@@ -226,7 +223,7 @@ void CMapMove::Update(void)
 //====================================================================
 void CMapMove::Draw(void)
 {
-
+	// Do Nothing
 }
 
 //====================================================================
@@ -400,14 +397,14 @@ void CMapMove::StateManager(void)
 		switch (m_ScrollType)
 		{
 		case CMapMove::SCROLL_TYPE_NORMAL:
-			Move(m_DevilArrow);
+			Move();
 			break;
 
 		case CMapMove::SCROLL_TYPE_RETRO:
 
 			if (m_nStateCount % (SCROOL_TIME / SCROOL_COUNT_02) == 0)
 			{
-				Move(m_DevilArrow);
+				Move();
 			}
 
 			break;
@@ -447,7 +444,7 @@ void CMapMove::StateManager(void)
 
 			if (m_bSlope)
 			{
-				Slope(m_DevilArrow);
+				Slope();
 			}
 			else
 			{
@@ -461,7 +458,7 @@ void CMapMove::StateManager(void)
 			{
 				if (m_bSlope)
 				{
-					Slope(m_DevilArrow);
+					Slope();
 				}
 				else
 				{
@@ -588,181 +585,80 @@ void CMapMove::SetRotState(void)
 //====================================================================
 //移動処理
 //====================================================================
-void CMapMove::Move(int Arroow)
+void CMapMove::Move()
 {
-	if (m_fScrollEndLine > 0.0f || m_fScrollEndLine < 0.0f)
+	switch (m_ScrollType)
 	{
-		D3DXVECTOR3 MapPos = CMapSystem::GetInstance()->GetMapPos();
-
-		switch (m_ScrollType)
+	case CMapMove::SCROLL_TYPE_NORMAL:
+		switch (m_DevilArrow)
 		{
-		case CMapMove::SCROLL_TYPE_NORMAL:
-
-			switch (Arroow)
-			{
-			case 0:
-				m_move.z = SCROOL_SPEED_01;
-				if (m_fScrollEndLine <= MapPos.z)
-				{
-					m_bScrollOK = true;
-				}
-				break;
-
-			case 1:
-				m_move.z = -SCROOL_SPEED_01;
-				if (m_fScrollEndLine >= MapPos.z)
-				{
-					m_bScrollOK = true;
-				}
-				break;
-
-			case 2:
-				m_move.x = -SCROOL_SPEED_01;
-				if (m_fScrollEndLine >= MapPos.x)
-				{
-					m_bScrollOK = true;
-				}
-				break;
-
-			case 3:
-				m_move.x = SCROOL_SPEED_01;
-				if (m_fScrollEndLine <= MapPos.x)
-				{
-					m_bScrollOK = true;
-				}
-				break;
-			}
+		case 0:
+			m_move.z = SCROOL_SPEED_01;
 			break;
-
-		case CMapMove::SCROLL_TYPE_RETRO:
-
-			switch (Arroow)
-			{
-			case 0:
-				m_move.z = SCROOL_SPEED_02;
-				if (m_fScrollEndLine <= MapPos.z)
-				{
-					m_bScrollOK = true;
-				}
-				break;
-
-			case 1:
-				m_move.z = -SCROOL_SPEED_02;
-				if (m_fScrollEndLine >= MapPos.z)
-				{
-					m_bScrollOK = true;
-				}
-				break;
-
-			case 2:
-				m_move.x = -SCROOL_SPEED_02;
-				if (m_fScrollEndLine >= MapPos.x)
-				{
-					m_bScrollOK = true;
-				}
-				break;
-
-			case 3:
-				m_move.x = SCROOL_SPEED_02;
-				if (m_fScrollEndLine <= MapPos.x)
-				{
-					m_bScrollOK = true;
-				}
-				break;
-			}
+		case 1:
+			m_move.z = -SCROOL_SPEED_01;
 			break;
-
-		default:
+		case 2:
+			m_move.x = -SCROOL_SPEED_01;
+			break;
+		case 3:
+			m_move.x = SCROOL_SPEED_01;
 			break;
 		}
 
-		if (m_bScrollOK == true)
+		m_fScrollMove += SCROOL_SPEED_01;
+		if (m_fScrollMove >= (SCROOL_MOVEGRID_01 * 100))
 		{
+			D3DXVECTOR3 MapPos = CMapSystem::GetInstance()->GetMapPos();
+
 			MapPos.x = useful::RoundUp2(MapPos.x);
 			MapPos.z = useful::RoundUp2(MapPos.z);
 
 			CMapSystem::GetInstance()->SetMapPos(MapPos);
 
+			m_bScrollOK = true;
 			m_fScrollMove = 0.0f;
-			m_fScrollEndLine = 0.0f;
 			m_move = INITVECTOR3;
 		}
-	}
-	else
-	{
-		switch (m_ScrollType)
+
+		break;
+
+	case CMapMove::SCROLL_TYPE_RETRO:
+		switch (m_DevilArrow)
 		{
-		case CMapMove::SCROLL_TYPE_NORMAL:
-			switch (Arroow)
-			{
-			case 0:
-				m_move.z = SCROOL_SPEED_01;
-				break;
-			case 1:
-				m_move.z = -SCROOL_SPEED_01;
-				break;
-			case 2:
-				m_move.x = -SCROOL_SPEED_01;
-				break;
-			case 3:
-				m_move.x = SCROOL_SPEED_01;
-				break;
-			}
-
-			m_fScrollMove += SCROOL_SPEED_01;
-			if (m_fScrollMove >= (SCROOL_MOVEGRID_01 * 100))
-			{
-				D3DXVECTOR3 MapPos = CMapSystem::GetInstance()->GetMapPos();
-
-				MapPos.x = useful::RoundUp2(MapPos.x);
-				MapPos.z = useful::RoundUp2(MapPos.z);
-
-				CMapSystem::GetInstance()->SetMapPos(MapPos);
-
-				m_bScrollOK = true;
-				m_fScrollMove = 0.0f;
-				m_move = INITVECTOR3;
-			}
-
+		case 0:
+			m_move.z = SCROOL_SPEED_02;
 			break;
-
-		case CMapMove::SCROLL_TYPE_RETRO:
-			switch (Arroow)
-			{
-			case 0:
-				m_move.z = SCROOL_SPEED_02;
-				break;
-			case 1:
-				m_move.z = -SCROOL_SPEED_02;
-				break;
-			case 2:
-				m_move.x = -SCROOL_SPEED_02;
-				break;
-			case 3:
-				m_move.x = SCROOL_SPEED_02;
-				break;
-			}
-
-			m_fScrollMove += SCROOL_SPEED_02;
-			if (m_fScrollMove > (SCROOL_MOVEGRID_02 * 100))
-			{
-				D3DXVECTOR3 MapPos = CMapSystem::GetInstance()->GetMapPos();
-
-				MapPos.x = useful::RoundUp2(MapPos.x);
-				MapPos.z = useful::RoundUp2(MapPos.z);
-
-				CMapSystem::GetInstance()->SetMapPos(MapPos);
-
-				m_bScrollOK = true;
-				m_fScrollMove = 0.0f;
-				m_move = INITVECTOR3;
-			}
-
+		case 1:
+			m_move.z = -SCROOL_SPEED_02;
 			break;
-
-		default:
+		case 2:
+			m_move.x = -SCROOL_SPEED_02;
+			break;
+		case 3:
+			m_move.x = SCROOL_SPEED_02;
 			break;
 		}
+
+		m_fScrollMove += SCROOL_SPEED_02;
+		if (m_fScrollMove > (SCROOL_MOVEGRID_02 * 100))
+		{
+			D3DXVECTOR3 MapPos = CMapSystem::GetInstance()->GetMapPos();
+
+			MapPos.x = useful::RoundUp2(MapPos.x);
+			MapPos.z = useful::RoundUp2(MapPos.z);
+
+			CMapSystem::GetInstance()->SetMapPos(MapPos);
+
+			m_bScrollOK = true;
+			m_fScrollMove = 0.0f;
+			m_move = INITVECTOR3;
+		}
+
+		break;
+
+	default:
+		break;
 	}
 
 	// マップを動かす
@@ -864,7 +760,7 @@ void CMapMove::BackSlope(void)
 //====================================================================
 //移動方向処理(傾ける)
 //====================================================================
-void CMapMove::Slope(int Arroow)
+void CMapMove::Slope()
 {
 	CObjmeshField* pMapField = CObjmeshField::GetListTop();
 	if (pMapField == nullptr) { assert(false); }
@@ -1019,51 +915,6 @@ void CMapMove::StopSound()
 	sound->Stop(CSound::SOUND_LABEL_SE_SIGN_DOWN);
 	sound->Stop(CSound::SOUND_LABEL_SE_SIGN_RIGHT);
 	sound->Stop(CSound::SOUND_LABEL_SE_SIGN_LEFT);
-}
-
-//====================================================================
-// デバッグボタン
-//====================================================================
-void CMapMove::DebugKey(void)
-{
-#ifdef _DEBUG
-
-	//キーボードの取得
-	CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
-
-	//キーボードの移動処理
-	if (pInputKeyboard->GetPress(DIK_UP))
-	{
-		m_DevilArrow = 0;
-		Move(0);
-
-	}
-	if (pInputKeyboard->GetPress(DIK_DOWN))
-	{
-		m_DevilArrow = 1;
-		Move(1);
-	}
-
-	if (pInputKeyboard->GetPress(DIK_LEFT))
-	{
-		m_DevilArrow = 2;
-		Move(2);
-	}
-	if (pInputKeyboard->GetPress(DIK_RIGHT))
-	{
-		m_DevilArrow = 3;
-		Move(3);
-	}
-
-	if (pInputKeyboard->GetPress(DIK_5))
-	{
-		CObjmeshField* pMapField = CObjmeshField::GetListTop();
-		D3DXVECTOR3 MapRot = pMapField->GetRot();
-		MapRot = INITVECTOR3;
-		pMapField->SetRot(MapRot);
-	}
-
-#endif // _DEBUG
 }
 
 //====================================================================
