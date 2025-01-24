@@ -127,7 +127,7 @@ HRESULT CMapMove::Init(void)
 	//ó‘ÔŠÖ˜A‚Ì‰Šú‰»
 	m_State = MOVE_WAIT;
 	m_SlopeOld = MOVE_WAIT;
-	m_nStateCount = 0;
+	m_nStateCount = SCROOL_TIME * 0.5f;
 	m_move = INITVECTOR3;
 	m_MapDifference = INITVECTOR3;
 	m_DevilRot = INITVECTOR3;
@@ -146,6 +146,9 @@ HRESULT CMapMove::Init(void)
 	m_bScrollOK = false;
 	m_SetState = MOVE_WAIT;
 	m_fScrollEndLine = 0.0f;
+
+	//ƒJƒƒ‰‚ðU“®‚³‚¹‚È‚¢
+	CManager::GetInstance()->GetCamera(0)->SetBib(false);
 
 	return S_OK;
 }
