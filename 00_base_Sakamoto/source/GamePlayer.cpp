@@ -446,7 +446,22 @@ void CGamePlayer::ControlUi()
 		m_pCrossUI->SetSize(D3DXVECTOR3(SizeDef.x, SizeDef.y * fCrossStatePercent, 0.0f));
 		m_pCrossUI->SetPos(D3DXVECTOR3(m_posDefCrossUI.x, m_posDefCrossUI.y + (SizeDef.y - SizeDef.y * fCrossStatePercent) / 2, 0.0f));
 
-		m_pCrossUI->SetAnim(D3DXVECTOR2(0.0f, 1.0 + fCrossStatePercent), D3DXVECTOR2(1.0f, 1.0f));
+		m_pCrossUI->SetAnim(D3DXVECTOR2(0.0f, 1.0 - fCrossStatePercent), D3DXVECTOR2(1.0f, 1.0f));
+
+
+		//表示内容の更新
+		if (CBowabowa::GetList() != nullptr)
+		{
+			m_pCrossUI->SetUIType(CCrossUi::TYPE_CROSS);
+			m_pCrossUIBg->SetUIType(CCrossUi::TYPE_CROSS);
+		}
+		else
+		{
+			//表示割合の初期化
+			fCrossStatePercent = 0.0f;
+			m_pCrossUI->SetUIType(CCrossUi::TYPE_KEY);
+			m_pCrossUIBg->SetUIType(CCrossUi::TYPE_KEY);
+		}
 	}
 
 	//吹き出しUI背景

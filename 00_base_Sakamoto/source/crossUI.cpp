@@ -16,7 +16,8 @@ namespace
 
 	const float SAMPLE_WIGHT = 125.0f;		//横幅
 	const float SAMPLE_HEIGHT = 125.0f;		//縦幅
-	const char TEXTURE_PASS[] = "data\\TEXTURE\\UI\\cross_UI.png";
+	const char TEXPASS_CROSS[] = "data\\TEXTURE\\UI\\cross_UI.png";
+	const char TEXPASS_KEY[] = "data\\TEXTURE\\UI\\Key_UI.png";
 
 }
 
@@ -66,7 +67,7 @@ HRESULT CCrossUi::Init(void)
 	CObject2D::Init();
 
 	//テクスチャ設定
-	SetTexture(TEXTURE_PASS);
+	SetTexture(TEXPASS_CROSS);
 
 	SetSize(D3DXVECTOR3(SAMPLE_WIGHT, SAMPLE_HEIGHT, 0.0f));
 
@@ -104,4 +105,24 @@ void CCrossUi::Draw(void)
 D3DXVECTOR2 CCrossUi::GetSizeDefault(void)
 {
 	return D3DXVECTOR2(SAMPLE_WIGHT,SAMPLE_HEIGHT);
+}
+//====================================================================
+//表示内容変更処理
+//====================================================================
+void CCrossUi::SetUIType(UI_TYPE type)
+{
+	switch (type)
+	{
+	case CCrossUi::TYPE_CROSS:
+		SetTexture(TEXPASS_CROSS);
+		break;
+
+	case CCrossUi::TYPE_KEY:
+		SetTexture(TEXPASS_KEY);
+		break;
+
+	default:
+		break;
+	}
+
 }

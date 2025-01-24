@@ -18,6 +18,12 @@ public:
 	CCrossUi(int nPriority = 6);
 	~CCrossUi();
 
+	enum UI_TYPE
+	{
+		TYPE_CROSS = 0,
+		TYPE_KEY
+	};
+
 	static CCrossUi* Create(int nPriority = 6);
 
 	HRESULT Init(void);
@@ -30,6 +36,7 @@ public:
 	void SetStateCount(int StateCount) { m_fStateCountParcent = StateCount; }
 
 	D3DXVECTOR2 GetSizeDefault(void);	//UIのデフォルトのサイズ取得
+	void SetUIType(UI_TYPE type);
 
 private:
 	float m_fStateCountParcent;		//十字架保持状態のカウントの割合
