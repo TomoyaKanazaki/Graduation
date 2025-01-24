@@ -26,8 +26,6 @@
 #include "wall.h"
 #include "camera.h"
 
-#include "mapmove_state.h"
-
 //===========================================
 // 定数定義
 //===========================================
@@ -92,8 +90,6 @@ CMapMove::CMapMove() :
 	m_MoveMode = MOVEMODE_WAIT;		// 移動モード
 	m_RotType = ROTTYPE_MAX;			// 向きの種類
 	m_OldRotType = m_RotType;			// 前回の向きの種類
-
-	m_pMapMoveState = nullptr;			// マップ移動の状態管理
 }
 
 //====================================================================
@@ -153,12 +149,6 @@ HRESULT CMapMove::Init(void)
 	m_RotType = ROTTYPE_MAX;			// 向きの種類
 	m_OldRotType = m_RotType;			// 前回の向きの種類
 
-	// マップ移動の状態設定
-	if (m_pMapMoveState == nullptr)
-	{
-		m_pMapMoveState = new CMapStateWait;		// 待機状態
-	}
-
 	//カメラを振動させない
 	CManager::GetInstance()->GetCamera(0)->SetBib(false);
 
@@ -170,13 +160,6 @@ HRESULT CMapMove::Init(void)
 //====================================================================
 void CMapMove::Uninit(void)
 {
-	// 移動状態の破棄
-	if (m_pMapMoveState != nullptr)
-	{
-		delete m_pMapMoveState;
-		m_pMapMoveState = nullptr;
-	}
-
 	// 自身を削除する
 	delete this;
 }
@@ -1342,19 +1325,4 @@ float CMapMove::MoveSlopeZ(float Move, SPEED& Speed)
 	}
 
 	return fSlopeMove;
-}
-
-//==========================================
-// 移動状態変更処理
-//==========================================
-void CMapMove::ChangeMoveState(CMapMoveState* pMapMoveState)
-{
-	if (pMapMoveState != nullptr)
-	{
-		delete pMapMoveState;
-		pMapMoveState = nullptr;
-	}
-
-	m_pMapMoveState = pMapMoveState;
-	m_pMapMoveState->Init();
 }

@@ -14,7 +14,6 @@
 class CObject2D;
 class CSignal;
 class CPlayer;
-class CMapMoveState;
 
 //マップムーブクラス
 class CMapMove
@@ -108,9 +107,6 @@ public:
 
 	void FollowScroll(D3DXVECTOR3& pos) { pos += m_move; }
 
-	// 移動状態変更処理
-	void ChangeMoveState(CMapMoveState* pMapMoveState);
-
 private:
 
 	void StateManager(void);	//状態管理
@@ -170,7 +166,5 @@ private:
 	MOVEMODE m_MoveMode;			// 移動モード
 	ROTTYPE m_RotType;				// 移動向きの種類
 	ROTTYPE m_OldRotType;			// 前回の移動向きの種類
-
-	CMapMoveState* m_pMapMoveState;	// マップ移動の状態管理
 };
 #endif

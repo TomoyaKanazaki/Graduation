@@ -304,9 +304,6 @@
     <ClCompile Include="source\crossUI.cpp">
       <Filter>ソース ファイル\Ui</Filter>
     </ClCompile>
-    <ClCompile Include="source\mapmove_state.cpp">
-      <Filter>ソース ファイル\Map\System</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\object.h">
@@ -569,9 +566,6 @@
     </ClInclude>
     <ClInclude Include="source\crossUI.h">
       <Filter>ソース ファイル\Ui</Filter>
-    </ClInclude>
-    <ClInclude Include="source\mapmove_state.h">
-      <Filter>ソース ファイル\Map\System</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
