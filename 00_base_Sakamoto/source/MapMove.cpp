@@ -127,7 +127,7 @@ HRESULT CMapMove::Init(void)
 	//状態関連の初期化
 	m_State = MOVE_WAIT;
 	m_SlopeOld = MOVE_WAIT;
-	m_nStateCount = 0;
+	m_nStateCount = SCROOL_TIME * 0.5f;
 	m_move = INITVECTOR3;
 	m_MapDifference = INITVECTOR3;
 	m_DevilRot = INITVECTOR3;
@@ -146,6 +146,9 @@ HRESULT CMapMove::Init(void)
 	m_bScrollOK = false;
 	m_SetState = MOVE_WAIT;
 	m_fScrollEndLine = 0.0f;
+
+	//カメラを振動させない
+	CManager::GetInstance()->GetCamera(0)->SetBib(false);
 
 	return S_OK;
 }
@@ -186,19 +189,6 @@ void CMapMove::Update(void)
 	D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
 	D3DXVECTOR3 InitPos = CMapSystem::GetInstance()->GetInitPos();
 	D3DXVECTOR3 MapPos = CMapSystem::GetInstance()->GetMapPos();
-
-	//デバッグ表示
-	DebugProc::Print(DebugProc::POINT_LEFT, "[マップ]　　　位置 %f : %f\n", MapPos.x, MapPos.z);
-	DebugProc::Print(DebugProc::POINT_LEFT, "[マップの差分]位置 %f : %f\n", m_MapDifference.x, m_MapDifference.z);
-	DebugProc::Print(DebugProc::POINT_LEFT, "[マップのスクロール]：矢印キー\n");
-	DebugProc::Print(DebugProc::POINT_LEFT, "[マップの傾きX]：[ X+ : 6 ] [ X- : 7 ]\n");
-	DebugProc::Print(DebugProc::POINT_LEFT, "[マップの傾きZ]：[ Z+ : 8 ] [ Z- : 9 ]\n");
-	DebugProc::Print(DebugProc::POINT_LEFT, "[マップの傾きリセット]：[ 5 ]\n");
-
-	DebugProc::Print(DebugProc::POINT_RIGHT, "[最小番号]左 %d : 上 %d\n", m_MinGrid.x, m_MinGrid.z);
-	DebugProc::Print(DebugProc::POINT_RIGHT, "[最大番号]右 %d : 下 %d\n", m_MaxGrid.x, m_MaxGrid.z);
-	DebugProc::Print(DebugProc::POINT_RIGHT, "[マップの傾き]X：%f, Z：%f\n", m_DevilRot.x, m_DevilRot.z);
-
 
 	// エフェクトを生成
 	switch (m_State)
@@ -1208,49 +1198,7 @@ void CMapMove::GritScroll()
 		MapPos.z = InitPos.z + m_move.z;
 	}
 
-#ifdef _DEBUG
-
-	//　グリットの位置にエフェクトを表示
-	for (int nCntW = 0; nCntW < CMapSystem::GetInstance()->GetWightMax(); nCntW++)
-	{
-		for (int nCntH = 0; nCntH < CMapSystem::GetInstance()->GetHeightMax(); nCntH++)
-		{
-			if (CMapSystem::GetInstance()->GetGritBool(nCntW, nCntH))
-			{// ブロックが存在するグリットのみエフェクトを表示
-
-				//CEffect* pEffect = CEffect::Create();
-				//pEffect->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(nCntW, nCntH)));
-				//pEffect->SetRadius(20.0f);
-				//pEffect->SetLife(10);
-			}
-		}
-	}
-
-#endif // _DEBUG
-
 	CMapSystem::GetInstance()->SetMapPos(MapPos);
-}
-//====================================================================
-// プレイヤーが潰される時の処理
-//====================================================================
-void CMapMove::CollisionPressPlayer(CPlayer* pPlayer, D3DXVECTOR3 pos, D3DXVECTOR3 Size)
-{
-	//// キューブブロックのリスト構造が無ければ抜ける
-	//if (CCubeBlock::GetList() == nullptr) { return; }
-	//std::list<CCubeBlock*> list = CCubeBlock::GetList()->GetList();    // リストを取得
-
-	//// キューブブロックのリストの中身を確認する
-	//for (CCubeBlock* pCubeBlock : list)
-	//{
-	//	D3DXVECTOR3 Blockpos = pCubeBlock->GetPos();
-	//	D3DXVECTOR3 BlockSize = pCubeBlock->GetSize();
-
-	//	if (useful::CollisionRectangle2D(pos, Blockpos, Size, BlockSize, useful::COLLISION::COLLISION_ZX))
-	//	{
-	//		pPlayer->Death();
-	//		return;
-	//	}
-	//}
 }
 
 //====================================================================

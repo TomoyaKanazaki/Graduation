@@ -189,6 +189,9 @@ void CPause::Update(void)
 			switch (m_PauseSelect)
 			{
 			case 0:
+
+				CManager::GetInstance()->SetPause(false);
+
 				break;
 			case 1:
 				CFade::SetFade(CScene::GetMode());
