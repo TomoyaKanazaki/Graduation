@@ -252,7 +252,7 @@ void CMapMove::Draw(void)
 //====================================================================
 //状態管理
 //====================================================================
-#if 1	// 元のコード
+#if 0	// 元のコード
 void CMapMove::StateManager(void)
 {
 	D3DXVECTOR3 MapPos = CMapSystem::GetInstance()->GetMapPos();
@@ -539,9 +539,20 @@ void CMapMove::StateManager(void)
 	{
 	case CMapMove::MOVEMODE_SCROLL:		// スクロール
 
-		// スクロールの処理
+		// 移動処理
+		Move();
 
+		if (m_bScrollOK == true)
+		{ // さっきの移動処理でスクロールが完了した場合
+
+			m_MoveMode = MOVEMODE_WAIT;	// 待機状態にする
+			m_nStateCount = 120;		// 状態管理カウンターを初期化
+
+			// 傾き装置の処理
+			SetDeviceMap();
+		}
 		break;
+
 	case CMapMove::MOVEMODE_SLOPE:		// 傾き
 
 		// 傾きの処理
@@ -607,51 +618,6 @@ void CMapMove::StateManager(void)
 
 	switch (m_State)
 	{
-		// スクロール中の状態 -> 待機状態になる
-	case MOVE_SCROLL_UP:
-	case MOVE_SCROLL_DOWN:
-	case MOVE_SCROLL_LEFT:
-	case MOVE_SCROLL_RIGHT:
-
-		switch (m_ScrollType)
-		{
-		case CMapMove::SCROLL_TYPE_NORMAL:
-			Move();
-			break;
-
-		case CMapMove::SCROLL_TYPE_RETRO:
-
-			if (m_nStateCount % (SCROOL_TIME / SCROOL_COUNT_02) == 0)
-			{
-				Move();
-			}
-
-			break;
-
-		default:
-
-			break;
-		}
-
-		if (m_bScrollOK == true)
-		{
-			m_State = MOVE_WAIT;
-			m_nStateCount = 120;
-
-			// マップ移動装置のリスト構造が無ければ抜ける
-			if (CScrollDevice::GetList() == nullptr) { return; }
-			std::list<CScrollDevice*> list = CScrollDevice::GetList()->GetList();    // リストを取得
-
-			// マップ移動装置のリストの中身を確認する
-			for (CScrollDevice* pScrollDevice : list)
-			{
-				// 通常状態に変更
-				pScrollDevice->SetState(CScrollDevice::STATE_NORMAL);
-			}
-		}
-
-		break;
-
 		// 傾き中の状態 -> 待機状態になる
 	case MOVE_SLOPE_UP:
 	case MOVE_SLOPE_DOWN:
@@ -868,78 +834,81 @@ void CMapMove::SetDeviceMap(void)
 //====================================================================
 void CMapMove::Move()
 {
+	// ローカル変数
+	bool bMoveScroll = false;
+
 	switch (m_ScrollType)
 	{
-	case CMapMove::SCROLL_TYPE_NORMAL:
+	case CMapMove::SCROLL_TYPE_NORMAL:		// ノーマル
 		switch (m_RotType)
 		{
-		case 0:
+		case ROTTYPE_UP:		// 上
 			m_move.z = SCROOL_SPEED_01;
 			break;
-		case 1:
+		case ROTTYPE_DOWN:		// 下
 			m_move.z = -SCROOL_SPEED_01;
 			break;
-		case 2:
+		case ROTTYPE_LEFT:		// 左
 			m_move.x = -SCROOL_SPEED_01;
 			break;
-		case 3:
+		case ROTTYPE_RIGHT:		// 右
 			m_move.x = SCROOL_SPEED_01;
 			break;
 		}
 
 		m_fScrollMove += SCROOL_SPEED_01;
 		if (m_fScrollMove >= (SCROOL_MOVEGRID_01 * 100))
-		{
-			D3DXVECTOR3 MapPos = CMapSystem::GetInstance()->GetMapPos();
-
-			MapPos.x = useful::RoundUp2(MapPos.x);
-			MapPos.z = useful::RoundUp2(MapPos.z);
-
-			CMapSystem::GetInstance()->SetMapPos(MapPos);
-
-			m_bScrollOK = true;
-			m_fScrollMove = 0.0f;
-			m_move = INITVECTOR3;
+		{ // 指定されたスクロール分移動した場合
+			bMoveScroll = true;		// スクロールした状態にする
 		}
-
 		break;
 
-	case CMapMove::SCROLL_TYPE_RETRO:
-		switch (m_RotType)
-		{
-		case 0:
-			m_move.z = SCROOL_SPEED_02;
-			break;
-		case 1:
-			m_move.z = -SCROOL_SPEED_02;
-			break;
-		case 2:
-			m_move.x = -SCROOL_SPEED_02;
-			break;
-		case 3:
-			m_move.x = SCROOL_SPEED_02;
-			break;
+	case CMapMove::SCROLL_TYPE_RETRO:		// レトロ
+
+		if (m_nStateCount % (SCROOL_TIME / SCROOL_COUNT_02) == 0)
+		{ // 一定時間ごとに移動
+			switch (m_RotType)
+			{
+			case ROTTYPE_UP:		// 上
+				m_move.z = SCROOL_SPEED_02;
+				break;
+			case ROTTYPE_DOWN:		// 下
+				m_move.z = -SCROOL_SPEED_02;
+				break;
+			case ROTTYPE_LEFT:		// 左
+				m_move.x = -SCROOL_SPEED_02;
+				break;
+			case ROTTYPE_RIGHT:		// 右
+				m_move.x = SCROOL_SPEED_02;
+				break;
+			}
+
+			m_fScrollMove += SCROOL_SPEED_02;
+			if (m_fScrollMove > (SCROOL_MOVEGRID_02 * 100))
+			{ // 指定されたスクロール分移動した場合
+				bMoveScroll = true;		// スクロールした状態にする
+			}
 		}
-
-		m_fScrollMove += SCROOL_SPEED_02;
-		if (m_fScrollMove > (SCROOL_MOVEGRID_02 * 100))
-		{
-			D3DXVECTOR3 MapPos = CMapSystem::GetInstance()->GetMapPos();
-
-			MapPos.x = useful::RoundUp2(MapPos.x);
-			MapPos.z = useful::RoundUp2(MapPos.z);
-
-			CMapSystem::GetInstance()->SetMapPos(MapPos);
-
-			m_bScrollOK = true;
-			m_fScrollMove = 0.0f;
-			m_move = INITVECTOR3;
-		}
-
 		break;
 
 	default:
+		assert(false);
 		break;
+	}
+
+	if (bMoveScroll)
+	{ // スクロールし終わった場合
+		D3DXVECTOR3 MapPos = CMapSystem::GetInstance()->GetMapPos();
+
+		MapPos.x = useful::RoundUp2(MapPos.x);
+		MapPos.z = useful::RoundUp2(MapPos.z);
+
+		// マップの位置設定
+		CMapSystem::GetInstance()->SetMapPos(MapPos);
+
+		m_bScrollOK = true;		// スクロール完了した状態にする
+		m_fScrollMove = 0.0f;	// スクロール移動量初期化
+		m_move = INITVECTOR3;	// 移動量初期化
 	}
 
 	// マップを動かす
