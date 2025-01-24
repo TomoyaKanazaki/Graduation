@@ -114,15 +114,20 @@ public:
 private:
 
 	void StateManager(void);	//状態管理
-	void Move();		//移動処理
+	void Move();				//移動処理
 	void BackSlope(void);		//傾き処理
-	void Slope();		//傾き処理
+	void Slope();				//傾き処理
 	void CollisionOut();		//ステージ外にいるオブジェクトの処理
 
 	void SetSlopeRot(void);		// 傾きの向きを設定
 	void SetDeviceMap(void);	// マップ装置の設定
 
-	void StopSound(); // 黙らせる
+	void SetScroll(void);		// スクロールの設定
+	void SetSlope(void);		// 傾きの設定
+	void SetBackSlope(void);	// 元に戻す傾きの設定
+
+	void PlaySound();	// 喋らせる
+	void StopSound();	// 黙らせる
 
 	void ScrollReset();		//スクロールのずれ修正
 	void GritScroll();		//グリットのスクロール
@@ -150,7 +155,7 @@ private:
 	float m_CollisionRot;			//当たり判定用の向き
 
 	D3DXVECTOR3 m_DevilRot;			// デビルパワーによって傾く値
-	int m_DevilArrow;				// 方向[0:上][1:下][2:左][3:右]
+	int m_DevilArrow;				// 方向[0:上][1:下][2:左][3:右] ------------------------------------------消す
 	int m_ScrollArrowOld;			// 過去のスクロールの方向
 	int m_SlopwArrowOld;			// 過去の傾きの方向
 	SCROLL_TYPE m_ScrollType;		// スクロールの種類
