@@ -41,7 +41,7 @@ namespace
 	const float SCROOL_SPEED_02 = (CMapSystem::GetGritSize() * SCROOL_MOVEGRID_02) / SCROOL_COUNT_02;			// スクロールの移動速度
 
 	const int SLOPE_TIME = 300;						// 傾き操作時間
-	const int SLOPE_RAND = 30;						// 傾き発生確率
+	const int SLOPE_RAND = 100;						// 傾き発生確率
 	float STAGE_ROT_LIMIT = D3DX_PI * 0.15f;		// 傾きの角度制限
 
 	const float SLOPE_SPEED01 = 0.00075f;			// 傾きの移動速度
@@ -99,21 +99,15 @@ CMapMove::~CMapMove()
 //====================================================================
 CMapMove* CMapMove::Create()
 {
-	CMapMove* pPause = nullptr;
-
-	if (pPause == nullptr)
-	{
-		//敵の生成
-		pPause = new CMapMove();
-	}
+	CMapMove* pSystem = new CMapMove();
 
 	//オブジェクトの初期化処理
-	if (FAILED(pPause->Init()))
+	if (FAILED(pSystem->Init()))
 	{//初期化処理が失敗した場合
 		return nullptr;
 	}
 
-	return pPause;
+	return pSystem;
 }
 
 //====================================================================
@@ -742,7 +736,7 @@ void CMapMove::BackSlope(void)
 	CObjmeshField* pMapField = CObjmeshField::GetListTop(); // マップの床
 	D3DXVECTOR3 MapRot = pMapField->GetRot(); // マップの傾き
 	bool bReset = false; // 傾きのリセットが完了したフラグ
-	float fSlopeRate = 0.0f; // スクロールの速度
+	float fSlopeRate = 0.0f; // 傾きの速度
 
 	// スクロールタイプによって使用する定数を設定
 	switch (m_ScrollType)
@@ -905,54 +899,6 @@ void CMapMove::Slope(int Arroow)
 		}
 		// 手前側
 		m_SlopeType = 3;
-
-		break;
-	}
-
-	switch (m_DevilArrow)
-	{
-	case 0:
-
-		MapRot.x += D3DX_PI * fSlopeRate;
-
-		if (MapRot.x > STAGE_ROT_LIMIT)
-		{
-			MapRot.x = STAGE_ROT_LIMIT;
-			CManager::GetInstance()->GetCamera(0)->SetBib(false);	//カメラの振動をオフにする
-		}
-
-		break;
-	case 1:
-
-		MapRot.x -= D3DX_PI * fSlopeRate;
-
-		if (MapRot.x < -STAGE_ROT_LIMIT)
-		{
-			MapRot.x = -STAGE_ROT_LIMIT;
-			CManager::GetInstance()->GetCamera(0)->SetBib(false);	//カメラの振動をオフにする
-		}
-
-		break;
-	case 2:
-
-		MapRot.z += D3DX_PI * fSlopeRate;
-
-		if (MapRot.z > STAGE_ROT_LIMIT)
-		{
-			MapRot.z = STAGE_ROT_LIMIT;
-			CManager::GetInstance()->GetCamera(0)->SetBib(false);	//カメラの振動をオフにする
-		}
-
-		break;
-	case 3:
-
-		MapRot.z -= D3DX_PI * fSlopeRate;
-
-		if (MapRot.z < -STAGE_ROT_LIMIT)
-		{
-			MapRot.z = -STAGE_ROT_LIMIT;
-			CManager::GetInstance()->GetCamera(0)->SetBib(false);	//カメラの振動をオフにする
-		}
 
 		break;
 	}
