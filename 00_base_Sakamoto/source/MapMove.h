@@ -118,7 +118,7 @@ private:
 	void Slope();				//傾き処理
 	void CollisionOut();		//ステージ外にいるオブジェクトの処理
 
-	void SetSlopeRot(void);		// 傾きの向きを設定
+	void SetSlopeRot(ROTTYPE& RotType);		// 傾きの向きを設定
 	void SetDeviceMap(void);	// マップ装置の設定
 
 	void SetScroll(void);		// スクロールの設定
@@ -168,5 +168,8 @@ private:
 	MOVEMODE m_MoveMode;			// 移動モード
 	ROTTYPE m_RotType;				// 移動向きの種類
 	ROTTYPE m_OldRotType;			// 前回の移動向きの種類
+	ROTTYPE m_OldScrollRotType;		// 前回の移動向きの種類(スクロール)
+	ROTTYPE m_OldSlopeRotType;		// 前回の移動向きの種類(傾き)
+
 };
 #endif

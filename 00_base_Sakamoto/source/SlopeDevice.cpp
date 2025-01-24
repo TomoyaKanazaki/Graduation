@@ -530,8 +530,8 @@ void CSlopeDevice::StateManager(void)
 	case STATE_DESCENT:
 
 		// 移動状態判定（上 or 下）
-		if (MoveState == CMapMove::MOVE_SLOPE_UP ||
-			MoveState == CMapMove::MOVE_SLOPE_DOWN)
+		if (MoveState == CMapMove::ROTTYPE_UP ||
+			MoveState == CMapMove::ROTTYPE_DOWN)
 		{
 			// 下降処理
 			Descent(SETUP_TYPE_ELEVATING_PART);
@@ -540,8 +540,8 @@ void CSlopeDevice::StateManager(void)
 			ActiveLever(SETUP_TYPE_LIVER);
 		}
 		// 移動状態判定（右 or 左）
-		else if (MoveState == CMapMove::MOVE_SLOPE_RIGHT ||
-				 MoveState == CMapMove::MOVE_SLOPE_LEFT)
+		else if (MoveState == CMapMove::ROTTYPE_RIGHT ||
+				 MoveState == CMapMove::ROTTYPE_LEFT)
 		{
 			// 下降処理
 			Descent(SETUP_TYPE_ELEVATING_PART);

@@ -41,7 +41,7 @@ namespace
 	const float SCROOL_SPEED_02 = (CMapSystem::GetGritSize() * SCROOL_MOVEGRID_02) / SCROOL_COUNT_02;			// スクロールの移動速度
 
 	const int SLOPE_TIME = 300;						// 傾き操作時間
-	const int SLOPE_RAND = 50;						// 傾き発生確率
+	const int SLOPE_RAND = 40;						// 傾き発生確率
 	float STAGE_ROT_LIMIT = D3DX_PI * 0.15f;		// 傾きの角度制限
 
 	const float SLOPE_SPEED01 = 0.00075f;			// 傾きの移動速度
@@ -86,9 +86,11 @@ CMapMove::CMapMove() :
 	m_fScrollMove = 0.0f;
 	m_fScrollEndLine = 0.0f;
 
-	m_MoveMode = MOVEMODE_WAIT;		// 移動モード
+	m_MoveMode = MOVEMODE_WAIT;			// 移動モード
 	m_RotType = ROTTYPE_MAX;			// 向きの種類
 	m_OldRotType = m_RotType;			// 前回の向きの種類
+	m_OldScrollRotType = m_RotType;		// 前回の移動向きの種類(スクロール)
+	m_OldSlopeRotType = m_RotType;		// 前回の移動向きの種類(傾き)
 }
 
 //====================================================================
@@ -146,6 +148,8 @@ HRESULT CMapMove::Init(void)
 	m_MoveMode = MOVEMODE_WAIT;		// 移動モード
 	m_RotType = ROTTYPE_MAX;			// 向きの種類
 	m_OldRotType = m_RotType;			// 前回の向きの種類
+	m_OldScrollRotType = m_RotType;		// 前回の移動向きの種類(スクロール)
+	m_OldSlopeRotType = m_RotType;		// 前回の移動向きの種類(傾き)
 
 	//カメラを振動させない
 	CManager::GetInstance()->GetCamera(0)->SetBib(false);
@@ -634,7 +638,7 @@ void CMapMove::StateManager(void)
 void CMapMove::SetScroll(void)
 {
 	// 傾きの向き設定する
-	SetSlopeRot();
+	SetSlopeRot(m_OldScrollRotType);
 
 	// マップ装置の設定
 	SetDeviceMap();
@@ -651,7 +655,7 @@ void CMapMove::SetSlope(void)
 	m_nStateCount = SLOPE_TIME;
 
 	// 傾きの向き設定する
-	SetSlopeRot();
+	SetSlopeRot(m_OldSlopeRotType);
 
 	// マップ装置の設定
 	SetDeviceMap();
@@ -684,19 +688,19 @@ void CMapMove::SetBackSlope(void)
 	for (CSlopeDevice* pSlopeDevice : list)
 	{
 		// 方向の傾き装置を上昇状態に変更
-		pSlopeDevice->SetStateArrowBack((CScrollArrow::Arrow)m_SlopwArrowOld); // TODO：←この変数変えて～yamete~
+		pSlopeDevice->SetStateArrowBack((CScrollArrow::Arrow)m_OldSlopeRotType); // TODO：←この変数変えて～yamete~
 	}
 }
 
 //====================================================================
 // 傾きの向きを設定
 //====================================================================
-void CMapMove::SetSlopeRot(void)
+void CMapMove::SetSlopeRot(ROTTYPE& RotType)
 {
 	//傾き方向指定処理
 	m_RotType = (ROTTYPE)(rand() % 2);
 
-	if (m_SlopwArrowOld == ROTTYPE_UP || m_SlopwArrowOld == ROTTYPE_DOWN)
+	if (RotType == ROTTYPE_UP || RotType == ROTTYPE_DOWN)
 	{// 前回の傾き方向が上下だった場合
 
 		// 今回の傾き方向は左右にする
@@ -713,8 +717,7 @@ void CMapMove::SetSlopeRot(void)
 	}
 
 	// 今回の傾き方向を記録する
-	m_SlopwArrowOld = m_RotType;
-	m_nStateNum = m_RotType;
+	RotType = m_RotType;
 }
 
 //====================================================================
