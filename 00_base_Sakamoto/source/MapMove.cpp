@@ -1263,7 +1263,7 @@ float CMapMove::MoveSlopeX(float Move, SPEED& Speed)
 	D3DXVECTOR3 DevilRot = m_DevilRot;
 
 	if (Move > 0.0f)
-	{
+	{// 右側に移動
 		fSlopeMove = (D3DX_PI / (D3DX_PI + DevilRot.z));
 
 		if (DevilRot.z < 0.0f)
@@ -1271,12 +1271,12 @@ float CMapMove::MoveSlopeX(float Move, SPEED& Speed)
 			fSlopeMove = (D3DX_PI / (D3DX_PI - DevilRot.z)) * SLOPEUP_MAG;
 		}
 		else if (DevilRot.z > 0.0f)
-		{// 左に傾いた時の加速
+		{// 右に傾いた時の減速
 			fSlopeMove = (D3DX_PI / (D3DX_PI + DevilRot.z)) * SLOPEDOWN_MAG;
 		}
 	}
 	else if (Move < 0.0f)
-	{
+	{// 左側に移動
 		fSlopeMove = (D3DX_PI / (D3DX_PI - DevilRot.z));
 
 		if (DevilRot.z > 0.0f)
@@ -1284,7 +1284,7 @@ float CMapMove::MoveSlopeX(float Move, SPEED& Speed)
 			fSlopeMove = (D3DX_PI / (D3DX_PI - DevilRot.z)) * SLOPEUP_MAG;
 		}
 		else if (DevilRot.z < 0.0f)
-		{// 右に傾いた時の加速
+		{// 左に傾いた時の減速
 			fSlopeMove = (D3DX_PI / (D3DX_PI + DevilRot.z)) * SLOPEDOWN_MAG;
 		}
 	}
@@ -1315,28 +1315,28 @@ float CMapMove::MoveSlopeZ(float Move, SPEED& Speed)
 	D3DXVECTOR3 DevilRot = m_DevilRot;
 
 	if (Move > 0.0f)
-	{
+	{// 奥側に移動
 		fSlopeMove = (D3DX_PI / (D3DX_PI + DevilRot.x));
 
 		if (DevilRot.x < 0.0f)
-		{// 左に傾いた時の加速
+		{// 手前に傾いた時の減速
 			fSlopeMove = (D3DX_PI / (D3DX_PI + DevilRot.x)) * SLOPEDOWN_MAG;
 		}
 		else if (DevilRot.x > 0.0f)
-		{// 左に傾いた時の加速
+		{// 奥に傾いた時の加速
 			fSlopeMove = (D3DX_PI / (D3DX_PI - DevilRot.x)) * SLOPEUP_MAG;
 		}
 	}
 	else if (Move < 0.0f)
-	{
+	{// 手前側に移動
 		fSlopeMove = (D3DX_PI / (D3DX_PI - DevilRot.x));
 
 		if (DevilRot.x > 0.0f)
-		{// 右に傾いた時の加速
+		{// 奥に傾いた時の減速
 			fSlopeMove = (D3DX_PI / (D3DX_PI + DevilRot.x)) * SLOPEDOWN_MAG;
 		}
 		else if (DevilRot.x < 0.0f)
-		{// 右に傾いた時の加速
+		{// 手前に傾いた時の加速
 			fSlopeMove = (D3DX_PI / (D3DX_PI - DevilRot.x)) * SLOPEUP_MAG;
 		}
 	}
