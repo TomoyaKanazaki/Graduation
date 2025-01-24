@@ -589,6 +589,14 @@ void CMapMove::StateManager(void)
 	{
 		m_nStateCount--;
 	}
+
+	DebugProc::Print(DebugProc::POINT_RIGHT, "ÉXÉNÉçÅ[ÉãèÛë‘ : ");
+
+	auto str = magic_enum::enum_name(m_SetState);
+
+	DebugProc::Print(DebugProc::POINT_RIGHT, str.data());
+	DebugProc::Print(DebugProc::POINT_RIGHT, "\n");
+
 }
 
 //====================================================================
