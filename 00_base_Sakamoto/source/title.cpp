@@ -268,7 +268,6 @@ void CTitle::Button(void)
 	if (CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_RETURN) == true)
 	{
 		CManager::GetInstance()->SetTypeInput(CManager::GetInstance()->TYPE_MNK);	// 入力タイプ：キーマウ
-		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_ENTER);
 
 		switch (m_nSelect)
 		{
@@ -297,6 +296,8 @@ void CTitle::Button(void)
 			CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_BGM_TITLE);
 			break;
 		}
+
+		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_ENTER);
 
 		// タイマーの初期化
 		m_fTimer = 0.0f;
@@ -304,7 +305,6 @@ void CTitle::Button(void)
 	else if (CManager::GetInstance()->GetInputJoyPad()->GetTrigger(CInputJoypad::BUTTON_A, 0) == true)
 	{
 		CManager::GetInstance()->SetTypeInput(CManager::GetInstance()->TYPE_JOYPAD);	// 入力タイプ：パッド
-		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_ENTER);
 
 		switch (m_nSelect)
 		{
@@ -335,6 +335,8 @@ void CTitle::Button(void)
 			CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_BGM_TITLE);
 			break;
 		}
+
+		CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_ENTER);
 
 		// タイマーの初期化
 		m_fTimer = 0.0f;
