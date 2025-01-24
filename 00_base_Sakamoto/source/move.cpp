@@ -1182,7 +1182,8 @@ void CStateAStar::Route(CObjectCharacter* pCharacter)
 	// Ÿ‚Ì–Ú•W‚ª‘¶İ‚µ‚È‚©‚Á‚½‚çŠÖ”‚ğ”²‚¯‚é
 	if (m_nTargetIndex >= m_nNumCoordinate)
 	{
-		pCharacter->ChangeMoveState(new CStateRandom);		// ƒ‰ƒ“ƒ_ƒ€ó‘Ô‚É‚·‚é
+		Coordinate(pCharacter);
+		//pCharacter->ChangeMoveState(new CStateRandom);		// ƒ‰ƒ“ƒ_ƒ€ó‘Ô‚É‚·‚é
 		return;
 	}
 

@@ -322,7 +322,7 @@ void CEnemy::Update(void)
 			//‘Ò‹@ó‘Ô‚É‚·‚é
 			SetState(STATE_WALK);
 			// Œü‚«ó‘Ô‚ÌÝ’è
-			m_pMoveState->SetRotState(CMoveState::ROTSTATE_WAIT);
+			//m_pMoveState->SetRotState(CMoveState::ROTSTATE_WAIT);
 			posThis = m_Grid.ToWorld();
 			m_pMoveState->RandomAStar(this);
 			break;
@@ -348,7 +348,7 @@ void CEnemy::Update(void)
 			//‘Ò‹@ó‘Ô‚É‚·‚é
 			SetState(STATE_WALK);
 			// Œü‚«ó‘Ô‚ÌÝ’è
-			m_pMoveState->SetRotState(CMoveState::ROTSTATE_WAIT);
+			//m_pMoveState->SetRotState(CMoveState::ROTSTATE_WAIT);
 			posThis = m_Grid.ToWorld();
 			m_pMoveState->RandomAStar(this);
 			break;
