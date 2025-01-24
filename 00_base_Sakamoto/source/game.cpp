@@ -356,6 +356,12 @@ void CGame::Update(void)
 				if (m_bEvent == false)
 				{
 					StageClear(CManager::GetInstance()->GetStage());
+
+					// プレイヤーの状態をリセット
+					for (int i = 0; i < CManager::GetInstance()->GetGameMode(); ++i)
+					{
+						m_pPlayer[i]->Reset();
+					}
 				}
 			}
 			else

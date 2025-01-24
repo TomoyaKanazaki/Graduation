@@ -40,10 +40,15 @@ public:
 	void InitUI();
 	void DebugKey(void);
 
+	void Reset();
+
 	CScore* GetScore(void) override { return m_pScore; }
 	CLifeUi* GetLifeUI(void) { return m_pLifeUi; }
 
 private:
+
+	// メンバ関数
+	void ControlUi();
 
 	CMapSystem::GRID m_Grid;		// グリッドの情報
 	
@@ -56,9 +61,9 @@ private:
 
 	CPopUiBg* m_pPopUIBg;			//吹き出しUI背景
 	CPopUi* m_pPopUI;				//吹き出しUI
-	float m_fSizePopUI;		//吹き出しUIのサイズ
+	float m_fSizePopUI;				//吹き出しUIのサイズ
 	float m_fVariableSizePopUI;		//吹き出しUIのサイズ可変値
-	int m_nUIFlashCount;		//UIの点滅タイミング
+	int m_nUIFlashCount;			//UIの点滅タイミング
 
 	D3DXVECTOR2 m_posDefCrossUI;
 };
