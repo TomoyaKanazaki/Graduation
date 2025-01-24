@@ -371,18 +371,20 @@ void CSlopeDevice::SetStateArrowBack(CScrollArrow::Arrow stateArrow)
 		break;
 	}
 
-	if (stateArrow == CScrollArrow::STATE_UP ||
-		stateArrow == CScrollArrow::STATE_DOWN)
-	{
-		// 目的位置を通常位置に変更
-		m_posTarget = m_posTargetDef;
-	}
-	else if (stateArrow == CScrollArrow::STATE_LEFT ||
-			 stateArrow == CScrollArrow::STATE_RIGHT)
-	{
-		// 目的位置を通常位置に変更
-		m_posTarget = m_posTargetDef;
-	}
+	// 目的位置を通常位置に変更
+	m_posTarget = m_posTargetDef;
+
+	//if (stateArrow == CScrollArrow::STATE_UP ||
+	//	stateArrow == CScrollArrow::STATE_DOWN)
+	//{
+	//	
+	//}
+	//else if (stateArrow == CScrollArrow::STATE_LEFT ||
+	//		 stateArrow == CScrollArrow::STATE_RIGHT)
+	//{
+	//	// 目的位置を通常位置に変更
+	//	m_posTarget = m_posTargetDef;
+	//}
 }
 
 //====================================================================

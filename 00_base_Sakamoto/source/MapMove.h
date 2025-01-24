@@ -30,18 +30,38 @@ public:
 		SCROLL_TYPE_MAX,		// 最大
 	};
 
+	// 向き
+	enum ROTTYPE
+	{
+		ROTTYPE_UP = 0,		// 上
+		ROTTYPE_DOWN,		// 下
+		ROTTYPE_LEFT,		// 左
+		ROTTYPE_RIGHT,		// 右
+		ROTTYPE_MAX
+	};
+
+	// 移動モード
+	enum MOVEMODE
+	{
+		MOVEMODE_SCROLL = 0,	// スクロール
+		MOVEMODE_SLOPE,			// 傾き
+		MOVEMODE_MAX
+	};
+
 	//デビルの状態
 	enum MOVE
 	{
 		MOVE_WAIT = 0,		//待機
 		MOVE_SCROLL_UP,		//スクロール[上]
 		MOVE_SCROLL_DOWN,	//スクロール[下]
-		MOVE_SCROLL_RIGHT,	//スクロール[右]
 		MOVE_SCROLL_LEFT,	//スクロール[左]
+		MOVE_SCROLL_RIGHT,	//スクロール[右]
+
 		MOVE_SLOPE_UP,		//傾き状態[上]
 		MOVE_SLOPE_DOWN,	//傾き状態[下]
-		MOVE_SLOPE_RIGHT,	//傾き状態[右]
 		MOVE_SLOPE_LEFT,	//傾き状態[左]
+		MOVE_SLOPE_RIGHT,	//傾き状態[右]
+
 		MOVE_MAX,			//最大
 	};
 
@@ -92,6 +112,9 @@ private:
 	void Slope(int Arroow);		//傾き処理
 	void CollisionOut();		//ステージ外にいるオブジェクトの処理
 
+	void SetSlopeRot(void);		// 傾きの向きを設定
+	void SetRotState(void);		// 移動角度の状態設定
+
 	void StopSound(); // 黙らせる
 
 	void ScrollReset();		//スクロールのずれ修正
@@ -128,5 +151,11 @@ private:
 	SCROLL_TYPE m_ScrollType;		// スクロールの種類
 	int m_SlopeType;				// スロープの種類
 	float m_fEffectTime;			// エフェクト生成タイマー
+
+
+
+
+
+	MOVEMODE m_moveMode;			// 移動モード
 };
 #endif
