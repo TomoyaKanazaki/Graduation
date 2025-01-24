@@ -190,19 +190,6 @@ void CMapMove::Update(void)
 	D3DXVECTOR3 InitPos = CMapSystem::GetInstance()->GetInitPos();
 	D3DXVECTOR3 MapPos = CMapSystem::GetInstance()->GetMapPos();
 
-	//デバッグ表示
-	DebugProc::Print(DebugProc::POINT_LEFT, "[マップ]　　　位置 %f : %f\n", MapPos.x, MapPos.z);
-	DebugProc::Print(DebugProc::POINT_LEFT, "[マップの差分]位置 %f : %f\n", m_MapDifference.x, m_MapDifference.z);
-	DebugProc::Print(DebugProc::POINT_LEFT, "[マップのスクロール]：矢印キー\n");
-	DebugProc::Print(DebugProc::POINT_LEFT, "[マップの傾きX]：[ X+ : 6 ] [ X- : 7 ]\n");
-	DebugProc::Print(DebugProc::POINT_LEFT, "[マップの傾きZ]：[ Z+ : 8 ] [ Z- : 9 ]\n");
-	DebugProc::Print(DebugProc::POINT_LEFT, "[マップの傾きリセット]：[ 5 ]\n");
-
-	DebugProc::Print(DebugProc::POINT_RIGHT, "[最小番号]左 %d : 上 %d\n", m_MinGrid.x, m_MinGrid.z);
-	DebugProc::Print(DebugProc::POINT_RIGHT, "[最大番号]右 %d : 下 %d\n", m_MaxGrid.x, m_MaxGrid.z);
-	DebugProc::Print(DebugProc::POINT_RIGHT, "[マップの傾き]X：%f, Z：%f\n", m_DevilRot.x, m_DevilRot.z);
-
-
 	// エフェクトを生成
 	switch (m_State)
 	{

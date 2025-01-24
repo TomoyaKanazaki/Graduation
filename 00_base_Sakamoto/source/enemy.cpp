@@ -301,10 +301,6 @@ void CEnemy::Update(void)
 	// キャラクタークラスの更新（継承）
 	CObjectCharacter::Update();
 
-	// デバッグ表示
-	DebugProc::Print(DebugProc::POINT_LEFT, "[敵]横 %d : 縦 %d\n", m_Grid.x, m_Grid.z);
-	DebugProc::Print(DebugProc::POINT_LEFT, "[敵]向き %f\n", rotThis.y);
-
 	m_pMoveState->Debug();		// 現在の移動状態
 
 	// 壁のリスト構造が無ければ抜ける
@@ -326,8 +322,9 @@ void CEnemy::Update(void)
 			//待機状態にする
 			SetState(STATE_WALK);
 			// 向き状態の設定
-			m_pMoveState->SetRotState(CMoveState::ROTSTATE_WAIT);
+			//m_pMoveState->SetRotState(CMoveState::ROTSTATE_WAIT);
 			posThis = m_Grid.ToWorld();
+			m_pMoveState->RandomAStar(this);
 			break;
 		}
 	}
@@ -351,8 +348,9 @@ void CEnemy::Update(void)
 			//待機状態にする
 			SetState(STATE_WALK);
 			// 向き状態の設定
-			m_pMoveState->SetRotState(CMoveState::ROTSTATE_WAIT);
+			//m_pMoveState->SetRotState(CMoveState::ROTSTATE_WAIT);
 			posThis = m_Grid.ToWorld();
+			m_pMoveState->RandomAStar(this);
 			break;
 		}
 	}

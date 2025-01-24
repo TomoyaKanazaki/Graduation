@@ -88,12 +88,12 @@ CMoveState* CMoveState::GetMoveState(CObjectCharacter* pCharacter)
 //==========================================
 void CMoveState::Debug(void)
 {
-	DebugProc::Print(DebugProc::POINT_LEFT, "移動状態 : ");
+	DebugProc::Print(DebugProc::POINT_RIGHT, "移動状態 : ");
 
 	auto str = magic_enum::enum_name(m_State);
 
-	DebugProc::Print(DebugProc::POINT_LEFT, str.data());
-	DebugProc::Print(DebugProc::POINT_LEFT, "\n");
+	DebugProc::Print(DebugProc::POINT_RIGHT, str.data());
+	DebugProc::Print(DebugProc::POINT_RIGHT, "\n");
 
 }
 
@@ -565,8 +565,6 @@ void CStateRandom::Move(CObjectCharacter* pCharacter, D3DXVECTOR3& pos, D3DXVECT
 	// 位置更新処理
 	UpdatePos(pCharacter, pos);
 
-	DebugProc::Print(DebugProc::POINT_LEFT, "移動向き : ");
-
 	auto str = magic_enum::enum_name(m_RotState);
 
 	DebugProc::Print(DebugProc::POINT_LEFT, str.data());
@@ -586,8 +584,6 @@ void CStateRandom::Move(CItem* pItem, D3DXVECTOR3& pos, D3DXVECTOR3& rot)
 
 	// 位置更新処理
 	UpdatePos(pItem, pos);
-
-	DebugProc::Print(DebugProc::POINT_LEFT, "移動向き : ");
 
 	auto str = magic_enum::enum_name(m_RotState);
 
@@ -666,9 +662,6 @@ void CStateRandom::SearchWall(CObjectCharacter* pCharacter, D3DXVECTOR3& pos)
 	//自分の立っているグリットの中心位置を求める
 	D3DXVECTOR3 MyGritPos = grid.ToWorld();
 	float MapGritSize = pMapSystem->GetGritSize();
-
-	DebugProc::Print(DebugProc::POINT_LEFT, "敵の位置 %f %f %f\n", MyGritPos.x, MyGritPos.y, MyGritPos.z);
-	DebugProc::Print(DebugProc::POINT_LEFT, "敵の位置 : %d, %d\n", grid.x, grid.z);
 
 	// 自身の座標とグリッドの中心が許容範囲よりも小さい場合
 	if (
@@ -769,9 +762,6 @@ void CStateRandom::SearchWall(CItem* pItem, D3DXVECTOR3& pos)
 	//自分の立っているグリットの中心位置を求める
 	D3DXVECTOR3 MyGritPos = grid.ToWorld();
 	float MapGritSize = pMapSystem->GetGritSize();
-
-	DebugProc::Print(DebugProc::POINT_LEFT, "敵の位置 %f %f %f\n", MyGritPos.x, MyGritPos.y, MyGritPos.z);
-	DebugProc::Print(DebugProc::POINT_LEFT, "敵の位置 : %d, %d\n", grid.x, grid.z);
 
 	// 自身の座標とグリッドの中心が許容範囲よりも小さい場合
 	if (
@@ -1192,7 +1182,8 @@ void CStateAStar::Route(CObjectCharacter* pCharacter)
 	// 次の目標が存在しなかったら関数を抜ける
 	if (m_nTargetIndex >= m_nNumCoordinate)
 	{
-		pCharacter->ChangeMoveState(new CStateRandom);		// ランダム状態にする
+		Coordinate(pCharacter);
+		//pCharacter->ChangeMoveState(new CStateRandom);		// ランダム状態にする
 		return;
 	}
 
