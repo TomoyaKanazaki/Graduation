@@ -32,7 +32,7 @@ namespace
 {
 	float GRID_SIZE = 100.0f;	// グリッドのサイズ
 	D3DXVECTOR3 MAP_SIZE = D3DXVECTOR3(750.0f, 0.0f, 550.0f);		// 横の当たり判定
-	int BOWABOWA_RATE = 60; // ボワボワの生成率 ( 0以下でエラー )
+	int BOWABOWA_RATE = 5; // ボワボワの生成率 ( 0以下でエラー )
 	const D3DXVECTOR3 EFFECT_SIZE = { 103.5f, 25.0f, 67.5f }; // エフェクトの倍率
 	const char* MAP_FILE = "data\\TXT\\STAGE\\stage.txt";		// マップファイル
 
@@ -158,6 +158,7 @@ void CMapSystem::Update(void)
 	if (CManager::GetInstance()->GetPause() == false)
 	{
 		if (CGame::GetInstance()->GetEvent() == false &&
+			CGame::GetInstance()->GetTrans() == false &&
 			m_pMapMove != nullptr)
 		{
 			//マップの動き設定
@@ -1002,6 +1003,20 @@ void CMapSystem::ResetMap(void)
 		{
 			// レールブロックのリセット
 			pRailBlock->Reset();
+		}
+	}
+
+	// 敵のリスト構造が無ければ抜ける
+	if (CEnemy::GetList() == nullptr) { }
+	else
+	{
+		std::list<CEnemy*> list = CEnemy::GetList()->GetList();    // リストを取得
+
+		// 敵のリストの中身を確認する
+		for (CEnemy* pEnemy : list)
+		{
+			// 敵のリセット
+			pEnemy->Reset();
 		}
 	}
 }

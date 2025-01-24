@@ -127,6 +127,8 @@ void CFade::Update(void)
 
 				if (m_bSetMode == true)
 				{
+					CManager::GetInstance()->SetPause(false);
+
 					//ƒ‚[ƒh‚Ìİ’è(Ÿ‚Ì‰æ–Ê‚ÉˆÚs)
 					CScene::SetMode(m_modeNext);
 				}

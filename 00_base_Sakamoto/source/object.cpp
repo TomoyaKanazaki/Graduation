@@ -144,7 +144,8 @@ void CObject::UpdateAll(void)
 						pObject->Update();
 					}
 				}
-				else if (pObject->m_Appear == true)
+				else if (pObject->m_Appear == true &&
+					CGame::GetInstance()->GetTrans() == false)		// ‘JˆÚ‚·‚é‘O‚¶‚á‚È‚¢‚Æ‚«
 				{
 					//XVˆ—
 					pObject->Update();
