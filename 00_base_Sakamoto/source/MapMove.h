@@ -100,7 +100,6 @@ private:
 
 	void ScrollReset();		//スクロールのずれ修正
 	void GritScroll();		//グリットのスクロール
-	void CollisionPressPlayer(CPlayer* pPlayer, D3DXVECTOR3 pos, D3DXVECTOR3 Size);	//プレイヤーが潰される時の処理
 
 	void DebugKey(void);		//デバッグキー
 
