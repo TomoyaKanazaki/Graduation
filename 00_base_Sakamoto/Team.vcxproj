@@ -31,6 +31,7 @@
     <ClCompile Include="source\EventMovie.cpp" />
     <ClCompile Include="source\footprint.cpp" />
     <ClCompile Include="source\MapMove.cpp" />
+    <ClCompile Include="source\mapmove_state.cpp" />
     <ClCompile Include="source\move.cpp" />
     <ClCompile Include="source\objectcharacter.cpp" />
     <ClCompile Include="source\cross.cpp" />
@@ -122,6 +123,7 @@
     <ClInclude Include="source\EventMovie.h" />
     <ClInclude Include="source\footprint.h" />
     <ClInclude Include="source\MapMove.h" />
+    <ClInclude Include="source\mapmove_state.h" />
     <ClInclude Include="source\move.h" />
     <ClInclude Include="source\objectcharacter.h" />
     <ClInclude Include="source\cross.h" />

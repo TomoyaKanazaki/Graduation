@@ -14,6 +14,7 @@
 class CObject2D;
 class CSignal;
 class CPlayer;
+class CMapMoveState;
 
 //マップムーブクラス
 class CMapMove
@@ -22,7 +23,7 @@ public:
 	CMapMove();
 	~CMapMove();
 
-	// モーション
+	// スクロールタイプ
 	enum SCROLL_TYPE
 	{
 		SCROLL_TYPE_NORMAL = 0,	// スムーズにスクロールする
@@ -45,10 +46,22 @@ public:
 	{
 		MOVEMODE_SCROLL = 0,	// スクロール
 		MOVEMODE_SLOPE,			// 傾き
+		MOVEMODE_WAIT,			// 待機
 		MOVEMODE_MAX
 	};
 
-	//デビルの状態
+	//加減速状態
+	enum SPEED
+	{
+		SPEED_NONE = 0,		//待機
+		SPEED_UP,			//加速
+		SPEED_DOWN,			//減速
+		SPEED_MAX,			//最大
+	};
+
+
+
+	//移動の状態
 	enum MOVE
 	{
 		MOVE_WAIT = 0,		//待機
@@ -63,15 +76,6 @@ public:
 		MOVE_SLOPE_RIGHT,	//傾き状態[右]
 
 		MOVE_MAX,			//最大
-	};
-
-	//加減速状態
-	enum SPEED
-	{
-		SPEED_NONE = 0,		//待機
-		SPEED_UP,			//加速
-		SPEED_DOWN,			//減速
-		SPEED_MAX,			//最大
 	};
 
 	static CMapMove* Create();
@@ -104,6 +108,9 @@ public:
 
 	void FollowScroll(D3DXVECTOR3& pos) { pos += m_move; }
 
+	// 移動状態変更処理
+	void ChangeMoveState(CMapMoveState* pMapMoveState);
+
 private:
 
 	void StateManager(void);	//状態管理
@@ -113,7 +120,7 @@ private:
 	void CollisionOut();		//ステージ外にいるオブジェクトの処理
 
 	void SetSlopeRot(void);		// 傾きの向きを設定
-	void SetRotState(void);		// 移動角度の状態設定
+	void SetDeviceMap(void);	// マップ装置の設定
 
 	void StopSound(); // 黙らせる
 
@@ -154,6 +161,9 @@ private:
 
 
 
-	MOVEMODE m_moveMode;			// 移動モード
+	MOVEMODE m_MoveMode;			// 移動モード
+	ROTTYPE m_RotType;				// 移動向きの種類
+
+	CMapMoveState* m_pMapMoveState;	// マップ移動の状態管理
 };
 #endif
