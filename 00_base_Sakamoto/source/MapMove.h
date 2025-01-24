@@ -96,6 +96,8 @@ private:
 	void Slope(int Arroow);		//傾き処理
 	void CollisionOut();		//ステージ外にいるオブジェクトの処理
 
+	void StopSound(); // 黙らせる
+
 	void ScrollReset();		//スクロールのずれ修正
 	void GritScroll();		//グリットのスクロール
 	void CollisionPressPlayer(CPlayer* pPlayer, D3DXVECTOR3 pos, D3DXVECTOR3 Size);	//プレイヤーが潰される時の処理

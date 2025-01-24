@@ -254,10 +254,7 @@ void CMapMove::StateManager(void)
 		if (m_nStateCount <= 0)
 		{
 			// サウンドの停止
-			CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_SE_SIGN_UP);
-			CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_SE_SIGN_DOWN);
-			CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_SE_SIGN_RIGHT);
-			CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_SE_SIGN_LEFT);
+			StopSound();
 
 			if (m_SetState == MOVE_SCROLL_UP ||
 				m_SetState == MOVE_SCROLL_DOWN ||
@@ -387,10 +384,7 @@ void CMapMove::StateManager(void)
 					{// 傾き戻し状態の時
 
 						// サウンドの停止
-						CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_SE_SIGN_UP);
-						CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_SE_SIGN_DOWN);
-						CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_SE_SIGN_RIGHT);
-						CManager::GetInstance()->GetSound()->Stop(CSound::SOUND_LABEL_SE_SIGN_LEFT);
+						StopSound();
 
 						// 傾きを戻す時だけ倍の時間を指定し、戻り切ったら傾き状態を終了とする
 						m_nStateCount = SLOPE_TIME * 2;
@@ -1115,6 +1109,21 @@ void CMapMove::CollisionOut()
 	}
 }
 
+//==========================================
+//  黙らせる処理
+//==========================================
+void CMapMove::StopSound()
+{
+	// サウンドの取得
+	CSound* sound = CManager::GetInstance()->GetSound();
+
+	// サウンドの停止
+	sound->Stop(CSound::SOUND_LABEL_SE_SIGN_UP);
+	sound->Stop(CSound::SOUND_LABEL_SE_SIGN_DOWN);
+	sound->Stop(CSound::SOUND_LABEL_SE_SIGN_RIGHT);
+	sound->Stop(CSound::SOUND_LABEL_SE_SIGN_LEFT);
+}
+
 //====================================================================
 // デバッグボタン
 //====================================================================
@@ -1157,7 +1166,7 @@ void CMapMove::DebugKey(void)
 		pMapField->SetRot(MapRot);
 	}
 
-#endif // !_DEBUG
+#endif // _DEBUG
 }
 
 //====================================================================
