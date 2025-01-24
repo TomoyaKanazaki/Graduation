@@ -200,7 +200,6 @@ void CPause::Update(void)
 				CFade::SetFade(CScene::MODE_GAME);
 				break;
 			}
-			CManager::GetInstance()->SetPause(false);
 		}
 	}
 	else

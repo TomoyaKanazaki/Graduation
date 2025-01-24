@@ -158,6 +158,7 @@ void CMapSystem::Update(void)
 	if (CManager::GetInstance()->GetPause() == false)
 	{
 		if (CGame::GetInstance()->GetEvent() == false &&
+			CGame::GetInstance()->GetTrans() == false &&
 			m_pMapMove != nullptr)
 		{
 			//ƒ}ƒbƒv‚Ì“®‚«İ’è
