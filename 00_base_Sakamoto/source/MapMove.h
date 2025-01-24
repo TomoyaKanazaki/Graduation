@@ -125,6 +125,7 @@ private:
 	void SetScroll(void);		// スクロールの設定
 	void SetSlope(void);		// 傾きの設定
 	void SetBackSlope(void);	// 元に戻す傾きの設定
+	void MoveScroll(void);		// 傾きの回転処理
 
 	void PlaySound();	// 喋らせる
 	void StopSound();	// 黙らせる
@@ -139,8 +140,8 @@ private:
 	D3DXVECTOR3 m_DevilPos;			//デビルパワーがマップのブロックにデビルスクロールする位置、テスト用
 	D3DXVECTOR3 m_MapDifference;	//マップを動かした時の差分
 	float m_fActionCount;			//行動のカウント
-	MOVE m_State;					//状態
-	MOVE m_SlopeOld;				//一個前の傾き状態
+	MOVE m_State;					//状態 ---------------------------------------------------------------消えろ
+	MOVE m_SlopeOld;				//一個前の傾き状態 ---------------------------------------------------消えろ
 	int m_nStateCount;				//状態管理用カウント
 	int m_nStateNum;				//状態カウント
 	bool m_bSlope;					//傾き状態かどうか
@@ -168,6 +169,7 @@ private:
 
 	MOVEMODE m_MoveMode;			// 移動モード
 	ROTTYPE m_RotType;				// 移動向きの種類
+	ROTTYPE m_OldRotType;			// 前回の移動向きの種類
 
 	CMapMoveState* m_pMapMoveState;	// マップ移動の状態管理
 };

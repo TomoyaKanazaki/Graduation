@@ -89,8 +89,9 @@ CMapMove::CMapMove() :
 	m_fScrollMove = 0.0f;
 	m_fScrollEndLine = 0.0f;
 
-	m_MoveMode = MOVEMODE_SCROLL;		// 移動モード
+	m_MoveMode = MOVEMODE_WAIT;		// 移動モード
 	m_RotType = ROTTYPE_MAX;			// 向きの種類
+	m_OldRotType = m_RotType;			// 前回の向きの種類
 
 	m_pMapMoveState = nullptr;			// マップ移動の状態管理
 }
@@ -148,8 +149,9 @@ HRESULT CMapMove::Init(void)
 	m_bScrollOK = false;
 	m_fScrollEndLine = 0.0f;
 
-	m_MoveMode = MOVEMODE_SCROLL;		// 移動モード
+	m_MoveMode = MOVEMODE_WAIT;		// 移動モード
 	m_RotType = ROTTYPE_MAX;			// 向きの種類
+	m_OldRotType = m_RotType;			// 前回の向きの種類
 
 	// マップ移動の状態設定
 	if (m_pMapMoveState == nullptr)
@@ -252,7 +254,7 @@ void CMapMove::Draw(void)
 //====================================================================
 //状態管理
 //====================================================================
-#if 0	// 元のコード
+#if 0	// 拷問コード
 void CMapMove::StateManager(void)
 {
 	D3DXVECTOR3 MapPos = CMapSystem::GetInstance()->GetMapPos();
@@ -542,20 +544,39 @@ void CMapMove::StateManager(void)
 		// 移動処理
 		Move();
 
-		if (m_bScrollOK == true)
+		if (m_bScrollOK)
 		{ // さっきの移動処理でスクロールが完了した場合
-
-			m_MoveMode = MOVEMODE_WAIT;	// 待機状態にする
-			m_nStateCount = 120;		// 状態管理カウンターを初期化
 
 			// 傾き装置の処理
 			SetDeviceMap();
+
+			m_MoveMode = MOVEMODE_WAIT;	// 待機状態にする
+			m_nStateCount = 120;		// 状態管理カウンターを初期化
 		}
+		else if(!m_bScrollOK)
+		{ // さっきの移動処理でスクロールが完了してない場合
+			if (m_nStateCount >= 0)
+			{
+				m_nStateCount--;	// 状態管理カウンターを減算
+			}
+		}
+
 		break;
 
 	case CMapMove::MOVEMODE_SLOPE:		// 傾き
 
-		// 傾きの処理
+		// 傾きの回転処理
+		MoveScroll();
+
+		if (m_nStateCount < 0)
+		{
+			m_MoveMode = MOVEMODE_WAIT;		// 待機状態にする
+			m_nStateCount = 120;
+		}
+		else
+		{
+			m_nStateCount--;		// 状態管理カウンターを減算
+		}
 
 		break;
 
@@ -613,82 +634,15 @@ void CMapMove::StateManager(void)
 		break;
 	}
 
-#if 1
-	D3DXVECTOR3 MapPos = CMapSystem::GetInstance()->GetMapPos();
-
-	switch (m_State)
-	{
-		// 傾き中の状態 -> 待機状態になる
-	case MOVE_SLOPE_UP:
-	case MOVE_SLOPE_DOWN:
-	case MOVE_SLOPE_LEFT:
-	case MOVE_SLOPE_RIGHT:
-		switch (m_ScrollType)
-		{
-		case CMapMove::SCROLL_TYPE_NORMAL:
-
-			if (m_bSlope)
-			{
-				Slope();
-			}
-			else
-			{
-				BackSlope(); // 現在の傾き状態を基に戻す関数
-			}
-			break;
-
-		case CMapMove::SCROLL_TYPE_RETRO:
-
-			if (m_nStateCount % 25 == 0)
-			{
-				if (m_bSlope)
-				{
-					Slope();
-				}
-				else
-				{
-					BackSlope();
-				}
-
-				// 傾き装置のリスト構造が無ければ抜ける
-				if (CSlopeDevice::GetList() == nullptr) { return; }
-				std::list<CSlopeDevice*> list = CSlopeDevice::GetList()->GetList();    // リストを取得
-
-				// 傾き移動装置のリストの中身を確認する
-				for (CSlopeDevice* pSlopeDevice : list)
-				{
-					// レトロ用の傾き移動をオン
-					pSlopeDevice->SetUseRetroMove(true);
-				}
-			}
-			break;
-
-		default:
-
-			break;
-		}
-
-		if (m_nStateCount < 0)
-		{
-			m_State = MOVE_WAIT;
-			m_nStateCount = 120;
-		}
-
-		break;
-	}
-
-	if (m_nStateCount >= 0)
-	{
-		m_nStateCount--;
-	}
-
-	DebugProc::Print(DebugProc::POINT_RIGHT, "スクロール状態 : ");
-
-	auto str = magic_enum::enum_name(m_State);
-
-	DebugProc::Print(DebugProc::POINT_RIGHT, str.data());
-	DebugProc::Print(DebugProc::POINT_RIGHT, "\n");
-#endif
+//#if 1
+//
+//	DebugProc::Print(DebugProc::POINT_RIGHT, "スクロール状態 : ");
+//
+//	auto str = magic_enum::enum_name(m_State);
+//
+//	DebugProc::Print(DebugProc::POINT_RIGHT, str.data());
+//	DebugProc::Print(DebugProc::POINT_RIGHT, "\n");
+//#endif
 
 }
 #endif
@@ -827,6 +781,59 @@ void CMapMove::SetDeviceMap(void)
 		break;
 	}
 	
+}
+
+//====================================================================
+// 傾きの回転処理
+//====================================================================
+void CMapMove::MoveScroll(void)
+{
+	// 傾き処理
+	switch (m_ScrollType)
+	{
+	case CMapMove::SCROLL_TYPE_NORMAL:		// ノーマル
+
+		if (m_bSlope)
+		{ // 傾く状態のとき
+			Slope();
+		}
+		else
+		{ // 元に戻す状態のとき
+			BackSlope(); // 現在の傾き状態を基に戻す関数
+		}
+		break;
+
+	case CMapMove::SCROLL_TYPE_RETRO:		// レトロ
+
+		if (m_nStateCount % 25 == 0)
+		{
+			if (m_bSlope)
+			{
+				Slope();
+			}
+			else
+			{
+				BackSlope();
+			}
+
+			// 傾き装置のリスト構造が無ければ抜ける
+			if (CSlopeDevice::GetList() == nullptr) { return; }
+			std::list<CSlopeDevice*> list = CSlopeDevice::GetList()->GetList();    // リストを取得
+
+			// 傾き移動装置のリストの中身を確認する
+			for (CSlopeDevice* pSlopeDevice : list)
+			{
+				// レトロ用の傾き移動をオン
+				pSlopeDevice->SetUseRetroMove(true);
+			}
+		}
+		break;
+
+	default:
+		assert(false);
+
+		break;
+	}
 }
 
 //====================================================================
@@ -1022,11 +1029,11 @@ void CMapMove::Slope()
 	// スクロールタイプによって使用する定数を設定
 	switch (m_ScrollType)
 	{
-	case CMapMove::SCROLL_TYPE_NORMAL:
+	case CMapMove::SCROLL_TYPE_NORMAL:		// ノーマル
 		fSlopeRate = SLOPE_SPEED01;
 		break;
 
-	case CMapMove::SCROLL_TYPE_RETRO:
+	case CMapMove::SCROLL_TYPE_RETRO:		// レトロ
 		fSlopeRate = SLOPE_SPEED02;
 		break;
 
@@ -1035,65 +1042,57 @@ void CMapMove::Slope()
 		break;
 	}
 
+	// 回転させる
 	switch (m_RotType)
 	{
-	case 0:
+	case ROTTYPE_UP:		// 上
 
 		MapRot.x += D3DX_PI * fSlopeRate;
 
 		if (MapRot.x > STAGE_ROT_LIMIT)
-		{
+		{ // 角度が目標を超えたら
 			MapRot.x = STAGE_ROT_LIMIT;
 			CManager::GetInstance()->GetCamera(0)->SetBib(false);	//カメラの振動をオフにする
 		}
-		// 右側
-		m_SlopeType = 0;
-
 		break;
-	case 1:
+
+	case ROTTYPE_DOWN:		// 下
 
 		MapRot.x -= D3DX_PI * fSlopeRate;
 
 		if (MapRot.x < -STAGE_ROT_LIMIT)
-		{
+		{ // 角度が目標を超えたら
 			MapRot.x = -STAGE_ROT_LIMIT;
 			CManager::GetInstance()->GetCamera(0)->SetBib(false);	//カメラの振動をオフにする
 		}
-		// 左側
-		m_SlopeType = 1;
-
 		break;
-	case 2:
+
+	case ROTTYPE_LEFT:		// 左
 
 		MapRot.z += D3DX_PI * fSlopeRate;
 
 		if (MapRot.z > STAGE_ROT_LIMIT)
-		{
+		{ // 角度が目標を超えたら
 			MapRot.z = STAGE_ROT_LIMIT;
 			CManager::GetInstance()->GetCamera(0)->SetBib(false);	//カメラの振動をオフにする
 		}
-		// 奥側
-		m_SlopeType = 2;
-
 		break;
-	case 3:
+
+	case ROTTYPE_RIGHT:		// 右
 
 		MapRot.z -= D3DX_PI * fSlopeRate;
 
 		if (MapRot.z < -STAGE_ROT_LIMIT)
-		{
+		{ // 角度が目標を超えたら
 			MapRot.z = -STAGE_ROT_LIMIT;
 			CManager::GetInstance()->GetCamera(0)->SetBib(false);	//カメラの振動をオフにする
 		}
-		// 手前側
-		m_SlopeType = 3;
-
 		break;
 	}
 
-	m_SlopeOld = m_State;
+	m_OldRotType = m_RotType;		// 前回の向き入れる
 
-	pMapField->SetRot(MapRot);
+	pMapField->SetRot(MapRot);		// 角度入れる
 
 	DebugProc::Print(DebugProc::POINT_RIGHT, "マップの角度 : %f %f %f\n", MapRot.x, MapRot.y, MapRot.z);
 }
