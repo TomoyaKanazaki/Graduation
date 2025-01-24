@@ -1198,49 +1198,7 @@ void CMapMove::GritScroll()
 		MapPos.z = InitPos.z + m_move.z;
 	}
 
-#ifdef _DEBUG
-
-	//　グリットの位置にエフェクトを表示
-	for (int nCntW = 0; nCntW < CMapSystem::GetInstance()->GetWightMax(); nCntW++)
-	{
-		for (int nCntH = 0; nCntH < CMapSystem::GetInstance()->GetHeightMax(); nCntH++)
-		{
-			if (CMapSystem::GetInstance()->GetGritBool(nCntW, nCntH))
-			{// ブロックが存在するグリットのみエフェクトを表示
-
-				//CEffect* pEffect = CEffect::Create();
-				//pEffect->SetPos(CMapSystem::GetInstance()->GetGritPos(CMapSystem::GRID(nCntW, nCntH)));
-				//pEffect->SetRadius(20.0f);
-				//pEffect->SetLife(10);
-			}
-		}
-	}
-
-#endif // _DEBUG
-
 	CMapSystem::GetInstance()->SetMapPos(MapPos);
-}
-//====================================================================
-// プレイヤーが潰される時の処理
-//====================================================================
-void CMapMove::CollisionPressPlayer(CPlayer* pPlayer, D3DXVECTOR3 pos, D3DXVECTOR3 Size)
-{
-	//// キューブブロックのリスト構造が無ければ抜ける
-	//if (CCubeBlock::GetList() == nullptr) { return; }
-	//std::list<CCubeBlock*> list = CCubeBlock::GetList()->GetList();    // リストを取得
-
-	//// キューブブロックのリストの中身を確認する
-	//for (CCubeBlock* pCubeBlock : list)
-	//{
-	//	D3DXVECTOR3 Blockpos = pCubeBlock->GetPos();
-	//	D3DXVECTOR3 BlockSize = pCubeBlock->GetSize();
-
-	//	if (useful::CollisionRectangle2D(pos, Blockpos, Size, BlockSize, useful::COLLISION::COLLISION_ZX))
-	//	{
-	//		pPlayer->Death();
-	//		return;
-	//	}
-	//}
 }
 
 //====================================================================
