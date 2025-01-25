@@ -52,8 +52,6 @@ public:
 	CDevil* GetDevil(void) { return m_pDevil; }
 	CPause* GetPause(void) { return m_pPause; }
 	CTimer* GetTime(void) { return m_pTime; }
-	void SetCubeBlock(CCubeBlock* pBlock) { m_pCubeBlock = pBlock; }
-	CCubeBlock* GetCubeBlock(void) { return m_pCubeBlock; }
 	void SetEvent(bool Set) { m_bEvent = Set; }
 	bool GetEvent(void) { return m_bEvent; }
 	bool GetEventEnd(void) { return m_bEventEnd; }
@@ -110,16 +108,11 @@ private:
 	CPause* m_pPause;						//ポーズのポインタ
 	CTimer* m_pTime;						//タイムのポインタ
 	CObjmeshField* m_pMapField;				//マップフィールド
-	CCubeBlock* m_pCubeBlock;				//キューブブロック
 	bool m_Wireframe;						//ワイヤーフレームのオンオフ
 	bool m_Slow;							//スロー演出のオンオフ
 
 	int m_nTransCounter;					// 遷移するまでのカウンター
 
 	CObject2D* LetterBox[2];				//イベント時の背景表示
-
-	CMask* m_pPlayerMask;	// プレイヤーマスク
-	CMask* m_pEnemyMask;	// 敵マスク
-	CMask* m_pItemMask;		// アイテムマスク
 };
 #endif

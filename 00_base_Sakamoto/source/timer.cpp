@@ -111,8 +111,11 @@ void CTimer::Uninit(void)
 {
 	for (int nCntObject = 0; nCntObject < NUM_TIME; nCntObject++)
 	{
-		m_apObject[nCntObject]->Uninit();
-		m_apObject[nCntObject] = nullptr;
+		if (m_apObject[nCntObject] != nullptr)
+		{
+			m_apObject[nCntObject]->Uninit();
+			m_apObject[nCntObject] = nullptr;
+		}
 	}
 
 	SetDeathFlag(true);

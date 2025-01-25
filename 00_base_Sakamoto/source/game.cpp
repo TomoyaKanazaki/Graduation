@@ -94,11 +94,7 @@ CGame::CGame()
 	m_pPause = nullptr;
 	m_pTime = nullptr;
 	m_pMapField = nullptr;
-	m_pCubeBlock = nullptr;
 	m_pDevil = nullptr;
-	m_pPlayerMask = nullptr;
-	m_pEnemyMask = nullptr;
-	m_pItemMask = nullptr;
 
 	m_bGameClear = false;
 	m_Wireframe = false;
@@ -234,6 +230,27 @@ void CGame::Uninit(void)
 		if (m_pPlayer.size() <= 0) { m_pPlayer.clear(); break; }
 		m_pPlayer.back()->SetDeathFlag(true);
 		m_pPlayer.pop_back();
+	}
+
+	// デビル
+	if (m_pDevil != nullptr)
+	{
+		m_pDevil->Uninit();
+		m_pDevil = nullptr;
+	}
+
+	// タイム
+	if (m_pTime != nullptr)
+	{
+		m_pTime->Uninit();
+		m_pTime = nullptr;
+	}
+
+	// 床
+	if (m_pMapField != nullptr)
+	{
+		m_pMapField->Uninit();
+		m_pMapField = nullptr;
 	}
 
 	CManager::GetInstance()->GetSound()->Stop();
