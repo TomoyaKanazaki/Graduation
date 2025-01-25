@@ -130,6 +130,7 @@ HRESULT CObject2D::Init(void)
 //====================================================================
 void CObject2D::Uninit(void)
 {
+	SetNULL();
 	SetDeathFlag(true);
 }
 
@@ -143,6 +144,20 @@ void CObject2D::SetNULL(void)
 	{
 		m_pVtxBuff->Release();
 		m_pVtxBuff = nullptr;
+	}
+
+	if (m_pTexture != nullptr)
+	{
+		m_pTexture->Release();
+		delete m_pTexture;
+		m_pTexture = nullptr;
+	}
+
+	if (m_pTargetTexture != nullptr)
+	{
+		m_pTargetTexture->Release();
+		delete m_pTargetTexture;
+		m_pTargetTexture = nullptr;
 	}
 }
 

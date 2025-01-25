@@ -61,21 +61,21 @@ public:
 
 
 	//移動の状態----------------------------------------------------------お前も消えろ全ての元凶
-	enum MOVE
-	{
-		MOVE_WAIT = 0,		//待機
-		MOVE_SCROLL_UP,		//スクロール[上]
-		MOVE_SCROLL_DOWN,	//スクロール[下]
-		MOVE_SCROLL_LEFT,	//スクロール[左]
-		MOVE_SCROLL_RIGHT,	//スクロール[右]
+	//enum MOVE
+	//{
+	//	MOVE_WAIT = 0,		//待機
+	//	MOVE_SCROLL_UP,		//スクロール[上]
+	//	MOVE_SCROLL_DOWN,	//スクロール[下]
+	//	MOVE_SCROLL_LEFT,	//スクロール[左]
+	//	MOVE_SCROLL_RIGHT,	//スクロール[右]
 
-		MOVE_SLOPE_UP,		//傾き状態[上]
-		MOVE_SLOPE_DOWN,	//傾き状態[下]
-		MOVE_SLOPE_LEFT,	//傾き状態[左]
-		MOVE_SLOPE_RIGHT,	//傾き状態[右]
+	//	MOVE_SLOPE_UP,		//傾き状態[上]
+	//	MOVE_SLOPE_DOWN,	//傾き状態[下]
+	//	MOVE_SLOPE_LEFT,	//傾き状態[左]
+	//	MOVE_SLOPE_RIGHT,	//傾き状態[右]
 
-		MOVE_MAX,			//最大
-	};
+	//	MOVE_MAX,			//最大
+	//};
 
 	static CMapMove* Create();
 
@@ -111,21 +111,22 @@ public:
 
 private:
 
+	// 移動用関数
 	void StateManager(void);	//状態管理
 	void Move();				//移動処理
 	void BackSlope(void);		//傾き処理
 	void Slope();				//傾き処理
 	void CollisionOut();		//ステージ外にいるオブジェクトの処理
 
-
-	void SetSlopeRot(ROTTYPE& RotType);		// 傾きの向きを設定
-	void SetDeviceMap(void);	// マップ装置の設定
-
+	// 移動関係の設定
 	void SetScroll(void);		// スクロールの設定
 	void SetSlope(void);		// 傾きの設定
 	void SetBackSlope(void);	// 元に戻す傾きの設定
+	void SetSlopeRot(ROTTYPE& RotType);		// 傾きの向きを設定
+	void SetDeviceMap(void);	// マップ装置の設定
 	void MoveScroll(void);		// 傾きの回転処理
 
+	// 矢印の音
 	void PlaySound();	// 喋らせる
 	void StopSound();	// 黙らせる
 
@@ -157,10 +158,9 @@ private:
 	float m_fEffectTime;			// エフェクト生成タイマー
 
 
-
+	// 新しく追加した変数(佐藤根)
 	MOVEMODE m_MoveMode;			// 移動モード
 	ROTTYPE m_RotType;				// 移動向きの種類
-	ROTTYPE m_OldRotType;			// 前回の移動向きの種類
 	ROTTYPE m_OldScrollRotType;		// 前回の移動向きの種類(スクロール)
 	ROTTYPE m_OldSlopeRotType;		// 前回の移動向きの種類(傾き)
 

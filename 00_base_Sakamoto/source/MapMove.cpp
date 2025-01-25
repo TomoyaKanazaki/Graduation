@@ -83,7 +83,6 @@ CMapMove::CMapMove() :
 
 	m_MoveMode = MOVEMODE_WAIT;			// 移動モード
 	m_RotType = ROTTYPE_MAX;			// 向きの種類
-	m_OldRotType = m_RotType;			// 前回の向きの種類
 	m_OldScrollRotType = m_RotType;		// 前回の移動向きの種類(スクロール)
 	m_OldSlopeRotType = m_RotType;		// 前回の移動向きの種類(傾き)
 }
@@ -137,7 +136,6 @@ HRESULT CMapMove::Init(void)
 
 	m_MoveMode = MOVEMODE_WAIT;		// 移動モード
 	m_RotType = ROTTYPE_MAX;			// 向きの種類
-	m_OldRotType = m_RotType;			// 前回の向きの種類
 	m_OldScrollRotType = m_RotType;		// 前回の移動向きの種類(スクロール)
 	m_OldSlopeRotType = m_RotType;		// 前回の移動向きの種類(傾き)
 
@@ -652,7 +650,7 @@ void CMapMove::SetBackSlope(void)
 	// 傾きを戻す時だけ倍の時間を指定し、戻り切ったら傾き状態を終了とする
 	m_nStateCount = SLOPE_TIME * 2;
 
-	m_RotType = m_OldRotType;
+	m_RotType = m_OldSlopeRotType;
 
 	//カメラを振動させる
 	CManager::GetInstance()->GetCamera(0)->SetBib(true);
@@ -665,7 +663,7 @@ void CMapMove::SetBackSlope(void)
 	for (CSlopeDevice* pSlopeDevice : list)
 	{
 		// 方向の傾き装置を上昇状態に変更
-		pSlopeDevice->SetStateArrowBack((CScrollArrow::Arrow)m_OldSlopeRotType); // TODO：←この変数変えて～yamete~
+		pSlopeDevice->SetStateArrowBack((CScrollArrow::Arrow)m_RotType);
 	}
 }
 
@@ -1050,8 +1048,6 @@ void CMapMove::Slope()
 		}
 		break;
 	}
-
-	m_OldRotType = m_RotType;		// 前回の向き入れる
 
 	pMapField->SetRot(MapRot);		// 角度入れる
 }

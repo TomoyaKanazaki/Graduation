@@ -49,7 +49,7 @@ namespace
 	{
 		CMyEffekseer::TYPE_RESPAWN_MEDAMAN,
 		CMyEffekseer::TYPE_RESPAWN_BONBON,
-		CMyEffekseer::TYPE_RESPAWN_BONBON // TODO : Žqƒfƒrƒ‹
+		CMyEffekseer::TYPE_RESPAWN_SMALLDEVIL
 	};
 }
 

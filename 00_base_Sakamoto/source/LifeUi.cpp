@@ -78,6 +78,12 @@ HRESULT CLifeUi::Init(void)
 //====================================================================
 void CLifeUi::Uninit(void)
 {
+	if (m_pNumber != nullptr)
+	{
+		m_pNumber->Uninit();
+		m_pNumber = nullptr;
+	}
+
 	CObject2D::Uninit();
 }
 
