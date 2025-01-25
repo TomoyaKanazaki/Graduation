@@ -33,6 +33,7 @@
 #include "tutorialCheck.h"
 #include "bible.h"
 #include "tutorialUi.h"
+#include "game.h"
 
 #include "sound.h"
 #include "shadow.h"
@@ -156,6 +157,8 @@ m_bTutorialClear(false),	// ゲームクリアのフラグ
 m_Wireframe(false),			// ワイヤーフレーム切り替え
 m_Slow(false),				// スロー演出フラグ
 InitPlayerPos(D3DXVECTOR3()),	// プレイヤーの初期位置
+m_pTime(nullptr),			// タイム
+m_pMapField(nullptr),		// 床
 m_nNumBible(0)				// 聖書の総数
 {
 	for (int nCnt = 0; nCnt < NUM_CAMERA; ++nCnt)
@@ -309,6 +312,35 @@ void CTutorial::Uninit(void)
 		m_pPlayer.pop_back();
 	}
 
+	// デビル
+	if (m_pDevil != nullptr)
+	{
+		m_pDevil->Uninit();
+		m_pDevil = nullptr;
+	}
+
+	// テキストの解放
+	while (1)
+	{
+		if (m_pText.size() <= 0) { m_pText.clear(); break; }
+		m_pText.back()->SetDeathFlag(true);
+		m_pText.pop_back();
+	}
+
+	// タイム
+	if (m_pTime != nullptr)
+	{
+		m_pTime->Uninit();
+		m_pTime = nullptr;
+	}
+
+	// 床
+	if (m_pMapField != nullptr)
+	{
+		m_pMapField->Uninit();
+		m_pMapField = nullptr;
+	}
+
 	// サウンド停止
 	CManager::GetInstance()->GetSound()->Stop();
 
@@ -318,6 +350,8 @@ void CTutorial::Uninit(void)
 	// 背景オブジェクトの終了処理
 	CBgObjManager::GetInstance()->Uninit();
 
+	// ゲームの終了処理(GetInstanceで生成されるため)
+	CGame::GetInstance()->Uninit();
 
 	//全てのオブジェクトの破棄
 	CObject::ReleaseAll();

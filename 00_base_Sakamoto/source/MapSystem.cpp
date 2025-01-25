@@ -157,15 +157,29 @@ void CMapSystem::Update(void)
 {
 	if (CManager::GetInstance()->GetPause() == false)
 	{
-		if (CGame::GetInstance()->GetEvent() == false &&
-			CGame::GetInstance()->GetTrans() == false &&
-			m_pMapMove != nullptr)
+		if (CScene::GetMode() == CScene::MODE_GAME)
 		{
-			//マップの動き設定
-			m_pMapMove->Update();
+			if (CGame::GetInstance()->GetEvent() == false &&
+				CGame::GetInstance()->GetTrans() == false &&
+				m_pMapMove != nullptr)
+			{
+				//マップの動き設定
+				m_pMapMove->Update();
 
-			//その他オブジェクトのスクロール
-			CObject::ScrollAll();
+				//その他オブジェクトのスクロール
+				CObject::ScrollAll();
+			}
+		}
+		else if (CScene::GetMode() == CScene::MODE_TUTORIAL)
+		{
+			if (m_pMapMove != nullptr)
+			{
+				//マップの動き設定
+				m_pMapMove->Update();
+
+				//その他オブジェクトのスクロール
+				CObject::ScrollAll();
+			}
 		}
 	}
 
