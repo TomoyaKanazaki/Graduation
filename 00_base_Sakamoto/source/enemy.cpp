@@ -199,14 +199,22 @@ HRESULT CEnemy::Init(void)
 //====================================================================
 void CEnemy::Uninit(void)
 {
-	// リストから自身のオブジェクトを削除
-	m_pList->DelList(m_iterator);
+	if (m_pList != nullptr)
+	{
+		// リストから自身のオブジェクトを削除
+		m_pList->DelList(m_iterator);
 
-	if (m_pList->GetNumAll() == 0)
-	{ // オブジェクトが一つもない場合
+		if (m_pList->GetNumAll() == 0)
+		{ // オブジェクトが一つもない場合
 
-		// リストマネージャーの破棄
-		m_pList->Release(m_pList);
+			// リストマネージャーの破棄
+			m_pList->Release(m_pList);
+		}
+	}
+
+	if (m_pSlow != nullptr)
+	{
+		m_pSlow = nullptr;
 	}
 
 	// エフェクトを消去

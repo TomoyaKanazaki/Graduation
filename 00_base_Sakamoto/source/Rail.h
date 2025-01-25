@@ -58,11 +58,6 @@ public:
 	void SetHeightNumber(int Number) { m_nMapHeight = Number; }
 	int GetHeightNumber(void) { return m_nMapHeight; }
 
-	void SetPrevRail(CRail *Set) { m_pPrev = Set; }		// 前のレール設定
-	CRail* GetPrevRail(void) { return m_pPrev; }		// 前のレール取得
-	void SetNextRail(CRail* Set) { m_pNext = Set; }		// 次のレール設定
-	CRail* GetNextRail(void) { return m_pNext; }		// 次のレール取得
-
 	void SetRailOK(int nCnt, bool Set) { m_bRail[nCnt] = Set; }
 	bool GetRailOK(int nCnt) { return m_bRail[nCnt]; }
 	int GetNextNumber(void) { return m_bNextNumber; }		// 次のモデルの番号
@@ -78,9 +73,7 @@ private:
 
 	int m_nMapWidth;	// マップの横番号
 	int m_nMapHeight;	// マップの縦番号
-								   
-	CRail* m_pPrev;		// 前のレールへのポインタ
-	CRail* m_pNext;		// 次のレールへのポインタ
+								  
 
 	CMapSystem::GRID m_Grid;			// グリッド情報
 	POSTYPE m_PosType[POSSTATE_MAX];	// レール位置の種類
