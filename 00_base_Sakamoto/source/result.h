@@ -16,6 +16,12 @@ class CRanking;
 class CBreak_Block3D;
 class CNumber;
 
+// 定数定義
+namespace Result
+{
+	const int NUM_DIGIT = 6;		// 桁数
+}
+
 //シーンクラス
 class CResult : public CScene
 {
@@ -47,9 +53,9 @@ private:
 	CObject2D* m_p1PTex;		// [1P]テキスト
 	CObject2D* m_p2PTex;		// [2P]テキスト
 
-	CNumber* m_apScore[6];		// 今回のスコア(数字)
-	CNumber* m_ap1P[6];			// 1Pの今回のスコア(数字)
-	CNumber* m_ap2P[6];			// 2Pの今回のスコア(数字)
+	CNumber* m_apScore[Result::NUM_DIGIT];		// 今回のスコア(数字)
+	CNumber* m_ap1P[Result::NUM_DIGIT];			// 1Pの今回のスコア(数字)
+	CNumber* m_ap2P[Result::NUM_DIGIT];			// 2Pの今回のスコア(数字)
 	CRanking* m_pLifeRanking;	// ランキング
 
 	int m_AddScoreCount;

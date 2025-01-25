@@ -160,8 +160,6 @@ private:
 	
 	bool m_bInput;					//入力を行ったかどうか
 	bool m_bPressObj;				//オブジェクトに押されているかどうか
-	//bool m_bInvincible;				//無敵かどうか
-	//int m_nInvincibleCount;			//無敵時間
 
 	bool m_UseItem;					//アイテムが使用可能かどうか
 
@@ -175,7 +173,6 @@ private:
 	CObjectBillboard* m_pP_NumUI;	//プレイヤー番号UI		
 
 	CMoveState* m_pMoveState;		// 移動状態
-
 
 	// 静的メンバ変数
 	static CListManager<CPlayer>* m_pList; // オブジェクトリスト
