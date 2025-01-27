@@ -537,31 +537,34 @@ void CTutorial::Update(void)
 		}
 	}
 
-	for (CDevilHole* pDevilHole : DevilHolelist)
-	{// デビルホールの中身を確認
-		if (pDevilHole->IsSet())
-		{// デビルホールの4箇所の内1箇所埋まった
-			CTutorialCheck::Create(D3DXVECTOR3(TEXTURE_CENTER_POS.x - CHECK_POS[TYPE_DEVILHOLE].x,
-									TEXTURE_CENTER_POS.y + CHECK_POS[TYPE_DEVILHOLE].y - CHECK_POS_Y, TEXTURE_CENTER_POS.z));
+	if (!m_bCheck[TYPE_DEVILHOLE])
+	{
+		for (CDevilHole* pDevilHole : DevilHolelist)
+		{// デビルホールの中身を確認
+			if (pDevilHole->IsSet())
+			{// デビルホールの4箇所の内1箇所埋まった
+				CTutorialCheck::Create(D3DXVECTOR3(TEXTURE_CENTER_POS.x - CHECK_POS[TYPE_DEVILHOLE].x,
+					TEXTURE_CENTER_POS.y + CHECK_POS[TYPE_DEVILHOLE].y - CHECK_POS_Y, TEXTURE_CENTER_POS.z));
 
-			// マーカー表示
-			m_bCheck[TYPE_DEVILHOLE] = true;
+				// マーカー表示
+				m_bCheck[TYPE_DEVILHOLE] = true;
 
-			if (m_bCheck[TYPE_DEVILHOLE] == true && m_bSound[TYPE_DEVILHOLE] == false)
-			{
-				// サウンド再生
-				CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_CHECK);
+				if (m_bCheck[TYPE_DEVILHOLE] == true && m_bSound[TYPE_DEVILHOLE] == false)
+				{
+					// サウンド再生
+					CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_CHECK);
 
-				m_bSound[TYPE_DEVILHOLE] = true;
+					m_bSound[TYPE_DEVILHOLE] = true;
+				}
+
+				if (m_bCheck[TYPE_DEVILHOLE] == true)
+				{// テキストの不透明度を下げる
+					SetUIAlpha(TYPE_DEVILHOLE, 0.5f);
+				}
+
+				// チュートリアル段階を進める
+				m_nTutorialWave += 1;
 			}
-
-			if (m_bCheck[TYPE_DEVILHOLE] == true)
-			{// テキストの不透明度を下げる
-				SetUIAlpha(TYPE_DEVILHOLE, 0.5f);
-			}
-
-			// チュートリアル段階を進める
-			m_nTutorialWave += 1;
 		}
 	}
 
@@ -579,50 +582,6 @@ void CTutorial::Update(void)
 	{// チュートリアル段階を4にする
 		m_nTutorialWave = WAVE_MIDDLE;
 	}
-
-	if (pInputKeyboard->GetTrigger(DIK_0) == true)
-	{
-		m_Wireframe = (m_Wireframe == true) ? false : true;
-
-		if (m_Wireframe == true)
-		{
-			//レンダーステートの設定
-			m_pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-		}
-		else
-		{
-			//レンダーステートの設定
-			m_pDevice->SetRenderState(D3DRS_FILLMODE, 0);
-		}
-	}
-
-	if (pInputKeyboard->GetTrigger(DIK_1) == true)
-	{
-		float Speed = CManager::GetInstance()->GetGameSpeed();
-
-		Speed -= 0.90f;
-
-		CManager::GetInstance()->SetGameSpeed(Speed);
-	}
-
-	if (pInputKeyboard->GetTrigger(DIK_2) == true)
-	{
-		float Speed = CManager::GetInstance()->GetGameSpeed();
-
-		Speed += 0.90f;
-
-		CManager::GetInstance()->SetGameSpeed(Speed);
-	}
-
-	if (CManager::GetInstance()->GetGameSpeed() <= 1.0f)
-	{
-		m_Slow = true;
-	}
-	else
-	{
-		m_Slow = false;
-	}
-
 #endif
 
 	if (CManager::GetInstance()->GetFade()->GetFade() == CFade::FADE_NONE)
