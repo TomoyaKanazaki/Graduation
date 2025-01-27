@@ -446,7 +446,7 @@ void CSlopeDevice::SetAppearAll(bool bAppear)
 //====================================================================
 HRESULT CSlopeDevice::InitModel(const std::string pModelNameSlopeDevice, const std::string pModelNameEnemy)
 {
-	CObjectCharacter::SetTxtCharacter(pModelNameSlopeDevice, 0);
+	CObjectCharacter::SetTxtCharacter(pModelNameSlopeDevice);
 
 	// レバーの初期向きを取得
 	m_rotleverDef = GetModel(SETUP_TYPE_LIVER)->GetStartRot();
@@ -458,7 +458,7 @@ HRESULT CSlopeDevice::InitModel(const std::string pModelNameSlopeDevice, const s
 	if (m_pObjectCharacter != nullptr)
 	{
 		// キャラクターテキスト読み込み処理（メダマン）
-		m_pObjectCharacter->SetTxtCharacter(pModelNameEnemy, 0);
+		m_pObjectCharacter->SetTxtCharacter(pModelNameEnemy);
 
 		// メダマンの親を土台に変更
 		m_pObjectCharacter->GetModel(0)->SetParent(GetModel(SETUP_TYPE_LIVER));

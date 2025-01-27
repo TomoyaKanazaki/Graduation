@@ -71,16 +71,6 @@ private:
 		SBodyData() : ppModel(nullptr), nNumModel(0) {}
 	};
 
-	// ステンシルバッファ用構造体
-	struct SStencilInfo
-	{
-		bool bUse;				// 使用の有無
-		int nRefIdx;			// ステンシル参照値
-
-		// コンストラクタ
-		SStencilInfo() : bUse(false), nRefIdx(0) {}
-	};
-
 public:
 
 
@@ -97,7 +87,7 @@ public:
 	virtual void Update(void) override;
 	virtual void Draw(void) override;
 	virtual void PlayerNumberDisp(bool Set) {}
-	void SetTxtCharacter(const std::string pFilename, int nRef);
+	void SetTxtCharacter(const std::string pFilename);
 	void SetModelColor(CModel::COLORTYPE Type, const D3DXCOLOR& Col);
 
 	void SetModel(CModel* pModel, int nCnt);
@@ -110,7 +100,6 @@ public:
 	int GetNumModel(void) { return m_BodyInfo.nNumModel; }
 	void SetUseMultiMatrix(D3DXMATRIX* Set) { m_UseMultiMatrix = Set; }
 	D3DXMATRIX* GetUseMultiMatrix(void) { return m_UseMultiMatrix; }
-	void SetUseStencil(bool bUse) { m_stencil.bUse = bUse; }
 	void SetUseShadowMtx(bool bUse) { m_bUseShadowMtx = bUse; }
 
 	// ゲットセット
@@ -170,9 +159,6 @@ public:
 	PROGGRESS GetProgress() { return m_Progress; }		// 移動の進行許可状況取得
 	bool GetGritCenter() { return m_bGritCenter; }		// グリッドの中心にいるか取得
 
-	void SetRefIdx(int nRefIdx) { m_stencil.nRefIdx = nRefIdx; }
-	int GetRefIdx() { return m_stencil.nRefIdx; }
-
 	void SetSpeedState(CMapMove::SPEED State) { m_SpeedState = State; }	//速度
 	CMapMove::SPEED GetSpeedState(void) { return m_SpeedState; }	//速度
 	CMapMove::SPEED GetOldSpeedState(void) { return m_OldSpeedState; }	//速度
@@ -202,8 +188,6 @@ private:
 	SBodyData m_BodyInfo;	// 階層モデル情報
 	CMapMove::SPEED m_SpeedState;	//速度
 	CMapMove::SPEED m_OldSpeedState;	//速度
-
-	SStencilInfo m_stencil;			// ステンシルバッファ用情報
 
 	// マトリックス情報
 	D3DXMATRIX m_mtxWorld;			// ワールドマトリックス

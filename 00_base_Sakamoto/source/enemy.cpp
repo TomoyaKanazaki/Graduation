@@ -164,7 +164,6 @@ HRESULT CEnemy::Init(void)
 
 	// マトリックス設定
 	SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());	// マップマトリックスと掛け合わせ
-	SetUseStencil(true);	// ステンシル
 
 	// スローの生成(配属、タグの設定)
 	m_pSlow = CSlowManager::Create(m_pSlow->CAMP_ENEMY, m_pSlow->TAG_ENEMY);
@@ -414,10 +413,10 @@ void CEnemy::Reset(void)
 //====================================================================
 // モデル関連の初期化処理
 //====================================================================
-HRESULT CEnemy::InitModel(const std::string pFilename, int nRef)
+HRESULT CEnemy::InitModel(const std::string pFilename)
 {
 	// キャラクターテキスト読み込み処理
-	CObjectCharacter::SetTxtCharacter(pFilename, nRef);
+	CObjectCharacter::SetTxtCharacter(pFilename);
 	
 	return S_OK;
 }
