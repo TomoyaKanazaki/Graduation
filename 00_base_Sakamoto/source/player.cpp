@@ -137,6 +137,7 @@ HRESULT CPlayer::Init(int PlayNumber)
 
 	// プレイヤー番号を設定
 	m_nPlayNumber = PlayNumber;
+	m_bPressObj = false;
 
 	// キャラクタークラスの初期化（継承）
 	if (FAILED(CObjectCharacter::Init())) { assert(false); }
@@ -381,11 +382,6 @@ void CPlayer::Update(void)
 
 		// カメラ更新処理
 		CameraPosUpdate(posThis);
-
-		if (state != STATE_EGG)
-		{
-			//ObjPosUpdate(posThis, posOldThis, sizeThis);
-		}
 
 		if (state == STATE_WALK || state == STATE_WAIT)
 		{
@@ -800,11 +796,21 @@ void CPlayer::CollisionWall(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D3DXV
 		// 矩形の当たり判定
 		if (useful::CollisionBlock(pos, pos, Move, Size, &posThis, posOldThis, &m_move, &m_Objmove, sizeThis, &m_bJump, XYZ) == true)
 		{
-			//待機状態にする
-			SetState(STATE_WAIT);
-			// 向き状態の設定
-			m_pMoveState->SetRotState(CMoveState::ROTSTATE_WAIT);
-			posThis = m_Grid.ToWorld();
+			if (!m_bPressObj)
+			{ // 壁に当たってない
+
+				// 待機状態
+				SetState(STATE_WAIT);
+
+				// 向き状態の設定
+				m_pMoveState->SetRotState(CMoveState::ROTSTATE_WAIT);
+			}
+			else if (m_bPressObj)
+			{ // 壁に当たってる
+				Death();
+			}
+
+			posThis = m_Grid.ToWorld();	
 		}
 	}
 }
@@ -835,6 +841,9 @@ void CPlayer::CollisionWaitRailBlock(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldTh
 		// 矩形の当たり判定
 		if (useful::CollisionBlock(pos, posOld, Move, Size, &posThis, posOldThis, &m_move, &m_Objmove, sizeThis, &m_bJump, XYZ) == true)
 		{
+			// 押されてる状態にする
+			m_bPressObj = true;
+
 			//待機状態にする
 			SetState(STATE_WAIT);
 
@@ -1339,6 +1348,9 @@ void CPlayer::PosUpdate(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D3DXVECTO
 	{
 		posThis.x += m_move.x * CManager::GetInstance()->GetGameSpeed() * fSpeed * pMapMove->MoveSlopeX(m_move.x, Speed);
 	}
+
+	// 何も押されてない状態にする
+	m_bPressObj = false;
 
 	// 壁との当たり判定
 	CollisionDevilHole(posThis, posOldThis, sizeThis, useful::COLLISION_X);
