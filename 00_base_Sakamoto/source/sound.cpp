@@ -4,36 +4,36 @@ CSound::SOUNDINFO CSound::m_aSoundInfo[SOUND_LABEL_MAX] =
 {
 	// SE
 	{ "data/SE/00_SE_death.wav", 0 },				// プレイヤーの死亡
-	{ "data/SE/01_SE_devilhole.wav", 0 },				// デビルホール
-	{ "data/SE/02_SE_egg_break.wav", 0 },				// 卵が割れる
-	{ "data/SE/03_SE_enem_rotation.wav", 0 },				// 方向転換
+	{ "data/SE/01_SE_devilhole.wav", 0 },			// デビルホール
+	{ "data/SE/02_SE_egg_break.wav", 0 },			// 卵が割れる
+	{ "data/SE/03_SE_enem_rotation.wav", 0 },		// 方向転換
 	{ "data/SE/04_SE_fire.wav", 0 },				// 火炎放射
 	{ "data/SE/05_SE_getitem.wav", 0 },				// 聖書取得
-	{ "data/SE/06_SE_stageclear.wav", 0 },				// ステージクリア
+	{ "data/SE/06_SE_stageclear.wav", 0 },			// ステージクリア
 	{ "data/SE/07_SE_walking.wav", 0 },				// 歩き
 	{ "data/SE/08_SE_flap.wav", 0 },				// 羽ばたき
 	{ "data/SE/09_SE_result.wav", 0 },				// リザルト
 	{ "data/SE/10_SE_fail.wav", 0 },				// 失敗
-	{ "data/SE/11_SE_explosion.wav", 0 },				// 爆発
+	{ "data/SE/11_SE_explosion.wav", 0 },			// 爆発
 	{ "data/SE/12_SE_born.wav", 0 },				// 生まれる
-	{ "data/SE/13_SE_eat.wav", 0 },				// 捕食
-	{ "data/SE/14_SE_getbible.wav", 0 },				// 聖書
+	{ "data/SE/13_SE_eat.wav", 0 },					// 捕食
+	{ "data/SE/14_SE_getbible.wav", 0 },			// 聖書
 	{ "data/SE/15_SE_getboa.wav", 0 },				// ぼあ
 	{ "data/SE/16_SE_select.wav", 0 },				// 選択
 	{ "data/SE/17_SE_enter.wav", 0 },				// 決定
-	{"data/SE/18_SE_get_icecream.wav", 0 },			// アイスクリーム取得時
-	{"data/SE/19_SE_unlock.wav", 0 },				// デビルホールに差し込む
-	{"data/SE/20_SE_sign_up.wav", -1 },				// デビルボイス上
-	{"data/SE/21_SE_sign_right.wav", -1 },			// デビルボイス右
-	{"data/SE/22_SE_sign_left.wav", -1 },			// デビルボイス左
-	{"data/SE/23_SE_sign_down.wav", -1 },			// デビルボイス下
-	{"data/SE/24_SE_check.wav",0},					// チェック音
+	{ "data/SE/18_SE_get_icecream.wav", 0 },		// アイスクリーム取得時
+	{ "data/SE/19_SE_unlock.wav", 0 },				// デビルホールに差し込む
+	{ "data/SE/20_SE_sign_up.wav", -1 },			// デビルボイス上
+	{ "data/SE/21_SE_sign_right.wav", -1 },			// デビルボイス右
+	{ "data/SE/22_SE_sign_left.wav", -1 },			// デビルボイス左
+	{ "data/SE/23_SE_sign_down.wav", -1 },			// デビルボイス下
+	{ "data/SE/24_SE_check.wav",0},					// チェック音
 
 	// BGM
-	{ "data/BGM/00_BGM_title.wav", -1 },				// タイトル
-	{ "data/BGM/01_BGM_result.wav", -1 },				// リザルト
-	{ "data/BGM/01_BGM_game2.wav", -1 },				// ステージ１
-	{ "data/BGM/03_BGM_stage2.wav", -1 },				// ステージ２
+	{ "data/BGM/00_BGM_title.wav", -1 },			// タイトル
+	{ "data/BGM/01_BGM_result.wav", -1 },			// リザルト
+	{ "data/BGM/01_BGM_game2.wav", -1 },			// ステージ１
+	{ "data/BGM/03_BGM_stage2.wav", -1 },			// ステージ２
 
 };
 
