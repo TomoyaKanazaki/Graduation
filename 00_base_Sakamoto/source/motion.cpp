@@ -8,21 +8,35 @@
 #include "model.h"
 #include "manager.h"
 #include <stdio.h>
+#include "MapMove.h"
+#include "MapSystem.h"
+
+//===============================================
+// 関数ポインタ
+//===============================================
+// 再生状態管理
+CMotion::PLAYTYPE_FUNC CMotion::m_PlayTypeFunc[] =
+{
+	&CMotion::PlayTypeNormal,		// 通常
+	&CMotion::PlayTypeBlend,		// ブレンド
+};
 
 //====================================================================
 //コンストラクタ
 //====================================================================
-CMotion::CMotion()
+CMotion::CMotion() :
+	// 上のメンバ変数
+	m_fSlowVaule(1.0f),		// スローに掛ける倍率
+
+	// 下のメンバ変数
+	m_PlayInfo(SPlayInfo()),
+	m_BodyData(SBodyData())
 {
-	m_ppModel = nullptr;
-	m_nType = 0;						//モーションの種類の設定
-	m_bLoop = m_aInfo[m_nType].bLoop;	//ループするかどうかの設定
-	m_nKey = 0;							//現在のキーNoを0にする
-	m_nNextKey = m_nKey + 1;			//次のキーNoを1にする
-	m_fCounter = 0;						//モーションのカウンターを0にする
-	m_bFinish = false;					//終了していない状態にする
-	m_fSlowVaule = 1.0f;
-	m_fCounterCurrent = 0;
+	// 値のクリア
+	for (int i = 0; i < MAX_INFO; i++)
+	{
+		m_aInfo[i] = INFO();
+	}
 }
 
 //====================================================================
@@ -38,56 +52,32 @@ CMotion::~CMotion()
 //====================================================================
 void CMotion::Set(int nType, float BlendTime)
 {
-	m_nBlendType = m_nType;
-	m_nBlendKey = m_nKey;
-	m_nBlendCounter = 0;
-	m_nBlendTime = BlendTime;
-	m_nBlendTimeMax = m_nBlendTime;
-	m_nType = nType;					//モーションの種類の設定
-	m_bLoop = m_aInfo[m_nType].bLoop;	//ループするかどうかの設定
-	m_nKey = 0;							//現在のキーNoを0にする
-	m_nNextKey = m_nKey + 1;			//次のキーNoを1にする
-	m_fCounter = 0;						//モーションのカウンターを0にする
-	m_fCounterCurrent = 0;
-	m_bFinish = false;					//終了していない状態にする
-}
+	SPlayInfo* pInfo = &m_PlayInfo;			// 再生情報のポインタ
+	SBlendInfo* pBlend = &pInfo->blendInfo;	// ブレンド情報のポインタ
 
-//====================================================================
-//モーションの設定処理
-//====================================================================
-void CMotion::SetStopPose(int nType, int nKey, float nCounter)
-{
-	m_nType = nType;					//モーションの種類の設定
-	m_nKey = nKey;						//現在のキーNoを0にする
-	m_nNextKey = m_nKey + 1;			//次のキーNoを1にする
-	m_fCounter = nCounter;				//モーションのカウンターを0にする
+	// ブレンド情報
+	pBlend->fCounter = 0.0f;
+	pBlend->fTime = BlendTime;
+	pBlend->fTimeMax = pBlend->fTime;
+	pBlend->nOldId = pInfo->nId;
+	pBlend->nOldKey = pInfo->nKey;
 
-	//全モデル(パーツ)の更新
-	for (int nCntModel = 0; nCntModel < m_nNumModel; nCntModel++)
+	// 再生情報
+	pInfo->nId = nType;					//モーションの種類の設定
+	pInfo->nKey = 0;					//現在のキーをリセット
+	pInfo->nKeyNext = (pInfo->nKey + 1) % m_aInfo[nType].NumKey;	// 次のキー設定
+	pInfo->bFinish = false;				// 終了フラグをリセット
+	pInfo->fCounter = 0.0f;				// 再生カウント
+
+	// ブレンドしない場合は通常再生
+	if (BlendTime == 0)
 	{
-		//キーの情報から位置・向きを算出
-		float POSX = m_aInfo[m_nType].aKeyInfo[m_nNextKey].aKey[nCntModel].fPosX - m_aInfo[m_nType].aKeyInfo[m_nKey].aKey[nCntModel].fPosX;
-		float POSY = m_aInfo[m_nType].aKeyInfo[m_nNextKey].aKey[nCntModel].fPosY - m_aInfo[m_nType].aKeyInfo[m_nKey].aKey[nCntModel].fPosY;
-		float POSZ = m_aInfo[m_nType].aKeyInfo[m_nNextKey].aKey[nCntModel].fPosZ - m_aInfo[m_nType].aKeyInfo[m_nKey].aKey[nCntModel].fPosZ;
-		float ROTX = m_aInfo[m_nType].aKeyInfo[m_nNextKey].aKey[nCntModel].fRotX - m_aInfo[m_nType].aKeyInfo[m_nKey].aKey[nCntModel].fRotX;
-		float ROTY = m_aInfo[m_nType].aKeyInfo[m_nNextKey].aKey[nCntModel].fRotY - m_aInfo[m_nType].aKeyInfo[m_nKey].aKey[nCntModel].fRotY;
-		float ROTZ = m_aInfo[m_nType].aKeyInfo[m_nNextKey].aKey[nCntModel].fRotZ - m_aInfo[m_nType].aKeyInfo[m_nKey].aKey[nCntModel].fRotZ;
-
-		//パーツの位置・向きを設定
-		m_ppModel[nCntModel]->SetPos(D3DXVECTOR3
-		(
-			m_ppModel[nCntModel]->GetStartPos().x + m_aInfo[m_nType].aKeyInfo[m_nKey].aKey[nCntModel].fPosX + POSX * ((float)m_fCounter / (float)m_aInfo[m_nType].aKeyInfo[m_nKey].nFrame),
-			m_ppModel[nCntModel]->GetStartPos().y + m_aInfo[m_nType].aKeyInfo[m_nKey].aKey[nCntModel].fPosY + POSY * ((float)m_fCounter / (float)m_aInfo[m_nType].aKeyInfo[m_nKey].nFrame),
-			m_ppModel[nCntModel]->GetStartPos().z + m_aInfo[m_nType].aKeyInfo[m_nKey].aKey[nCntModel].fPosZ + POSZ * ((float)m_fCounter / (float)m_aInfo[m_nType].aKeyInfo[m_nKey].nFrame)
-		));
-
-		m_ppModel[nCntModel]->SetRot(D3DXVECTOR3
-		(
-			m_ppModel[nCntModel]->GetStartRot().x + m_aInfo[m_nType].aKeyInfo[m_nKey].aKey[nCntModel].fRotX + ROTX * ((float)m_fCounter / (float)m_aInfo[m_nType].aKeyInfo[m_nKey].nFrame),
-			m_ppModel[nCntModel]->GetStartRot().y + m_aInfo[m_nType].aKeyInfo[m_nKey].aKey[nCntModel].fRotY + ROTY * ((float)m_fCounter / (float)m_aInfo[m_nType].aKeyInfo[m_nKey].nFrame),
-			m_ppModel[nCntModel]->GetStartRot().z + m_aInfo[m_nType].aKeyInfo[m_nKey].aKey[nCntModel].fRotZ + ROTZ * ((float)m_fCounter / (float)m_aInfo[m_nType].aKeyInfo[m_nKey].nFrame)
-		));
+		m_PlayInfo.type = PLAYTYPE::PLAYTYPE_NORMAL;
+		return;
 	}
+
+	// ブレンドする場合はブレンド再生
+	m_PlayInfo.type = PLAYTYPE::PLAYTYPE_BLEND;
 }
 
 //====================================================================
@@ -95,114 +85,21 @@ void CMotion::SetStopPose(int nType, int nKey, float nCounter)
 //====================================================================
 void CMotion::Update(void)
 {
-	if (m_bFinish == false)
-	{
-		if (m_nBlendTime > 0.0f)
-		{//モーションブレンドの実装
-			for (int nCntModel = 0; nCntModel < m_nNumModel; nCntModel++)
-			{
-				//キーの情報から位置・向きを算出
-				float POSX = m_aInfo[m_nType].aKeyInfo[m_nKey].aKey[nCntModel].fPosX - m_aInfo[m_nBlendType].aKeyInfo[m_nBlendKey].aKey[nCntModel].fPosX;
-				float POSY = m_aInfo[m_nType].aKeyInfo[m_nKey].aKey[nCntModel].fPosY - m_aInfo[m_nBlendType].aKeyInfo[m_nBlendKey].aKey[nCntModel].fPosY;
-				float POSZ = m_aInfo[m_nType].aKeyInfo[m_nKey].aKey[nCntModel].fPosZ - m_aInfo[m_nBlendType].aKeyInfo[m_nBlendKey].aKey[nCntModel].fPosZ;
-				float ROTX = m_aInfo[m_nType].aKeyInfo[m_nKey].aKey[nCntModel].fRotX - m_aInfo[m_nBlendType].aKeyInfo[m_nBlendKey].aKey[nCntModel].fRotX;
-				float ROTY = m_aInfo[m_nType].aKeyInfo[m_nKey].aKey[nCntModel].fRotY - m_aInfo[m_nBlendType].aKeyInfo[m_nBlendKey].aKey[nCntModel].fRotY;
-				float ROTZ = m_aInfo[m_nType].aKeyInfo[m_nKey].aKey[nCntModel].fRotZ - m_aInfo[m_nBlendType].aKeyInfo[m_nBlendKey].aKey[nCntModel].fRotZ;
+	// 再生終了の場合
+	if (m_PlayInfo.bFinish) { return; }
 
-				//パーツの位置・向きを設定
-				m_ppModel[nCntModel]->SetPos(D3DXVECTOR3
-				(
-					m_ppModel[nCntModel]->GetStartPos().x + m_aInfo[m_nBlendType].aKeyInfo[m_nBlendKey].aKey[nCntModel].fPosX + POSX * ((float)m_nBlendCounter / (float)m_nBlendTimeMax),
-					m_ppModel[nCntModel]->GetStartPos().y + m_aInfo[m_nBlendType].aKeyInfo[m_nBlendKey].aKey[nCntModel].fPosY + POSY * ((float)m_nBlendCounter / (float)m_nBlendTimeMax),
-					m_ppModel[nCntModel]->GetStartPos().z + m_aInfo[m_nBlendType].aKeyInfo[m_nBlendKey].aKey[nCntModel].fPosZ + POSZ * ((float)m_nBlendCounter / (float)m_nBlendTimeMax)
-				));
-
-				m_ppModel[nCntModel]->SetRot(D3DXVECTOR3
-				(
-					m_ppModel[nCntModel]->GetStartRot().x + m_aInfo[m_nBlendType].aKeyInfo[m_nBlendKey].aKey[nCntModel].fRotX + ROTX * ((float)m_nBlendCounter / (float)m_nBlendTimeMax),
-					m_ppModel[nCntModel]->GetStartRot().y + m_aInfo[m_nBlendType].aKeyInfo[m_nBlendKey].aKey[nCntModel].fRotY + ROTY * ((float)m_nBlendCounter / (float)m_nBlendTimeMax),
-					m_ppModel[nCntModel]->GetStartRot().z + m_aInfo[m_nBlendType].aKeyInfo[m_nBlendKey].aKey[nCntModel].fRotZ + ROTZ * ((float)m_nBlendCounter / (float)m_nBlendTimeMax)
-				));
-			}
-			m_nBlendCounter += CManager::GetInstance()->GetGameSpeed() * m_fSlowVaule;
-			m_nBlendTime -= CManager::GetInstance()->GetGameSpeed() * m_fSlowVaule;
-		}
-		else
-		{
-			m_nNumKey = m_aInfo[m_nType].NumKey;
-
-			//全モデル(パーツ)の更新
-			for (int nCntModel = 0; nCntModel < m_nNumModel; nCntModel++)
-			{
-				//キーの情報から位置・向きを算出
-				float POSX = m_aInfo[m_nType].aKeyInfo[m_nNextKey].aKey[nCntModel].fPosX - m_aInfo[m_nType].aKeyInfo[m_nKey].aKey[nCntModel].fPosX;
-				float POSY = m_aInfo[m_nType].aKeyInfo[m_nNextKey].aKey[nCntModel].fPosY - m_aInfo[m_nType].aKeyInfo[m_nKey].aKey[nCntModel].fPosY;
-				float POSZ = m_aInfo[m_nType].aKeyInfo[m_nNextKey].aKey[nCntModel].fPosZ - m_aInfo[m_nType].aKeyInfo[m_nKey].aKey[nCntModel].fPosZ;
-				float ROTX = m_aInfo[m_nType].aKeyInfo[m_nNextKey].aKey[nCntModel].fRotX - m_aInfo[m_nType].aKeyInfo[m_nKey].aKey[nCntModel].fRotX;
-				float ROTY = m_aInfo[m_nType].aKeyInfo[m_nNextKey].aKey[nCntModel].fRotY - m_aInfo[m_nType].aKeyInfo[m_nKey].aKey[nCntModel].fRotY;
-				float ROTZ = m_aInfo[m_nType].aKeyInfo[m_nNextKey].aKey[nCntModel].fRotZ - m_aInfo[m_nType].aKeyInfo[m_nKey].aKey[nCntModel].fRotZ;
-
-				//パーツの位置・向きを設定
-				m_ppModel[nCntModel]->SetPos(D3DXVECTOR3
-				(
-					m_ppModel[nCntModel]->GetStartPos().x + m_aInfo[m_nType].aKeyInfo[m_nKey].aKey[nCntModel].fPosX + POSX * (m_fCounter / ((float)m_aInfo[m_nType].aKeyInfo[m_nKey].nFrame)),
-					m_ppModel[nCntModel]->GetStartPos().y + m_aInfo[m_nType].aKeyInfo[m_nKey].aKey[nCntModel].fPosY + POSY * (m_fCounter / ((float)m_aInfo[m_nType].aKeyInfo[m_nKey].nFrame)),
-					m_ppModel[nCntModel]->GetStartPos().z + m_aInfo[m_nType].aKeyInfo[m_nKey].aKey[nCntModel].fPosZ + POSZ * (m_fCounter / ((float)m_aInfo[m_nType].aKeyInfo[m_nKey].nFrame))
-				));
-
-				m_ppModel[nCntModel]->SetRot(D3DXVECTOR3
-				(
-					m_ppModel[nCntModel]->GetStartRot().x + m_aInfo[m_nType].aKeyInfo[m_nKey].aKey[nCntModel].fRotX + ROTX * (m_fCounter / ((float)m_aInfo[m_nType].aKeyInfo[m_nKey].nFrame)),
-					m_ppModel[nCntModel]->GetStartRot().y + m_aInfo[m_nType].aKeyInfo[m_nKey].aKey[nCntModel].fRotY + ROTY * (m_fCounter / ((float)m_aInfo[m_nType].aKeyInfo[m_nKey].nFrame)),
-					m_ppModel[nCntModel]->GetStartRot().z + m_aInfo[m_nType].aKeyInfo[m_nKey].aKey[nCntModel].fRotZ + ROTZ * (m_fCounter / ((float)m_aInfo[m_nType].aKeyInfo[m_nKey].nFrame))
-				));
-			}
-
-			m_fCounter += CManager::GetInstance()->GetGameSpeed() * m_fSlowVaule;
-			m_fCounterCurrent += CManager::GetInstance()->GetGameSpeed() * m_fSlowVaule;
-			
-			if (m_fCounter >= m_aInfo[m_nType].aKeyInfo[m_nKey].nFrame)
-			{
-				m_fCounter = 0;
-				m_nKey++;
-				m_nNextKey++;
-
-				if (m_nNextKey >= m_nNumKey)
-				{
-					if (m_aInfo[m_nType].bLoop == true)
-					{
-						m_nNextKey = 0;
-					}
-					else
-					{
-						m_nNextKey = 0;
-						m_bFinish = true;
-					}
-				}
-				if (m_nKey >= m_nNumKey)
-				{
-					if (m_aInfo[m_nType].bLoop == true)
-					{
-						m_nKey = 0;
-					}
-					else
-					{
-						m_nKey = 0;
-						m_bFinish = true;
-					}
-				}
-			}
-		}
-	}
+	// 再生設定
+	(this->*(m_PlayTypeFunc[m_PlayInfo.type]))();
 }
 
 //====================================================================
 //モデルのセット処理
 //====================================================================
-void CMotion::SetModel(CModel **ppModel, int nNumModel)
+void CMotion::SetModel(CModel** ppModel, int nNumModel)
 {
-	m_ppModel = ppModel;
-	m_nNumModel = nNumModel;
+	// 階層モデル情報を設定
+	m_BodyData.ppModel = ppModel;
+	m_BodyData.nNumModel = nNumModel;
 }
 
 //====================================================================
@@ -210,7 +107,7 @@ void CMotion::SetModel(CModel **ppModel, int nNumModel)
 //====================================================================
 void CMotion::LoadData(const std::string pFilename)
 {
-	FILE *pFile; //ファイルポインタを宣言
+	FILE* pFile; //ファイルポインタを宣言
 
 	//ファイルを開く
 	pFile = fopen(pFilename.c_str(), "r");
@@ -300,7 +197,7 @@ void CMotion::LoadData(const std::string pFilename)
 									if (strcmp(&aMessage[0], "END_KEY") == 0)
 									{
 										nCntKey++;
-										if (nCntKey >= m_nNumModel)
+										if (nCntKey >= m_BodyData.nNumModel)
 										{
 											break;
 										}
@@ -343,16 +240,182 @@ void CMotion::LoadData(const std::string pFilename)
 }
 
 //====================================================================
-// nIdx番目のモーションの総フレーム数
+// 通常再生
 //====================================================================
-int CMotion::GetFullFrame(int nIdx)
+void CMotion::PlayTypeNormal()
 {
-	int nNumFrame = 0;
+	SPlayInfo* pInfo = &m_PlayInfo;		// 再生情報のポインタ
+	SBodyData* pBody = &m_BodyData;		// 階層データのポインタ
+	if (m_BodyData.ppModel == nullptr) { return; }
 
-	for (int i = 0; i < m_aInfo[nIdx].NumKey; i++)
+	// ローカルに格納
+	int id = pInfo->nId;				// 再生中モーション番号
+	int key = pInfo->nKey;				// 再生中キー番号
+	int keynext = pInfo->nKeyNext;		// 次のキー
+	float count = pInfo->fCounter;		// カウント
+
+
+	// マップの動作がレトロの場合モーションをかくかくに : TODO いらなかったら消して
+	CMapMove* pMove = CMapSystem::GetInstance()->GetMove();
+	if (pMove->GetScrollType() == CMapMove::SCROLL_TYPE::SCROLL_TYPE_RETRO)
 	{
-		nNumFrame += m_aInfo[nIdx].aKeyInfo[i].nFrame;
+		count = 0.0f;
 	}
 
-	return nNumFrame;
+	//全モデル(パーツ)の更新
+	for (int nCntModel = 0; nCntModel < pBody->nNumModel; nCntModel++)
+	{
+		// モデル取得
+		CModel* pModel = pBody->ppModel[nCntModel];
+
+		//キーの情報から位置・向きを算出
+		float POSX = m_aInfo[id].aKeyInfo[keynext].aKey[nCntModel].fPosX - m_aInfo[id].aKeyInfo[key].aKey[nCntModel].fPosX;
+		float POSY = m_aInfo[id].aKeyInfo[keynext].aKey[nCntModel].fPosY - m_aInfo[id].aKeyInfo[key].aKey[nCntModel].fPosY;
+		float POSZ = m_aInfo[id].aKeyInfo[keynext].aKey[nCntModel].fPosZ - m_aInfo[id].aKeyInfo[key].aKey[nCntModel].fPosZ;
+		float ROTX = m_aInfo[id].aKeyInfo[keynext].aKey[nCntModel].fRotX - m_aInfo[id].aKeyInfo[key].aKey[nCntModel].fRotX;
+		float ROTY = m_aInfo[id].aKeyInfo[keynext].aKey[nCntModel].fRotY - m_aInfo[id].aKeyInfo[key].aKey[nCntModel].fRotY;
+		float ROTZ = m_aInfo[id].aKeyInfo[keynext].aKey[nCntModel].fRotZ - m_aInfo[id].aKeyInfo[key].aKey[nCntModel].fRotZ;
+
+		//パーツの位置・向きを設定
+		pModel->SetPos(D3DXVECTOR3
+		(
+			pModel->GetStartPos().x + m_aInfo[id].aKeyInfo[key].aKey[nCntModel].fPosX + POSX * (count / ((float)m_aInfo[id].aKeyInfo[key].nFrame)),
+			pModel->GetStartPos().y + m_aInfo[id].aKeyInfo[key].aKey[nCntModel].fPosY + POSY * (count / ((float)m_aInfo[id].aKeyInfo[key].nFrame)),
+			pModel->GetStartPos().z + m_aInfo[id].aKeyInfo[key].aKey[nCntModel].fPosZ + POSZ * (count / ((float)m_aInfo[id].aKeyInfo[key].nFrame))
+		));
+
+		pModel->SetRot(D3DXVECTOR3
+		(
+			pModel->GetStartRot().x + m_aInfo[id].aKeyInfo[key].aKey[nCntModel].fRotX + ROTX * (count / ((float)m_aInfo[id].aKeyInfo[key].nFrame)),
+			pModel->GetStartRot().y + m_aInfo[id].aKeyInfo[key].aKey[nCntModel].fRotY + ROTY * (count / ((float)m_aInfo[id].aKeyInfo[key].nFrame)),
+			pModel->GetStartRot().z + m_aInfo[id].aKeyInfo[key].aKey[nCntModel].fRotZ + ROTZ * (count / ((float)m_aInfo[id].aKeyInfo[key].nFrame))
+		));
+	}
+
+	// 現在の再生カウントを加算
+	pInfo->fCounter += CManager::GetInstance()->GetGameSpeed() * m_fSlowVaule;
+
+	// 次のキーに移動
+	int frame = m_aInfo[id].aKeyInfo[key].nFrame;
+	if (pInfo->fCounter >= static_cast<int>(frame))
+	{
+		// カウントリセット
+		pInfo->fCounter = 0.0f;
+
+		// カウントを次に進める
+		pInfo->nKey = (pInfo->nKey + 1) % m_aInfo[pInfo->nId].NumKey;
+		pInfo->nKeyNext = (pInfo->nKey + 1) % m_aInfo[pInfo->nId].NumKey;
+
+		// 再生未完了
+		if (pInfo->nKey != 0 && pInfo->nKeyNext != 0) { return; }
+
+		// ループしない場合再生終了
+		if (m_aInfo[id].bLoop) { return; }
+
+		pInfo->bFinish = true;
+	}
+}
+
+//====================================================================
+// ブレンド再生
+//====================================================================
+void CMotion::PlayTypeBlend()
+{
+	SPlayInfo* pInfo = &m_PlayInfo;		// 再生情報のポインタ
+	SBodyData* pBody = &m_BodyData;		// 階層データのポインタ
+	SBlendInfo* pBlend = &pInfo->blendInfo;	// ブレンド情報のポインタ
+
+	if (m_BodyData.ppModel == nullptr) { return; }
+
+	// ローカルに格納
+	int id = pInfo->nId;				// 再生中モーション番号
+	int key = pInfo->nKey;				// 再生中キー番号
+	int blendid = pBlend->nOldId;		// ブレンド用モーション番号
+	int blendkey = pBlend->nOldKey;		// ブレンド用キー番号
+
+	for (int nCntModel = 0; nCntModel < pBody->nNumModel; nCntModel++)
+	{
+		CModel* pModel = pBody->ppModel[nCntModel];
+		//キーの情報から位置・向きを算出
+		float POSX = m_aInfo[id].aKeyInfo[key].aKey[nCntModel].fPosX - m_aInfo[blendid].aKeyInfo[blendkey].aKey[nCntModel].fPosX;
+		float POSY = m_aInfo[id].aKeyInfo[key].aKey[nCntModel].fPosY - m_aInfo[blendid].aKeyInfo[blendkey].aKey[nCntModel].fPosY;
+		float POSZ = m_aInfo[id].aKeyInfo[key].aKey[nCntModel].fPosZ - m_aInfo[blendid].aKeyInfo[blendkey].aKey[nCntModel].fPosZ;
+		float ROTX = m_aInfo[id].aKeyInfo[key].aKey[nCntModel].fRotX - m_aInfo[blendid].aKeyInfo[blendkey].aKey[nCntModel].fRotX;
+		float ROTY = m_aInfo[id].aKeyInfo[key].aKey[nCntModel].fRotY - m_aInfo[blendid].aKeyInfo[blendkey].aKey[nCntModel].fRotY;
+		float ROTZ = m_aInfo[id].aKeyInfo[key].aKey[nCntModel].fRotZ - m_aInfo[blendid].aKeyInfo[blendkey].aKey[nCntModel].fRotZ;
+
+		//パーツの位置・向きを設定
+		pModel->SetPos(D3DXVECTOR3
+		(
+
+			pModel->GetStartPos().x + m_aInfo[blendid].aKeyInfo[blendkey].aKey[nCntModel].fPosX + POSX * (pBlend->fCounter / pBlend->fTimeMax),
+			pModel->GetStartPos().y + m_aInfo[blendid].aKeyInfo[blendkey].aKey[nCntModel].fPosY + POSY * (pBlend->fCounter / pBlend->fTimeMax),
+			pModel->GetStartPos().z + m_aInfo[blendid].aKeyInfo[blendkey].aKey[nCntModel].fPosZ + POSZ * (pBlend->fCounter / pBlend->fTimeMax)
+		));
+
+		pModel->SetRot(D3DXVECTOR3
+		(
+			pModel->GetStartRot().x + m_aInfo[blendid].aKeyInfo[blendkey].aKey[nCntModel].fRotX + ROTX * (pBlend->fCounter / pBlend->fTimeMax),
+			pModel->GetStartRot().y + m_aInfo[blendid].aKeyInfo[blendkey].aKey[nCntModel].fRotY + ROTY * (pBlend->fCounter / pBlend->fTimeMax),
+			pModel->GetStartRot().z + m_aInfo[blendid].aKeyInfo[blendkey].aKey[nCntModel].fRotZ + ROTZ * (pBlend->fCounter / pBlend->fTimeMax)
+		));
+	}
+
+	// 現在のカウント加算、タイマー減算
+	pBlend->fCounter += CManager::GetInstance()->GetGameSpeed() * m_fSlowVaule;
+	pBlend->fTime -= CManager::GetInstance()->GetGameSpeed() * m_fSlowVaule;
+
+	// ブレンド終了後デフォルトに戻す
+	if (pBlend->fTime <= 0.0f)
+	{
+		m_PlayInfo.type = PLAYTYPE::PLAYTYPE_NORMAL;
+	}
+}
+
+//====================================================================
+// ループ取得
+//====================================================================
+bool CMotion::GetInfoLoop(int nMotion)
+{
+	// 範囲外
+	if (nMotion < 0 || nMotion >= MAX_INFO)
+	{
+		assert(false);
+	}
+
+	return m_aInfo[nMotion].bLoop;
+}
+
+//====================================================================
+// キー総数取得
+//====================================================================
+int CMotion::GetInfoNumKey(int nMotion)
+{
+	// 範囲外
+	if (nMotion < 0 || nMotion >= MAX_INFO)
+	{
+		assert(false);
+	}
+
+	return m_aInfo[nMotion].NumKey;
+}
+
+//====================================================================
+// 指定キーのフレーム数取得
+//====================================================================
+int CMotion::GetInfoKeyFrame(int nMotion, int nKey)
+{
+	// 範囲外
+	if (nMotion < 0 || nMotion >= MAX_INFO)
+	{
+		assert(false);
+	};
+
+	// 範囲外
+	if (nKey < 0 || nKey >= MAX_KEY)
+	{
+		assert(false);
+	};
+
+	return m_aInfo[nMotion].aKeyInfo[nKey].nFrame;
 }
