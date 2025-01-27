@@ -13,6 +13,8 @@
 #include "light.h"
 #include "sound.h"
 
+#include "BgObjManager.h"
+
 // 定数定義
 namespace
 {
@@ -24,7 +26,7 @@ namespace
 	const D3DXVECTOR2 TITLE_LOGO_SIZE = { 600.0f, 240.0f };				// タイトルロゴの大きさ
 
 	const D3DXVECTOR3 SELECT_POS = D3DXVECTOR3(640.0f, 300.0f, 0.0f);		// 選択項目の位置
-	const D3DXVECTOR2 SELECT_SIZE = D3DXVECTOR2(300.0f, 80.0f);				// 選択項目の大きさ
+	const D3DXVECTOR2 SELECT_SIZE = D3DXVECTOR2(350.0f, 80.0f);				// 選択項目の大きさ
 	const D3DXVECTOR2 SELECT_DISTANCE = D3DXVECTOR2(0.0f + (SELECT_SIZE.x * 0.0f), 5.0f + (SELECT_SIZE.y * 1.0f));	// 選択項目の幅
 	const D3DXCOLOR SELECT_COLOR_TRUE = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);	// 選択状態項目の色
 	const D3DXCOLOR SELECT_COLOR_FALSE = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.5f);	// 選択してない項目の色
@@ -33,6 +35,8 @@ namespace
 	const D3DXVECTOR2 BUTTON_SIZE = { 300.0f, 160.0f };						// ボタンの大きさ
 
 	const float FADE_TIME = 5.0f; // 自動で遷移するまでの時間
+
+	const CMapSystem::GRID FIELD_GRID = { 64, 64 }; // 下の床のサイズ
 }
 
 //静的メンバ変数宣言
@@ -156,6 +160,10 @@ HRESULT CTitle::Init(void)
 	// タイマーの初期化
 	m_fTimer = 0.0f;
 
+	// 背景オブジェクトのゲーム設置処理
+	auto grid = FIELD_GRID;
+	CBgObjManager::GetInstance()->SetGame(grid);
+
 	return S_OK;
 }
 
@@ -164,6 +172,9 @@ HRESULT CTitle::Init(void)
 //====================================================================
 void CTitle::Uninit(void)
 {
+	// 背景オブジェクトの終了処理
+	CBgObjManager::GetInstance()->Uninit();
+
 	//全てのオブジェクトの破棄
 	CObject::ReleaseAll();
 
@@ -190,6 +201,9 @@ void CTitle::Update(void)
 		// 自動遷移
 		AutoFade();
 	}
+
+	// 背景モデルの更新処理
+	CBgObjManager::GetInstance()->Update();
 }
 
 //====================================================================

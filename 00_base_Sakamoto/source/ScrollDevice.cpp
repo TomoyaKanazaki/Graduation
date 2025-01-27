@@ -317,12 +317,12 @@ void CScrollDevice::SetAppearAll(bool bAppear)
 //====================================================================
 HRESULT CScrollDevice::InitModel(const std::string pModelNameScrollDevice, const std::string pModelNameEnemy)
 {
-	CObjectCharacter::SetTxtCharacter(pModelNameScrollDevice, 0);
+	CObjectCharacter::SetTxtCharacter(pModelNameScrollDevice);
 
 	if (m_pObjectCharacter != nullptr)
 	{
 		// キャラクターテキスト読み込み処理（メダマン）
-		m_pObjectCharacter->SetTxtCharacter(pModelNameEnemy, 0);
+		m_pObjectCharacter->SetTxtCharacter(pModelNameEnemy);
 
 		// メダマンの親を土台に変更
 		m_pObjectCharacter->GetModel(0)->SetParent(GetModel(SETUP_TYPE_FOUNDATION));

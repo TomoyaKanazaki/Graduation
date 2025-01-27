@@ -41,7 +41,6 @@ m_bUseShadow(true),
 m_State(STATE_WAIT),
 m_OldState(STATE_WAIT),
 m_Info(SInfo()),
-m_stencil(SStencilInfo()),
 m_BodyInfo(SBodyData()),
 m_SpeedState(CMapMove::SPEED_NONE),
 m_OldSpeedState(CMapMove::SPEED_NONE)
@@ -198,7 +197,6 @@ void CObjectCharacter::Draw(void)
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
 
 	D3DXMATRIX mtxRot, mtxTrans;	//計算用マトリックス
-	SStencilInfo* pInfo = &m_stencil;
 
 	//ワールドマトリックスの初期化
 	D3DXMatrixIdentity(&m_mtxWorld);
@@ -249,28 +247,7 @@ void CObjectCharacter::Draw(void)
 	//ワールドマトリックスの設定
 	pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
 
-	// ステンシルバッファを使用する
-	if (pInfo->bUse)
-	{
-		//ステンシルバッファ有効
-		pDevice->SetRenderState(D3DRS_STENCILENABLE, TRUE);
-
-		//ステンシルバッファと比較する参照値の設定 => ref
-		pDevice->SetRenderState(D3DRS_STENCILREF, pInfo->nRefIdx);
-
-		//ステンシルバッファの値に対してのマスク設定 => 0xff(全て真)
-		pDevice->SetRenderState(D3DRS_STENCILMASK, 255);
-
-		//ステンシルバッファの比較方法 => (参照値 => ステンシルバッファの参照値)なら合格
-		pDevice->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_GREATEREQUAL);
-
-		//ステンシルテスト結果に対しての反映設定
-		pDevice->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_REPLACE);	// Zテスト・ステンシルテスト成功
-		pDevice->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP);		// Zテスト・ステンシルテスト失敗
-		pDevice->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_KEEP);		// Zテスト失敗・ステンシルテスト成功
-	}
-
-	//モデルの描画(全パーツ)
+//モデルの描画(全パーツ)
 	if (m_BodyInfo.ppModel != nullptr)
 	{
 		for (int i = 0; i < m_BodyInfo.nNumModel; i++)
@@ -280,9 +257,6 @@ void CObjectCharacter::Draw(void)
 			pModel->Draw();
 		}
 	}
-
-	//ステンシルバッファ無効
-	pDevice->SetRenderState(D3DRS_STENCILENABLE, FALSE);
 }
 
 //==========================================
@@ -364,7 +338,7 @@ void CObjectCharacter::SetNumModel(int nNumModel)
 //====================================================================
 // キャラクターテキスト設定処理
 //====================================================================
-void CObjectCharacter::SetTxtCharacter(const std::string pFilename, int nRef)
+void CObjectCharacter::SetTxtCharacter(const std::string pFilename)
 {
 	CCharacterManager* pCharacterManager = CManager::GetInstance()->GetCharacterManager();
 
@@ -383,9 +357,6 @@ void CObjectCharacter::SetTxtCharacter(const std::string pFilename, int nRef)
 		assert(("キャラクター割当失敗", false));
 		return;
 	}
-
-	// ステンシル参照値設定
-	SetRefIdx(nRef);
 }
 
 //====================================================================

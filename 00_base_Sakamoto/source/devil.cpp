@@ -136,7 +136,7 @@ HRESULT CDevil::Init(void)
 	if (FAILED(CObjectCharacter::Init())) { assert(false); }
 
 	// キャラクターテキスト読み込み処理
-	SetTxtCharacter("data\\TXT\\MOTION\\01_enemy\\motion_devil.txt", 0);
+	SetTxtCharacter("data\\TXT\\MOTION\\01_enemy\\motion_devil.txt");
 
 	// スローの生成
 	m_pSlow = CSlowManager::Create(CSlowManager::CAMP_PLAYER, CSlowManager::TAG_PLAYER);
