@@ -67,9 +67,6 @@ public:
 	CDevil* GetDevil(void) { return m_pDevil; }
 	CPause* GetPause(void) { return m_pPause; }
 	CTimer* GetTime(void) { return m_pTime; }
-	CObjmeshDome* GetDomeUp(void) { return m_pMeshDomeUp; }
-	void SetCubeBlock(CCubeBlock* pBlock) { m_pCubeBlock = pBlock; }
-	CCubeBlock* GetCubeBlock(void) { return m_pCubeBlock; }
 	float GetBGColorA(void) { return m_BGColorA; }
 	void AddBGColorA(float Add) { m_BGColorA += Add; }
 	void SetGameEnd(bool Set) { m_bTutorialEnd = Set; }
@@ -125,9 +122,7 @@ private:
 
 	CPause* m_pPause;						// ポーズのポインタ
 	CTimer* m_pTime;						// タイムのポインタ
-	CObjmeshDome* m_pMeshDomeUp;			// メッシュドーム
 	CObjmeshField* m_pMapField;				// マップフィールド
-	CCubeBlock* m_pCubeBlock;				// キューブブロック
 	CTutorialUi* m_pTutorialUI;
 	std::vector<CTutorialUi*> m_pText;		// チュートリアルテキストのポインタ
 	bool m_bSound[TYPE_MAX];

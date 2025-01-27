@@ -33,6 +33,7 @@
 #include "tutorialCheck.h"
 #include "bible.h"
 #include "tutorialUi.h"
+#include "game.h"
 
 #include "sound.h"
 #include "shadow.h"
@@ -156,6 +157,8 @@ m_bTutorialClear(false),	// ゲームクリアのフラグ
 m_Wireframe(false),			// ワイヤーフレーム切り替え
 m_Slow(false),				// スロー演出フラグ
 InitPlayerPos(D3DXVECTOR3()),	// プレイヤーの初期位置
+m_pTime(nullptr),			// タイム
+m_pMapField(nullptr),		// 床
 m_nNumBible(0)				// 聖書の総数
 {
 	for (int nCnt = 0; nCnt < NUM_CAMERA; ++nCnt)
@@ -309,6 +312,35 @@ void CTutorial::Uninit(void)
 		m_pPlayer.pop_back();
 	}
 
+	// デビル
+	if (m_pDevil != nullptr)
+	{
+		m_pDevil->Uninit();
+		m_pDevil = nullptr;
+	}
+
+	// テキストの解放
+	while (1)
+	{
+		if (m_pText.size() <= 0) { m_pText.clear(); break; }
+		m_pText.back()->SetDeathFlag(true);
+		m_pText.pop_back();
+	}
+
+	// タイム
+	if (m_pTime != nullptr)
+	{
+		m_pTime->Uninit();
+		m_pTime = nullptr;
+	}
+
+	// 床
+	if (m_pMapField != nullptr)
+	{
+		m_pMapField->Uninit();
+		m_pMapField = nullptr;
+	}
+
 	// サウンド停止
 	CManager::GetInstance()->GetSound()->Stop();
 
@@ -318,6 +350,8 @@ void CTutorial::Uninit(void)
 	// 背景オブジェクトの終了処理
 	CBgObjManager::GetInstance()->Uninit();
 
+	// ゲームの終了処理(GetInstanceで生成されるため)
+	CGame::GetInstance()->Uninit();
 
 	//全てのオブジェクトの破棄
 	CObject::ReleaseAll();
@@ -503,31 +537,34 @@ void CTutorial::Update(void)
 		}
 	}
 
-	for (CDevilHole* pDevilHole : DevilHolelist)
-	{// デビルホールの中身を確認
-		if (pDevilHole->IsSet())
-		{// デビルホールの4箇所の内1箇所埋まった
-			CTutorialCheck::Create(D3DXVECTOR3(TEXTURE_CENTER_POS.x - CHECK_POS[TYPE_DEVILHOLE].x,
-									TEXTURE_CENTER_POS.y + CHECK_POS[TYPE_DEVILHOLE].y - CHECK_POS_Y, TEXTURE_CENTER_POS.z));
+	if (!m_bCheck[TYPE_DEVILHOLE])
+	{
+		for (CDevilHole* pDevilHole : DevilHolelist)
+		{// デビルホールの中身を確認
+			if (pDevilHole->IsSet())
+			{// デビルホールの4箇所の内1箇所埋まった
+				CTutorialCheck::Create(D3DXVECTOR3(TEXTURE_CENTER_POS.x - CHECK_POS[TYPE_DEVILHOLE].x,
+					TEXTURE_CENTER_POS.y + CHECK_POS[TYPE_DEVILHOLE].y - CHECK_POS_Y, TEXTURE_CENTER_POS.z));
 
-			// マーカー表示
-			m_bCheck[TYPE_DEVILHOLE] = true;
+				// マーカー表示
+				m_bCheck[TYPE_DEVILHOLE] = true;
 
-			if (m_bCheck[TYPE_DEVILHOLE] == true && m_bSound[TYPE_DEVILHOLE] == false)
-			{
-				// サウンド再生
-				CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_CHECK);
+				if (m_bCheck[TYPE_DEVILHOLE] == true && m_bSound[TYPE_DEVILHOLE] == false)
+				{
+					// サウンド再生
+					CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_CHECK);
 
-				m_bSound[TYPE_DEVILHOLE] = true;
+					m_bSound[TYPE_DEVILHOLE] = true;
+				}
+
+				if (m_bCheck[TYPE_DEVILHOLE] == true)
+				{// テキストの不透明度を下げる
+					SetUIAlpha(TYPE_DEVILHOLE, 0.5f);
+				}
+
+				// チュートリアル段階を進める
+				m_nTutorialWave += 1;
 			}
-
-			if (m_bCheck[TYPE_DEVILHOLE] == true)
-			{// テキストの不透明度を下げる
-				SetUIAlpha(TYPE_DEVILHOLE, 0.5f);
-			}
-
-			// チュートリアル段階を進める
-			m_nTutorialWave += 1;
 		}
 	}
 
@@ -545,50 +582,6 @@ void CTutorial::Update(void)
 	{// チュートリアル段階を4にする
 		m_nTutorialWave = WAVE_MIDDLE;
 	}
-
-	if (pInputKeyboard->GetTrigger(DIK_0) == true)
-	{
-		m_Wireframe = (m_Wireframe == true) ? false : true;
-
-		if (m_Wireframe == true)
-		{
-			//レンダーステートの設定
-			m_pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-		}
-		else
-		{
-			//レンダーステートの設定
-			m_pDevice->SetRenderState(D3DRS_FILLMODE, 0);
-		}
-	}
-
-	if (pInputKeyboard->GetTrigger(DIK_1) == true)
-	{
-		float Speed = CManager::GetInstance()->GetGameSpeed();
-
-		Speed -= 0.90f;
-
-		CManager::GetInstance()->SetGameSpeed(Speed);
-	}
-
-	if (pInputKeyboard->GetTrigger(DIK_2) == true)
-	{
-		float Speed = CManager::GetInstance()->GetGameSpeed();
-
-		Speed += 0.90f;
-
-		CManager::GetInstance()->SetGameSpeed(Speed);
-	}
-
-	if (CManager::GetInstance()->GetGameSpeed() <= 1.0f)
-	{
-		m_Slow = true;
-	}
-	else
-	{
-		m_Slow = false;
-	}
-
 #endif
 
 	if (CManager::GetInstance()->GetFade()->GetFade() == CFade::FADE_NONE)

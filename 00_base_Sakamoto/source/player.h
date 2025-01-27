@@ -107,7 +107,6 @@ private:
 
 	void ActionState(void);							//モーションと状態の管理
 	void StateManager(D3DXVECTOR3& posMy, D3DXVECTOR3& rotThis);			//状態管理
-	D3DXVECTOR3 MoveInputPadKey(D3DXVECTOR3& posMy, D3DXVECTOR3& rotMy, D3DXVECTOR3 Move);	//移動入力パッドキー
 	void Rot(D3DXVECTOR3& rotMy);									//移動方向処理
 	void Attack(D3DXVECTOR3& posMy, D3DXVECTOR3& rotMy);			//攻撃処理
 	void CollisionWall(D3DXVECTOR3& posMy, D3DXVECTOR3& posOldMy, D3DXVECTOR3& sizeMy, useful::COLLISION XYZ);		//壁との当たり判定
@@ -160,8 +159,6 @@ private:
 	
 	bool m_bInput;					//入力を行ったかどうか
 	bool m_bPressObj;				//オブジェクトに押されているかどうか
-	//bool m_bInvincible;				//無敵かどうか
-	//int m_nInvincibleCount;			//無敵時間
 
 	bool m_UseItem;					//アイテムが使用可能かどうか
 
@@ -175,7 +172,6 @@ private:
 	CObjectBillboard* m_pP_NumUI;	//プレイヤー番号UI		
 
 	CMoveState* m_pMoveState;		// 移動状態
-
 
 	// 静的メンバ変数
 	static CListManager<CPlayer>* m_pList; // オブジェクトリスト

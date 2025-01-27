@@ -94,11 +94,7 @@ CGame::CGame()
 	m_pPause = nullptr;
 	m_pTime = nullptr;
 	m_pMapField = nullptr;
-	m_pCubeBlock = nullptr;
 	m_pDevil = nullptr;
-	m_pPlayerMask = nullptr;
-	m_pEnemyMask = nullptr;
-	m_pItemMask = nullptr;
 
 	m_bGameClear = false;
 	m_Wireframe = false;
@@ -136,7 +132,6 @@ CGame* CGame::GetInstance(void)
 	}
 	return m_pGame;
 }
-
 
 //====================================================================
 //初期化処理
@@ -234,6 +229,27 @@ void CGame::Uninit(void)
 		if (m_pPlayer.size() <= 0) { m_pPlayer.clear(); break; }
 		m_pPlayer.back()->SetDeathFlag(true);
 		m_pPlayer.pop_back();
+	}
+
+	// デビル
+	if (m_pDevil != nullptr)
+	{
+		m_pDevil->Uninit();
+		m_pDevil = nullptr;
+	}
+
+	// タイム
+	if (m_pTime != nullptr)
+	{
+		m_pTime->Uninit();
+		m_pTime = nullptr;
+	}
+
+	// 床
+	if (m_pMapField != nullptr)
+	{
+		m_pMapField->Uninit();
+		m_pMapField = nullptr;
 	}
 
 	CManager::GetInstance()->GetSound()->Stop();
@@ -478,8 +494,6 @@ void CGame::ResetStage(void)
 	{
 		CGame::GetInstance()->GetPlayer(1)->SetMove(INITVECTOR3);
 	}
-
-	CMapSystem::GetInstance()->GetMove()->SetScroolSetState(CMapSystem::GetInstance()->GetMove()->GetState());
 
 	// マップの初期化
 	CMapSystem::GetInstance()->GetMove()->Init();

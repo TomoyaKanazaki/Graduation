@@ -266,6 +266,7 @@ void CStateControl::Move(CObjectCharacter* pCharacter, D3DXVECTOR3& pos, D3DXVEC
 	case CObject::TYPE_PLAYER3D:		// プレイヤー
 		NormarizeMove = InputKey(pCharacter, pos, rot, NormarizeMove, PLAYER_SPEED);
 		NormarizeMove = MoveInputPadStick(pCharacter, pos, rot, NormarizeMove, PLAYER_SPEED);
+		NormarizeMove = MoveInputPadKey(pCharacter, pos, rot, NormarizeMove, PLAYER_SPEED);
 		UpdateMovePlayer(pCharacter, NormarizeMove);		// 移動更新
 
 		break;
@@ -477,6 +478,67 @@ D3DXVECTOR3 CStateControl::MoveInputPadStick(CObjectCharacter* pCharacter, D3DXV
 			}
 			else if (((pInputJoypad->Get_Stick_Left(nCnt).x > 0.0f && progress.bOKR && bGridCenter) ||
 				(pInputJoypad->Get_Stick_Left(nCnt).x > 0.0f && m_RotState == ROTSTATE_LEFT)))
+			{
+				Move.x += 1.0f * cosf(D3DX_PI * 0.0f) * fSpeed;
+				Move.z -= 1.0f * sinf(D3DX_PI * 0.0f) * fSpeed;
+
+				m_bInput = true;
+				m_RotState = ROTSTATE_RIGHT;
+			}
+		}
+	}
+
+	return Move;
+}
+
+//====================================================================
+//移動入力パッドキー
+//====================================================================
+D3DXVECTOR3 CStateControl::MoveInputPadKey(CObjectCharacter* pCharacter, D3DXVECTOR3& pos, D3DXVECTOR3& rot, D3DXVECTOR3 Move, float fSpeed)
+{
+	CInputJoypad* pInputJoypad = CManager::GetInstance()->GetInputJoyPad();
+
+	// 移動の進行許可状況
+	CObjectCharacter::PROGGRESS progress = pCharacter->GetProgress();
+	bool bGridCenter = pCharacter->GetGritCenter();		// グリッド座標の中心にいるか
+	int nPlayNumber = pCharacter->GetPlayNumber();		// プレイヤーのナンバーを取得する
+
+	for (int nCnt = 0; nCnt < MAX_PLAYER; nCnt++)
+	{
+		if (nCnt == nPlayNumber)
+		{
+			//キーボードの移動処理
+			if ((pInputJoypad->GetPress(CInputJoypad::BUTTON_UP, nCnt) && progress.bOKU && bGridCenter) ||
+				(pInputJoypad->GetPress(CInputJoypad::BUTTON_UP, nCnt) && m_RotState == ROTSTATE_DOWN))
+			{
+				Move.z += 1.0f * cosf(D3DX_PI * 0.0f) * fSpeed;
+				Move.x += 1.0f * sinf(D3DX_PI * 0.0f) * fSpeed;
+
+				m_bInput = true;
+				m_RotState = ROTSTATE_UP;
+			}
+			else if (((pInputJoypad->GetPress(CInputJoypad::BUTTON_DOWN, nCnt) && progress.bOKD && bGridCenter) ||
+				(pInputJoypad->GetPress(CInputJoypad::BUTTON_DOWN, nCnt) && m_RotState == ROTSTATE_UP)) &&
+				pInputJoypad->GetPress(CInputJoypad::BUTTON_UP, nCnt) == false)
+			{
+				Move.z += -1.0f * cosf(D3DX_PI * 0.0f) * fSpeed;
+				Move.x += -1.0f * sinf(D3DX_PI * 0.0f) * fSpeed;
+
+				m_bInput = true;
+				m_RotState = ROTSTATE_DOWN;
+			}
+			else if ((pInputJoypad->GetPress(CInputJoypad::BUTTON_LEFT, nCnt) && progress.bOKL && bGridCenter) ||
+				(pInputJoypad->GetPress(CInputJoypad::BUTTON_LEFT, nCnt) && m_RotState == ROTSTATE_RIGHT))
+			{
+				Move.x += -1.0f * cosf(D3DX_PI * 0.0f) * fSpeed;
+				Move.z -= -1.0f * sinf(D3DX_PI * 0.0f) * fSpeed;
+
+				m_bInput = true;
+				m_RotState = ROTSTATE_LEFT;
+			}
+			else if (((pInputJoypad->GetPress(CInputJoypad::BUTTON_RIGHT, nCnt) && progress.bOKR && bGridCenter) ||
+				(pInputJoypad->GetPress(CInputJoypad::BUTTON_RIGHT, nCnt) && m_RotState == ROTSTATE_LEFT)) &&
+				pInputJoypad->GetPress(CInputJoypad::BUTTON_LEFT, nCnt) == false)
 			{
 				Move.x += 1.0f * cosf(D3DX_PI * 0.0f) * fSpeed;
 				Move.z -= 1.0f * sinf(D3DX_PI * 0.0f) * fSpeed;

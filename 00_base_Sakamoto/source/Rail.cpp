@@ -46,9 +46,6 @@ CRail::CRail(int nPriority) : CObject(nPriority)
 		m_bRail[nCnt] = false;
 	}
 
-	m_pPrev = nullptr;		// 前のレールへのポインタ
-	m_pNext = nullptr;		// 次のレールへのポインタ
-
 	// グリッド
 	m_Grid.x = 0;
 	m_Grid.z = 0;
@@ -153,14 +150,17 @@ void CRail::Uninit(void)
 
 	SetDeathFlag(true);
 
-	// リストから自身のオブジェクトを削除
-	m_pList->DelList(m_iterator);
+	if (m_pList != nullptr)
+	{
+		// リストから自身のオブジェクトを削除
+		m_pList->DelList(m_iterator);
 
-	if (m_pList->GetNumAll() == 0)
-	{ // オブジェクトが一つもない場合
+		if (m_pList->GetNumAll() == 0)
+		{ // オブジェクトが一つもない場合
 
-		// リストマネージャーの破棄
-		m_pList->Release(m_pList);
+			// リストマネージャーの破棄
+			m_pList->Release(m_pList);
+		}
 	}
 }
 

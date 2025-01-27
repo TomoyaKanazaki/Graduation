@@ -135,10 +135,32 @@ void CMapSystem::Init()
 //====================================================================
 void CMapSystem::Uninit(void)
 {
+	// マップ移動
 	if (m_pMapMove != nullptr)
 	{
 		m_pMapMove->Uninit();
 		m_pMapMove = nullptr;
+	}
+
+	// 読み込み用変数
+	while (1)
+	{
+		if (m_nData.size() <= 0) { m_nData.clear(); break; }
+		m_nData.pop_back();
+	}
+
+	// マップ情報
+	for (int i = 0; i < m_MapInfo.size(); i++)
+	{
+		if (m_MapInfo[i].grid.size() <= 0) { m_MapInfo[i].grid.clear(); }				// グリッド
+		if (m_MapInfo[i].posPlayer.size() <= 0) { m_MapInfo[i].posPlayer.clear(); }		// プレイヤー位置
+		if (m_MapInfo[i].texture.size() <= 0) { m_MapInfo[i].texture.clear(); }			// サムネイル
+		if (m_MapInfo[i].type.size() <= 0) { m_MapInfo[i].type.clear(); }				// マップオブジェクトの種類
+	}
+	while (1)
+	{
+		if (m_MapInfo.size() <= 0) { m_MapInfo.clear(); break; }
+		m_MapInfo.pop_back();
 	}
 
 	if (m_pMapSystem != nullptr)
@@ -157,15 +179,29 @@ void CMapSystem::Update(void)
 {
 	if (CManager::GetInstance()->GetPause() == false)
 	{
-		if (CGame::GetInstance()->GetEvent() == false &&
-			CGame::GetInstance()->GetTrans() == false &&
-			m_pMapMove != nullptr)
+		if (CScene::GetMode() == CScene::MODE_GAME)
 		{
-			//マップの動き設定
-			m_pMapMove->Update();
+			if (CGame::GetInstance()->GetEvent() == false &&
+				CGame::GetInstance()->GetTrans() == false &&
+				m_pMapMove != nullptr)
+			{
+				//マップの動き設定
+				m_pMapMove->Update();
 
-			//その他オブジェクトのスクロール
-			CObject::ScrollAll();
+				//その他オブジェクトのスクロール
+				CObject::ScrollAll();
+			}
+		}
+		else if (CScene::GetMode() == CScene::MODE_TUTORIAL)
+		{
+			if (m_pMapMove != nullptr)
+			{
+				//マップの動き設定
+				m_pMapMove->Update();
+
+				//その他オブジェクトのスクロール
+				CObject::ScrollAll();
+			}
 		}
 	}
 
@@ -462,7 +498,6 @@ HRESULT CMapSystem::LoadAll()
 
 	// ファイル読み込み用変数
 	CMapSystem* pMapSystem = CMapSystem::GetInstance();
-	CTexture* pTexture = CManager::GetInstance()->GetTexture();
 	std::string FileName;	// 読込文字列
 	int nNum = -1;			// マップ数
 	int nNumTex = 0;		// テクスチャ数

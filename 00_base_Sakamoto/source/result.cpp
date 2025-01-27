@@ -11,6 +11,8 @@
 #include "ranking.h"
 #include "number.h"
 
+using namespace Result;
+
 //マクロ定義
 namespace
 {
@@ -82,7 +84,10 @@ CResult::CResult() :
 	m_pScoreTex = nullptr;
 	m_Appear = false;
 
-	for (int nCnt = 0; nCnt < 6; nCnt++)
+	m_p1PTex = nullptr;
+	m_p2PTex = nullptr;
+
+	for (int nCnt = 0; nCnt < NUM_DIGIT; nCnt++)
 	{
 		m_apScore[nCnt] = nullptr;
 		m_ap1P[nCnt] = nullptr;
@@ -136,7 +141,7 @@ HRESULT CResult::Init(void)
 
 	if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_SINGLE)
 	{
-		for (int nCntObject = 0; nCntObject < 6; nCntObject++)
+		for (int nCntObject = 0; nCntObject < NUM_DIGIT; nCntObject++)
 		{
 			//数字の生成
 			m_apScore[nCntObject] = CNumber::Create();
@@ -198,7 +203,7 @@ HRESULT CResult::Init(void)
 		m_pScoreTex->SetTexture("data\\TEXTURE\\result_score.png");
 
 		//今回のスコア
-		for (int nCntObject = 0; nCntObject < 6; nCntObject++)
+		for (int nCntObject = 0; nCntObject < NUM_DIGIT; nCntObject++)
 		{
 			//数字の生成
 			m_apScore[nCntObject] = CNumber::Create();
@@ -221,7 +226,7 @@ HRESULT CResult::Init(void)
 		m_p1PTex->SetTexture("data\\TEXTURE\\UI\\1p.png");
 
 		//今回のスコア
-		for (int nCntObject = 0; nCntObject < 6; nCntObject++)
+		for (int nCntObject = 0; nCntObject < NUM_DIGIT; nCntObject++)
 		{
 			//数字の生成
 			m_ap1P[nCntObject] = CNumber::Create();
@@ -244,7 +249,7 @@ HRESULT CResult::Init(void)
 		m_p2PTex->SetTexture("data\\TEXTURE\\UI\\2p.png");
 
 		//今回のスコア
-		for (int nCntObject = 0; nCntObject < 6; nCntObject++)
+		for (int nCntObject = 0; nCntObject < NUM_DIGIT; nCntObject++)
 		{
 			//数字の生成
 			m_ap2P[nCntObject] = CNumber::Create();
@@ -333,6 +338,58 @@ HRESULT CResult::Init(void)
 void CResult::Uninit(void)
 {
 	CManager::GetInstance()->GetSound()->Stop();
+
+	// 背景
+	if (m_pBg != nullptr)
+	{
+		m_pBg->Uninit();
+		m_pBg = nullptr;
+	}
+
+	if (m_pScoreTex != nullptr)
+	{
+		m_pScoreTex->Uninit();
+		m_pScoreTex = nullptr;
+	}
+
+	if (m_pLifeRanking != nullptr)
+	{
+		m_pLifeRanking->Uninit();
+		m_pLifeRanking = nullptr;
+	}
+
+	if (m_p1PTex != nullptr)
+	{
+		m_p1PTex->Uninit();
+		m_p1PTex = nullptr;
+	}
+
+	if (m_p2PTex != nullptr)
+	{
+		m_p2PTex->Uninit();
+		m_p2PTex = nullptr;
+	}
+
+	for (int i = 0; i < NUM_DIGIT; i++)
+	{
+		if (m_apScore[i] != nullptr)
+		{
+			m_apScore[i]->Uninit();
+			m_apScore[i] = nullptr;
+		}
+
+		if (m_ap1P[i] != nullptr)
+		{
+			m_ap1P[i]->Uninit();
+			m_ap1P[i] = nullptr;
+		}
+
+		if (m_ap2P[i] != nullptr)
+		{
+			m_ap2P[i]->Uninit();
+			m_ap2P[i] = nullptr;
+		}
+	}
 
 	//全てのオブジェクトの破棄
 	CObject::ReleaseAll();
