@@ -294,7 +294,7 @@ void CBgObjManager::SetMountain(void)
 		if (m_pBGCharacter[nCnt] == nullptr)
 		{
 			m_pBGCharacter[nCnt] = CObjectCharacter::Create(false);
-			m_pBGCharacter[nCnt]->SetTxtCharacter(SCROLL_DEVICE_ENEMY_MODEL, 0);
+			m_pBGCharacter[nCnt]->SetTxtCharacter(SCROLL_DEVICE_ENEMY_MODEL);
 
 			m_pBGCharacter[nCnt]->SetPos(D3DXVECTOR3(
 				-1975.0f + sinf(D3DX_PI * (0.5f * nCnt)) * 400.0f,
