@@ -536,65 +536,6 @@ void CPlayer::UI_Create(void)
 	}
 }
 
-#if 0
-//====================================================================
-//移動入力パッドキー
-//====================================================================
-D3DXVECTOR3 CPlayer::MoveInputPadKey(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis, D3DXVECTOR3 Move)
-{
-	CInputJoypad* pInputJoypad = CManager::GetInstance()->GetInputJoyPad();
-
-	for (int nCnt = 0; nCnt < MAX_PLAYER; nCnt++)
-	{
-		if (nCnt == m_nPlayNumber)
-		{
-			//キーボードの移動処理
-			if ((pInputJoypad->GetPress(CInputJoypad::BUTTON_UP, nCnt) && m_Progress.bOKU && m_bGritCenter) ||
-				(pInputJoypad->GetPress(CInputJoypad::BUTTON_UP, nCnt) && m_MoveState == MOVE_STATE_DOWN))
-			{
-				Move.z += 1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
-				Move.x += 1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
-
-				m_bInput = true;
-				m_MoveState = MOVE_STATE_UP;
-			}
-			else if (((pInputJoypad->GetPress(CInputJoypad::BUTTON_DOWN, nCnt) && m_Progress.bOKD && m_bGritCenter) ||
-				(pInputJoypad->GetPress(CInputJoypad::BUTTON_DOWN, nCnt) && m_MoveState == MOVE_STATE_UP)) &&
-				pInputJoypad->GetPress(CInputJoypad::BUTTON_UP, nCnt) == false)
-			{
-				Move.z += -1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
-				Move.x += -1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
-
-				m_bInput = true;
-				m_MoveState = MOVE_STATE_DOWN;
-			}
-			else if ((pInputJoypad->GetPress(CInputJoypad::BUTTON_LEFT, nCnt) && m_Progress.bOKL && m_bGritCenter) ||
-				(pInputJoypad->GetPress(CInputJoypad::BUTTON_LEFT, nCnt) && m_MoveState == MOVE_STATE_RIGHT))
-			{
-				Move.x += -1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
-				Move.z -= -1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
-
-				m_bInput = true;
-				m_MoveState = MOVE_STATE_LEFT;
-			}
-			else if (((pInputJoypad->GetPress(CInputJoypad::BUTTON_RIGHT, nCnt) && m_Progress.bOKR && m_bGritCenter) ||
-				(pInputJoypad->GetPress(CInputJoypad::BUTTON_RIGHT, nCnt) && m_MoveState == MOVE_STATE_LEFT)) &&
-				pInputJoypad->GetPress(CInputJoypad::BUTTON_LEFT, nCnt) == false)
-			{
-				Move.x += 1.0f * cosf(D3DX_PI * 0.0f) * PLAYER_SPEED;
-				Move.z -= 1.0f * sinf(D3DX_PI * 0.0f) * PLAYER_SPEED;
-
-				m_bInput = true;
-				m_MoveState = MOVE_STATE_RIGHT;
-			}
-		}
-	}
-
-	return Move;
-}
-
-#endif
-
 //====================================================================
 //移動方向処理
 //====================================================================
@@ -921,7 +862,6 @@ void CPlayer::CollisionWaitRailBlock(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldTh
 
 			// 向き状態の設定
 			m_pMoveState->SetRotState(CMoveState::ROTSTATE_WAIT);
-			//posThis = m_Grid.ToWorld();
 		}
 	}
 }
@@ -978,11 +918,6 @@ void CPlayer::CollisionMoveRailBlock(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldTh
 //====================================================================
 void CPlayer::CollisionWaitRock(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D3DXVECTOR3& sizeThis, useful::COLLISION XYZ)
 {
-	/*if (m_bPressObj == true)
-	{
-		return;
-	}*/
-
 	// 岩のリスト構造が無ければ抜ける
 	if (CRollRock::GetList() == nullptr) { return; }
 	std::list<CRollRock*> list = CRollRock::GetList()->GetList();    // リストを取得
@@ -1008,7 +943,6 @@ void CPlayer::CollisionWaitRock(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D
 			SetState(STATE_WAIT);
 			// 向き状態の設定
 			m_pMoveState->SetRotState(CMoveState::ROTSTATE_WAIT);
-			//posThis = m_Grid.ToWorld();
 		}
 	}
 }
@@ -1423,7 +1357,7 @@ void CPlayer::PosUpdate(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D3DXVECTO
 	CMapMove::SPEED Speed = GetSpeedState();
 
 	//X軸の位置更新
-	if (m_move.x > 0.0f || m_move.x < 0.0f)
+	//if (m_move.x > 0.0f || m_move.x < 0.0f)
 	{
 		posThis.x += m_move.x * CManager::GetInstance()->GetGameSpeed() * fSpeed * pMapMove->MoveSlopeX(m_move.x, Speed);
 	}
@@ -1435,7 +1369,7 @@ void CPlayer::PosUpdate(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D3DXVECTO
 	CollisionWall(posThis, posOldThis, sizeThis, useful::COLLISION_X);
 
 	//Z軸の位置更新
-	if (m_move.z > 0.0f || m_move.z < 0.0f)
+	//if (m_move.z > 0.0f || m_move.z < 0.0f)
 	{
 		posThis.z += m_move.z * CManager::GetInstance()->GetGameSpeed() * fSpeed * pMapMove->MoveSlopeZ(m_move.z, Speed);
 	}
