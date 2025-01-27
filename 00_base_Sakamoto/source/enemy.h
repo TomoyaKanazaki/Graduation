@@ -69,7 +69,7 @@ public:
 
 protected:
 
-	HRESULT InitModel(const std::string pFilename, int nRef);				// ƒ‚ƒfƒ‹‚Ì‰Šú‰»
+	HRESULT InitModel(const std::string pFilename);				// ƒ‚ƒfƒ‹‚Ì‰Šú‰»
 
 private:
 
