@@ -1429,8 +1429,8 @@ void CStateRoll::Move(CObjectX* pObjectX, D3DXVECTOR3& pos, D3DXVECTOR3& rot)
 		// 左右の移動判定
 		if (type == CObject::TYPE_ROLLROCK)
 		{ // 岩
-			SetJudg(nRGridX, grid.z, m_Progress.bOKR);
-			SetJudg(nLGridX, grid.z, m_Progress.bOKL);
+			SetJudge(nRGridX, grid.z, m_Progress.bOKR);
+			SetJudge(nLGridX, grid.z, m_Progress.bOKL);
 		}
 		else if (type == CObject::TYPE_RAILBLOCK)
 		{ // レールブロック
@@ -1454,8 +1454,8 @@ void CStateRoll::Move(CObjectX* pObjectX, D3DXVECTOR3& pos, D3DXVECTOR3& rot)
 		// 上下の移動判定
 		if (type == CObject::TYPE_ROLLROCK)
 		{ // 岩
-			SetJudg(grid.x, nUGridZ, m_Progress.bOKU);
-			SetJudg(grid.x, nDGridZ, m_Progress.bOKD);
+			SetJudge(grid.x, nUGridZ, m_Progress.bOKU);
+			SetJudge(grid.x, nDGridZ, m_Progress.bOKD);
 		}
 		else if (type == CObject::TYPE_RAILBLOCK)
 		{ // レールブロック
@@ -1489,7 +1489,7 @@ void CStateRoll::RailCheck(CMapSystem::GRID& grid, bool& bProgress)
 //==========================================
 // 転がれるか判断する処理
 //==========================================
-void CStateRoll::SetJudg(int& nGridPosX, int& nGridPosZ, bool& bProgress)
+void CStateRoll::SetJudge(int& nGridPosX, int& nGridPosZ, bool& bProgress)
 {
 	// 転がれる場所があるか判定を取る
 	if (CMapSystem::GetInstance()->GetGritBool(nGridPosX, nGridPosZ) == true)

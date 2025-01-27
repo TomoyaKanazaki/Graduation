@@ -20,7 +20,6 @@ public:
 	enum CAMERAMODE
 	{
 		CAMERAMODE_CONTROL = 0,		//操作
-		CAMERAMODE_FOLLOW,			//追従
 		CAMERAMODE_FIXEDNOW,		//現在のカメラで固定
 		CAMERAMODE_BETWEEN,			//2点の間に位置するカメラ
 		CAMERAMODE_DOWNVIEW,		//見下ろし
@@ -80,7 +79,6 @@ public:
 
 private:
 	void ControlCamera(void);
-	void FollowCamera(void);
 	void FixedNow(void);
 	void BetWeen(void);
 	void DownviewCamera(void);

@@ -45,8 +45,8 @@ namespace
 	const float ULTIMATE_DISTANCEu = 150.0f;						//術発動時の高さ
 	const float ULTIMATE_ROT = 0.5f;								//術発動時の向き
 
-	const D3DXVECTOR3 TITLE_POS_V = D3DXVECTOR3(-1300.0f, 550.0f, 300.0f);	//タイトルカメラの位置(視点)
-	const D3DXVECTOR3 TITLE_POS_R = D3DXVECTOR3(-0.0f, 400.0f, 1700.0f);		//タイトルカメラの位置(注視点)
+	const D3DXVECTOR3 TITLE_POS_V = D3DXVECTOR3(-300.0f, -200.0f, 3000.0f);	//タイトルカメラの位置(視点)
+	const D3DXVECTOR3 TITLE_POS_R = D3DXVECTOR3(800.0f, -200.0f, 2500.0f);		//タイトルカメラの位置(注視点)
 	const float TTTLE_DECREASE = 0.05f;								//プレイヤー視点までの距離の減少速度
 	const float TTTLE_LENGTH = 0.01f;								//プレイヤー視点までのたどり着いた距離
 }
@@ -198,9 +198,6 @@ void CCamera::Update(void)
 		{
 		case CAMERAMODE_CONTROL:	//操作カメラの更新
 			ControlCamera();
-			break;
-		case CAMERAMODE_FOLLOW:		//追従カメラの更新
-			FollowCamera();
 			break;
 		case CAMERAMODE_FIXEDNOW:		//固定カメラの更新
 			FixedNow();
@@ -391,169 +388,6 @@ void CCamera::ControlCamera(void)
 		m_posV.y = m_posR.y + sinf(-m_rot.x) * m_CameraDistance;
 		m_posV.z = m_posR.z + cosf(m_rot.y) * -cosf(m_rot.x) * m_CameraDistance;
 	}
-}
-
-//====================================================================
-//追従カメラの更新処理
-//====================================================================
-void CCamera::FollowCamera(void)
-{
-	//デバイスの取得
-	//CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
-	//CInputJoypad* pInputJoypad = CManager::GetInstance()->GetInputJoyPad();
-	//CInputMouse* pInputMouse = CManager::GetInstance()->GetInputMouse();
-
-	//プレイヤーの取得
-	//CPlayer* pPlayer = CGame::GetPlayer(0);
-	//ボスの取得
-	//CBoss* pBoss = CGame::GetBoss();
-
-	//m_fRotMove = m_fRotMove * 0.5f;
-
-	//if (pPlayer->GetJump() == false)
-	//{
-	//	if (m_rot.x <= D3DX_PI * 0.5f && m_rot.x >= -(D3DX_PI * 0.5f))
-	//	{//入力
-	//		m_rotOld.x = m_rot.x;
-
-	//		//キーボード
-	//		if (pInputKeyboard->GetPress(DIK_I) == true)
-	//		{
-	//			m_fRotMove.x += CAMERA_VR_SPEED;
-	//		}
-	//		if (pInputKeyboard->GetPress(DIK_K) == true)
-	//		{
-	//			m_fRotMove.x -= CAMERA_VR_SPEED;
-	//		}
-
-	//		//右スティックの上下視点移動入力
-	//		m_fRotMove.x += pInputJoypad->Get_Stick_Right(0).y * CAMERA_PAD_VR_SPEED;
-
-	//		m_fRotMove.x -= pInputMouse->GetMouseMove().y * CAMERA_VR_SPEED;
-
-	//		m_rot.x += m_fRotMove.x;
-	//	}
-	//}
-
-	//if (m_rot.x > D3DX_PI * 0.05f || m_rot.x < -(D3DX_PI * 0.45f))
-	//{//上限に達した時１フレーム前のrotにもどる
-	//	m_rot.x = m_rotOld.x;
-	//}
-
-	////キーボード
-	//if (pInputKeyboard->GetPress(DIK_J) == true)
-	//{
-	//	m_fRotMove.y -= CAMERA_VR_SPEED;
-
-	//}
-	//if (pInputKeyboard->GetPress(DIK_L) == true)
-	//{
-	//	m_fRotMove.y += CAMERA_VR_SPEED;
-	//}
-
-	////右スティックの左右視点移動入力
-	//m_fRotMove.y += pInputJoypad->Get_Stick_Right(0).x * CAMERA_PAD_VR_SPEED;
-
-	//m_fRotMove.y += pInputMouse->GetMouseMove().x * CAMERA_VR_SPEED;
-
-	//m_rot.y += m_fRotMove.y;
-
-	//一周した時の向きの補正
-	//if (m_rot.y > D3DX_PI * 1.0f)
-	//{
-	//	m_rot.y -= D3DX_PI * 2.0f;
-	//}
-	//else if (m_rot.y < -D3DX_PI * 1.0f)
-	//{
-	//	m_rot.y += D3DX_PI * 2.0f;
-	//}
-
-	//m_posRDest.x = m_posV.x + sinf(m_rot.y) * cosf(m_rot.x) * CAMERA_DISTANCE;
-	//m_posRDest.z = m_posV.z + cosf(m_rot.y) * cosf(m_rot.x) * CAMERA_DISTANCE;
-	//m_posRDest.y = m_posV.y + sinf(m_rot.x) * CAMERA_DISTANCE;
-
-	//m_posVDest.x = pPlayer->GetCameraPos().x + sinf(-pPlayer->GetRot().y) * MODEL_DISTANCE + sinf(m_rot.y) * -cosf(m_rot.x) * CAMERA_DISTANCE;
-	//m_posVDest.z = pPlayer->GetCameraPos().z + cosf(-pPlayer->GetRot().y) * MODEL_DISTANCE + cosf(m_rot.y) * -cosf(m_rot.x) * CAMERA_DISTANCE;
-	//m_posVDest.y = pPlayer->GetCameraPos().y + 50.0f + sinf(-m_rot.x) * CAMERA_DISTANCE;
-
-	//if (m_bBib == true)
-	//{
-	//	m_fBibPowor += 0.4f;
-
-	//	m_posR.x += (m_posRDest.x - m_posR.x) * m_fHomingSpeed;
-	//	m_posR.z += (m_posRDest.z - m_posR.z) * m_fHomingSpeed;
-	//	m_posV.x += (m_posVDest.x - m_posV.x) * m_fHomingSpeed * 5.0f + (int)(sin(D3DX_PI * m_fBibPowor) * 5.0f);
-	//	m_posV.z += (m_posVDest.z - m_posV.z) * m_fHomingSpeed * 5.0f + (int)(sin(D3DX_PI * m_fBibPowor) * 5.0f);
-
-	//	if (pPlayer->GetJump() == false)
-	//	{
-	//		m_posR.y += (m_posRDest.y - m_posR.y) * m_fHomingSpeed;
-	//		m_posV.y += (m_posVDest.y - m_posV.y) * m_fHomingSpeed;
-	//	}
-	//}
-	//else
-	//{
-	//	m_posR.x += (m_posRDest.x - m_posR.x) * m_fHomingSpeed * 0.05f;
-	//	m_posR.z += (m_posRDest.z - m_posR.z) * m_fHomingSpeed * 0.05f;
-	//	m_posV.x += (m_posVDest.x - m_posV.x) * m_fHomingSpeed * 1.0f;
-	//	m_posV.z += (m_posVDest.z - m_posV.z) * m_fHomingSpeed * 1.0f;
-
-	//	if (pPlayer->GetJump() == false)
-	//	{
-	//		m_posR.y += (m_posRDest.y - m_posR.y) * m_fHomingSpeed;
-	//		m_posV.y += (m_posVDest.y - m_posV.y) * m_fHomingSpeed;
-	//	}
-	//}
-
-
-	//注目の切り替え
-	//if (pInputKeyboard->GetTrigger(DIK_LSHIFT) == true ||
-	//	pInputJoypad->GetTrigger(CInputJoypad::BUTTON_L, 0) == true)
-	//{
-	//	ゲームのSEを再生する
-	//	CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_ATTENTION);
-
-	//	m_bAttention = m_bAttention ? false : true;
-	//}
-
-	//if (m_bAttention == true)
-	//{
-	//	m_FollowTime = 180;
-	//}
-
-	////モデルが止まった時に正面を向く処理
-	//float fRotMove, fRotDest, fRotDiff;
-
-	//if (m_FollowTime > 0)
-	//{
-	//	m_FollowTime--;
-
-	//	fRotMove = atan2f(sinf(m_rot.y), cosf(m_rot.y));	//現在の向き
-	//	fRotDest = atan2f(pBoss->GetPos().x - pPlayer->GetPos().x, pBoss->GetPos().z - pPlayer->GetPos().z);	//目的の向き
-	//	//fRotDest = atan2f(sinf(pPlayer->GetRot().y + D3DX_PI), cosf(pPlayer->GetRot().y + D3DX_PI));	//目的の向き
-	//	fRotDiff = fRotDest - fRotMove;									 //差分
-
-	//	if (fRotDiff > D3DX_PI * 1.0f)
-	//	{
-	//		fRotDiff -= D3DX_PI * 2.0f;
-	//	}
-	//	else if (fRotDiff < -D3DX_PI * 1.0f)
-	//	{
-	//		fRotDiff += D3DX_PI * 2.0f;
-	//	}
-
-	//	fRotMove += fRotDiff * 0.075f;
-
-	//	if (fRotMove > D3DX_PI * 1.0f)
-	//	{
-	//		fRotMove -= D3DX_PI * 2.0f;
-	//	}
-	//	else if (fRotMove < -D3DX_PI * 1.0f)
-	//	{
-	//		fRotMove += D3DX_PI * 2.0f;
-	//	}
-	//	m_rot.y = fRotMove;
-	//}
 }
 
 //====================================================================
