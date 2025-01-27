@@ -40,30 +40,20 @@ m_pShadow(nullptr),
 m_bUseShadow(true),
 m_State(STATE_WAIT),
 m_OldState(STATE_WAIT),
-m_nRefIdx(0),
+m_Info(SInfo()),
+m_stencil(SStencilInfo()),
+m_BodyInfo(SBodyData()),
 m_SpeedState(CMapMove::SPEED_NONE),
 m_OldSpeedState(CMapMove::SPEED_NONE)
 {
-	for (int nCnt = 0; nCnt < MODEL_NUM; nCnt++)
-	{
-		m_apModel[nCnt] = nullptr;
-		m_aModelName[nCnt] = {};
-	}
-
 	m_pMotion = nullptr;
-	m_nNumModel = 0;
 	m_nCharacterNum = -1;
 
-	m_pos = INITVECTOR3;
-	m_posOld = INITVECTOR3;
 	m_move = INITVECTOR3;
-	m_rot = INITVECTOR3;
-	m_size = INITVECTOR3;
 	m_Objmove = INITVECTOR3;
 
 	m_UseMultiMatrix = nullptr;
 
-	m_bUseStencil = false;
 	m_bUseShadowMtx = false;
 
 	m_pMoveState = nullptr;
@@ -117,7 +107,7 @@ HRESULT CObjectCharacter::Init(void)
 {
 	if (m_pShadow == nullptr && m_bUseShadow)
 	{// 影生成
-		m_pShadow = CShadow::Create(m_pos, D3DXVECTOR3(SHADOW_SIZE, 0.0f, SHADOW_SIZE));
+		m_pShadow = CShadow::Create(m_Info.pos, D3DXVECTOR3(SHADOW_SIZE, 0.0f, SHADOW_SIZE));
 	}
 
 	if (m_pMoveState == nullptr)
@@ -133,14 +123,18 @@ HRESULT CObjectCharacter::Init(void)
 //====================================================================
 void CObjectCharacter::Uninit(void)
 {
-	for (int nCntModel = 0; nCntModel < m_nNumModel; nCntModel++)
+	if (m_BodyInfo.ppModel != nullptr)
 	{
-		if (m_apModel[nCntModel] != nullptr)
+		for (int i = 0; i < m_BodyInfo.nNumModel; i++)
 		{
-			m_apModel[nCntModel]->Uninit();
-			delete m_apModel[nCntModel];
-			m_apModel[nCntModel] = nullptr;
+			CModel* pModel = m_BodyInfo.ppModel[i];
+			if (pModel == nullptr) { continue; }
+			pModel->Uninit();
+			delete pModel;
 		}
+
+		delete[] m_BodyInfo.ppModel;
+		m_BodyInfo.ppModel = nullptr;
 	}
 
 	// 影の終了
@@ -187,7 +181,7 @@ void CObjectCharacter::Update(void)
 
 	if (m_pShadow != nullptr)
 	{// シャドウの更新
-		m_pShadow->SetPos(D3DXVECTOR3(m_pos.x, 1.0f, m_pos.z));
+		m_pShadow->SetPos(D3DXVECTOR3(m_Info.pos.x, 1.0f, m_Info.pos.z));
 		m_pShadow->SetBaseHeight(pos.y);
 	}
 
@@ -202,8 +196,9 @@ void CObjectCharacter::Draw(void)
 {
 	//デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
-	
+
 	D3DXMATRIX mtxRot, mtxTrans;	//計算用マトリックス
+	SStencilInfo* pInfo = &m_stencil;
 
 	//ワールドマトリックスの初期化
 	D3DXMatrixIdentity(&m_mtxWorld);
@@ -236,11 +231,11 @@ void CObjectCharacter::Draw(void)
 	}
 
 	//向きを反映
-	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
+	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_Info.rot.y, m_Info.rot.x, m_Info.rot.z);
 	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
 
 	//位置を反映
-	D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);
+	D3DXMatrixTranslation(&mtxTrans, m_Info.pos.x, m_Info.pos.y, m_Info.pos.z);
 	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
 
 	if (m_UseMultiMatrix != nullptr)
@@ -254,13 +249,14 @@ void CObjectCharacter::Draw(void)
 	//ワールドマトリックスの設定
 	pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
 
-	if (m_bUseStencil == true)
+	// ステンシルバッファを使用する
+	if (pInfo->bUse)
 	{
 		//ステンシルバッファ有効
 		pDevice->SetRenderState(D3DRS_STENCILENABLE, TRUE);
 
 		//ステンシルバッファと比較する参照値の設定 => ref
-		pDevice->SetRenderState(D3DRS_STENCILREF, m_nRefIdx);
+		pDevice->SetRenderState(D3DRS_STENCILREF, pInfo->nRefIdx);
 
 		//ステンシルバッファの値に対してのマスク設定 => 0xff(全て真)
 		pDevice->SetRenderState(D3DRS_STENCILMASK, 255);
@@ -275,11 +271,13 @@ void CObjectCharacter::Draw(void)
 	}
 
 	//モデルの描画(全パーツ)
-	for (int nCntModel = 0; nCntModel < m_nNumModel; nCntModel++)
+	if (m_BodyInfo.ppModel != nullptr)
 	{
-		if (m_apModel[nCntModel] != nullptr)
+		for (int i = 0; i < m_BodyInfo.nNumModel; i++)
 		{
-			m_apModel[nCntModel]->Draw();
+			CModel* pModel = m_BodyInfo.ppModel[i];
+			if (pModel == nullptr) { continue; }
+			pModel->Draw();
 		}
 	}
 
@@ -326,13 +324,48 @@ void CObjectCharacter::ChangeMoveState(CMoveState* pMoveState)
 	m_pMoveState->Init();
 }
 
+//==========================================
+// 移動状態変更処理
+//==========================================
+void CObjectCharacter::SetNumModel(int nNumModel)
+{
+	// 既に使用済みなら削除
+	if (m_BodyInfo.ppModel != nullptr)
+	{
+		for (int i = 0; i < m_BodyInfo.nNumModel; i++)
+		{
+			CModel* pModel = m_BodyInfo.ppModel[i];
+			if (pModel == nullptr) { continue; }
+			pModel->Uninit();
+			delete pModel;
+		}
+
+		delete[] m_BodyInfo.ppModel;
+		m_BodyInfo.ppModel = nullptr;
+	}
+
+	// 新たなデータ数を設定
+	m_BodyInfo.nNumModel = nNumModel;
+
+	// ポインタ生成
+	if (m_BodyInfo.ppModel == nullptr)
+	{
+		m_BodyInfo.ppModel = new CModel * [m_BodyInfo.nNumModel];
+
+		// null入れる
+		for (int i = 0; i < m_BodyInfo.nNumModel; i++)
+		{
+			m_BodyInfo.ppModel[i] = nullptr;
+		}
+	}
+}
+
+
 //====================================================================
 // キャラクターテキスト設定処理
 //====================================================================
 void CObjectCharacter::SetTxtCharacter(const std::string pFilename, int nRef)
 {
-	strcpy(&m_aModelName[0], pFilename.c_str());
-
 	CCharacterManager* pCharacterManager = CManager::GetInstance()->GetCharacterManager();
 
 	if (pCharacterManager == nullptr)
@@ -360,9 +393,24 @@ void CObjectCharacter::SetTxtCharacter(const std::string pFilename, int nRef)
 //====================================================================
 void CObjectCharacter::SetModel(CModel* pModel, int nCnt)
 {
-	if (m_apModel[nCnt] == nullptr)
+	// モデルのダブルポインタ
+	CModel** ppModel = m_BodyInfo.ppModel;
+
+	// 生成されていない
+	if (ppModel == nullptr)
 	{
-		m_apModel[nCnt] = pModel;
+		assert(("モデル生成していない", false));
+	}
+
+	if (nCnt < 0 || nCnt >= m_BodyInfo.nNumModel)
+	{
+		assert(("モデル生成していない", false));
+
+	}
+
+	if (ppModel[nCnt] == nullptr)
+	{
+		ppModel[nCnt] = pModel;
 	}
 	else
 	{
@@ -376,9 +424,24 @@ void CObjectCharacter::SetModel(CModel* pModel, int nCnt)
 //====================================================================
 CModel* CObjectCharacter::GetModel(int nCnt)
 {
-	if (m_apModel[nCnt] != nullptr)
+	// モデルのダブルポインタ
+	CModel** ppModel = m_BodyInfo.ppModel;
+
+	// 生成されていない
+	if (ppModel == nullptr)
 	{
-		return m_apModel[nCnt];
+		assert(("モデル生成していない", false));
+	}
+
+	if (nCnt < 0 || nCnt >= m_BodyInfo.nNumModel)
+	{
+		assert(("モデル生成していない", false));
+
+	}
+
+	if (ppModel[nCnt] != nullptr)
+	{
+		return ppModel[nCnt];
 	}
 
 	assert(("モデル取得失敗", false));
@@ -386,14 +449,18 @@ CModel* CObjectCharacter::GetModel(int nCnt)
 	return nullptr;
 }
 
+
 //====================================================================
 // モデル取得処理
 //====================================================================
 CModel** CObjectCharacter::GetModel(void)
 {
-	if (m_apModel[0] != nullptr)
+	// モデルのダブルポインタ
+	CModel** ppModel = m_BodyInfo.ppModel;
+
+	if (ppModel != nullptr)
 	{
-		return &m_apModel[0];
+		return ppModel;
 	}
 
 	assert(("モデル取得失敗", false));
@@ -465,7 +532,20 @@ void CObjectCharacter::LoadModel(const std::string pFilename)
 					if (strcmp(&aMessage[0], "NUM_MODEL") == 0)
 					{
 						fscanf(pFile, "%s", &aString[0]);
-						fscanf(pFile, "%d", &m_nNumModel);		//モデル数の設定
+						fscanf(pFile, "%d", &m_BodyInfo.nNumModel);		//モデル数の設定
+
+						// ポインタ生成
+						if (m_BodyInfo.ppModel == nullptr)
+						{
+							m_BodyInfo.ppModel = new CModel * [m_BodyInfo.nNumModel];
+
+							// null入れる
+							for (int i = 0; i < m_BodyInfo.nNumModel; i++)
+							{
+								m_BodyInfo.ppModel[i] = nullptr;
+							}
+						}
+
 						break;
 					}
 				}
@@ -473,17 +553,21 @@ void CObjectCharacter::LoadModel(const std::string pFilename)
 				//モデルファイルの読み込み
 				while (1)
 				{//「MODEL_FILENAME」を探す
+
+					// モデルのダブルポインタ
+					CModel** ppModel = m_BodyInfo.ppModel;
+
 					fscanf(pFile, "%s", &aMessage[0]);
 					if (strcmp(&aMessage[0], "MODEL_FILENAME") == 0)
 					{
 						fscanf(pFile, "%s", &aString[0]);
 						fscanf(pFile, "%s", &ModelName[0]);		//読み込むモデルのパスを取得
 
-						m_apModel[nCntModel] = CModel::Create(&ModelName[0]);
-						m_apModel[nCntModel]->SetColorType(CModel::COLORTYPE_FALSE);
+						ppModel[nCntModel] = CModel::Create(&ModelName[0]);
+						ppModel[nCntModel]->SetColorType(CModel::COLORTYPE_FALSE);
 						nCntModel++;
 					}
-					if (nCntModel >= m_nNumModel)
+					if (nCntModel >= m_BodyInfo.nNumModel)
 					{
 						nCntModel = 0;
 						break;
@@ -493,6 +577,10 @@ void CObjectCharacter::LoadModel(const std::string pFilename)
 				// キャラクター情報読み込み-----------------------------------------------------
 				while (1)
 				{//「PARTSSET」を探す
+
+					// モデルのダブルポインタ
+					CModel** ppModel = m_BodyInfo.ppModel;
+
 					fscanf(pFile, "%s", &aMessage[0]);
 					if (strcmp(&aMessage[0], "PARTSSET") == 0)
 					{
@@ -511,11 +599,11 @@ void CObjectCharacter::LoadModel(const std::string pFilename)
 
 								if (ModelParent == -1)
 								{
-									m_apModel[nCntModel]->SetParent(nullptr);
+									ppModel[nCntModel]->SetParent(nullptr);
 								}
 								else
 								{
-									m_apModel[nCntModel]->SetParent(m_apModel[ModelParent]);
+									ppModel[nCntModel]->SetParent(ppModel[ModelParent]);
 								}
 							}
 							if (strcmp(&aMessage[0], "POS") == 0)
@@ -525,8 +613,8 @@ void CObjectCharacter::LoadModel(const std::string pFilename)
 								fscanf(pFile, "%f", &ModelPos.y);				//位置(オフセット)の初期設定
 								fscanf(pFile, "%f", &ModelPos.z);				//位置(オフセット)の初期設定
 
-								m_apModel[nCntModel]->SetPos(ModelPos);
-								m_apModel[nCntModel]->SetStartPos(ModelPos);
+								ppModel[nCntModel]->SetPos(ModelPos);
+								ppModel[nCntModel]->SetStartPos(ModelPos);
 							}
 							if (strcmp(&aMessage[0], "ROT") == 0)
 							{
@@ -535,8 +623,8 @@ void CObjectCharacter::LoadModel(const std::string pFilename)
 								fscanf(pFile, "%f", &ModelRot.y);				////向きの初期設定
 								fscanf(pFile, "%f", &ModelRot.z);				////向きの初期設定
 
-								m_apModel[nCntModel]->SetRot(ModelRot);
-								m_apModel[nCntModel]->SetStartRot(ModelRot);
+								ppModel[nCntModel]->SetRot(ModelRot);
+								ppModel[nCntModel]->SetStartRot(ModelRot);
 							}
 							if (strcmp(&aMessage[0], "END_PARTSSET") == 0)
 							{
@@ -544,7 +632,7 @@ void CObjectCharacter::LoadModel(const std::string pFilename)
 							}
 						}
 						nCntModel++;
-						if (nCntModel >= m_nNumModel)
+						if (nCntModel >= m_BodyInfo.nNumModel)
 						{
 							break;
 						}
@@ -567,15 +655,24 @@ void CObjectCharacter::LoadModel(const std::string pFilename)
 //====================================================================
 // 指定モデルカラー変更
 //====================================================================
-void CObjectCharacter::SetModelColor(CModel::COLORTYPE Type, D3DXCOLOR Col)
+void CObjectCharacter::SetModelColor(CModel::COLORTYPE Type, const D3DXCOLOR& Col)
 {
+	// モデルのダブルポインタ
+	CModel** ppModel = m_BodyInfo.ppModel;
+
+	// 生成されていない
+	if (ppModel == nullptr)
+	{
+		assert(("モデル生成していない", false));
+	}
+
 	// モデル数の取得
 	int nNumModel = GetNumModel();
 
 	for (int nCnt = 0; nCnt < nNumModel; nCnt++)
 	{
 		// モデルの取得
-		CModel* pModel = GetModel(nCnt);
+		CModel* pModel = ppModel[nCnt];
 
 		if (pModel != nullptr)
 		{
