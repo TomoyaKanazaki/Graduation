@@ -34,6 +34,7 @@ namespace
 
 	const std::string SLOPE_RUNNINGMAN_MODEL =		"data\\TXT\\MOTION\\99_etc\\motion_runningman.txt";
 	const int RUNNING_RATE = 10;
+	const int AKR_RATE = 100;
 }
 
 // Ã“Iƒƒ“ƒo•Ï”éŒ¾
@@ -327,7 +328,15 @@ void CBgObjManager::SetMountain(void)
 //==========================================
 void CBgObjManager::SetAirShip(void)
 {
-	m_pAirShip = CObjectX::Create("data\\MODEL\\airship.x");
+	if (rand() % AKR_RATE)
+	{
+		m_pAirShip = CObjectX::Create("data\\MODEL\\airship.x");
+	}
+	else
+	{
+		m_pAirShip = CObjectX::Create("data\\MODEL\\AKR_head.x");
+		m_pAirShip->SetScaling({ 15.0f, 15.0f, 15.0f });
+	}
 	m_pAirShip->SetPos(D3DXVECTOR3(750.0f, -400.0f, 1800.0f));
 }
 
