@@ -447,7 +447,7 @@ void CPlayer::Update(void)
 	ControlEffect(m_pEffectEgg);	// 卵のエフェクト
 	D3DXVECTOR3 temp = posThis;
 	temp.y += EFFECT_HEIGHT;
-	ControlEffect(m_pEffectSpeed, &temp);	// 加減速のエフェクト
+	MoveEffect(m_pEffectSpeed, &temp);	// 加減速のエフェクト
 	ControlEffect(m_pEffectItem);	// アイテム所持エフェクト
 	if (m_pShadow != nullptr)
 	{
@@ -819,7 +819,7 @@ void CPlayer::CollisionWall(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D3DXV
 		if (useful::CollisionBlock(pos, pos, Move, Size, &posThis, posOldThis, &m_move, &m_Objmove, sizeThis, &m_bJump, XYZ) == true)
 		{
 			if (!m_bPressObj)
-			{ // 壁に当たってない
+			{ // 何かに押されてる
 
 				// 待機状態
 				SetState(STATE_WAIT);
@@ -828,7 +828,7 @@ void CPlayer::CollisionWall(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D3DXV
 				m_pMoveState->SetRotState(CMoveState::ROTSTATE_WAIT);
 			}
 			else if (m_bPressObj)
-			{ // 壁に当たってる
+			{ // 何にも押されてない
 				Death();
 			}
 
@@ -1366,7 +1366,7 @@ void CPlayer::PosUpdate(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D3DXVECTO
 	CMapMove::SPEED Speed = GetSpeedState();
 
 	//X軸の位置更新
-	//if (m_move.x > 0.0f || m_move.x < 0.0f)
+	if (m_move.x > 0.0f || m_move.x < 0.0f)
 	{
 		posThis.x += m_move.x * CManager::GetInstance()->GetGameSpeed() * fSpeed * pMapMove->MoveSlopeX(m_move.x, Speed);
 	}
@@ -1381,7 +1381,7 @@ void CPlayer::PosUpdate(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D3DXVECTO
 	CollisionWall(posThis, posOldThis, sizeThis, useful::COLLISION_X);
 
 	//Z軸の位置更新
-	//if (m_move.z > 0.0f || m_move.z < 0.0f)
+	if (m_move.z > 0.0f || m_move.z < 0.0f)
 	{
 		posThis.z += m_move.z * CManager::GetInstance()->GetGameSpeed() * fSpeed * pMapMove->MoveSlopeZ(m_move.z, Speed);
 	}
@@ -1678,15 +1678,17 @@ void CPlayer::SpeedEffect(const D3DXVECTOR3& pos, const D3DXVECTOR3& rot)
 	D3DXVECTOR3 temp = pos;
 	temp.y += EFFECT_HEIGHT;
 	D3DXVECTOR3 ef = useful::CalcMatrix(temp, rot, mtx);
+	D3DXVECTOR3 efRot = useful::CalcMatrixToRot(mtx);
+	efRot.y = rot.y;
 
 	// 新しいエフェクトを設定する
 	switch (speed)
 	{
 	case CMapMove::SPEED_DOWN:
-		m_pEffectSpeed = MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DROP, true, ef, useful::CalcMatrixToRot(mtx));
+		m_pEffectSpeed = MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DROP, true, ef, efRot);
 		break;
 	case CMapMove::SPEED_UP:
-		m_pEffectSpeed = MyEffekseer::EffectCreate(CMyEffekseer::TYPE_ACCELE, true, ef, useful::CalcMatrixToRot(mtx));
+		m_pEffectSpeed = MyEffekseer::EffectCreate(CMyEffekseer::TYPE_ACCELE, true, ef, efRot);
 		break;
 	default:
 		break;

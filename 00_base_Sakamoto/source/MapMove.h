@@ -103,6 +103,7 @@ public:
 	CMapSystem::GRID GetMaxGrid(void) { return m_MaxGrid; }	//マップで一番右下にあるブロックの番号
 
 	void SetStateCount(int Set) { m_nStateCount = Set; }
+	int GetStateCount(void) { return m_nStateCount; }
 
 	ROTTYPE GetRotState(void) { return m_RotType; }			// 向き状態
 	MOVEMODE GetMoveMode(void) { return m_MoveMode; }		// 移動状態

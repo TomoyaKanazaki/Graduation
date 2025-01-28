@@ -270,6 +270,7 @@ private:
     void RailCheck(CMapSystem::GRID& grid, bool& bProgress);                        // レールがあるか確認
 
     void Stop(D3DXVECTOR3& pos, D3DXVECTOR3& GridPos, D3DXVECTOR3& move);           // 転がらないときの位置
+    void CollisionStop(CObjectX* pObjectX, D3DXVECTOR3& pos, D3DXVECTOR3& GridPos);  // 停止の判定
 };
 
 #endif
