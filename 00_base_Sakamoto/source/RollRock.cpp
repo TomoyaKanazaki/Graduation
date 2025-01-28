@@ -232,6 +232,9 @@ void CRollRock::Update(void)
 	// グリッド情報を設定
 	m_Grid = CMapSystem::GetInstance()->CMapSystem::CalcGrid(posThis);
 
+	// プレイヤーとの当たり判定
+	CollisionPlayer();
+
 	//大きさの設定
 	SetScaling(D3DXVECTOR3(m_Scaling, m_Scaling, m_Scaling));
 
@@ -355,6 +358,57 @@ void CRollRock::CollisionOut(D3DXVECTOR3& pos)
 			pos.z = Pos.z + MapSize.z + GritSize;
 		}
 	}
+}
+
+//==========================================
+//  プレイヤーとの当たり判定
+//==========================================
+void CRollRock::CollisionPlayer()
+{
+	// 前回のグリッドと今回のグリッドが一致している場合関数を抜ける
+	if (m_Grid == m_OldGrid) { return; }
+
+	// プレイヤーのリスト構造が無ければ抜ける
+	if (CPlayer::GetList() == nullptr) { assert(false); }
+	std::list<CPlayer*> list = CPlayer::GetList()->GetList();    // リストを取得
+
+	// プレイヤーリストの中身を確認する
+	for (CPlayer* player : list)
+	{
+		// 死んでる場合は取得できない
+		if (player->GetState() == CPlayer::STATE_EGG || player->GetState() == CPlayer::STATE_DEATH)
+		{
+			continue;
+		}
+
+		// プレイヤーの座標(グリッド単位)を取得
+		CMapSystem::GRID gridPlayer = player->GetGrid();
+
+		// 存在座標が一致していた場合殺す
+		if (m_Grid == gridPlayer)
+		{
+			player->Death();
+		}
+	}
+
+	// 経路探索用の情報を取得
+	auto generator = AStar::Generator::GetInstance();
+	if (generator == nullptr)
+	{
+		assert(false);
+		generator = AStar::Generator::Create();
+	}
+
+	// マップ情報を取得
+	CMapSystem* pMapSystem = CMapSystem::GetInstance();
+
+	// 前回のグリッドを移動可能地点に設定
+	generator->removeCollision(m_OldGrid.ToAStar());
+	pMapSystem->SetGritBool(m_OldGrid, false);
+
+	// 現在のグリッドを移動不可地点に設定
+	generator->addCollision(m_Grid.ToAStar());
+	pMapSystem->SetGritBool(m_Grid, true);
 }
 
 //==========================================

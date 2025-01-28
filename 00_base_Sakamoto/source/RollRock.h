@@ -48,6 +48,7 @@ public:
 private:
 	void Move(D3DXVECTOR3& pos, D3DXVECTOR3& rot);
 	void CollisionOut(D3DXVECTOR3& pos);							//ステージ外との当たり判定
+	void CollisionPlayer(void);
 
 	CMapSystem::GRID m_Grid;	//グリット番号
 	CMapSystem::GRID m_OldGrid;	//グリット番号

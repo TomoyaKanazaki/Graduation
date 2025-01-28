@@ -819,7 +819,7 @@ void CPlayer::CollisionWall(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D3DXV
 		if (useful::CollisionBlock(pos, pos, Move, Size, &posThis, posOldThis, &m_move, &m_Objmove, sizeThis, &m_bJump, XYZ) == true)
 		{
 			if (!m_bPressObj)
-			{ // •Ç‚É“–‚½‚Á‚Ä‚È‚¢
+			{ // ‰½‚©‚É‰Ÿ‚³‚ê‚Ä‚é
 
 				// ‘Ò‹@ó‘Ô
 				SetState(STATE_WAIT);
@@ -828,7 +828,7 @@ void CPlayer::CollisionWall(D3DXVECTOR3& posThis, D3DXVECTOR3& posOldThis, D3DXV
 				m_pMoveState->SetRotState(CMoveState::ROTSTATE_WAIT);
 			}
 			else if (m_bPressObj)
-			{ // •Ç‚É“–‚½‚Á‚Ä‚é
+			{ // ‰½‚É‚à‰Ÿ‚³‚ê‚Ä‚È‚¢
 				Death();
 			}
 
