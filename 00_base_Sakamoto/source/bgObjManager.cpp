@@ -25,12 +25,15 @@ namespace
 	const char* BOTTOM_FIELD_TEX = "data\\TEXTURE\\Field\\tile_test_02.png";	// 下床のテクスチャ
 	const D3DXVECTOR3 BOTTOM_FIELD_POS = D3DXVECTOR3(0.0f, -1000.0f, 0.0f);		// 下床の位置
 
-	const std::string SCROLL_DEVICE_MODEL_HEIGHT = "data\\TXT\\MOTION\\02_staging\\00_ScrollDevice\\motion_scrolldevice_h.txt";
-	const std::string SCROLL_DEVICE_MODEL_WIDTH = "data\\TXT\\MOTION\\02_staging\\00_ScrollDevice\\motion_scrolldevice_w.txt";
-	const std::string SCROLL_DEVICE_ENEMY_MODEL = "data\\TXT\\MOTION\\01_enemy\\motion_medaman.txt";
+	const std::string SCROLL_DEVICE_MODEL_HEIGHT =	"data\\TXT\\MOTION\\02_staging\\00_ScrollDevice\\motion_scrolldevice_h.txt";
+	const std::string SCROLL_DEVICE_MODEL_WIDTH =	"data\\TXT\\MOTION\\02_staging\\00_ScrollDevice\\motion_scrolldevice_w.txt";
+	const std::string SCROLL_DEVICE_ENEMY_MODEL =	"data\\TXT\\MOTION\\01_enemy\\motion_medaman.txt";
 
-	const std::string SLOPE_DEVICE_MODEL = "data\\TXT\\MOTION\\02_staging\\01_SlopeDevice\\motion_slopedevice.txt";
-	const std::string SLOPE_DEVICE_ENEMY_MODEL = "data\\TXT\\MOTION\\01_enemy\\motion_medaman.txt";
+	const std::string SLOPE_DEVICE_MODEL =			"data\\TXT\\MOTION\\02_staging\\01_SlopeDevice\\motion_slopedevice.txt";
+	const std::string SLOPE_DEVICE_ENEMY_MODEL =	"data\\TXT\\MOTION\\01_enemy\\motion_medaman.txt";
+
+	const std::string SLOPE_RUNNINGMAN_MODEL =		"data\\TXT\\MOTION\\99_etc\\motion_runningman.txt";
+	const int RUNNING_RATE = 10;
 }
 
 // 静的メンバ変数宣言
@@ -288,13 +291,21 @@ void CBgObjManager::SetMountain(void)
 	pMaguma00->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.5f));
 	pMaguma00->SetTexture("data\\TEXTURE\\Field\\maguma_00.jpg");
 
-	//メダマン  // TODO : モーションいじる
+	//メダマン
 	for (int nCnt = 0; nCnt < MOUNTAIN_OBJ_NUM; nCnt++)
 	{
 		if (m_pBGCharacter[nCnt] == nullptr)
 		{
 			m_pBGCharacter[nCnt] = CObjectCharacter::Create(false);
-			m_pBGCharacter[nCnt]->SetTxtCharacter(SCROLL_DEVICE_ENEMY_MODEL);
+
+			if (rand() % RUNNING_RATE)
+			{
+				m_pBGCharacter[nCnt]->SetTxtCharacter(SLOPE_DEVICE_ENEMY_MODEL);
+			}
+			else
+			{
+				m_pBGCharacter[nCnt]->SetTxtCharacter(SLOPE_RUNNINGMAN_MODEL);
+			}
 
 			m_pBGCharacter[nCnt]->SetPos(D3DXVECTOR3(
 				-1975.0f + sinf(D3DX_PI * (0.5f * nCnt)) * 400.0f,

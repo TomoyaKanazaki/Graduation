@@ -8,6 +8,13 @@
 #include "manager.h"
 #include "camera.h"
 
+//==========================================
+//  定数定義
+//==========================================
+namespace
+{
+	constexpr float GIMBAL_LOCK_THRESHOLD = 0.9999f; // ジンバルロックの閾値
+}
 
 //====================================================================
 // 移動量を比較し移動量１より移動量２が早いときtrueを返す
@@ -850,25 +857,49 @@ D3DXVECTOR3 useful::CalcMatrix(const D3DXVECTOR3& pos, const D3DXVECTOR3& rot, c
 }
 
 //==========================================
+//  回転計算を分離する処理
+//==========================================
+D3DXVECTOR3 useful::CalcNormalRotation(const D3DXMATRIX& mtx)
+{
+	D3DXVECTOR3 rot;
+	rot.x = atan2f(mtx._31, mtx._33); // X軸回転
+	rot.z = atan2f(mtx._12, mtx._22); // Z軸回転
+	return rot;
+}
+
+//==========================================
+//  ジンバルロック状態の回転計算
+//==========================================
+D3DXVECTOR3 useful::CalcGimbalLockRotation(const D3DXMATRIX& mtx)
+{
+	D3DXVECTOR3 rot;
+	rot.x = atan2f(-mtx._13, mtx._11); // X軸回転（代替計算式）
+	rot.z = 0.0f; // Z軸は0に固定
+	return rot;
+}
+
+//==========================================
 //  マトリックスから角度を算出する
 //==========================================
 D3DXVECTOR3 useful::CalcMatrixToRot(const D3DXMATRIX& mtx)
 {
 	D3DXVECTOR3 rot;
 
-	// Y軸を産出
+	// Y軸回転を計算
 	rot.y = asinf(-mtx._32);
 
-	// ジンバルロックを考慮する
-	if (fabs(mtx._32) < 0.9999f)
+	// ジンバルロックを判定し、対応する計算方法を適用
+	if (fabs(mtx._32) < GIMBAL_LOCK_THRESHOLD)
 	{
-		rot.x = atan2f(mtx._31, mtx._33);
-		rot.z = atan2f(mtx._12, mtx._22);
+		D3DXVECTOR3 normalRot = CalcNormalRotation(mtx);
+		rot.x = normalRot.x;
+		rot.z = normalRot.z;
 	}
-	else // ジンバルロックが発生している場合
+	else
 	{
-		rot.x = atan2f(-mtx._13, mtx._11);
-		rot.z = 0.0f;
+		D3DXVECTOR3 gimbalRot = CalcGimbalLockRotation(mtx);
+		rot.x = gimbalRot.x;
+		rot.z = gimbalRot.z;
 	}
 
 	return rot;
