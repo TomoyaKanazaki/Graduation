@@ -328,15 +328,23 @@ void CBgObjManager::SetMountain(void)
 //==========================================
 void CBgObjManager::SetAirShip(void)
 {
-	if (rand() % AKR_RATE)
+	switch (rand() % AKR_RATE)
 	{
-		m_pAirShip = CObjectX::Create("data\\MODEL\\airship.x");
-	}
-	else
-	{
+	case 1:
 		m_pAirShip = CObjectX::Create("data\\MODEL\\AKR_head.x");
 		m_pAirShip->SetScaling({ 15.0f, 15.0f, 15.0f });
+		break;
+	
+	case 2:
+		m_pAirShip = CObjectX::Create("data\\MODEL\\airship_01.x");
+		break;
+
+	default:
+		m_pAirShip = CObjectX::Create("data\\MODEL\\airship_00.x");
+		break;
+
 	}
+
 	m_pAirShip->SetPos(D3DXVECTOR3(750.0f, -400.0f, 1800.0f));
 }
 
