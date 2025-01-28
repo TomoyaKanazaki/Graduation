@@ -218,8 +218,6 @@ void CEventMovie::StartMovie(void)
 		if (m_nCount == 5)
 		{
 			// エフェクトの生成
-			D3DXMATRIX mat = {};
-			D3DXVECTOR3 ef = useful::CalcMatrix(DevilPos, pDevil->GetRot(), mat);
 			CEffekseer* pEffect = MyEffekseer::EffectCreate((CMyEffekseer::TYPE)((int)CMyEffekseer::TYPE_SPAWN_DEVIL), false, DevilPos, pDevil->GetRot(), D3DXVECTOR3(50.0f, 50.0f, 50.0f));
 		}
 
