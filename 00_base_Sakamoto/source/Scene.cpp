@@ -69,11 +69,6 @@ CScene* CScene::Create(MODE mode)
 
 	m_mode = mode;
 
-	if (m_mode == MODE_GAME)
-	{
-
-	}
-
 	//オブジェクトの初期化処理
 	if (FAILED(pScene->Init()))
 	{//初期化処理が失敗した場合

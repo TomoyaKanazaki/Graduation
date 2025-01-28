@@ -8,9 +8,6 @@
     <Filter Include="ソース ファイル\Object">
       <UniqueIdentifier>{d1ffe7ec-b133-4789-902a-b37e22591c81}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Library">
-      <UniqueIdentifier>{d4c6cca2-cae9-4185-be80-e05a03b5868b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Character">
       <UniqueIdentifier>{198b5405-4d4d-45e6-90dc-ab1c37631435}</UniqueIdentifier>
     </Filter>
@@ -43,6 +40,9 @@
     </Filter>
     <Filter Include="ソース ファイル\Character\Enemy">
       <UniqueIdentifier>{8957a4c0-4553-4e04-b523-5b7756288159}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Map\Library">
+      <UniqueIdentifier>{d4c6cca2-cae9-4185-be80-e05a03b5868b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -80,10 +80,10 @@
       <Filter>ソース ファイル\Object</Filter>
     </ClCompile>
     <ClCompile Include="source\AStar.cpp">
-      <Filter>ソース ファイル\Library</Filter>
+      <Filter>ソース ファイル\Map\Library</Filter>
     </ClCompile>
     <ClCompile Include="source\MyEffekseer.cpp">
-      <Filter>ソース ファイル\Library</Filter>
+      <Filter>ソース ファイル\Map\Library</Filter>
     </ClCompile>
     <ClCompile Include="source\objectcharacter.cpp">
       <Filter>ソース ファイル\Object</Filter>
@@ -292,9 +292,6 @@
     <ClCompile Include="source\tutorialUi.cpp">
       <Filter>ソース ファイル\Ui</Filter>
     </ClCompile>
-    <ClCompile Include="source\bgObjManager.cpp">
-      <Filter>ソース ファイル\Map\System</Filter>
-    </ClCompile>
     <ClCompile Include="source\popUI.cpp">
       <Filter>ソース ファイル\Ui</Filter>
     </ClCompile>
@@ -303,6 +300,9 @@
     </ClCompile>
     <ClCompile Include="source\crossUI.cpp">
       <Filter>ソース ファイル\Ui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\bgObjManager.cpp">
+      <Filter>ソース ファイル\Map\Object</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -340,13 +340,13 @@
       <Filter>ソース ファイル\Object</Filter>
     </ClInclude>
     <ClInclude Include="source\AStar.h">
-      <Filter>ソース ファイル\Library</Filter>
+      <Filter>ソース ファイル\Map\Library</Filter>
     </ClInclude>
     <ClInclude Include="source\MyEffekseer.h">
-      <Filter>ソース ファイル\Library</Filter>
+      <Filter>ソース ファイル\Map\Library</Filter>
     </ClInclude>
     <ClInclude Include="source\lib\magic_enum.hpp">
-      <Filter>ソース ファイル\Library</Filter>
+      <Filter>ソース ファイル\Map\Library</Filter>
     </ClInclude>
     <ClInclude Include="source\objectcharacter.h">
       <Filter>ソース ファイル\Object</Filter>
@@ -555,9 +555,6 @@
     <ClInclude Include="source\tutorialUi.h">
       <Filter>ソース ファイル\Ui</Filter>
     </ClInclude>
-    <ClInclude Include="source\bgObjManager.h">
-      <Filter>ソース ファイル\Map\System</Filter>
-    </ClInclude>
     <ClInclude Include="source\popUI.h">
       <Filter>ソース ファイル\Ui</Filter>
     </ClInclude>
@@ -566,6 +563,9 @@
     </ClInclude>
     <ClInclude Include="source\crossUI.h">
       <Filter>ソース ファイル\Ui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\bgObjManager.h">
+      <Filter>ソース ファイル\Map\Object</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
