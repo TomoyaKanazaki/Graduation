@@ -136,12 +136,6 @@ HRESULT CResult::Init(void)
 	// ƒXƒRƒAŽæ“¾
 	m_ScoreData = CManager::GetInstance()->GetEndScore();
 
-	//”wŒi
-	//m_pBg = CObject2D::Create();
-	//m_pBg->SetPos(D3DXVECTOR3(640.0f, 360.0f, 0.0f));
-	//m_pBg->SetSize(D3DXVECTOR3(1280.0f, 720.0f, 0.0f));
-	//m_pBg->SetColor(D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
-
 	if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_SINGLE)
 	{
 		for (int nCntObject = 0; nCntObject < NUM_DIGIT; nCntObject++)
@@ -348,13 +342,6 @@ void CResult::Uninit(void)
 
 	// ”wŒiƒIƒuƒWƒFƒNƒg‚ÌI—¹ˆ—
 	CBgObjManager::GetInstance()->Uninit();
-
-	// ”wŒi
-	if (m_pBg != nullptr)
-	{
-		m_pBg->Uninit();
-		m_pBg = nullptr;
-	}
 
 	if (m_pScoreTex != nullptr)
 	{

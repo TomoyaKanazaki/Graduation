@@ -34,7 +34,7 @@ namespace
 
 	const std::string SLOPE_RUNNINGMAN_MODEL =		"data\\TXT\\MOTION\\99_etc\\motion_runningman.txt";
 	const int RUNNING_RATE = 20;
-	const int AKR_RATE = 20;
+	const int AKR_RATE = 3;
 }
 
 // Ã“Iƒƒ“ƒo•Ï”éŒ¾
