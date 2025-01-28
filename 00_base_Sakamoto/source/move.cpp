@@ -1374,6 +1374,12 @@ void CStateRoll::Move(CObjectX* pObjectX, D3DXVECTOR3& pos, D3DXVECTOR3& rot)
 	CMapSystem::GRID grid = pObjectX->GetGrid();	// グリッド
 	CObject::OBJECT_TYPE type = pObjectX->GetType();	// オブジェクトの種類
 
+	// 進行状況初期化
+	m_Progress.bOKD = true;
+	m_Progress.bOKL = true;
+	m_Progress.bOKR = true;
+	m_Progress.bOKU = true;
+
 	// 傾きによる移動量設定
 	move.x = -SlopeRot.z * 10.0f;
 	move.z = SlopeRot.x * 10.0f;
@@ -1468,6 +1474,10 @@ void CStateRoll::Move(CObjectX* pObjectX, D3DXVECTOR3& pos, D3DXVECTOR3& rot)
 	Stop(pos, MyGritPos, move);
 
 	pObjectX->SetMove(move);	// 移動量設定
+
+	DebugProc::Print(DebugProc::POINT_RIGHT, "岩の位置 : %f %f\n", pos.x, pos.z);
+	DebugProc::Print(DebugProc::POINT_RIGHT, "岩のグリッド位置 : %f %f\n", MyGritPos.x, MyGritPos.z);
+
 }
 
 //==========================================
