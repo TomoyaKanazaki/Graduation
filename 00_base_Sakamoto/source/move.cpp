@@ -1371,8 +1371,6 @@ void CStateRoll::Move(CObjectX* pObjectX, D3DXVECTOR3& pos, D3DXVECTOR3& rot)
 {
 	D3DXVECTOR3 SlopeRot = CMapSystem::GetInstance()->GetMove()->GetDevilRot();		// マップの傾き
 	D3DXVECTOR3 move = pObjectX->GetMove();			// 移動量
-	CMapSystem::GRID grid = pObjectX->GetGrid();	// グリッド
-	CObject::OBJECT_TYPE type = pObjectX->GetType();	// オブジェクトの種類
 
 	// 進行状況初期化
 	m_Progress.bOKD = true;
@@ -1386,7 +1384,6 @@ void CStateRoll::Move(CObjectX* pObjectX, D3DXVECTOR3& pos, D3DXVECTOR3& rot)
 
 	//自分の立っているグリットの中心位置を求める
 	D3DXVECTOR3 MyGritPos = pObjectX->GetGrid().ToWorld();
-	float MapGritSize = CMapSystem::GetInstance()->GetGritSize();
 
 	// 移動処理
 	if (useful::CollisionCircle(MyGritPos, D3DXVECTOR3(pos.x, MyGritPos.y, pos.z), 5.0f) == true)
@@ -1420,55 +1417,7 @@ void CStateRoll::Move(CObjectX* pObjectX, D3DXVECTOR3& pos, D3DXVECTOR3& rot)
 	}
 
 	// 停止しているか判定をとる
-	if (pos.x <= MyGritPos.x + ((MapGritSize * 0.5f) - (GRIT_OK * m_Progress.bOKR)) &&	//左
-		pos.x >= MyGritPos.x - ((MapGritSize * 0.5f) - (GRIT_OK * m_Progress.bOKL)) &&	//右
-		pos.z <= MyGritPos.z + ((MapGritSize * 0.5f)) &&	//上
-		pos.z >= MyGritPos.z - ((MapGritSize * 0.5f)))	//下
-	{// グリットの中心位置に立っているか
-
-		int nRGridX = grid.x + 1;
-		int nLGridX = grid.x - 1;
-
-		nRGridX = useful::RangeNumber(CMapSystem::GetInstance()->GetWightMax(), 0, nRGridX);
-		nLGridX = useful::RangeNumber(CMapSystem::GetInstance()->GetWightMax(), 0, nLGridX);
-
-		// 左右の移動判定
-		if (type == CObject::TYPE_ROLLROCK)
-		{ // 岩
-			SetJudge(nRGridX, grid.z, m_Progress.bOKR);
-			SetJudge(nLGridX, grid.z, m_Progress.bOKL);
-		}
-		else if (type == CObject::TYPE_RAILBLOCK)
-		{ // レールブロック
-			RailCheck(CMapSystem::GRID(nRGridX, grid.z), m_Progress.bOKR);
-			RailCheck(CMapSystem::GRID(nLGridX, grid.z), m_Progress.bOKL);
-		}
-	}
-
-	if (pos.x <= MyGritPos.x + ((MapGritSize * 0.5f)) &&	//左
-		pos.x >= MyGritPos.x - ((MapGritSize * 0.5f)) &&	//右
-		pos.z <= MyGritPos.z + ((MapGritSize * 0.5f) - (GRIT_OK * m_Progress.bOKD)) &&	//上
-		pos.z >= MyGritPos.z - ((MapGritSize * 0.5f) - (GRIT_OK * m_Progress.bOKU)))	//下
-	{// グリットの中心位置に立っているか
-
-		int nUGridZ = grid.z - 1;
-		int nDGridZ = grid.z + 1;
-
-		nUGridZ = useful::RangeNumber(CMapSystem::GetInstance()->GetHeightMax(), 0, nUGridZ);
-		nDGridZ = useful::RangeNumber(CMapSystem::GetInstance()->GetHeightMax(), 0, nDGridZ);
-
-		// 上下の移動判定
-		if (type == CObject::TYPE_ROLLROCK)
-		{ // 岩
-			SetJudge(grid.x, nUGridZ, m_Progress.bOKU);
-			SetJudge(grid.x, nDGridZ, m_Progress.bOKD);
-		}
-		else if (type == CObject::TYPE_RAILBLOCK)
-		{ // レールブロック
-			RailCheck(CMapSystem::GRID(grid.x, nUGridZ), m_Progress.bOKU);
-			RailCheck(CMapSystem::GRID(grid.x, nDGridZ), m_Progress.bOKD);
-		}
-	}
+	CollisionStop(pObjectX, pos, MyGritPos);
 
 	// 停止処理
 	Stop(pos, MyGritPos, move);
@@ -1509,6 +1458,66 @@ void CStateRoll::SetJudge(int& nGridPosX, int& nGridPosZ, bool& bProgress)
 	else
 	{
 		bProgress = true;		// 転がることが出来る
+	}
+}
+
+//==========================================
+// 停止の判定
+//==========================================
+void CStateRoll::CollisionStop(CObjectX* pObjectX, D3DXVECTOR3& pos, D3DXVECTOR3& GridPos)
+{
+	CMapSystem::GRID grid = pObjectX->GetGrid();	// グリッド
+	CObject::OBJECT_TYPE type = pObjectX->GetType();	// オブジェクトの種類
+	float MapGritSize = CMapSystem::GetInstance()->GetGritSize();
+
+	if (pos.x <= GridPos.x + ((MapGritSize * 0.5f) - (GRIT_OK * m_Progress.bOKR)) &&	//左
+		pos.x >= GridPos.x - ((MapGritSize * 0.5f) - (GRIT_OK * m_Progress.bOKL)) &&	//右
+		pos.z <= GridPos.z + ((MapGritSize * 0.5f)) &&	//上
+		pos.z >= GridPos.z - ((MapGritSize * 0.5f)))	//下
+	{// グリットの中心位置に立っているか
+
+		int nRGridX = grid.x + 1;
+		int nLGridX = grid.x - 1;
+
+		nRGridX = useful::RangeNumber(CMapSystem::GetInstance()->GetWightMax(), 0, nRGridX);
+		nLGridX = useful::RangeNumber(CMapSystem::GetInstance()->GetWightMax(), 0, nLGridX);
+
+		// 左右の移動判定
+		if (type == CObject::TYPE_ROLLROCK)
+		{ // 岩
+			SetJudge(nRGridX, grid.z, m_Progress.bOKR);
+			SetJudge(nLGridX, grid.z, m_Progress.bOKL);
+		}
+		else if (type == CObject::TYPE_RAILBLOCK)
+		{ // レールブロック
+			RailCheck(CMapSystem::GRID(nRGridX, grid.z), m_Progress.bOKR);
+			RailCheck(CMapSystem::GRID(nLGridX, grid.z), m_Progress.bOKL);
+		}
+	}
+
+	if (pos.x <= GridPos.x + ((MapGritSize * 0.5f)) &&	//左
+		pos.x >= GridPos.x - ((MapGritSize * 0.5f)) &&	//右
+		pos.z <= GridPos.z + ((MapGritSize * 0.5f) - (GRIT_OK * m_Progress.bOKD)) &&	//上
+		pos.z >= GridPos.z - ((MapGritSize * 0.5f) - (GRIT_OK * m_Progress.bOKU)))	//下
+	{// グリットの中心位置に立っているか
+
+		int nUGridZ = grid.z - 1;
+		int nDGridZ = grid.z + 1;
+
+		nUGridZ = useful::RangeNumber(CMapSystem::GetInstance()->GetHeightMax(), 0, nUGridZ);
+		nDGridZ = useful::RangeNumber(CMapSystem::GetInstance()->GetHeightMax(), 0, nDGridZ);
+
+		// 上下の移動判定
+		if (type == CObject::TYPE_ROLLROCK)
+		{ // 岩
+			SetJudge(grid.x, nUGridZ, m_Progress.bOKU);
+			SetJudge(grid.x, nDGridZ, m_Progress.bOKD);
+		}
+		else if (type == CObject::TYPE_RAILBLOCK)
+		{ // レールブロック
+			RailCheck(CMapSystem::GRID(grid.x, nUGridZ), m_Progress.bOKU);
+			RailCheck(CMapSystem::GRID(grid.x, nDGridZ), m_Progress.bOKD);
+		}
 	}
 }
 
