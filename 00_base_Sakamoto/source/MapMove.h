@@ -15,6 +15,11 @@ class CObject2D;
 class CSignal;
 class CPlayer;
 
+namespace Time
+{
+	const int RESET = 60;						// カウントリセット
+}
+
 //マップムーブクラス
 class CMapMove
 {
