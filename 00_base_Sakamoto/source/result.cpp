@@ -10,6 +10,7 @@
 #include "camera.h"
 #include "ranking.h"
 #include "number.h"
+#include "BgObjManager.h"
 
 using namespace Result;
 
@@ -20,6 +21,8 @@ namespace
 	const char* END_SET_OK("ENDSETSTAGE");	//エンドメッセージがあるかどうかの確認
 	const float SCORE_POSX(300.0f);
 	const float SCORE_MOVEX(20.1f);
+
+	const CMapSystem::GRID FIELD_GRID = { 64, 64 }; // 下の床のサイズ
 
 	//シングルプレイ用
 	const D3DXVECTOR3 SINGLE_RANKING_TXT_POS(D3DXVECTOR3(SCREEN_WIDTH * 0.5f, 230.0f, 0.0f));						//「RANKING」の位置
@@ -67,7 +70,7 @@ namespace
 
 	const float SCORE_DISTANCE(25.0f);																	//スコアと数字の距離
 
-	const float FADE_TIME = 5.0f; // 自動で遷移するまでの時間
+	const float FADE_TIME = 12.0f; // 自動で遷移するまでの時間
 }
 
 //静的メンバ変数宣言
@@ -132,12 +135,6 @@ HRESULT CResult::Init(void)
 
 	// スコア取得
 	m_ScoreData = CManager::GetInstance()->GetEndScore();
-
-	//背景
-	m_pBg = CObject2D::Create();
-	m_pBg->SetPos(D3DXVECTOR3(640.0f, 360.0f, 0.0f));
-	m_pBg->SetSize(D3DXVECTOR3(1280.0f, 720.0f, 0.0f));
-	m_pBg->SetColor(D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
 
 	if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_SINGLE)
 	{
@@ -329,6 +326,10 @@ HRESULT CResult::Init(void)
 	// タイマーの初期化
 	m_fTimer = 0.0f;
 
+	// 背景オブジェクトのゲーム設置処理
+	auto grid = FIELD_GRID;
+	CBgObjManager::GetInstance()->SetGame(grid);
+
 	return S_OK;
 }
 
@@ -339,12 +340,8 @@ void CResult::Uninit(void)
 {
 	CManager::GetInstance()->GetSound()->Stop();
 
-	// 背景
-	if (m_pBg != nullptr)
-	{
-		m_pBg->Uninit();
-		m_pBg = nullptr;
-	}
+	// 背景オブジェクトの終了処理
+	CBgObjManager::GetInstance()->Uninit();
 
 	if (m_pScoreTex != nullptr)
 	{
@@ -418,6 +415,9 @@ void CResult::Update(void)
 		//CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_ENTER_PUSH);
 		//m_pLifeRanking->SaveRanking();
 	}
+
+	// 背景モデルの更新処理
+	CBgObjManager::GetInstance()->Update();
 
 	// 自動遷移
 	AutoFade();

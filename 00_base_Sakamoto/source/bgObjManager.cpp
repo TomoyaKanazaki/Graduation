@@ -33,8 +33,8 @@ namespace
 	const std::string SLOPE_DEVICE_ENEMY_MODEL =	"data\\TXT\\MOTION\\01_enemy\\motion_medaman.txt";
 
 	const std::string SLOPE_RUNNINGMAN_MODEL =		"data\\TXT\\MOTION\\99_etc\\motion_runningman.txt";
-	const int RUNNING_RATE = 10;
-	const int AKR_RATE = 100;
+	const int RUNNING_RATE = 20;
+	const int AKR_RATE = 3;
 }
 
 // Ã“Iƒƒ“ƒo•Ï”éŒ¾
@@ -332,7 +332,6 @@ void CBgObjManager::SetAirShip(void)
 	{
 	case 1:
 		m_pAirShip = CObjectX::Create("data\\MODEL\\AKR_head.x");
-		m_pAirShip->SetScaling({ 15.0f, 15.0f, 15.0f });
 		break;
 	
 	case 2:

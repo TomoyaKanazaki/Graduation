@@ -152,6 +152,7 @@ HRESULT CGame::Init(void)
 	CMask::Create(PLAYER_REF, MASK_PLAYER_COLOR);
 	CMask::Create(ITEM_REF, MASK_ITEM_COLOR);
 	CMask::Create(MEDAMAN_REF, MASK_MEDAMAN_COLOR);
+	//CMask::Create(104, MASK_DEFAULT_COLOR);
 
 	//クリアフラグのデフォルトをオンにしておく
 	m_bGameClear = true;
