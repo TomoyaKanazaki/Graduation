@@ -447,7 +447,7 @@ void CPlayer::Update(void)
 	ControlEffect(m_pEffectEgg);	// 卵のエフェクト
 	D3DXVECTOR3 temp = posThis;
 	temp.y += EFFECT_HEIGHT;
-	ControlEffect(m_pEffectSpeed, &temp);	// 加減速のエフェクト
+	MoveEffect(m_pEffectSpeed, &temp);	// 加減速のエフェクト
 	ControlEffect(m_pEffectItem);	// アイテム所持エフェクト
 	if (m_pShadow != nullptr)
 	{
@@ -1678,15 +1678,17 @@ void CPlayer::SpeedEffect(const D3DXVECTOR3& pos, const D3DXVECTOR3& rot)
 	D3DXVECTOR3 temp = pos;
 	temp.y += EFFECT_HEIGHT;
 	D3DXVECTOR3 ef = useful::CalcMatrix(temp, rot, mtx);
+	D3DXVECTOR3 efRot = useful::CalcMatrixToRot(mtx);
+	efRot.y = rot.y;
 
 	// 新しいエフェクトを設定する
 	switch (speed)
 	{
 	case CMapMove::SPEED_DOWN:
-		m_pEffectSpeed = MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DROP, true, ef, useful::CalcMatrixToRot(mtx));
+		m_pEffectSpeed = MyEffekseer::EffectCreate(CMyEffekseer::TYPE_DROP, true, ef, efRot);
 		break;
 	case CMapMove::SPEED_UP:
-		m_pEffectSpeed = MyEffekseer::EffectCreate(CMyEffekseer::TYPE_ACCELE, true, ef, useful::CalcMatrixToRot(mtx));
+		m_pEffectSpeed = MyEffekseer::EffectCreate(CMyEffekseer::TYPE_ACCELE, true, ef, efRot);
 		break;
 	default:
 		break;
