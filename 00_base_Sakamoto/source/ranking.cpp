@@ -281,6 +281,7 @@ void CRanking::Update(void)
 			//m_apObject[nCntObject][nCntRank]->SetNumber(nCntObject * 2 + nCntRank * 2);
 		}
 	}
+
 }
 
 //====================================================================
