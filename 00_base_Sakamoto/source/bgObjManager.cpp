@@ -332,7 +332,6 @@ void CBgObjManager::SetAirShip(void)
 	{
 	case 1:
 		m_pAirShip = CObjectX::Create("data\\MODEL\\AKR_head.x");
-		m_pAirShip->SetScaling({ 15.0f, 15.0f, 15.0f });
 		break;
 	
 	case 2:
