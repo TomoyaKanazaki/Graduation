@@ -49,6 +49,10 @@ namespace
 	const D3DXVECTOR3 TITLE_POS_R = D3DXVECTOR3(800.0f, -200.0f, 2500.0f);		//タイトルカメラの位置(注視点)
 	const float TTTLE_DECREASE = 0.05f;								//プレイヤー視点までの距離の減少速度
 	const float TTTLE_LENGTH = 0.01f;								//プレイヤー視点までのたどり着いた距離
+
+	const D3DXVECTOR3 RESULT_POS_R = D3DXVECTOR3(-1800.0f, -100.0f, 1400.0f);	//タイトルカメラの位置(視点)
+	const D3DXVECTOR3 RESULT_POS_V = D3DXVECTOR3(-1450.0f, 150.0f, 950.0f);		//タイトルカメラの位置(注視点)
+
 }
 
 //===========================================
@@ -234,10 +238,10 @@ void CCamera::Update(void)
 		break;
 	case CScene::MODE_RESULT:
 
-		//視点の情報を出力する
-		m_posV.x = m_posR.x + sinf(m_rot.y) * -cosf(m_rot.x) * m_CameraDistance;
-		m_posV.y = m_posR.y + sinf(-m_rot.x) * m_CameraDistance;
-		m_posV.z = m_posR.z + cosf(m_rot.y) * -cosf(m_rot.x) * m_CameraDistance;
+		// 視点
+		m_posV = RESULT_POS_V;
+		// 注視点
+		m_posR = RESULT_POS_R;
 
 		break;
 	}

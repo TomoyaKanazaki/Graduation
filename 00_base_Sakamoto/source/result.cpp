@@ -70,7 +70,7 @@ namespace
 
 	const float SCORE_DISTANCE(25.0f);																	//ƒXƒRƒA‚Æ”Žš‚Ì‹——£
 
-	const float FADE_TIME = 5.0f; // Ž©“®‚Å‘JˆÚ‚·‚é‚Ü‚Å‚ÌŽžŠÔ
+	const float FADE_TIME = 12.0f; // Ž©“®‚Å‘JˆÚ‚·‚é‚Ü‚Å‚ÌŽžŠÔ
 }
 
 //Ã“Iƒƒ“ƒo•Ï”éŒ¾
@@ -137,10 +137,10 @@ HRESULT CResult::Init(void)
 	m_ScoreData = CManager::GetInstance()->GetEndScore();
 
 	//”wŒi
-	m_pBg = CObject2D::Create();
-	m_pBg->SetPos(D3DXVECTOR3(640.0f, 360.0f, 0.0f));
-	m_pBg->SetSize(D3DXVECTOR3(1280.0f, 720.0f, 0.0f));
-	m_pBg->SetColor(D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
+	//m_pBg = CObject2D::Create();
+	//m_pBg->SetPos(D3DXVECTOR3(640.0f, 360.0f, 0.0f));
+	//m_pBg->SetSize(D3DXVECTOR3(1280.0f, 720.0f, 0.0f));
+	//m_pBg->SetColor(D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
 
 	if (CManager::GetInstance()->GetGameMode() == CManager::GAME_MODE::MODE_SINGLE)
 	{
@@ -346,6 +346,9 @@ void CResult::Uninit(void)
 {
 	CManager::GetInstance()->GetSound()->Stop();
 
+	// ”wŒiƒIƒuƒWƒFƒNƒg‚ÌI—¹ˆ—
+	CBgObjManager::GetInstance()->Uninit();
+
 	// ”wŒi
 	if (m_pBg != nullptr)
 	{
@@ -406,9 +409,6 @@ void CResult::Uninit(void)
 		delete m_pResult;
 		m_pResult = nullptr;
 	}
-
-	// ”wŒiƒIƒuƒWƒFƒNƒg‚ÌI—¹ˆ—
-	CBgObjManager::GetInstance()->Uninit();
 }
 
 //====================================================================

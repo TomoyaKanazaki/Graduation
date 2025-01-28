@@ -33,8 +33,8 @@ namespace
 	const std::string SLOPE_DEVICE_ENEMY_MODEL =	"data\\TXT\\MOTION\\01_enemy\\motion_medaman.txt";
 
 	const std::string SLOPE_RUNNINGMAN_MODEL =		"data\\TXT\\MOTION\\99_etc\\motion_runningman.txt";
-	const int RUNNING_RATE = 10;
-	const int AKR_RATE = 100;
+	const int RUNNING_RATE = 20;
+	const int AKR_RATE = 20;
 }
 
 // Ã“Iƒƒ“ƒo•Ï”éŒ¾
