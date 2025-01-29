@@ -332,6 +332,30 @@ void CObjectBillboard::SetAnim(D3DXVECTOR2 TexMin, D3DXVECTOR2 TexMax)
 	m_pVtxBuff->Unlock();
 }
 
+//============================================================
+//	アニメーションのテクスチャ座標の設定処理(丹野竜之介)
+//============================================================
+void CObjectBillboard::SetAnimTex(const int nNum)
+{
+	// ポインタを宣言
+	VERTEX_3D* pVtx;	// 頂点情報へのポインタ
+
+	if (m_pVtxBuff != nullptr)
+	{ // 使用中の場合
+
+		// 頂点バッファをロックし、頂点情報へのポインタを取得
+		m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
+
+		// テクスチャ座標の設定
+		pVtx[0].tex = D3DXVECTOR2(0.1f * nNum, 0.0f);
+		pVtx[1].tex = D3DXVECTOR2(0.1f * nNum+0.1f, 0.0f);
+		pVtx[2].tex = D3DXVECTOR2(0.1f * nNum,1.0f);
+		pVtx[3].tex = D3DXVECTOR2(0.1f * nNum+0.1f,1.0f);
+
+		// 頂点バッファをアンロックする
+		m_pVtxBuff->Unlock();
+	}
+}
 //====================================================================
 //頂点カラーの設定
 //====================================================================

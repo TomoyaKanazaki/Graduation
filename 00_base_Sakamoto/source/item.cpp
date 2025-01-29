@@ -21,6 +21,7 @@
 #include "devil.h"
 #include "MapMove.h"
 #include "GamePlayer.h"
+#include "getscoreUi.h"
 
 //==========================================
 //  定数定義
@@ -362,6 +363,8 @@ bool CItem::CollisionPlayer()
 
 		// スコアを加算する
 		player->GetScore()->AddScore(ITEM_SCORE[m_eType]);
+		//獲得スコア表示UIの生成
+		CGetscoreUi::Create(ITEM_SCORE[m_eType], player->GetPos(), 6);
 	}
 
 	return false;
