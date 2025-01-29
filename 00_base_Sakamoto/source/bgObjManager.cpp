@@ -33,7 +33,7 @@ namespace
 	const std::string SLOPE_DEVICE_ENEMY_MODEL =	"data\\TXT\\MOTION\\01_enemy\\motion_medaman.txt";
 
 	const std::string SLOPE_RUNNINGMAN_MODEL =		"data\\TXT\\MOTION\\99_etc\\motion_runningman.txt";
-	const int RUNNING_RATE = 25;
+	const int RUNNING_RATE = 1;
 	const int AKR_RATE = 25;
 }
 
@@ -299,15 +299,23 @@ void CBgObjManager::SetMountain(void)
 		{
 			m_pBGCharacter[nCnt] = CObjectCharacter::Create(false);
 
-			if (rand() % RUNNING_RATE)
+			// ここをいじると歩くモデルが変わる
+			switch (rand() % RUNNING_RATE)
 			{
+			case 1:
+				m_pBGCharacter[nCnt]->SetTxtCharacter(SLOPE_RUNNINGMAN_MODEL); // 歩行
+				m_pBGCharacter[nCnt]->GetMotion()->Set(1, 0);
+				break;
+
+			case 2:
+				m_pBGCharacter[nCnt]->SetTxtCharacter(SLOPE_RUNNINGMAN_MODEL); // コサック
+				m_pBGCharacter[nCnt]->GetMotion()->Set(6, 0);
+				break;
+
+			default:
 				m_pBGCharacter[nCnt]->SetTxtCharacter(SLOPE_DEVICE_ENEMY_MODEL); // メダマン
 				m_pBGCharacter[nCnt]->GetMotion()->Set(1, 0);
-			}
-			else
-			{
-				m_pBGCharacter[nCnt]->SetTxtCharacter(SLOPE_RUNNINGMAN_MODEL); // ランニングマン
-				m_pBGCharacter[nCnt]->GetMotion()->Set(1, 0);
+				break;
 			}
 
 			m_pBGCharacter[nCnt]->SetPos(D3DXVECTOR3(
@@ -328,6 +336,7 @@ void CBgObjManager::SetMountain(void)
 //==========================================
 void CBgObjManager::SetAirShip(void)
 {
+	// ここをいじると飛行船を変えられる
 	switch (rand() % AKR_RATE)
 	{
 	case 1:
@@ -341,7 +350,6 @@ void CBgObjManager::SetAirShip(void)
 	default:
 		m_pAirShip = CObjectX::Create("data\\MODEL\\airship_00.x");
 		break;
-
 	}
 
 	m_pAirShip->SetPos(D3DXVECTOR3(750.0f, -400.0f, 1800.0f));
