@@ -81,7 +81,6 @@ private:
 	void UpdateLetterBox(void);
 	void StageClear(int Stage);
 	void LoadStageRailBlock(const std::string pFilename);
-	void LoadStageMapModel(const std::string pFilename);
 
 	// ƒVƒ“ƒOƒ‹ƒgƒ“
 	static CGame* m_pGame;
