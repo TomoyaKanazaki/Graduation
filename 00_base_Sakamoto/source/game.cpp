@@ -59,10 +59,15 @@ namespace
 	const D3DXCOLOR MASK_BONBON_COLOR = D3DXCOLOR(1.0f, 0.5f, 0.0f, 1.0f);			// ボンンボンのステンシルカラー(オレンジ)
 	const D3DXCOLOR MASK_YUNGDEVIL_COLOR = D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f);		// 子デビルのステンシルカラー(青)
 	const D3DXCOLOR MASK_ITEM_COLOR = D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f);			// アイテムのステンシルカラー(青)
+	const D3DXCOLOR MASK_SCROLL_COLOR = D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f);			// アイテムのステンシルカラー(赤)
 
 	const int PLAYER_REF = 2;		// プレイヤーのステンシル参照値
 	const int ITEM_REF = 4;			// アイテムのステンシル参照値
-	const int MEDAMAN_REF = 102;	// メダマンのステンシル参照値
+	const int MEDAMAN_REF = 6;	// メダマンのステンシル参照値
+	const int SCROLL_REF = 8;		// スクロールのステンシル参照値
+	const int MEAT_REF = 10;		// 肉のステンシル参照値
+	const int RAILBLOCK_REF = 12;	// レールブロックのステンシル参照値
+	const int ROLLROCK_REF = 14;	// 岩のステンシル参照値
 
 	const int TRANS_TIME = 60 * 3;			// 遷移するまでの時間
 }
@@ -152,7 +157,10 @@ HRESULT CGame::Init(void)
 	CMask::Create(PLAYER_REF, MASK_PLAYER_COLOR);
 	CMask::Create(ITEM_REF, MASK_ITEM_COLOR);
 	CMask::Create(MEDAMAN_REF, MASK_MEDAMAN_COLOR);
-	//CMask::Create(104, MASK_DEFAULT_COLOR);
+	CMask::Create(SCROLL_REF, MASK_SCROLL_COLOR);
+	CMask::Create(MEAT_REF, MASK_ITEM_COLOR);
+	CMask::Create(RAILBLOCK_REF, MASK_PLAYER_COLOR);
+	CMask::Create(ROLLROCK_REF, MASK_PLAYER_COLOR);
 
 	//クリアフラグのデフォルトをオンにしておく
 	m_bGameClear = true;
@@ -742,101 +750,4 @@ void CGame::LoadStageRailBlock(const std::string pFilename)
 	{//ファイルが開けなかった場合
 		printf("***ファイルを開けませんでした***\n");
 	}
-}
-
-//====================================================================
-// モデルの読み込み配置
-//====================================================================
-void CGame::LoadStageMapModel(const std::string pFilename)
-{
-	////ファイルを開く
-	//FILE* pFile = fopen(pFilename, "r");
-
-	//if (pFile != nullptr)
-	//{//ファイルが開けた場合
-
-	//	char Getoff[32] = {};
-	//	char boolLife[32] = {};
-	//	char aString[128] = {};			//ゴミ箱
-	//	char aStartMessage[32] = {};	//スタートメッセージ
-	//	char aSetMessage[32] = {};		//セットメッセージ
-	//	char aEndMessage[32] = {};		//終了メッセージ
-	//	char aBool[8] = {};				//bool型メッセージ
-	//	bool Loop = false;
-
-	//	fscanf(pFile, "%s", &aStartMessage[0]);
-	//	if (strcmp(&aStartMessage[0], "STARTSETSTAGE") == 0)
-	//	{
-	//		while (1)
-	//		{
-	//			fscanf(pFile, "%s", &aSetMessage[0]);
-	//			if (strcmp(&aSetMessage[0], "STARTSETXMODEL") == 0)
-	//			{
-	//				char aModelName[64] = {};		//モデルのパス名
-	//				D3DXVECTOR3 pos;
-	//				D3DXVECTOR3 rot;
-	//				int nEditIndex = 0;
-
-	//				fscanf(pFile, "%s", &aString[0]);
-	//				fscanf(pFile, "%s", &aModelName[0]);
-
-	//				fscanf(pFile, "%s", &aString[0]);
-	//				fscanf(pFile, "%d", &nEditIndex);
-
-	//				fscanf(pFile, "%s", &aString[0]);
-	//				fscanf(pFile, "%f", &pos.x);
-	//				fscanf(pFile, "%f", &pos.y);
-	//				fscanf(pFile, "%f", &pos.z);
-
-	//				fscanf(pFile, "%s", &aString[0]);
-	//				fscanf(pFile, "%f", &rot.x);
-	//				fscanf(pFile, "%f", &rot.y);
-	//				fscanf(pFile, "%f", &rot.z);
-
-	//				fscanf(pFile, "%s", &aString[0]);
-	//				fscanf(pFile, "%s", &aBool[0]);	//ループするかどうかを設定
-	//				Loop = (strcmp(&aBool[0], "1") == 0 ? true : false);			//bool型の書き方
-
-	//				CMapModel* pModel = CMapModel::Create(&aModelName[0]);
-	//				pModel->SetPos(pos);
-	//				pModel->SetRot(rot);
-	//				pModel->SetEditIdx(nEditIndex);
-
-	//				if (rot.y < 1.57f)
-	//				{
-
-	//				}
-	//				else if (rot.y < 3.14f)
-	//				{
-	//					pModel->SwapSize();
-	//				}
-	//				else if (rot.y < 4.71f)
-	//				{
-
-	//				}
-	//				else
-	//				{
-	//					pModel->SwapSize();
-	//				}
-
-	//				pModel->SetCollision(Loop);
-
-	//				fscanf(pFile, "%s", &aEndMessage[0]);
-	//				if (strcmp(&aEndMessage[0], "ENDSETXMODEL") != 0)
-	//				{
-	//					break;
-	//				}
-	//			}
-	//			else if (strcmp(&aSetMessage[0], "ENDSETSTAGE") == 0)
-	//			{
-	//				break;
-	//			}
-	//		}
-	//	}
-	//	fclose(pFile);
-	//}
-	//else
-	//{//ファイルが開けなかった場合
-	//	printf("***ファイルを開けませんでした***\n");
-	//}
 }

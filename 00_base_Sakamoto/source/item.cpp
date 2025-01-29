@@ -61,8 +61,7 @@ CItem::CItem(int nPriority) : CObjectX(nPriority),
 m_posBase(INITVECTOR3),
 m_fMoveTime(0.0f),
 m_pShadow(nullptr),
-m_pEffect(nullptr),
-m_nRefIdx(0)
+m_pEffect(nullptr)
 {
 	m_eType = TYPE_NONE;		// 種類
 	m_nIdxXModel = 0;			// Xモデル番号
@@ -165,15 +164,12 @@ void CItem::Move(D3DXVECTOR3& pos)
 //====================================================================
 // 初期化
 //====================================================================
-HRESULT CItem::Init(const char* pModelName, int ref)
+HRESULT CItem::Init(const char* pModelName)
 {
 	D3DXVECTOR3 pos = GetPos();
 
 	// 継承クラスの初期化
 	CObjectX::Init(pModelName);
-
-	// ステンシルの参照値設定
-	SetRefIdx(ref);
 
 	//マップとのマトリックスの掛け合わせをオンにする
 	SetUseMultiMatrix(CObjmeshField::GetListTop()->GetMatrix());
@@ -281,31 +277,9 @@ void CItem::Update()
 //====================================================================
 void CItem::Draw()
 {
-	//デバイスの取得
-	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
-
-	//ステンシルバッファ有効
-	pDevice->SetRenderState(D3DRS_STENCILENABLE, TRUE);
-
-	//ステンシルバッファと比較する参照値の設定 => ref
-	pDevice->SetRenderState(D3DRS_STENCILREF, m_nRefIdx);
-
-	//ステンシルバッファの値に対してのマスク設定 => 0xff(全て真)
-	pDevice->SetRenderState(D3DRS_STENCILMASK, 255);
-
-	//ステンシルバッファの比較方法 => (参照値 => ステンシルバッファの参照値)なら合格
-	pDevice->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_GREATEREQUAL);
-
-	//ステンシルテスト結果に対しての反映設定
-	pDevice->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_REPLACE);	// Zテスト・ステンシルテスト成功
-	pDevice->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP);		// Zテスト・ステンシルテスト失敗
-	pDevice->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_KEEP);		// Zテスト失敗・ステンシルテスト成功
 
 	// 継承クラスの描画
 	CObjectX::Draw();
-
-	//ステンシルバッファ無効
-	pDevice->SetRenderState(D3DRS_STENCILENABLE, FALSE);
 }
 
 //==========================================
