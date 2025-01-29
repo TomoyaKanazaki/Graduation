@@ -59,10 +59,12 @@ namespace
 	const D3DXCOLOR MASK_BONBON_COLOR = D3DXCOLOR(1.0f, 0.5f, 0.0f, 1.0f);			// ボンンボンのステンシルカラー(オレンジ)
 	const D3DXCOLOR MASK_YUNGDEVIL_COLOR = D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f);		// 子デビルのステンシルカラー(青)
 	const D3DXCOLOR MASK_ITEM_COLOR = D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f);			// アイテムのステンシルカラー(青)
+	const D3DXCOLOR MASK_SCROLL_COLOR = D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f);			// アイテムのステンシルカラー(青)
 
 	const int PLAYER_REF = 2;		// プレイヤーのステンシル参照値
 	const int ITEM_REF = 4;			// アイテムのステンシル参照値
 	const int MEDAMAN_REF = 102;	// メダマンのステンシル参照値
+	const int SCROLL_REF = 104;		// スクロールのステンシル参照値
 
 	const int TRANS_TIME = 60 * 3;			// 遷移するまでの時間
 }
@@ -152,6 +154,7 @@ HRESULT CGame::Init(void)
 	CMask::Create(PLAYER_REF, MASK_PLAYER_COLOR);
 	CMask::Create(ITEM_REF, MASK_ITEM_COLOR);
 	CMask::Create(MEDAMAN_REF, MASK_MEDAMAN_COLOR);
+	CMask::Create(SCROLL_REF, MASK_SCROLL_COLOR);
 
 	//クリアフラグのデフォルトをオンにしておく
 	m_bGameClear = true;

@@ -34,7 +34,7 @@ namespace
 	const D3DXVECTOR3 BUTTON_POS = D3DXVECTOR3(640.0f, 670.0f, 0.0f);		// ボタンの位置
 	const D3DXVECTOR2 BUTTON_SIZE = { 300.0f, 160.0f };						// ボタンの大きさ
 
-	const float FADE_TIME = 5.0f; // 自動で遷移するまでの時間
+	const float FADE_TIME = 12.0f; // 自動で遷移するまでの時間
 
 	const CMapSystem::GRID FIELD_GRID = { 64, 64 }; // 下の床のサイズ
 }

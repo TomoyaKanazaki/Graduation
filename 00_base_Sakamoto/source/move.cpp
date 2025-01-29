@@ -31,6 +31,7 @@ namespace
 	const float PLAYER_SPEED = 5.0f;		// プレイヤーの移動速度
 	const float ENEMY_SPEED = 3.0f;			// 敵の移動速度
 	const float FRIEDEGG_SPEED = 3.0f;		// 目玉焼きの移動速度
+	const float STOP_INER = (4.0f / Time::RESET);	// 停止までの慣性
 
 	const float COORDDINATE_RATE[] =		// 経路探索を行う間隔
 	{
@@ -1346,6 +1347,8 @@ CStateRoll::CStateRoll()
 	m_ProgressOld.bOKL = false;	//左
 	m_ProgressOld.bOKU = false;	//上
 	m_ProgressOld.bOKD = false;	//下 
+
+	m_PosDest = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 }
 //==========================================
 // 破棄
@@ -1369,14 +1372,9 @@ void CStateRoll::RollStop(CObjectX* pObjectX)
 //==========================================
 void CStateRoll::Move(CObjectX* pObjectX, D3DXVECTOR3& pos, D3DXVECTOR3& rot)
 {
+	int MoveCnt = CMapSystem::GetInstance()->GetMove()->GetStateCount();
 	D3DXVECTOR3 SlopeRot = CMapSystem::GetInstance()->GetMove()->GetDevilRot();		// マップの傾き
 	D3DXVECTOR3 move = pObjectX->GetMove();			// 移動量
-
-	// 進行状況初期化
-	m_Progress.bOKD = true;
-	m_Progress.bOKL = true;
-	m_Progress.bOKR = true;
-	m_Progress.bOKU = true;
 
 	// 傾きによる移動量設定
 	move.x = -SlopeRot.z * 10.0f;
@@ -1385,19 +1383,23 @@ void CStateRoll::Move(CObjectX* pObjectX, D3DXVECTOR3& pos, D3DXVECTOR3& rot)
 	//自分の立っているグリットの中心位置を求める
 	D3DXVECTOR3 MyGritPos = pObjectX->GetGrid().ToWorld();
 
-	// 移動処理
+	// 移動処理(傾いた時)
 	if (useful::CollisionCircle(MyGritPos, D3DXVECTOR3(pos.x, MyGritPos.y, pos.z), 5.0f) == true)
-	{// ブロックの中心にある時に上下か左右のどちらかになるまでに移動する(傾いてない時)
+	{// ブロックの中心にある時に上下か左右のどちらかになるまでに移動する
 
 		pos.x += move.x;
 		pos.z += move.z;
+
+		DebugProc::Print(DebugProc::POINT_RIGHT, "岩 true : %f %f\n");
+
 	}
 	else
-	{// ブロックの中心にないとき(傾いた時)
+	{// ブロックの中心にないとき
 
 		//上下移動
 		if (MyGritPos.x - pos.x >= -5.0f && MyGritPos.x - pos.x <= 5.0f)
 		{
+
 			pos.z += move.z;
 		}
 		else
@@ -1413,6 +1415,30 @@ void CStateRoll::Move(CObjectX* pObjectX, D3DXVECTOR3& pos, D3DXVECTOR3& rot)
 		else
 		{
 			pos.x = MyGritPos.x;
+		}
+
+		DebugProc::Print(DebugProc::POINT_RIGHT, "岩 false : %f %f\n");
+
+	}
+
+	m_PosDest= MyGritPos - pos;
+
+	// 移動していない
+	if (move.x == 0.0f && move.z == 0.0f)
+	{
+		// カウントが終わった
+		if (MoveCnt <= 0)
+		{
+			//グリッド座標と合わせる
+			{
+				pos.x = MyGritPos.x;
+				pos.z = MyGritPos.z;
+			}
+		}
+		else
+		{// カウントがまだある
+			pos.x += m_PosDest.x * STOP_INER;
+			pos.z += m_PosDest.z * STOP_INER;
 		}
 	}
 
@@ -1493,6 +1519,10 @@ void CStateRoll::CollisionStop(CObjectX* pObjectX, D3DXVECTOR3& pos, D3DXVECTOR3
 			RailCheck(CMapSystem::GRID(nRGridX, grid.z), m_Progress.bOKR);
 			RailCheck(CMapSystem::GRID(nLGridX, grid.z), m_Progress.bOKL);
 		}
+	}
+	else
+	{
+
 	}
 
 	if (pos.x <= GridPos.x + ((MapGritSize * 0.5f)) &&	//左

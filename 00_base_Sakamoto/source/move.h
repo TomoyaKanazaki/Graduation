@@ -271,6 +271,9 @@ private:
 
     void Stop(D3DXVECTOR3& pos, D3DXVECTOR3& GridPos, D3DXVECTOR3& move);           // “]‚ª‚ç‚È‚¢‚Æ‚«‚ÌˆÊ’u
     void CollisionStop(CObjectX* pObjectX, D3DXVECTOR3& pos, D3DXVECTOR3& GridPos);  // ’âŽ~‚Ì”»’è
+
+    // ƒƒ“ƒo•Ï”
+    D3DXVECTOR3 m_PosDest;      // –Ú“I
 };
 
 #endif
