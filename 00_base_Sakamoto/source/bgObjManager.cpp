@@ -33,7 +33,7 @@ namespace
 	const std::string SLOPE_DEVICE_ENEMY_MODEL =	"data\\TXT\\MOTION\\01_enemy\\motion_medaman.txt";
 
 	const std::string SLOPE_RUNNINGMAN_MODEL =		"data\\TXT\\MOTION\\99_etc\\motion_runningman.txt";
-	const int RUNNING_RATE = 20;
+	const int RUNNING_RATE = 25;
 	const int AKR_RATE = 25;
 }
 
@@ -301,11 +301,13 @@ void CBgObjManager::SetMountain(void)
 
 			if (rand() % RUNNING_RATE)
 			{
-				m_pBGCharacter[nCnt]->SetTxtCharacter(SLOPE_DEVICE_ENEMY_MODEL);
+				m_pBGCharacter[nCnt]->SetTxtCharacter(SLOPE_DEVICE_ENEMY_MODEL); // メダマン
+				m_pBGCharacter[nCnt]->GetMotion()->Set(1, 0);
 			}
 			else
 			{
-				m_pBGCharacter[nCnt]->SetTxtCharacter(SLOPE_RUNNINGMAN_MODEL);
+				m_pBGCharacter[nCnt]->SetTxtCharacter(SLOPE_RUNNINGMAN_MODEL); // ランニングマン
+				m_pBGCharacter[nCnt]->GetMotion()->Set(1, 0);
 			}
 
 			m_pBGCharacter[nCnt]->SetPos(D3DXVECTOR3(
@@ -317,8 +319,6 @@ void CBgObjManager::SetMountain(void)
 				0.0f,
 				sinf(D3DX_PI * (0.5f * (nCnt - 1))),
 				0.0f));
-
-			m_pBGCharacter[nCnt]->GetMotion()->Set(1, 0);
 		}
 	}
 }
