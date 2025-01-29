@@ -66,6 +66,8 @@ namespace
 	const int MEDAMAN_REF = 102;	// メダマンのステンシル参照値
 	const int SCROLL_REF = 104;		// スクロールのステンシル参照値
 	const int MEAT_REF = 106;		// 肉のステンシル参照値
+	const int RAILBLOCK_REF = 108;	// レールブロックのステンシル参照値
+	const int ROLLROCK_REF = 110;	// 岩のステンシル参照値
 
 	const int TRANS_TIME = 60 * 3;			// 遷移するまでの時間
 }
@@ -157,6 +159,8 @@ HRESULT CGame::Init(void)
 	CMask::Create(MEDAMAN_REF, MASK_MEDAMAN_COLOR);
 	CMask::Create(SCROLL_REF, MASK_SCROLL_COLOR);
 	CMask::Create(MEAT_REF, MASK_ITEM_COLOR);
+	CMask::Create(RAILBLOCK_REF, MASK_PLAYER_COLOR);
+	CMask::Create(ROLLROCK_REF, MASK_PLAYER_COLOR);
 
 	//クリアフラグのデフォルトをオンにしておく
 	m_bGameClear = true;
