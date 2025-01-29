@@ -52,7 +52,7 @@ CBowabowa::~CBowabowa()
 HRESULT CBowabowa::Init()
 {
 	// 親クラスの初期化
-	if(FAILED(CItem::Init(MODEL_PASS, 3))){ assert(false); return E_FAIL; }
+	if(FAILED(CItem::Init(MODEL_PASS))){ assert(false); return E_FAIL; }
 
 	// オブジェクトの種類を設定
 	SetType(CObject::TYPE_BOWABOWA);
@@ -113,8 +113,54 @@ void CBowabowa::Update(void)
 //====================================================================
 void CBowabowa::Draw(void)
 {
+	//デバイスの取得
+	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
+
 	// 親クラスの描画処理
 	CItem::Draw();
+
+	//ステンシルバッファ有効
+	pDevice->SetRenderState(D3DRS_STENCILENABLE, TRUE);
+
+	//ステンシルバッファと比較する参照値の設定 => ref
+	pDevice->SetRenderState(D3DRS_STENCILREF, 3);
+
+	//ステンシルバッファの値に対してのマスク設定 => 0xff(全て真)
+	pDevice->SetRenderState(D3DRS_STENCILMASK, 255);
+
+	//ステンシルバッファの比較方法 => (参照値 => ステンシルバッファの参照値)なら合格
+	pDevice->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_GREATEREQUAL);
+
+	//ステンシルテスト結果に対しての反映設定
+	pDevice->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_REPLACE);	// Zテスト・ステンシルテスト成功
+	pDevice->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP);		// Zテスト・ステンシルテスト失敗
+	pDevice->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_KEEP);		// Zテスト失敗・ステンシルテスト成功
+
+	// 親クラスの描画処理
+	CItem::Draw();
+
+	//ステンシルバッファ有効
+	pDevice->SetRenderState(D3DRS_STENCILENABLE, TRUE);
+
+	//ステンシルバッファと比較する参照値の設定 => ref
+	pDevice->SetRenderState(D3DRS_STENCILREF, 105);
+
+	//ステンシルバッファの値に対してのマスク設定 => 0xff(全て真)
+	pDevice->SetRenderState(D3DRS_STENCILMASK, 255);
+
+	//ステンシルバッファの比較方法 => (参照値 => ステンシルバッファの参照値)なら合格
+	pDevice->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_GREATEREQUAL);
+
+	//ステンシルテスト結果に対しての反映設定
+	pDevice->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_REPLACE);	// Zテスト・ステンシルテスト成功
+	pDevice->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP);		// Zテスト・ステンシルテスト失敗
+	pDevice->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_KEEP);		// Zテスト失敗・ステンシルテスト成功
+
+	// 親クラスの描画処理
+	CItem::Draw();
+
+	//ステンシルバッファ無効
+	pDevice->SetRenderState(D3DRS_STENCILENABLE, FALSE);
 }
 
 //==========================================
