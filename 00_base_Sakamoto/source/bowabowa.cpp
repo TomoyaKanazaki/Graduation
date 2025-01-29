@@ -143,7 +143,7 @@ void CBowabowa::Draw(void)
 	pDevice->SetRenderState(D3DRS_STENCILENABLE, TRUE);
 
 	//ステンシルバッファと比較する参照値の設定 => ref
-	pDevice->SetRenderState(D3DRS_STENCILREF, 105);
+	pDevice->SetRenderState(D3DRS_STENCILREF, 9);
 
 	//ステンシルバッファの値に対してのマスク設定 => 0xff(全て真)
 	pDevice->SetRenderState(D3DRS_STENCILMASK, 255);
