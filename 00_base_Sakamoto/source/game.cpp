@@ -63,11 +63,11 @@ namespace
 
 	const int PLAYER_REF = 2;		// プレイヤーのステンシル参照値
 	const int ITEM_REF = 4;			// アイテムのステンシル参照値
-	const int MEDAMAN_REF = 102;	// メダマンのステンシル参照値
-	const int SCROLL_REF = 104;		// スクロールのステンシル参照値
-	const int MEAT_REF = 106;		// 肉のステンシル参照値
-	const int RAILBLOCK_REF = 108;	// レールブロックのステンシル参照値
-	const int ROLLROCK_REF = 110;	// 岩のステンシル参照値
+	const int MEDAMAN_REF = 6;	// メダマンのステンシル参照値
+	const int SCROLL_REF = 8;		// スクロールのステンシル参照値
+	const int MEAT_REF = 10;		// 肉のステンシル参照値
+	const int RAILBLOCK_REF = 12;	// レールブロックのステンシル参照値
+	const int ROLLROCK_REF = 14;	// 岩のステンシル参照値
 
 	const int TRANS_TIME = 60 * 3;			// 遷移するまでの時間
 }

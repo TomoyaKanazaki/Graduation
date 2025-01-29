@@ -506,7 +506,7 @@ void CPlayer::Draw(void)
 	pDevice->SetRenderState(D3DRS_STENCILENABLE, TRUE);
 
 	//ステンシルバッファと比較する参照値の設定 => ref
-	pDevice->SetRenderState(D3DRS_STENCILREF, 107);
+	pDevice->SetRenderState(D3DRS_STENCILREF, 11);
 
 	//ステンシルバッファの値に対してのマスク設定 => 0xff(全て真)
 	pDevice->SetRenderState(D3DRS_STENCILMASK, 255);
@@ -526,7 +526,7 @@ void CPlayer::Draw(void)
 	pDevice->SetRenderState(D3DRS_STENCILENABLE, TRUE);
 
 	//ステンシルバッファと比較する参照値の設定 => ref
-	pDevice->SetRenderState(D3DRS_STENCILREF, 109);
+	pDevice->SetRenderState(D3DRS_STENCILREF, 13);
 
 	//ステンシルバッファの値に対してのマスク設定 => 0xff(全て真)
 	pDevice->SetRenderState(D3DRS_STENCILMASK, 255);
