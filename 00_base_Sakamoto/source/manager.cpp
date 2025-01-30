@@ -464,7 +464,8 @@ void CManager::Update(void)
 #endif
 
 	if ((CManager::GetInstance()->GetInputKeyboard()->GetTrigger(DIK_P) == true ||
-		CManager::GetInstance()->GetInputJoyPad()->GetTrigger(CInputJoypad::BUTTON_START, 0) == true) &&
+		CManager::GetInstance()->GetInputJoyPad()->GetTrigger(CInputJoypad::BUTTON_START, 0) == true ||
+		CManager::GetInstance()->GetInputJoyPad()->GetTrigger(CInputJoypad::BUTTON_START, 1) == true) &&
 		m_PauseOK == true &&
 		m_pFade->GetFade() == CFade::FADE_NONE)
 	{
