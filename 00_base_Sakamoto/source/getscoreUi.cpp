@@ -14,7 +14,7 @@
 //==========================================
 namespace
 {
-	const int OBJ_LIFE = 90;
+	const int OBJ_LIFE = 50;
 
 	const float OBJ_DEGITPOS_X =35.0f;
 
