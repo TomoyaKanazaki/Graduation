@@ -120,6 +120,7 @@ HRESULT CMapMove::Init(void)
 {
 	m_ScrollType = (SCROLL_TYPE)CManager::GetInstance()->GetScrollType();
 
+	// TODO : コメントアウト
 	// ステージ番号の取得
 	if (CManager::GetInstance()->GetMapSystem() != nullptr)
 	{
@@ -593,6 +594,20 @@ void CMapMove::StateManager(void)
 
 			// 次の行動を抽選
 			int nRand = rand() % MAX_PRAB_MODE + 1;
+
+			// スクロールが出来ない場合
+			if (!m_bCanScroll)
+			{
+				// 傾きの数値を与える
+				nRand = SLOPE_RAND;
+			}
+
+			// 傾きが出来ない場合
+			if (!m_bCanSlope)
+			{
+				// スクロールの数値を与える
+				nRand = SLOPE_RAND + 1;
+			}
 
 			if (nRand <= SLOPE_RAND)
 			{ // 傾きの指定％の時
