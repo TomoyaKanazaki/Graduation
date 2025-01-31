@@ -1099,12 +1099,12 @@ void CMapMove::Slope()
 //====================================================================
 void CMapMove::CollisionOut()
 {
-	// キューブブロックのリスト構造が無ければ抜ける
+	// エネミーのリスト構造が無ければ抜ける
 	if (CEnemy::GetList() == nullptr) { return; }
-	std::list<CEnemy*> list = CEnemy::GetList()->GetList();    // リストを取得
+	std::list<CEnemy*> Enemylist = CEnemy::GetList()->GetList();    // リストを取得
 
-	// キューブブロックリストの中身を確認する
-	for (CEnemy* pEnemy : list)
+	// エネミーリストの中身を確認する
+	for (CEnemy* pEnemy : Enemylist)
 	{
 		CMapSystem::GRID EnemyGrid = pEnemy->GetGrid();
 		D3DXVECTOR3 EnemyPos = pEnemy->GetPos();
@@ -1146,6 +1146,54 @@ void CMapMove::CollisionOut()
 
 		pEnemy->SetPos(EnemyPos);
 	}
+
+	// レールブロックのリスト構造が無ければ抜ける
+	if (CRailBlock::GetList() == nullptr) { return; }
+	std::list<CRailBlock*> Blocklist = CRailBlock::GetList()->GetList();    // リストを取得
+
+	// レールブロックリストの中身を確認する
+	for (CRailBlock* RailBlock : Blocklist)
+	{
+		CMapSystem::GRID Grid = RailBlock->GetGrid();
+		D3DXVECTOR3 Pos = RailBlock->GetPos();
+		D3DXVECTOR3 Move = RailBlock->GetMove();
+		D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
+		float GritSize = CMapSystem::GetInstance()->GetGritSize() * 0.5f;
+
+		m_MinGrid.x = CMapSystem::GetInstance()->CalcGridX(m_DevilPos.x - MapSize.x - GritSize);	//左
+		m_MinGrid.z = CMapSystem::GetInstance()->CalcGridZ(m_DevilPos.z + MapSize.z + GritSize);	//上
+		m_MaxGrid.x = CMapSystem::GetInstance()->CalcGridX(m_DevilPos.x + MapSize.x - GritSize);	//右
+		m_MaxGrid.z = CMapSystem::GetInstance()->CalcGridZ(m_DevilPos.z - MapSize.z + GritSize);	//下
+
+		if (Grid.x == -1)
+		{
+			if (Pos.x > 0.0f)
+			{
+				m_MinGrid.x = CMapSystem::GetInstance()->CalcGridX(m_DevilPos.x - MapSize.x - GritSize);	//左
+				Pos = CMapSystem::GRID(m_MinGrid.x, RailBlock->GetGrid().z).ToWorld();
+			}
+			else
+			{
+				m_MaxGrid.x = CMapSystem::GetInstance()->CalcGridX(m_DevilPos.x + MapSize.x - GritSize);	//右
+				Pos = CMapSystem::GRID(m_MaxGrid.x, RailBlock->GetGrid().z).ToWorld();
+			}
+		}
+		else if (Grid.z == -1)
+		{
+			if (Pos.z < 0.0f)
+			{
+				m_MinGrid.z = CMapSystem::GetInstance()->CalcGridZ(m_DevilPos.z + MapSize.z + GritSize);	//上
+				Pos = CMapSystem::GRID(RailBlock->GetGrid().x, m_MinGrid.z).ToWorld();
+			}
+			else
+			{
+				m_MaxGrid.z = CMapSystem::GetInstance()->CalcGridZ(m_DevilPos.z - MapSize.z + GritSize);	//下
+				Pos = CMapSystem::GRID(RailBlock->GetGrid().x, m_MaxGrid.z).ToWorld();
+			}
+		}
+
+		RailBlock->SetPos(Pos);
+	}
 }
 
 //==========================================
@@ -1153,31 +1201,25 @@ void CMapMove::CollisionOut()
 //==========================================
 void CMapMove::PlaySound()
 {
-	// ローカル変数
-	CSound::SOUND_LABEL SoundLabel;
-
 	// SE設定
 	switch (m_RotType)
 	{
 	case ROTTYPE_UP:		// 上
-		SoundLabel = CSound::SOUND_LABEL_SE_SIGN_UP;
+		CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_SIGN_UP);
 		break;
 
 	case ROTTYPE_DOWN:		// 下
-		SoundLabel = CSound::SOUND_LABEL_SE_SIGN_DOWN;
+		CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_SIGN_DOWN);
 		break;
 
 	case ROTTYPE_LEFT:		// 左
-		SoundLabel = CSound::SOUND_LABEL_SE_SIGN_LEFT;
+		CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_SIGN_LEFT);
 		break;
 
 	case ROTTYPE_RIGHT:		// 右
-		SoundLabel = CSound::SOUND_LABEL_SE_SIGN_RIGHT;
+		CManager::GetInstance()->GetSound()->PlaySound(CSound::SOUND_LABEL_SE_SIGN_RIGHT);
 		break;
 	}
-
-	// サウンド再生
-	CManager::GetInstance()->GetSound()->PlaySound(SoundLabel);
 }
 
 
