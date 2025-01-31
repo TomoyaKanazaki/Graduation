@@ -218,7 +218,7 @@ void CEventMovie::StartMovie(void)
 		if (m_nCount == 5)
 		{
 			// エフェクトの生成
-			CEffekseer* pEffect = MyEffekseer::EffectCreate((CMyEffekseer::TYPE)((int)CMyEffekseer::TYPE_SPAWN_DEVIL), false, DevilPos, pDevil->GetRot(), D3DXVECTOR3(50.0f, 50.0f, 50.0f));
+			MyEffekseer::EffectCreate((CMyEffekseer::TYPE)((int)CMyEffekseer::TYPE_SPAWN_DEVIL), false, DevilPos, pDevil->GetRot(), D3DXVECTOR3(50.0f, 50.0f, 50.0f));
 		}
 
 		if (m_nCount >= 80)
@@ -536,7 +536,6 @@ void CEventMovie::EndMovie(void)
 	CCamera* pCamera = CManager::GetInstance()->GetCamera(0);
 	CDevil* pDevil = CDevil::GetListTop();
 	D3DXVECTOR3 DevilPos = pDevil->GetPos();
-	float CameraDistance = 0.0f;
 	float a;
 
 	//float fDistance = sqrtf((PlayerPos.x - DevilPos.x) * (PlayerPos.x - DevilPos.x) + (PlayerPos.z - DevilPos.z) * (PlayerPos.z - DevilPos.z));
@@ -581,7 +580,7 @@ void CEventMovie::EndMovie(void)
 			// エフェクトの生成
 			D3DXMATRIX mat = {};
 			D3DXVECTOR3 ef = useful::CalcMatrix(DevilPos, pDevil->GetRot(), mat);
-			CEffekseer* pEffect = MyEffekseer::EffectCreate((CMyEffekseer::TYPE)((int)CMyEffekseer::TYPE_SPAWN_DEVIL), false, DevilPos, pDevil->GetRot(), D3DXVECTOR3(50.0f, 50.0f, 50.0f));
+			MyEffekseer::EffectCreate((CMyEffekseer::TYPE)((int)CMyEffekseer::TYPE_SPAWN_DEVIL), false, DevilPos, pDevil->GetRot(), D3DXVECTOR3(50.0f, 50.0f, 50.0f));
 
 			m_nCount = 0;
 			m_nWave++;
@@ -627,7 +626,7 @@ void CEventMovie::EndMovie(void)
 			// エフェクトの生成
 			D3DXMATRIX mat = {};
 			D3DXVECTOR3 ef = useful::CalcMatrix(DevilPos, pDevil->GetRot(), mat);
-			CEffekseer* pEffect = MyEffekseer::EffectCreate((CMyEffekseer::TYPE)((int)CMyEffekseer::TYPE_SPAWN_DEVIL), false, DevilPos, pDevil->GetRot(), D3DXVECTOR3(25.0f, 25.0f, 25.0f));
+			MyEffekseer::EffectCreate((CMyEffekseer::TYPE)((int)CMyEffekseer::TYPE_SPAWN_DEVIL), false, DevilPos, pDevil->GetRot(), D3DXVECTOR3(25.0f, 25.0f, 25.0f));
 		}
 
 		break;
@@ -642,7 +641,7 @@ void CEventMovie::EndMovie(void)
 			//デビルの非表示
 			pDevil->SetAction(CDevil::ACTION_NEUTRAL, 0);
 
-			CEffekseer* pEffect = MyEffekseer::EffectCreate((CMyEffekseer::TYPE)((int)CMyEffekseer::TYPE_SPAWN_DEVIL), false, DevilPos, pDevil->GetRot(), D3DXVECTOR3(50.0f, 50.0f, 50.0f));
+			MyEffekseer::EffectCreate((CMyEffekseer::TYPE)((int)CMyEffekseer::TYPE_SPAWN_DEVIL), false, DevilPos, pDevil->GetRot(), D3DXVECTOR3(50.0f, 50.0f, 50.0f));
 
 			m_nCount = 0;
 			m_nWave++;
