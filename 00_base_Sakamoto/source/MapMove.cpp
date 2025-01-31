@@ -135,10 +135,10 @@ HRESULT CMapMove::Init(void)
 
 
 		// ŒX‚«‚Ì“®‚«‚¾‚¯‚ğ‹–‰Â
-		case 1:
-			m_bCanScroll = false;
-			m_bCanSlope = true;
-			break;
+		//case 1:
+		//	m_bCanScroll = false;
+		//	m_bCanSlope = true;
+		//	break;
 
 		default: // İ’èƒiƒV‚Ìê‡—¼•û‚Ì“®‚«‚ğ‹–‰Â
 			m_bCanScroll = m_bCanSlope = true;
