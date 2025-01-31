@@ -169,6 +169,8 @@ private:
 	ROTTYPE m_RotType;				// 移動向きの種類
 	ROTTYPE m_OldScrollRotType;		// 前回の移動向きの種類(スクロール)
 	ROTTYPE m_OldSlopeRotType;		// 前回の移動向きの種類(傾き)
+	bool m_bCanScroll;					// スクロールフラグ
+	bool m_bCanSlope;					// 傾きフラグ
 
 };
 #endif
