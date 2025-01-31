@@ -120,30 +120,31 @@ HRESULT CMapMove::Init(void)
 {
 	m_ScrollType = (SCROLL_TYPE)CManager::GetInstance()->GetScrollType();
 
+	// TODO : コメントアウト
 	// ステージ番号の取得
-	if (CManager::GetInstance()->GetMapSystem() != nullptr)
-	{
-		// 各種フラグの設定
-		switch (CManager::GetInstance()->GetMapSystem()->GetSelectMap())
-		{
-		// スクロールの動きのみを許可
-		case 0:
-			m_bCanScroll = true;
-			m_bCanSlope = false;
-			break;
+	//if (CManager::GetInstance()->GetMapSystem() != nullptr)
+	//{
+	//	// 各種フラグの設定
+	//	switch (CManager::GetInstance()->GetMapSystem()->GetSelectMap())
+	//	{
+	//	// スクロールの動きのみを許可
+	//	case 0:
+	//		m_bCanScroll = true;
+	//		m_bCanSlope = false;
+	//		break;
 
 
-		// 傾きの動きだけを許可
-		case 1:
-			m_bCanScroll = false;
-			m_bCanSlope = true;
-			break;
+	//	// 傾きの動きだけを許可
+	//	case 1:
+	//		m_bCanScroll = false;
+	//		m_bCanSlope = true;
+	//		break;
 
-		default: // 設定ナシの場合両方の動きを許可
-			m_bCanScroll = m_bCanSlope = true;
-			break;
-		}
-	}
+	//	default: // 設定ナシの場合両方の動きを許可
+	//		m_bCanScroll = m_bCanSlope = true;
+	//		break;
+	//	}
+	//}
 
 	//状態関連の初期化
 	m_nStateCount = SCROOL_TIME * 0.5f;
@@ -593,6 +594,20 @@ void CMapMove::StateManager(void)
 
 			// 次の行動を抽選
 			int nRand = rand() % MAX_PRAB_MODE + 1;
+
+			// スクロールが出来ない場合
+			if (!m_bCanScroll)
+			{
+				// 傾きの数値を与える
+				nRand = SLOPE_RAND;
+			}
+
+			// 傾きが出来ない場合
+			if (!m_bCanSlope)
+			{
+				// スクロールの数値を与える
+				nRand = SLOPE_RAND + 1;
+			}
 
 			if (nRand <= SLOPE_RAND)
 			{ // 傾きの指定％の時
