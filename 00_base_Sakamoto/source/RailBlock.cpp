@@ -240,26 +240,29 @@ void CRailBlock::CollisionOut(D3DXVECTOR3& pos)
 	// キューブブロックリストの中身を確認する
 	for (CDevil* pDevil : list)
 	{
-		D3DXVECTOR3 Pos = pDevil->GetDevilPos();
 		D3DXVECTOR3 MapSize = CMapSystem::GetInstance()->GetMapSize();
-		float GritSize = CMapSystem::GetInstance()->GetGritSize();
+		float GritSize = CMapSystem::GetInstance()->GetGritSize() * 0.5f;
+
+		DebugProc::Print(DebugProc::POINT_CENTER, "%f, %f\n\n", pos.x, pos.z);
+
+		// z奥が+
 
 		// ステージ外の当たり判定
-		if (Pos.x + MapSize.x < pos.x) // 右
+		if (MapSize.x + GritSize < pos.x) // 右
 		{
-			pos.x = Pos.x - MapSize.x - GritSize;
+			pos = m_OldGrid.ToWorld();
 		}
-		if (Pos.x - MapSize.x - GritSize > pos.x) // 左
+		if (-MapSize.x - GritSize > pos.x) // 左
 		{
-			pos.x = Pos.x + MapSize.x;
+			pos = m_OldGrid.ToWorld();
 		}
-		if (Pos.z + MapSize.z + GritSize < pos.z) // 上
+		if (MapSize.z + GritSize < pos.z) // 上
 		{
-			pos.z = Pos.z - MapSize.z;
+			pos = m_OldGrid.ToWorld();
 		}
-		if (Pos.z - MapSize.z > pos.z) // 下
+		if (-MapSize.z - GritSize > pos.z) // 下
 		{
-			pos.z = Pos.z + MapSize.z + GritSize;
+			pos = m_OldGrid.ToWorld();
 		}
 	}
 }
@@ -272,23 +275,13 @@ void CRailBlock::Coodinate()
 	// 前回のグリッドと今回のグリッドが一致している場合関数を抜ける
 	if (m_Grid == m_OldGrid) { return; }
 
-	// 経路探索用の情報を取得
-	auto generator = AStar::Generator::GetInstance();
-	if (generator == nullptr)
-	{
-		assert(false);
-		generator = AStar::Generator::Create();
-	}
-
 	// マップ情報を取得
 	CMapSystem* pMapSystem = CMapSystem::GetInstance();
 
 	// 前回のグリッドを移動可能地点に設定
-	generator->removeCollision(m_OldGrid.ToAStar());
 	pMapSystem->SetGritBool(m_OldGrid, false);
 
 	// 現在のグリッドを移動不可地点に設定
-	generator->addCollision(m_Grid.ToAStar());
 	pMapSystem->SetGritBool(m_Grid, true);
 }
 

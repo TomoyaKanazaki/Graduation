@@ -132,9 +132,7 @@ void CPause::Update(void)
 	{
 		if (pInputKeyboard->GetTrigger(DIK_W) == true ||
 			pInputJoypad->GetTrigger(CInputJoypad::BUTTON_UP, 0) == true ||
-			pInputJoypad->Get_LStick_Trigger(CInputJoypad::LSTICK_UP, 0) == true ||
-			pInputJoypad->GetTrigger(CInputJoypad::BUTTON_UP, 1) == true ||
-			pInputJoypad->Get_LStick_Trigger(CInputJoypad::LSTICK_UP, 1) == true)
+			pInputJoypad->GetTrigger(CInputJoypad::BUTTON_UP, 1) == true)
 		{
 			CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_SELECT);
 			m_PauseSelect--;
@@ -147,9 +145,7 @@ void CPause::Update(void)
 
 		if (pInputKeyboard->GetTrigger(DIK_S) == true ||
 			pInputJoypad->GetTrigger(CInputJoypad::BUTTON_DOWN, 0) == true ||
-			pInputJoypad->Get_LStick_Trigger(CInputJoypad::LSTICK_DOWN, 0) == true ||
-			pInputJoypad->GetTrigger(CInputJoypad::BUTTON_DOWN, 1) == true ||
-			pInputJoypad->Get_LStick_Trigger(CInputJoypad::LSTICK_DOWN, 1) == true)
+			pInputJoypad->GetTrigger(CInputJoypad::BUTTON_DOWN, 1) == true )
 		{
 			CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_SELECT);
 			m_PauseSelect++;
