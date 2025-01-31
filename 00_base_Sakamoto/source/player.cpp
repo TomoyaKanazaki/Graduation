@@ -606,22 +606,20 @@ void CPlayer::Attack(D3DXVECTOR3& posThis, D3DXVECTOR3& rotThis)
 		CInputKeyboard* pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
 		CInputJoypad* pInputJoypad = CManager::GetInstance()->GetInputJoyPad();
 
-		for (int i = 0; i < MAX_PLAYER; ++i)
+
+		if (pInputKeyboard->GetTrigger(DIK_SPACE)
+			|| pInputJoypad->GetTrigger(CInputJoypad::BUTTON_A, m_nPlayNumber))
 		{
-			if (pInputKeyboard->GetTrigger(DIK_SPACE)
-				|| pInputJoypad->GetTrigger(CInputJoypad::BUTTON_A, i))
-			{
-				// ‰Î‰Š•úŽË
-				CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_FIRE);
-				D3DXMATRIX mat = *GetUseMultiMatrix();
-				D3DXVECTOR3 ef = useful::CalcMatrix(posThis, rotThis, mat);
+			// ‰Î‰Š•úŽË
+			CManager::GetInstance()->GetSound()->PlaySoundA(CSound::SOUND_LABEL_SE_FIRE);
+			D3DXMATRIX mat = *GetUseMultiMatrix();
+			D3DXVECTOR3 ef = useful::CalcMatrix(posThis, rotThis, mat);
 
-				MyEffekseer::EffectCreate(CMyEffekseer::TYPE_SMOKE, false, ef, rotThis);
+			MyEffekseer::EffectCreate(CMyEffekseer::TYPE_SMOKE, false, ef, rotThis);
 
-				CFire::Create("data\\model\\fireball.x", posThis, rotThis);
-				SetState(STATE_ATTACK);
-				m_nStateCount = FIRE_STOPTIME;
-			}
+			CFire::Create("data\\model\\fireball.x", posThis, rotThis);
+			SetState(STATE_ATTACK);
+			m_nStateCount = FIRE_STOPTIME;
 		}
 	}
 }
