@@ -122,29 +122,29 @@ HRESULT CMapMove::Init(void)
 
 	// TODO : コメントアウト
 	// ステージ番号の取得
-	//if (CManager::GetInstance()->GetMapSystem() != nullptr)
-	//{
-	//	// 各種フラグの設定
-	//	switch (CManager::GetInstance()->GetMapSystem()->GetSelectMap())
-	//	{
-	//	// スクロールの動きのみを許可
-	//	case 0:
-	//		m_bCanScroll = true;
-	//		m_bCanSlope = false;
-	//		break;
+	if (CManager::GetInstance()->GetMapSystem() != nullptr)
+	{
+		// 各種フラグの設定
+		switch (CManager::GetInstance()->GetMapSystem()->GetSelectMap())
+		{
+		// スクロールの動きのみを許可
+		case 0:
+			m_bCanScroll = true;
+			m_bCanSlope = false;
+			break;
 
 
-	//	// 傾きの動きだけを許可
-	//	case 1:
-	//		m_bCanScroll = false;
-	//		m_bCanSlope = true;
-	//		break;
+		// 傾きの動きだけを許可
+		case 1:
+			m_bCanScroll = false;
+			m_bCanSlope = true;
+			break;
 
-	//	default: // 設定ナシの場合両方の動きを許可
-	//		m_bCanScroll = m_bCanSlope = true;
-	//		break;
-	//	}
-	//}
+		default: // 設定ナシの場合両方の動きを許可
+			m_bCanScroll = m_bCanSlope = true;
+			break;
+		}
+	}
 
 	//状態関連の初期化
 	m_nStateCount = SCROOL_TIME * 0.5f;
