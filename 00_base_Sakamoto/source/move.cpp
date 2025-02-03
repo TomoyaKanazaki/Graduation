@@ -1389,9 +1389,6 @@ void CStateRoll::Move(CObjectX* pObjectX, D3DXVECTOR3& pos, D3DXVECTOR3& rot)
 
 		pos.x += move.x;
 		pos.z += move.z;
-
-		DebugProc::Print(DebugProc::POINT_RIGHT, "岩 true : %f %f\n");
-
 	}
 	else
 	{// ブロックの中心にないとき
@@ -1416,9 +1413,6 @@ void CStateRoll::Move(CObjectX* pObjectX, D3DXVECTOR3& pos, D3DXVECTOR3& rot)
 		{
 			pos.x = MyGritPos.x;
 		}
-
-		DebugProc::Print(DebugProc::POINT_RIGHT, "岩 false : %f %f\n");
-
 	}
 
 	m_PosDest= MyGritPos - pos;
@@ -1449,10 +1443,6 @@ void CStateRoll::Move(CObjectX* pObjectX, D3DXVECTOR3& pos, D3DXVECTOR3& rot)
 	Stop(pos, MyGritPos, move);
 
 	pObjectX->SetMove(move);	// 移動量設定
-
-	DebugProc::Print(DebugProc::POINT_RIGHT, "岩の位置 : %f %f\n", pos.x, pos.z);
-	DebugProc::Print(DebugProc::POINT_RIGHT, "岩のグリッド位置 : %f %f\n", MyGritPos.x, MyGritPos.z);
-
 }
 
 //==========================================
